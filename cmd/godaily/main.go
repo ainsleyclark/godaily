@@ -3,26 +3,54 @@ package main
 import (
 	"context"
 	"fmt"
-	"log/slog"
+	"log"
+	"os"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/source"
+	"github.com/urfave/cli/v3"
 )
 
+var cmd = &cli.Command{
+	Name:  "godaily",
+	Usage: "Daily Go news, straight to your inbox",
+	Commands: []*cli.Command{
+		{
+			Name:  "run",
+			Usage: "Gather all news from sources.",
+			Action: func(ctx context.Context, cmd *cli.Command) error {
+				return nil
+			},
+		},
+		{
+			Name:  "sources",
+			Usage: "Lists registered source names",
+			Action: func(ctx context.Context, cmd *cli.Command) error {
+				for _, name := range news.Sources {
+					fmt.Println(name)
+				}
+				return nil
+			},
+		},
+		{
+			Name: "fetch",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "provider",
+					Value: "all",
+					Usage: "Provider of source information",
+				},
+			},
+			Action: func(ctx context.Context, cmd *cli.Command) error {
+				s := cmd.String("provider")
+				fmt.Println(s)
+				return nil
+			},
+		},
+	},
+}
+
 func main() {
-	ctx := context.Background()
-
-	fetch, err := source.NewDevTo().Fetch(context.Background())
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		return
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
+		log.Fatal(err)
 	}
-
-
-
-	var fetchers []news.Fetcher = {
-
-	}
-
-	fmt.Println(fetch)
 }
