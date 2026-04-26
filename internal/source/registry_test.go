@@ -21,6 +21,13 @@ func TestRegisteredSources(t *testing.T) {
 				assert.NotNil(t, f)
 			},
 		},
+		"GoBlog": {
+			source: news.SourceGoBlog,
+			want: func(f news.Fetcher, err error) {
+				assert.NoError(t, err)
+				assert.NotNil(t, f)
+			},
+		},
 	}
 
 	for name, test := range tt {

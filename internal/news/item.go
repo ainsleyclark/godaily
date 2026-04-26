@@ -24,5 +24,6 @@ type Item struct {
 type Tag string
 
 const (
+	TagArticle  Tag = "article"
 	TagProposal Tag = "proposal"
 )

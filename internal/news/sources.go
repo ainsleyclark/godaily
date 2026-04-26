@@ -6,6 +6,7 @@ type Source string
 // Source constants
 const (
 	SourceDevTo  Source = "dev_to"
+	SourceGoBlog Source = "go_blog"
 	SourceGitHub Source = "github"
 	SourceReddit Source = "reddit"
 )
@@ -13,6 +14,7 @@ const (
 // Sources defines a list of all source types.
 var Sources = []Source{
 	SourceDevTo,
+	SourceGoBlog,
 	SourceGitHub,
 	SourceReddit,
 }
