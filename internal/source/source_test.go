@@ -24,42 +24,17 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRegisteredSources(t *testing.T) {
 	t.Parallel()
-
-	tt := map[string]struct {
-		source news.Source
-		want   func(news.Fetcher, error)
-	}{
-		"DevTo": {
-			source: news.SourceDevTo,
-			want: func(f news.Fetcher, err error) {
-				assert.NoError(t, err)
-				assert.NotNil(t, f)
-			},
-		},
-		"GoBlog": {
-			source: news.SourceGoBlog,
-			want: func(f news.Fetcher, err error) {
-				assert.NoError(t, err)
-				assert.NotNil(t, f)
-			},
-		},
-		"HackerNews": {
-			source: news.SourceHN,
-			want: func(f news.Fetcher, err error) {
-				assert.NoError(t, err)
-				assert.NotNil(t, f)
-			},
-		},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			got, err := news.Get(test.source)
-			test.want(got, err)
+	for _, s := range []news.Source{news.SourceDevTo, news.SourceGoBlog, news.SourceHN} {
+		t.Run(string(s), func(t *testing.T) {
+			t.Parallel()
+			got, err := news.Get(s)
+			require.NoError(t, err)
+			assert.NotNil(t, got)
 		})
 	}
 }

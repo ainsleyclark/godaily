@@ -30,13 +30,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// roundTripFunc is a helper type to create a custom RoundTripper for testing.
-type roundTripFunc func(req *http.Request) (*http.Response, error)
-
-func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req)
-}
-
 type fakeItem struct {
 	Name string `json:"name" xml:"name"`
 }
