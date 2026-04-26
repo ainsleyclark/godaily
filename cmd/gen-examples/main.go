@@ -21,6 +21,8 @@
 // results to internal/examples/rendered and internal/examples/raw. Run via:
 //
 //	go generate ./...
+//
+//go:generate go run main.go
 package main
 
 import (
@@ -39,9 +41,8 @@ import (
 )
 
 func main() {
-	root := moduleRoot()
-	renderedDir := filepath.Join(root, "internal", "examples", "rendered")
-	rawDir := filepath.Join(root, "internal", "examples", "raw")
+	renderedDir := filepath.Join("..", "..", "internal", "examples", "rendered")
+	rawDir := filepath.Join("..", "..", "internal", "examples", "raw")
 	for _, dir := range []string{renderedDir, rawDir} {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			slog.Error("create dir", "dir", dir, "err", err)
@@ -119,23 +120,3 @@ func prettyJSON(src []byte) []byte {
 	return buf.Bytes()
 }
 
-// moduleRoot walks up from the current working directory until it finds go.mod,
-// returning that directory as the module root.
-func moduleRoot() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		slog.Error("getwd", "err", err)
-		os.Exit(1)
-	}
-	for {
-		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
-			return dir
-		}
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			slog.Error("go.mod not found")
-			os.Exit(1)
-		}
-		dir = parent
-	}
-}
