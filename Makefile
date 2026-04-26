@@ -34,7 +34,7 @@ cover: test # Run all the tests and opens the coverage report
 .PHONY: cover
 
 lic: # Add license to all files
-	find . -name "*.go" -type f -print0 | xargs -0 addlicense -c "godaily (Ainsley Clark)" -l bsd
+	find . -name "*.go" -type f -print0 | xargs -0 addlicense -c "godaily (Ainsley Clark)" -l mit
 .PHONY: lic
 
 doc: # Run go doc
