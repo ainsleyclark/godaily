@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	_ "github.com/ainsleyclark/godaily/internal/source"
 	"github.com/urfave/cli/v3"
 )
 
@@ -36,13 +38,26 @@ var cmd = &cli.Command{
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "provider",
-					Value: "all",
 					Usage: "Provider of source information",
 				},
 			},
 			Action: func(ctx context.Context, cmd *cli.Command) error {
-				s := cmd.String("provider")
-				fmt.Println(s)
+				fetcher, err := news.Get(news.Source(cmd.String("provider")))
+				if err != nil {
+					return err
+				}
+
+				items, err := fetcher.Fetch(ctx)
+				if err != nil {
+					return err
+				}
+
+				indent, err := json.MarshalIndent(items, "", "  ")
+				if err != nil {
+					return err
+				}
+
+				fmt.Println(string(indent))
 				return nil
 			},
 		},

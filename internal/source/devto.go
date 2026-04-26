@@ -19,6 +19,10 @@ type DevTo struct {
 
 var _ news.Fetcher = &DevTo{}
 
+func init() {
+	news.Register(news.SourceDevTo, func() news.Fetcher { return NewDevTo() })
+}
+
 const devToUrl = "https://dev.to/api/articles?tag=go&top=1"
 
 // NewDevTo creates a dev.to client.
