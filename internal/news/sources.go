@@ -39,6 +39,7 @@ var Sources = []Source{
 	SourceGitHub,
 	SourceReddit,
 	SourceHN,
+	SourceGolangBridge,
 }
 
 // String implements fmt.Stringer on source.
