@@ -3,47 +3,73 @@ package source
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 )
 
+// DevTo defines the type that implements news.Fetcher.
 type DevTo struct {
-	client *http.Client
+	http *http.Client
+	url  string
 }
 
+var _ news.Fetcher = &DevTo{}
+
+const devToUrl = "https://dev.to/api/articles?tag=go&top=1"
+
+// NewDevTo creates a dev.to client.
 func NewDevTo() *DevTo {
 	return &DevTo{
-		client: &http.Client{},
+		http: &http.Client{},
+		url:  devToUrl,
 	}
 }
 
-func (d *DevTo) Name() string {
-	return "devto"
-}
-
-func (d *DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", "https://devto.me/", nil)
+// Fetch retrieves all the news items from dev.to
+func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", d.url, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "devto request creation failed")
 	}
 
-	resp, err := d.client.Do(req)
+	resp, err := d.http.Do(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch dev to")
 	}
 
-	var response []devToResponse
-	if err = json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return nil, errors.Wrap(err, "parse dev to")
+	if !httputil.Is2xx(resp.StatusCode) {
+		return nil, errors.Errorf("unexpected status code from dev.to: %d", resp.StatusCode)
 	}
 
-	fmt.Print(response)
+	var response []devToResponse
+	if err = json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return nil, errors.Wrap(err, "parsing response")
+	}
 
-	return []news.Item{}, nil
+	out := make([]news.Item, len(response))
+	for i, item := range response {
+		out[i] = item.transform(ctx)
+	}
+
+	return out, nil
+}
+
+func (d devToResponse) transform(_ context.Context) news.Item {
+	return news.Item{
+		Source:    news.SourceDevTo,
+		Title:     d.Title,
+		URL:       d.Url,
+		Author:    d.User.Name,
+		Snippet:   d.Description,
+		Score:     0,
+		Tag:       news.TagProposal,
+		Comments:  d.CommentsCount,
+		Published: d.PublishedAt,
+	}
 }
 
 type devToResponse struct {

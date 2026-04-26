@@ -5,13 +5,12 @@ import (
 	"time"
 )
 
-type Source interface {
-	Name() string // "reddit", "hn", …
+type Fetcher interface {
 	Fetch(ctx context.Context) ([]Item, error)
 }
 
 type Item struct {
-	Source    string
+	Source    Source
 	Title     string
 	URL       string
 	Author    string

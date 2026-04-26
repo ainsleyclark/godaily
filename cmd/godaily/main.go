@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/source"
 )
 
@@ -15,6 +16,12 @@ func main() {
 	if err != nil {
 		slog.ErrorContext(ctx, err.Error())
 		return
+	}
+
+
+
+	var fetchers []news.Fetcher = {
+
 	}
 
 	fmt.Println(fetch)
