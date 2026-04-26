@@ -95,46 +95,45 @@ type (
 			FlairColor   string `json:"flair_color"`
 		} `json:"flair_groups"`
 		TopicList struct {
-			CanCreateTopic bool              `json:"can_create_topic"`
-			MoreTopicsUrl  string            `json:"more_topics_url"`
-			PerPage        int               `json:"per_page"`
+			CanCreateTopic bool                `json:"can_create_topic"`
+			MoreTopicsUrl  string              `json:"more_topics_url"`
+			PerPage        int                 `json:"per_page"`
 			Topics         []golangBridgeTopic `json:"topics"`
 		} `json:"topic_list"`
 	}
 	golangBridgeTopic struct {
-		FancyTitle        string    `json:"fancy_title"`
-		ID                int       `json:"id"`
-		Title             string    `json:"title"`
-		Slug              string    `json:"slug"`
-		PostsCount        int       `json:"posts_count"`
-		ReplyCount        int       `json:"reply_count"`
-		HighestPostNumber int       `json:"highest_post_number"`
-		ImageUrl          *string   `json:"image_url"`
-		CreatedAt         time.Time `json:"created_at"`
-		LastPostedAt      time.Time `json:"last_posted_at"`
-		Bumped            bool      `json:"bumped"`
-		BumpedAt          time.Time `json:"bumped_at"`
-		Archetype         string    `json:"archetype"`
-		Unseen            bool      `json:"unseen"`
-		Pinned            bool      `json:"pinned"`
-		Unpinned          any       `json:"unpinned"`
-		Excerpt           string    `json:"excerpt,omitempty"`
-		Visible           bool      `json:"visible"`
-		Closed            bool      `json:"closed"`
-		Archived          bool      `json:"archived"`
-		Bookmarked        any       `json:"bookmarked"`
-		Liked             any       `json:"liked"`
-		TagsDescriptions  struct {
-		} `json:"tags_descriptions"`
-		Views              int    `json:"views"`
-		LikeCount          int    `json:"like_count"`
-		HasSummary         bool   `json:"has_summary"`
-		LastPosterUsername string `json:"last_poster_username"`
-		CategoryId         int    `json:"category_id"`
-		PinnedGlobally     bool   `json:"pinned_globally"`
-		FeaturedLink       any    `json:"featured_link"`
-		HasAcceptedAnswer  bool   `json:"has_accepted_answer"`
-		CanVote            bool   `json:"can_vote"`
+		FancyTitle         string    `json:"fancy_title"`
+		ID                 int       `json:"id"`
+		Title              string    `json:"title"`
+		Slug               string    `json:"slug"`
+		PostsCount         int       `json:"posts_count"`
+		ReplyCount         int       `json:"reply_count"`
+		HighestPostNumber  int       `json:"highest_post_number"`
+		ImageUrl           *string   `json:"image_url"`
+		CreatedAt          time.Time `json:"created_at"`
+		LastPostedAt       time.Time `json:"last_posted_at"`
+		Bumped             bool      `json:"bumped"`
+		BumpedAt           time.Time `json:"bumped_at"`
+		Archetype          string    `json:"archetype"`
+		Unseen             bool      `json:"unseen"`
+		Pinned             bool      `json:"pinned"`
+		Unpinned           any       `json:"unpinned"`
+		Excerpt            string    `json:"excerpt,omitempty"`
+		Visible            bool      `json:"visible"`
+		Closed             bool      `json:"closed"`
+		Archived           bool      `json:"archived"`
+		Bookmarked         any       `json:"bookmarked"`
+		Liked              any       `json:"liked"`
+		TagsDescriptions   struct{}  `json:"tags_descriptions"`
+		Views              int       `json:"views"`
+		LikeCount          int       `json:"like_count"`
+		HasSummary         bool      `json:"has_summary"`
+		LastPosterUsername string    `json:"last_poster_username"`
+		CategoryId         int       `json:"category_id"`
+		PinnedGlobally     bool      `json:"pinned_globally"`
+		FeaturedLink       any       `json:"featured_link"`
+		HasAcceptedAnswer  bool      `json:"has_accepted_answer"`
+		CanVote            bool      `json:"can_vote"`
 		Posters            []struct {
 			Extras         *string `json:"extras"`
 			Description    string  `json:"description"`

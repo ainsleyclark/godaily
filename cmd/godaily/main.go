@@ -47,7 +47,7 @@ var cmd = &cli.Command{
 			Usage: "Lists registered source names",
 			Action: func(ctx context.Context, cmd *cli.Command) error {
 				for _, name := range news.Sources {
-					fmt.Println(name)
+					fmt.Println(name) //nolint
 				}
 				return nil
 			},
