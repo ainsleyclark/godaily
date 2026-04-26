@@ -35,7 +35,7 @@ import (
 )
 
 func main() {
-	outDir := filepath.Join("..", "..", "internal", "examples")
+	outDir := filepath.Join(moduleRoot(), "internal", "examples")
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		log.Fatalf("create examples dir: %v", err)
 	}
@@ -68,5 +68,24 @@ func main() {
 		}
 
 		log.Printf("wrote %s (%d items)", path, len(items))
+	}
+}
+
+// moduleRoot walks up from the current working directory until it finds go.mod,
+// returning that directory as the module root.
+func moduleRoot() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("getwd: %v", err)
+	}
+	for {
+		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
+			return dir
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			log.Fatal("go.mod not found")
+		}
+		dir = parent
 	}
 }

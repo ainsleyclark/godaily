@@ -24,11 +24,12 @@ type Source string
 
 // Source constants
 const (
-	SourceDevTo  Source = "dev_to"
-	SourceGoBlog Source = "go_blog"
-	SourceGitHub Source = "github"
-	SourceReddit Source = "reddit"
-	SourceHN     Source = "hacker_news"
+	SourceDevTo         Source = "dev_to"
+	SourceGoBlog        Source = "go_blog"
+	SourceGitHub        Source = "github"
+	SourceReddit        Source = "reddit"
+	SourceHN            Source = "hacker_news"
+	SourceGolangBridge  Source = "golangbridge"
 )
 
 // Sources defines a list of all source types.

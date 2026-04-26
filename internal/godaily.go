@@ -19,4 +19,4 @@
 
 package godaily
 
-//go:generate go run ../../cmd/gen-examples/main.go
+//go:generate go run ../cmd/gen-examples/main.go
