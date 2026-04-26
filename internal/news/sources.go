@@ -9,6 +9,7 @@ const (
 	SourceGoBlog Source = "go_blog"
 	SourceGitHub Source = "github"
 	SourceReddit Source = "reddit"
+	SourceHN     Source = "hacker_news"
 )
 
 // Sources defines a list of all source types.
@@ -17,6 +18,7 @@ var Sources = []Source{
 	SourceGoBlog,
 	SourceGitHub,
 	SourceReddit,
+	SourceHN,
 }
 
 // String implements fmt.Stringer on source.

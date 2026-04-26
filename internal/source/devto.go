@@ -44,6 +44,7 @@ func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch dev to")
 	}
+	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		return nil, errors.Errorf("unexpected status code from dev.to: %d", resp.StatusCode)

@@ -44,6 +44,7 @@ func (g GoBlog) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch go blog")
 	}
+	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		return nil, errors.Errorf("unexpected status code from go blog: %d", resp.StatusCode)
