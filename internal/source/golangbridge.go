@@ -72,15 +72,79 @@ func (t golangBridgeTopic) transform() news.Item {
 
 type (
 	golangBridgeResponse struct {
+		Users []struct {
+			Id               int    `json:"id"`
+			Username         string `json:"username"`
+			Name             string `json:"name"`
+			AvatarTemplate   string `json:"avatar_template"`
+			Admin            bool   `json:"admin,omitempty"`
+			TrustLevel       int    `json:"trust_level"`
+			Moderator        bool   `json:"moderator,omitempty"`
+			PrimaryGroupName string `json:"primary_group_name,omitempty"`
+			FlairName        string `json:"flair_name,omitempty"`
+			FlairGroupId     int    `json:"flair_group_id,omitempty"`
+		} `json:"users"`
+		PrimaryGroups []struct {
+			Id   int    `json:"id"`
+			Name string `json:"name"`
+		} `json:"primary_groups"`
+		FlairGroups []struct {
+			Id           int         `json:"id"`
+			Name         string      `json:"name"`
+			FlairUrl     interface{} `json:"flair_url"`
+			FlairBgColor string      `json:"flair_bg_color"`
+			FlairColor   string      `json:"flair_color"`
+		} `json:"flair_groups"`
 		TopicList struct {
-			Topics []golangBridgeTopic `json:"topics"`
+			CanCreateTopic bool              `json:"can_create_topic"`
+			MoreTopicsUrl  string            `json:"more_topics_url"`
+			PerPage        int               `json:"per_page"`
+			Topics         golangBridgeTopic `json:"topics"`
 		} `json:"topic_list"`
 	}
 	golangBridgeTopic struct {
-		ID         int    `json:"id"`
-		Title      string `json:"title"`
-		Slug       string `json:"slug"`
-		PostsCount int    `json:"posts_count"`
-		CreatedAt  string `json:"created_at"`
+		FancyTitle        string      `json:"fancy_title"`
+		Id                int         `json:"id"`
+		Title             string      `json:"title"`
+		Slug              string      `json:"slug"`
+		PostsCount        int         `json:"posts_count"`
+		ReplyCount        int         `json:"reply_count"`
+		HighestPostNumber int         `json:"highest_post_number"`
+		ImageUrl          *string     `json:"image_url"`
+		CreatedAt         time.Time   `json:"created_at"`
+		LastPostedAt      time.Time   `json:"last_posted_at"`
+		Bumped            bool        `json:"bumped"`
+		BumpedAt          time.Time   `json:"bumped_at"`
+		Archetype         string      `json:"archetype"`
+		Unseen            bool        `json:"unseen"`
+		Pinned            bool        `json:"pinned"`
+		Unpinned          interface{} `json:"unpinned"`
+		Excerpt           string      `json:"excerpt,omitempty"`
+		Visible           bool        `json:"visible"`
+		Closed            bool        `json:"closed"`
+		Archived          bool        `json:"archived"`
+		Bookmarked        interface{} `json:"bookmarked"`
+		Liked             interface{} `json:"liked"`
+		TagsDescriptions  struct {
+		} `json:"tags_descriptions"`
+		Views              int         `json:"views"`
+		LikeCount          int         `json:"like_count"`
+		HasSummary         bool        `json:"has_summary"`
+		LastPosterUsername string      `json:"last_poster_username"`
+		CategoryId         int         `json:"category_id"`
+		PinnedGlobally     bool        `json:"pinned_globally"`
+		FeaturedLink       interface{} `json:"featured_link"`
+		HasAcceptedAnswer  bool        `json:"has_accepted_answer"`
+		CanVote            bool        `json:"can_vote"`
+		Posters            []struct {
+			Extras         *string `json:"extras"`
+			Description    string  `json:"description"`
+			UserId         int     `json:"user_id"`
+			PrimaryGroupId *int    `json:"primary_group_id"`
+			FlairGroupId   *int    `json:"flair_group_id"`
+		} `json:"posters"`
 	}
 )
+
+type T struct {
+}
