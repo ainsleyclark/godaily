@@ -24,10 +24,17 @@ import (
 	"time"
 )
 
+// Fetcher defines the method for obtaining news items
+// from various sources.
 type Fetcher interface {
+	// Fetch obtains a transforms news articles.
+	//
+	// Source types are responsible for returning errors
+	// if they could not be obtained.
 	Fetch(ctx context.Context) ([]Item, error)
 }
 
+// Item defines a Go Daily news item.
 type Item struct {
 	Source    Source
 	Title     string

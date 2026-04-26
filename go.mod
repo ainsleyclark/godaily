@@ -18,6 +18,7 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mailru/easyjson v0.9.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/resend/resend-go/v3 v3.6.0 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.2.0 // indirect
