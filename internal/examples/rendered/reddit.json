@@ -1,13 +1,24 @@
 [
 	{
 		"Source": "reddit",
+		"Title": "Bled: A new TUI editor with recursive templates and scrolling notifications",
+		"URL": "https://www.reddit.com/r/golang/comments/1swfzaw/bled_a_new_tui_editor_with_recursive_templates/",
+		"Author": "Sea_Huckleberry9897",
+		"Snippet": "Good Morning Earth !\n\nI wanted to share a project I've been working on: **Bled**. It's a Text User Interface (TUI) editor developed in Go.\n\nOne of the things I found lacking in other CLI editors was a",
+		"Score": 0,
+		"Tag": "article",
+		"Comments": 3,
+		"Published": "2026-04-26T18:49:03Z"
+	},
+	{
+		"Source": "reddit",
 		"Title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
 		"URL": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
 		"Author": "Extension_Layer1825",
-		"Snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns go test -bench output into interactive HTML charts. It got some nice feedback, and people have be",
-		"Score": 2,
+		"Snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have ",
+		"Score": 0,
 		"Tag": "article",
-		"Comments": 0,
+		"Comments": 2,
 		"Published": "2026-04-26T15:58:00Z"
 	},
 	{
@@ -16,7 +27,7 @@
 		"URL": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
 		"Author": "self",
 		"Snippet": "",
-		"Score": 11,
+		"Score": 14,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-26T15:31:39Z"
@@ -27,9 +38,9 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
 		"Author": "KaleidoscopePlusPlus",
 		"Snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits.\n\nThe routine runs indefinitely on an interval delivered from a ticker.\n\n  \n`ticker := time.New",
-		"Score": 6,
+		"Score": 9,
 		"Tag": "article",
-		"Comments": 10,
+		"Comments": 15,
 		"Published": "2026-04-26T14:46:53Z"
 	},
 	{
@@ -82,7 +93,7 @@
 		"URL": "https://github.com/itchyny/go2bf",
 		"Author": "itchyny",
 		"Snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
-		"Score": 35,
+		"Score": 37,
 		"Tag": "article",
 		"Comments": 6,
 		"Published": "2026-04-25T11:19:48Z"
@@ -93,7 +104,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1suvgap/how_to_stack_widgets_and_shapes_in_go_and_gio/",
 		"Author": "Warm_Low_4155",
 		"Snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap.\n\nIn contrast, the Flex family—suc",
-		"Score": 9,
+		"Score": 8,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-24T23:16:08Z"
@@ -115,9 +126,9 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
 		"Author": "thecodearcher",
 		"Snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2`  \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.",
-		"Score": 91,
+		"Score": 93,
 		"Tag": "article",
-		"Comments": 10,
+		"Comments": 11,
 		"Published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -148,7 +159,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
 		"Author": "xenol",
 		"Snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
-		"Score": 8,
+		"Score": 9,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-23T21:58:26Z"
@@ -159,7 +170,7 @@
 		"URL": "https://github.com/janosmiko/lfk",
 		"Author": "Mixe3y",
 		"Snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
-		"Score": 39,
+		"Score": 43,
 		"Tag": "article",
 		"Comments": 7,
 		"Published": "2026-04-23T14:31:45Z"
@@ -181,7 +192,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1stdwxz/3_reasons_im_choosing_taskfile_over_make_for_my/",
 		"Author": "Marmelab",
 		"Snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
-		"Score": 25,
+		"Score": 29,
 		"Tag": "article",
 		"Comments": 45,
 		"Published": "2026-04-23T09:36:02Z"
@@ -203,7 +214,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1st8g0z/gos_implicit_interface_system_is_there_a_real/",
 		"Author": "Mauricio0129",
 		"Snippet": "I've been learning Go and ran into something that I can't find a clean solution to.\n\n\n\nWhen a function accepts an interface like http.ResponseWriter, I know the concrete struct coming in satisfies tha",
-		"Score": 89,
+		"Score": 88,
 		"Tag": "article",
 		"Comments": 80,
 		"Published": "2026-04-23T04:26:34Z"
@@ -258,20 +269,9 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1sslqoj/pdf_oxide_for_go_pdf_library_with_rust_engine_via/",
 		"Author": "yfedoseev",
 		"Snippet": "We've released Go bindings for pdf_oxide recently. Rust core, Go binding via cgo. MIT / Apache-2.0.\n\nThe binding exposes the full toolkit, not just text extraction: plain / markdown / HTML extraction ",
-		"Score": 23,
+		"Score": 24,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-22T13:36:08Z"
-	},
-	{
-		"Source": "reddit",
-		"Title": "[Project] NoKV: a distributed KV storage research platform written entirely in Go",
-		"URL": "https://www.reddit.com/r/golang/comments/1sskbl1/project_nokv_a_distributed_kv_storage_research/",
-		"Author": "Thick-Bar1279",
-		"Snippet": "Hi\n\nI’ve been building NoKV, an open-source distributed KV storage project in Go:\n\n[https://github.com/feichai0017/NoKV](https://github.com/feichai0017/NoKV)\n\nInteractive demo:\n\n[https://demo.eric-s",
-		"Score": 34,
-		"Tag": "article",
-		"Comments": 7,
-		"Published": "2026-04-22T12:40:11Z"
 	}
 ]

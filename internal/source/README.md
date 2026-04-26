@@ -153,6 +153,7 @@ Cover at minimum: successful response, non-2xx error, and any source-specific ed
 ```sh
 make test        # unit tests
 make integration # hits real APIs — ensure the new source returns items
+go generate ./... # regenerates any static fixtures or generated files
 ```
 
 `TestValidate` in `internal/news/registry_test.go` will fail if you forgot the `init()` registration.

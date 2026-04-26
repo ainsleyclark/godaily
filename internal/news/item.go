@@ -50,6 +50,8 @@ type Item struct {
 type Tag string
 
 const (
-	TagArticle  Tag = "article"
-	TagProposal Tag = "proposal"
+	TagArticle          Tag = "article"
+	TagProposal         Tag = "proposal"
+	TagProposalAccepted Tag = "proposal_accepted"
+	TagProposalShipped  Tag = "proposal_shipped"
 )

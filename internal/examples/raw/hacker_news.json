@@ -1,11 +1,51 @@
 {
 	"exhaustive": {
-		"nbHits": false,
-		"typo": false
+		"nbHits": true,
+		"typo": true
 	},
-	"exhaustiveNbHits": false,
-	"exhaustiveTypo": false,
+	"exhaustiveNbHits": true,
+	"exhaustiveTypo": true,
 	"hits": [
+		{
+			"_highlightResult": {
+				"author": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "ichihiroy"
+				},
+				"title": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "I learned Rust with rustlings, so I built the same thing for Go"
+				},
+				"url": {
+					"fullyHighlighted": false,
+					"matchLevel": "full",
+					"matchedWords": [
+						"golang"
+					],
+					"value": "https://github.com/Ichihiroy/<em>goling</em>s"
+				}
+			},
+			"_tags": [
+				"story",
+				"author_ichihiroy",
+				"story_47912690"
+			],
+			"author": "ichihiroy",
+			"children": [
+				47912691
+			],
+			"created_at": "2026-04-26T18:40:36Z",
+			"created_at_i": 1777228836,
+			"num_comments": 0,
+			"objectID": "47912690",
+			"points": 1,
+			"story_id": 47912690,
+			"title": "I learned Rust with rustlings, so I built the same thing for Go",
+			"updated_at": "2026-04-26T18:41:23Z",
+			"url": "https://github.com/Ichihiroy/golings"
+		},
 		{
 			"_highlightResult": {
 				"author": {
@@ -790,54 +830,17 @@
 			"title": "A collection of 35 Golang Agent Skills",
 			"updated_at": "2026-03-24T06:02:38Z",
 			"url": "https://github.com/samber/cc-skills-golang"
-		},
-		{
-			"_highlightResult": {
-				"author": {
-					"matchLevel": "none",
-					"matchedWords": [],
-					"value": "orneryd"
-				},
-				"title": {
-					"fullyHighlighted": false,
-					"matchLevel": "full",
-					"matchedWords": [
-						"golang"
-					],
-					"value": "7ms E2E graph-RAG retrieval Neo4j <em>Golang</em> rewrite. Reddit called perf \"insane\""
-				},
-				"url": {
-					"matchLevel": "none",
-					"matchedWords": [],
-					"value": "https://www.reddit.com/r/Rag/s/6O8vTeQufK"
-				}
-			},
-			"_tags": [
-				"story",
-				"author_orneryd",
-				"story_47472060"
-			],
-			"author": "orneryd",
-			"created_at": "2026-03-21T22:14:40Z",
-			"created_at_i": 1774131280,
-			"num_comments": 0,
-			"objectID": "47472060",
-			"points": 4,
-			"story_id": 47472060,
-			"title": "7ms E2E graph-RAG retrieval Neo4j Golang rewrite. Reddit called perf \"insane\"",
-			"updated_at": "2026-03-22T00:17:45Z",
-			"url": "https://www.reddit.com/r/Rag/s/6O8vTeQufK"
 		}
 	],
 	"hitsPerPage": 20,
-	"nbHits": 6630,
+	"nbHits": 6661,
 	"nbPages": 50,
 	"page": 0,
 	"params": "query=golang&tags=story&advancedSyntax=true&analyticsTags=backend",
-	"processingTimeMS": 10,
+	"processingTimeMS": 14,
 	"processingTimingsMS": {
 		"_request": {
-			"roundTrip": 22
+			"roundTrip": 20
 		},
 		"afterFetch": {
 			"format": {
@@ -846,12 +849,12 @@
 			}
 		},
 		"fetch": {
-			"query": 2,
-			"scanning": 6,
-			"total": 9
+			"query": 3,
+			"scanning": 9,
+			"total": 13
 		},
-		"total": 10
+		"total": 14
 	},
 	"query": "golang",
-	"serverTimeMS": 12
+	"serverTimeMS": 16
 }

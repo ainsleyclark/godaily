@@ -1,58 +1,47 @@
 [
 	{
 		"Source": "dev_to",
-		"Title": "I built agent-to-agent communication that works behind any NAT – no ngrok, no relay server, no configuration",
-		"URL": "https://dev.to/artem_a/i-built-agent-to-agent-communication-that-works-behind-any-nat-no-ngrok-no-relay-server-no-501",
-		"Author": "Artemii Amelin ",
-		"Snippet": "If you have ever tried connecting two AI agents running on different machines, you already know the...",
+		"Title": "Don’t Trust Backups You Haven’t Restored",
+		"URL": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
+		"Author": "alexey.zh",
+		"Snippet": "0. A Backup Is Not a File, but a Promise   You can write anything you want in the...",
 		"Score": 0,
 		"Tag": "proposal",
 		"Comments": 0,
-		"Published": "2026-04-25T11:04:19Z"
+		"Published": "2026-04-26T14:39:58Z"
 	},
 	{
 		"Source": "dev_to",
-		"Title": "What if your authoritative DNS server *was* a Git repository?",
-		"URL": "https://dev.to/c02kr/what-if-your-authoritative-dns-server-was-a-git-repository-240b",
-		"Author": "Chandan",
-		"Snippet": "DNS has no git. I built one.  This is a working prototype, not a finished product. The point of the...",
+		"Title": "I built ssmctl because AWS SSM deserved a better user experience",
+		"URL": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
+		"Author": "Rhys | Senior Cloud Infrastructure Engineer",
+		"Snippet": "Github: github.com/rhysmcneill/ssmctl   I use AWS Session Manager a lot. No bastion hosts, no open...",
 		"Score": 0,
 		"Tag": "proposal",
 		"Comments": 0,
-		"Published": "2026-04-25T11:48:38Z"
+		"Published": "2026-04-26T17:00:37Z"
 	},
 	{
 		"Source": "dev_to",
-		"Title": "My Database Disappeared Every Time I Restarted Docker. Migrations Fixed That.",
-		"URL": "https://dev.to/abhishek_sharma_a9792aee8/my-database-disappeared-every-time-i-restarted-docker-migrations-fixed-that-n93",
-		"Author": "Abhishek Sharma",
-		"Snippet": "In Part 8, I ripped out SQLite and switched to Postgres. The database was real now — but it still...",
+		"Title": "DDD in Go applied to crypto exchange APIs",
+		"URL": "https://dev.to/ohugonnot/ddd-in-go-applied-to-crypto-exchange-apis-3on4",
+		"Author": "Odilon HUGONNOT",
+		"Snippet": "Bounded contexts, aggregates, value objects and anti-corruption layer — DDD is the 'why' behind CQRS and event sourcing. Applied to a Go service consuming Binance, OKEx and Coinbase.",
 		"Score": 0,
 		"Tag": "proposal",
 		"Comments": 0,
-		"Published": "2026-04-25T17:51:53Z"
+		"Published": "2026-04-26T09:00:04Z"
 	},
 	{
 		"Source": "dev_to",
-		"Title": "Your test suite is the only thing that makes AI agents useful",
-		"URL": "https://dev.to/adioof/your-test-suite-is-the-only-thing-that-makes-ai-agents-useful-5ch5",
-		"Author": "Aditya Agarwal",
-		"Snippet": "A company called Reco converted JSONata from JavaScript to Go in 7 hours using AI. Seven. Hours. Not...",
+		"Title": "Message Queue Example using RabbitMQ in Go",
+		"URL": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
+		"Author": "nadirbasalamah",
+		"Snippet": "Introduction   A message queue is an essential component in a distributed system, allowing...",
 		"Score": 0,
 		"Tag": "proposal",
 		"Comments": 0,
-		"Published": "2026-04-25T13:16:26Z"
-	},
-	{
-		"Source": "dev_to",
-		"Title": "Why Your AI Voice Bot Is Actually Just an HTTP Server (And Why That Scales Beautifully)",
-		"URL": "https://dev.to/voipbin/why-your-ai-voice-bot-is-actually-just-an-http-server-and-why-that-scales-beautifully-51pn",
-		"Author": "voipbin",
-		"Snippet": "You built an AI voice bot that handles one call perfectly. Then you run a real campaign — 50 calls...",
-		"Score": 0,
-		"Tag": "proposal",
-		"Comments": 0,
-		"Published": "2026-04-25T17:03:14Z"
+		"Published": "2026-04-26T07:22:51Z"
 	},
 	{
 		"Source": "dev_to",
@@ -64,5 +53,71 @@
 		"Tag": "proposal",
 		"Comments": 0,
 		"Published": "2026-04-26T03:39:30Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "WEB UI in Go? Nothing Can Stop Me!",
+		"URL": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
+		"Author": "alexey.zh",
+		"Snippet": "Introduction   Author's note: This article is not technical in nature. Rather, it is a set...",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T09:58:48Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "The Airgap Test: Refactoring a Cobra CLI into a Library API",
+		"URL": "https://dev.to/bala_paranj_059d338e44e7e/the-airgap-test-refactoring-a-cobra-cli-into-a-library-api-1h0k",
+		"Author": "Bala Paranj",
+		"Snippet": "How a single rule — only RunE touches *cobra.Command — turned a CLI codebase into a library that...",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T12:06:42Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "Every Request Looked the Same in My Logs. Then I Added One Line.",
+		"URL": "https://dev.to/abhishek_sharma_a9792aee8/every-request-looked-the-same-in-my-logs-then-i-added-one-line-19m7",
+		"Author": "Abhishek Sharma",
+		"Snippet": "In Part 9, I Dockerized my backend and added database migrations. One command (docker compose up) now...",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T14:11:32Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "I learned Rust with rustlings, so I built the same thing for Go",
+		"URL": "https://dev.to/ichihiroy/i-learned-rust-with-rustlings-so-i-built-the-same-thing-for-go-4f4m",
+		"Author": "Yunis Quliyev",
+		"Snippet": "I've been wanting to learn Go properly for a while. Tried the usual — read the docs, watched...",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T18:44:00Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "8 Cursor Rules for Go Developers — 2026 Edition",
+		"URL": "https://dev.to/olivia_craft/8-cursor-rules-for-go-developers-2026-edition-2c25",
+		"Author": "Olivia Craft",
+		"Snippet": "Eight Cursor rules that make your AI write idiomatic Go — proper error handling, accept interfaces, context-first signatures, owned goroutines, directional channels, no init() tricks, table-driven tests, and lint-clean commits.",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T09:55:03Z"
+	},
+	{
+		"Source": "dev_to",
+		"Title": "GopherWhisper: A burrow full of malware",
+		"URL": "https://dev.to/mark0_617b45cda9782a/gopherwhisper-a-burrow-full-of-malware-1cfj",
+		"Author": "Mark0",
+		"Snippet": "ESET researchers have identified a new China-aligned APT group dubbed GopherWhisper, which has been...",
+		"Score": 0,
+		"Tag": "proposal",
+		"Comments": 0,
+		"Published": "2026-04-26T06:45:55Z"
 	}
 ]

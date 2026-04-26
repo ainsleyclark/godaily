@@ -1,6 +1,17 @@
 [
 	{
 		"Source": "hacker_news",
+		"Title": "I learned Rust with rustlings, so I built the same thing for Go",
+		"URL": "https://github.com/Ichihiroy/golings",
+		"Author": "ichihiroy",
+		"Snippet": "",
+		"Score": 1,
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-26T18:40:36Z"
+	},
+	{
+		"Source": "hacker_news",
 		"Title": "Show HN: SherifDB, a databe written in Golang under 500 LOC",
 		"URL": "https://emmanuel326.github.io/blogs/sheriffdb.html",
 		"Author": "Nya-kundi",
@@ -207,16 +218,5 @@
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-23T11:03:49Z"
-	},
-	{
-		"Source": "hacker_news",
-		"Title": "7ms E2E graph-RAG retrieval Neo4j Golang rewrite. Reddit called perf \"insane\"",
-		"URL": "https://www.reddit.com/r/Rag/s/6O8vTeQufK",
-		"Author": "orneryd",
-		"Snippet": "",
-		"Score": 4,
-		"Tag": "article",
-		"Comments": 0,
-		"Published": "2026-03-21T22:14:40Z"
 	}
 ]
