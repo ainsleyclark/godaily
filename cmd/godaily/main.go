@@ -1,0 +1,21 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log/slog"
+
+	"github.com/ainsleyclark/godaily/internal/source"
+)
+
+func main() {
+	ctx := context.Background()
+
+	fetch, err := source.NewDevTo().Fetch(context.Background())
+	if err != nil {
+		slog.ErrorContext(ctx, err.Error())
+		return
+	}
+
+	fmt.Println(fetch)
+}
