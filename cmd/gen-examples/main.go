@@ -18,26 +18,35 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // gen-examples fetches live data from every registered source and writes the
-// results to examples/<source>.json at the project root. Run via:
+// results to internal/examples/rendered and internal/examples/raw. Run via:
 //
-//	go generate ./internal/source/...
+//	go generate ./...
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
-	"log"
+	"io"
+	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/source"
 	_ "github.com/ainsleyclark/godaily/internal/source"
 )
 
 func main() {
-	outDir := filepath.Join(moduleRoot(), "internal", "examples")
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
-		log.Fatalf("create examples dir: %v", err)
+	root := moduleRoot()
+	renderedDir := filepath.Join(root, "internal", "examples", "rendered")
+	rawDir := filepath.Join(root, "internal", "examples", "raw")
+	for _, dir := range []string{renderedDir, rawDir} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			slog.Error("create dir", "dir", dir, "err", err)
+			os.Exit(1)
+		}
 	}
 
 	ctx := context.Background()
@@ -45,30 +54,69 @@ func main() {
 	for _, s := range news.Sources {
 		fetcher, err := news.Get(s)
 		if err != nil {
-			log.Printf("skipping %s: %v", s, err)
+			slog.Warn("skipping source", "source", s, "err", err)
 			continue
 		}
+
+		rec := &recordingTransport{base: http.DefaultTransport}
+		source.SetHTTPClient(&http.Client{Transport: rec})
 
 		items, err := fetcher.Fetch(ctx)
 		if err != nil {
-			log.Printf("fetch %s: %v", s, err)
+			slog.Error("fetch failed", "source", s, "err", err)
 			continue
 		}
 
+		// Write raw API response, pretty-printed if JSON.
+		if rec.body != nil {
+			rawPath := filepath.Join(rawDir, string(s)+".json")
+			if err := os.WriteFile(rawPath, prettyJSON(rec.body), os.ModePerm); err != nil {
+				slog.Error("write raw", "source", s, "err", err)
+			}
+		}
+
+		// Write transformed items.
 		data, err := json.MarshalIndent(items, "", "\t")
 		if err != nil {
-			log.Printf("marshal %s: %v", s, err)
+			slog.Error("marshal", "source", s, "err", err)
+			continue
+		}
+		renderedPath := filepath.Join(renderedDir, string(s)+".json")
+		if err := os.WriteFile(renderedPath, data, os.ModePerm); err != nil {
+			slog.Error("write rendered", "source", s, "err", err)
 			continue
 		}
 
-		path := filepath.Join(outDir, string(s)+".json")
-		if err := os.WriteFile(path, data, os.ModePerm); err != nil {
-			log.Printf("write %s: %v", path, err)
-			continue
-		}
-
-		log.Printf("wrote %s (%d items)", path, len(items))
+		slog.Info("wrote", "source", s, "items", len(items))
 	}
+}
+
+// recordingTransport records the raw response body while passing the response
+// through to the caller unchanged.
+type recordingTransport struct {
+	base http.RoundTripper
+	body []byte
+}
+
+func (r *recordingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	resp, err := r.base.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
+	r.body, err = io.ReadAll(resp.Body)
+	resp.Body.Close()
+	resp.Body = io.NopCloser(bytes.NewReader(r.body))
+	return resp, err
+}
+
+// prettyJSON returns src pretty-printed with tab indentation if it is valid
+// JSON, otherwise it returns src unchanged (e.g. for XML responses).
+func prettyJSON(src []byte) []byte {
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, src, "", "\t"); err != nil {
+		return src
+	}
+	return buf.Bytes()
 }
 
 // moduleRoot walks up from the current working directory until it finds go.mod,
@@ -76,7 +124,8 @@ func main() {
 func moduleRoot() string {
 	dir, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("getwd: %v", err)
+		slog.Error("getwd", "err", err)
+		os.Exit(1)
 	}
 	for {
 		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
@@ -84,7 +133,8 @@ func moduleRoot() string {
 		}
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			log.Fatal("go.mod not found")
+			slog.Error("go.mod not found")
+			os.Exit(1)
 		}
 		dir = parent
 	}

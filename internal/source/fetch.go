@@ -38,6 +38,11 @@ type transformer interface {
 // tests to inject custom transports.
 var httpClient = &http.Client{}
 
+// SetHTTPClient replaces the shared HTTP client used by all sources.
+func SetHTTPClient(c *http.Client) {
+	httpClient = c
+}
+
 // fetch performs a GET request to url, checks for a 2xx status, reads the body
 // into bytes, then calls unmarshal to decode it into T.
 //
