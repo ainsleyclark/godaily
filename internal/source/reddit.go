@@ -71,7 +71,7 @@ func (c redditChild) transform() news.Item {
 	if strings.Contains(u, "reddit.com/r/") {
 		u = "https://www.reddit.com" + p.Permalink
 	}
-	snippet := strings.TrimSpace(p.Selftext)
+	snippet := strings.TrimSpace(p.SelfText)
 	if len(snippet) > 200 {
 		snippet = snippet[:200]
 	}
@@ -99,13 +99,13 @@ type (
 		Data redditPost `json:"data"`
 	}
 	redditPost struct {
-		Title      string  `json:"title"`
-		URL        string  `json:"url"`
-		Author     string  `json:"author"`
-		Selftext   string  `json:"selftext"`
-		Score      int     `json:"score"`
-		NumComments int    `json:"num_comments"`
-		CreatedUTC float64 `json:"created_utc"`
-		Permalink  string  `json:"permalink"`
+		Title       string  `json:"title"`
+		URL         string  `json:"url"`
+		Author      string  `json:"author"`
+		SelfText    string  `json:"selftext"`
+		Score       int     `json:"score"`
+		NumComments int     `json:"num_comments"`
+		CreatedUTC  float64 `json:"created_utc"`
+		Permalink   string  `json:"permalink"`
 	}
 )
