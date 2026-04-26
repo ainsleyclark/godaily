@@ -1,0 +1,42 @@
+# From: https://github.com/ainsleydev/webkit/blob/main/internal/templates/.golangci.yaml
+version: "2"
+run:
+  go: "1.25"
+linters:
+  enable:
+    - forbidigo
+    - misspell
+    - revive
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - wastedassign
+  settings:
+    revive:
+      rules:
+        - name: context-keys-type
+          disabled: true
+    staticcheck:
+      checks:
+        - -SA1029
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
