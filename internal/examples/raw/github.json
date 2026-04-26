@@ -1402,8 +1402,8 @@
 		},
 		"reactions": {
 			"url": "https://api.github.com/repos/golang/go/issues/62026/reactions",
-			"total_count": 220,
-			"+1": 205,
+			"total_count": 221,
+			"+1": 206,
 			"-1": 3,
 			"laugh": 0,
 			"hooray": 0,

@@ -566,7 +566,7 @@
 		"URL": "https://github.com/golang/go/issues/62026",
 		"Author": "mzattahri",
 		"Snippet": "Targeting Go 1.27 — I would like to suggest the addition to the standard library of a package to generate and parse UUID identifiers, specifically versions 3, 4 and 5. Th",
-		"Score": 205,
+		"Score": 206,
 		"Tag": "proposal_shipped",
 		"Comments": 342,
 		"Published": "2023-08-14T19:57:51Z"

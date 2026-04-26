@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:cc="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html">
+    <channel>
+        <title><![CDATA[Golang on Medium]]></title>
+        <description><![CDATA[Latest stories tagged with Golang on Medium]]></description>
+        <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        <image>
+            <url>https://cdn-images-1.medium.com/proxy/1*TGH72Nnw24QL3iV9IOm4VA.png</url>
+            <title>Golang on Medium</title>
+            <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        </image>
+        <generator>Medium</generator>
+        <lastBuildDate>Sun, 26 Apr 2026 20:19:49 GMT</lastBuildDate>
+        <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
+        <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
+        <atom:link href="http://medium.superfeedr.com" rel="hub"/>
+        <item>
+            <title><![CDATA[Go Concurrency]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-snippet">Most tutorials on Go concurrency follow the same script. They show you a goroutine, tell you it&#x2019;s like a lightweight thread, demonstrate a&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@shayanholakouee/go-concurrency-23acb96f813e?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@shayanholakouee/go-concurrency-23acb96f813e?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/23acb96f813e</guid>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[backend]]></category>
+            <dc:creator><![CDATA[Shayan Holakouee]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 20:00:28 GMT</pubDate>
+            <atom:updated>2026-04-26T20:00:28.799Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Managing Multi-Cloud Configuration on Golang Services]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2552/0*JeMKo3A_ayMRmHrw.png" width="2552"></a></p><p class="medium-feed-snippet">It is well known that managing configuration, specially in Golang, can become a mess, depending on how the project is structured, its size&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/ded1688c18d0</guid>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[aws]]></category>
+            <dc:creator><![CDATA[Victoria Luquet]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 19:59:17 GMT</pubDate>
+            <atom:updated>2026-04-26T19:59:17.470Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Learning Go through building a trading engine: Pt. 1]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/878/1*DmEe3nUa5oKfUl1_7zoRQQ.png" width="878"></a></p><p class="medium-feed-snippet">I picked up Go last week, coming from JAVA and JS and Frontend it is not a pleasant experience. You can easily find discussions as this&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/3c69e4f75335</guid>
+            <category><![CDATA[trading]]></category>
+            <category><![CDATA[beginners-guide]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Anaz Aijaz]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 18:31:16 GMT</pubDate>
+            <atom:updated>2026-04-26T18:31:16.501Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Kikplate: The Easiest Way to Start with Production-Ready Boilerplates]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/1*5oCgxnJNBhlAoDqp_ec3Zg.png" width="2688"></a></p><p class="medium-feed-snippet">For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming&#x2026;</p><p class="medium-feed-link"><a href="https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5">Continue reading on ITNEXT »</a></p></div>]]></description>
+            <link>https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/9ddd5ebe98c9</guid>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[javascript]]></category>
+            <category><![CDATA[javascrip]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[software-development]]></category>
+            <dc:creator><![CDATA[Moeid Heidari]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 18:05:17 GMT</pubDate>
+            <atom:updated>2026-04-26T19:39:23.333Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[AI-Assisted Go You Should Know]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.programmerscareer.com/ai-assisted-go-you-should-know-24d9104e45d7?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/1*t8ZE_ijzCVt7iWxy9K1n1Q.png" width="600"></a></p><p class="medium-feed-link"><a href="https://medium.programmerscareer.com/ai-assisted-go-you-should-know-24d9104e45d7?source=rss------golang-5">Continue reading on Programmer’s Career »</a></p></div>]]></description>
+            <link>https://medium.programmerscareer.com/ai-assisted-go-you-should-know-24d9104e45d7?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/24d9104e45d7</guid>
+            <category><![CDATA[coding]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[productivity]]></category>
+            <category><![CDATA[technology]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Wesley Wei]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 17:01:02 GMT</pubDate>
+            <atom:updated>2026-04-26T17:01:02.502Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Don’t Trust Backups You Haven’t Restored]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@mailbox.sq7/backups-are-useless-until-you-restore-them-025947afeeb9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1672/1*zJyOw_fuQUjB0xE7oyJJXg.png" width="1672"></a></p><p class="medium-feed-snippet">0. A Backup Is Not a File, but a Promise</p><p class="medium-feed-link"><a href="https://medium.com/@mailbox.sq7/backups-are-useless-until-you-restore-them-025947afeeb9?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@mailbox.sq7/backups-are-useless-until-you-restore-them-025947afeeb9?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/025947afeeb9</guid>
+            <category><![CDATA[database]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[postgresql]]></category>
+            <dc:creator><![CDATA[alexey.zh]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 14:40:34 GMT</pubDate>
+            <atom:updated>2026-04-26T16:14:21.672Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Makefiles that actually scale in Go projects]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://blog.stackademic.com/makefiles-that-actually-scale-in-go-projects-38d4037f3a01?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/0*2DrtoBQgXLbZgQaR" width="4873"></a></p><p class="medium-feed-snippet">Structuring makefiles for scalable Go services</p><p class="medium-feed-link"><a href="https://blog.stackademic.com/makefiles-that-actually-scale-in-go-projects-38d4037f3a01?source=rss------golang-5">Continue reading on Stackademic »</a></p></div>]]></description>
+            <link>https://blog.stackademic.com/makefiles-that-actually-scale-in-go-projects-38d4037f3a01?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/38d4037f3a01</guid>
+            <category><![CDATA[makefile]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[writing]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[software-engineering]]></category>
+            <dc:creator><![CDATA[Yaninyz witty]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 14:30:45 GMT</pubDate>
+            <atom:updated>2026-04-26T14:30:45.895Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Same Product, Two Backends: Node.js vs Go in a Real Project]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@kaderkaaya/same-product-two-backends-node-js-vs-go-in-a-real-project-2b4da77a60d6?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1536/1*xWHcA4rdJUbUmvhTZaSgAw.png" width="1536"></a></p><p class="medium-feed-snippet">Two backends. One system. Measured in reality.</p><p class="medium-feed-link"><a href="https://medium.com/@kaderkaaya/same-product-two-backends-node-js-vs-go-in-a-real-project-2b4da77a60d6?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@kaderkaaya/same-product-two-backends-node-js-vs-go-in-a-real-project-2b4da77a60d6?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/2b4da77a60d6</guid>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[software-architecture]]></category>
+            <category><![CDATA[nodejs]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Kader Kaya]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 11:16:08 GMT</pubDate>
+            <atom:updated>2026-04-26T11:19:13.264Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[WEB UI in Go? Nothing Can Stop Me!]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@mailbox.sq7/web-ui-in-go-nothing-can-stop-me-60d75c4cd4f0?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1774/1*0h1LwZLI0kilysRB8IlPEA.png" width="1774"></a></p><p class="medium-feed-snippet">Introduction</p><p class="medium-feed-link"><a href="https://medium.com/@mailbox.sq7/web-ui-in-go-nothing-can-stop-me-60d75c4cd4f0?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@mailbox.sq7/web-ui-in-go-nothing-can-stop-me-60d75c4cd4f0?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/60d75c4cd4f0</guid>
+            <category><![CDATA[postgresql]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[alexey.zh]]></dc:creator>
+            <pubDate>Sun, 26 Apr 2026 09:56:41 GMT</pubDate>
+            <atom:updated>2026-04-26T09:58:21.429Z</atom:updated>
+        </item>
+    </channel>
+</rss>

@@ -7,7 +7,7 @@
 		"Snippet": "Good Morning Earth !\n\nI wanted to share a project I've been working on: **Bled**. It's a Text User Interface (TUI) editor developed in Go.\n\nOne of the things I found lacking in other CLI editors was a",
 		"Score": 0,
 		"Tag": "article",
-		"Comments": 3,
+		"Comments": 4,
 		"Published": "2026-04-26T18:49:03Z"
 	},
 	{
@@ -16,7 +16,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
 		"Author": "Extension_Layer1825",
 		"Snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have ",
-		"Score": 0,
+		"Score": 2,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-26T15:58:00Z"
@@ -27,7 +27,7 @@
 		"URL": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
 		"Author": "self",
 		"Snippet": "",
-		"Score": 14,
+		"Score": 17,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-26T15:31:39Z"
@@ -38,7 +38,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
 		"Author": "KaleidoscopePlusPlus",
 		"Snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits.\n\nThe routine runs indefinitely on an interval delivered from a ticker.\n\n  \n`ticker := time.New",
-		"Score": 9,
+		"Score": 10,
 		"Tag": "article",
 		"Comments": 15,
 		"Published": "2026-04-26T14:46:53Z"
@@ -51,7 +51,7 @@
 		"Snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.**\n\nI wrote kLex/FROG almost entirely using AI - only breaking from this as required.  I did this for",
 		"Score": 0,
 		"Tag": "article",
-		"Comments": 2,
+		"Comments": 3,
 		"Published": "2026-04-26T14:38:55Z"
 	},
 	{
@@ -71,7 +71,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
 		"Author": "WorkingInitiative909",
 		"Snippet": "Are someone use this repo \n\nGOWA \n\n  \n[https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
-		"Score": 14,
+		"Score": 15,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-26T00:07:59Z"
@@ -82,7 +82,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1svdj2t/gomirofish_built_infast_go_rewrite_of_mirofish/",
 		"Author": "Odd_Army_7385",
 		"Snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go.\n\nUpload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → sp",
-		"Score": 2,
+		"Score": 1,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-25T14:22:10Z"
@@ -93,7 +93,7 @@
 		"URL": "https://github.com/itchyny/go2bf",
 		"Author": "itchyny",
 		"Snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
-		"Score": 37,
+		"Score": 35,
 		"Tag": "article",
 		"Comments": 6,
 		"Published": "2026-04-25T11:19:48Z"
@@ -126,7 +126,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
 		"Author": "thecodearcher",
 		"Snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2`  \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.",
-		"Score": 93,
+		"Score": 94,
 		"Tag": "article",
 		"Comments": 11,
 		"Published": "2026-04-24T14:22:06Z"
@@ -137,7 +137,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1sugo1r/i_need_help_with_e2e_tests/",
 		"Author": "SeaHall833",
 		"Snippet": "I’m using e2e tests based on docker-compose via testcontainers.  \nThe service under test runs inside a container and makes HTTP calls to an external service.\n\nI want to intercept these HTTP requests",
-		"Score": 12,
+		"Score": 13,
 		"Tag": "article",
 		"Comments": 10,
 		"Published": "2026-04-24T14:02:49Z"
@@ -159,7 +159,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
 		"Author": "xenol",
 		"Snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
-		"Score": 9,
+		"Score": 8,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-23T21:58:26Z"
@@ -170,7 +170,7 @@
 		"URL": "https://github.com/janosmiko/lfk",
 		"Author": "Mixe3y",
 		"Snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
-		"Score": 43,
+		"Score": 41,
 		"Tag": "article",
 		"Comments": 7,
 		"Published": "2026-04-23T14:31:45Z"
@@ -192,7 +192,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1stdwxz/3_reasons_im_choosing_taskfile_over_make_for_my/",
 		"Author": "Marmelab",
 		"Snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
-		"Score": 29,
+		"Score": 28,
 		"Tag": "article",
 		"Comments": 45,
 		"Published": "2026-04-23T09:36:02Z"
@@ -214,9 +214,9 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1st8g0z/gos_implicit_interface_system_is_there_a_real/",
 		"Author": "Mauricio0129",
 		"Snippet": "I've been learning Go and ran into something that I can't find a clean solution to.\n\n\n\nWhen a function accepts an interface like http.ResponseWriter, I know the concrete struct coming in satisfies tha",
-		"Score": 88,
+		"Score": 90,
 		"Tag": "article",
-		"Comments": 80,
+		"Comments": 81,
 		"Published": "2026-04-23T04:26:34Z"
 	},
 	{
@@ -236,7 +236,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1ssvusm/mlsgo_pure_go_implementation_of_rfc_9420_built_to/",
 		"Author": "Pythondesurubi",
 		"Snippet": "It started with a music bot. I was using disgo, Discord added DAVE (their E2E encryption for voice calls) and the only Go option was wrapping libdave via CGo. Cross-compilation became a nightmare so I",
-		"Score": 19,
+		"Score": 20,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-22T19:36:35Z"
@@ -247,7 +247,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1ssox9q/i_built_deadenv_to_stop_storing_secrets_in/",
 		"Author": "ashtraxk",
 		"Snippet": "It's a CLI tool that stores your secrets in the OS keychain (Keychain on macOS, Credential Manager on Windows, libsecret on Linux) instead of plaintext files. Your credentials never touch the disk.\n\n*",
-		"Score": 13,
+		"Score": 14,
 		"Tag": "article",
 		"Comments": 12,
 		"Published": "2026-04-22T15:32:14Z"
@@ -258,7 +258,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1ssohj1/raftly_a_raft_consensus_implementation_in_go_that/",
 		"Author": "anirudhology",
 		"Snippet": "For the past few days, I had been working on Raftly: ([GitHub](https://github.com/ani03sha/raftly)), a from-scratch Raft consensus implementation in Go.\n\nI wanted something that did two things I wasn'",
-		"Score": 53,
+		"Score": 52,
 		"Tag": "article",
 		"Comments": 11,
 		"Published": "2026-04-22T15:16:36Z"
@@ -269,7 +269,7 @@
 		"URL": "https://www.reddit.com/r/golang/comments/1sslqoj/pdf_oxide_for_go_pdf_library_with_rust_engine_via/",
 		"Author": "yfedoseev",
 		"Snippet": "We've released Go bindings for pdf_oxide recently. Rust core, Go binding via cgo. MIT / Apache-2.0.\n\nThe binding exposes the full toolkit, not just text extraction: plain / markdown / HTML extraction ",
-		"Score": 24,
+		"Score": 25,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-22T13:36:08Z"
