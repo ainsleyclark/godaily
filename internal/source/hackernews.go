@@ -23,20 +23,16 @@ import (
 	"context"
 	"encoding/json"
 	"html"
-	"net/http"
 	"regexp"
 	"strings"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleydev/webkit/pkg/util/httputil"
-	"github.com/pkg/errors"
 )
 
 // HackerNews defines the type that implements news.Fetcher.
 type HackerNews struct {
-	http *http.Client
-	url  string
+	url string
 }
 
 var (
@@ -53,39 +49,17 @@ const hnURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=st
 // NewHackerNews creates a Hacker News Algolia client.
 func NewHackerNews() *HackerNews {
 	return &HackerNews{
-		http: &http.Client{},
-		url:  hnURL,
+		url: hnURL,
 	}
 }
 
 // Fetch retrieves all news items from Hacker News via the Algolia search API.
 func (h HackerNews) Fetch(ctx context.Context) ([]news.Item, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", h.url, nil)
+	response, err := fetch[hnResponse](ctx, h.url, "hacker news", json.Unmarshal)
 	if err != nil {
-		return nil, errors.Wrap(err, "hacker news request creation failed")
+		return nil, err
 	}
-
-	resp, err := h.http.Do(req)
-	if err != nil {
-		return nil, errors.Wrap(err, "fetch hacker news")
-	}
-	defer resp.Body.Close()
-
-	if !httputil.Is2xx(resp.StatusCode) {
-		return nil, errors.Errorf("unexpected status code from hacker news: %d", resp.StatusCode)
-	}
-
-	var response hnResponse
-	if err = json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return nil, errors.Wrap(err, "parsing response")
-	}
-
-	out := make([]news.Item, len(response.Hits))
-	for i, hit := range response.Hits {
-		out[i] = hit.transform()
-	}
-
-	return out, nil
+	return transformAll(response.Hits), nil
 }
 
 // transform maps an hnHit to a news.Item.

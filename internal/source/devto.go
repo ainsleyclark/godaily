@@ -22,18 +22,14 @@ package source
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleydev/webkit/pkg/util/httputil"
-	"github.com/pkg/errors"
 )
 
 // DevTo defines the type that implements news.Fetcher.
 type DevTo struct {
-	http *http.Client
-	url  string
+	url string
 }
 
 var _ news.Fetcher = &DevTo{}
@@ -47,42 +43,20 @@ const devToUrl = "https://dev.to/api/articles?tag=go&top=1"
 // NewDevTo creates a dev.to client.
 func NewDevTo() *DevTo {
 	return &DevTo{
-		http: &http.Client{},
-		url:  devToUrl,
+		url: devToUrl,
 	}
 }
 
 // Fetch retrieves all the news items from dev.to
 func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", d.url, nil)
+	response, err := fetch[[]devToResponse](ctx, d.url, "dev to", json.Unmarshal)
 	if err != nil {
-		return nil, errors.Wrap(err, "devto request creation failed")
+		return nil, err
 	}
-
-	resp, err := d.http.Do(req)
-	if err != nil {
-		return nil, errors.Wrap(err, "fetch dev to")
-	}
-	defer resp.Body.Close()
-
-	if !httputil.Is2xx(resp.StatusCode) {
-		return nil, errors.Errorf("unexpected status code from dev.to: %d", resp.StatusCode)
-	}
-
-	var response []devToResponse
-	if err = json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return nil, errors.Wrap(err, "parsing response")
-	}
-
-	out := make([]news.Item, len(response))
-	for i, item := range response {
-		out[i] = item.transform(ctx)
-	}
-
-	return out, nil
+	return transformAll(response), nil
 }
 
-func (d devToResponse) transform(_ context.Context) news.Item {
+func (d devToResponse) transform() news.Item {
 	return news.Item{
 		Source:    news.SourceDevTo,
 		Title:     d.Title,

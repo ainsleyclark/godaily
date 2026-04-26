@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,37 +35,14 @@ func TestDevTo_Fetch(t *testing.T) {
 	tt := map[string]struct {
 		stub http.HandlerFunc
 		url  string
-
 		want func([]news.Item, error)
 	}{
-		"Error Creating Request": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-			},
-			url: ":@!£$",
-			want: func(_ []news.Item, err error) {
-				assert.Error(t, err)
-			},
-		},
 		"Bad Request": {
-			stub: func(w http.ResponseWriter, r *http.Request) {
+			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusBadRequest)
 			},
 			want: func(items []news.Item, err error) {
 				assert.Error(t, err)
-				assert.ErrorContains(t, err, "unexpected status code")
-				assert.Nil(t, items)
-			},
-		},
-		"Decode Error": {
-			stub: func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(`bad json`))
-				assert.NoError(t, err)
-			},
-			want: func(items []news.Item, err error) {
-				assert.Error(t, err)
-				assert.ErrorContains(t, err, "parsing response")
 				assert.Nil(t, items)
 			},
 		},
@@ -104,32 +80,8 @@ func TestDevTo_Fetch(t *testing.T) {
 				url = test.url
 			}
 
-			c := DevTo{
-				http: s.Client(),
-				url:  url,
-			}
-
-			got, err := c.Fetch(t.Context())
+			got, err := DevTo{url: url}.Fetch(t.Context())
 			test.want(got, err)
 		})
 	}
-
-	t.Run("Do Error", func(t *testing.T) {
-		f := NewDevTo()
-		f.http = &http.Client{
-			Transport: roundTripFunc(func(_ *http.Request) (*http.Response, error) {
-				return nil, errors.New("network error")
-			}),
-		}
-
-		_, err := f.Fetch(t.Context())
-		assert.ErrorContains(t, err, "fetch dev to")
-	})
-}
-
-// roundTripFunc is a helper type to create a custom RoundTripper for testing
-type roundTripFunc func(req *http.Request) (*http.Response, error)
-
-func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req)
 }

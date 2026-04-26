@@ -22,18 +22,14 @@ package source
 import (
 	"context"
 	"encoding/xml"
-	"net/http"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleydev/webkit/pkg/util/httputil"
-	"github.com/pkg/errors"
 )
 
 // GoBlog defines the type that implements news.Fetcher.
 type GoBlog struct {
-	http *http.Client
-	url  string
+	url string
 }
 
 var _ news.Fetcher = &GoBlog{}
@@ -47,39 +43,17 @@ const goBlogURL = "https://go.dev/blog/feed.atom"
 // NewGoBlog creates a Go Dev Blog client.
 func NewGoBlog() *GoBlog {
 	return &GoBlog{
-		http: &http.Client{},
-		url:  goBlogURL,
+		url: goBlogURL,
 	}
 }
 
 // Fetch retrieves all the news items from the Go Dev Blog Atom feed.
 func (g GoBlog) Fetch(ctx context.Context) ([]news.Item, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", g.url, nil)
+	feed, err := fetch[goBlogFeed](ctx, g.url, "go blog", xml.Unmarshal)
 	if err != nil {
-		return nil, errors.Wrap(err, "go blog request creation failed")
+		return nil, err
 	}
-
-	resp, err := g.http.Do(req)
-	if err != nil {
-		return nil, errors.Wrap(err, "fetch go blog")
-	}
-	defer resp.Body.Close()
-
-	if !httputil.Is2xx(resp.StatusCode) {
-		return nil, errors.Errorf("unexpected status code from go blog: %d", resp.StatusCode)
-	}
-
-	var feed goBlogFeed
-	if err = xml.NewDecoder(resp.Body).Decode(&feed); err != nil {
-		return nil, errors.Wrap(err, "parsing response")
-	}
-
-	out := make([]news.Item, len(feed.Entries))
-	for i, entry := range feed.Entries {
-		out[i] = entry.transform()
-	}
-
-	return out, nil
+	return transformAll(feed.Entries), nil
 }
 
 type (

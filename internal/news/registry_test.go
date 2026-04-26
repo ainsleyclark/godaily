@@ -57,8 +57,6 @@ func TestRegister(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		setup  func()
 		source Source
