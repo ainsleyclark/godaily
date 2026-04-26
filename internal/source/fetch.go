@@ -42,12 +42,27 @@ var httpClient = &http.Client{}
 // into bytes, then calls unmarshal to decode it into T.
 //
 // Callers pass json.Unmarshal or xml.Unmarshal — both match the required
-// func([]byte, any) error signature.
-func fetch[T any](ctx context.Context, url, name string, unmarshal func([]byte, any) error) (T, error) {
+// func([]byte, any) error signature. Optional headers are merged onto the
+// request; existing callers that pass none continue to work unchanged.
+func fetch[T any](
+	ctx context.Context,
+	url string,
+	name string,
+	unmarshal func([]byte, any) error,
+	headers ...http.Header,
+) (T, error) {
 	var zero T
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return zero, errors.Wrap(err, name+" request creation failed")
+	}
+
+	for _, h := range headers {
+		for k, vs := range h {
+			for _, v := range vs {
+				req.Header.Add(k, v)
+			}
+		}
 	}
 
 	resp, err := httpClient.Do(req)
