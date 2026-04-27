@@ -34,6 +34,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/joho/godotenv"
 
@@ -71,10 +72,12 @@ func main() {
 			continue
 		}
 
-		// Write raw API response, pretty-printed if JSON.
+		// Write raw API response. The extension is chosen from the recorded
+		// Content-Type so HTML/XML sources don't masquerade as .json.
 		if rec.body != nil {
-			rawPath := filepath.Join(rawDir, string(s)+".json")
-			if err := os.WriteFile(rawPath, prettyJSON(rec.body), 0o600); err != nil {
+			ext, body := rawExtAndBody(rec.contentType, rec.body)
+			rawPath := filepath.Join(rawDir, string(s)+"."+ext)
+			if err := os.WriteFile(rawPath, body, 0o600); err != nil {
 				slog.Error("write raw", "source", s, "err", err)
 			}
 		}
@@ -95,11 +98,15 @@ func main() {
 	}
 }
 
-// recordingTransport records the raw response body while passing the response
-// through to the caller unchanged.
+// recordingTransport records the FIRST response body it sees together with
+// its Content-Type. We keep only the first because per-source enrichment
+// (ingest.enrich) issues follow-up HTTP calls through the same client, and
+// overwriting on every round-trip would leave us with an enrichment page
+// instead of the source's primary response.
 type recordingTransport struct {
-	base http.RoundTripper
-	body []byte
+	base        http.RoundTripper
+	body        []byte
+	contentType string
 }
 
 func (r *recordingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -107,14 +114,35 @@ func (r *recordingTransport) RoundTrip(req *http.Request) (*http.Response, error
 	if err != nil {
 		return nil, err
 	}
-	r.body, err = io.ReadAll(resp.Body)
+	body, readErr := io.ReadAll(resp.Body)
 	_ = resp.Body.Close()
-	resp.Body = io.NopCloser(bytes.NewReader(r.body))
-	return resp, err
+	resp.Body = io.NopCloser(bytes.NewReader(body))
+	if r.body == nil {
+		r.body = body
+		r.contentType = resp.Header.Get("Content-Type")
+	}
+	return resp, readErr
+}
+
+// rawExtAndBody picks a file extension and (where useful) reformats the body
+// based on the response Content-Type. JSON gets pretty-printed; HTML/XML are
+// written verbatim under their native extension.
+func rawExtAndBody(contentType string, body []byte) (string, []byte) {
+	ct := strings.ToLower(contentType)
+	switch {
+	case strings.Contains(ct, "json"):
+		return "json", prettyJSON(body)
+	case strings.Contains(ct, "html"):
+		return "html", body
+	case strings.Contains(ct, "xml"), strings.Contains(ct, "atom"), strings.Contains(ct, "rss"):
+		return "xml", body
+	default:
+		return "txt", body
+	}
 }
 
 // prettyJSON returns src pretty-printed with tab indentation if it is valid
-// JSON, otherwise it returns src unchanged (e.g. for XML responses).
+// JSON, otherwise it returns src unchanged.
 func prettyJSON(src []byte) []byte {
 	var buf bytes.Buffer
 	if err := json.Indent(&buf, src, "", "\t"); err != nil {

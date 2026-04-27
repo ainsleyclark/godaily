@@ -1,523 +1,473 @@
-
-
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-
-	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <!--[if IE]>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <![endif]-->
-    <meta name="description" content="Ri Xu Online -- Weaving dreams · Achievements of the future">
-    <meta name="keywords" content="xuri,xuri.me,Go,PHP,Linux,Web,Server,Mac">
-    <meta name="author" content="Ri Xu">
-    <meta name="robots" content="all">
-    <meta content="always" name="referrer">
-    <meta name="wot-verification" content="c800202e4dd249fdc091"/>
-    <meta name="p:domain_verify" content="4b12344b74fc609e10344b1782aafb0f"/>
-    <meta name="360-site-verification" content="b84b5cd5e8cfcaeb4e123672070b2795"/>
-    <meta name="sogou_site_verification" content="TxCx08rECM"/>
-    <meta name="msvalidate.01" content="CFBAB0FA541B804543BC09078FC99380" />
-    <meta name="copyright" content="Ri Xu Online">
-    <meta name="language" content="en-US">
-    <meta name="owner" content="Ri Xu">
-    <meta name="topic" content="Programming,Technology,BigData">
-    <meta name="category" content="Blog">
-    <meta name="summary" content="Personal blog">
-    <meta name="rating" content="General">
-    <meta name="coverage" content="Worldwide">
-    <meta name="distribution" content="Global">
-        <!-- OpenGraph Meta Tags -->
-    <meta property="fb:app_id" content="663579267156644" />
-    <meta property="article:author" content="xuri" />
-    <meta property="og:site_name" content="Ri Xu Online" />
-    <meta property="og:title" content="Using Go Dynamic and Static Shared libraries in C/C++ Programs" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://xuri.me/2022/04/15/go-shared-libraries.html" />
-    <meta property="og:image" content="https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png" />
-    <meta property="og:description" content="In this post, I build a shared library and dynamic library by a Go source code and use it for spreadsheet decryption. A Shared Object/Library is a binary file with a dynamic/static loading table for functions. Go language Source Code&hellip; " />
-    <meta property="twitter:card" content="summary" />
-    <meta property="twitter:url" content="https://xuri.me/2022/04/15/go-shared-libraries.html" />
-    <meta property="twitter:title" content="Using Go Dynamic and Static Shared libraries in C/C++ Programs" />
-    <meta property="twitter:description" content="In this post, I build a shared library and dynamic library by a Go source code and use it for spreadsheet decryption. A Shared Object/Library is a binary file with a dynamic/static loading table for functions. Go language Source Code&hellip; " />
-    <meta property="twitter:image" content="https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png" />
-    <meta property="twitter:site" content="@xurime" />
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="mobile-web-app-capable" content="yes"/>
-    <link rel="license" href="https://www.opensource.org/licenses/mit-license.php" />   
-    <link rel="dns-prefetch" href="//xuri.me"/>
-    <link rel="me" href="https://mastodon.social/@xurime"/>
-    <link href="https://xuri.me/" rel="prefetch">
-    <link href="https://xuri.me/wp-content/themes/travelify/font-awesome-6.6.0-web/css/all.min.css" rel="stylesheet">
-    <!-- For Chrome for Android: -->
-    <link rel="icon" sizes="192x192" href="https://xuri.me/apps/icons/touch-icon-192x192.png">
-    <!-- For iPhone 6 Plus with @3× display: -->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png">
-    <!-- For iPad with @2× display running iOS ≥ 7: -->
-    <link rel="apple-touch-icon" sizes="152x152" href="https://xuri.me/apps/icons/apple-touch-icon-152x152-precomposed.png">
-    <!-- For iPad with @2× display running iOS ≤ 6: -->
-    <link rel="apple-touch-icon" sizes="144x144" href="https://xuri.me/apps/icons/apple-touch-icon-144x144-precomposed.png">
-    <!-- For iPhone with @2× display running iOS ≥ 7: -->
-    <link rel="apple-touch-icon" sizes="120x120" href="https://xuri.me/apps/icons/apple-touch-icon-120x120-precomposed.png">
-    <!-- For iPhone with @2× display running iOS ≤ 6: -->
-    <link rel="apple-touch-icon" sizes="114x114" href="https://xuri.me/apps/icons/apple-touch-icon-114x114-precomposed.png">
-    <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≥ 7: -->
-    <link rel="apple-touch-icon" sizes="76x76" href="https://xuri.me/apps/icons/apple-touch-icon-76x76-precomposed.png">
-    <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≤ 6: -->
-    <link rel="apple-touch-icon" sizes="72x72" href="https://xuri.me/apps/icons/apple-touch-icon-72x72-precomposed.png">
-    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
-    <link rel="apple-touch-icon" href="https://xuri.me/apps/icons/apple-touch-icon-precomposed.png"><!-- 57×57px -->
-    <!-- Make AMP discoverable -->
-    <link rel="amphtml" href="https://xuri.me/2022/04/15/go-shared-libraries.html?amp">
-    <title>
-        Using Go Dynamic and Static Shared libraries in C/C++ Programs | Ri Xu Online    </title>
-    <link rel="profile" href="https://gmpg.org/xfn/11" />
-    <link rel="pingback" href="https://xuri.me/xmlrpc.php" />
-<meta name='robots' content='max-image-preview:large' />
-	<style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
-	<link rel="alternate" type="application/rss+xml" title="Ri Xu Online &raquo; Feed" href="https://xuri.me/feed" />
-<link rel="alternate" type="application/rss+xml" title="Ri Xu Online &raquo; Comments Feed" href="https://xuri.me/comments/feed" />
-<link rel='stylesheet' id='travelify_style-css' href='https://xuri.me/wp-content/themes/travelify/style.css'  media='all' />
-<link rel='stylesheet' id='wp-block-library-css' href='https://xuri.me/wp-includes/css/dist/block-library/style.min.css'  media='all' />
-<style id='classic-theme-styles-inline-css' type='text/css'>
-/*! This file is auto-generated */
-.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
-</style>
-<style id='global-styles-inline-css' type='text/css'>
-:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
-:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
-:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
-:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
-</style>
-<link rel='stylesheet' id='post-ratings-raty-css' href='https://xuri.me/wp-content/plugins/post-ratings/assets/jquery.raty.css'  media='all' />
-<link rel="canonical" href="https://xuri.me/2022/04/15/go-shared-libraries.html" />
-<link rel='shortlink' href='https://xuri.me/?p=3360' />
-<!-- Ri Xu Online Custom CSS Styles -->
-<style media="screen">
-body { background-image: none; }
-</style>
-    <style>
-        a { color: #57ad68; }
-        #site-title a { color: #57ad68; }
-        #site-title a:hover { color: #439f55; }
-        .wrapper { background-color: #F8F8F8; }
-        .social-icons ul li a { color: #D0D0D0; }
-        #main-nav a, #main-nav a:hover,#main-nav ul li.current-menu-item a,#main-nav ul li.current_page_ancestor a,#main-nav ul li.current-menu-ancestor a,#main-nav ul li.current_page_item a,#main-nav ul li:hover > a { color: #FFF; }
-        .widget, article { background-color: #FFF; }
-        .entry-title, .entry-title a, h1, h2, h3, h4, h5, h6, .widget-title  { color: #444; }
-        a:focus, a:active, a:hover, .tags a:hover, .custom-gallery-title a, .widget-title a, #content ul a:hover,#content ol a:hover, .widget ul li a:hover, .entry-title a:hover, .entry-meta a:hover, #site-generator .copyright a:hover { color: #439f55; }
-        #main-nav { background-color: #57ad68; border-color: #57ad68; }
-    	#main-nav ul li ul, body { border-color: #57ad68; }
-    	#main-nav a:hover,#main-nav ul li.current-menu-item a,#main-nav ul li.current_page_ancestor a,#main-nav ul li.current-menu-ancestor a,#main-nav ul li.current_page_item a,#main-nav ul li:hover > a, #main-nav li:hover > a,#main-nav ul ul :hover > a,#main-nav a:focus { background-color: #439f55; }
-    	#main-nav ul li ul li a:hover,#main-nav ul li ul li:hover > a,#main-nav ul li.current-menu-item ul li a:hover { color: #439f55; }
-    	.entry-content { color: #444; }
-    	input[type="reset"], input[type="button"], input[type="submit"], a.readmore, #controllers a:hover, #controllers a.active, .pagination span, .pagination a:hover span { background-color: #57ad68; border-color: #57ad68 }
-    	blockquote { border-color: #57ad68 }
-        #controllers a:hover, #controllers a.active { color: #57ad68 }
-    	input[type="reset"]:hover,input[type="button"]:hover,input[type="submit"]:hover,input[type="reset"]:active,input[type="button"]:active,input[type="submit"]:active, a.readmore:hover, a.readmore:active, ul.default-wp-page li a:hover, ul.default-wp-page li a:active { background-color: #439f55; border-color: #439f55 }
-    </style>
-    <style type="text/css" id="custom-background-css">
-body.custom-background { background-color: #d3d3d3; background-image: url("https://xuri.me/wp-content/themes/travelify/images/background.png"); background-position: left top; background-size: auto; background-repeat: repeat; background-attachment: scroll; }
-</style>
-	<link rel="amphtml" href="https://xuri.me/2022/04/15/go-shared-libraries.html/amp">
-<script data-cfasync="false" nonce="930eac89-33a8-4ec1-92e3-010f90c7ef24">try{(function(w,d){!function(F,G,H,I){if(F.zaraz)console.error("zaraz is loaded twice");else{F[H]=F[H]||{};F[H].executed=[];F.zaraz={deferred:[],listeners:[]};F.zaraz._v="5882";F.zaraz._n="930eac89-33a8-4ec1-92e3-010f90c7ef24";F.zaraz.q=[];F.zaraz._f=function(J){return async function(){var K=Array.prototype.slice.call(arguments);F.zaraz.q.push({m:J,a:K})}};for(const L of["track","set","debug"])F.zaraz[L]=F.zaraz._f(L);F.zaraz.init=()=>{var M=G.getElementsByTagName(I)[0],N=G.createElement(I),O=G.getElementsByTagName("title")[0];O&&(F[H].t=G.getElementsByTagName("title")[0].text);F[H].x=Math.random();F[H].w=F.screen.width;F[H].h=F.screen.height;F[H].j=F.innerHeight;F[H].e=F.innerWidth;F[H].l=F.location.href;F[H].r=G.referrer;F[H].k=F.screen.colorDepth;F[H].n=G.characterSet;F[H].o=(new Date).getTimezoneOffset();if(F.dataLayer)for(const P of Object.entries(Object.entries(dataLayer).reduce((Q,R)=>({...Q[1],...R[1]}),{})))zaraz.set(P[0],P[1],{scope:"page"});F[H].q=[];for(;F.zaraz.q.length;){const S=F.zaraz.q.shift();F[H].q.push(S)}N.defer=!0;for(const T of[localStorage,sessionStorage])Object.keys(T||{}).filter(V=>V.startsWith("_zaraz_")).forEach(U=>{try{F[H]["z_"+U.slice(7)]=JSON.parse(T.getItem(U))}catch{F[H]["z_"+U.slice(7)]=T.getItem(U)}});N.referrerPolicy="origin";N.src="/cdn-cgi/zaraz/s.js?z="+btoa(encodeURIComponent(JSON.stringify(F[H])));M.parentNode.insertBefore(N,M)};["complete","interactive"].includes(G.readyState)?zaraz.init():F.addEventListener("DOMContentLoaded",zaraz.init)}}(w,d,"zarazData","script");window.zaraz._p=async bO=>new Promise(bP=>{if(bO){bO.e&&bO.e.forEach(bQ=>{try{const bR=d.querySelector("script[nonce]"),bS=bR?.nonce||bR?.getAttribute("nonce"),bT=d.createElement("script");bS&&(bT.nonce=bS);bT.innerHTML=bQ;bT.onload=()=>{d.head.removeChild(bT)};d.head.appendChild(bT)}catch(bU){console.error(`Error executing script: ${bQ}\n`,bU)}});Promise.allSettled((bO.f||[]).map(bV=>fetch(bV[0],bV[1])))}bP()});zaraz._p({"e":["(function(w,d){})(window,document)"]});})(window,document)}catch(e){throw fetch("/cdn-cgi/zaraz/t"),e;};</script></head>
-
-<body class="wp-singular post-template-default single single-post postid-3360 single-format-standard custom-background wp-theme-travelify ">
-	
-	<div class="wrapper">
-				<header id="branding" >
-			    
-    <div class="container clearfix">
-        <div class="hgroup-wrap clearfix">
-                    <div class="hgroup-right">
-                                            </div><!-- .hgroup-right -->
-                <div id="site-logo" class="clearfix">
-                                                <h1 id="site-title">
-                                <a href="https://xuri.me/" title="Ri Xu Online" rel="home">
-                                    Ri Xu Online                                </a>
-                            </h1>
-                            <h2 id="site-description">Change the life in a geek way</h2>
-                        
-                </div><!-- #site-logo -->
-
-        </div><!-- .hgroup-wrap -->
-    </div><!-- .container -->
-        <nav id="main-nav" class="clearfix">
-                    <div class="container clearfix"><ul class="root"><li id="menu-item-619" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-619"><a href="https://xuri.me">Home</a></li>
-<li id="menu-item-1145" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-1145"><a href="https://xuri.me/category/coding">Coding</a></li>
-<li id="menu-item-3152" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3152"><a href="https://xuri.me/category/cloud-native">Cloud Native</a></li>
-<li id="menu-item-3281" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3281"><a href="https://xuri.me/excelize">Excelize</a></li>
-<li id="menu-item-3282" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3282"><a href="https://xuri.me/aurora">Aurora</a></li>
-<li id="menu-item-3283" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3283"><a href="https://xuri.me/toml-to-go">TOML-to-Go</a></li>
-<li id="menu-item-3295" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3295"><a href="https://rust-reportcard.xuri.me">Rust Report Card</a></li>
-<li id="menu-item-618" class="menu-item menu-item-type-post_type menu-item-object-page current-post-parent menu-item-618"><a href="https://xuri.me/about">About</a></li>
-<li id="menu-item-969" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-969"><a href="https://xuri.me/blog-statement">Blog Statement</a></li>
-<li id="menu-item-2592" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2592"><a href="https://xuri.me/blogroll">Blogroll</a></li>
-<li id="menu-item-2865" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-2865"><a rel="privacy-policy" href="https://xuri.me/privacy-policy">Privacy Policy</a></li>
-<li class="default-menu"><a href="https://xuri.me" title="Navigation">Navigation</a></li></ul></div><!-- .container -->
-                    </nav><!-- #main-nav -->        		</header>
-		
-				<div id="main" class="container clearfix">
-
-
-<div id="container">
-	
-
-<div id="primary" class="no-margin-left">
-   <div id="content">    <div id="post-3360" class="post-3360 post type-post status-publish format-standard hentry category-coding tag-coding">
-        <article>
-
-            
-            <header class="entry-header">
-                <h2 class="entry-title">
-                    Using Go Dynamic and Static Shared libraries in C/C++ Programs                </h2><!-- .entry-title -->
-            </header>
-
-            
-            
-            <div class="entry-meta-bar clearfix">
-                <div class="entry-meta">
-                        <span class="author vcard"><a href="https://xuri.me/author/xuri"><span class="fn">Ri Xu</span></a></span>
-                        <span class="date updated"><a href="https://xuri.me/2022/04/15/go-shared-libraries.html" title="00:40">April 15, 2022</a></span>
-                                                <span class="category"><a href="https://xuri.me/category/coding" rel="category tag">Coding</a></span>
-                                                            </div><!-- .entry-meta -->
-            </div>
-            <div class="entry-content clearfix">
-                <p>In this post, I build a shared library and dynamic library by a Go source code and use it for spreadsheet decryption. A Shared Object/Library is a binary file with a dynamic/static loading table for functions.</p>
-<p>Go language Source Code</p>
-<pre>// decrypt.go
-package main
-
-import "C"
-import (
-    "fmt"
-
-    "github.com/xuri/excelize/v2"
-)
-
-//export  decryption
-func decryption(file *C.char, passwd *C.char) {
-    f, err := excelize.OpenFile(C.GoString(file), excelize.Options{Password: C.GoString(passwd)})
-    if err != nil {
-        return
-    }
-    defer func() {
-        if err := f.Close(); err != nil {
-            fmt.Println(err)
-        }
-    }()
-    if err := f.SaveAs("decrypted workbook.xlsx", excelize.Options{}); err != nil {
-        fmt.Println(err)
-    }
-}
-
-func main() {
-}
-</pre>
-<p><strong>Build shared libraries</strong></p>
-<p>Build a dynamic shared library</p>
-<pre>go build -o libdecrypt.so -buildmode=c-shared decrypt.go
-</pre>
-<p>It will generate two files: <code>libdecrypt.a</code> and <code>libdecrypt.h</code>.</p>
-<p>Build a static shared library</p>
-<pre>go build -o libdecrypt.a -buildmode=c-archive
-</pre>
-<p>It will generate two files: <code>libdecrypt.so</code> and <code>libdecrypt.h</code>.</p>
-<p><strong>Using a dynamic shared library in C++ program</strong></p>
-<pre>// decrypt.cpp
-#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-
-#include "libdecrypt.h"
-
-int main() {
-    decryption((char*)"encryptAES.xlsx", (char*)"password");
-}
-</pre>
-<p>Build a executable file:</p>
-<pre>gcc -v decrypt.cpp -o decrypt ./libdecrypt.so
-</pre>
-<p>By executing the following command we can get decrypted spreadsheet: <code>decrypted workbook.xlsx</code>.</p>
-<pre>./decrypt
-</pre>
-<p><strong>Using a static shared library in C program</strong></p>
-<pre>// decrypt.c
-#include "libdecrypt.h"
-
-
-int main ()
-{
-    decryption("encryptAES.xlsx", "password");
-}
-</pre>
-<p>Build a executable file:</p>
-<pre>gcc -o decrypt decrypt.c libdecrypt.a -lpthread
-</pre>
-<p>By executing the following command we can get decrypted spreadsheet.</p>
-<pre>./decrypt
-</pre>
-<p>That explains how to build the dynamic and static shared library (shared object) in Go, and how to use them.</p>
-<p>The open-source project <a href="https://github.com/xuri/excelize-py" title="Excelize for Python">excelize-py</a> is a practice for more complex scenario such as complex custom data structure.</p>
-
-<div class="post-ratings" data-post="3360">
-	
-	<div class="rating" data-post="3360" data-rating="5" data-readonly="0"></div>
-
-	<div class="rating-meta">
-		<strong>5.00</strong> avg. rating (<strong>99</strong>% score) - <strong class="votes">6</strong> votes	</div>
-
-</div>                            <div class="tags">
-                                <a href="https://xuri.me/tag/coding" rel="tag">Coding</a>                            </div>
-                                        </div>
-
-                        <ul class="default-wp-page clearfix">
-                <li class="previous"><a href="https://xuri.me/2021/08/30/5th-anniversary-of-the-excelize-open-source.html" rel="prev"><span class="meta-nav">&larr;</span> 5th Anniversary of the Excelize Open Source</a></li>
-                <li class="next"></li>
-            </ul>
-        
-<div id="comments" class="comments-area">
-
-	
-	
-	
-</div><!-- #comments .comments-area -->
-        </article>
-    </div>
-</div><!-- #content --></div><!-- #primary -->
-
-
-<div id="secondary">
-	
-
-<aside id="text-2" class="widget widget_text">			<div class="textwidget"><p class="contact module">
-    <a href="https://www.facebook.com/xuri.me" target="_blank" title="Facebook" rel="author"><i class="fa fa-facebook fa-3x"></i></a><a href="https://x.com/xurime" target="_blank" title="X" rel="author"><i class="fa fa-x-twitter fa-3x"></i></a><a href="https://www.linkedin.com/in/xurime" target="_blank" title="LinkedIn" rel="author"><i class="fa fa-linkedin-in fa-3x"></i></a><a href="https://github.com/xuri" target="_blank" title="GitHub" rel="author"><i class="fa fa-github fa-3x"></i></a><a href="https://www.youtube.com/@rixu" target="_blank" title="Youtube" rel="author"><i class="fa fa-youtube fa-3x"></i></a><a href="https://stackoverflow.com/users/2676708/xuri" target="_blank" title="Stack Overflow" rel="author"><i class="fa fa-stack-overflow fa-3x"></i></a><a href="https://xuri.me/feed" title="RSS" rel="author"><i class="fa fa-rss fa-3x"></i></a></p>
-</div>
-		</aside><aside id="search-3" class="widget widget_search">    <form action="https://xuri.me/" class="searchform clearfix" method="get">
-        <label class="assistive-text" for="s">Search</label>
-        <input type="text" placeholder="Search" class="s field" name="s" id="s">
-    </form></aside><aside id="categories-5" class="widget widget_categories"><h3 class="widget-title">Categories</h3>
-			<ul>
-					<li class="cat-item cat-item-6"><a href="https://xuri.me/category/apps">Apps</a>
-</li>
-	<li class="cat-item cat-item-67"><a href="https://xuri.me/category/books">Books</a>
-</li>
-	<li class="cat-item cat-item-13"><a href="https://xuri.me/category/classical-music">Classical Music</a>
-</li>
-	<li class="cat-item cat-item-360"><a href="https://xuri.me/category/cloud-native">Cloud Native</a>
-</li>
-	<li class="cat-item cat-item-2"><a href="https://xuri.me/category/coding">Coding</a>
-</li>
-	<li class="cat-item cat-item-358"><a href="https://xuri.me/category/kubernetes">Kubernetes</a>
-</li>
-	<li class="cat-item cat-item-5"><a href="https://xuri.me/category/life">Life</a>
-</li>
-	<li class="cat-item cat-item-4"><a href="https://xuri.me/category/linux">Linux</a>
-</li>
-	<li class="cat-item cat-item-182"><a href="https://xuri.me/category/mac">Mac</a>
-</li>
-	<li class="cat-item cat-item-26"><a href="https://xuri.me/category/mcu">MCU</a>
-</li>
-	<li class="cat-item cat-item-9"><a href="https://xuri.me/category/apps/programming-office">Programming Office</a>
-</li>
-	<li class="cat-item cat-item-8"><a href="https://xuri.me/category/apps/security-related">Security Related</a>
-</li>
-	<li class="cat-item cat-item-7"><a href="https://xuri.me/category/web">Web</a>
-</li>
-	<li class="cat-item cat-item-3"><a href="https://xuri.me/category/windows">Windows</a>
-</li>
-			</ul>
-
-			</aside><aside id="archives-2" class="widget widget_archive"><h3 class="widget-title">Archives</h3>		<label class="screen-reader-text" for="archives-dropdown-2">Archives</label>
-		<select id="archives-dropdown-2" name="archive-dropdown">
-			
-			<option value="">Select Month</option>
-				<option value='https://xuri.me/2022/04'> April 2022 </option>
-	<option value='https://xuri.me/2021/08'> August 2021 </option>
-	<option value='https://xuri.me/2021/07'> July 2021 </option>
-	<option value='https://xuri.me/2021/01'> January 2021 </option>
-	<option value='https://xuri.me/2020/01'> January 2020 </option>
-	<option value='https://xuri.me/2019/12'> December 2019 </option>
-	<option value='https://xuri.me/2019/05'> May 2019 </option>
-	<option value='https://xuri.me/2019/02'> February 2019 </option>
-	<option value='https://xuri.me/2019/01'> January 2019 </option>
-	<option value='https://xuri.me/2018/06'> June 2018 </option>
-	<option value='https://xuri.me/2018/05'> May 2018 </option>
-	<option value='https://xuri.me/2018/01'> January 2018 </option>
-	<option value='https://xuri.me/2017/12'> December 2017 </option>
-	<option value='https://xuri.me/2017/11'> November 2017 </option>
-	<option value='https://xuri.me/2017/10'> October 2017 </option>
-	<option value='https://xuri.me/2017/09'> September 2017 </option>
-	<option value='https://xuri.me/2017/08'> August 2017 </option>
-	<option value='https://xuri.me/2017/07'> July 2017 </option>
-	<option value='https://xuri.me/2017/06'> June 2017 </option>
-	<option value='https://xuri.me/2017/05'> May 2017 </option>
-	<option value='https://xuri.me/2017/04'> April 2017 </option>
-	<option value='https://xuri.me/2017/03'> March 2017 </option>
-	<option value='https://xuri.me/2017/02'> February 2017 </option>
-	<option value='https://xuri.me/2017/01'> January 2017 </option>
-	<option value='https://xuri.me/2016/12'> December 2016 </option>
-	<option value='https://xuri.me/2016/11'> November 2016 </option>
-	<option value='https://xuri.me/2016/10'> October 2016 </option>
-	<option value='https://xuri.me/2016/09'> September 2016 </option>
-	<option value='https://xuri.me/2016/08'> August 2016 </option>
-	<option value='https://xuri.me/2016/07'> July 2016 </option>
-	<option value='https://xuri.me/2016/06'> June 2016 </option>
-	<option value='https://xuri.me/2016/05'> May 2016 </option>
-	<option value='https://xuri.me/2016/04'> April 2016 </option>
-	<option value='https://xuri.me/2016/03'> March 2016 </option>
-	<option value='https://xuri.me/2016/02'> February 2016 </option>
-	<option value='https://xuri.me/2016/01'> January 2016 </option>
-	<option value='https://xuri.me/2015/12'> December 2015 </option>
-	<option value='https://xuri.me/2015/11'> November 2015 </option>
-	<option value='https://xuri.me/2015/10'> October 2015 </option>
-	<option value='https://xuri.me/2015/09'> September 2015 </option>
-	<option value='https://xuri.me/2015/08'> August 2015 </option>
-	<option value='https://xuri.me/2015/07'> July 2015 </option>
-	<option value='https://xuri.me/2015/06'> June 2015 </option>
-	<option value='https://xuri.me/2015/05'> May 2015 </option>
-	<option value='https://xuri.me/2015/04'> April 2015 </option>
-	<option value='https://xuri.me/2015/03'> March 2015 </option>
-	<option value='https://xuri.me/2015/02'> February 2015 </option>
-	<option value='https://xuri.me/2015/01'> January 2015 </option>
-	<option value='https://xuri.me/2014/12'> December 2014 </option>
-	<option value='https://xuri.me/2014/11'> November 2014 </option>
-	<option value='https://xuri.me/2014/10'> October 2014 </option>
-	<option value='https://xuri.me/2014/09'> September 2014 </option>
-	<option value='https://xuri.me/2014/08'> August 2014 </option>
-	<option value='https://xuri.me/2014/07'> July 2014 </option>
-	<option value='https://xuri.me/2014/06'> June 2014 </option>
-	<option value='https://xuri.me/2014/05'> May 2014 </option>
-	<option value='https://xuri.me/2014/04'> April 2014 </option>
-	<option value='https://xuri.me/2014/03'> March 2014 </option>
-	<option value='https://xuri.me/2014/02'> February 2014 </option>
-	<option value='https://xuri.me/2014/01'> January 2014 </option>
-	<option value='https://xuri.me/2013/12'> December 2013 </option>
-	<option value='https://xuri.me/2013/11'> November 2013 </option>
-	<option value='https://xuri.me/2013/10'> October 2013 </option>
-	<option value='https://xuri.me/2013/09'> September 2013 </option>
-	<option value='https://xuri.me/2013/08'> August 2013 </option>
-	<option value='https://xuri.me/2013/07'> July 2013 </option>
-	<option value='https://xuri.me/2013/06'> June 2013 </option>
-	<option value='https://xuri.me/2013/05'> May 2013 </option>
-	<option value='https://xuri.me/2013/04'> April 2013 </option>
-	<option value='https://xuri.me/2013/03'> March 2013 </option>
-	<option value='https://xuri.me/2013/02'> February 2013 </option>
-
-		</select>
-
-			<script type="f9195c42ef9bbbfc304803bb-text/javascript">
-/* <![CDATA[ */
-
-(function() {
-	var dropdown = document.getElementById( "archives-dropdown-2" );
-	function onSelectChange() {
-		if ( dropdown.options[ dropdown.selectedIndex ].value !== '' ) {
-			document.location.href = this.options[ this.selectedIndex ].value;
-		}
-	}
-	dropdown.onchange = onSelectChange;
-})();
-
-/* ]]> */
-</script>
-</aside><aside id="tag_cloud-3" class="widget widget_tag_cloud"><h3 class="widget-title">Tags</h3><div class="tagcloud"><a href="https://xuri.me/tag/algorithm" class="tag-cloud-link tag-link-230 tag-link-position-1" style="font-size: 14.041095890411pt;" aria-label="Algorithm (12 items)">Algorithm</a>
-<a href="https://xuri.me/tag/apache" class="tag-cloud-link tag-link-278 tag-link-position-2" style="font-size: 10.109589041096pt;" aria-label="Apache (4 items)">Apache</a>
-<a href="https://xuri.me/tag/apple" class="tag-cloud-link tag-link-261 tag-link-position-3" style="font-size: 8pt;" aria-label="Apple (2 items)">Apple</a>
-<a href="https://xuri.me/tag/apps" class="tag-cloud-link tag-link-306 tag-link-position-4" style="font-size: 18.835616438356pt;" aria-label="Apps (40 items)">Apps</a>
-<a href="https://xuri.me/tag/banchmark" class="tag-cloud-link tag-link-236 tag-link-position-5" style="font-size: 8pt;" aria-label="Banchmark (2 items)">Banchmark</a>
-<a href="https://xuri.me/tag/books" class="tag-cloud-link tag-link-313 tag-link-position-6" style="font-size: 12.986301369863pt;" aria-label="Books (9 items)">Books</a>
-<a href="https://xuri.me/tag/centos" class="tag-cloud-link tag-link-178 tag-link-position-7" style="font-size: 11.547945205479pt;" aria-label="CentOS (6 items)">CentOS</a>
-<a href="https://xuri.me/tag/classical-music" class="tag-cloud-link tag-link-310 tag-link-position-8" style="font-size: 16.438356164384pt;" aria-label="Classical Music (22 items)">Classical Music</a>
-<a href="https://xuri.me/tag/cluster" class="tag-cloud-link tag-link-281 tag-link-position-9" style="font-size: 10.109589041096pt;" aria-label="Cluster (4 items)">Cluster</a>
-<a href="https://xuri.me/tag/coding" class="tag-cloud-link tag-link-304 tag-link-position-10" style="font-size: 21.904109589041pt;" aria-label="Coding (85 items)">Coding</a>
-<a href="https://xuri.me/tag/docker" class="tag-cloud-link tag-link-287 tag-link-position-11" style="font-size: 10.876712328767pt;" aria-label="Docker (5 items)">Docker</a>
-<a href="https://xuri.me/tag/git" class="tag-cloud-link tag-link-133 tag-link-position-12" style="font-size: 8pt;" aria-label="git (2 items)">git</a>
-<a href="https://xuri.me/tag/go-language" class="tag-cloud-link tag-link-300 tag-link-position-13" style="font-size: 15.191780821918pt;" aria-label="Go Language (16 items)">Go Language</a>
-<a href="https://xuri.me/tag/hadoop" class="tag-cloud-link tag-link-280 tag-link-position-14" style="font-size: 9.1506849315068pt;" aria-label="Hadoop (3 items)">Hadoop</a>
-<a href="https://xuri.me/tag/homebrew" class="tag-cloud-link tag-link-329 tag-link-position-15" style="font-size: 14.712328767123pt;" aria-label="Homebrew (14 items)">Homebrew</a>
-<a href="https://xuri.me/tag/iis" class="tag-cloud-link tag-link-198 tag-link-position-16" style="font-size: 8pt;" aria-label="IIS (2 items)">IIS</a>
-<a href="https://xuri.me/tag/ios" class="tag-cloud-link tag-link-255 tag-link-position-17" style="font-size: 8pt;" aria-label="iOS (2 items)">iOS</a>
-<a href="https://xuri.me/tag/java" class="tag-cloud-link tag-link-282 tag-link-position-18" style="font-size: 9.1506849315068pt;" aria-label="Java (3 items)">Java</a>
-<a href="https://xuri.me/tag/laravel" class="tag-cloud-link tag-link-228 tag-link-position-19" style="font-size: 16.054794520548pt;" aria-label="Laravel (20 items)">Laravel</a>
-<a href="https://xuri.me/tag/life" class="tag-cloud-link tag-link-305 tag-link-position-20" style="font-size: 15.191780821918pt;" aria-label="Life (16 items)">Life</a>
-<a href="https://xuri.me/tag/linux-os" class="tag-cloud-link tag-link-11 tag-link-position-21" style="font-size: 22pt;" aria-label="Linux (86 items)">Linux</a>
-<a href="https://xuri.me/tag/macintosh" class="tag-cloud-link tag-link-131 tag-link-position-22" style="font-size: 18.931506849315pt;" aria-label="Mac (41 items)">Mac</a>
-<a href="https://xuri.me/tag/mcu" class="tag-cloud-link tag-link-312 tag-link-position-23" style="font-size: 8pt;" aria-label="MCU (2 items)">MCU</a>
-<a href="https://xuri.me/tag/memcached" class="tag-cloud-link tag-link-277 tag-link-position-24" style="font-size: 9.1506849315068pt;" aria-label="Memcached (3 items)">Memcached</a>
-<a href="https://xuri.me/tag/mysql" class="tag-cloud-link tag-link-311 tag-link-position-25" style="font-size: 14.712328767123pt;" aria-label="MySQL (14 items)">MySQL</a>
-<a href="https://xuri.me/tag/nginx" class="tag-cloud-link tag-link-296 tag-link-position-26" style="font-size: 10.876712328767pt;" aria-label="Nginx (5 items)">Nginx</a>
-<a href="https://xuri.me/tag/octopress" class="tag-cloud-link tag-link-211 tag-link-position-27" style="font-size: 8pt;" aria-label="Octopress (2 items)">Octopress</a>
-<a href="https://xuri.me/tag/oracle" class="tag-cloud-link tag-link-232 tag-link-position-28" style="font-size: 8pt;" aria-label="Oracle (2 items)">Oracle</a>
-<a href="https://xuri.me/tag/os-x" class="tag-cloud-link tag-link-290 tag-link-position-29" style="font-size: 15.191780821918pt;" aria-label="OS X (16 items)">OS X</a>
-<a href="https://xuri.me/tag/php" class="tag-cloud-link tag-link-201 tag-link-position-30" style="font-size: 19.794520547945pt;" aria-label="PHP (50 items)">PHP</a>
-<a href="https://xuri.me/tag/postgresql" class="tag-cloud-link tag-link-291 tag-link-position-31" style="font-size: 9.1506849315068pt;" aria-label="PostgreSQL (3 items)">PostgreSQL</a>
-<a href="https://xuri.me/tag/programming-office" class="tag-cloud-link tag-link-309 tag-link-position-32" style="font-size: 15.86301369863pt;" aria-label="Programming Office (19 items)">Programming Office</a>
-<a href="https://xuri.me/tag/python" class="tag-cloud-link tag-link-196 tag-link-position-33" style="font-size: 8pt;" aria-label="Python (2 items)">Python</a>
-<a href="https://xuri.me/tag/raid" class="tag-cloud-link tag-link-327 tag-link-position-34" style="font-size: 10.109589041096pt;" aria-label="RAID (4 items)">RAID</a>
-<a href="https://xuri.me/tag/security-related" class="tag-cloud-link tag-link-308 tag-link-position-35" style="font-size: 9.1506849315068pt;" aria-label="Security Related (3 items)">Security Related</a>
-<a href="https://xuri.me/tag/server" class="tag-cloud-link tag-link-192 tag-link-position-36" style="font-size: 10.876712328767pt;" aria-label="Server (5 items)">Server</a>
-<a href="https://xuri.me/tag/shadowsocks" class="tag-cloud-link tag-link-318 tag-link-position-37" style="font-size: 9.1506849315068pt;" aria-label="ShadowSocks (3 items)">ShadowSocks</a>
-<a href="https://xuri.me/tag/ssd" class="tag-cloud-link tag-link-221 tag-link-position-38" style="font-size: 8pt;" aria-label="SSD (2 items)">SSD</a>
-<a href="https://xuri.me/tag/ssl" class="tag-cloud-link tag-link-271 tag-link-position-39" style="font-size: 10.109589041096pt;" aria-label="SSL (4 items)">SSL</a>
-<a href="https://xuri.me/tag/ubuntu" class="tag-cloud-link tag-link-171 tag-link-position-40" style="font-size: 17.109589041096pt;" aria-label="Ubuntu (26 items)">Ubuntu</a>
-<a href="https://xuri.me/tag/vim" class="tag-cloud-link tag-link-184 tag-link-position-41" style="font-size: 9.1506849315068pt;" aria-label="Vim (3 items)">Vim</a>
-<a href="https://xuri.me/tag/virtualization" class="tag-cloud-link tag-link-190 tag-link-position-42" style="font-size: 12.986301369863pt;" aria-label="Virtualization (9 items)">Virtualization</a>
-<a href="https://xuri.me/tag/web" class="tag-cloud-link tag-link-307 tag-link-position-43" style="font-size: 21.041095890411pt;" aria-label="Web (68 items)">Web</a>
-<a href="https://xuri.me/tag/websocket" class="tag-cloud-link tag-link-273 tag-link-position-44" style="font-size: 9.1506849315068pt;" aria-label="WebSocket (3 items)">WebSocket</a>
-<a href="https://xuri.me/tag/windows" class="tag-cloud-link tag-link-10 tag-link-position-45" style="font-size: 16.630136986301pt;" aria-label="Windows (23 items)">Windows</a></div>
-</aside>
-</div><!-- #secondary --></div><!-- #container -->
-
-
-	   </div><!-- #main -->
-
-	   
-	   
-	   <footer id="footerarea" class="clearfix">
-			
-
-
-<div id="site-generator">
-				<div class="container"><div class="copyright">Copyright &copy; 2013 - 2026 <a href="https://xuri.me/" title="Ri Xu Online" ><span>Ri Xu Online</span></a> All rights reserved.</div><!-- .copyright --><div class="footer-right">Hosting on <a href="https://azure.microsoft.com" target="_blank">Azure</a></div><div style="clear:both;"></div>
-			</div><!-- .container -->
-			</div><!-- #site-generator --><div class="back-to-top"><button data-href="#branding" aria-label="Back to top"></button></div>		</footer>
-
-		
-	</div><!-- .wrapper -->
-
-	<script type="application/ld+json">
-{
-	"@context": "http://schema.org",
-	"@type": "Organization",
-	"name": "Ri Xu",
-	"alternateName": "Ri Xu Online",
-	"url": "https://xuri.me",
-	"logo": "https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png",
-	"potentialAction": {
-		"@type": "SearchAction",
-		"target": "https://xuri.me/?s={search_term_string}",
-		"query-input": "required name=search_term_string"
+[
+	{
+		"short_id": "2lzsw6",
+		"created_at": "2026-04-26T09:19:13.000-05:00",
+		"title": "Swissing a table",
+		"url": "https://philpearl.github.io/post/swissing_a_table/",
+		"score": 34,
+		"flags": 0,
+		"comment_count": 4,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/2lzsw6",
+		"comments_url": "https://lobste.rs/s/2lzsw6/swissing_table"
 	},
-	"sameAs": [
-		"https://www.facebook.com/xuri.me",
-		"https://twitter.com/xurime",
-		"https://plus.google.com/u/0/+RiXu/",
-		"https://www.instagram.com/xuri.me/",
-		"http://www.linkedin.com/in/xurime"
-	]
-}
-</script>
-<script src="https://xuri.me/wp-content/themes/travelify/library/js/main.min.js" id="jquery-js" type="f9195c42ef9bbbfc304803bb-text/javascript"></script>
-<script type="f9195c42ef9bbbfc304803bb-text/javascript" id="post-ratings-js-extra">
-/* <![CDATA[ */
-var post_ratings = {"ajaxURL":"https:\/\/xuri.me\/wp-admin\/admin-ajax.php","nonce":"46723dfce6","path":"https:\/\/xuri.me\/wp-content\/plugins\/post-ratings\/assets\/images\/","number":"5"};
-/* ]]> */
-</script>
-<script src="https://xuri.me/wp-content/plugins/post-ratings/js/post-ratings.js" id="post-ratings-js" type="f9195c42ef9bbbfc304803bb-text/javascript"></script>
-<script src="https://xuri.me/wp-content/plugins/post-ratings/assets/jquery.raty.js" id="post-ratings-raty-js" type="f9195c42ef9bbbfc304803bb-text/javascript"></script>
-<script type="speculationrules">
-{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"\/*"},{"not":{"href_matches":["\/wp-*.php","\/wp-admin\/*","\/wp-content\/uploads\/*","\/wp-content\/*","\/wp-content\/plugins\/*","\/wp-content\/themes\/travelify\/*","\/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
-</script>
-<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="f9195c42ef9bbbfc304803bb-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"c77074b2c18540d993ec3a76503c4883","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f2ff1d69b93ef51',t:'MTc3NzMxNTExMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+	{
+		"short_id": "9xgleb",
+		"created_at": "2026-04-18T04:17:46.000-05:00",
+		"title": "How GitHub uses eBPF to improve deployment safety",
+		"url": "https://github.blog/engineering/infrastructure/how-github-uses-ebpf-to-improve-deployment-safety/",
+		"score": 21,
+		"flags": 0,
+		"comment_count": 6,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eduard",
+		"user_is_author": false,
+		"tags": [
+			"debugging",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/9xgleb",
+		"comments_url": "https://lobste.rs/s/9xgleb/how_github_uses_ebpf_improve_deployment"
+	},
+	{
+		"short_id": "y8shi7",
+		"created_at": "2026-04-16T07:48:35.000-05:00",
+		"title": "Many-Step Sequences in Go",
+		"url": "https://lesiw.dev/go/step/",
+		"score": 22,
+		"flags": 0,
+		"comment_count": 4,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "iv",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/y8shi7",
+		"comments_url": "https://lobste.rs/s/y8shi7/many_step_sequences_go"
+	},
+	{
+		"short_id": "hbyclt",
+		"created_at": "2026-04-15T12:18:59.000-05:00",
+		"title": "How do Wake-On-Lan works?",
+		"url": "https://blog.xaner.dev/post/wake-on-lan/",
+		"score": 7,
+		"flags": 0,
+		"comment_count": 1,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "pondidum",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"networking"
+		],
+		"short_id_url": "https://lobste.rs/s/hbyclt",
+		"comments_url": "https://lobste.rs/s/hbyclt/how_do_wake_on_lan_works"
+	},
+	{
+		"short_id": "ioszzg",
+		"created_at": "2026-04-15T03:07:45.000-05:00",
+		"title": "Porting Go's strings package to C",
+		"url": "https://antonz.org/porting-go-strings/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "abhin4v",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/ioszzg",
+		"comments_url": "https://lobste.rs/s/ioszzg/porting_go_s_strings_package_c"
+	},
+	{
+		"short_id": "pulywh",
+		"created_at": "2026-04-10T06:38:16.000-05:00",
+		"title": "watgo - a WebAssembly Toolkit for Go",
+		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
+		"score": 19,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "cgrinds",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"wasm"
+		],
+		"short_id_url": "https://lobste.rs/s/pulywh",
+		"comments_url": "https://lobste.rs/s/pulywh/watgo_webassembly_toolkit_for_go"
+	},
+	{
+		"short_id": "214wj4",
+		"created_at": "2026-04-07T18:35:34.000-05:00",
+		"title": "When the compiler lies: breaking memory safety in safe Go",
+		"url": "https://ciolek.dev/posts/when-the-compiler-lies",
+		"score": 31,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "samuelkarp",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"security"
+		],
+		"short_id_url": "https://lobste.rs/s/214wj4",
+		"comments_url": "https://lobste.rs/s/214wj4/when_compiler_lies_breaking_memory"
+	},
+	{
+		"short_id": "exrybd",
+		"created_at": "2026-04-07T11:23:42.000-05:00",
+		"title": "Hazmat: OS-level containment for AI coding agents on macOS",
+		"url": "https://github.com/dredozubov/hazmat",
+		"score": 4,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "\u003cp\u003eBlog post with the full write-up and threat model: \u003ca href=\"https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\" rel=\"ugc\"\u003ehttps://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\u003c/a\u003e\u003c/p\u003e\n",
+		"description_plain": "Blog post with the full write-up and threat model: https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/",
+		"submitter_user": "dredozubov",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"mac",
+			"vibecoding"
+		],
+		"short_id_url": "https://lobste.rs/s/exrybd",
+		"comments_url": "https://lobste.rs/s/exrybd/hazmat_os_level_containment_for_ai_coding"
+	},
+	{
+		"short_id": "faksz1",
+		"created_at": "2026-04-05T11:59:29.000-05:00",
+		"title": "Stamp It! All Programs Must Report Their Version",
+		"url": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/",
+		"score": 102,
+		"flags": 1,
+		"comment_count": 40,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "stapelberg",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"nix"
+		],
+		"short_id_url": "https://lobste.rs/s/faksz1",
+		"comments_url": "https://lobste.rs/s/faksz1/stamp_it_all_programs_must_report_their"
+	},
+	{
+		"short_id": "uffroj",
+		"created_at": "2026-04-05T07:58:46.000-05:00",
+		"title": "Building slogbox",
+		"url": "https://alexrios.me/blog/slogbox-devlog/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/uffroj",
+		"comments_url": "https://lobste.rs/s/uffroj/building_slogbox"
+	},
+	{
+		"short_id": "rw62j7",
+		"created_at": "2026-04-03T07:17:43.000-05:00",
+		"title": "Lisette — Rust syntax, Go runtime",
+		"url": "https://lisette.run",
+		"score": 70,
+		"flags": 0,
+		"comment_count": 40,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "telemachus",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"plt",
+			"rust"
+		],
+		"short_id_url": "https://lobste.rs/s/rw62j7",
+		"comments_url": "https://lobste.rs/s/rw62j7/lisette_rust_syntax_go_runtime"
+	},
+	{
+		"short_id": "9wwopb",
+		"created_at": "2026-04-02T11:53:29.000-05:00",
+		"title": "Making Services With Go Right Way",
+		"url": "https://snawoot.github.io/go_web_right_way.html",
+		"score": 6,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "lr0",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"satire"
+		],
+		"short_id_url": "https://lobste.rs/s/9wwopb",
+		"comments_url": "https://lobste.rs/s/9wwopb/making_services_with_go_right_way"
+	},
+	{
+		"short_id": "gtb0fc",
+		"created_at": "2026-04-01T12:49:53.000-05:00",
+		"title": "A game with programmable space combat written in Go",
+		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
+		"score": 24,
+		"flags": 2,
+		"comment_count": 18,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "quasilyte",
+		"user_is_author": true,
+		"tags": [
+			"games",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/gtb0fc",
+		"comments_url": "https://lobste.rs/s/gtb0fc/game_with_programmable_space_combat"
+	},
+	{
+		"short_id": "wlgi4a",
+		"created_at": "2026-03-31T07:53:06.000-05:00",
+		"title": "Data Indexing in Golang",
+		"url": "https://hister.org/posts/data-indexing-in-golang",
+		"score": 14,
+		"flags": 0,
+		"comment_count": 5,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "kvch",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/wlgi4a",
+		"comments_url": "https://lobste.rs/s/wlgi4a/data_indexing_golang"
+	},
+	{
+		"short_id": "h1hr9m",
+		"created_at": "2026-03-30T09:32:20.000-05:00",
+		"title": "A fast, compact, immutable map from strings to uint64 values in Go",
+		"url": "https://github.com/lemire/constmap",
+		"score": 13,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eatonphil",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"performance"
+		],
+		"short_id_url": "https://lobste.rs/s/h1hr9m",
+		"comments_url": "https://lobste.rs/s/h1hr9m/fast_compact_immutable_map_from_strings"
+	},
+	{
+		"short_id": "y5hfo9",
+		"created_at": "2026-03-30T09:07:40.000-05:00",
+		"title": "I Made a Terminal Pager",
+		"url": "https://theleo.zone/posts/pager/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "robinovitch61",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"release",
+			"show"
+		],
+		"short_id_url": "https://lobste.rs/s/y5hfo9",
+		"comments_url": "https://lobste.rs/s/y5hfo9/i_made_terminal_pager"
+	},
+	{
+		"short_id": "36tumc",
+		"created_at": "2026-03-27T16:15:19.000-05:00",
+		"title": "Porting Go's io package to C",
+		"url": "https://antonz.org/porting-go-io/",
+		"score": 7,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "telemachus",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/36tumc",
+		"comments_url": "https://lobste.rs/s/36tumc/porting_go_s_io_package_c"
+	},
+	{
+		"short_id": "77pwzi",
+		"created_at": "2026-03-26T13:47:14.000-05:00",
+		"title": "goada: Fast WHATWG spec compliant URL library written in Go",
+		"url": "https://github.com/ada-url/goada",
+		"score": 2,
+		"flags": 0,
+		"comment_count": 1,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eatonphil",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"performance"
+		],
+		"short_id_url": "https://lobste.rs/s/77pwzi",
+		"comments_url": "https://lobste.rs/s/77pwzi/goada_fast_whatwg_spec_compliant_url"
+	},
+	{
+		"short_id": "hjxi2b",
+		"created_at": "2026-03-26T05:13:26.000-05:00",
+		"title": "Deploying Go Apps to Google Cloud Run",
+		"url": "https://www.josephspurrier.com/google-cloud-run-deployment",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 3,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"devops",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/hjxi2b",
+		"comments_url": "https://lobste.rs/s/hjxi2b/deploying_go_apps_google_cloud_run"
+	},
+	{
+		"short_id": "fqeydw",
+		"created_at": "2026-03-24T22:54:35.000-05:00",
+		"title": "Type Construction and Cycle Detection",
+		"url": "https://go.dev/blog/type-construction-and-cycle-detection",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "binjip978",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/fqeydw",
+		"comments_url": "https://lobste.rs/s/fqeydw/type_construction_cycle_detection"
+	},
+	{
+		"short_id": "ucympz",
+		"created_at": "2026-03-24T15:14:51.000-05:00",
+		"title": "Structuring Go projects",
+		"url": "https://www.alexedwards.net/blog/11-tips-for-structuring-your-go-projects",
+		"score": 6,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "runxiyu",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"practices"
+		],
+		"short_id_url": "https://lobste.rs/s/ucympz",
+		"comments_url": "https://lobste.rs/s/ucympz/structuring_go_projects"
+	},
+	{
+		"short_id": "xarlmy",
+		"created_at": "2026-03-24T12:08:32.000-05:00",
+		"title": "Go Naming Conventions: A Practical Guide",
+		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
+		"score": 28,
+		"flags": 0,
+		"comment_count": 24,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "cgrinds",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/xarlmy",
+		"comments_url": "https://lobste.rs/s/xarlmy/go_naming_conventions_practical_guide"
+	},
+	{
+		"short_id": "fad6ua",
+		"created_at": "2026-03-21T11:46:30.000-05:00",
+		"title": "Using Go Dynamic and Static Shared libraries in C/C++ Programs",
+		"url": "https://xuri.me/2022/04/15/go-shared-libraries.html",
+		"score": 3,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "runxiyu",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/fad6ua",
+		"comments_url": "https://lobste.rs/s/fad6ua/using_go_dynamic_static_shared_libraries"
+	},
+	{
+		"short_id": "uqeo3m",
+		"created_at": "2026-03-21T10:16:27.000-05:00",
+		"title": "Solod: Go can be a better C",
+		"url": "https://antonz.org/solod/",
+		"score": 37,
+		"flags": 0,
+		"comment_count": 9,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "gcollazo",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"plt"
+		],
+		"short_id_url": "https://lobste.rs/s/uqeo3m",
+		"comments_url": "https://lobste.rs/s/uqeo3m/solod_go_can_be_better_c"
+	},
+	{
+		"short_id": "ldglpx",
+		"created_at": "2026-03-20T13:08:40.000-05:00",
+		"title": "Adding Live Reload to a Static Site Generator Written in Go",
+		"url": "https://jon.chrt.dev/2026/03/20/adding-live-reload-to-a-static-site-generator-written-in-go.html",
+		"score": 19,
+		"flags": 0,
+		"comment_count": 14,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "bugsmith",
+		"user_is_author": true,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/ldglpx",
+		"comments_url": "https://lobste.rs/s/ldglpx/adding_live_reload_static_site_generator"
+	}
+]

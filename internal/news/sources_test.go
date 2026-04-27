@@ -58,15 +58,16 @@ func TestSource_Priority(t *testing.T) {
 		source Source
 		want   int
 	}{
-		"Go Blog":      {source: SourceGoBlog, want: 9},
-		"GitHub":       {source: SourceGitHub, want: 8},
-		"Hacker News":  {source: SourceHN, want: 7},
-		"Lobsters":     {source: SourceLobsters, want: 6},
-		"Reddit":       {source: SourceReddit, want: 5},
-		"Dev.to":       {source: SourceDevTo, want: 4},
-		"GolangBridge": {source: SourceGolangBridge, want: 3},
-		"YouTube":      {source: SourceYouTube, want: 2},
-		"Medium":       {source: SourceMedium, want: 1},
+		"Go Blog":         {source: SourceGoBlog, want: 10},
+		"GitHub":          {source: SourceGitHub, want: 9},
+		"GitHub Trending": {source: SourceGitHubTrending, want: 8},
+		"Hacker News":     {source: SourceHN, want: 7},
+		"Lobsters":        {source: SourceLobsters, want: 6},
+		"Reddit":          {source: SourceReddit, want: 5},
+		"Dev.to":          {source: SourceDevTo, want: 4},
+		"GolangBridge":    {source: SourceGolangBridge, want: 3},
+		"YouTube":         {source: SourceYouTube, want: 2},
+		"Medium":          {source: SourceMedium, want: 1},
 	}
 	for name, test := range values {
 		t.Run(name, func(t *testing.T) {
@@ -85,7 +86,8 @@ func TestSource_Priority(t *testing.T) {
 	t.Run("Orders Go Blog Above Medium", func(t *testing.T) {
 		t.Parallel()
 		assert.Greater(t, SourceGoBlog.Priority(), SourceGitHub.Priority())
-		assert.Greater(t, SourceGitHub.Priority(), SourceHN.Priority())
+		assert.Greater(t, SourceGitHub.Priority(), SourceGitHubTrending.Priority())
+		assert.Greater(t, SourceGitHubTrending.Priority(), SourceHN.Priority())
 		assert.Greater(t, SourceHN.Priority(), SourceLobsters.Priority())
 		assert.Greater(t, SourceLobsters.Priority(), SourceReddit.Priority())
 		assert.Greater(t, SourceReddit.Priority(), SourceDevTo.Priority())

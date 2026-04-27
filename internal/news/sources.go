@@ -24,15 +24,16 @@ type Source string
 
 // Source constants
 const (
-	SourceDevTo        Source = "dev_to"
-	SourceGoBlog       Source = "go_blog"
-	SourceGitHub       Source = "github"
-	SourceReddit       Source = "reddit"
-	SourceHN           Source = "hacker_news"
-	SourceGolangBridge Source = "golangbridge"
-	SourceLobsters     Source = "lobsters"
-	SourceMedium       Source = "medium"
-	SourceYouTube      Source = "youtube"
+	SourceDevTo          Source = "dev_to"
+	SourceGoBlog         Source = "go_blog"
+	SourceGitHub         Source = "github"
+	SourceGitHubTrending Source = "github_trending"
+	SourceReddit         Source = "reddit"
+	SourceHN             Source = "hacker_news"
+	SourceGolangBridge   Source = "golangbridge"
+	SourceLobsters       Source = "lobsters"
+	SourceMedium         Source = "medium"
+	SourceYouTube        Source = "youtube"
 )
 
 // Sources defines a list of all source types.
@@ -40,6 +41,7 @@ var Sources = []Source{
 	SourceDevTo,
 	SourceGoBlog,
 	SourceGitHub,
+	SourceGitHubTrending,
 	SourceReddit,
 	SourceHN,
 	SourceGolangBridge,
@@ -54,15 +56,16 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
-	SourceGoBlog:       9,
-	SourceGitHub:       8,
-	SourceHN:           7,
-	SourceLobsters:     6,
-	SourceReddit:       5,
-	SourceDevTo:        4,
-	SourceGolangBridge: 3,
-	SourceYouTube:      2,
-	SourceMedium:       1,
+	SourceGoBlog:         10,
+	SourceGitHub:         9,
+	SourceGitHubTrending: 8,
+	SourceHN:             7,
+	SourceLobsters:       6,
+	SourceReddit:         5,
+	SourceDevTo:          4,
+	SourceGolangBridge:   3,
+	SourceYouTube:        2,
+	SourceMedium:         1,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -73,15 +76,16 @@ func (s Source) Priority() int {
 }
 
 var sourceNiceNames = map[Source]string{
-	SourceDevTo:        "Dev.to",
-	SourceGoBlog:       "Go Blog",
-	SourceGitHub:       "GitHub",
-	SourceReddit:       "Reddit",
-	SourceHN:           "Hacker News",
-	SourceGolangBridge: "Golang Bridge",
-	SourceLobsters:     "Lobsters",
-	SourceMedium:       "Medium",
-	SourceYouTube:      "YouTube",
+	SourceDevTo:          "Dev.to",
+	SourceGoBlog:         "Go Blog",
+	SourceGitHub:         "GitHub",
+	SourceGitHubTrending: "GitHub Trending",
+	SourceReddit:         "Reddit",
+	SourceHN:             "Hacker News",
+	SourceGolangBridge:   "Golang Bridge",
+	SourceLobsters:       "Lobsters",
+	SourceMedium:         "Medium",
+	SourceYouTube:        "YouTube",
 }
 
 // NiceName returns a formatted string of the source.

@@ -1,6 +1,17 @@
 [
 	{
 		"source": "reddit",
+		"title": "Small Projects",
+		"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
+		"author": "AutoModerator",
+		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.23804628387473528,
+		"published": "2026-04-27T19:00:54Z"
+	},
+	{
+		"source": "reddit",
 		"title": "two apps in one project , how can i structure it ?",
 		"url": "https://www.reddit.com/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
 		"author": "Radonish",
@@ -30,7 +41,7 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.6007619328947518,
+		"score": 0.6262830509731585,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -53,7 +64,7 @@
 		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.8199546729298166,
+		"score": 0.8149733256083747,
 		"published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -76,7 +87,7 @@
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.7220189587716063,
+		"score": 0.714138851624206,
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -87,7 +98,7 @@
 		"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
 		"tag": "article",
 		"comments": 17,
-		"score": 0.6007619328947518,
+		"score": 0.613898019286257,
 		"published": "2026-04-26T14:46:53Z"
 	},
 	{
@@ -111,7 +122,7 @@
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.6007619328947518,
+		"score": 0.5718284755479184,
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -123,7 +134,7 @@
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.6262830509731585,
+		"score": 0.6379982859432913,
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -180,7 +191,7 @@
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
-		"score": 0.9844368669660623,
+		"score": 0.9934664678721489,
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -214,7 +225,7 @@
 		"snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
 		"tag": "article",
 		"comments": 7,
-		"score": 0.8046533244696281,
+		"score": 0.8098747594226537,
 		"published": "2026-04-23T14:31:45Z"
 	},
 	{
@@ -236,7 +247,7 @@
 		"snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
 		"tag": "article",
 		"comments": 45,
-		"score": 0.764088502509945,
+		"score": 0.7764735341968465,
 		"published": "2026-04-23T09:36:02Z"
 	},
 	{
@@ -250,16 +261,5 @@
 		"comments": 0,
 		"score": 0.1,
 		"published": "2026-04-23T09:03:05Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Go's implicit interface system is there a real solution to the discoverability problem or is it just accepted as a tradeoff",
-		"url": "https://www.reddit.com/r/golang/comments/1st8g0z/gos_implicit_interface_system_is_there_a_real/",
-		"author": "Mauricio0129",
-		"snippet": "I've been learning Go and ran into something that I can't find a clean solution to. When a function accepts an interface like http.ResponseWriter, I know the concrete struct coming in satisfies that i",
-		"tag": "article",
-		"comments": 82,
-		"score": 0.9821194217167522,
-		"published": "2026-04-23T04:26:34Z"
 	}
 ]
