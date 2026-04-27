@@ -69,6 +69,8 @@ all: # Make format, lint and test
 	$(MAKE) format
 	$(MAKE) lint
 	$(MAKE) test-race
+	$(MAKE) vuln
+	$(MAKE) sec
 	$(MAKE) gen
 .PHONY: all
 

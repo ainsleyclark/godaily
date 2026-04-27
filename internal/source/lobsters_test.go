@@ -116,8 +116,8 @@ func TestLobsters_Fetch(t *testing.T) {
 				assert.Equal(t, news.Item{
 					Source:      news.SourceLobsters,
 					Title:       "Building a REST API in Go",
-					URL:         "https://lobste.rs/s/abc123/building_rest_api_go",
-					OriginalURL: serverURL,
+					URL:         serverURL,
+					OriginalURL: "https://lobste.rs/s/abc123/building_rest_api_go",
 					Author:      "gopher",
 					Snippet:     "A tutorial on building REST APIs with Go.",
 					Tag:         news.TagArticle,

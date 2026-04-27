@@ -99,8 +99,8 @@ func TestHackerNews_Fetch(t *testing.T) {
 				assert.Equal(t, news.Item{
 					Source:      news.SourceHN,
 					Title:       "Building a high-performance HTTP server in Go",
-					URL:         "https://news.ycombinator.com/item?id=43920000",
-					OriginalURL: serverURL,
+					URL:         serverURL,
+					OriginalURL: "https://news.ycombinator.com/item?id=43920000",
 					Author:      "gopher42",
 					Snippet:     "A deep dive into Go's net/http & stdlib.",
 					Tag:         news.TagArticle,

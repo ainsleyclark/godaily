@@ -40,7 +40,7 @@ type Runner interface {
 
 // RunOptions configures a Run call.
 type RunOptions struct {
-	// DryRun skips sending the email digest.
+	// DryRun skips sending the email digest and the synth API call.
 	DryRun bool
 
 	// Sources restricts the run to the given sources. If empty,
@@ -143,7 +143,7 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 	})
 
 	var suggestion *synth.Suggestion
-	if opts.IncludeSynth && a.suggester != nil {
+	if opts.IncludeSynth && a.suggester != nil && !opts.DryRun {
 		s, err := a.suggester.Suggest(ctx, day, results)
 		switch {
 		case errors.Is(err, synth.ErrNoItems):

@@ -362,6 +362,19 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				assert.NotContains(t, m.req.Html, "Suggested posts")
 			},
 		},
+		"DryRun Skips Suggester": {
+			opts: RunOptions{
+				Sources:      []news.Source{news.SourceDevTo},
+				IncludeSynth: true,
+				DryRun:       true,
+			},
+			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
+				t.Helper()
+				assert.False(t, sg.called, "synth must not be called when DryRun is set")
+				assert.False(t, m.called)
+			},
+		},
 		"Nil Suggester Tolerated": {
 			opts: RunOptions{
 				Sources:      []news.Source{news.SourceDevTo},

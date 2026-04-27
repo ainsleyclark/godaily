@@ -30,7 +30,7 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.613898019286257,
+		"score": 0.6007619328947518,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -53,7 +53,7 @@
 		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.8149733256083747,
+		"score": 0.8199546729298166,
 		"published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -65,7 +65,7 @@
 		"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.23804628387473528,
+		"score": 0.3003809664473759,
 		"published": "2026-04-26T15:58:00Z"
 	},
 	{
@@ -76,7 +76,7 @@
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.714138851624206,
+		"score": 0.7220189587716063,
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -87,7 +87,7 @@
 		"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
 		"tag": "article",
 		"comments": 17,
-		"score": 0.613898019286257,
+		"score": 0.6007619328947518,
 		"published": "2026-04-26T14:46:53Z"
 	},
 	{
@@ -111,7 +111,7 @@
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.5867777864565255,
+		"score": 0.6007619328947518,
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -123,7 +123,7 @@
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.649112469029166,
+		"score": 0.6262830509731585,
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -134,7 +134,7 @@
 		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.23804628387473528,
+		"score": 0.15019048322368794,
 		"published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -146,7 +146,7 @@
 		"snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
 		"tag": "article",
 		"comments": 8,
-		"score": 0.8046533244696281,
+		"score": 0.799302952252854,
 		"published": "2026-04-25T11:19:48Z"
 	},
 	{
@@ -180,7 +180,7 @@
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
-		"score": 0.9934664678721489,
+		"score": 0.9844368669660623,
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -202,7 +202,7 @@
 		"snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.49892198580547814,
+		"score": 0.5195737064824407,
 		"published": "2026-04-23T21:58:26Z"
 	},
 	{
@@ -214,7 +214,7 @@
 		"snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
 		"tag": "article",
 		"comments": 7,
-		"score": 0.8149733256083747,
+		"score": 0.8046533244696281,
 		"published": "2026-04-23T14:31:45Z"
 	},
 	{
@@ -236,7 +236,7 @@
 		"snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
 		"tag": "article",
 		"comments": 45,
-		"score": 0.757619990357176,
+		"score": 0.764088502509945,
 		"published": "2026-04-23T09:36:02Z"
 	},
 	{
@@ -259,7 +259,7 @@
 		"snippet": "I've been learning Go and ran into something that I can't find a clean solution to. When a function accepts an interface like http.ResponseWriter, I know the concrete struct coming in satisfies that i",
 		"tag": "article",
 		"comments": 82,
-		"score": 0.9844368669660623,
+		"score": 0.9821194217167522,
 		"published": "2026-04-23T04:26:34Z"
 	}
 ]
