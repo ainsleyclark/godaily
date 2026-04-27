@@ -51,6 +51,6 @@ func (c Client) Send(ctx context.Context, req SendEmailRequest) error {
 	if err != nil {
 		return err
 	}
-	slog.InfoContext(ctx, "Successfully sent email", "id", sent.Id, "subject", req.Subject)
+	slog.InfoContext(ctx, "successfully sent email", "id", sent.Id, "subject", req.Subject)
 	return nil
 }

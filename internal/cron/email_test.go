@@ -58,7 +58,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, nil)
+		err := agg.sendDigest(t.Context(), sendDigestDay, nil, nil)
 		require.NoError(t, err)
 		assert.False(t, m.called)
 	})
@@ -69,7 +69,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{err: errors.New("boom")}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
 		assert.True(t, m.called)
 		assert.ErrorContains(t, err, "boom")
 	})
@@ -80,7 +80,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
 		require.NoError(t, err)
 		require.True(t, m.called)
 		assert.Equal(t, "noreply@mail.ainsley.dev", m.req.From)
@@ -100,7 +100,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
 		assert.False(t, m.called)
 		assert.ErrorContains(t, err, "rendering html")
 	})
@@ -113,7 +113,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
 		assert.False(t, m.called)
 		assert.ErrorContains(t, err, "rendering text")
 	})

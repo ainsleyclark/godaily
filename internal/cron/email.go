@@ -1,3 +1,22 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 package cron
 
 import (
@@ -12,6 +31,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
 //go:embed email.html
@@ -26,12 +46,13 @@ var (
 )
 
 type digestData struct {
-	Date     time.Time
-	Sections []news.SourceItems
+	Date       time.Time
+	Sections   []news.SourceItems
+	Suggestion *synth.Suggestion
 }
 
-func (a Aggregator) sendDigest(ctx context.Context, day time.Time, sources []news.SourceItems) error {
-	data := digestData{Date: day, Sections: sources}
+func (a Aggregator) sendDigest(ctx context.Context, day time.Time, sources []news.SourceItems, suggestion *synth.Suggestion) error {
+	data := digestData{Date: day, Sections: sources, Suggestion: suggestion}
 
 	if len(data.Sections) == 0 {
 		slog.InfoContext(ctx, "no items to send in digest")

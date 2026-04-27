@@ -10,5 +10,13 @@
 			{{ end }}
 		</ul>
 	{{ end  }}
+	{{ if .Suggestion }}
+		<hr>
+		<h3>Suggested posts</h3>
+		<h4>Twitter</h4>
+		<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Suggestion.Twitter }}</pre>
+		<h4>LinkedIn</h4>
+		<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Suggestion.LinkedIn }}</pre>
+	{{ end }}
 </body>
 </html>

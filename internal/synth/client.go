@@ -17,35 +17,91 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// Package synth turns a day's scored news into suggested social posts
+// (Twitter + LinkedIn) by calling the Anthropic Messages API. It keeps
+// input cheap by filtering to top-N items and caching the static system
+// prompt (the embedded style guide) on the request.
 package synth
 
 import (
+	"context"
+	"fmt"
+	"log/slog"
+	"time"
+
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/anthropics/anthropic-sdk-go/option"
+
+	"github.com/ainsleyclark/godaily/internal/news"
 )
 
+// Client wraps the Anthropic SDK with the prompt construction and
+// filtering needed to draft social posts from a day's news.
 type Client struct {
 	anthropic anthropic.Client
+	filter    filterConfig
 }
 
-func New() *Client {
+// New constructs a Client using ANTHROPIC_API_KEY from the environment.
+// Request options are forwarded to the SDK — tests pass
+// option.WithBaseURL to redirect to an httptest.Server.
+func New(opts ...option.RequestOption) *Client {
 	return &Client{
-		anthropic: anthropic.NewClient(),
+		anthropic: anthropic.NewClient(opts...),
+		filter:    defaultFilterConfig(),
 	}
 }
 
-//func main() {
-//	client := anthropic.NewClient(
-//		option.WithAPIKey("my-anthropic-api-key"), // defaults to os.LookupEnv("ANTHROPIC_API_KEY")
-//	)
-//	message, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
-//		MaxTokens: 1024,
-//		Messages: []anthropic.MessageParam{
-//			anthropic.NewUserMessage(anthropic.NewTextBlock("What is a quaternion?")),
-//		},
-//		Model: anthropic.ModelClaudeOpus4_7,
-//	})
-//	if err != nil {
-//		panic(err.Error())
-//	}
-//	fmt.Printf("%+v\n", message.Content)
-//}
+const (
+	model       = anthropic.ModelClaudeSonnet4_6
+	maxTokens   = int64(1024)
+	temperature = 0.4
+)
+
+// Suggest filters the day's sections to top items, calls the model with
+// a cached system prompt, and returns a parsed Suggestion. ErrNoItems
+// is returned (without making an API call) when there is nothing to
+// summarise. Token usage and model are logged for cost tracking.
+func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (Suggestion, error) {
+	items := filterItems(sections, c.filter)
+	if len(items) == 0 {
+		return Suggestion{}, ErrNoItems
+	}
+
+	user := buildUserPrompt(day, items)
+
+	slog.InfoContext(ctx, "calling anthropic",
+		"model", model,
+		"items", len(items),
+		"max_tokens", maxTokens,
+	)
+
+	resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
+		Model:       model,
+		MaxTokens:   maxTokens,
+		Temperature: anthropic.Float(temperature),
+		System:      buildSystemBlocks(),
+		Messages: []anthropic.MessageParam{
+			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
+		},
+	})
+	if err != nil {
+		return Suggestion{}, fmt.Errorf("anthropic: %w", err)
+	}
+
+	slog.InfoContext(ctx, "synth response",
+		"model", resp.Model,
+		"input_tokens", resp.Usage.InputTokens,
+		"output_tokens", resp.Usage.OutputTokens,
+		"cache_creation_tokens", resp.Usage.CacheCreationInputTokens,
+		"cache_read_tokens", resp.Usage.CacheReadInputTokens,
+	)
+
+	sug, err := parseResponse(resp)
+	if err != nil {
+		return Suggestion{}, err
+	}
+
+	sug.Date = day
+	return sug, nil
+}

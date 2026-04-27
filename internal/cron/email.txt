@@ -5,4 +5,15 @@ GoDaily — {{.Date.Format "January 2, 2006"}}
 {{range .Items}}• {{.Title}} ({{.Published.Format "Jan 2"}}){{if .Author}} — {{.Author}}{{end}}
   {{.URL}}
 {{end}}
+{{end}}{{if .Suggestion}}
+Suggested posts
+===============
+
+Twitter
+-------
+{{.Suggestion.Twitter}}
+
+LinkedIn
+--------
+{{.Suggestion.LinkedIn}}
 {{end}}

@@ -27,6 +27,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -50,6 +51,17 @@ func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	m.called = true
 	m.req = req
 	return m.err
+}
+
+type mockSuggester struct {
+	called bool
+	resp   synth.Suggestion
+	err    error
+}
+
+func (m *mockSuggester) Suggest(_ context.Context, _ time.Time, _ []news.SourceItems) (synth.Suggestion, error) {
+	m.called = true
+	return m.resp, m.err
 }
 
 // allRegistered returns a registry populated with mock fetchers for
@@ -282,6 +294,100 @@ func TestAggregator_Run(t *testing.T) {
 
 			got, err := agg.Run(t.Context(), test.opts)
 			test.want(t, got, m, err)
+		})
+	}
+}
+
+func TestAggregator_Run_Synth(t *testing.T) {
+	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+	inWindow := yesterday.Add(time.Hour)
+
+	registry := map[news.Source]news.Fetcher{
+		news.SourceDevTo: mockFetcher{
+			items: []news.Item{{Title: "in", Published: inWindow}},
+		},
+	}
+
+	tt := map[string]struct {
+		opts      RunOptions
+		suggester *mockSuggester
+		want      func(t *testing.T, m *mockEmail, sg *mockSuggester)
+	}{
+		"Disabled By Default": {
+			opts:      RunOptions{Sources: []news.Source{news.SourceDevTo}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
+				t.Helper()
+				assert.False(t, sg.called, "synth must not be called without IncludeSynth")
+				assert.True(t, m.called)
+			},
+		},
+		"Enabled Calls Suggester And Includes In Email": {
+			opts: RunOptions{
+				Sources:      []news.Source{news.SourceDevTo},
+				IncludeSynth: true,
+			},
+			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "tweetytweet", LinkedIn: "linky"}},
+			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
+				t.Helper()
+				assert.True(t, sg.called)
+				assert.True(t, m.called)
+				assert.Contains(t, m.req.Html, "tweetytweet")
+				assert.Contains(t, m.req.Text, "linky")
+			},
+		},
+		"Suggester Error Logged Not Returned": {
+			opts: RunOptions{
+				Sources:      []news.Source{news.SourceDevTo},
+				IncludeSynth: true,
+			},
+			suggester: &mockSuggester{err: errors.New("api boom")},
+			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
+				t.Helper()
+				assert.True(t, sg.called)
+				assert.True(t, m.called, "digest still ships when synth fails")
+				assert.NotContains(t, m.req.Html, "Suggested posts")
+			},
+		},
+		"Suggester ErrNoItems Skipped Silently": {
+			opts: RunOptions{
+				Sources:      []news.Source{news.SourceDevTo},
+				IncludeSynth: true,
+			},
+			suggester: &mockSuggester{err: synth.ErrNoItems},
+			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
+				t.Helper()
+				assert.True(t, sg.called)
+				assert.True(t, m.called)
+				assert.NotContains(t, m.req.Html, "Suggested posts")
+			},
+		},
+		"Nil Suggester Tolerated": {
+			opts: RunOptions{
+				Sources:      []news.Source{news.SourceDevTo},
+				IncludeSynth: true,
+			},
+			suggester: nil,
+			want: func(t *testing.T, m *mockEmail, _ *mockSuggester) {
+				t.Helper()
+				assert.True(t, m.called)
+			},
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Cleanup(news.SwapRegistry(registry))
+
+			m := &mockEmail{}
+			agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+			if test.suggester != nil {
+				agg.suggester = test.suggester
+			}
+
+			_, err := agg.Run(t.Context(), test.opts)
+			require.NoError(t, err)
+			test.want(t, m, test.suggester)
 		})
 	}
 }
