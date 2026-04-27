@@ -97,15 +97,16 @@ func TestHackerNews_Fetch(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
-					Source:    news.SourceHN,
-					Title:     "Building a high-performance HTTP server in Go",
-					URL:       serverURL,
-					Author:    "gopher42",
-					Snippet:   "A deep dive into Go's net/http & stdlib.",
-					Tag:       news.TagArticle,
-					Comments:  42,
-					Score:     1.2, // 350 points saturates the curve; weight 1.2 * engagement 1.0
-					Published: time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
+					Source:      news.SourceHN,
+					Title:       "Building a high-performance HTTP server in Go",
+					URL:         "https://news.ycombinator.com/item?id=43920000",
+					OriginalURL: serverURL,
+					Author:      "gopher42",
+					Snippet:     "A deep dive into Go's net/http & stdlib.",
+					Tag:         news.TagArticle,
+					Comments:    42,
+					Score:       1.2, // 350 points saturates the curve; weight 1.2 * engagement 1.0
+					Published:   time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
 				}, items[0])
 			},
 		},
@@ -122,6 +123,7 @@ func TestHackerNews_Fetch(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, "https://news.ycombinator.com/item?id=43920001", items[0].URL)
+				assert.Empty(t, items[0].OriginalURL)
 			},
 		},
 	}

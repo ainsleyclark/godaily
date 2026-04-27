@@ -47,7 +47,7 @@ func main() {
 	renderedDir := filepath.Join("..", "..", "examples", "rendered")
 	rawDir := filepath.Join("..", "..", "examples", "raw")
 	for _, dir := range []string{renderedDir, rawDir} {
-		if err := os.MkdirAll(dir, 0o755); err != nil {
+		if err := os.MkdirAll(dir, 0o750); err != nil {
 			slog.Error("create dir", "dir", dir, "err", err)
 			os.Exit(1)
 		}
@@ -74,7 +74,7 @@ func main() {
 		// Write raw API response, pretty-printed if JSON.
 		if rec.body != nil {
 			rawPath := filepath.Join(rawDir, string(s)+".json")
-			if err := os.WriteFile(rawPath, prettyJSON(rec.body), os.ModePerm); err != nil {
+			if err := os.WriteFile(rawPath, prettyJSON(rec.body), 0o600); err != nil {
 				slog.Error("write raw", "source", s, "err", err)
 			}
 		}
@@ -86,7 +86,7 @@ func main() {
 			continue
 		}
 		renderedPath := filepath.Join(renderedDir, string(s)+".json")
-		if err := os.WriteFile(renderedPath, data, os.ModePerm); err != nil {
+		if err := os.WriteFile(renderedPath, data, 0o600); err != nil {
 			slog.Error("write rendered", "source", s, "err", err)
 			continue
 		}
@@ -108,7 +108,7 @@ func (r *recordingTransport) RoundTrip(req *http.Request) (*http.Response, error
 		return nil, err
 	}
 	r.body, err = io.ReadAll(resp.Body)
-	resp.Body.Close()
+	_ = resp.Body.Close()
 	resp.Body = io.NopCloser(bytes.NewReader(r.body))
 	return resp, err
 }

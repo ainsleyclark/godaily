@@ -5,7 +5,8 @@
 			{
 				"source": "hacker_news",
 				"title": "I learned Rust with rustlings, so I built the same thing for Go",
-				"url": "https://github.com/Ichihiroy/golings",
+				"url": "https://news.ycombinator.com/item?id=47912690",
+				"original_url": "https://github.com/Ichihiroy/golings",
 				"image_url": "https://opengraph.githubassets.com/25bfd6b0741b1d4e23125a056dfa05fb3082b3ffa78f9171c81de80557cfbcd2/Ichihiroy/golings",
 				"author": "ichihiroy",
 				"snippet": "🐹 Learn Go through small, interactive exercises — inspired by rustlings. - Ichihiroy/golings",
@@ -22,7 +23,8 @@
 			{
 				"source": "lobsters",
 				"title": "Swissing a table",
-				"url": "https://philpearl.github.io/post/swissing_a_table/",
+				"url": "https://lobste.rs/s/2lzsw6/swissing_table",
+				"original_url": "https://philpearl.github.io/post/swissing_a_table/",
 				"author": "carlana",
 				"snippet": "Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation.",
 				"tag": "article",
@@ -66,7 +68,7 @@
 				"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
 				"tag": "article",
 				"comments": 17,
-				"score": 0.6007619328947518,
+				"score": 0.613898019286257,
 				"published": "2026-04-26T14:46:53Z"
 			},
 			{
@@ -90,7 +92,7 @@
 				"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 				"tag": "article",
 				"comments": 2,
-				"score": 0.3003809664473759,
+				"score": 0.15019048322368794,
 				"published": "2026-04-26T15:58:00Z"
 			},
 			{

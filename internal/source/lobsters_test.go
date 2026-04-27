@@ -38,6 +38,7 @@ const lobstersOKResponseTpl = `[
     "short_id": "abc123",
     "title": "Building a REST API in Go",
     "url": "%s",
+    "comments_url": "https://lobste.rs/s/abc123/building_rest_api_go",
     "score": 42,
     "comment_count": 7,
     "created_at": "2024-04-25T10:30:00.000-05:00",
@@ -52,12 +53,31 @@ const lobstersEmptyDescResponseTpl = `[
     "short_id": "def456",
     "title": "Go 1.24 is released",
     "url": "%s",
+    "comments_url": "https://lobste.rs/s/def456/go_1_24_is_released",
     "score": 100,
     "comment_count": 25,
     "created_at": "2024-04-26T12:00:00.000-05:00",
     "description": "",
     "submitter_user": "robpike",
     "tags": ["go"]
+  }
+]`
+
+// lobstersSelfPostResponse exercises the branch where the story URL points
+// back at the discussion page (Lobsters self-post) — OriginalURL must stay
+// empty in that case.
+const lobstersSelfPostResponse = `[
+  {
+    "short_id": "ghi789",
+    "title": "Ask Lobsters: favourite Go testing patterns?",
+    "url": "https://lobste.rs/s/ghi789/ask_lobsters_favourite_go_testing",
+    "comments_url": "https://lobste.rs/s/ghi789/ask_lobsters_favourite_go_testing",
+    "score": 5,
+    "comment_count": 3,
+    "created_at": "2024-04-27T09:00:00.000-05:00",
+    "description": "",
+    "submitter_user": "asker",
+    "tags": ["go", "ask"]
   }
 ]`
 
@@ -94,15 +114,16 @@ func TestLobsters_Fetch(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
-					Source:    news.SourceLobsters,
-					Title:     "Building a REST API in Go",
-					URL:       serverURL,
-					Author:    "gopher",
-					Snippet:   "A tutorial on building REST APIs with Go.",
-					Tag:       news.TagArticle,
-					Comments:  7,
-					Score:     0.9566039969802683, // log(43)/log(51); weight 1.0 * engagement
-					Published: time.Date(2024, 4, 25, 15, 30, 0, 0, time.UTC),
+					Source:      news.SourceLobsters,
+					Title:       "Building a REST API in Go",
+					URL:         "https://lobste.rs/s/abc123/building_rest_api_go",
+					OriginalURL: serverURL,
+					Author:      "gopher",
+					Snippet:     "A tutorial on building REST APIs with Go.",
+					Tag:         news.TagArticle,
+					Comments:    7,
+					Score:       0.9566039969802683, // log(43)/log(51); weight 1.0 * engagement
+					Published:   time.Date(2024, 4, 25, 15, 30, 0, 0, time.UTC),
 				}, items[0])
 			},
 		},
@@ -120,6 +141,22 @@ func TestLobsters_Fetch(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Empty(t, items[0].Snippet)
+			},
+		},
+		"Self Post": {
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(lobstersSelfPostResponse))
+					assert.NoError(t, err)
+				}
+			},
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
+				assert.NoError(t, err)
+				assert.Len(t, items, 1)
+				assert.Equal(t, "https://lobste.rs/s/ghi789/ask_lobsters_favourite_go_testing", items[0].URL)
+				assert.Empty(t, items[0].OriginalURL)
 			},
 		},
 	}

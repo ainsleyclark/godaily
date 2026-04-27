@@ -41,6 +41,16 @@ lint: # Run linter
 	golangci-lint run ./... --fix --config=.golangci.yaml
 .PHONY: lint
 
+sec: # Run gosec security scan (matches CI)
+	@command -v gosec >/dev/null 2>&1 || go install github.com/securego/gosec/v2/cmd/gosec@latest
+	gosec ./...
+.PHONY: sec
+
+vuln: # Run govulncheck (matches CI)
+	@command -v govulncheck >/dev/null 2>&1 || go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck ./...
+.PHONY: vuln
+
 cover: test # Run all the tests and opens the coverage report
 	go tool cover -html=coverage.out
 .PHONY: cover

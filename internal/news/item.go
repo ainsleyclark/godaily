@@ -42,16 +42,17 @@ type SourceItems struct {
 
 // Item defines a Go Daily news item.
 type Item struct {
-	Source    Source    `json:"source"`
-	Title     string    `json:"title"`
-	URL       string    `json:"url"`
-	ImageURL  string    `json:"image_url,omitempty"`
-	Author    string    `json:"author"`
-	Snippet   string    `json:"snippet"`
-	Tag       Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
-	Comments  int       `json:"comments"`
-	Score     float64   `json:"score"` // per-source relevance/popularity, normalised across sources
-	Published time.Time `json:"published"`
+	Source      Source    `json:"source"`
+	Title       string    `json:"title"`
+	URL         string    `json:"url"`                    // click target — the external content the source is linking to
+	OriginalURL string    `json:"original_url,omitempty"` // listing on the source platform (e.g. HN comments page), when different from URL
+	ImageURL    string    `json:"image_url,omitempty"`
+	Author      string    `json:"author"`
+	Snippet     string    `json:"snippet"`
+	Tag         Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
+	Comments    int       `json:"comments"`
+	Score       float64   `json:"score"` // per-source relevance/popularity, normalised across sources
+	Published   time.Time `json:"published"`
 }
 
 type Tag string

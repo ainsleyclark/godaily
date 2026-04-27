@@ -65,23 +65,29 @@ func (h hnHit) EnrichmentURL() string { return h.URL }
 
 // Transform maps an hnHit to a news.Item.
 //
-// If the story has no external URL (Ask HN / self-posts), it falls back to the
-// HN permalink: https://news.ycombinator.com/item?id=<objectID>
+// URL is the external story URL (the click target). OriginalURL is the HN
+// permalink where the story was posted. For Ask HN / self-posts the story has
+// no external URL, so URL falls back to the HN permalink and OriginalURL stays
+// empty (it would duplicate URL).
 func (h hnHit) Transform() news.Item {
+	hnPermalink := "https://news.ycombinator.com/item?id=" + h.ObjectID
 	u := h.URL
+	original := hnPermalink
 	if u == "" {
-		u = "https://news.ycombinator.com/item?id=" + h.ObjectID
+		u = hnPermalink
+		original = ""
 	}
 	return news.Item{
-		Source:    news.SourceHN,
-		Title:     h.Title,
-		URL:       u,
-		Author:    h.Author,
-		Snippet:   h.StoryText,
-		Tag:       news.TagArticle,
-		Comments:  h.NumComments,
-		Score:     news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
-		Published: h.CreatedAt,
+		Source:      news.SourceHN,
+		Title:       h.Title,
+		URL:         u,
+		OriginalURL: original,
+		Author:      h.Author,
+		Snippet:     h.StoryText,
+		Tag:         news.TagArticle,
+		Comments:    h.NumComments,
+		Score:       news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
+		Published:   h.CreatedAt,
 	}
 }
 
