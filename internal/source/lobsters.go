@@ -65,7 +65,6 @@ func (s lobstersStory) transform() news.Item {
 		URL:       s.URL,
 		Author:    s.SubmitterUser,
 		Snippet:   strings.TrimSpace(s.Description),
-		Score:     s.Score,
 		Tag:       news.TagArticle,
 		Comments:  s.CommentCount,
 		Published: published.UTC(),

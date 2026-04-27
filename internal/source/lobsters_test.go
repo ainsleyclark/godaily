@@ -88,7 +88,6 @@ func TestLobsters_Fetch(t *testing.T) {
 					URL:       "https://example.com/go-rest-api",
 					Author:    "gopher",
 					Snippet:   "A tutorial on building REST APIs with Go.",
-					Score:     42,
 					Tag:       news.TagArticle,
 					Comments:  7,
 					Published: time.Date(2024, 4, 25, 15, 30, 0, 0, time.UTC),

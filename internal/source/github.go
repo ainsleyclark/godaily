@@ -110,7 +110,6 @@ func (i ghIssue) transform(tag news.Tag) news.Item {
 		URL:       i.HTMLURL,
 		Author:    i.User.Login,
 		Snippet:   ghSnippet(i.Body, i.Milestone),
-		Score:     i.Reactions.PlusOne,
 		Tag:       tag,
 		Comments:  i.Comments,
 		Published: i.CreatedAt,

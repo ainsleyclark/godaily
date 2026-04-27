@@ -81,7 +81,6 @@ func (c redditChild) transform() news.Item {
 		URL:       u,
 		Author:    p.Author,
 		Snippet:   strings.TrimSpace(p.SelfText),
-		Score:     p.Score,
 		Tag:       news.TagArticle,
 		Comments:  p.NumComments,
 		Published: time.Unix(int64(p.CreatedUTC), 0).UTC(),

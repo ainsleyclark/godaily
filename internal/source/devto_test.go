@@ -61,7 +61,6 @@ func TestDevTo_Fetch(t *testing.T) {
 					URL:       "https://dev.to/artem_a/slug",
 					Author:    "Artemii Amelin",
 					Snippet:   "If you have ever tried connecting two AI agents running on different machines...",
-					Score:     0,
 					Tag:       news.TagProposal,
 					Comments:  3,
 					Published: time.Date(2026, time.April, 25, 11, 4, 19, 0, time.UTC),

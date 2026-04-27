@@ -41,7 +41,6 @@ type Item struct {
 	URL       string
 	Author    string
 	Snippet   string
-	Score     int
 	Tag       Tag // source-specific hint ("proposal-accepted", "trending", "official")
 	Comments  int
 	Published time.Time

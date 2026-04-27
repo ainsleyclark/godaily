@@ -44,7 +44,8 @@ var cmd = &cli.Command{
 				if err != nil {
 					return err
 				}
-				return runner.Run(cron.RunOptions{DryRun: cmd.Bool("dry-run")})
+				_, err = runner.Run(ctx, cron.RunOptions{DryRun: cmd.Bool("dry-run")})
+				return err
 			},
 		},
 		{

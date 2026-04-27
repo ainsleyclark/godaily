@@ -101,7 +101,6 @@ func TestReddit_Fetch(t *testing.T) {
 					URL:       "https://go.dev/blog/go1.23",
 					Author:    "gopher",
 					Snippet:   "",
-					Score:     500,
 					Tag:       news.TagArticle,
 					Comments:  88,
 					Published: time.Unix(1714000000, 0).UTC(),

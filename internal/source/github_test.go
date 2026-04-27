@@ -66,7 +66,6 @@ func TestGitHub_Fetch(t *testing.T) {
 				require.Len(t, items, 1)
 				assert.True(t, strings.HasPrefix(items[0].Snippet, "Targeting Go 1.27 \u2014 "), "snippet: %q", items[0].Snippet)
 				assert.Equal(t, news.TagProposalAccepted, items[0].Tag)
-				assert.Equal(t, 10, items[0].Score)
 				assert.Equal(t, 5, items[0].Comments)
 				assert.Equal(t, "gopher", items[0].Author)
 			},

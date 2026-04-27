@@ -79,7 +79,6 @@ func (h hnHit) transform() news.Item {
 		URL:       u,
 		Author:    h.Author,
 		Snippet:   sanitiseSnippet(h.StoryText),
-		Score:     h.Points,
 		Tag:       news.TagArticle,
 		Comments:  h.NumComments,
 		Published: h.CreatedAt,
