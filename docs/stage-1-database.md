@@ -39,6 +39,9 @@ surface yet. Self-contained and shippable.
 
 ## Schema (3 tables)
 
+Please bear in mind we shouldn't store any social share text, this is purely
+for issues. I use the social share text for me only.
+
 ```sql
 CREATE TABLE issues (
   id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,8 +51,6 @@ CREATE TABLE issues (
   summary         TEXT,                        -- one-liner from synth
   html_body       TEXT NOT NULL,
   text_body       TEXT NOT NULL,
-  social_x        TEXT,
-  social_linkedin TEXT,
   status          TEXT NOT NULL DEFAULT 'sent' -- sent|skipped|failed
 );
 
@@ -91,15 +92,45 @@ so any digest can carry a one-click unsubscribe link without auth.
 | Queries    | `sqlc` (sqlite engine)                       |
 | Migrations | `pressly/goose`, embedded via `embed.FS`     |
 
+## Package layout
+
+Two packages, separate concerns:
+
+- `internal/db/` owns the `*sql.DB` lifecycle and schema (migrations).
+  Anything in here is about *getting a connection* and *evolving the
+  schema*, not about querying.
+- `internal/store/` owns typed query access. One file per domain, plus
+  the sqlc-generated companion. Hand-written `*.go` only appears when
+  there is logic beyond a single query (multi-step tx, token
+  generation, validation).
+
+```
+internal/
+├── db/
+│   ├── db.go                 # New(ctx, url, token) (*sql.DB, error)
+│   ├── migrate.go            # Migrate(ctx, *sql.DB) error (embedded goose)
+│   └── migrations/
+│       └── 0001_init.sql
+└── store/
+    ├── store.go              # New(*sql.DB) *Store, shared helpers, tx wrapper
+    ├── issues.sql            # sqlc input
+    ├── issues.sql.go         # sqlc output
+    ├── issues.go             # hand-rolled domain logic (only if needed)
+    ├── news_items.sql / .sql.go / .go
+    └── subscribers.sql / .sql.go / .go
+```
+
 ## Files
 
 To create:
 
-- `internal/db/db.go`: `New(ctx, url, token) (*sql.DB, error)` constructor using `enforce` per AGENTS.md
+- `internal/db/db.go`: `New(ctx, url, token) (*sql.DB, error)` using `enforce` per AGENTS.md
+- `internal/db/migrate.go`: `Migrate(ctx, *sql.DB) error`, goose with embedded migrations
 - `internal/db/migrations/0001_init.sql`: schema above
-- `internal/db/queries/issues.sql`, `news_items.sql`, `subscribers.sql`
-- `internal/db/gen/`: sqlc output (`*.gen.go`)
-- `sqlc.yaml`
+- `internal/store/store.go`: `New(*sql.DB) *Store`, shared tx helper
+- `internal/store/issues.sql`, `news_items.sql`, `subscribers.sql`: sqlc query files
+- `internal/store/*.sql.go`: sqlc output (per-domain, generated)
+- `sqlc.yaml`: configures per-file output into `internal/store`
 
 To modify:
 

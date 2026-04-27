@@ -45,6 +45,7 @@ type Item struct {
 	Source    Source    `json:"source"`
 	Title     string    `json:"title"`
 	URL       string    `json:"url"`
+	ImageURL  string    `json:"image_url,omitempty"`
 	Author    string    `json:"author"`
 	Snippet   string    `json:"snippet"`
 	Tag       Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")

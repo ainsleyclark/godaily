@@ -20,6 +20,7 @@
 package ingest
 
 import (
+	"context"
 	"html"
 	"regexp"
 	"strings"
@@ -37,6 +38,11 @@ type Transformer interface {
 	// feed. Return false to silently drop the item before it reaches the
 	// caller.
 	ShouldInclude() bool
+
+	// EnrichmentURL returns the URL to crawl for snippet/image enrichment,
+	// or "" to skip. Implementations live next to URL construction so
+	// per-source URL knowledge stays in the source.
+	EnrichmentURL() string
 }
 
 // TransformAll maps a slice of items that implement Transformer to []news.Item,
@@ -44,8 +50,15 @@ type Transformer interface {
 // item's snippet is sanitised (HTML stripped, entities unescaped) and
 // truncated to maxSnippetLen bytes — sources can put raw API content into
 // news.Item.Snippet without per-source cleanup.
-func TransformAll[T Transformer](items []T) []news.Item {
-	var out []news.Item
+//
+// Items whose transformer returns a non-empty EnrichmentURL are then passed
+// to Enrich, which fills empty Snippet/ImageURL fields by fetching that URL
+// once and extracting og:/twitter: meta tags.
+func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
+	var (
+		out        []news.Item
+		enrichURLs []string
+	)
 	for _, item := range items {
 		if !item.ShouldInclude() {
 			continue
@@ -53,6 +66,17 @@ func TransformAll[T Transformer](items []T) []news.Item {
 		i := item.Transform()
 		i.Snippet = truncate(sanitise(i.Snippet), maxSnippetLen)
 		out = append(out, i)
+		enrichURLs = append(enrichURLs, item.EnrichmentURL())
+	}
+
+	var targets []enrichTarget
+	for i := range out {
+		if enrichURLs[i] != "" {
+			targets = append(targets, enrichTarget{URL: enrichURLs[i], Item: &out[i]})
+		}
+	}
+	if len(targets) > 0 {
+		Enrich(ctx, targets)
 	}
 	return out
 }
