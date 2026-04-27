@@ -240,25 +240,12 @@ func TestAggregator_Run(t *testing.T) {
 	}
 }
 
-func TestAggregator_fetchSource(t *testing.T) {
+func TestAggregator_FetchSource(t *testing.T) {
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
 		source   news.Source
 		want     func(t *testing.T, items []news.Item, err error)
 	}{
-		"OK": {
-			registry: map[news.Source]news.Fetcher{
-				news.SourceDevTo: mockFetcher{
-					items: []news.Item{{Title: "ok"}},
-				},
-			},
-			source: news.SourceDevTo,
-			want: func(t *testing.T, items []news.Item, err error) {
-				t.Helper()
-				require.NoError(t, err)
-				assert.Len(t, items, 1)
-			},
-		},
 		"Unregistered Source": {
 			registry: map[news.Source]news.Fetcher{},
 			source:   news.SourceDevTo,
@@ -277,6 +264,19 @@ func TestAggregator_fetchSource(t *testing.T) {
 				t.Helper()
 				assert.Nil(t, items)
 				assert.ErrorContains(t, err, "fetching")
+			},
+		},
+		"OK": {
+			registry: map[news.Source]news.Fetcher{
+				news.SourceDevTo: mockFetcher{
+					items: []news.Item{{Title: "ok"}},
+				},
+			},
+			source: news.SourceDevTo,
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				assert.Len(t, items, 1)
 			},
 		},
 	}

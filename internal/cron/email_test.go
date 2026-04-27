@@ -20,13 +20,13 @@
 package cron
 
 import (
-	"errors"
 	htmltemplate "html/template"
 	"testing"
 	texttemplate "text/template"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -49,69 +49,72 @@ func sampleSections() []news.SourceItems {
 	}}
 }
 
-func TestAggregator_sendDigest_NoSections(t *testing.T) {
+func TestAggregator_SendDigest(t *testing.T) {
 	t.Parallel()
 
-	m := &mockEmail{}
-	agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+	t.Run("No Sections", func(t *testing.T) {
+		t.Parallel()
 
-	err := agg.sendDigest(t.Context(), sendDigestDay, nil)
-	require.NoError(t, err)
-	assert.False(t, m.called)
-}
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-func TestAggregator_sendDigest_OK(t *testing.T) {
-	t.Parallel()
+		err := agg.sendDigest(t.Context(), sendDigestDay, nil)
+		require.NoError(t, err)
+		assert.False(t, m.called)
+	})
 
-	m := &mockEmail{}
-	agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+	t.Run("Send Error", func(t *testing.T) {
+		t.Parallel()
 
-	err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
-	require.NoError(t, err)
-	require.True(t, m.called)
-	assert.Equal(t, "noreply@mail.ainsley.dev", m.req.From)
-	assert.Equal(t, []string{"to@example.com"}, m.req.To)
-	assert.Contains(t, m.req.Subject, "April 26, 2026")
-	assert.Contains(t, m.req.Html, "hello")
-	assert.Contains(t, m.req.Text, "hello")
-}
+		m := &mockEmail{err: errors.New("boom")}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-func TestAggregator_sendDigest_EmailSendError(t *testing.T) {
-	t.Parallel()
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		assert.True(t, m.called)
+		assert.ErrorContains(t, err, "boom")
+	})
 
-	m := &mockEmail{err: errors.New("boom")}
-	agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
 
-	err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
-	assert.True(t, m.called)
-	assert.ErrorContains(t, err, "boom")
-}
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-// Template-error tests below mutate package-level templates and cannot
-// run in parallel: other sendDigest cases read the same vars.
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		require.NoError(t, err)
+		require.True(t, m.called)
+		assert.Equal(t, "noreply@mail.ainsley.dev", m.req.From)
+		assert.Equal(t, []string{"to@example.com"}, m.req.To)
+		assert.Contains(t, m.req.Subject, "April 26, 2026")
+		assert.Contains(t, m.req.Html, "hello")
+		assert.Contains(t, m.req.Text, "hello")
+	})
 
-func TestAggregator_sendDigest_HTMLTemplateError(t *testing.T) {
-	orig := htmlTmpl
-	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
-	t.Cleanup(func() { htmlTmpl = orig })
+	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl
+	// which the parallel subtests above read; they must run sequentially.
+	t.Run("HTML Template Error", func(t *testing.T) {
+		orig := htmlTmpl
+		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
+		t.Cleanup(func() { htmlTmpl = orig })
 
-	m := &mockEmail{}
-	agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-	err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
-	assert.False(t, m.called)
-	assert.ErrorContains(t, err, "rendering html")
-}
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		assert.False(t, m.called)
+		assert.ErrorContains(t, err, "rendering html")
+	})
 
-func TestAggregator_sendDigest_TextTemplateError(t *testing.T) {
-	orig := textTmpl
-	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
-	t.Cleanup(func() { textTmpl = orig })
+	t.Run("Text Template Error", func(t *testing.T) {
+		orig := textTmpl
+		textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
+		t.Cleanup(func() { textTmpl = orig })
 
-	m := &mockEmail{}
-	agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-	err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
-	assert.False(t, m.called)
-	assert.ErrorContains(t, err, "rendering text")
+		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections())
+		assert.False(t, m.called)
+		assert.ErrorContains(t, err, "rendering text")
+	})
 }

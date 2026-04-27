@@ -20,8 +20,10 @@ var emailHTML string
 //go:embed email.txt
 var emailText string
 
-var htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(emailHTML))
-var textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(emailText))
+var (
+	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(emailHTML))
+	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(emailText))
+)
 
 type digestData struct {
 	Date     time.Time
