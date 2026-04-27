@@ -1,11 +1,20 @@
 [
 	{
 		"Source": "medium",
+		"Title": "Goroutine Made Easy :)",
+		"URL": "https://medium.com/@abhay.tiwari.er/goroutine-made-easy-146c64b81c0e?source=rss------golang-5",
+		"Author": "Er. Abhay Tiwari",
+		"Snippet": "In this article I would like to cover what you need to know about goroutines… With almost zero jargon. Continue reading on Medium »",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"Source": "medium",
 		"Title": "¿Por qué las Queues son la columna vertebral de la escalabilidad?",
 		"URL": "https://medium.com/@jcmexdev/por-qu%C3%A9-las-queues-son-la-columna-vertebral-de-la-escalabilidad-19746e9ec04d?source=rss------golang-5",
 		"Author": "Juan Carlos G.E.",
 		"Snippet": "Aprende qué es una Queue, cómo se compara con otras estructuras y cómo implementarla en Go de forma eficiente. Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -16,7 +25,6 @@
 		"URL": "https://medium.com/@erwindev/handling-billions-of-events-our-kafka-partition-strategy-b94a32a15ba3?source=rss------golang-5",
 		"Author": "Erwin Hermanto",
 		"Snippet": "I still remember the first time we hit a million events per day. It was 2019, and I was manually SSH-ing into our production server at 2… Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -27,7 +35,6 @@
 		"URL": "https://jeriatno.medium.com/go-kenapa-harus-belajar-go-di-era-ai-46aa486db1f2?source=rss------golang-5",
 		"Author": "iwanna",
 		"Snippet": "Di tahun 2026, AI sudah bisa generate kode. Copilot, Claude, ChatGPT — tinggal describe kebutuhan, kode muncul dalam hitungan detik. Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -38,7 +45,6 @@
 		"URL": "https://medium.com/@cassius.paim/designing-an-llm-orchestrator-in-go-decisions-that-actually-matter-in-production-144f2d9d6008?source=rss------golang-5",
 		"Author": "Cássius Paim",
 		"Snippet": "Why I stopped thinking about integration and started thinking about control at scale Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -49,7 +55,6 @@
 		"URL": "https://medium.com/@bdgouthiere/ai-writes-go-tests-that-pass-thats-not-the-same-as-tests-that-catch-bugs-ad55005ab781?source=rss------golang-5",
 		"Author": "Benoit Gouthiere",
 		"Snippet": "After several months of using AI assistants on real Go projects, the pattern is consistent. The coverage number is climbing. The actual… Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -60,7 +65,6 @@
 		"URL": "https://medium.com/@shayanholakouee/go-concurrency-23acb96f813e?source=rss------golang-5",
 		"Author": "Shayan Holakouee",
 		"Snippet": "Most tutorials on Go concurrency follow the same script. They show you a goroutine, tell you it’s like a lightweight thread, demonstrate a… Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -71,7 +75,6 @@
 		"URL": "https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5",
 		"Author": "Victoria Luquet",
 		"Snippet": "It is well known that managing configuration, specially in Golang, can become a mess, depending on how the project is structured, its size… Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -82,7 +85,6 @@
 		"URL": "https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5",
 		"Author": "Anaz Aijaz",
 		"Snippet": "I picked up Go last week, coming from JAVA and JS and Frontend it is not a pleasant experience. You can easily find discussions as this… Continue reading on Medium »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"
@@ -93,18 +95,6 @@
 		"URL": "https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5",
 		"Author": "Moeid Heidari",
 		"Snippet": "For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming… Continue reading on ITNEXT »",
-		"Score": 0,
-		"Tag": "article",
-		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
-	},
-	{
-		"Source": "medium",
-		"Title": "AI-Assisted Go You Should Know",
-		"URL": "https://medium.programmerscareer.com/ai-assisted-go-you-should-know-24d9104e45d7?source=rss------golang-5",
-		"Author": "Wesley Wei",
-		"Snippet": "Continue reading on Programmer’s Career »",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "0001-01-01T00:00:00Z"

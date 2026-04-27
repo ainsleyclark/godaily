@@ -5,7 +5,9 @@ go 1.26.2
 require (
 	github.com/ainsleydev/webkit v0.13.2
 	github.com/anthropics/anthropic-sdk-go v1.38.0
+	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
+	github.com/resend/resend-go/v3 v3.6.0
 	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli/v3 v3.8.0
 )
@@ -18,7 +20,6 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mailru/easyjson v0.9.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/resend/resend-go/v3 v3.6.0 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.2.0 // indirect

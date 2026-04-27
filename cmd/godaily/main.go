@@ -26,6 +26,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
+
 	"github.com/ainsleyclark/godaily/internal/cron"
 	"github.com/ainsleyclark/godaily/internal/news"
 	_ "github.com/ainsleyclark/godaily/internal/source"
@@ -44,8 +46,22 @@ var cmd = &cli.Command{
 				if err != nil {
 					return err
 				}
-				_, err = runner.Run(ctx, cron.RunOptions{DryRun: cmd.Bool("dry-run")})
-				return err
+
+				items, err := runner.Run(ctx, cron.RunOptions{DryRun: cmd.Bool("dry-run")})
+				if err != nil {
+					return err
+				}
+
+				indent, err := json.MarshalIndent(items, "", "\t")
+				if err != nil {
+					return err
+				}
+
+				if err = os.MkdirAll("examples", os.ModePerm); err != nil {
+					return err
+				}
+
+				return os.WriteFile("examples/news.json", indent, 0o644)
 			},
 		},
 		{
@@ -90,6 +106,7 @@ var cmd = &cli.Command{
 }
 
 func main() {
+	_ = godotenv.Load()
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}

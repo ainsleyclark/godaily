@@ -59,7 +59,7 @@ func (i mediumItem) shouldInclude() bool { return true }
 
 func (i mediumItem) transform() news.Item {
 	snippet := strings.Join(strings.Fields(sanitiseSnippet(i.Description)), " ")
-	published, _ := time.Parse(time.RFC1123Z, i.PubDate)
+	published, _ := time.Parse(time.RFC1123, i.PubDate)
 	return news.Item{
 		Source:    news.SourceMedium,
 		Title:     i.Title,

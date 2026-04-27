@@ -21,7 +21,6 @@ package synth
 
 import (
 	"github.com/anthropics/anthropic-sdk-go"
-	"github.com/anthropics/anthropic-sdk-go/option"
 )
 
 type Client struct {
@@ -30,9 +29,7 @@ type Client struct {
 
 func New() *Client {
 	return &Client{
-		anthropic: anthropic.NewClient(
-			option.WithAPIKey("my-anthropic-api-key"), // Defaults to os.LookupEnv("ANTHROPIC_API_KEY")
-		),
+		anthropic: anthropic.NewClient(),
 	}
 }
 

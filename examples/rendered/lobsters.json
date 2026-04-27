@@ -5,7 +5,6 @@
 		"URL": "https://philpearl.github.io/post/swissing_a_table/",
 		"Author": "carlana",
 		"Snippet": "",
-		"Score": 25,
 		"Tag": "article",
 		"Comments": 4,
 		"Published": "2026-04-26T14:19:13Z"
@@ -16,7 +15,6 @@
 		"URL": "https://github.blog/engineering/infrastructure/how-github-uses-ebpf-to-improve-deployment-safety/",
 		"Author": "eduard",
 		"Snippet": "",
-		"Score": 21,
 		"Tag": "article",
 		"Comments": 6,
 		"Published": "2026-04-18T09:17:46Z"
@@ -27,7 +25,6 @@
 		"URL": "https://lesiw.dev/go/step/",
 		"Author": "iv",
 		"Snippet": "",
-		"Score": 22,
 		"Tag": "article",
 		"Comments": 4,
 		"Published": "2026-04-16T12:48:35Z"
@@ -38,7 +35,6 @@
 		"URL": "https://blog.xaner.dev/post/wake-on-lan/",
 		"Author": "pondidum",
 		"Snippet": "",
-		"Score": 7,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-15T17:18:59Z"
@@ -49,7 +45,6 @@
 		"URL": "https://antonz.org/porting-go-strings/",
 		"Author": "abhin4v",
 		"Snippet": "",
-		"Score": 5,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-15T08:07:45Z"
@@ -60,7 +55,6 @@
 		"URL": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
 		"Author": "cgrinds",
 		"Snippet": "",
-		"Score": 19,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-10T11:38:16Z"
@@ -71,7 +65,6 @@
 		"URL": "https://ciolek.dev/posts/when-the-compiler-lies",
 		"Author": "samuelkarp",
 		"Snippet": "",
-		"Score": 31,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-07T23:35:34Z"
@@ -82,7 +75,6 @@
 		"URL": "https://github.com/dredozubov/hazmat",
 		"Author": "dredozubov",
 		"Snippet": "\u003cp\u003eBlog post with the full write-up and threat model: \u003ca href=\"https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\" rel=\"ugc\"\u003ehttps://codeofchange.io/how-i-made-danger",
-		"Score": 4,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-07T16:23:42Z"
@@ -93,7 +85,6 @@
 		"URL": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/",
 		"Author": "stapelberg",
 		"Snippet": "",
-		"Score": 102,
 		"Tag": "article",
 		"Comments": 40,
 		"Published": "2026-04-05T16:59:29Z"
@@ -104,7 +95,6 @@
 		"URL": "https://alexrios.me/blog/slogbox-devlog/",
 		"Author": "carlana",
 		"Snippet": "",
-		"Score": 5,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-05T12:58:46Z"
@@ -115,7 +105,6 @@
 		"URL": "https://lisette.run",
 		"Author": "telemachus",
 		"Snippet": "",
-		"Score": 70,
 		"Tag": "article",
 		"Comments": 40,
 		"Published": "2026-04-03T12:17:43Z"
@@ -126,7 +115,6 @@
 		"URL": "https://snawoot.github.io/go_web_right_way.html",
 		"Author": "lr0",
 		"Snippet": "",
-		"Score": 6,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-04-02T16:53:29Z"
@@ -137,7 +125,6 @@
 		"URL": "https://store.steampowered.com/app/3024370/NebuLeet",
 		"Author": "quasilyte",
 		"Snippet": "",
-		"Score": 24,
 		"Tag": "article",
 		"Comments": 18,
 		"Published": "2026-04-01T17:49:53Z"
@@ -148,7 +135,6 @@
 		"URL": "https://hister.org/posts/data-indexing-in-golang",
 		"Author": "kvch",
 		"Snippet": "",
-		"Score": 14,
 		"Tag": "article",
 		"Comments": 5,
 		"Published": "2026-03-31T12:53:06Z"
@@ -159,7 +145,6 @@
 		"URL": "https://github.com/lemire/constmap",
 		"Author": "eatonphil",
 		"Snippet": "",
-		"Score": 13,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-30T14:32:20Z"
@@ -170,7 +155,6 @@
 		"URL": "https://theleo.zone/posts/pager/",
 		"Author": "robinovitch61",
 		"Snippet": "",
-		"Score": 5,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-03-30T14:07:40Z"
@@ -181,7 +165,6 @@
 		"URL": "https://antonz.org/porting-go-io/",
 		"Author": "telemachus",
 		"Snippet": "",
-		"Score": 7,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-03-27T21:15:19Z"
@@ -192,7 +175,6 @@
 		"URL": "https://github.com/ada-url/goada",
 		"Author": "eatonphil",
 		"Snippet": "",
-		"Score": 2,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-03-26T18:47:14Z"
@@ -203,7 +185,6 @@
 		"URL": "https://www.josephspurrier.com/google-cloud-run-deployment",
 		"Author": "carlana",
 		"Snippet": "",
-		"Score": 5,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-03-26T10:13:26Z"
@@ -214,7 +195,6 @@
 		"URL": "https://go.dev/blog/type-construction-and-cycle-detection",
 		"Author": "binjip978",
 		"Snippet": "",
-		"Score": 5,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-03-25T03:54:35Z"
@@ -225,7 +205,6 @@
 		"URL": "https://www.alexedwards.net/blog/11-tips-for-structuring-your-go-projects",
 		"Author": "runxiyu",
 		"Snippet": "",
-		"Score": 6,
 		"Tag": "article",
 		"Comments": 0,
 		"Published": "2026-03-24T20:14:51Z"
@@ -236,7 +215,6 @@
 		"URL": "https://www.alexedwards.net/blog/go-naming-conventions",
 		"Author": "cgrinds",
 		"Snippet": "",
-		"Score": 28,
 		"Tag": "article",
 		"Comments": 24,
 		"Published": "2026-03-24T17:08:32Z"
@@ -247,7 +225,6 @@
 		"URL": "https://xuri.me/2022/04/15/go-shared-libraries.html",
 		"Author": "runxiyu",
 		"Snippet": "",
-		"Score": 3,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-21T16:46:30Z"
@@ -258,7 +235,6 @@
 		"URL": "https://antonz.org/solod/",
 		"Author": "gcollazo",
 		"Snippet": "",
-		"Score": 37,
 		"Tag": "article",
 		"Comments": 9,
 		"Published": "2026-03-21T15:16:27Z"
@@ -269,7 +245,6 @@
 		"URL": "https://jon.chrt.dev/2026/03/20/adding-live-reload-to-a-static-site-generator-written-in-go.html",
 		"Author": "bugsmith",
 		"Snippet": "",
-		"Score": 19,
 		"Tag": "article",
 		"Comments": 14,
 		"Published": "2026-03-20T18:08:40Z"

@@ -833,14 +833,14 @@
 		}
 	],
 	"hitsPerPage": 20,
-	"nbHits": 6644,
+	"nbHits": 6658,
 	"nbPages": 50,
 	"page": 0,
 	"params": "query=golang&tags=story&advancedSyntax=true&analyticsTags=backend",
-	"processingTimeMS": 11,
+	"processingTimeMS": 14,
 	"processingTimingsMS": {
 		"_request": {
-			"roundTrip": 19
+			"roundTrip": 25
 		},
 		"afterFetch": {
 			"format": {
@@ -849,11 +849,11 @@
 		},
 		"fetch": {
 			"query": 3,
-			"scanning": 6,
-			"total": 10
+			"scanning": 8,
+			"total": 12
 		},
-		"total": 11
+		"total": 14
 	},
 	"query": "golang",
-	"serverTimeMS": 12
+	"serverTimeMS": 15
 }

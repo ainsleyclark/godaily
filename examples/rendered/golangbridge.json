@@ -5,7 +5,6 @@
 		"URL": "https://forum.golangbridge.org/t/an-unofficial-discourse-user-reference-guide/9738",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 4,
 		"Published": "2018-07-03T07:31:23.214Z"
@@ -16,7 +15,6 @@
 		"URL": "https://forum.golangbridge.org/t/welcome-to-the-go-forum/8",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2015-09-06T22:41:07.631Z"
@@ -27,7 +25,6 @@
 		"URL": "https://forum.golangbridge.org/t/service-propagation-from-middleware-chain-to-handlers/41840",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 4,
 		"Published": "2026-04-15T09:48:32.397Z"
@@ -38,7 +35,6 @@
 		"URL": "https://forum.golangbridge.org/t/integrate-react-email-with-go-templates/41864",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-24T15:34:46.604Z"
@@ -49,7 +45,6 @@
 		"URL": "https://forum.golangbridge.org/t/golang-for-playdate-handheld-compiler-sdk-bindings-tools-and-examples/41524",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 9,
 		"Published": "2026-01-28T11:27:55.571Z"
@@ -60,7 +55,6 @@
 		"URL": "https://forum.golangbridge.org/t/free-android-app-for-learning-go/41821",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-09T09:26:38.398Z"
@@ -71,7 +65,6 @@
 		"URL": "https://forum.golangbridge.org/t/founding-engineer-go-typescript-incus-pre-seed-equity-only/41856",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-21T15:51:12.047Z"
@@ -82,7 +75,6 @@
 		"URL": "https://forum.golangbridge.org/t/how-do-i-run-a-go-testable-example-with-cli-provided-arguments/41851",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-20T05:19:42.065Z"
@@ -93,7 +85,6 @@
 		"URL": "https://forum.golangbridge.org/t/tool-sungo-project-manager-go-productivity-with-a-demoscene-soul-and-custom-hardware/41653",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-04T16:10:34.466Z"
@@ -104,7 +95,6 @@
 		"URL": "https://forum.golangbridge.org/t/bouncy-blob-an-infinite-climbing-and-bouncing-game-go-ebitengine/41846",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-16T21:41:30.087Z"
@@ -115,7 +105,6 @@
 		"URL": "https://forum.golangbridge.org/t/when-is-v2-draft-design-reality-especially-for-error-handling/41506",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 10,
 		"Published": "2026-01-24T14:33:59.844Z"
@@ -126,7 +115,6 @@
 		"URL": "https://forum.golangbridge.org/t/troubles-with-go-mod/41651",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 8,
 		"Published": "2026-03-04T02:03:17.835Z"
@@ -137,7 +125,6 @@
 		"URL": "https://forum.golangbridge.org/t/exec-format-error-cygwin-windows-new-problem-in-1-25/41809",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-07T17:49:55.428Z"
@@ -148,7 +135,6 @@
 		"URL": "https://forum.golangbridge.org/t/park-pause-a-process-and-free-its-tcp-port-via-ptrace-mach-injection/41836",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-13T15:28:08.252Z"
@@ -159,7 +145,6 @@
 		"URL": "https://forum.golangbridge.org/t/responder-when-the-interview-is-a-bot-so-am-i/41822",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-04-09T09:52:27.976Z"
@@ -170,7 +155,6 @@
 		"URL": "https://forum.golangbridge.org/t/resources-for-getting-started-with-go/6277",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 12,
 		"Published": "2017-08-12T14:25:32.097Z"
@@ -181,7 +165,6 @@
 		"URL": "https://forum.golangbridge.org/t/best-api-testing-tool-as-postman-alternative/41734",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 8,
 		"Published": "2026-03-21T03:31:48.94Z"
@@ -192,7 +175,6 @@
 		"URL": "https://forum.golangbridge.org/t/why-url-query-skip-param-key-value-with-semicolon/41808",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-07T12:43:00.072Z"
@@ -203,7 +185,6 @@
 		"URL": "https://forum.golangbridge.org/t/request-better-namespacing-for-vendor-directory/41782",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 5,
 		"Published": "2026-04-02T20:13:46.901Z"
@@ -214,7 +195,6 @@
 		"URL": "https://forum.golangbridge.org/t/beyond-the-compiler-external-ssa-analysis-workflows/41758",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-25T13:43:29.976Z"
@@ -225,7 +205,6 @@
 		"URL": "https://forum.golangbridge.org/t/kata-v1-0-0-in-process-compensation-workflows-for-go/41803",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-06T19:37:20.717Z"
@@ -236,7 +215,6 @@
 		"URL": "https://forum.golangbridge.org/t/pvs-studio-static-analyzer-for-go/41731",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-17T14:47:05.063Z"
@@ -247,7 +225,6 @@
 		"URL": "https://forum.golangbridge.org/t/sip-exporter-ebpf-based-sip-monitoring-service-written-in-go/41790",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-05T11:07:45.333Z"
@@ -258,7 +235,6 @@
 		"URL": "https://forum.golangbridge.org/t/go-mock-gen-type-safe-minimal-and-zero-dependency-mock-generator/41789",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-04T21:14:16.975Z"
@@ -269,7 +245,6 @@
 		"URL": "https://forum.golangbridge.org/t/indicator-a-high-performance-zero-dependency-technical-analysis-library/41786",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-03T18:28:47.417Z"
@@ -280,7 +255,6 @@
 		"URL": "https://forum.golangbridge.org/t/go-cabinet-pure-go-microsoft-cabinet-cab-file-reader-and-writer/41783",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-03T12:22:22.758Z"
@@ -291,7 +265,6 @@
 		"URL": "https://forum.golangbridge.org/t/go-gui-immediate-mode-gui-framework/41777",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 3,
 		"Published": "2026-04-01T14:19:39.942Z"
@@ -302,7 +275,6 @@
 		"URL": "https://forum.golangbridge.org/t/toon-package-recommendation/41778",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 1,
 		"Published": "2026-04-01T17:15:12.57Z"
@@ -313,7 +285,6 @@
 		"URL": "https://forum.golangbridge.org/t/wt-webtransport-framework-for-go-feedback-welcome/41773",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 2,
 		"Published": "2026-03-30T18:22:10.03Z"
@@ -324,7 +295,6 @@
 		"URL": "https://forum.golangbridge.org/t/company-building-backend-systems-and-infrastructure-in-go/41727",
 		"Author": "",
 		"Snippet": "",
-		"Score": 0,
 		"Tag": "article",
 		"Comments": 4,
 		"Published": "2026-03-16T09:44:22.967Z"

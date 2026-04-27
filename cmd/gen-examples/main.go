@@ -35,14 +35,17 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/joho/godotenv"
+
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/source"
 	_ "github.com/ainsleyclark/godaily/internal/source"
 )
 
 func main() {
-	renderedDir := filepath.Join("..", "..", "internal", "examples", "rendered")
-	rawDir := filepath.Join("..", "..", "internal", "examples", "raw")
+	_ = godotenv.Load(filepath.Join("..", "..", ".env"))
+	renderedDir := filepath.Join("..", "..", "examples", "rendered")
+	rawDir := filepath.Join("..", "..", "examples", "raw")
 	for _, dir := range []string{renderedDir, rawDir} {
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			slog.Error("create dir", "dir", dir, "err", err)

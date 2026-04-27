@@ -1,0 +1,202 @@
+[
+	{
+		"Source": "hacker_news",
+		"Title": "I learned Rust with rustlings, so I built the same thing for Go",
+		"URL": "https://github.com/Ichihiroy/golings",
+		"Author": "ichihiroy",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-26T18:40:36Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Show HN: SherifDB, a databe written in Golang under 500 LOC",
+		"URL": "https://emmanuel326.github.io/blogs/sheriffdb.html",
+		"Author": "Nya-kundi",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 2,
+		"Published": "2026-04-25T14:42:42Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Rcarmo/gte-go: Golang inference for the GTE Small embedding model",
+		"URL": "https://github.com/rcarmo/gte-go",
+		"Author": "rcarmo",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-25T05:30:04Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Choosing a Go Logging Library in 2026",
+		"URL": "https://www.dash0.com/guides/golang-logging-libraries",
+		"Author": "ayoisaiah",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-22T11:46:10Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Go news Android app revamped with the help of Claude Code",
+		"URL": "https://play.google.com/store/apps/details?id=com.minaandrawos.golangnews\u0026hl=en_US",
+		"Author": "minaandrawos",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 1,
+		"Published": "2026-04-20T00:19:00Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "GoLand",
+		"URL": "https://news.ycombinator.com/item?id=47802569",
+		"Author": "mukulmantosh",
+		"Snippet": "A curated guide to the best tips and tricks for mastering GoLand. https://github.com/mukulmantosh/awesome_goland",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-17T04:58:28Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Ask HN: How to test a distributed Job Runner with an at-most once execution",
+		"URL": "https://news.ycombinator.com/item?id=47779534",
+		"Author": "john-923",
+		"Snippet": "Hey everyone.\nI'm currently building a distributed job runner that can guarantee an at-most once execution under crashes \u0026 system failures. I'm still in the early stages, building it from scratch.\nThi",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-15T14:30:43Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Soppo: Golang, with the features it's missing",
+		"URL": "https://soppolang.dev/?2",
+		"Author": "networked",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 2,
+		"Published": "2026-04-11T10:53:18Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Tell HN: Always ask \"is that how it works or\"?",
+		"URL": "https://news.ycombinator.com/item?id=47708728",
+		"Author": "dakiol",
+		"Snippet": "I asked Claude: \u003e In \"The pre-release suffix indicates a version is a pre-release. Pre-release versions sort before the corresponding release versions. For example, v1.2.3-pre comes before v1.2.3.\", W",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-09T19:41:08Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Spec: Generic Methods for Go",
+		"URL": "https://github.com/golang/go/issues/77273",
+		"Author": "_ikke_",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-08T21:00:01Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "System Engineering an agent thanks to Golang",
+		"URL": "https://blog.mattsbit.co.uk/2026/04/06/systems-engineering-an-agent-thanks-to-the-world-of-golang/",
+		"Author": "mrmattyboy",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-06T14:46:44Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "SIMD in Go",
+		"URL": "https://programmerscareer.com/golang-simd/",
+		"Author": "djood",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-06T07:00:29Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Ask HN: What is your dev set up like?",
+		"URL": "https://news.ycombinator.com/item?id=47616250",
+		"Author": "break_the_bank",
+		"Snippet": "Curious what HackerNews users are using right now.  Mapping my IDE usage since 2022 Goland (2022-2024)-\u003e Cursor(November 2024 to February 2026) -\u003e Claude Code (\u0026 VSCode or Cursor for manual edits) The",
+		"Tag": "article",
+		"Comments": 28,
+		"Published": "2026-04-02T16:01:00Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Show HN: A platform to help you find the best tech jobs",
+		"URL": "https://thedream.work/",
+		"Author": "vulk",
+		"Snippet": "Hey everyone, Long time lurker finally took the leap to share something with the community. From a long time I wanted to build something and I had this idea about a job board but not just a simple agg",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-04-01T17:01:48Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Show HN: Bridging People Together via Podcasts",
+		"URL": "https://news.ycombinator.com/item?id=47586188",
+		"Author": "fcpguru",
+		"Snippet": "Hi, I'm Andrew, a long-time hacker about to turn 50 in a few days. Today I'd like to tell you how taout.tv came into my life. It stands for \"talk it out\" and I'm told this is a \"portmanteau\" when you ",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-03-31T12:12:53Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Golang Constmap by Daniel Lemire",
+		"URL": "https://twitter.com/lemire/status/2038320406432494059",
+		"Author": "pjf",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 1,
+		"Published": "2026-03-31T09:04:27Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Show HN: Go Style Agent Skill – Opinionated Skill for Writing Golang",
+		"URL": "https://github.com/madflojo/go-style-agent-skill",
+		"Author": "madflojo",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-03-28T15:23:58Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Golang naming conventions: a practical guide",
+		"URL": "https://www.alexedwards.net/blog/go-naming-conventions",
+		"Author": "fanf2",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 0,
+		"Published": "2026-03-25T15:42:04Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "Ask HN: Building a deterministic AI substrate on legacy hardware",
+		"URL": "https://news.ycombinator.com/item?id=47516833",
+		"Author": "theantagonistai",
+		"Snippet": "I have been working on this in isolation for the last 7+ years. I have reached the absolute limit of what I can do as a solo architect without \"production plumbing.\" I am at a survival wall and am loo",
+		"Tag": "article",
+		"Comments": 1,
+		"Published": "2026-03-25T13:05:32Z"
+	},
+	{
+		"Source": "hacker_news",
+		"Title": "A collection of 35 Golang Agent Skills",
+		"URL": "https://github.com/samber/cc-skills-golang",
+		"Author": "samber",
+		"Snippet": "",
+		"Tag": "article",
+		"Comments": 2,
+		"Published": "2026-03-23T11:03:49Z"
+	}
+]

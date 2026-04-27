@@ -1,0 +1,272 @@
+{
+	"dev_to": [
+		{
+			"Source": "dev_to",
+			"Title": "Don’t Trust Backups You Haven’t Restored",
+			"URL": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
+			"Author": "alexey.zh",
+			"Snippet": "0. A Backup Is Not a File, but a Promise   You can write anything you want in the...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T14:39:58Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "I built ssmctl because AWS SSM deserved a better user experience",
+			"URL": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
+			"Author": "Rhys | Senior Cloud Infrastructure Engineer",
+			"Snippet": "Github: github.com/rhysmcneill/ssmctl   I use AWS Session Manager a lot. No bastion hosts, no open...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T17:00:37Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "DDD in Go applied to crypto exchange APIs",
+			"URL": "https://dev.to/ohugonnot/ddd-in-go-applied-to-crypto-exchange-apis-3on4",
+			"Author": "Odilon HUGONNOT",
+			"Snippet": "Bounded contexts, aggregates, value objects and anti-corruption layer — DDD is the 'why' behind CQRS and event sourcing. Applied to a Go service consuming Binance, OKEx and Coinbase.",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T09:00:04Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "Message Queue Example using RabbitMQ in Go",
+			"URL": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
+			"Author": "nadirbasalamah",
+			"Snippet": "Introduction   A message queue is an essential component in a distributed system, allowing...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T07:22:51Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "The Invisible Layer Protecting Your Go Dependencies",
+			"URL": "https://dev.to/logicco/the-invisible-layer-protecting-your-go-dependencies-4n9m",
+			"Author": "LogicCo",
+			"Snippet": "Before starting, I want to be clear: this is not a deep dive into the Golang Proxy, but an...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T03:39:30Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "WEB UI in Go? Nothing Can Stop Me!",
+			"URL": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
+			"Author": "alexey.zh",
+			"Snippet": "Introduction   Author's note: This article is not technical in nature. Rather, it is a set...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T09:58:48Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "The Airgap Test: Refactoring a Cobra CLI into a Library API",
+			"URL": "https://dev.to/bala_paranj_059d338e44e7e/the-airgap-test-refactoring-a-cobra-cli-into-a-library-api-1h0k",
+			"Author": "Bala Paranj",
+			"Snippet": "How a single rule — only RunE touches *cobra.Command — turned a CLI codebase into a library that...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T12:06:42Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "Every Request Looked the Same in My Logs. Then I Added One Line.",
+			"URL": "https://dev.to/abhishek_sharma_a9792aee8/every-request-looked-the-same-in-my-logs-then-i-added-one-line-19m7",
+			"Author": "Abhishek Sharma",
+			"Snippet": "In Part 9, I Dockerized my backend and added database migrations. One command (docker compose up) now...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T14:11:32Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "I learned Rust with rustlings, so I built the same thing for Go",
+			"URL": "https://dev.to/ichihiroy/i-learned-rust-with-rustlings-so-i-built-the-same-thing-for-go-4f4m",
+			"Author": "Yunis Quliyev",
+			"Snippet": "I've been wanting to learn Go properly for a while. Tried the usual — read the docs, watched...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T18:44:00Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "8 Cursor Rules for Go Developers — 2026 Edition",
+			"URL": "https://dev.to/olivia_craft/8-cursor-rules-for-go-developers-2026-edition-2c25",
+			"Author": "Olivia Craft",
+			"Snippet": "Eight Cursor rules that make your AI write idiomatic Go — proper error handling, accept interfaces, context-first signatures, owned goroutines, directional channels, no init() tricks, table-driven t",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T09:55:03Z"
+		},
+		{
+			"Source": "dev_to",
+			"Title": "GopherWhisper: A burrow full of malware",
+			"URL": "https://dev.to/mark0_617b45cda9782a/gopherwhisper-a-burrow-full-of-malware-1cfj",
+			"Author": "Mark0",
+			"Snippet": "ESET researchers have identified a new China-aligned APT group dubbed GopherWhisper, which has been...",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T06:45:55Z"
+		}
+	],
+	"hacker_news": [
+		{
+			"Source": "hacker_news",
+			"Title": "I learned Rust with rustlings, so I built the same thing for Go",
+			"URL": "https://github.com/Ichihiroy/golings",
+			"Author": "ichihiroy",
+			"Snippet": "",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T18:40:36Z"
+		}
+	],
+	"lobsters": [
+		{
+			"Source": "lobsters",
+			"Title": "Swissing a table",
+			"URL": "https://philpearl.github.io/post/swissing_a_table/",
+			"Author": "carlana",
+			"Snippet": "",
+			"Tag": "article",
+			"Comments": 4,
+			"Published": "2026-04-26T14:19:13Z"
+		}
+	],
+	"medium": [
+		{
+			"Source": "medium",
+			"Title": "Go: Kenapa Harus Belajar Go di Era AI?",
+			"URL": "https://jeriatno.medium.com/go-kenapa-harus-belajar-go-di-era-ai-46aa486db1f2?source=rss------golang-5",
+			"Author": "iwanna",
+			"Snippet": "Di tahun 2026, AI sudah bisa generate kode. Copilot, Claude, ChatGPT — tinggal describe kebutuhan, kode muncul dalam hitungan detik. Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T23:10:46Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "Designing an LLM Orchestrator in Go: Decisions That Actually Matter in Production",
+			"URL": "https://medium.com/@cassius.paim/designing-an-llm-orchestrator-in-go-decisions-that-actually-matter-in-production-144f2d9d6008?source=rss------golang-5",
+			"Author": "Cássius Paim",
+			"Snippet": "Why I stopped thinking about integration and started thinking about control at scale Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T23:06:30Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "AI Writes Go Tests That Pass — That’s Not the Same as Tests That Catch Bugs",
+			"URL": "https://medium.com/@bdgouthiere/ai-writes-go-tests-that-pass-thats-not-the-same-as-tests-that-catch-bugs-ad55005ab781?source=rss------golang-5",
+			"Author": "Benoit Gouthiere",
+			"Snippet": "After several months of using AI assistants on real Go projects, the pattern is consistent. The coverage number is climbing. The actual… Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T21:09:33Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "Go Concurrency",
+			"URL": "https://medium.com/@shayanholakouee/go-concurrency-23acb96f813e?source=rss------golang-5",
+			"Author": "Shayan Holakouee",
+			"Snippet": "Most tutorials on Go concurrency follow the same script. They show you a goroutine, tell you it’s like a lightweight thread, demonstrate a… Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T20:00:28Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "Managing Multi-Cloud Configuration on Golang Services",
+			"URL": "https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5",
+			"Author": "Victoria Luquet",
+			"Snippet": "It is well known that managing configuration, specially in Golang, can become a mess, depending on how the project is structured, its size… Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T19:59:17Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "Learning Go through building a trading engine: Pt. 1",
+			"URL": "https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5",
+			"Author": "Anaz Aijaz",
+			"Snippet": "I picked up Go last week, coming from JAVA and JS and Frontend it is not a pleasant experience. You can easily find discussions as this… Continue reading on Medium »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T18:31:16Z"
+		},
+		{
+			"Source": "medium",
+			"Title": "Kikplate: The Easiest Way to Start with Production-Ready Boilerplates",
+			"URL": "https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5",
+			"Author": "Moeid Heidari",
+			"Snippet": "For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming… Continue reading on ITNEXT »",
+			"Tag": "article",
+			"Comments": 0,
+			"Published": "2026-04-26T18:05:17Z"
+		}
+	],
+	"reddit": [
+		{
+			"Source": "reddit",
+			"Title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
+			"URL": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
+			"Author": "Extension_Layer1825",
+			"Snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have ",
+			"Tag": "article",
+			"Comments": 2,
+			"Published": "2026-04-26T15:58:00Z"
+		},
+		{
+			"Source": "reddit",
+			"Title": "watgo - a WebAssembly Toolkit for Go",
+			"URL": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
+			"Author": "self",
+			"Snippet": "",
+			"Tag": "article",
+			"Comments": 1,
+			"Published": "2026-04-26T15:31:39Z"
+		},
+		{
+			"Source": "reddit",
+			"Title": "potential goroutine leak or nah",
+			"URL": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
+			"Author": "KaleidoscopePlusPlus",
+			"Snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits.\n\nThe routine runs indefinitely on an interval delivered from a ticker.\n\n  \n`ticker := time.New",
+			"Tag": "article",
+			"Comments": 17,
+			"Published": "2026-04-26T14:46:53Z"
+		},
+		{
+			"Source": "reddit",
+			"Title": "Showcase: kLex (FROG) – A 'Governed' language with 30+ libs written in Go.",
+			"URL": "https://github.com/kmcnally5/FROG",
+			"Author": "Ill-Plum-7348",
+			"Snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.**\n\nI wrote kLex/FROG almost entirely using AI - only breaking from this as required.  I did this for",
+			"Tag": "article",
+			"Comments": 5,
+			"Published": "2026-04-26T14:38:55Z"
+		},
+		{
+			"Source": "reddit",
+			"Title": "xytz - a beautiful TUI YouTube Downloader/Player",
+			"URL": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
+			"Author": "Upbeat_Equivalent519",
+			"Snippet": "made with go and bubbletea\n\nhttps://github.com/xdagiz/xytz",
+			"Tag": "article",
+			"Comments": 1,
+			"Published": "2026-04-26T09:27:37Z"
+		},
+		{
+			"Source": "reddit",
+			"Title": "WhatsApp api",
+			"URL": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
+			"Author": "WorkingInitiative909",
+			"Snippet": "Are someone use this repo \n\nGOWA \n\n  \n[https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
+			"Tag": "article",
+			"Comments": 3,
+			"Published": "2026-04-26T00:07:59Z"
+		}
+	]
+}

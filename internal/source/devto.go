@@ -65,7 +65,7 @@ func (d devToResponse) transform() news.Item {
 		URL:       d.Url,
 		Author:    d.User.Name,
 		Snippet:   d.Description,
-		Tag:       news.TagProposal,
+		Tag:       news.TagArticle,
 		Comments:  d.CommentsCount,
 		Published: d.PublishedAt,
 	}

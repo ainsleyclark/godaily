@@ -22,6 +22,7 @@ package email
 import (
 	"context"
 	"log/slog"
+	"os"
 
 	"github.com/resend/resend-go/v3"
 )
@@ -32,7 +33,7 @@ type Client struct {
 
 func New() *Client {
 	return &Client{
-		resend: resend.NewClient("re_xxxxxxxxx"),
+		resend: resend.NewClient(os.Getenv("RESEND_TOKEN")),
 	}
 }
 
