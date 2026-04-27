@@ -20,48 +20,17 @@
 package source
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// %s in each fixture is the test server URL — point story URLs at the same
-// server so enrichment requests land on a non-HTML response and silently
-// skip, keeping the test hermetic.
-const lobstersOKResponseTpl = `[
-  {
-    "short_id": "abc123",
-    "title": "Building a REST API in Go",
-    "url": "%s",
-    "comments_url": "https://lobste.rs/s/abc123/building_rest_api_go",
-    "score": 42,
-    "comment_count": 7,
-    "created_at": "2024-04-25T10:30:00.000-05:00",
-    "description": "A tutorial on building REST APIs with Go.",
-    "submitter_user": "gopher",
-    "tags": ["go", "practices"]
-  }
-]`
-
-const lobstersEmptyDescResponseTpl = `[
-  {
-    "short_id": "def456",
-    "title": "Go 1.24 is released",
-    "url": "%s",
-    "comments_url": "https://lobste.rs/s/def456/go_1_24_is_released",
-    "score": 100,
-    "comment_count": 25,
-    "created_at": "2024-04-26T12:00:00.000-05:00",
-    "description": "",
-    "submitter_user": "robpike",
-    "tags": ["go"]
-  }
-]`
 
 // lobstersSelfPostResponse exercises the branch where the story URL points
 // back at the discussion page (Lobsters self-post) — OriginalURL must stay
@@ -84,6 +53,12 @@ const lobstersSelfPostResponse = `[
 func TestLobsters_Fetch(t *testing.T) {
 	t.Parallel()
 
+	// Real /t/go.json response captured from lobste.rs — every story's "url"
+	// field is replaced with __SERVER_URL__ so enrichment requests land on
+	// the test server (which returns JSON, not HTML, and silently skips).
+	fixture, err := os.ReadFile("testdata/lobsters.json")
+	require.NoError(t, err)
+
 	tt := map[string]struct {
 		stub func(serverURL string) http.HandlerFunc
 		want func(t *testing.T, items []news.Item, err error, serverURL string)
@@ -102,7 +77,7 @@ func TestLobsters_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(lobstersOKResponseTpl, serverURL)
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, err := w.Write([]byte(body))
@@ -112,35 +87,18 @@ func TestLobsters_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 3)
 				assert.Equal(t, news.Item{
 					Source:      news.SourceLobsters,
-					Title:       "Building a REST API in Go",
+					Title:       "Swissing a table",
 					URL:         serverURL,
-					OriginalURL: "https://lobste.rs/s/abc123/building_rest_api_go",
-					Author:      "gopher",
-					Snippet:     "A tutorial on building REST APIs with Go.",
+					OriginalURL: "https://lobste.rs/s/2lzsw6/swissing_table",
+					Author:      "carlana",
 					Tag:         news.TagArticle,
-					Comments:    7,
-					Score:       0.9566039969802683, // log(43)/log(51); weight 1.0 * engagement
-					Published:   time.Date(2024, 4, 25, 15, 30, 0, 0, time.UTC),
+					Comments:    4,
+					Score:       0.9042486604437607, // log(35)/log(51); weight 1.0 * engagement
+					Published:   time.Date(2026, 4, 26, 14, 19, 13, 0, time.UTC),
 				}, items[0])
-			},
-		},
-		"Empty Description": {
-			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(lobstersEmptyDescResponseTpl, serverURL)
-				return func(w http.ResponseWriter, _ *http.Request) {
-					w.WriteHeader(http.StatusOK)
-					_, err := w.Write([]byte(body))
-					assert.NoError(t, err)
-				}
-			},
-			want: func(t *testing.T, items []news.Item, err error, _ string) {
-				t.Helper()
-				assert.NoError(t, err)
-				assert.Len(t, items, 1)
-				assert.Empty(t, items[0].Snippet)
 			},
 		},
 		"Self Post": {

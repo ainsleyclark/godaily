@@ -22,28 +22,14 @@ package source
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// golangBridgeOKResponse is a minimal Discourse /latest.json response with one topic.
-const golangBridgeOKResponse = `{
-  "topic_list": {
-    "topics": [
-      {
-        "id": 12345,
-        "title": "How to use generics in Go 1.21",
-        "slug": "how-to-use-generics-in-go-1-21",
-        "posts_count": 8,
-        "created_at": "2026-04-20T10:00:00.000Z",
-        "image_url": "https://forum.golangbridge.org/uploads/cover.png"
-      }
-    ]
-  }
-}`
 
 // golangBridgeEmptyResponse has an empty topics list.
 const golangBridgeEmptyResponse = `{
@@ -54,6 +40,13 @@ const golangBridgeEmptyResponse = `{
 
 func TestGolangBridge_Fetch(t *testing.T) {
 	t.Parallel()
+
+	// Real /latest.json response captured from forum.golangbridge.org.
+	// GolangBridge has no enrichment hop (EnrichmentURL returns ""), so
+	// topic URLs are constructed by the source from slug+id without any
+	// network round-trip.
+	fixture, err := os.ReadFile("testdata/golangbridge.json")
+	require.NoError(t, err)
 
 	tt := map[string]struct {
 		stub http.HandlerFunc
@@ -71,21 +64,20 @@ func TestGolangBridge_Fetch(t *testing.T) {
 		"OK": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(golangBridgeOKResponse))
+				_, err := w.Write(fixture)
 				assert.NoError(t, err)
 			},
 			want: func(items []news.Item, err error) {
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 3)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGolangBridge,
-					Title:     "How to use generics in Go 1.21",
-					URL:       "https://forum.golangbridge.org/t/how-to-use-generics-in-go-1-21/12345",
-					ImageURL:  "https://forum.golangbridge.org/uploads/cover.png",
-					Comments:  8,
+					Title:     "An Unofficial Discourse User Reference Guide",
+					URL:       "https://forum.golangbridge.org/t/an-unofficial-discourse-user-reference-guide/9738",
+					Comments:  4,
 					Tag:       news.TagArticle,
-					Score:     0.1, // 0 views hits the default floor; weight 1.0 * 0.1
-					Published: time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
+					Score:     1.0, // 13375 views saturates the curve; weight 1.0 * engagement 1.0
+					Published: time.Date(2018, time.July, 3, 7, 31, 23, 214000000, time.UTC),
 				}, items[0])
 			},
 		},

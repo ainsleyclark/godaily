@@ -20,35 +20,26 @@
 package source
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// %s is filled with the test server URL — the item link points at the same
-// server so enrichment requests get a non-HTML response and silently skip.
-const mediumOKResponseTpl = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <channel>
-    <item>
-      <title>Understanding Go Interfaces</title>
-      <link>%s</link>
-      <dc:creator>Gopher Dev</dc:creator>
-      <description><![CDATA[<p>Interfaces in Go are <strong>implicit</strong>.</p>]]></description>
-      <pubDate>Thu, 25 Apr 2024 10:00:00 +0000</pubDate>
-      <category>golang</category>
-      <category>programming</category>
-    </item>
-  </channel>
-</rss>`
 
 func TestMedium_Fetch(t *testing.T) {
 	t.Parallel()
+
+	// Real golang-tag RSS feed captured from medium.com — each item's <link>
+	// is replaced with __SERVER_URL__ so enrichment requests land on the
+	// test server (which returns RSS, not HTML, and silently skips).
+	fixture, err := os.ReadFile("testdata/medium.xml")
+	require.NoError(t, err)
 
 	tt := map[string]struct {
 		stub func(serverURL string) http.HandlerFunc
@@ -68,7 +59,7 @@ func TestMedium_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(mediumOKResponseTpl, serverURL)
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, err := w.Write([]byte(body))
@@ -78,16 +69,16 @@ func TestMedium_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 2)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceMedium,
-					Title:     "Understanding Go Interfaces",
+					Title:     "Why did my value receivers have the same address?",
 					URL:       serverURL,
-					Author:    "Gopher Dev",
-					Snippet:   "Interfaces in Go are implicit .",
+					Author:    "Andrei Boar",
+					Snippet:   "Intro Continue reading on Medium »",
 					Tag:       news.TagArticle,
 					Score:     0.25, // no signal: weight 0.5 * constant 0.5
-					Published: time.Date(2024, 4, 25, 10, 0, 0, 0, time.UTC),
+					Published: time.Date(2026, 4, 27, 19, 6, 22, 0, time.UTC),
 				}, items[0])
 			},
 		},

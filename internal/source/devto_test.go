@@ -22,19 +22,25 @@ package source
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestDevTo_Fetch(t *testing.T) {
 	t.Parallel()
 
+	// Real /api/articles?tag=go response captured from dev.to. DevTo has no
+	// enrichment hop (EnrichmentURL returns ""), so item URLs stay verbatim.
+	fixture, err := os.ReadFile("testdata/devto.json")
+	require.NoError(t, err)
+
 	tt := map[string]struct {
 		stub http.HandlerFunc
-		url  string
 		want func([]news.Item, error)
 	}{
 		"Bad Request": {
@@ -49,23 +55,23 @@ func TestDevTo_Fetch(t *testing.T) {
 		"OK": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(`[{"type_of":"article","id":3549510,"title":"I built agent-to-agent communication that works behind any NAT","description":"If you have ever tried connecting two AI agents running on different machines...","slug":"slug","path":"/artem_a/slug","url":"https://dev.to/artem_a/slug","comments_count":3,"public_reactions_count":0,"collection_id":null,"published_timestamp":"2026-04-25T11:04:19Z","language":"en","subforem_id":1,"positive_reactions_count":0,"cover_image":"https://media2.dev.to/cover.png","social_image":"https://media2.dev.to/social.png","canonical_url":"https://dev.to/artem_a/slug","created_at":"2026-04-25T11:04:19Z","edited_at":null,"crossposted_at":null,"published_at":"2026-04-25T11:04:19Z","last_comment_at":"2026-04-25T11:04:19Z","reading_time_minutes":4,"tag_list":["go"],"tags":"go","user":{"name":"Artemii Amelin","username":"artem_a","twitter_username":null,"github_username":"artemiia","user_id":3893832,"website_url":null,"profile_image":"","profile_image_90":""}}]`))
+				_, err := w.Write(fixture)
 				assert.NoError(t, err)
 			},
 			want: func(items []news.Item, err error) {
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 3)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceDevTo,
-					Title:     "I built agent-to-agent communication that works behind any NAT",
-					URL:       "https://dev.to/artem_a/slug",
-					ImageURL:  "https://media2.dev.to/cover.png",
-					Author:    "Artemii Amelin",
-					Snippet:   "If you have ever tried connecting two AI agents running on different machines...",
+					Title:     "🚀 Building a CRUD API in Go with PostgreSQL (Step-by-Step)",
+					URL:       "https://dev.to/ahmedraza_fyntune/building-a-crud-api-in-go-with-postgresql-step-by-step-2n34",
+					ImageURL:  "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fas19p9v7rfz1vj7ip25e.png",
+					Author:    "Ahmed Raza Idrisi",
+					Snippet:   "In the previous post, we built a simple CRUD API in Go using in-memory storage. Now let\u2019s make it...",
 					Tag:       news.TagArticle,
-					Comments:  3,
-					Score:     0.1, // 0 reactions hits the default floor; weight 1.0 * 0.1
-					Published: time.Date(2026, time.April, 25, 11, 4, 19, 0, time.UTC),
+					Comments:  0,
+					Score:     0.227670248696953, // 1 reaction: log(2)/log(21); weight 1.0
+					Published: time.Date(2026, time.April, 27, 11, 9, 38, 0, time.UTC),
 				}, items[0])
 			},
 		},
@@ -77,12 +83,7 @@ func TestDevTo_Fetch(t *testing.T) {
 			s := httptest.NewServer(test.stub)
 			defer s.Close()
 
-			url := s.URL
-			if test.url != "" {
-				url = test.url
-			}
-
-			got, err := DevTo{url: url}.Fetch(t.Context())
+			got, err := DevTo{url: s.URL}.Fetch(t.Context())
 			test.want(got, err)
 		})
 	}

@@ -1,10 +1,10 @@
 {
 	"exhaustive": {
-		"nbHits": false,
-		"typo": false
+		"nbHits": true,
+		"typo": true
 	},
-	"exhaustiveNbHits": false,
-	"exhaustiveTypo": false,
+	"exhaustiveNbHits": true,
+	"exhaustiveTypo": true,
 	"hits": [
 		{
 			"_highlightResult": {
@@ -833,37 +833,22 @@
 		}
 	],
 	"hitsPerPage": 20,
-	"nbHits": 6622,
+	"nbHits": 6661,
 	"nbPages": 50,
 	"page": 0,
 	"params": "query=golang&tags=story&advancedSyntax=true&analyticsTags=backend",
-	"processingTimeMS": 94,
+	"processingTimeMS": 9,
 	"processingTimingsMS": {
 		"_request": {
-			"roundTrip": 14
-		},
-		"afterFetch": {
-			"format": {
-				"highlighting": 1,
-				"total": 1
-			}
+			"roundTrip": 16
 		},
 		"fetch": {
-			"query": 4,
-			"scanning": 8,
-			"total": 13
+			"query": 2,
+			"scanning": 5,
+			"total": 8
 		},
-		"getIdx": {
-			"load": {
-				"dicts": 1,
-				"gens": 51,
-				"synonyms": 26,
-				"total": 79
-			},
-			"total": 79
-		},
-		"total": 94
+		"total": 9
 	},
 	"query": "golang",
-	"serverTimeMS": 137
+	"serverTimeMS": 10
 }

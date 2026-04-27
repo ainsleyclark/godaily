@@ -9,7 +9,7 @@
             <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
         </image>
         <generator>Medium</generator>
-        <lastBuildDate>Mon, 27 Apr 2026 19:09:30 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 27 Apr 2026 19:24:49 GMT</lastBuildDate>
         <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
         <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
         <atom:link href="http://medium.superfeedr.com" rel="hub"/>
@@ -25,7 +25,7 @@
             <category><![CDATA[runtime]]></category>
             <dc:creator><![CDATA[Andrei Boar]]></dc:creator>
             <pubDate>Mon, 27 Apr 2026 19:06:22 GMT</pubDate>
-            <atom:updated>2026-04-27T19:06:22.047Z</atom:updated>
+            <atom:updated>2026-04-27T19:19:23.073Z</atom:updated>
         </item>
         <item>
             <title><![CDATA[Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️]]></title>
@@ -80,7 +80,7 @@
             <category><![CDATA[distributed-systems]]></category>
             <dc:creator><![CDATA[Kennedy Karoko]]></dc:creator>
             <pubDate>Mon, 27 Apr 2026 15:20:14 GMT</pubDate>
-            <atom:updated>2026-04-27T15:20:14.955Z</atom:updated>
+            <atom:updated>2026-04-27T19:18:07.061Z</atom:updated>
         </item>
         <item>
             <title><![CDATA[The Green Tea GC Is Now Default in Go 1.26. Here Is What That Means for Your Backend Services.]]></title>

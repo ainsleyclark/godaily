@@ -22,8 +22,10 @@ package source
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
@@ -162,6 +164,44 @@ func TestGitHub_Fetch(t *testing.T) {
 			tc.want(got, err)
 		})
 	}
+}
+
+// TestGitHub_RealResponse verifies the source decodes a real captured
+// /repos/golang/go/issues response from api.github.com without losing fields.
+// The fixture's html_url is replaced with __SERVER_URL__ so the enrichment
+// hop lands on the test server (which returns JSON, not HTML, and silently
+// skips). Refresh the fixture by re-running the curl in testdata/README.md.
+func TestGitHub_RealResponse(t *testing.T) {
+	t.Parallel()
+
+	fixture, err := os.ReadFile("testdata/github_issues.json")
+	require.NoError(t, err)
+
+	var serverURL string
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(body))
+	}))
+	defer s.Close()
+	serverURL = s.URL
+
+	got, err := GitHub{
+		endpoints: []ghEndpoint{{url: s.URL, tag: news.TagProposalAccepted}},
+	}.Fetch(t.Context())
+	require.NoError(t, err)
+	require.Len(t, got, 1)
+	assert.Equal(t, news.Item{
+		Source:    news.SourceGitHub,
+		Title:     "spec: generic methods for Go",
+		URL:       serverURL,
+		Author:    "griesemer",
+		Snippet:   "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
+		Tag:       news.TagProposalAccepted,
+		Comments:  175,
+		Score:     1.8, // 853 +1s saturates the curve; weight 2.0 * engagement 0.9 (capped to 1.0 by sat) → adjusted by ScoreOf
+		Published: time.Date(2026, time.January, 22, 23, 13, 22, 0, time.UTC),
+	}, got[0])
 }
 
 func TestGhSnippet(t *testing.T) {

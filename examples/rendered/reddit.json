@@ -1,6 +1,18 @@
 [
 	{
 		"source": "reddit",
+		"title": "Zero-config Go heap profiling",
+		"url": "https://coroot.com/blog/zero-config-go-heap-profiling/",
+		"image_url": "https://external-preview.redd.it/4l64GFfghifmYot9kg43cQE0s-qMlelSqjTddw8pY1Q.png?auto=webp\u0026s=b534ecb68432bcb684bb9b2cb5e165eca6c30063",
+		"author": "NikolaySivko",
+		"snippet": "How we added continuous Go heap profiling to coroot-node-agent without requiring any code changes, pprof endpoints, or annotations, by reading runtime.mbuckets directly from process memory.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.15019048322368794,
+		"published": "2026-04-27T19:26:59Z"
+	},
+	{
+		"source": "reddit",
 		"title": "Small Projects",
 		"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
 		"author": "AutoModerator",
@@ -41,7 +53,7 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.6379982859432913,
+		"score": 0.649112469029166,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -64,7 +76,7 @@
 		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.8149733256083747,
+		"score": 0.8199546729298166,
 		"published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -87,7 +99,7 @@
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.714138851624206,
+		"score": 0.7220189587716063,
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -122,7 +134,7 @@
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.5867777864565255,
+		"score": 0.5718284755479184,
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -134,7 +146,7 @@
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.6262830509731585,
+		"score": 0.6379982859432913,
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -145,7 +157,7 @@
 		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.15019048322368794,
+		"score": 0.23804628387473528,
 		"published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -157,7 +169,7 @@
 		"snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
 		"tag": "article",
 		"comments": 8,
-		"score": 0.8046533244696281,
+		"score": 0.8098747594226537,
 		"published": "2026-04-25T11:19:48Z"
 	},
 	{
@@ -168,7 +180,7 @@
 		"snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap. In contrast, the Flex family—such",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.45057144967106383,
+		"score": 0.4760925677494707,
 		"published": "2026-04-24T23:16:08Z"
 	},
 	{
@@ -191,7 +203,7 @@
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
-		"score": 0.9821194217167522,
+		"score": 0.9867297885250814,
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -225,7 +237,7 @@
 		"snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
 		"tag": "article",
 		"comments": 7,
-		"score": 0.8149733256083747,
+		"score": 0.8248240703312607,
 		"published": "2026-04-23T14:31:45Z"
 	},
 	{
@@ -247,19 +259,7 @@
 		"snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
 		"tag": "article",
 		"comments": 45,
-		"score": 0.764088502509945,
+		"score": 0.7703694949060205,
 		"published": "2026-04-23T09:36:02Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Anatomy of an OpenAI-compatible provider in Go",
-		"url": "https://www.reddit.com/r/golang/comments/1stdd9z/anatomy_of_an_openaicompatible_provider_in_go/",
-		"image_url": "https://external-preview.redd.it/CzlJkaODKS7Rjo9Y3SjOmLDTqAzwxBnbQvPtfFSx_Xc.png?auto=webp\u0026s=7b6b17b047b1d66820746fc046ae3664c6dc9ef5",
-		"author": "anhzendev",
-		"snippet": "\u003eHow much Go code do you need to ship an OpenAI-compatible provider? About 84 lines for chat-only. 126 for one with embeddings and account-ID URL quirks (Cloudflare Workers AI). 132 with regional rout",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.1,
-		"published": "2026-04-23T09:03:05Z"
 	}
 ]

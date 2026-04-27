@@ -102,6 +102,6 @@ func (e goBlogEntry) Transform() news.Item {
 		Snippet:   e.Summary,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceGoBlog, news.TagArticle, 0, false),
-		Published: published,
+		Published: published.UTC(),
 	}
 }

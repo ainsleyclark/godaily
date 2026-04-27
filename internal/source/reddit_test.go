@@ -20,42 +20,17 @@
 package source
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// %s is filled with the test server URL — the post URL points at the same
-// server so enrichment requests get a non-HTML response and silently skip.
-const redditOKResponseTpl = `{
-  "data": {
-    "children": [
-      {
-        "data": {
-          "title": "Go 1.23 released",
-          "url": "%s",
-          "author": "gopher",
-          "selftext": "",
-          "score": 500,
-          "num_comments": 88,
-          "created_utc": 1714000000.0,
-          "permalink": "/r/golang/comments/abc123/go_123_released/",
-          "preview": {
-            "images": [
-              {"source": {"url": "https://preview.redd.it/abc.jpg?width=640&amp;auto=webp"}}
-            ]
-          },
-          "thumbnail": "https://b.thumbs.redditmedia.com/x.jpg"
-        }
-      }
-    ]
-  }
-}`
 
 // redditSelfPostResponse is a self-post whose URL points back to Reddit,
 // exercising the permalink fallback in transform().
@@ -81,6 +56,13 @@ const redditSelfPostResponse = `{
 func TestReddit_Fetch(t *testing.T) {
 	t.Parallel()
 
+	// Real /r/golang/new.json response captured from reddit.com — every
+	// child's external "url" field is replaced with __SERVER_URL__ so
+	// enrichment lands on the test server (self-post URLs that point back
+	// at reddit.com are kept verbatim and skip enrichment via the source).
+	fixture, err := os.ReadFile("testdata/reddit.json")
+	require.NoError(t, err)
+
 	tt := map[string]struct {
 		stub func(serverURL string) http.HandlerFunc
 		want func(t *testing.T, items []news.Item, err error, serverURL string)
@@ -99,28 +81,27 @@ func TestReddit_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(redditOKResponseTpl, serverURL)
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, err := w.Write([]byte(body))
 					assert.NoError(t, err)
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 3)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceReddit,
-					Title:     "Go 1.23 released",
-					URL:       serverURL,
-					ImageURL:  "https://preview.redd.it/abc.jpg?width=640&auto=webp",
-					Author:    "gopher",
-					Snippet:   "",
+					Title:     "Small Projects",
+					URL:       "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
+					Author:    "AutoModerator",
+					Snippet:   "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
 					Tag:       news.TagArticle,
-					Comments:  88,
-					Score:     1.0, // score 500 saturates the curve; weight 1.0 * 1.0
-					Published: time.Unix(1714000000, 0).UTC(),
+					Comments:  0,
+					Score:     0.23804628387473528, // 2 score: log(3)/log(101); weight 1.0
+					Published: time.Date(2026, 4, 27, 19, 0, 54, 0, time.UTC),
 				}, items[0])
 			},
 		},

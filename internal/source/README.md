@@ -100,10 +100,29 @@ Key points:
 - For empty snippets (e.g. external link posts), the cron pipeline calls `ingest.EnrichSnippets`
   after fetch, which fills them in from the article's meta description.
 
-## 3. Write tests
+## 3. Capture a real-API fixture
 
-Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API; pass the test
-server's URL into the source struct directly:
+Tests load the OK-case payload from `testdata/<source>.{json,xml,atom,html}` rather than embedding
+the response inline. Capture a small real response from the upstream once and commit it:
+
+```sh
+curl -s 'https://api.example.com/feed?limit=3' -o internal/source/testdata/foo.json
+```
+
+Trim to ~2–3 representative items so the file stays readable but still exercises multi-item parsing.
+**If the source enriches** (i.e. its `EnrichmentURL()` returns a non-empty URL), replace every
+external URL in the captured response with the literal sentinel `__SERVER_URL__`. The test rewrites
+this to the local `httptest` server's URL at runtime, so enrichment requests never hit the live
+internet. Sources that return `""` from `EnrichmentURL()` (e.g. dev.to, GolangBridge, YouTube) need
+no substitution — leave the captured URLs verbatim.
+
+Edge-case payloads (malformed cards, missing fields, self-posts) stay inline as small `const`
+strings — those are crafted negative tests, not real API samples.
+
+## 4. Write tests
+
+Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API; load the fixture
+once at the top of the test and (for enriching sources) `strings.ReplaceAll` the sentinel:
 
 ```go
 package source
@@ -111,37 +130,50 @@ package source
 import (
     "net/http"
     "net/http/httptest"
+    "os"
+    "strings"
     "testing"
 
     "github.com/ainsleyclark/godaily/internal/news"
     "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/require"
 )
 
 func TestFoo_Fetch(t *testing.T) {
     t.Parallel()
 
+    fixture, err := os.ReadFile("testdata/foo.json")
+    require.NoError(t, err)
+
     tt := map[string]struct {
-        stub http.HandlerFunc
-        want func([]news.Item, error)
+        stub func(serverURL string) http.HandlerFunc
+        want func(t *testing.T, items []news.Item, err error, serverURL string)
     }{
         "Bad Request": {
-            stub: func(w http.ResponseWriter, _ *http.Request) {
-                w.WriteHeader(http.StatusBadRequest)
+            stub: func(string) http.HandlerFunc {
+                return func(w http.ResponseWriter, _ *http.Request) {
+                    w.WriteHeader(http.StatusBadRequest)
+                }
             },
-            want: func(items []news.Item, err error) {
+            want: func(t *testing.T, items []news.Item, err error, _ string) {
+                t.Helper()
                 assert.Error(t, err)
                 assert.Nil(t, items)
             },
         },
         "OK": {
-            stub: func(w http.ResponseWriter, _ *http.Request) {
-                w.WriteHeader(http.StatusOK)
-                _, err := w.Write([]byte(`{"items":[{"title":"Hello","link":"https://example.com"}]}`))
-                assert.NoError(t, err)
+            stub: func(serverURL string) http.HandlerFunc {
+                // Drop the ReplaceAll if Foo doesn't enrich.
+                body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
+                return func(w http.ResponseWriter, _ *http.Request) {
+                    w.WriteHeader(http.StatusOK)
+                    _, _ = w.Write([]byte(body))
+                }
             },
-            want: func(items []news.Item, err error) {
+            want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+                t.Helper()
                 assert.NoError(t, err)
-                assert.Len(t, items, 1)
+                assert.Len(t, items, 3)
                 assert.Equal(t, "Hello", items[0].Title)
             },
         },
@@ -149,18 +181,30 @@ func TestFoo_Fetch(t *testing.T) {
 
     for name, test := range tt {
         t.Run(name, func(t *testing.T) {
-            s := httptest.NewServer(test.stub)
+            t.Parallel()
+            var serverURL string
+            s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+                test.stub(serverURL)(w, r)
+            }))
             defer s.Close()
+            serverURL = s.URL
             got, err := Foo{url: s.URL}.Fetch(t.Context())
-            test.want(got, err)
+            test.want(t, got, err, s.URL)
         })
     }
 }
 ```
 
-Cover at minimum: successful response, non-2xx error, and any source-specific edge cases (e.g. missing fields, fallback URLs).
+Cover at minimum: successful response (from the fixture), non-2xx error, and any source-specific
+edge cases (missing fields, fallback URLs) using small inline `const` strings.
 
-## 4. Verify
+### Refreshing fixtures
+
+When the upstream API schema changes and the fixture-based test fails, re-run the original `curl`
+to capture a fresh response, re-apply the `__SERVER_URL__` substitution if the source enriches, and
+update the OK-case assertions to match the new first-item values.
+
+## 5. Verify
 
 ```sh
 make test        # unit tests
