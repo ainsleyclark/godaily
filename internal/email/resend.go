@@ -25,6 +25,7 @@ import (
 	"github.com/resend/resend-go/v3"
 )
 
+//nolint:unused
 func test() {
 	client := resend.NewClient("re_xxxxxxxxx")
 
@@ -40,8 +41,8 @@ func test() {
 
 	sent, err := client.Emails.Send(params)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err.Error()) //nolint
 		return
 	}
-	fmt.Println(sent.Id)
+	fmt.Println(sent.Id) //nolint
 }

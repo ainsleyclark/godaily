@@ -75,13 +75,13 @@ func (s lobstersStory) transform() news.Item {
 }
 
 type lobstersStory struct {
-	ShortID       string            `json:"short_id"`
-	Title         string            `json:"title"`
-	URL           string            `json:"url"`
-	Score         int               `json:"score"`
-	CommentCount  int               `json:"comment_count"`
-	CreatedAt     string            `json:"created_at"`
-	Description   string            `json:"description"`
+	ShortID       string   `json:"short_id"`
+	Title         string   `json:"title"`
+	URL           string   `json:"url"`
+	Score         int      `json:"score"`
+	CommentCount  int      `json:"comment_count"`
+	CreatedAt     string   `json:"created_at"`
+	Description   string   `json:"description"`
 	SubmitterUser string   `json:"submitter_user"`
 	Tags          []string `json:"tags"`
 }

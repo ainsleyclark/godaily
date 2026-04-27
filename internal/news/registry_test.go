@@ -45,6 +45,7 @@ func TestRegister(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			orig := registry
 			registry = map[Source]func() Fetcher{}
 			t.Cleanup(func() { registry = orig })
@@ -122,6 +123,7 @@ func TestValidate(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			orig := registry
 			registry = map[Source]func() Fetcher{}
 			t.Cleanup(func() { registry = orig })

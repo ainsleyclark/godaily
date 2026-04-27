@@ -94,6 +94,7 @@ func TestYouTube_Fetch(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			url := "http://unused"
 			if test.stub != nil {
 				s := httptest.NewServer(test.stub)

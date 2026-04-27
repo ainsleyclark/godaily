@@ -76,7 +76,7 @@ var cmd = &cli.Command{
 					return err
 				}
 
-				fmt.Println(string(indent))
+				fmt.Println(string(indent)) //nolint
 				return nil
 			},
 		},

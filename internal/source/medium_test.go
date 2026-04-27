@@ -84,6 +84,7 @@ func TestMedium_Fetch(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			s := httptest.NewServer(test.stub)
 			defer s.Close()
 			got, err := Medium{url: s.URL}.Fetch(t.Context())

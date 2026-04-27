@@ -51,6 +51,7 @@ func TestFetch(t *testing.T) {
 			url:       ":@!£$",
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
+				t.Helper()
 				assert.ErrorContains(t, err, "request creation failed")
 			},
 		},
@@ -58,6 +59,7 @@ func TestFetch(t *testing.T) {
 			url:       closedServer.URL,
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
+				t.Helper()
 				assert.ErrorContains(t, err, "fetch")
 			},
 		},
@@ -67,6 +69,7 @@ func TestFetch(t *testing.T) {
 			},
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
+				t.Helper()
 				assert.ErrorContains(t, err, "unexpected status code")
 			},
 		},
@@ -77,6 +80,7 @@ func TestFetch(t *testing.T) {
 			},
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
+				t.Helper()
 				assert.ErrorContains(t, err, "parsing response")
 			},
 		},
@@ -87,6 +91,7 @@ func TestFetch(t *testing.T) {
 			},
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, got fakeItem, err error) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Equal(t, fakeItem{Name: "gopher"}, got)
 			},
@@ -98,6 +103,7 @@ func TestFetch(t *testing.T) {
 			},
 			unmarshal: xml.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
+				t.Helper()
 				assert.ErrorContains(t, err, "parsing response")
 			},
 		},
@@ -108,6 +114,7 @@ func TestFetch(t *testing.T) {
 			},
 			unmarshal: xml.Unmarshal,
 			want: func(t *testing.T, got fakeItem, err error) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Equal(t, "gopher", got.Name)
 			},
