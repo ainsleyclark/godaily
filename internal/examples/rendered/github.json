@@ -243,17 +243,6 @@
 	},
 	{
 		"Source": "github",
-		"Title": "proposal: spec: short function literals",
-		"URL": "https://github.com/golang/go/issues/21498",
-		"Author": "neild",
-		"Snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
-		"Score": 658,
-		"Tag": "proposal",
-		"Comments": 917,
-		"Published": "2017-08-17T18:29:52Z"
-	},
-	{
-		"Source": "github",
 		"Title": "proposal: slices: add SwapDelete",
 		"URL": "https://github.com/golang/go/issues/78964",
 		"Author": "icholy",
@@ -262,6 +251,28 @@
 		"Tag": "proposal",
 		"Comments": 8,
 		"Published": "2026-04-25T14:40:27Z"
+	},
+	{
+		"Source": "github",
+		"Title": "proposal: spec: short function literals",
+		"URL": "https://github.com/golang/go/issues/21498",
+		"Author": "neild",
+		"Snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
+		"Score": 658,
+		"Tag": "proposal",
+		"Comments": 916,
+		"Published": "2017-08-17T18:29:52Z"
+	},
+	{
+		"Source": "github",
+		"Title": "proposal: crypto/x509: support SSL_CERT_FILE on darwin",
+		"URL": "https://github.com/golang/go/issues/77865",
+		"Author": "rolandshoemaker",
+		"Snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
+		"Score": 3,
+		"Tag": "proposal",
+		"Comments": 6,
+		"Published": "2026-02-28T01:00:58Z"
 	},
 	{
 		"Source": "github",
@@ -419,17 +430,6 @@
 	},
 	{
 		"Source": "github",
-		"Title": "proposal: crypto/x509: support SSL_CERT_FILE on darwin",
-		"URL": "https://github.com/golang/go/issues/77865",
-		"Author": "rolandshoemaker",
-		"Snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
-		"Score": 2,
-		"Tag": "proposal",
-		"Comments": 5,
-		"Published": "2026-02-28T01:00:58Z"
-	},
-	{
-		"Source": "github",
 		"Title": "proposal: net/http/httptest: synctest support",
 		"URL": "https://github.com/golang/go/issues/76608",
 		"Author": "rogpeppe",
@@ -482,6 +482,17 @@
 		"Tag": "proposal",
 		"Comments": 1,
 		"Published": "2026-04-19T22:23:51Z"
+	},
+	{
+		"Source": "github",
+		"Title": "uuid: add API to generate and parse UUID",
+		"URL": "https://github.com/golang/go/issues/62026",
+		"Author": "mzattahri",
+		"Snippet": "Targeting Go 1.27 — I would like to suggest the addition to the standard library of a package to generate and parse UUID identifiers, specifically versions 3, 4 and 5. Th",
+		"Score": 206,
+		"Tag": "proposal_shipped",
+		"Comments": 343,
+		"Published": "2023-08-14T19:57:51Z"
 	},
 	{
 		"Source": "github",
@@ -559,17 +570,6 @@
 		"Tag": "proposal_shipped",
 		"Comments": 79,
 		"Published": "2024-08-08T00:35:25Z"
-	},
-	{
-		"Source": "github",
-		"Title": "uuid: add API to generate and parse UUID",
-		"URL": "https://github.com/golang/go/issues/62026",
-		"Author": "mzattahri",
-		"Snippet": "Targeting Go 1.27 — I would like to suggest the addition to the standard library of a package to generate and parse UUID identifiers, specifically versions 3, 4 and 5. Th",
-		"Score": 206,
-		"Tag": "proposal_shipped",
-		"Comments": 342,
-		"Published": "2023-08-14T19:57:51Z"
 	},
 	{
 		"Source": "github",

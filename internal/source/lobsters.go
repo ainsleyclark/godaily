@@ -65,7 +65,7 @@ func (s lobstersStory) transform() news.Item {
 		Source:    news.SourceLobsters,
 		Title:     s.Title,
 		URL:       s.URL,
-		Author:    s.SubmitterUser.Username,
+		Author:    s.SubmitterUser,
 		Snippet:   snippet,
 		Score:     s.Score,
 		Tag:       news.TagArticle,
@@ -82,10 +82,6 @@ type lobstersStory struct {
 	CommentCount  int               `json:"comment_count"`
 	CreatedAt     string            `json:"created_at"`
 	Description   string            `json:"description"`
-	SubmitterUser lobstersSubmitter `json:"submitter_user"`
-	Tags          []string          `json:"tags"`
-}
-
-type lobstersSubmitter struct {
-	Username string `json:"username"`
+	SubmitterUser string   `json:"submitter_user"`
+	Tags          []string `json:"tags"`
 }

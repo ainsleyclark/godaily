@@ -55,8 +55,7 @@ func TestYouTube_Fetch(t *testing.T) {
 			key:  "",
 			stub: nil,
 			want: func(items []news.Item, err error) {
-				assert.Error(t, err)
-				assert.Contains(t, err.Error(), "YOUTUBE_API_KEY")
+				assert.NoError(t, err)
 				assert.Nil(t, items)
 			},
 		},

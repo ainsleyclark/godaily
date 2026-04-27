@@ -38,7 +38,7 @@ const lobstersOKResponse = `[
     "comment_count": 7,
     "created_at": "2024-04-25T10:30:00.000-05:00",
     "description": "A tutorial on building REST APIs with Go.",
-    "submitter_user": {"username": "gopher"},
+    "submitter_user": "gopher",
     "tags": ["go", "practices"]
   }
 ]`
@@ -52,7 +52,7 @@ const lobstersEmptyDescResponse = `[
     "comment_count": 25,
     "created_at": "2024-04-26T12:00:00.000-05:00",
     "description": "",
-    "submitter_user": {"username": "robpike"},
+    "submitter_user": "robpike",
     "tags": ["go"]
   }
 ]`

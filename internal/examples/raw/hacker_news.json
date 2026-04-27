@@ -1,10 +1,10 @@
 {
 	"exhaustive": {
-		"nbHits": true,
-		"typo": true
+		"nbHits": false,
+		"typo": false
 	},
-	"exhaustiveNbHits": true,
-	"exhaustiveTypo": true,
+	"exhaustiveNbHits": false,
+	"exhaustiveTypo": false,
 	"hits": [
 		{
 			"_highlightResult": {
@@ -40,10 +40,10 @@
 			"created_at_i": 1777228836,
 			"num_comments": 0,
 			"objectID": "47912690",
-			"points": 1,
+			"points": 3,
 			"story_id": 47912690,
 			"title": "I learned Rust with rustlings, so I built the same thing for Go",
-			"updated_at": "2026-04-26T18:41:23Z",
+			"updated_at": "2026-04-27T06:44:39Z",
 			"url": "https://github.com/Ichihiroy/golings"
 		},
 		{
@@ -833,15 +833,14 @@
 		}
 	],
 	"hitsPerPage": 20,
-	"nbHits": 6661,
+	"nbHits": 6644,
 	"nbPages": 50,
 	"page": 0,
 	"params": "query=golang&tags=story&advancedSyntax=true&analyticsTags=backend",
-	"processingTimeMS": 15,
+	"processingTimeMS": 11,
 	"processingTimingsMS": {
 		"_request": {
-			"queue": 23,
-			"roundTrip": 14
+			"roundTrip": 19
 		},
 		"afterFetch": {
 			"format": {
@@ -850,11 +849,11 @@
 		},
 		"fetch": {
 			"query": 3,
-			"scanning": 10,
-			"total": 14
+			"scanning": 6,
+			"total": 10
 		},
-		"total": 15
+		"total": 11
 	},
 	"query": "golang",
-	"serverTimeMS": 39
+	"serverTimeMS": 12
 }

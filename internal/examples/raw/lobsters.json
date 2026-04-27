@@ -1,0 +1,473 @@
+[
+	{
+		"short_id": "2lzsw6",
+		"created_at": "2026-04-26T09:19:13.000-05:00",
+		"title": "Swissing a table",
+		"url": "https://philpearl.github.io/post/swissing_a_table/",
+		"score": 25,
+		"flags": 0,
+		"comment_count": 4,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/2lzsw6",
+		"comments_url": "https://lobste.rs/s/2lzsw6/swissing_table"
+	},
+	{
+		"short_id": "9xgleb",
+		"created_at": "2026-04-18T04:17:46.000-05:00",
+		"title": "How GitHub uses eBPF to improve deployment safety",
+		"url": "https://github.blog/engineering/infrastructure/how-github-uses-ebpf-to-improve-deployment-safety/",
+		"score": 21,
+		"flags": 0,
+		"comment_count": 6,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eduard",
+		"user_is_author": false,
+		"tags": [
+			"debugging",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/9xgleb",
+		"comments_url": "https://lobste.rs/s/9xgleb/how_github_uses_ebpf_improve_deployment"
+	},
+	{
+		"short_id": "y8shi7",
+		"created_at": "2026-04-16T07:48:35.000-05:00",
+		"title": "Many-Step Sequences in Go",
+		"url": "https://lesiw.dev/go/step/",
+		"score": 22,
+		"flags": 0,
+		"comment_count": 4,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "iv",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/y8shi7",
+		"comments_url": "https://lobste.rs/s/y8shi7/many_step_sequences_go"
+	},
+	{
+		"short_id": "hbyclt",
+		"created_at": "2026-04-15T12:18:59.000-05:00",
+		"title": "How do Wake-On-Lan works?",
+		"url": "https://blog.xaner.dev/post/wake-on-lan/",
+		"score": 7,
+		"flags": 0,
+		"comment_count": 1,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "pondidum",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"networking"
+		],
+		"short_id_url": "https://lobste.rs/s/hbyclt",
+		"comments_url": "https://lobste.rs/s/hbyclt/how_do_wake_on_lan_works"
+	},
+	{
+		"short_id": "ioszzg",
+		"created_at": "2026-04-15T03:07:45.000-05:00",
+		"title": "Porting Go's strings package to C",
+		"url": "https://antonz.org/porting-go-strings/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "abhin4v",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/ioszzg",
+		"comments_url": "https://lobste.rs/s/ioszzg/porting_go_s_strings_package_c"
+	},
+	{
+		"short_id": "pulywh",
+		"created_at": "2026-04-10T06:38:16.000-05:00",
+		"title": "watgo - a WebAssembly Toolkit for Go",
+		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
+		"score": 19,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "cgrinds",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"wasm"
+		],
+		"short_id_url": "https://lobste.rs/s/pulywh",
+		"comments_url": "https://lobste.rs/s/pulywh/watgo_webassembly_toolkit_for_go"
+	},
+	{
+		"short_id": "214wj4",
+		"created_at": "2026-04-07T18:35:34.000-05:00",
+		"title": "When the compiler lies: breaking memory safety in safe Go",
+		"url": "https://ciolek.dev/posts/when-the-compiler-lies",
+		"score": 31,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "samuelkarp",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"security"
+		],
+		"short_id_url": "https://lobste.rs/s/214wj4",
+		"comments_url": "https://lobste.rs/s/214wj4/when_compiler_lies_breaking_memory"
+	},
+	{
+		"short_id": "exrybd",
+		"created_at": "2026-04-07T11:23:42.000-05:00",
+		"title": "Hazmat: OS-level containment for AI coding agents on macOS",
+		"url": "https://github.com/dredozubov/hazmat",
+		"score": 4,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "\u003cp\u003eBlog post with the full write-up and threat model: \u003ca href=\"https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\" rel=\"ugc\"\u003ehttps://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\u003c/a\u003e\u003c/p\u003e\n",
+		"description_plain": "Blog post with the full write-up and threat model: https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/",
+		"submitter_user": "dredozubov",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"mac",
+			"vibecoding"
+		],
+		"short_id_url": "https://lobste.rs/s/exrybd",
+		"comments_url": "https://lobste.rs/s/exrybd/hazmat_os_level_containment_for_ai_coding"
+	},
+	{
+		"short_id": "faksz1",
+		"created_at": "2026-04-05T11:59:29.000-05:00",
+		"title": "Stamp It! All Programs Must Report Their Version",
+		"url": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/",
+		"score": 102,
+		"flags": 1,
+		"comment_count": 40,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "stapelberg",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"nix"
+		],
+		"short_id_url": "https://lobste.rs/s/faksz1",
+		"comments_url": "https://lobste.rs/s/faksz1/stamp_it_all_programs_must_report_their"
+	},
+	{
+		"short_id": "uffroj",
+		"created_at": "2026-04-05T07:58:46.000-05:00",
+		"title": "Building slogbox",
+		"url": "https://alexrios.me/blog/slogbox-devlog/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/uffroj",
+		"comments_url": "https://lobste.rs/s/uffroj/building_slogbox"
+	},
+	{
+		"short_id": "rw62j7",
+		"created_at": "2026-04-03T07:17:43.000-05:00",
+		"title": "Lisette — Rust syntax, Go runtime",
+		"url": "https://lisette.run",
+		"score": 70,
+		"flags": 0,
+		"comment_count": 40,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "telemachus",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"plt",
+			"rust"
+		],
+		"short_id_url": "https://lobste.rs/s/rw62j7",
+		"comments_url": "https://lobste.rs/s/rw62j7/lisette_rust_syntax_go_runtime"
+	},
+	{
+		"short_id": "9wwopb",
+		"created_at": "2026-04-02T11:53:29.000-05:00",
+		"title": "Making Services With Go Right Way",
+		"url": "https://snawoot.github.io/go_web_right_way.html",
+		"score": 6,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "lr0",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"satire"
+		],
+		"short_id_url": "https://lobste.rs/s/9wwopb",
+		"comments_url": "https://lobste.rs/s/9wwopb/making_services_with_go_right_way"
+	},
+	{
+		"short_id": "gtb0fc",
+		"created_at": "2026-04-01T12:49:53.000-05:00",
+		"title": "A game with programmable space combat written in Go",
+		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
+		"score": 24,
+		"flags": 2,
+		"comment_count": 18,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "quasilyte",
+		"user_is_author": true,
+		"tags": [
+			"games",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/gtb0fc",
+		"comments_url": "https://lobste.rs/s/gtb0fc/game_with_programmable_space_combat"
+	},
+	{
+		"short_id": "wlgi4a",
+		"created_at": "2026-03-31T07:53:06.000-05:00",
+		"title": "Data Indexing in Golang",
+		"url": "https://hister.org/posts/data-indexing-in-golang",
+		"score": 14,
+		"flags": 0,
+		"comment_count": 5,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "kvch",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/wlgi4a",
+		"comments_url": "https://lobste.rs/s/wlgi4a/data_indexing_golang"
+	},
+	{
+		"short_id": "h1hr9m",
+		"created_at": "2026-03-30T09:32:20.000-05:00",
+		"title": "A fast, compact, immutable map from strings to uint64 values in Go",
+		"url": "https://github.com/lemire/constmap",
+		"score": 13,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eatonphil",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"performance"
+		],
+		"short_id_url": "https://lobste.rs/s/h1hr9m",
+		"comments_url": "https://lobste.rs/s/h1hr9m/fast_compact_immutable_map_from_strings"
+	},
+	{
+		"short_id": "y5hfo9",
+		"created_at": "2026-03-30T09:07:40.000-05:00",
+		"title": "I Made a Terminal Pager",
+		"url": "https://theleo.zone/posts/pager/",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "robinovitch61",
+		"user_is_author": true,
+		"tags": [
+			"go",
+			"release",
+			"show"
+		],
+		"short_id_url": "https://lobste.rs/s/y5hfo9",
+		"comments_url": "https://lobste.rs/s/y5hfo9/i_made_terminal_pager"
+	},
+	{
+		"short_id": "36tumc",
+		"created_at": "2026-03-27T16:15:19.000-05:00",
+		"title": "Porting Go's io package to C",
+		"url": "https://antonz.org/porting-go-io/",
+		"score": 7,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "telemachus",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/36tumc",
+		"comments_url": "https://lobste.rs/s/36tumc/porting_go_s_io_package_c"
+	},
+	{
+		"short_id": "77pwzi",
+		"created_at": "2026-03-26T13:47:14.000-05:00",
+		"title": "goada: Fast WHATWG spec compliant URL library written in Go",
+		"url": "https://github.com/ada-url/goada",
+		"score": 2,
+		"flags": 0,
+		"comment_count": 1,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "eatonphil",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"performance"
+		],
+		"short_id_url": "https://lobste.rs/s/77pwzi",
+		"comments_url": "https://lobste.rs/s/77pwzi/goada_fast_whatwg_spec_compliant_url"
+	},
+	{
+		"short_id": "hjxi2b",
+		"created_at": "2026-03-26T05:13:26.000-05:00",
+		"title": "Deploying Go Apps to Google Cloud Run",
+		"url": "https://www.josephspurrier.com/google-cloud-run-deployment",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 3,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "carlana",
+		"user_is_author": false,
+		"tags": [
+			"devops",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/hjxi2b",
+		"comments_url": "https://lobste.rs/s/hjxi2b/deploying_go_apps_google_cloud_run"
+	},
+	{
+		"short_id": "fqeydw",
+		"created_at": "2026-03-24T22:54:35.000-05:00",
+		"title": "Type Construction and Cycle Detection",
+		"url": "https://go.dev/blog/type-construction-and-cycle-detection",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "binjip978",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/fqeydw",
+		"comments_url": "https://lobste.rs/s/fqeydw/type_construction_cycle_detection"
+	},
+	{
+		"short_id": "ucympz",
+		"created_at": "2026-03-24T15:14:51.000-05:00",
+		"title": "Structuring Go projects",
+		"url": "https://www.alexedwards.net/blog/11-tips-for-structuring-your-go-projects",
+		"score": 6,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "runxiyu",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"practices"
+		],
+		"short_id_url": "https://lobste.rs/s/ucympz",
+		"comments_url": "https://lobste.rs/s/ucympz/structuring_go_projects"
+	},
+	{
+		"short_id": "xarlmy",
+		"created_at": "2026-03-24T12:08:32.000-05:00",
+		"title": "Go Naming Conventions: A Practical Guide",
+		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
+		"score": 28,
+		"flags": 0,
+		"comment_count": 24,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "cgrinds",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/xarlmy",
+		"comments_url": "https://lobste.rs/s/xarlmy/go_naming_conventions_practical_guide"
+	},
+	{
+		"short_id": "fad6ua",
+		"created_at": "2026-03-21T11:46:30.000-05:00",
+		"title": "Using Go Dynamic and Static Shared libraries in C/C++ Programs",
+		"url": "https://xuri.me/2022/04/15/go-shared-libraries.html",
+		"score": 3,
+		"flags": 0,
+		"comment_count": 2,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "runxiyu",
+		"user_is_author": false,
+		"tags": [
+			"c",
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/fad6ua",
+		"comments_url": "https://lobste.rs/s/fad6ua/using_go_dynamic_static_shared_libraries"
+	},
+	{
+		"short_id": "uqeo3m",
+		"created_at": "2026-03-21T10:16:27.000-05:00",
+		"title": "Solod: Go can be a better C",
+		"url": "https://antonz.org/solod/",
+		"score": 37,
+		"flags": 0,
+		"comment_count": 9,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "gcollazo",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"plt"
+		],
+		"short_id_url": "https://lobste.rs/s/uqeo3m",
+		"comments_url": "https://lobste.rs/s/uqeo3m/solod_go_can_be_better_c"
+	},
+	{
+		"short_id": "ldglpx",
+		"created_at": "2026-03-20T13:08:40.000-05:00",
+		"title": "Adding Live Reload to a Static Site Generator Written in Go",
+		"url": "https://jon.chrt.dev/2026/03/20/adding-live-reload-to-a-static-site-generator-written-in-go.html",
+		"score": 19,
+		"flags": 0,
+		"comment_count": 14,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "bugsmith",
+		"user_is_author": true,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/ldglpx",
+		"comments_url": "https://lobste.rs/s/ldglpx/adding_live_reload_static_site_generator"
+	}
+]

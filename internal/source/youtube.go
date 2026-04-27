@@ -22,12 +22,12 @@ package source
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/pkg/errors"
 )
 
 // YouTube defines the type that implements news.Fetcher for YouTube video search.
@@ -56,7 +56,8 @@ func NewYouTube() *YouTube {
 // Fetch retrieves the latest Go-related videos from YouTube, sorted by upload date.
 func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if y.key == "" {
-		return nil, errors.New("youtube: YOUTUBE_API_KEY is not set")
+		slog.Warn("youtube: YOUTUBE_API_KEY is not set, skipping")
+		return nil, nil
 	}
 	sep := "?"
 	if strings.Contains(y.url, "?") {
