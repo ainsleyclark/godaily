@@ -40,7 +40,7 @@ type GitHub struct {
 var _ news.Fetcher = &GitHub{}
 
 func init() {
-	news.Register(news.SourceGitHub, func() news.Fetcher { return NewGitHub() })
+	news.Register(news.SourceGitHub, NewGitHub())
 }
 
 const ghBase = "https://api.github.com/repos/golang/go/issues"

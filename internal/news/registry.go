@@ -19,28 +19,40 @@
 
 package news
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-var registry = map[Source]func() Fetcher{}
+var (
+	registryMu sync.RWMutex
+	registry   = map[Source]Fetcher{}
+)
 
-// Register associates a Source with a factory function.
+// Register associates a Source with a Fetcher.
 // Called from each source package's init().
-func Register(s Source, f func() Fetcher) {
+func Register(s Source, f Fetcher) {
+	registryMu.Lock()
+	defer registryMu.Unlock()
 	registry[s] = f
 }
 
-// Get returns a new Fetcher for the given Source.
+// Get returns the Fetcher for the given Source.
 func Get(s Source) (Fetcher, error) {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
 	f, ok := registry[s]
 	if !ok {
 		return nil, fmt.Errorf("no fetcher registered for source %q", s)
 	}
-	return f(), nil
+	return f, nil
 }
 
 // Validate checks that every entry in Sources has a registered fetcher.
 // Call at startup or in tests to catch missing registrations early.
 func Validate() error {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
 	for _, s := range Sources {
 		if _, ok := registry[s]; !ok {
 			return fmt.Errorf("no fetcher registered for source %q", s)

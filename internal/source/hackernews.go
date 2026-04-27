@@ -41,7 +41,7 @@ var (
 )
 
 func init() {
-	news.Register(news.SourceHN, func() news.Fetcher { return NewHackerNews() })
+	news.Register(news.SourceHN, NewHackerNews())
 }
 
 const hnURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story"

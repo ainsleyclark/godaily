@@ -36,7 +36,7 @@ type Medium struct {
 var _ news.Fetcher = &Medium{}
 
 func init() {
-	news.Register(news.SourceMedium, func() news.Fetcher { return NewMedium() })
+	news.Register(news.SourceMedium, NewMedium())
 }
 
 const mediumURL = "https://medium.com/feed/tag/golang"

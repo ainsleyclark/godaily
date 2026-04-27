@@ -26,6 +26,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/ainsleyclark/godaily/internal/cron"
 	"github.com/ainsleyclark/godaily/internal/news"
 	_ "github.com/ainsleyclark/godaily/internal/source"
 	"github.com/urfave/cli/v3"
@@ -39,7 +40,11 @@ var cmd = &cli.Command{
 			Name:  "run",
 			Usage: "Gather all news from sources.",
 			Action: func(ctx context.Context, cmd *cli.Command) error {
-				return nil
+				runner, err := cron.New()
+				if err != nil {
+					return err
+				}
+				return runner.Run(cron.RunOptions{DryRun: cmd.Bool("dry-run")})
 			},
 		},
 		{

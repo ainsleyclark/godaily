@@ -39,7 +39,7 @@ type YouTube struct {
 var _ news.Fetcher = &YouTube{}
 
 func init() {
-	news.Register(news.SourceYouTube, func() news.Fetcher { return NewYouTube() })
+	news.Register(news.SourceYouTube, NewYouTube())
 }
 
 const youtubeURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=golang&type=video&order=date&maxResults=25"

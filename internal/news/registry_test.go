@@ -31,12 +31,12 @@ func TestRegister(t *testing.T) {
 
 	tt := map[string]struct {
 		source  Source
-		factory func() Fetcher
+		fetcher Fetcher
 		want    func(error)
 	}{
 		"OK": {
 			source:  "test_source",
-			factory: func() Fetcher { return nil },
+			fetcher: nil,
 			want: func(err error) {
 				assert.NoError(t, err)
 			},
@@ -47,10 +47,10 @@ func TestRegister(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			orig := registry
-			registry = map[Source]func() Fetcher{}
+			registry = map[Source]Fetcher{}
 			t.Cleanup(func() { registry = orig })
 
-			Register(test.source, test.factory)
+			Register(test.source, test.fetcher)
 			_, err := Get(test.source)
 			test.want(err)
 		})
@@ -65,7 +65,7 @@ func TestGet(t *testing.T) {
 	}{
 		"OK": {
 			setup: func() {
-				Register("test_get", func() Fetcher { return nil })
+				Register("test_get", nil)
 			},
 			source: "test_get",
 			want: func(_ Fetcher, err error) {
@@ -85,7 +85,7 @@ func TestGet(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			orig := registry
-			registry = map[Source]func() Fetcher{}
+			registry = map[Source]Fetcher{}
 			t.Cleanup(func() { registry = orig })
 
 			test.setup()
@@ -105,7 +105,7 @@ func TestValidate(t *testing.T) {
 		"All Registered": {
 			setup: func() {
 				for _, s := range Sources {
-					Register(s, func() Fetcher { return nil })
+					Register(s, nil)
 				}
 			},
 			want: func(err error) {
@@ -125,7 +125,7 @@ func TestValidate(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			orig := registry
-			registry = map[Source]func() Fetcher{}
+			registry = map[Source]Fetcher{}
 			t.Cleanup(func() { registry = orig })
 
 			test.setup()

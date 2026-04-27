@@ -42,7 +42,7 @@ type Foo struct {
 var _ news.Fetcher = &Foo{}
 
 func init() {
-    news.Register(news.SourceFoo, func() news.Fetcher { return NewFoo() })
+    news.Register(news.SourceFoo, NewFoo())
 }
 
 const fooURL = "https://api.example.com/feed"

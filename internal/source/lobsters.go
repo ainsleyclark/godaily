@@ -36,7 +36,7 @@ type Lobsters struct {
 var _ news.Fetcher = &Lobsters{}
 
 func init() {
-	news.Register(news.SourceLobsters, func() news.Fetcher { return NewLobsters() })
+	news.Register(news.SourceLobsters, NewLobsters())
 }
 
 const lobstersURL = "https://lobste.rs/t/go.json"

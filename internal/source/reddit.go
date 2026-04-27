@@ -37,7 +37,7 @@ type Reddit struct {
 var _ news.Fetcher = &Reddit{}
 
 func init() {
-	news.Register(news.SourceReddit, func() news.Fetcher { return NewReddit() })
+	news.Register(news.SourceReddit, NewReddit())
 }
 
 const (

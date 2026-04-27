@@ -35,7 +35,7 @@ type GoBlog struct {
 var _ news.Fetcher = &GoBlog{}
 
 func init() {
-	news.Register(news.SourceGoBlog, func() news.Fetcher { return NewGoBlog() })
+	news.Register(news.SourceGoBlog, NewGoBlog())
 }
 
 const goBlogURL = "https://go.dev/blog/feed.atom"

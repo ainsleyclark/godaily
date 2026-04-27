@@ -36,7 +36,7 @@ type GolangBridge struct {
 var _ news.Fetcher = &GolangBridge{}
 
 func init() {
-	news.Register(news.SourceGolangBridge, func() news.Fetcher { return NewGolangBridge() })
+	news.Register(news.SourceGolangBridge, NewGolangBridge())
 }
 
 const golangBridgeURL = "https://forum.golangbridge.org/latest.json"
