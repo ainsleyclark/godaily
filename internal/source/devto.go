@@ -54,16 +54,22 @@ func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(response), nil
+	return ingest.TransformAll(ctx, response), nil
 }
 
-func (d devToResponse) ShouldInclude() bool { return true }
+func (d devToResponse) ShouldInclude() bool   { return true }
+func (d devToResponse) EnrichmentURL() string { return "" }
 
 func (d devToResponse) Transform() news.Item {
+	img := d.SocialImage
+	if d.CoverImage != nil && *d.CoverImage != "" {
+		img = *d.CoverImage
+	}
 	return news.Item{
 		Source:    news.SourceDevTo,
 		Title:     d.Title,
 		URL:       d.Url,
+		ImageURL:  img,
 		Author:    d.User.Name,
 		Snippet:   d.Description,
 		Tag:       news.TagArticle,

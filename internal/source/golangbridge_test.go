@@ -38,7 +38,8 @@ const golangBridgeOKResponse = `{
         "title": "How to use generics in Go 1.21",
         "slug": "how-to-use-generics-in-go-1-21",
         "posts_count": 8,
-        "created_at": "2026-04-20T10:00:00.000Z"
+        "created_at": "2026-04-20T10:00:00.000Z",
+        "image_url": "https://forum.golangbridge.org/uploads/cover.png"
       }
     ]
   }
@@ -80,6 +81,7 @@ func TestGolangBridge_Fetch(t *testing.T) {
 					Source:    news.SourceGolangBridge,
 					Title:     "How to use generics in Go 1.21",
 					URL:       "https://forum.golangbridge.org/t/how-to-use-generics-in-go-1-21/12345",
+					ImageURL:  "https://forum.golangbridge.org/uploads/cover.png",
 					Comments:  8,
 					Tag:       news.TagArticle,
 					Score:     0.1, // 0 views hits the default floor; weight 1.0 * 0.1

@@ -52,10 +52,11 @@ func (l Lobsters) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(stories), nil
+	return ingest.TransformAll(ctx, stories), nil
 }
 
-func (s lobstersStory) ShouldInclude() bool { return true }
+func (s lobstersStory) ShouldInclude() bool   { return true }
+func (s lobstersStory) EnrichmentURL() string { return s.URL }
 
 func (s lobstersStory) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, s.CreatedAt)

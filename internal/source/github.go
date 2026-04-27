@@ -77,8 +77,8 @@ func NewGitHub() *GitHub {
 // lifecycle stages and returns them as a deduplicated list of news items.
 func (g GitHub) Fetch(ctx context.Context) ([]news.Item, error) {
 	var (
-		items []news.Item
-		seen  = make(map[string]bool)
+		collected []ghIssue
+		seen      = make(map[string]bool)
 	)
 
 	var hdrs []http.Header
@@ -91,29 +91,34 @@ func (g GitHub) Fetch(ctx context.Context) ([]news.Item, error) {
 		if err != nil {
 			return nil, err
 		}
-		for _, issue := range issues {
-			if seen[issue.HTMLURL] {
+		for i := range issues {
+			if seen[issues[i].HTMLURL] {
 				continue
 			}
-			seen[issue.HTMLURL] = true
-			items = append(items, issue.transform(ep.tag))
+			seen[issues[i].HTMLURL] = true
+			issues[i].tag = ep.tag
+			collected = append(collected, issues[i])
 		}
 	}
 
-	return items, nil
+	return ingest.TransformAll(ctx, collected), nil
 }
 
-// transform maps a ghIssue to a news.Item using the given tag.
-func (i ghIssue) transform(tag news.Tag) news.Item {
+func (i ghIssue) ShouldInclude() bool   { return true }
+func (i ghIssue) EnrichmentURL() string { return i.HTMLURL }
+
+// Transform maps a ghIssue to a news.Item using the tag stored on the issue
+// (set in Fetch from the originating endpoint).
+func (i ghIssue) Transform() news.Item {
 	return news.Item{
 		Source:    news.SourceGitHub,
 		Title:     i.Title,
 		URL:       i.HTMLURL,
 		Author:    i.User.Login,
 		Snippet:   ghSnippet(i.Body, i.Milestone),
-		Tag:       tag,
+		Tag:       i.tag,
 		Comments:  i.Comments,
-		Score:     news.ScoreOf(news.SourceGitHub, tag, float64(i.Reactions.PlusOne), true),
+		Score:     news.ScoreOf(news.SourceGitHub, i.tag, float64(i.Reactions.PlusOne), true),
 		Published: i.CreatedAt,
 	}
 }
@@ -150,6 +155,7 @@ type (
 		Comments  int          `json:"comments"`
 		Reactions ghReactions  `json:"reactions"`
 		CreatedAt time.Time    `json:"created_at"`
+		tag       news.Tag     // populated by Fetch from the endpoint that returned this issue
 	}
 	ghUser struct {
 		Login string `json:"login"`

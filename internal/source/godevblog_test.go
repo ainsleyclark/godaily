@@ -20,6 +20,7 @@
 package source
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -29,13 +30,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// atomOKResponse is a minimal Atom 1.0 feed with one entry used in the OK test case.
-const atomOKResponse = `<?xml version="1.0" encoding="utf-8"?>
+// atomOKResponseTpl is a minimal Atom 1.0 feed with one entry. The %s
+// placeholder is filled with the test server URL so enrichment requests
+// land on the same server (which returns Atom XML, not HTML, and so
+// enrichment silently fails — keeping the test hermetic).
+const atomOKResponseTpl = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>The Go Blog</title>
   <entry>
     <title>Go 1.23 Released</title>
-    <link rel="alternate" href="https://go.dev/blog/go1.23"/>
+    <link rel="alternate" href="%s"/>
     <author><name>The Go Team</name></author>
     <published>2024-08-13T00:00:00Z</published>
     <summary>Go 1.23 is now available.</summary>
@@ -59,32 +63,38 @@ func TestGoBlog_Fetch(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		stub http.HandlerFunc
-		url  string
-		want func([]news.Item, error)
+		stub func(serverURL string) http.HandlerFunc
+		want func(t *testing.T, items []news.Item, err error, serverURL string)
 	}{
 		"Bad Request": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusBadRequest)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusBadRequest)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.Error(t, err)
 				assert.Nil(t, items)
 			},
 		},
 		"OK": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(atomOKResponse))
-				assert.NoError(t, err)
+			stub: func(serverURL string) http.HandlerFunc {
+				body := fmt.Sprintf(atomOKResponseTpl, serverURL)
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(body))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGoBlog,
 					Title:     "Go 1.23 Released",
-					URL:       "https://go.dev/blog/go1.23",
+					URL:       serverURL,
 					Author:    "The Go Team",
 					Snippet:   "Go 1.23 is now available.",
 					Tag:       news.TagArticle,
@@ -94,12 +104,15 @@ func TestGoBlog_Fetch(t *testing.T) {
 			},
 		},
 		"No Alternate Link": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(atomNoLinkResponse))
-				assert.NoError(t, err)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(atomNoLinkResponse))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, "", items[0].URL)
@@ -110,16 +123,15 @@ func TestGoBlog_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			s := httptest.NewServer(test.stub)
+			var serverURL string
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				test.stub(serverURL)(w, r)
+			}))
 			defer s.Close()
+			serverURL = s.URL
 
-			url := s.URL
-			if test.url != "" {
-				url = test.url
-			}
-
-			got, err := GoBlog{url: url}.Fetch(t.Context())
-			test.want(got, err)
+			got, err := GoBlog{url: s.URL}.Fetch(t.Context())
+			test.want(t, got, err, s.URL)
 		})
 	}
 }

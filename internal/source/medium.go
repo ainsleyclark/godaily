@@ -52,10 +52,11 @@ func (m Medium) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(feed.Channel.Items), nil
+	return ingest.TransformAll(ctx, feed.Channel.Items), nil
 }
 
-func (i mediumItem) ShouldInclude() bool { return true }
+func (i mediumItem) ShouldInclude() bool   { return true }
+func (i mediumItem) EnrichmentURL() string { return i.Link }
 
 func (i mediumItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC1123, i.PubDate)

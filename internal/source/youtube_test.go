@@ -83,6 +83,7 @@ func TestYouTube_Fetch(t *testing.T) {
 					Source:    news.SourceYouTube,
 					Title:     "Go Concurrency Patterns",
 					URL:       "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+					ImageURL:  "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
 					Author:    "GopherCon",
 					Snippet:   "An introduction to concurrency patterns in Go.",
 					Tag:       news.TagVideo,

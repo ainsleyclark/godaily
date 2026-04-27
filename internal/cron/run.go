@@ -29,7 +29,6 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/email"
-	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
@@ -119,7 +118,6 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 			slog.ErrorContext(ctx, "failed to fetch source", "source", src, "err", err)
 			continue
 		}
-		ingest.EnrichSnippets(ctx, fetched)
 		si := news.SourceItems{Source: src}
 
 		for _, item := range fetched {

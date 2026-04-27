@@ -54,7 +54,7 @@ func (g GoBlog) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(feed.Entries), nil
+	return ingest.TransformAll(ctx, feed.Entries), nil
 }
 
 type (
@@ -89,7 +89,8 @@ func (e goBlogEntry) url() string {
 	return ""
 }
 
-func (e goBlogEntry) ShouldInclude() bool { return true }
+func (e goBlogEntry) ShouldInclude() bool   { return true }
+func (e goBlogEntry) EnrichmentURL() string { return e.url() }
 
 func (e goBlogEntry) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, e.Published)

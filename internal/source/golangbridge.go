@@ -23,6 +23,7 @@ import (
 	"context"
 	"encoding/json"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/ingest"
@@ -55,17 +56,26 @@ func (g GolangBridge) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(response.TopicList.Topics), nil
+	return ingest.TransformAll(ctx, response.TopicList.Topics), nil
 }
 
-func (t golangBridgeTopic) ShouldInclude() bool { return true }
+func (t golangBridgeTopic) ShouldInclude() bool   { return true }
+func (t golangBridgeTopic) EnrichmentURL() string { return "" }
 
 // Transform maps a golangBridgeTopic to a news.Item.
 func (t golangBridgeTopic) Transform() news.Item {
+	var img string
+	if t.ImageUrl != nil && *t.ImageUrl != "" {
+		img = *t.ImageUrl
+		if strings.HasPrefix(img, "/") {
+			img = "https://forum.golangbridge.org" + img
+		}
+	}
 	return news.Item{
 		Source:    news.SourceGolangBridge,
 		Title:     t.Title,
 		URL:       "https://forum.golangbridge.org/t/" + t.Slug + "/" + strconv.Itoa(t.ID),
+		ImageURL:  img,
 		Comments:  t.PostsCount,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceGolangBridge, news.TagArticle, float64(t.Views), true),

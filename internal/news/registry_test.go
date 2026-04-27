@@ -27,8 +27,6 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		source  Source
 		fetcher Fetcher
@@ -45,10 +43,7 @@ func TestRegister(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			orig := registry
-			registry = map[Source]Fetcher{}
-			t.Cleanup(func() { registry = orig })
+			t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
 
 			Register(test.source, test.fetcher)
 			_, err := Get(test.source)
@@ -84,9 +79,7 @@ func TestGet(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			orig := registry
-			registry = map[Source]Fetcher{}
-			t.Cleanup(func() { registry = orig })
+			t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
 
 			test.setup()
 			got, err := Get(test.source)
@@ -96,8 +89,6 @@ func TestGet(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		setup func()
 		want  func(error)
@@ -123,10 +114,7 @@ func TestValidate(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			orig := registry
-			registry = map[Source]Fetcher{}
-			t.Cleanup(func() { registry = orig })
+			t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
 
 			test.setup()
 			err := Validate()

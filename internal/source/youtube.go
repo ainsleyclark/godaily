@@ -68,10 +68,11 @@ func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(resp.Items), nil
+	return ingest.TransformAll(ctx, resp.Items), nil
 }
 
-func (v ytItem) ShouldInclude() bool { return true }
+func (v ytItem) ShouldInclude() bool   { return true }
+func (v ytItem) EnrichmentURL() string { return "" }
 
 func (v ytItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, v.Snippet.PublishedAt)
@@ -79,6 +80,7 @@ func (v ytItem) Transform() news.Item {
 		Source:    news.SourceYouTube,
 		Title:     v.Snippet.Title,
 		URL:       "https://www.youtube.com/watch?v=" + v.ID.VideoID,
+		ImageURL:  "https://i.ytimg.com/vi/" + v.ID.VideoID + "/hqdefault.jpg",
 		Author:    v.Snippet.ChannelTitle,
 		Snippet:   v.Snippet.Description,
 		Tag:       news.TagVideo,

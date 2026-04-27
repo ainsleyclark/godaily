@@ -22,7 +22,9 @@ package ingest
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/ainsleyclark/godaily/internal/news"
@@ -30,98 +32,30 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestShouldEnrich(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		input string
-		want  bool
-	}{
-		"Empty":             {input: "", want: false},
-		"HN Permalink":      {input: "https://news.ycombinator.com/item?id=1", want: false},
-		"Reddit Self Post":  {input: "https://www.reddit.com/r/golang/comments/abc/foo/", want: false},
-		"Reddit Mixed Case": {input: "https://www.Reddit.com/R/Golang/comments/abc/", want: false},
-		"External Article":  {input: "https://example.com/post", want: true},
-		"GitHub Repo":       {input: "https://github.com/foo/bar", want: true},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, shouldEnrich(test.input))
-		})
-	}
-}
-
-func TestFetchMetaDescription(t *testing.T) {
+func TestFetchPage(t *testing.T) {
 	t.Parallel()
 
 	const ogPage = `<html><head>
 <meta property="og:description" content="OG wins">
 <meta name="twitter:description" content="twitter loses">
 <meta name="description" content="standard loses">
+<meta property="og:image" content="https://cdn.example/img.jpg">
 </head><body></body></html>`
 
-	const twitterOnlyPage = `<html><head>
-<meta name="twitter:description" content="twitter wins">
-<meta name="description" content="standard loses">
-</head></html>`
-
-	const stdOnlyPage = `<html><head>
-<meta name="description" content="standard wins">
-</head></html>`
-
-	const emptyOGPage = `<html><head>
-<meta property="og:description" content="">
-<meta name="description" content="standard wins">
-</head></html>`
-
-	const noMetaPage = `<html><head><title>Nothing</title></head><body><p>hi</p></body></html>`
-
 	tt := map[string]struct {
-		stub        http.HandlerFunc
-		wantContent string
-		wantErr     bool
+		stub     http.HandlerFunc
+		wantDesc string
+		wantImg  string
+		wantErr  bool
 	}{
-		"OG Wins": {
+		"OG Tags Found": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.Header().Set("Content-Type", "text/html; charset=utf-8")
 				_, err := w.Write([]byte(ogPage))
 				assert.NoError(t, err)
 			},
-			wantContent: "OG wins",
-		},
-		"Twitter Fallback": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.Header().Set("Content-Type", "text/html")
-				_, err := w.Write([]byte(twitterOnlyPage))
-				assert.NoError(t, err)
-			},
-			wantContent: "twitter wins",
-		},
-		"Standard Fallback": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.Header().Set("Content-Type", "text/html")
-				_, err := w.Write([]byte(stdOnlyPage))
-				assert.NoError(t, err)
-			},
-			wantContent: "standard wins",
-		},
-		"Empty OG Skipped": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.Header().Set("Content-Type", "text/html")
-				_, err := w.Write([]byte(emptyOGPage))
-				assert.NoError(t, err)
-			},
-			wantContent: "standard wins",
-		},
-		"No Meta": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.Header().Set("Content-Type", "text/html")
-				_, err := w.Write([]byte(noMetaPage))
-				assert.NoError(t, err)
-			},
-			wantContent: "",
+			wantDesc: "OG wins",
+			wantImg:  "https://cdn.example/img.jpg",
 		},
 		"Non-HTML Content-Type": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
@@ -145,14 +79,21 @@ func TestFetchMetaDescription(t *testing.T) {
 			s := httptest.NewServer(test.stub)
 			defer s.Close()
 
-			got, err := fetchMetaDescription(t.Context(), s.URL)
-			assert.Equal(t, test.wantErr, err != nil)
-			assert.Equal(t, test.wantContent, got)
+			doc, base, err := fetchPage(t.Context(), s.URL)
+			if test.wantErr {
+				assert.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.NotNil(t, doc)
+			require.NotNil(t, base)
+			assert.Equal(t, test.wantDesc, extractMeta(doc, metaDescriptionSelectors))
+			assert.Equal(t, test.wantImg, extractMeta(doc, metaImageSelectors))
 		})
 	}
 }
 
-func TestFetchMetaDescription_UserAgent(t *testing.T) {
+func TestFetchPage_UserAgent(t *testing.T) {
 	t.Parallel()
 
 	var gotUA string
@@ -164,58 +105,247 @@ func TestFetchMetaDescription_UserAgent(t *testing.T) {
 	}))
 	defer s.Close()
 
-	_, err := fetchMetaDescription(t.Context(), s.URL)
+	_, _, err := fetchPage(t.Context(), s.URL)
 	require.NoError(t, err)
 	assert.Equal(t, enrichUserAgent, gotUA)
 }
 
-func TestEnrichSnippets(t *testing.T) {
+func TestExtractMeta_DescriptionPriority(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Fills Empty Snippets", func(t *testing.T) {
+	tt := map[string]struct {
+		body string
+		want string
+	}{
+		"OG Wins": {
+			body: `<html><head>
+<meta property="og:description" content="OG wins">
+<meta name="twitter:description" content="twitter loses">
+<meta name="description" content="standard loses">
+</head></html>`,
+			want: "OG wins",
+		},
+		"Twitter Fallback": {
+			body: `<html><head>
+<meta name="twitter:description" content="twitter wins">
+<meta name="description" content="standard loses">
+</head></html>`,
+			want: "twitter wins",
+		},
+		"Standard Fallback": {
+			body: `<html><head><meta name="description" content="standard wins"></head></html>`,
+			want: "standard wins",
+		},
+		"Empty OG Skipped": {
+			body: `<html><head>
+<meta property="og:description" content="">
+<meta name="description" content="standard wins">
+</head></html>`,
+			want: "standard wins",
+		},
+		"None": {
+			body: `<html><head><title>x</title></head></html>`,
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "text/html")
+				_, err := w.Write([]byte(test.body))
+				assert.NoError(t, err)
+			}))
+			defer s.Close()
+
+			doc, _, err := fetchPage(t.Context(), s.URL)
+			require.NoError(t, err)
+			assert.Equal(t, test.want, extractMeta(doc, metaDescriptionSelectors))
+		})
+	}
+}
+
+func TestExtractMeta_ImagePriority(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		body string
+		want string
+	}{
+		"Secure URL Wins": {
+			body: `<html><head>
+<meta property="og:image:secure_url" content="https://secure.example/img.jpg">
+<meta property="og:image" content="https://example/img.jpg">
+<meta name="twitter:image" content="https://twitter.example/img.jpg">
+</head></html>`,
+			want: "https://secure.example/img.jpg",
+		},
+		"OG Image Fallback": {
+			body: `<html><head>
+<meta property="og:image" content="https://example/img.jpg">
+<meta name="twitter:image" content="https://twitter.example/img.jpg">
+</head></html>`,
+			want: "https://example/img.jpg",
+		},
+		"Twitter Fallback": {
+			body: `<html><head><meta name="twitter:image" content="https://twitter.example/img.jpg"></head></html>`,
+			want: "https://twitter.example/img.jpg",
+		},
+		"None": {
+			body: `<html><head></head></html>`,
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "text/html")
+				_, err := w.Write([]byte(test.body))
+				assert.NoError(t, err)
+			}))
+			defer s.Close()
+
+			doc, _, err := fetchPage(t.Context(), s.URL)
+			require.NoError(t, err)
+			assert.Equal(t, test.want, extractMeta(doc, metaImageSelectors))
+		})
+	}
+}
+
+func TestResolveImageURL(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		base string
+		raw  string
+		want string
+	}{
+		"Absolute HTTPS": {base: "https://example.com/post", raw: "https://cdn.example/img.jpg", want: "https://cdn.example/img.jpg"},
+		"Absolute HTTP":  {base: "https://example.com/post", raw: "http://cdn.example/img.jpg", want: "http://cdn.example/img.jpg"},
+		"Relative Path":  {base: "https://example.com/articles/post", raw: "/images/hero.jpg", want: "https://example.com/images/hero.jpg"},
+		"Relative Same":  {base: "https://example.com/articles/post", raw: "hero.jpg", want: "https://example.com/articles/hero.jpg"},
+		"Data Scheme":    {base: "https://example.com/post", raw: "data:image/png;base64,iVBOR", want: ""},
+		"FTP Scheme":     {base: "https://example.com/post", raw: "ftp://example.com/x.jpg", want: ""},
+		"Unparseable":    {base: "https://example.com/post", raw: "://broken", want: ""},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			base, err := url.Parse(test.base)
+			require.NoError(t, err)
+			assert.Equal(t, test.want, resolveImageURL(base, test.raw))
+		})
+	}
+}
+
+func TestEnrich(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Fills Empty Snippet And ImageURL", func(t *testing.T) {
 		t.Parallel()
 		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			_, err := w.Write([]byte(`<html><head><meta property="og:description" content="enriched body"></head></html>`))
+			_, err := w.Write([]byte(`<html><head>
+<meta property="og:description" content="enriched body">
+<meta property="og:image" content="https://cdn.example/img.jpg">
+</head></html>`))
 			assert.NoError(t, err)
 		}))
 		defer s.Close()
 
-		items := []news.Item{
-			{Title: "A", URL: s.URL, Snippet: ""},
-			{Title: "B", URL: s.URL, Snippet: ""},
-		}
-		EnrichSnippets(t.Context(), items)
+		items := []news.Item{{Title: "A"}, {Title: "B"}}
+		enrich(t.Context(), []enrichTarget{
+			{URL: s.URL, Item: &items[0]},
+			{URL: s.URL, Item: &items[1]},
+		})
 		assert.Equal(t, "enriched body", items[0].Snippet)
+		assert.Equal(t, "https://cdn.example/img.jpg", items[0].ImageURL)
 		assert.Equal(t, "enriched body", items[1].Snippet)
+		assert.Equal(t, "https://cdn.example/img.jpg", items[1].ImageURL)
 	})
 
-	t.Run("Preserves Existing Snippet", func(t *testing.T) {
+	t.Run("Preserves Existing Fields", func(t *testing.T) {
 		t.Parallel()
 		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-			t.Errorf("server should not be called when snippet is already set")
+			w.Header().Set("Content-Type", "text/html")
+			_, err := w.Write([]byte(`<html><head>
+<meta property="og:description" content="should not overwrite">
+<meta property="og:image" content="https://cdn.example/new.jpg">
+</head></html>`))
+			assert.NoError(t, err)
 		}))
 		defer s.Close()
 
-		items := []news.Item{{URL: s.URL, Snippet: "already populated"}}
-		EnrichSnippets(t.Context(), items)
-		assert.Equal(t, "already populated", items[0].Snippet)
+		item := news.Item{Snippet: "kept", ImageURL: ""}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Equal(t, "kept", item.Snippet, "existing snippet must not be overwritten")
+		assert.Equal(t, "https://cdn.example/new.jpg", item.ImageURL)
 	})
 
-	t.Run("Skips Discussion URLs", func(t *testing.T) {
+	t.Run("Skips When Both Fields Set", func(t *testing.T) {
 		t.Parallel()
+		var hits int32
 		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-			t.Errorf("server should not be called for skipped URL")
+			atomic.AddInt32(&hits, 1)
 		}))
 		defer s.Close()
 
-		items := []news.Item{
-			{URL: "https://news.ycombinator.com/item?id=1"},
-			{URL: "https://www.reddit.com/r/golang/comments/x/y/"},
-		}
-		EnrichSnippets(t.Context(), items)
-		assert.Empty(t, items[0].Snippet)
-		assert.Empty(t, items[1].Snippet)
+		item := news.Item{Snippet: "set", ImageURL: "https://x/y.jpg"}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Equal(t, int32(0), atomic.LoadInt32(&hits))
+	})
+
+	t.Run("Single Fetch For Both Fields", func(t *testing.T) {
+		t.Parallel()
+		var hits int32
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&hits, 1)
+			w.Header().Set("Content-Type", "text/html")
+			_, err := w.Write([]byte(`<html><head>
+<meta property="og:description" content="d">
+<meta property="og:image" content="https://cdn.example/img.jpg">
+</head></html>`))
+			assert.NoError(t, err)
+		}))
+		defer s.Close()
+
+		item := news.Item{}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Equal(t, int32(1), atomic.LoadInt32(&hits))
+		assert.Equal(t, "d", item.Snippet)
+		assert.Equal(t, "https://cdn.example/img.jpg", item.ImageURL)
+	})
+
+	t.Run("Resolves Relative Image URL", func(t *testing.T) {
+		t.Parallel()
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "text/html")
+			_, err := w.Write([]byte(`<html><head><meta property="og:image" content="/hero.jpg"></head></html>`))
+			assert.NoError(t, err)
+		}))
+		defer s.Close()
+
+		item := news.Item{}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Equal(t, s.URL+"/hero.jpg", item.ImageURL)
+	})
+
+	t.Run("Rejects Data URI Image", func(t *testing.T) {
+		t.Parallel()
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "text/html")
+			_, err := w.Write([]byte(`<html><head><meta property="og:image" content="data:image/png;base64,xxx"></head></html>`))
+			assert.NoError(t, err)
+		}))
+		defer s.Close()
+
+		item := news.Item{}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Empty(t, item.ImageURL)
 	})
 
 	t.Run("Tolerates Errors", func(t *testing.T) {
@@ -225,9 +355,10 @@ func TestEnrichSnippets(t *testing.T) {
 		}))
 		defer s.Close()
 
-		items := []news.Item{{URL: s.URL}}
-		EnrichSnippets(t.Context(), items)
-		assert.Empty(t, items[0].Snippet)
+		item := news.Item{}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Empty(t, item.Snippet)
+		assert.Empty(t, item.ImageURL)
 	})
 
 	t.Run("Truncates Long Description", func(t *testing.T) {
@@ -240,13 +371,13 @@ func TestEnrichSnippets(t *testing.T) {
 		}))
 		defer s.Close()
 
-		items := []news.Item{{URL: s.URL}}
-		EnrichSnippets(t.Context(), items)
-		assert.Len(t, items[0].Snippet, maxSnippetLen)
+		item := news.Item{}
+		enrich(t.Context(), []enrichTarget{{URL: s.URL, Item: &item}})
+		assert.Len(t, item.Snippet, maxSnippetLen)
 	})
 
 	t.Run("Empty Slice", func(t *testing.T) {
 		t.Parallel()
-		EnrichSnippets(t.Context(), nil)
+		enrich(t.Context(), nil)
 	})
 }

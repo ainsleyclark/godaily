@@ -76,8 +76,9 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 		}
 	}
 	if len(targets) > 0 {
-		Enrich(ctx, targets)
+		enrich(ctx, targets)
 	}
+
 	return out
 }
 

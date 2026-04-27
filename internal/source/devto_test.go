@@ -49,7 +49,7 @@ func TestDevTo_Fetch(t *testing.T) {
 		"OK": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(`[{"type_of":"article","id":3549510,"title":"I built agent-to-agent communication that works behind any NAT","description":"If you have ever tried connecting two AI agents running on different machines...","slug":"slug","path":"/artem_a/slug","url":"https://dev.to/artem_a/slug","comments_count":3,"public_reactions_count":0,"collection_id":null,"published_timestamp":"2026-04-25T11:04:19Z","language":"en","subforem_id":1,"positive_reactions_count":0,"cover_image":null,"social_image":"","canonical_url":"https://dev.to/artem_a/slug","created_at":"2026-04-25T11:04:19Z","edited_at":null,"crossposted_at":null,"published_at":"2026-04-25T11:04:19Z","last_comment_at":"2026-04-25T11:04:19Z","reading_time_minutes":4,"tag_list":["go"],"tags":"go","user":{"name":"Artemii Amelin","username":"artem_a","twitter_username":null,"github_username":"artemiia","user_id":3893832,"website_url":null,"profile_image":"","profile_image_90":""}}]`))
+				_, err := w.Write([]byte(`[{"type_of":"article","id":3549510,"title":"I built agent-to-agent communication that works behind any NAT","description":"If you have ever tried connecting two AI agents running on different machines...","slug":"slug","path":"/artem_a/slug","url":"https://dev.to/artem_a/slug","comments_count":3,"public_reactions_count":0,"collection_id":null,"published_timestamp":"2026-04-25T11:04:19Z","language":"en","subforem_id":1,"positive_reactions_count":0,"cover_image":"https://media2.dev.to/cover.png","social_image":"https://media2.dev.to/social.png","canonical_url":"https://dev.to/artem_a/slug","created_at":"2026-04-25T11:04:19Z","edited_at":null,"crossposted_at":null,"published_at":"2026-04-25T11:04:19Z","last_comment_at":"2026-04-25T11:04:19Z","reading_time_minutes":4,"tag_list":["go"],"tags":"go","user":{"name":"Artemii Amelin","username":"artem_a","twitter_username":null,"github_username":"artemiia","user_id":3893832,"website_url":null,"profile_image":"","profile_image_90":""}}]`))
 				assert.NoError(t, err)
 			},
 			want: func(items []news.Item, err error) {
@@ -59,6 +59,7 @@ func TestDevTo_Fetch(t *testing.T) {
 					Source:    news.SourceDevTo,
 					Title:     "I built agent-to-agent communication that works behind any NAT",
 					URL:       "https://dev.to/artem_a/slug",
+					ImageURL:  "https://media2.dev.to/cover.png",
 					Author:    "Artemii Amelin",
 					Snippet:   "If you have ever tried connecting two AI agents running on different machines...",
 					Tag:       news.TagArticle,

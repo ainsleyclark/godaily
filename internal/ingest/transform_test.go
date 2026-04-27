@@ -29,10 +29,12 @@ import (
 type fakeTransformer struct {
 	title   string
 	include bool
+	enrich  string
 }
 
-func (f fakeTransformer) Transform() news.Item { return news.Item{Title: f.title} }
-func (f fakeTransformer) ShouldInclude() bool  { return f.include }
+func (f fakeTransformer) Transform() news.Item  { return news.Item{Title: f.title} }
+func (f fakeTransformer) ShouldInclude() bool   { return f.include }
+func (f fakeTransformer) EnrichmentURL() string { return f.enrich }
 
 func TestTruncate(t *testing.T) {
 	t.Parallel()
@@ -71,7 +73,7 @@ func TestTransformAll(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, TransformAll(test.items))
+			assert.Equal(t, test.want, TransformAll(t.Context(), test.items))
 		})
 	}
 }

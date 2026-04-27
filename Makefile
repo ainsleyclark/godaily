@@ -41,7 +41,6 @@ lint: # Run linter
 	golangci-lint run ./... --fix --config=.golangci.yaml
 .PHONY: lint
 
-
 cover: test # Run all the tests and opens the coverage report
 	go tool cover -html=coverage.out
 .PHONY: cover
@@ -59,7 +58,7 @@ all: # Make format, lint and test
 	$(MAKE) lic
 	$(MAKE) format
 	$(MAKE) lint
-	$(MAKE) test
+	$(MAKE) test-race
 	$(MAKE) gen
 .PHONY: all
 

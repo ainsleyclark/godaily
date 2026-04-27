@@ -6,7 +6,10 @@
 		<h3>{{ .Source.NiceName }}</h3>
 		<ul>
 			{{ range .Items }}
-				<li><a href="{{ .URL }}">{{ .Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}</li>
+				<li>
+					{{ if .ImageURL }}<img src="{{ .ImageURL }}" alt="" width="80" style="vertical-align:middle;border-radius:4px;margin-right:8px;">{{ end }}
+					<a href="{{ .URL }}">{{ .Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}
+				</li>
 			{{ end }}
 		</ul>
 	{{ end  }}

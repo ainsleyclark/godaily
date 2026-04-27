@@ -22,6 +22,7 @@ package source
 import (
 	"context"
 	"encoding/json"
+	"html"
 	"net/http"
 	"strings"
 	"time"
@@ -59,7 +60,7 @@ func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(listing.Data.Children), nil
+	return ingest.TransformAll(ctx, listing.Data.Children), nil
 }
 
 // Transform maps a redditChild to a news.Item.
@@ -68,6 +69,15 @@ func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
 // external link. In that case we fall back to the full permalink.
 func (c redditChild) ShouldInclude() bool {
 	return !strings.Contains(strings.ToLower(c.Data.Title), "help")
+}
+
+// EnrichmentURL returns the external URL for crawler enrichment, or "" for
+// self-posts (which point back to reddit.com and have no useful meta tags).
+func (c redditChild) EnrichmentURL() string {
+	if c.Data.URL == "" || strings.Contains(c.Data.URL, "reddit.com/r/") {
+		return ""
+	}
+	return c.Data.URL
 }
 
 func (c redditChild) Transform() news.Item {
@@ -80,6 +90,7 @@ func (c redditChild) Transform() news.Item {
 		Source:    news.SourceReddit,
 		Title:     p.Title,
 		URL:       u,
+		ImageURL:  redditImage(p),
 		Author:    p.Author,
 		Snippet:   p.SelfText,
 		Tag:       news.TagArticle,
@@ -87,6 +98,30 @@ func (c redditChild) Transform() news.Item {
 		Score:     news.ScoreOf(news.SourceReddit, news.TagArticle, float64(p.Score), true),
 		Published: time.Unix(int64(p.CreatedUTC), 0).UTC(),
 	}
+}
+
+// redditThumbnailSentinels are the placeholder values Reddit returns in the
+// thumbnail field when there's no usable image.
+var redditThumbnailSentinels = map[string]bool{
+	"self": true, "default": true, "nsfw": true, "spoiler": true, "image": true, "": true,
+}
+
+// redditImage extracts the best available image URL from a redditPost,
+// preferring the high-resolution preview source over the low-res thumbnail.
+// Reddit returns HTML-escaped URLs (e.g. &amp;) so we unescape them.
+func redditImage(p redditPost) string {
+	if len(p.Preview.Images) > 0 {
+		if u := p.Preview.Images[0].Source.URL; u != "" {
+			return html.UnescapeString(u)
+		}
+	}
+	if redditThumbnailSentinels[p.Thumbnail] {
+		return ""
+	}
+	if strings.HasPrefix(p.Thumbnail, "http://") || strings.HasPrefix(p.Thumbnail, "https://") {
+		return p.Thumbnail
+	}
+	return ""
 }
 
 type (
@@ -100,13 +135,24 @@ type (
 		Data redditPost `json:"data"`
 	}
 	redditPost struct {
-		Title       string  `json:"title"`
-		URL         string  `json:"url"`
-		Author      string  `json:"author"`
-		SelfText    string  `json:"selftext"`
-		Score       int     `json:"score"`
-		NumComments int     `json:"num_comments"`
-		CreatedUTC  float64 `json:"created_utc"`
-		Permalink   string  `json:"permalink"`
+		Title       string        `json:"title"`
+		URL         string        `json:"url"`
+		Author      string        `json:"author"`
+		SelfText    string        `json:"selftext"`
+		Score       int           `json:"score"`
+		NumComments int           `json:"num_comments"`
+		CreatedUTC  float64       `json:"created_utc"`
+		Permalink   string        `json:"permalink"`
+		Preview     redditPreview `json:"preview"`
+		Thumbnail   string        `json:"thumbnail"`
+	}
+	redditPreview struct {
+		Images []redditPreviewImage `json:"images"`
+	}
+	redditPreviewImage struct {
+		Source redditPreviewSource `json:"source"`
+	}
+	redditPreviewSource struct {
+		URL string `json:"url"`
 	}
 )

@@ -20,6 +20,7 @@
 package source
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -29,12 +30,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const mediumOKResponse = `<?xml version="1.0" encoding="UTF-8"?>
+// %s is filled with the test server URL — the item link points at the same
+// server so enrichment requests get a non-HTML response and silently skip.
+const mediumOKResponseTpl = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <item>
       <title>Understanding Go Interfaces</title>
-      <link>https://medium.com/@gopher/understanding-go-interfaces</link>
+      <link>%s</link>
       <dc:creator>Gopher Dev</dc:creator>
       <description><![CDATA[<p>Interfaces in Go are <strong>implicit</strong>.</p>]]></description>
       <pubDate>Thu, 25 Apr 2024 10:00:00 +0000</pubDate>
@@ -48,31 +51,38 @@ func TestMedium_Fetch(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		stub http.HandlerFunc
-		want func([]news.Item, error)
+		stub func(serverURL string) http.HandlerFunc
+		want func(t *testing.T, items []news.Item, err error, serverURL string)
 	}{
 		"Bad Request": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusBadRequest)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusBadRequest)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.Error(t, err)
 				assert.Nil(t, items)
 			},
 		},
 		"OK": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(mediumOKResponse))
-				assert.NoError(t, err)
+			stub: func(serverURL string) http.HandlerFunc {
+				body := fmt.Sprintf(mediumOKResponseTpl, serverURL)
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(body))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceMedium,
 					Title:     "Understanding Go Interfaces",
-					URL:       "https://medium.com/@gopher/understanding-go-interfaces",
+					URL:       serverURL,
 					Author:    "Gopher Dev",
 					Snippet:   "Interfaces in Go are implicit .",
 					Tag:       news.TagArticle,
@@ -86,10 +96,15 @@ func TestMedium_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			s := httptest.NewServer(test.stub)
+			var serverURL string
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				test.stub(serverURL)(w, r)
+			}))
 			defer s.Close()
+			serverURL = s.URL
+
 			got, err := Medium{url: s.URL}.Fetch(t.Context())
-			test.want(got, err)
+			test.want(t, got, err, s.URL)
 		})
 	}
 }

@@ -54,10 +54,14 @@ func (h HackerNews) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(response.Hits), nil
+	return ingest.TransformAll(ctx, response.Hits), nil
 }
 
 func (h hnHit) ShouldInclude() bool { return true }
+
+// EnrichmentURL returns the external story URL for crawling, or "" for
+// Ask-HN / self-posts (which fall back to news.ycombinator.com/item?id=).
+func (h hnHit) EnrichmentURL() string { return h.URL }
 
 // Transform maps an hnHit to a news.Item.
 //

@@ -20,6 +20,7 @@
 package source
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -29,11 +30,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const lobstersOKResponse = `[
+// %s in each fixture is the test server URL — point story URLs at the same
+// server so enrichment requests land on a non-HTML response and silently
+// skip, keeping the test hermetic.
+const lobstersOKResponseTpl = `[
   {
     "short_id": "abc123",
     "title": "Building a REST API in Go",
-    "url": "https://example.com/go-rest-api",
+    "url": "%s",
     "score": 42,
     "comment_count": 7,
     "created_at": "2024-04-25T10:30:00.000-05:00",
@@ -43,11 +47,11 @@ const lobstersOKResponse = `[
   }
 ]`
 
-const lobstersEmptyDescResponse = `[
+const lobstersEmptyDescResponseTpl = `[
   {
     "short_id": "def456",
     "title": "Go 1.24 is released",
-    "url": "https://go.dev/blog/go1.24",
+    "url": "%s",
     "score": 100,
     "comment_count": 25,
     "created_at": "2024-04-26T12:00:00.000-05:00",
@@ -61,31 +65,38 @@ func TestLobsters_Fetch(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		stub http.HandlerFunc
-		want func([]news.Item, error)
+		stub func(serverURL string) http.HandlerFunc
+		want func(t *testing.T, items []news.Item, err error, serverURL string)
 	}{
 		"Bad Request": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusBadRequest)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusBadRequest)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.Error(t, err)
 				assert.Nil(t, items)
 			},
 		},
 		"OK": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(lobstersOKResponse))
-				assert.NoError(t, err)
+			stub: func(serverURL string) http.HandlerFunc {
+				body := fmt.Sprintf(lobstersOKResponseTpl, serverURL)
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(body))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceLobsters,
 					Title:     "Building a REST API in Go",
-					URL:       "https://example.com/go-rest-api",
+					URL:       serverURL,
 					Author:    "gopher",
 					Snippet:   "A tutorial on building REST APIs with Go.",
 					Tag:       news.TagArticle,
@@ -96,12 +107,16 @@ func TestLobsters_Fetch(t *testing.T) {
 			},
 		},
 		"Empty Description": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(lobstersEmptyDescResponse))
-				assert.NoError(t, err)
+			stub: func(serverURL string) http.HandlerFunc {
+				body := fmt.Sprintf(lobstersEmptyDescResponseTpl, serverURL)
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(body))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Empty(t, items[0].Snippet)
@@ -112,10 +127,15 @@ func TestLobsters_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			s := httptest.NewServer(test.stub)
+			var serverURL string
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				test.stub(serverURL)(w, r)
+			}))
 			defer s.Close()
+			serverURL = s.URL
+
 			got, err := Lobsters{url: s.URL}.Fetch(t.Context())
-			test.want(got, err)
+			test.want(t, got, err, s.URL)
 		})
 	}
 }

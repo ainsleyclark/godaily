@@ -20,6 +20,7 @@
 package source
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -29,14 +30,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// hnOKResponse is a minimal Algolia HN search response with one story hit.
-// The story_text contains raw HTML tags and entities as returned by the API.
-const hnOKResponse = `{
+// %s is filled with the test server URL — the story URL points at the same
+// server so enrichment requests get a non-HTML response and silently skip.
+const hnOKResponseTpl = `{
   "hits": [
     {
       "objectID": "43920000",
       "title": "Building a high-performance HTTP server in Go",
-      "url": "https://example.com/go-http-server",
+      "url": "%s",
       "author": "gopher42",
       "story_text": "<p>A deep dive into Go&#x27;s net/http &amp; stdlib.",
       "points": 350,
@@ -67,32 +68,38 @@ func TestHackerNews_Fetch(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		stub http.HandlerFunc
-		url  string
-		want func([]news.Item, error)
+		stub func(serverURL string) http.HandlerFunc
+		want func(t *testing.T, items []news.Item, err error, serverURL string)
 	}{
 		"Bad Request": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusBadRequest)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusBadRequest)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.Error(t, err)
 				assert.Nil(t, items)
 			},
 		},
 		"OK": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(hnOKResponse))
-				assert.NoError(t, err)
+			stub: func(serverURL string) http.HandlerFunc {
+				body := fmt.Sprintf(hnOKResponseTpl, serverURL)
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(body))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceHN,
 					Title:     "Building a high-performance HTTP server in Go",
-					URL:       "https://example.com/go-http-server",
+					URL:       serverURL,
 					Author:    "gopher42",
 					Snippet:   "A deep dive into Go's net/http & stdlib.",
 					Tag:       news.TagArticle,
@@ -103,12 +110,15 @@ func TestHackerNews_Fetch(t *testing.T) {
 			},
 		},
 		"No Story URL": {
-			stub: func(w http.ResponseWriter, _ *http.Request) {
-				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(hnNoURLResponse))
-				assert.NoError(t, err)
+			stub: func(string) http.HandlerFunc {
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, err := w.Write([]byte(hnNoURLResponse))
+					assert.NoError(t, err)
+				}
 			},
-			want: func(items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
 				assert.NoError(t, err)
 				assert.Len(t, items, 1)
 				assert.Equal(t, "https://news.ycombinator.com/item?id=43920001", items[0].URL)
@@ -119,16 +129,15 @@ func TestHackerNews_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			s := httptest.NewServer(test.stub)
+			var serverURL string
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				test.stub(serverURL)(w, r)
+			}))
 			defer s.Close()
+			serverURL = s.URL
 
-			url := s.URL
-			if test.url != "" {
-				url = test.url
-			}
-
-			got, err := HackerNews{url: url}.Fetch(t.Context())
-			test.want(got, err)
+			got, err := HackerNews{url: s.URL}.Fetch(t.Context())
+			test.want(t, got, err, s.URL)
 		})
 	}
 }
