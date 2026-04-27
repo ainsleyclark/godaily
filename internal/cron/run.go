@@ -25,10 +25,16 @@ type RunOptions struct {
 	Sources []news.Source
 }
 
+// emailSender abstracts the email client so tests can substitute a
+// fake without standing up the real Resend transport.
+type emailSender interface {
+	Send(ctx context.Context, req email.SendEmailRequest) error
+}
+
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
-	email         *email.Client
+	email         emailSender
 	sendToAddress string
 }
 

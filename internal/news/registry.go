@@ -48,6 +48,21 @@ func Get(s Source) (Fetcher, error) {
 	return f, nil
 }
 
+// SwapRegistry replaces the fetcher registry with reg and returns a
+// function that restores the previous registry. Intended for use in
+// tests across packages.
+func SwapRegistry(reg map[Source]Fetcher) (restore func()) {
+	registryMu.Lock()
+	defer registryMu.Unlock()
+	orig := registry
+	registry = reg
+	return func() {
+		registryMu.Lock()
+		defer registryMu.Unlock()
+		registry = orig
+	}
+}
+
 // Validate checks that every entry in Sources has a registered fetcher.
 // Call at startup or in tests to catch missing registrations early.
 func Validate() error {
