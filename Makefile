@@ -4,7 +4,12 @@ build: # Build
 
 generate: # Runs go generate
 	go generate ./...
+	go run ./cmd/godaily run --dry-run --output examples/news.json
 .PHONY: generate
+
+run: # Sends the godaily email
+	go run ./cmd/godaily run
+.PHONY: run
 
 run-dry: # Run godaily and write the aggregated digest to examples/rendered/news.json
 	go run ./cmd/godaily run --dry-run --output examples/news.json
