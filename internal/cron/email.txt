@@ -1,4 +1,4 @@
-GoDaily — {{.Date.Format "January 2, 2006"}}
+GoDaily - {{.Date.Format "January 2, 2006"}}
 
 {{range .Sections}}{{.Source.NiceName}}
 ---
