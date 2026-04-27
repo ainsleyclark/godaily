@@ -13,7 +13,7 @@ import (
 
 // Runner is the interface for running the daily news aggregation.
 type Runner interface {
-	Run(ctx context.Context, opts RunOptions) (map[news.Source][]news.Item, error)
+	Run(ctx context.Context, opts RunOptions) ([]news.SourceItems, error)
 }
 
 // RunOptions configures a Run call.
@@ -46,35 +46,41 @@ func New() (*Aggregator, error) {
 }
 
 // Run fetches Go news items published yesterday from all registered sources.
-func (a Aggregator) Run(ctx context.Context, opts RunOptions) (map[news.Source][]news.Item, error) {
+func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItems, error) {
 	day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour) // Yesterday
 	next := day.AddDate(0, 0, 1)
 
-	items := make(map[news.Source][]news.Item)
+	var results []news.SourceItems
 	for _, source := range news.Sources {
 		fetched, err := a.fetchSource(ctx, source)
 		if err != nil {
 			slog.ErrorContext(ctx, "failed to fetch source", "source", source, "err", err)
 			continue
 		}
+		si := news.SourceItems{Source: source}
+
 		for _, item := range fetched {
 			if item.Published.IsZero() {
 				slog.ErrorContext(ctx, "item has zero published date", "source", source, "title", item.Title)
 				continue
 			}
 			if item.Published.After(day) && item.Published.Before(next) {
-				items[source] = append(items[source], item)
+				si.Items = append(si.Items, item)
 			}
+		}
+
+		if len(si.Items) > 0 {
+			results = append(results, si)
 		}
 	}
 
 	if !opts.DryRun {
-		if err := a.sendDigest(ctx, items); err != nil {
+		if err := a.sendDigest(ctx, day, results); err != nil {
 			slog.ErrorContext(ctx, "failed to send digest email", "err", err)
 		}
 	}
 
-	return items, nil
+	return results, nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

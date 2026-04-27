@@ -34,6 +34,12 @@ type Fetcher interface {
 	Fetch(ctx context.Context) ([]Item, error)
 }
 
+// SourceItems groups a source with its fetched news items.
+type SourceItems struct {
+	Source Source
+	Items  []Item
+}
+
 // Item defines a Go Daily news item.
 type Item struct {
 	Source    Source

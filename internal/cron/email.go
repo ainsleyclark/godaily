@@ -23,44 +23,13 @@ var emailText string
 var htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(emailHTML))
 var textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(emailText))
 
-type (
-	digestData struct {
-		Date     string
-		Sections []sectionData
-	}
-	sectionData struct {
-		Source string
-		Items  []itemData
-	}
-	itemData struct {
-		Title     string
-		URL       string
-		Author    string
-		Published string
-	}
-)
+type digestData struct {
+	Date     time.Time
+	Sections []news.SourceItems
+}
 
-func (a Aggregator) sendDigest(ctx context.Context, items map[news.Source][]news.Item) error {
-	yesterday := time.Now().AddDate(0, 0, -1)
-	date := yesterday.Format("January 2, 2006")
-
-	data := digestData{Date: date}
-	for _, source := range news.Sources {
-		its, ok := items[source]
-		if !ok || len(its) == 0 {
-			continue
-		}
-		section := sectionData{Source: source.NiceName()}
-		for _, item := range its {
-			section.Items = append(section.Items, itemData{
-				Title:     item.Title,
-				URL:       item.URL,
-				Author:    item.Author,
-				Published: item.Published.Format("Jan 2"),
-			})
-		}
-		data.Sections = append(data.Sections, section)
-	}
+func (a Aggregator) sendDigest(ctx context.Context, day time.Time, sources []news.SourceItems) error {
+	data := digestData{Date: day, Sections: sources}
 
 	if len(data.Sections) == 0 {
 		slog.InfoContext(ctx, "no items to send in digest")
@@ -80,7 +49,7 @@ func (a Aggregator) sendDigest(ctx context.Context, items map[news.Source][]news
 	return a.email.Send(ctx, email.SendEmailRequest{
 		From:    "noreply@mail.ainsley.dev",
 		To:      []string{a.sendToAddress},
-		Subject: "GoDaily - " + date,
+		Subject: "GoDaily - " + day.Format("January 2, 2006"),
 		Html:    htmlBuf.String(),
 		Text:    textBuf.String(),
 	})

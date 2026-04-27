@@ -1,8 +1,8 @@
-GoDaily — {{.Date}}
+GoDaily — {{.Date.Format "January 2, 2006"}}
 
-{{range .Sections}}{{.Source}}
+{{range .Sections}}{{.Source.NiceName}}
 ---
-{{range .Items}}• {{.Title}} ({{.Published}}){{if .Author}} — {{.Author}}{{end}}
+{{range .Items}}• {{.Title}} ({{.Published.Format "Jan 2"}}){{if .Author}} — {{.Author}}{{end}}
   {{.URL}}
 {{end}}
 {{end}}
