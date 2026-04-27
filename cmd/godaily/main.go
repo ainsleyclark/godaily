@@ -21,6 +21,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,11 +33,31 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/ainsleyclark/godaily/internal/cron"
+	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/news"
 	_ "github.com/ainsleyclark/godaily/internal/source"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/urfave/cli/v3"
 )
+
+// openStore connects to the configured database and returns a *store.Store.
+//
+// If TURSO_URL is unset the function returns (nil, nil) so the rest of the
+// CLI can run without a database — useful for ad-hoc fetch/synth commands
+// during development.
+func openStore(ctx context.Context) (*store.Store, *sql.DB, error) {
+	url := os.Getenv("TURSO_URL")
+	if url == "" {
+		slog.WarnContext(ctx, "TURSO_URL not set, persistence disabled")
+		return nil, nil, nil
+	}
+	conn, err := db.New(ctx, url, os.Getenv("TURSO_AUTH_TOKEN"))
+	if err != nil {
+		return nil, nil, err
+	}
+	return store.NewStore(conn), conn, nil
+}
 
 var cmd = &cli.Command{
 	Name:  "godaily",
@@ -65,7 +86,21 @@ var cmd = &cli.Command{
 				},
 			},
 			Action: func(ctx context.Context, cmd *cli.Command) error {
-				runner, err := cron.New()
+				st, conn, err := openStore(ctx)
+				if err != nil {
+					return fmt.Errorf("opening database: %w", err)
+				}
+				if conn != nil {
+					defer conn.Close()
+				}
+
+				// st may be nil — cron.New tolerates a nil persister and
+				// simply skips archival when no DB is configured.
+				var p cron.Persister
+				if st != nil {
+					p = st
+				}
+				runner, err := cron.New(p)
 				if err != nil {
 					return err
 				}
@@ -177,6 +212,32 @@ var cmd = &cli.Command{
 					return err
 				}
 				return os.WriteFile(out, rendered, 0o600)
+			},
+		},
+		{
+			Name:  "migrate",
+			Usage: "Apply pending database migrations",
+			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:  "down",
+					Usage: "Roll back the most recent migration instead of applying pending ones",
+				},
+			},
+			Action: func(ctx context.Context, cmd *cli.Command) error {
+				url := os.Getenv("TURSO_URL")
+				if url == "" {
+					return fmt.Errorf("TURSO_URL is required for the migrate command")
+				}
+				conn, err := db.New(ctx, url, os.Getenv("TURSO_AUTH_TOKEN"))
+				if err != nil {
+					return fmt.Errorf("opening database: %w", err)
+				}
+				defer conn.Close()
+
+				if cmd.Bool("down") {
+					return db.Down(ctx, conn)
+				}
+				return db.Migrate(ctx, conn)
 			},
 		},
 		{

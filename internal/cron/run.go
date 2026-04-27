@@ -21,6 +21,8 @@ package cron
 
 import (
 	"context"
+	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -30,6 +32,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
@@ -59,6 +62,7 @@ type Aggregator struct {
 	email         emailSender
 	sendToAddress string
 	suggester     suggester
+	persister     Persister
 }
 
 type (
@@ -72,11 +76,17 @@ type (
 	suggester interface {
 		Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
 	}
+	// Persister abstracts the store so tests can run the cron pipeline
+	// without standing up a real database. Implemented by *store.Store.
+	Persister interface {
+		Tx(ctx context.Context, fn func(*store.Queries) error) error
+	}
 )
 
 // New creates a new Aggregator, validating that all news sources have
-// registered fetchers before returning.
-func New() (*Aggregator, error) {
+// registered fetchers before returning. The store argument is optional —
+// pass nil to disable archival persistence (useful in tests).
+func New(s Persister) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
@@ -98,6 +108,7 @@ func New() (*Aggregator, error) {
 		email:         email.New(),
 		sendToAddress: to,
 		suggester:     sg,
+		persister:     s,
 	}, nil
 }
 
@@ -155,13 +166,85 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 		}
 	}
 
-	if !opts.DryRun {
-		if err := a.sendDigest(ctx, day, results, suggestion); err != nil {
+	if opts.DryRun || len(results) == 0 {
+		return results, nil
+	}
+
+	rendered, err := renderDigest(day, results, suggestion)
+	if err != nil {
+		slog.ErrorContext(ctx, "failed to render digest", "err", err)
+		return results, nil
+	}
+
+	status := "sent"
+	switch {
+	case a.sendToAddress == "":
+		status = "skipped"
+	default:
+		if err := a.sendDigest(ctx, rendered); err != nil {
 			slog.ErrorContext(ctx, "failed to send digest email", "err", err)
+			status = "failed"
+		}
+	}
+
+	if a.persister != nil {
+		if err := a.persistIssue(ctx, day, rendered, status, results); err != nil {
+			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
 		}
 	}
 
 	return results, nil
+}
+
+// persistIssue archives the rendered digest and its constituent news items
+// inside a single transaction. Failures are reported up; the caller decides
+// whether to surface or log.
+func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
+	return a.persister.Tx(ctx, func(q *store.Queries) error {
+		issue, err := q.CreateIssue(ctx, store.CreateIssueParams{
+			Slug:     day.Format("2006-01-02"),
+			SentAt:   time.Now().UTC(),
+			Subject:  r.Subject,
+			HtmlBody: r.HTML,
+			TextBody: r.Text,
+			Status:   status,
+		})
+		if err != nil {
+			return fmt.Errorf("creating issue: %w", err)
+		}
+
+		var position int64
+		for _, section := range sections {
+			for _, item := range section.Items {
+				position++
+				raw, err := json.Marshal(item)
+				if err != nil {
+					return fmt.Errorf("marshalling raw item: %w", err)
+				}
+				if _, err := q.CreateNewsItem(ctx, store.CreateNewsItemParams{
+					IssueID:  issue.ID,
+					Source:   string(section.Source),
+					Title:    item.Title,
+					Url:      item.URL,
+					Author:   nullString(item.Author),
+					Score:    sql.NullFloat64{Float64: item.Score, Valid: true},
+					Summary:  nullString(item.Snippet),
+					Position: position,
+					RawJson:  sql.NullString{String: string(raw), Valid: true},
+				}); err != nil {
+					return fmt.Errorf("creating news item: %w", err)
+				}
+			}
+		}
+		return nil
+	})
+}
+
+func nullString(s string) sql.NullString {
+	if s == "" {
+		return sql.NullString{}
+	}
+	return sql.NullString{String: s, Valid: true}
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

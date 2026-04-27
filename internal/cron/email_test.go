@@ -49,19 +49,41 @@ func sampleSections() []news.SourceItems {
 	}}
 }
 
+func TestRenderDigest(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		got, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		require.NoError(t, err)
+		assert.Contains(t, got.Subject, "April 26, 2026")
+		assert.Contains(t, got.HTML, "hello")
+		assert.Contains(t, got.Text, "hello")
+	})
+
+	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl
+	// and must run sequentially.
+	t.Run("HTML Template Error", func(t *testing.T) {
+		orig := htmlTmpl
+		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
+		t.Cleanup(func() { htmlTmpl = orig })
+
+		_, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		assert.ErrorContains(t, err, "rendering html")
+	})
+
+	t.Run("Text Template Error", func(t *testing.T) {
+		orig := textTmpl
+		textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
+		t.Cleanup(func() { textTmpl = orig })
+
+		_, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		assert.ErrorContains(t, err, "rendering text")
+	})
+}
+
 func TestAggregator_SendDigest(t *testing.T) {
 	t.Parallel()
 
-	t.Run("No Sections", func(t *testing.T) {
-		t.Parallel()
-
-		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
-
-		err := agg.sendDigest(t.Context(), sendDigestDay, nil, nil)
-		require.NoError(t, err)
-		assert.False(t, m.called)
-	})
+	rendered, err := renderDigest(sendDigestDay, sampleSections(), nil)
+	require.NoError(t, err)
 
 	t.Run("Send Error", func(t *testing.T) {
 		t.Parallel()
@@ -69,7 +91,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{err: errors.New("boom")}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
+		err := agg.sendDigest(t.Context(), rendered)
 		assert.True(t, m.called)
 		assert.ErrorContains(t, err, "boom")
 	})
@@ -80,7 +102,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
+		err := agg.sendDigest(t.Context(), rendered)
 		require.NoError(t, err)
 		require.True(t, m.called)
 		assert.Equal(t, "noreply@mail.ainsley.dev", m.req.From)
@@ -88,33 +110,5 @@ func TestAggregator_SendDigest(t *testing.T) {
 		assert.Contains(t, m.req.Subject, "April 26, 2026")
 		assert.Contains(t, m.req.Html, "hello")
 		assert.Contains(t, m.req.Text, "hello")
-	})
-
-	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl
-	// which the parallel subtests above read; they must run sequentially.
-	t.Run("HTML Template Error", func(t *testing.T) {
-		orig := htmlTmpl
-		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
-		t.Cleanup(func() { htmlTmpl = orig })
-
-		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
-
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
-		assert.False(t, m.called)
-		assert.ErrorContains(t, err, "rendering html")
-	})
-
-	t.Run("Text Template Error", func(t *testing.T) {
-		orig := textTmpl
-		textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
-		t.Cleanup(func() { textTmpl = orig })
-
-		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
-
-		err := agg.sendDigest(t.Context(), sendDigestDay, sampleSections(), nil)
-		assert.False(t, m.called)
-		assert.ErrorContains(t, err, "rendering text")
 	})
 }
