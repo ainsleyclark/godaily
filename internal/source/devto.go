@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -49,16 +50,16 @@ func NewDevTo() *DevTo {
 
 // Fetch retrieves all the news items from dev.to
 func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
-	response, err := fetch[[]devToResponse](ctx, d.url, "dev to", json.Unmarshal)
+	response, err := ingest.Fetch[[]devToResponse](ctx, d.url, "dev to", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(response), nil
+	return ingest.TransformAll(response), nil
 }
 
-func (d devToResponse) shouldInclude() bool { return true }
+func (d devToResponse) ShouldInclude() bool { return true }
 
-func (d devToResponse) transform() news.Item {
+func (d devToResponse) Transform() news.Item {
 	return news.Item{
 		Source:    news.SourceDevTo,
 		Title:     d.Title,

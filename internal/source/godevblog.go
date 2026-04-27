@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -49,11 +50,11 @@ func NewGoBlog() *GoBlog {
 
 // Fetch retrieves all the news items from the Go Dev Blog Atom feed.
 func (g GoBlog) Fetch(ctx context.Context) ([]news.Item, error) {
-	feed, err := fetch[goBlogFeed](ctx, g.url, "go blog", xml.Unmarshal)
+	feed, err := ingest.Fetch[goBlogFeed](ctx, g.url, "go blog", xml.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(feed.Entries), nil
+	return ingest.TransformAll(feed.Entries), nil
 }
 
 type (
@@ -88,9 +89,9 @@ func (e goBlogEntry) url() string {
 	return ""
 }
 
-func (e goBlogEntry) shouldInclude() bool { return true }
+func (e goBlogEntry) ShouldInclude() bool { return true }
 
-func (e goBlogEntry) transform() news.Item {
+func (e goBlogEntry) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, e.Published)
 	return news.Item{
 		Source:    news.SourceGoBlog,

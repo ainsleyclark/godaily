@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
+package ingest
 
 import (
 	"testing"
@@ -31,10 +31,10 @@ type fakeTransformer struct {
 	include bool
 }
 
-func (f fakeTransformer) transform() news.Item { return news.Item{Title: f.title} }
-func (f fakeTransformer) shouldInclude() bool  { return f.include }
+func (f fakeTransformer) Transform() news.Item { return news.Item{Title: f.title} }
+func (f fakeTransformer) ShouldInclude() bool  { return f.include }
 
-func TestTruncateSnippet(t *testing.T) {
+func TestTruncate(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
@@ -51,7 +51,7 @@ func TestTruncateSnippet(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, truncateSnippet(test.input, test.max))
+			assert.Equal(t, test.want, truncate(test.input, test.max))
 		})
 	}
 }
@@ -71,7 +71,7 @@ func TestTransformAll(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, transformAll(test.items))
+			assert.Equal(t, test.want, TransformAll(test.items))
 		})
 	}
 }

@@ -29,9 +29,11 @@ import (
 
 func TestRegisteredSources(t *testing.T) {
 	t.Parallel()
+
 	for _, s := range []news.Source{news.SourceDevTo, news.SourceGoBlog, news.SourceHN, news.SourceLobsters, news.SourceMedium, news.SourceYouTube} {
 		t.Run(string(s), func(t *testing.T) {
 			t.Parallel()
+
 			got, err := news.Get(s)
 			require.NoError(t, err)
 			assert.NotNil(t, got)

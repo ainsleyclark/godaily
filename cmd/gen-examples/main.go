@@ -37,8 +37,8 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/source"
 	_ "github.com/ainsleyclark/godaily/internal/source"
 )
 
@@ -63,7 +63,7 @@ func main() {
 		}
 
 		rec := &recordingTransport{base: http.DefaultTransport}
-		source.SetHTTPClient(&http.Client{Transport: rec})
+		ingest.SetHTTPClient(&http.Client{Transport: rec})
 
 		items, err := fetcher.Fetch(ctx)
 		if err != nil {

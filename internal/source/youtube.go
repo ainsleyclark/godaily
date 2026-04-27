@@ -27,6 +27,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -63,16 +64,16 @@ func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if strings.Contains(y.url, "?") {
 		sep = "&"
 	}
-	resp, err := fetch[ytSearchResponse](ctx, y.url+sep+"key="+y.key, "youtube", json.Unmarshal)
+	resp, err := ingest.Fetch[ytSearchResponse](ctx, y.url+sep+"key="+y.key, "youtube", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(resp.Items), nil
+	return ingest.TransformAll(resp.Items), nil
 }
 
-func (v ytItem) shouldInclude() bool { return true }
+func (v ytItem) ShouldInclude() bool { return true }
 
-func (v ytItem) transform() news.Item {
+func (v ytItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, v.Snippet.PublishedAt)
 	return news.Item{
 		Source:    news.SourceYouTube,

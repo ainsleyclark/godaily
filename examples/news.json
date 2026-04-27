@@ -7,7 +7,7 @@
 				"title": "I learned Rust with rustlings, so I built the same thing for Go",
 				"url": "https://github.com/Ichihiroy/golings",
 				"author": "ichihiroy",
-				"snippet": "",
+				"snippet": "🐹 Learn Go through small, interactive exercises — inspired by rustlings. - Ichihiroy/golings",
 				"tag": "article",
 				"comments": 0,
 				"score": 0.423099442533317,
@@ -23,10 +23,10 @@
 				"title": "Swissing a table",
 				"url": "https://philpearl.github.io/post/swissing_a_table/",
 				"author": "carlana",
-				"snippet": "",
+				"snippet": "Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation.",
 				"tag": "article",
 				"comments": 4,
-				"score": 0.8650427814891417,
+				"score": 0.9042486604437607,
 				"published": "2026-04-26T14:19:13Z"
 			}
 		]
@@ -42,7 +42,7 @@
 				"snippet": "",
 				"tag": "article",
 				"comments": 2,
-				"score": 0.7059613126314263,
+				"score": 0.714138851624206,
 				"published": "2026-04-26T15:31:39Z"
 			},
 			{
@@ -50,9 +50,9 @@
 				"title": "WhatsApp api",
 				"url": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
 				"author": "WorkingInitiative909",
-				"snippet": "Are someone use this repo \n\nGOWA \n\n  \n[https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
+				"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 				"tag": "article",
-				"comments": 4,
+				"comments": 5,
 				"score": 0.6379982859432913,
 				"published": "2026-04-26T00:07:59Z"
 			},
@@ -61,10 +61,10 @@
 				"title": "potential goroutine leak or nah",
 				"url": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
 				"author": "KaleidoscopePlusPlus",
-				"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits.\n\nThe routine runs indefinitely on an interval delivered from a ticker.\n\n  \n`ticker := time.New",
+				"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
 				"tag": "article",
 				"comments": 17,
-				"score": 0.5867777864565255,
+				"score": 0.613898019286257,
 				"published": "2026-04-26T14:46:53Z"
 			},
 			{
@@ -72,7 +72,7 @@
 				"title": "xytz - a beautiful TUI YouTube Downloader/Player",
 				"url": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
 				"author": "Upbeat_Equivalent519",
-				"snippet": "made with go and bubbletea\n\nhttps://github.com/xdagiz/xytz",
+				"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 				"tag": "article",
 				"comments": 1,
 				"score": 0.5557708294077383,
@@ -83,7 +83,7 @@
 				"title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
 				"url": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
 				"author": "Extension_Layer1825",
-				"snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have ",
+				"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 				"tag": "article",
 				"comments": 2,
 				"score": 0.15019048322368794,
@@ -94,7 +94,7 @@
 				"title": "Showcase: kLex (FROG) – A 'Governed' language with 30+ libs written in Go.",
 				"url": "https://github.com/kmcnally5/FROG",
 				"author": "Ill-Plum-7348",
-				"snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.**\n\nI wrote kLex/FROG almost entirely using AI - only breaking from this as required.  I did this for",
+				"snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.** I wrote kLex/FROG almost entirely using AI - only breaking from this as required. I did this for m",
 				"tag": "article",
 				"comments": 5,
 				"score": 0.1,
@@ -121,7 +121,7 @@
 				"title": "Don’t Trust Backups You Haven’t Restored",
 				"url": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
 				"author": "alexey.zh",
-				"snippet": "0. A Backup Is Not a File, but a Promise   You can write anything you want in the...",
+				"snippet": "0. A Backup Is Not a File, but a Promise You can write anything you want in the...",
 				"tag": "article",
 				"comments": 0,
 				"score": 0.1,
@@ -132,7 +132,7 @@
 				"title": "I built ssmctl because AWS SSM deserved a better user experience",
 				"url": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
 				"author": "Rhys | Senior Cloud Infrastructure Engineer",
-				"snippet": "Github: github.com/rhysmcneill/ssmctl   I use AWS Session Manager a lot. No bastion hosts, no open...",
+				"snippet": "Github: github.com/rhysmcneill/ssmctl I use AWS Session Manager a lot. No bastion hosts, no open...",
 				"tag": "article",
 				"comments": 0,
 				"score": 0.1,
@@ -154,7 +154,7 @@
 				"title": "Message Queue Example using RabbitMQ in Go",
 				"url": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
 				"author": "nadirbasalamah",
-				"snippet": "Introduction   A message queue is an essential component in a distributed system, allowing...",
+				"snippet": "Introduction A message queue is an essential component in a distributed system, allowing...",
 				"tag": "article",
 				"comments": 0,
 				"score": 0.1,
@@ -176,7 +176,7 @@
 				"title": "WEB UI in Go? Nothing Can Stop Me!",
 				"url": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
 				"author": "alexey.zh",
-				"snippet": "Introduction   Author's note: This article is not technical in nature. Rather, it is a set...",
+				"snippet": "Introduction Author's note: This article is not technical in nature. Rather, it is a set...",
 				"tag": "article",
 				"comments": 0,
 				"score": 0.1,
@@ -225,66 +225,6 @@
 				"comments": 0,
 				"score": 0.1,
 				"published": "2026-04-26T06:45:55Z"
-			}
-		]
-	},
-	{
-		"source": "medium",
-		"items": [
-			{
-				"source": "medium",
-				"title": "Go: Kenapa Harus Belajar Go di Era AI?",
-				"url": "https://jeriatno.medium.com/go-kenapa-harus-belajar-go-di-era-ai-46aa486db1f2?source=rss------golang-5",
-				"author": "iwanna",
-				"snippet": "Di tahun 2026, AI sudah bisa generate kode. Copilot, Claude, ChatGPT — tinggal describe kebutuhan, kode muncul dalam hitungan detik. Continue reading on Medium »",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.25,
-				"published": "2026-04-26T23:10:46Z"
-			},
-			{
-				"source": "medium",
-				"title": "Designing an LLM Orchestrator in Go: Decisions That Actually Matter in Production",
-				"url": "https://medium.com/@cassius.paim/designing-an-llm-orchestrator-in-go-decisions-that-actually-matter-in-production-144f2d9d6008?source=rss------golang-5",
-				"author": "Cássius Paim",
-				"snippet": "Why I stopped thinking about integration and started thinking about control at scale Continue reading on Medium »",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.25,
-				"published": "2026-04-26T23:06:30Z"
-			},
-			{
-				"source": "medium",
-				"title": "AI Writes Go Tests That Pass — That’s Not the Same as Tests That Catch Bugs",
-				"url": "https://medium.com/@bdgouthiere/ai-writes-go-tests-that-pass-thats-not-the-same-as-tests-that-catch-bugs-ad55005ab781?source=rss------golang-5",
-				"author": "Benoit Gouthiere",
-				"snippet": "After several months of using AI assistants on real Go projects, the pattern is consistent. The coverage number is climbing. The actual… Continue reading on Medium »",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.25,
-				"published": "2026-04-26T21:09:33Z"
-			},
-			{
-				"source": "medium",
-				"title": "Go Concurrency",
-				"url": "https://medium.com/@shayanholakouee/go-concurrency-23acb96f813e?source=rss------golang-5",
-				"author": "Shayan Holakouee",
-				"snippet": "Most tutorials on Go concurrency follow the same script. They show you a goroutine, tell you it’s like a lightweight thread, demonstrate a… Continue reading on Medium »",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.25,
-				"published": "2026-04-26T20:00:28Z"
-			},
-			{
-				"source": "medium",
-				"title": "Managing Multi-Cloud Configuration on Golang Services",
-				"url": "https://medium.com/@victoria.luquet/managing-multi-cloud-configuration-on-golang-services-ded1688c18d0?source=rss------golang-5",
-				"author": "Victoria Luquet",
-				"snippet": "It is well known that managing configuration, specially in Golang, can become a mess, depending on how the project is structured, its size… Continue reading on Medium »",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.25,
-				"published": "2026-04-26T19:59:17Z"
 			}
 		]
 	}

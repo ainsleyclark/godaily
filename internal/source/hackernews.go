@@ -22,11 +22,9 @@ package source
 import (
 	"context"
 	"encoding/json"
-	"html"
-	"regexp"
-	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -35,10 +33,7 @@ type HackerNews struct {
 	url string
 }
 
-var (
-	_         news.Fetcher = &HackerNews{}
-	htmlTagRe              = regexp.MustCompile(`<[^>]*>`)
-)
+var _ news.Fetcher = &HackerNews{}
 
 func init() {
 	news.Register(news.SourceHN, NewHackerNews())
@@ -55,20 +50,20 @@ func NewHackerNews() *HackerNews {
 
 // Fetch retrieves all news items from Hacker News via the Algolia search API.
 func (h HackerNews) Fetch(ctx context.Context) ([]news.Item, error) {
-	response, err := fetch[hnResponse](ctx, h.url, "hacker news", json.Unmarshal)
+	response, err := ingest.Fetch[hnResponse](ctx, h.url, "hacker news", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(response.Hits), nil
+	return ingest.TransformAll(response.Hits), nil
 }
 
-func (h hnHit) shouldInclude() bool { return true }
+func (h hnHit) ShouldInclude() bool { return true }
 
-// transform maps an hnHit to a news.Item.
+// Transform maps an hnHit to a news.Item.
 //
 // If the story has no external URL (Ask HN / self-posts), it falls back to the
 // HN permalink: https://news.ycombinator.com/item?id=<objectID>
-func (h hnHit) transform() news.Item {
+func (h hnHit) Transform() news.Item {
 	u := h.URL
 	if u == "" {
 		u = "https://news.ycombinator.com/item?id=" + h.ObjectID
@@ -78,20 +73,12 @@ func (h hnHit) transform() news.Item {
 		Title:     h.Title,
 		URL:       u,
 		Author:    h.Author,
-		Snippet:   sanitiseSnippet(h.StoryText),
+		Snippet:   h.StoryText,
 		Tag:       news.TagArticle,
 		Comments:  h.NumComments,
 		Score:     news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
 		Published: h.CreatedAt,
 	}
-}
-
-// sanitiseSnippet strips HTML tags and unescapes HTML entities from the
-// story_text field, which the Algolia HN API returns as raw HTML.
-func sanitiseSnippet(s string) string {
-	s = htmlTagRe.ReplaceAllString(s, " ")
-	s = html.UnescapeString(s)
-	return strings.TrimSpace(s)
 }
 
 type (

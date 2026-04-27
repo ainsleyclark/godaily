@@ -22,9 +22,9 @@ package source
 import (
 	"context"
 	"encoding/xml"
-	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -48,24 +48,23 @@ func NewMedium() *Medium {
 
 // Fetch retrieves the latest Go-tagged articles from Medium's RSS feed.
 func (m Medium) Fetch(ctx context.Context) ([]news.Item, error) {
-	feed, err := fetch[mediumRSS](ctx, m.url, "medium", xml.Unmarshal)
+	feed, err := ingest.Fetch[mediumRSS](ctx, m.url, "medium", xml.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(feed.Channel.Items), nil
+	return ingest.TransformAll(feed.Channel.Items), nil
 }
 
-func (i mediumItem) shouldInclude() bool { return true }
+func (i mediumItem) ShouldInclude() bool { return true }
 
-func (i mediumItem) transform() news.Item {
-	snippet := strings.Join(strings.Fields(sanitiseSnippet(i.Description)), " ")
+func (i mediumItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC1123, i.PubDate)
 	return news.Item{
 		Source:    news.SourceMedium,
 		Title:     i.Title,
 		URL:       i.Link,
 		Author:    i.Creator,
-		Snippet:   snippet,
+		Snippet:   i.Description,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceMedium, news.TagArticle, 0, false),
 		Published: published.UTC(),

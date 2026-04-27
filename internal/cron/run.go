@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/email"
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
@@ -112,17 +113,18 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 	}
 
 	var results []news.SourceItems
-	for _, source := range sources {
-		fetched, err := a.fetchSource(ctx, source)
+	for _, src := range sources {
+		fetched, err := a.fetchSource(ctx, src)
 		if err != nil {
-			slog.ErrorContext(ctx, "failed to fetch source", "source", source, "err", err)
+			slog.ErrorContext(ctx, "failed to fetch source", "source", src, "err", err)
 			continue
 		}
-		si := news.SourceItems{Source: source}
+		ingest.EnrichSnippets(ctx, fetched)
+		si := news.SourceItems{Source: src}
 
 		for _, item := range fetched {
 			if item.Published.IsZero() {
-				slog.ErrorContext(ctx, "item has zero published date", "source", source, "title", item.Title)
+				slog.ErrorContext(ctx, "item has zero published date", "source", src, "title", item.Title)
 				continue
 			}
 			if item.Published.After(day) && item.Published.Before(next) {

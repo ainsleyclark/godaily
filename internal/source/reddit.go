@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -52,24 +53,24 @@ func NewReddit() *Reddit {
 
 // Fetch retrieves the latest posts from r/golang via the public JSON API.
 func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
-	listing, err := fetch[redditListing](ctx, r.url, "reddit", json.Unmarshal, http.Header{
+	listing, err := ingest.Fetch[redditListing](ctx, r.url, "reddit", json.Unmarshal, http.Header{
 		"User-Agent": {redditUserAgent},
 	})
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(listing.Data.Children), nil
+	return ingest.TransformAll(listing.Data.Children), nil
 }
 
-// transform maps a redditChild to a news.Item.
+// Transform maps a redditChild to a news.Item.
 //
 // Self-posts have a URL pointing back to reddit.com/r/… rather than an
 // external link. In that case we fall back to the full permalink.
-func (c redditChild) shouldInclude() bool {
+func (c redditChild) ShouldInclude() bool {
 	return !strings.Contains(strings.ToLower(c.Data.Title), "help")
 }
 
-func (c redditChild) transform() news.Item {
+func (c redditChild) Transform() news.Item {
 	p := c.Data
 	u := p.URL
 	if strings.Contains(u, "reddit.com/r/") {
@@ -80,7 +81,7 @@ func (c redditChild) transform() news.Item {
 		Title:     p.Title,
 		URL:       u,
 		Author:    p.Author,
-		Snippet:   strings.TrimSpace(p.SelfText),
+		Snippet:   p.SelfText,
 		Tag:       news.TagArticle,
 		Comments:  p.NumComments,
 		Score:     news.ScoreOf(news.SourceReddit, news.TagArticle, float64(p.Score), true),

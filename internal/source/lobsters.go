@@ -22,9 +22,9 @@ package source
 import (
 	"context"
 	"encoding/json"
-	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -48,23 +48,23 @@ func NewLobsters() *Lobsters {
 
 // Fetch retrieves the latest Go-tagged stories from lobste.rs.
 func (l Lobsters) Fetch(ctx context.Context) ([]news.Item, error) {
-	stories, err := fetch[[]lobstersStory](ctx, l.url, "lobsters", json.Unmarshal)
+	stories, err := ingest.Fetch[[]lobstersStory](ctx, l.url, "lobsters", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(stories), nil
+	return ingest.TransformAll(stories), nil
 }
 
-func (s lobstersStory) shouldInclude() bool { return true }
+func (s lobstersStory) ShouldInclude() bool { return true }
 
-func (s lobstersStory) transform() news.Item {
+func (s lobstersStory) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, s.CreatedAt)
 	return news.Item{
 		Source:    news.SourceLobsters,
 		Title:     s.Title,
 		URL:       s.URL,
 		Author:    s.SubmitterUser,
-		Snippet:   strings.TrimSpace(s.Description),
+		Snippet:   s.Description,
 		Tag:       news.TagArticle,
 		Comments:  s.CommentCount,
 		Score:     news.ScoreOf(news.SourceLobsters, news.TagArticle, float64(s.Score), true),

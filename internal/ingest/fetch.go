@@ -17,7 +17,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
+// Package ingest holds the cross-cutting plumbing shared by every
+// per-provider source: HTTP fetch, response transformation, and snippet
+// enrichment. Source packages compose these primitives; ingest itself
+// has no knowledge of any specific provider.
+package ingest
 
 import (
 	"context"
@@ -28,7 +32,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// httpClient is the shared HTTP client used by fetch.
+// httpClient is the shared HTTP client used by Fetch and EnrichSnippets.
 var httpClient = &http.Client{}
 
 // SetHTTPClient replaces the shared HTTP client used by all sources.
@@ -36,13 +40,13 @@ func SetHTTPClient(c *http.Client) {
 	httpClient = c
 }
 
-// fetch performs a GET request to url, checks for a 2xx status, reads the body
+// Fetch performs a GET request to url, checks for a 2xx status, reads the body
 // into bytes, then calls unmarshal to decode it into T.
 //
 // Callers pass json.Unmarshal or xml.Unmarshal — both match the required
 // func([]byte, any) error signature. Optional headers are merged onto the
 // request; existing callers that pass none continue to work unchanged.
-func fetch[T any](
+func Fetch[T any](
 	ctx context.Context,
 	url string,
 	name string,

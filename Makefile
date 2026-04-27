@@ -19,6 +19,10 @@ format: # Run gofmt
 	go fmt ./...
 .PHONY: format
 
+gen: # Runs all //go:generate
+	go generate ./...
+.PHONY: gen
+
 excluded := grep -v gen | grep -v res
 
 test: # Test uses race and coverage
@@ -56,6 +60,7 @@ all: # Make format, lint and test
 	$(MAKE) format
 	$(MAKE) lint
 	$(MAKE) test
+	$(MAKE) gen
 .PHONY: all
 
 todo: # Show to-do items per file

@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
+package ingest
 
 import (
 	"encoding/json"
@@ -131,7 +131,7 @@ func TestFetch(t *testing.T) {
 				url = s.URL
 			}
 
-			got, err := fetch[fakeItem](t.Context(), url, "test", test.unmarshal)
+			got, err := Fetch[fakeItem](t.Context(), url, "test", test.unmarshal)
 			test.want(t, got, err)
 		})
 	}

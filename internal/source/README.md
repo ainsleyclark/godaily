@@ -1,7 +1,8 @@
 # Adding a New Source
 
 Follow these steps to add a new news source. Use `hackernews.go` and `hackernews_test.go` as the
-reference implementation.
+reference implementation. Shared plumbing — HTTP fetch, transformation, snippet enrichment — lives
+in `internal/ingest`; this package only holds per-provider fetchers.
 
 ---
 
@@ -32,6 +33,7 @@ import (
     "context"
     "encoding/json" // or encoding/xml
 
+    "github.com/ainsleyclark/godaily/internal/ingest"
     "github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -52,19 +54,22 @@ func NewFoo() *Foo {
 }
 
 func (f Foo) Fetch(ctx context.Context) ([]news.Item, error) {
-    response, err := fetch[fooResponse](ctx, f.url, "foo", json.Unmarshal)
+    response, err := ingest.Fetch[fooResponse](ctx, f.url, "foo", json.Unmarshal)
     if err != nil {
         return nil, err
     }
-    return transformAll(response.Items), nil
+    return ingest.TransformAll(response.Items), nil
 }
 
-func (i fooItem) transform() news.Item {
+func (i fooItem) ShouldInclude() bool { return true }
+
+func (i fooItem) Transform() news.Item {
     return news.Item{
         Source:    news.SourceFoo,
         Title:     i.Title,
         URL:       i.Link,
         Author:    i.Author,
+        Snippet:   i.Description, // raw — ingest.TransformAll sanitises and truncates
         Published: i.PublishedAt,
         Tag:       news.TagArticle,
     }
@@ -78,20 +83,27 @@ type (
         Title       string    `json:"title"`
         Link        string    `json:"link"`
         Author      string    `json:"author"`
+        Description string    `json:"description"`
         PublishedAt time.Time `json:"published_at"`
     }
 )
 ```
 
 Key points:
-- `fetch[T]()` handles the HTTP GET, status check, and unmarshal — pass `json.Unmarshal` or `xml.Unmarshal`
-- `transformAll()` calls `.transform()` on each response item
-- The `var _ news.Fetcher = &Foo{}` line enforces the interface at compile time
-- `init()` registers the factory; without it `TestValidate` will fail
+- `ingest.Fetch[T]()` handles the HTTP GET, status check, and unmarshal — pass `json.Unmarshal` or `xml.Unmarshal`.
+- `ingest.TransformAll()` calls `.Transform()` on each response item, then sanitises the resulting
+  snippet (strips HTML, unescapes entities, collapses whitespace) and truncates it. Sources put raw
+  API content into `news.Item.Snippet` without per-source cleanup.
+- Items whose `ShouldInclude()` returns `false` are silently dropped.
+- The `var _ news.Fetcher = &Foo{}` line enforces the interface at compile time.
+- `init()` registers the factory; without it `TestValidate` will fail.
+- For empty snippets (e.g. external link posts), the cron pipeline calls `ingest.EnrichSnippets`
+  after fetch, which fills them in from the article's meta description.
 
 ## 3. Write tests
 
-Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API and swap `httpClient` via the test server's client:
+Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API; pass the test
+server's URL into the source struct directly:
 
 ```go
 package source

@@ -3,6 +3,7 @@ module github.com/ainsleyclark/godaily
 go 1.26.2
 
 require (
+	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/ainsleydev/webkit v0.13.2
 	github.com/anthropics/anthropic-sdk-go v1.38.0
 	github.com/joho/godotenv v1.5.1
@@ -13,6 +14,7 @@ require (
 )
 
 require (
+	github.com/andybalholm/cascadia v1.3.3 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -26,6 +28,7 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
+	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

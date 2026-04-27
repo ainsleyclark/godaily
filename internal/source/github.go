@@ -28,6 +28,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -86,7 +87,7 @@ func (g GitHub) Fetch(ctx context.Context) ([]news.Item, error) {
 	}
 
 	for _, ep := range g.endpoints {
-		issues, err := fetch[[]ghIssue](ctx, ep.url, "github", json.Unmarshal, hdrs...)
+		issues, err := ingest.Fetch[[]ghIssue](ctx, ep.url, "github", json.Unmarshal, hdrs...)
 		if err != nil {
 			return nil, err
 		}

@@ -25,6 +25,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/ingest"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
@@ -50,17 +51,17 @@ func NewGolangBridge() *GolangBridge {
 
 // Fetch retrieves all news items from the GolangBridge forum.
 func (g GolangBridge) Fetch(ctx context.Context) ([]news.Item, error) {
-	response, err := fetch[golangBridgeResponse](ctx, g.url, "golangbridge", json.Unmarshal)
+	response, err := ingest.Fetch[golangBridgeResponse](ctx, g.url, "golangbridge", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return transformAll(response.TopicList.Topics), nil
+	return ingest.TransformAll(response.TopicList.Topics), nil
 }
 
-func (t golangBridgeTopic) shouldInclude() bool { return true }
+func (t golangBridgeTopic) ShouldInclude() bool { return true }
 
-// transform maps a golangBridgeTopic to a news.Item.
-func (t golangBridgeTopic) transform() news.Item {
+// Transform maps a golangBridgeTopic to a news.Item.
+func (t golangBridgeTopic) Transform() news.Item {
 	return news.Item{
 		Source:    news.SourceGolangBridge,
 		Title:     t.Title,
