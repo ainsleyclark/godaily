@@ -5,8 +5,9 @@
 		"URL": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
 		"Author": "alexey.zh",
 		"Snippet": "0. A Backup Is Not a File, but a Promise   You can write anything you want in the...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T14:39:58Z"
 	},
 	{
@@ -15,8 +16,9 @@
 		"URL": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
 		"Author": "Rhys | Senior Cloud Infrastructure Engineer",
 		"Snippet": "Github: github.com/rhysmcneill/ssmctl   I use AWS Session Manager a lot. No bastion hosts, no open...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T17:00:37Z"
 	},
 	{
@@ -25,8 +27,9 @@
 		"URL": "https://dev.to/ohugonnot/ddd-in-go-applied-to-crypto-exchange-apis-3on4",
 		"Author": "Odilon HUGONNOT",
 		"Snippet": "Bounded contexts, aggregates, value objects and anti-corruption layer — DDD is the 'why' behind CQRS and event sourcing. Applied to a Go service consuming Binance, OKEx and Coinbase.",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T09:00:04Z"
 	},
 	{
@@ -35,8 +38,9 @@
 		"URL": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
 		"Author": "nadirbasalamah",
 		"Snippet": "Introduction   A message queue is an essential component in a distributed system, allowing...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T07:22:51Z"
 	},
 	{
@@ -45,8 +49,9 @@
 		"URL": "https://dev.to/logicco/the-invisible-layer-protecting-your-go-dependencies-4n9m",
 		"Author": "LogicCo",
 		"Snippet": "Before starting, I want to be clear: this is not a deep dive into the Golang Proxy, but an...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T03:39:30Z"
 	},
 	{
@@ -55,8 +60,9 @@
 		"URL": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
 		"Author": "alexey.zh",
 		"Snippet": "Introduction   Author's note: This article is not technical in nature. Rather, it is a set...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T09:58:48Z"
 	},
 	{
@@ -65,8 +71,9 @@
 		"URL": "https://dev.to/bala_paranj_059d338e44e7e/the-airgap-test-refactoring-a-cobra-cli-into-a-library-api-1h0k",
 		"Author": "Bala Paranj",
 		"Snippet": "How a single rule — only RunE touches *cobra.Command — turned a CLI codebase into a library that...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.227670248696953,
 		"Published": "2026-04-26T12:06:42Z"
 	},
 	{
@@ -75,8 +82,9 @@
 		"URL": "https://dev.to/abhishek_sharma_a9792aee8/every-request-looked-the-same-in-my-logs-then-i-added-one-line-19m7",
 		"Author": "Abhishek Sharma",
 		"Snippet": "In Part 9, I Dockerized my backend and added database migrations. One command (docker compose up) now...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T14:11:32Z"
 	},
 	{
@@ -85,8 +93,9 @@
 		"URL": "https://dev.to/ichihiroy/i-learned-rust-with-rustlings-so-i-built-the-same-thing-for-go-4f4m",
 		"Author": "Yunis Quliyev",
 		"Snippet": "I've been wanting to learn Go properly for a while. Tried the usual — read the docs, watched...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T18:44:00Z"
 	},
 	{
@@ -95,8 +104,9 @@
 		"URL": "https://dev.to/olivia_craft/8-cursor-rules-for-go-developers-2026-edition-2c25",
 		"Author": "Olivia Craft",
 		"Snippet": "Eight Cursor rules that make your AI write idiomatic Go — proper error handling, accept interfaces, context-first signatures, owned goroutines, directional channels, no init() tricks, table-driven t",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T09:55:03Z"
 	},
 	{
@@ -105,8 +115,9 @@
 		"URL": "https://dev.to/mark0_617b45cda9782a/gopherwhisper-a-burrow-full-of-malware-1cfj",
 		"Author": "Mark0",
 		"Snippet": "ESET researchers have identified a new China-aligned APT group dubbed GopherWhisper, which has been...",
-		"Tag": "proposal",
+		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-26T06:45:55Z"
 	}
 ]

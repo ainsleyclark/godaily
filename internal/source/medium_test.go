@@ -76,6 +76,7 @@ func TestMedium_Fetch(t *testing.T) {
 					Author:    "Gopher Dev",
 					Snippet:   "Interfaces in Go are implicit .",
 					Tag:       news.TagArticle,
+					Score:     0.25, // no signal: weight 0.5 * constant 0.5
 					Published: time.Date(2024, 4, 25, 10, 0, 0, 0, time.UTC),
 				}, items[0])
 			},

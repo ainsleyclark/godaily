@@ -99,6 +99,7 @@ func (e goBlogEntry) transform() news.Item {
 		Author:    e.Author.Name,
 		Snippet:   e.Summary,
 		Tag:       news.TagArticle,
+		Score:     news.ScoreOf(news.SourceGoBlog, news.TagArticle, 0, false),
 		Published: published,
 	}
 }

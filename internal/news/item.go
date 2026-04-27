@@ -36,20 +36,21 @@ type Fetcher interface {
 
 // SourceItems groups a source with its fetched news items.
 type SourceItems struct {
-	Source Source
-	Items  []Item
+	Source Source `json:"source"`
+	Items  []Item `json:"items"`
 }
 
 // Item defines a Go Daily news item.
 type Item struct {
-	Source    Source
-	Title     string
-	URL       string
-	Author    string
-	Snippet   string
-	Tag       Tag // source-specific hint ("proposal-accepted", "trending", "official")
-	Comments  int
-	Published time.Time
+	Source    Source    `json:"source"`
+	Title     string    `json:"title"`
+	URL       string    `json:"url"`
+	Author    string    `json:"author"`
+	Snippet   string    `json:"snippet"`
+	Tag       Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
+	Comments  int       `json:"comments"`
+	Score     float64   `json:"score"` // per-source relevance/popularity, normalised across sources
+	Published time.Time `json:"published"`
 }
 
 type Tag string

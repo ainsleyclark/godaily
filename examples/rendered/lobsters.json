@@ -7,6 +7,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 4,
+		"Score": 0.8650427814891417,
 		"Published": "2026-04-26T14:19:13Z"
 	},
 	{
@@ -17,6 +18,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 6,
+		"Score": 0.7861595966087034,
 		"Published": "2026-04-18T09:17:46Z"
 	},
 	{
@@ -27,6 +29,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 4,
+		"Score": 0.797465225780268,
 		"Published": "2026-04-16T12:48:35Z"
 	},
 	{
@@ -37,6 +40,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.5288743031666463,
 		"Published": "2026-04-15T17:18:59Z"
 	},
 	{
@@ -47,6 +51,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4557067470936043,
 		"Published": "2026-04-15T08:07:45Z"
 	},
 	{
@@ -57,6 +62,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.7619189031733016,
 		"Published": "2026-04-10T11:38:16Z"
 	},
 	{
@@ -67,6 +73,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.8814571719444105,
 		"Published": "2026-04-07T23:35:34Z"
 	},
 	{
@@ -77,6 +84,7 @@
 		"Snippet": "\u003cp\u003eBlog post with the full write-up and threat model: \u003ca href=\"https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/\" rel=\"ugc\"\u003ehttps://codeofchange.io/how-i-made-danger",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4093360343955374,
 		"Published": "2026-04-07T16:23:42Z"
 	},
 	{
@@ -87,6 +95,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 40,
+		"Score": 1,
 		"Published": "2026-04-05T16:59:29Z"
 	},
 	{
@@ -97,6 +106,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4557067470936043,
 		"Published": "2026-04-05T12:58:46Z"
 	},
 	{
@@ -107,6 +117,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 40,
+		"Score": 1,
 		"Published": "2026-04-03T12:17:43Z"
 	},
 	{
@@ -117,6 +128,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.49491262604822334,
 		"Published": "2026-04-02T16:53:29Z"
 	},
 	{
@@ -127,6 +139,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 18,
+		"Score": 0.8186720687910748,
 		"Published": "2026-04-01T17:49:53Z"
 	},
 	{
@@ -137,6 +150,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 5,
+		"Score": 0.6887513471002596,
 		"Published": "2026-03-31T12:53:06Z"
 	},
 	{
@@ -147,6 +161,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.6712040604371055,
 		"Published": "2026-03-30T14:32:20Z"
 	},
 	{
@@ -157,6 +172,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4557067470936043,
 		"Published": "2026-03-30T14:07:40Z"
 	},
 	{
@@ -167,6 +183,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.5288743031666463,
 		"Published": "2026-03-27T21:15:19Z"
 	},
 	{
@@ -177,6 +194,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.27941531270472214,
 		"Published": "2026-03-26T18:47:14Z"
 	},
 	{
@@ -187,6 +205,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 3,
+		"Score": 0.4557067470936043,
 		"Published": "2026-03-26T10:13:26Z"
 	},
 	{
@@ -197,6 +216,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4557067470936043,
 		"Published": "2026-03-25T03:54:35Z"
 	},
 	{
@@ -207,6 +227,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.49491262604822334,
 		"Published": "2026-03-24T20:14:51Z"
 	},
 	{
@@ -217,6 +238,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 24,
+		"Score": 0.8564204378649686,
 		"Published": "2026-03-24T17:08:32Z"
 	},
 	{
@@ -227,6 +249,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.3525828687777642,
 		"Published": "2026-03-21T16:46:30Z"
 	},
 	{
@@ -237,6 +260,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 9,
+		"Score": 0.925164668913849,
 		"Published": "2026-03-21T15:16:27Z"
 	},
 	{
@@ -247,6 +271,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 14,
+		"Score": 0.7619189031733016,
 		"Published": "2026-03-20T18:08:40Z"
 	}
 ]

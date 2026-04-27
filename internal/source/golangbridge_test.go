@@ -82,6 +82,7 @@ func TestGolangBridge_Fetch(t *testing.T) {
 					URL:       "https://forum.golangbridge.org/t/how-to-use-generics-in-go-1-21/12345",
 					Comments:  8,
 					Tag:       news.TagArticle,
+					Score:     0.1, // 0 views hits the default floor; weight 1.0 * 0.1
 					Published: time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
 				}, items[0])
 			},

@@ -6,6 +6,10 @@ generate: # Runs go generate
 	go generate ./...
 .PHONY: generate
 
+run-dry: # Run godaily and write the aggregated digest to examples/rendered/news.json
+	go run ./cmd/godaily run --dry-run --output examples/news.json
+.PHONY: run
+
 format: # Run gofmt
 	go fmt ./...
 .PHONY: format

@@ -9,10 +9,35 @@
             <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
         </image>
         <generator>Medium</generator>
-        <lastBuildDate>Mon, 27 Apr 2026 08:21:43 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 27 Apr 2026 11:26:31 GMT</lastBuildDate>
         <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
         <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
         <atom:link href="http://medium.superfeedr.com" rel="hub"/>
+        <item>
+            <title><![CDATA[Cryptopals Challenge 1: From Hex to Base64]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@jinalipabasara/cryptopals-challenge-1-from-hex-to-base64-360f18fa31b4?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1343/0*Dy_GweVTLakCPo9h.png" width="1343"></a></p><p class="medium-feed-snippet">The Cryptopals cryptography challenges are a fun way to dive into the world of cryptography and learn through hands-on exercises! In this&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@jinalipabasara/cryptopals-challenge-1-from-hex-to-base64-360f18fa31b4?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@jinalipabasara/cryptopals-challenge-1-from-hex-to-base64-360f18fa31b4?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/360f18fa31b4</guid>
+            <category><![CDATA[cryptography]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Jinali Pabasara]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 10:07:30 GMT</pubDate>
+            <atom:updated>2026-04-27T10:07:30.208Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Deterministic Go toolchain with Mise and Just]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/codex/deterministic-go-toolchain-with-mise-and-just-f321d741263b?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/0*3gLgIdwTfvMtFrib" width="4965"></a></p><p class="medium-feed-snippet">Eliminating &#x201C;Works on my machine&#x201D; fluff with deterministic builds</p><p class="medium-feed-link"><a href="https://medium.com/codex/deterministic-go-toolchain-with-mise-and-just-f321d741263b?source=rss------golang-5">Continue reading on CodeX »</a></p></div>]]></description>
+            <link>https://medium.com/codex/deterministic-go-toolchain-with-mise-and-just-f321d741263b?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/f321d741263b</guid>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[ci-cd-pipeline]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[writing]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Yaninyz witty]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 08:38:49 GMT</pubDate>
+            <atom:updated>2026-04-27T08:38:49.421Z</atom:updated>
+        </item>
         <item>
             <title><![CDATA[Goroutine Made Easy :)]]></title>
             <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@abhay.tiwari.er/goroutine-made-easy-146c64b81c0e?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1672/1*uSNMzyZspWY4FKE5RCCSKw.png" width="1672"></a></p><p class="medium-feed-snippet">In this article I would like to cover what you need to know about goroutines&#x2026; With almost zero jargon.</p><p class="medium-feed-link"><a href="https://medium.com/@abhay.tiwari.er/goroutine-made-easy-146c64b81c0e?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
@@ -119,32 +144,6 @@
             <dc:creator><![CDATA[Victoria Luquet]]></dc:creator>
             <pubDate>Sun, 26 Apr 2026 19:59:17 GMT</pubDate>
             <atom:updated>2026-04-26T19:59:17.470Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Learning Go through building a trading engine: Pt. 1]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/878/1*DmEe3nUa5oKfUl1_7zoRQQ.png" width="878"></a></p><p class="medium-feed-snippet">I picked up Go last week, coming from JAVA and JS and Frontend it is not a pleasant experience. You can easily find discussions as this&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/3c69e4f75335</guid>
-            <category><![CDATA[trading]]></category>
-            <category><![CDATA[beginners-guide]]></category>
-            <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Anaz Aijaz]]></dc:creator>
-            <pubDate>Sun, 26 Apr 2026 18:31:16 GMT</pubDate>
-            <atom:updated>2026-04-26T18:31:16.501Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Kikplate: The Easiest Way to Start with Production-Ready Boilerplates]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/1*5oCgxnJNBhlAoDqp_ec3Zg.png" width="2688"></a></p><p class="medium-feed-snippet">For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming&#x2026;</p><p class="medium-feed-link"><a href="https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5">Continue reading on ITNEXT »</a></p></div>]]></description>
-            <link>https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/9ddd5ebe98c9</guid>
-            <category><![CDATA[golang]]></category>
-            <category><![CDATA[javascript]]></category>
-            <category><![CDATA[javascrip]]></category>
-            <category><![CDATA[programming]]></category>
-            <category><![CDATA[software-development]]></category>
-            <dc:creator><![CDATA[Moeid Heidari]]></dc:creator>
-            <pubDate>Sun, 26 Apr 2026 18:05:17 GMT</pubDate>
-            <atom:updated>2026-04-26T19:39:23.333Z</atom:updated>
         </item>
     </channel>
 </rss>

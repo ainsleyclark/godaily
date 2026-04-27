@@ -50,3 +50,59 @@ func TestSource_NiceName(t *testing.T) {
 		assert.IsType(t, got, "devto")
 	})
 }
+
+func TestSource_Priority(t *testing.T) {
+	t.Parallel()
+
+	values := map[string]struct {
+		source Source
+		want   int
+	}{
+		"Go Blog":      {source: SourceGoBlog, want: 9},
+		"GitHub":       {source: SourceGitHub, want: 8},
+		"Hacker News":  {source: SourceHN, want: 7},
+		"Lobsters":     {source: SourceLobsters, want: 6},
+		"Reddit":       {source: SourceReddit, want: 5},
+		"Dev.to":       {source: SourceDevTo, want: 4},
+		"GolangBridge": {source: SourceGolangBridge, want: 3},
+		"YouTube":      {source: SourceYouTube, want: 2},
+		"Medium":       {source: SourceMedium, want: 1},
+	}
+	for name, test := range values {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, test.source.Priority())
+		})
+	}
+
+	t.Run("All Sources Covered", func(t *testing.T) {
+		t.Parallel()
+		for _, s := range Sources {
+			assert.Greater(t, s.Priority(), 0, "source %q must have a non-zero priority", s)
+		}
+	})
+
+	t.Run("Orders Go Blog Above Medium", func(t *testing.T) {
+		t.Parallel()
+		assert.Greater(t, SourceGoBlog.Priority(), SourceGitHub.Priority())
+		assert.Greater(t, SourceGitHub.Priority(), SourceHN.Priority())
+		assert.Greater(t, SourceHN.Priority(), SourceLobsters.Priority())
+		assert.Greater(t, SourceLobsters.Priority(), SourceReddit.Priority())
+		assert.Greater(t, SourceReddit.Priority(), SourceDevTo.Priority())
+		assert.Greater(t, SourceDevTo.Priority(), SourceGolangBridge.Priority())
+		assert.Greater(t, SourceGolangBridge.Priority(), SourceYouTube.Priority())
+		assert.Greater(t, SourceYouTube.Priority(), SourceMedium.Priority())
+	})
+
+	t.Run("All Priorities Are Unique", func(t *testing.T) {
+		t.Parallel()
+		seen := make(map[int]Source, len(Sources))
+		for _, s := range Sources {
+			p := s.Priority()
+			if other, ok := seen[p]; ok {
+				t.Errorf("priority %d is shared by %q and %q", p, other, s)
+			}
+			seen[p] = s
+		}
+	})
+}

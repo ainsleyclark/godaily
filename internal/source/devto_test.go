@@ -63,6 +63,7 @@ func TestDevTo_Fetch(t *testing.T) {
 					Snippet:   "If you have ever tried connecting two AI agents running on different machines...",
 					Tag:       news.TagArticle,
 					Comments:  3,
+					Score:     0.1, // 0 reactions hits the default floor; weight 1.0 * 0.1
 					Published: time.Date(2026, time.April, 25, 11, 4, 19, 0, time.UTC),
 				}, items[0])
 			},

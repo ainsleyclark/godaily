@@ -7,6 +7,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.423099442533317,
 		"Published": "2026-04-26T18:40:36Z"
 	},
 	{
@@ -17,6 +18,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.423099442533317,
 		"Published": "2026-04-25T14:42:42Z"
 	},
 	{
@@ -27,6 +29,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.2115497212666585,
 		"Published": "2026-04-25T05:30:04Z"
 	},
 	{
@@ -37,6 +40,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-22T11:46:10Z"
 	},
 	{
@@ -47,6 +51,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-20T00:19:00Z"
 	},
 	{
@@ -57,6 +62,7 @@
 		"Snippet": "A curated guide to the best tips and tricks for mastering GoLand. https://github.com/mukulmantosh/awesome_goland",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-17T04:58:28Z"
 	},
 	{
@@ -67,6 +73,7 @@
 		"Snippet": "Hey everyone.\nI'm currently building a distributed job runner that can guarantee an at-most once execution under crashes \u0026 system failures. I'm still in the early stages, building it from scratch.\nThi",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.2115497212666585,
 		"Published": "2026-04-15T14:30:43Z"
 	},
 	{
@@ -77,6 +84,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.423099442533317,
 		"Published": "2026-04-11T10:53:18Z"
 	},
 	{
@@ -87,6 +95,7 @@
 		"Snippet": "I asked Claude: \u003e In \"The pre-release suffix indicates a version is a pre-release. Pre-release versions sort before the corresponding release versions. For example, v1.2.3-pre comes before v1.2.3.\", W",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-09T19:41:08Z"
 	},
 	{
@@ -97,6 +106,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.2115497212666585,
 		"Published": "2026-04-08T21:00:01Z"
 	},
 	{
@@ -107,6 +117,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-06T14:46:44Z"
 	},
 	{
@@ -117,6 +128,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.2115497212666585,
 		"Published": "2026-04-06T07:00:29Z"
 	},
 	{
@@ -127,6 +139,7 @@
 		"Snippet": "Curious what HackerNews users are using right now.  Mapping my IDE usage since 2022 Goland (2022-2024)-\u003e Cursor(November 2024 to February 2026) -\u003e Claude Code (\u0026 VSCode or Cursor for manual edits) The",
 		"Tag": "article",
 		"Comments": 28,
+		"Score": 0.846198885066634,
 		"Published": "2026-04-02T16:01:00Z"
 	},
 	{
@@ -137,6 +150,7 @@
 		"Snippet": "Hey everyone, Long time lurker finally took the leap to share something with the community. From a long time I wanted to build something and I had this idea about a job board but not just a simple agg",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-04-01T17:01:48Z"
 	},
 	{
@@ -147,6 +161,7 @@
 		"Snippet": "Hi, I'm Andrew, a long-time hacker about to turn 50 in a few days. Today I'd like to tell you how taout.tv came into my life. It stands for \"talk it out\" and I'm told this is a \"portmanteau\" when you ",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-03-31T12:12:53Z"
 	},
 	{
@@ -157,6 +172,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.4912032412746449,
 		"Published": "2026-03-31T09:04:27Z"
 	},
 	{
@@ -167,6 +183,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3352983752456666,
 		"Published": "2026-03-28T15:23:58Z"
 	},
 	{
@@ -177,6 +194,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.423099442533317,
 		"Published": "2026-03-25T15:42:04Z"
 	},
 	{
@@ -187,6 +205,7 @@
 		"Snippet": "I have been working on this in isolation for the last 7+ years. I have reached the absolute limit of what I can do as a solo architect without \"production plumbing.\" I am at a survival wall and am loo",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.2115497212666585,
 		"Published": "2026-03-25T13:05:32Z"
 	},
 	{
@@ -197,6 +216,7 @@
 		"Snippet": "",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.423099442533317,
 		"Published": "2026-03-23T11:03:49Z"
 	}
 ]

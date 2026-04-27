@@ -1,13 +1,36 @@
 [
 	{
 		"Source": "medium",
+		"Title": "Cryptopals Challenge 1: From Hex to Base64",
+		"URL": "https://medium.com/@jinalipabasara/cryptopals-challenge-1-from-hex-to-base64-360f18fa31b4?source=rss------golang-5",
+		"Author": "Jinali Pabasara",
+		"Snippet": "The Cryptopals cryptography challenges are a fun way to dive into the world of cryptography and learn through hands-on exercises! In this… Continue reading on Medium »",
+		"Tag": "article",
+		"Comments": 0,
+		"Score": 0.25,
+		"Published": "2026-04-27T10:07:30Z"
+	},
+	{
+		"Source": "medium",
+		"Title": "Deterministic Go toolchain with Mise and Just",
+		"URL": "https://medium.com/codex/deterministic-go-toolchain-with-mise-and-just-f321d741263b?source=rss------golang-5",
+		"Author": "Yaninyz witty",
+		"Snippet": "Eliminating “Works on my machine” fluff with deterministic builds Continue reading on CodeX »",
+		"Tag": "article",
+		"Comments": 0,
+		"Score": 0.25,
+		"Published": "2026-04-27T08:38:49Z"
+	},
+	{
+		"Source": "medium",
 		"Title": "Goroutine Made Easy :)",
 		"URL": "https://medium.com/@abhay.tiwari.er/goroutine-made-easy-146c64b81c0e?source=rss------golang-5",
 		"Author": "Er. Abhay Tiwari",
 		"Snippet": "In this article I would like to cover what you need to know about goroutines… With almost zero jargon. Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-27T07:37:48Z"
 	},
 	{
 		"Source": "medium",
@@ -17,7 +40,8 @@
 		"Snippet": "Aprende qué es una Queue, cómo se compara con otras estructuras y cómo implementarla en Go de forma eficiente. Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-27T04:40:15Z"
 	},
 	{
 		"Source": "medium",
@@ -27,7 +51,8 @@
 		"Snippet": "I still remember the first time we hit a million events per day. It was 2019, and I was manually SSH-ing into our production server at 2… Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-27T01:51:01Z"
 	},
 	{
 		"Source": "medium",
@@ -37,7 +62,8 @@
 		"Snippet": "Di tahun 2026, AI sudah bisa generate kode. Copilot, Claude, ChatGPT — tinggal describe kebutuhan, kode muncul dalam hitungan detik. Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-26T23:10:46Z"
 	},
 	{
 		"Source": "medium",
@@ -47,7 +73,8 @@
 		"Snippet": "Why I stopped thinking about integration and started thinking about control at scale Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-26T23:06:30Z"
 	},
 	{
 		"Source": "medium",
@@ -57,7 +84,8 @@
 		"Snippet": "After several months of using AI assistants on real Go projects, the pattern is consistent. The coverage number is climbing. The actual… Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-26T21:09:33Z"
 	},
 	{
 		"Source": "medium",
@@ -67,7 +95,8 @@
 		"Snippet": "Most tutorials on Go concurrency follow the same script. They show you a goroutine, tell you it’s like a lightweight thread, demonstrate a… Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-26T20:00:28Z"
 	},
 	{
 		"Source": "medium",
@@ -77,26 +106,7 @@
 		"Snippet": "It is well known that managing configuration, specially in Golang, can become a mess, depending on how the project is structured, its size… Continue reading on Medium »",
 		"Tag": "article",
 		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
-	},
-	{
-		"Source": "medium",
-		"Title": "Learning Go through building a trading engine: Pt. 1",
-		"URL": "https://medium.com/@anaz.aijaz/learning-go-through-building-a-trading-engine-pt-1-3c69e4f75335?source=rss------golang-5",
-		"Author": "Anaz Aijaz",
-		"Snippet": "I picked up Go last week, coming from JAVA and JS and Frontend it is not a pleasant experience. You can easily find discussions as this… Continue reading on Medium »",
-		"Tag": "article",
-		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
-	},
-	{
-		"Source": "medium",
-		"Title": "Kikplate: The Easiest Way to Start with Production-Ready Boilerplates",
-		"URL": "https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5",
-		"Author": "Moeid Heidari",
-		"Snippet": "For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming… Continue reading on ITNEXT »",
-		"Tag": "article",
-		"Comments": 0,
-		"Published": "0001-01-01T00:00:00Z"
+		"Score": 0.25,
+		"Published": "2026-04-26T19:59:17Z"
 	}
 ]

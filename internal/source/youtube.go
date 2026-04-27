@@ -81,6 +81,7 @@ func (v ytItem) transform() news.Item {
 		Author:    v.Snippet.ChannelTitle,
 		Snippet:   v.Snippet.Description,
 		Tag:       news.TagVideo,
+		Score:     news.ScoreOf(news.SourceYouTube, news.TagVideo, 0, false),
 		Published: published,
 	}
 }

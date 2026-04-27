@@ -67,6 +67,7 @@ func (s lobstersStory) transform() news.Item {
 		Snippet:   strings.TrimSpace(s.Description),
 		Tag:       news.TagArticle,
 		Comments:  s.CommentCount,
+		Score:     news.ScoreOf(news.SourceLobsters, news.TagArticle, float64(s.Score), true),
 		Published: published.UTC(),
 	}
 }

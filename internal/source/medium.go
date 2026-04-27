@@ -67,6 +67,7 @@ func (i mediumItem) transform() news.Item {
 		Author:    i.Creator,
 		Snippet:   snippet,
 		Tag:       news.TagArticle,
+		Score:     news.ScoreOf(news.SourceMedium, news.TagArticle, 0, false),
 		Published: published.UTC(),
 	}
 }

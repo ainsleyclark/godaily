@@ -86,6 +86,7 @@ func TestYouTube_Fetch(t *testing.T) {
 					Author:    "GopherCon",
 					Snippet:   "An introduction to concurrency patterns in Go.",
 					Tag:       news.TagVideo,
+					Score:     0.5, // no signal: weight 1.0 * constant 0.5
 					Published: time.Date(2024, 4, 25, 14, 0, 0, 0, time.UTC),
 				}, items[0])
 			},

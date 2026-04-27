@@ -112,6 +112,7 @@ func (i ghIssue) transform(tag news.Tag) news.Item {
 		Snippet:   ghSnippet(i.Body, i.Milestone),
 		Tag:       tag,
 		Comments:  i.Comments,
+		Score:     news.ScoreOf(news.SourceGitHub, tag, float64(i.Reactions.PlusOne), true),
 		Published: i.CreatedAt,
 	}
 }

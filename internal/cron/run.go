@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/email"
@@ -84,9 +85,16 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 		}
 
 		if len(si.Items) > 0 {
+			sort.SliceStable(si.Items, func(i, j int) bool {
+				return si.Items[i].Score > si.Items[j].Score
+			})
 			results = append(results, si)
 		}
 	}
+
+	sort.SliceStable(results, func(i, j int) bool {
+		return results[i].Source.Priority() > results[j].Source.Priority()
+	})
 
 	if !opts.DryRun {
 		if err := a.sendDigest(ctx, day, results); err != nil {

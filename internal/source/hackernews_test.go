@@ -97,6 +97,7 @@ func TestHackerNews_Fetch(t *testing.T) {
 					Snippet:   "A deep dive into Go's net/http & stdlib.",
 					Tag:       news.TagArticle,
 					Comments:  42,
+					Score:     1.2, // 350 points saturates the curve; weight 1.2 * engagement 1.0
 					Published: time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
 				}, items[0])
 			},

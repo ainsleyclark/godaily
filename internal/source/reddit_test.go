@@ -103,6 +103,7 @@ func TestReddit_Fetch(t *testing.T) {
 					Snippet:   "",
 					Tag:       news.TagArticle,
 					Comments:  88,
+					Score:     1.0, // score 500 saturates the curve; weight 1.0 * 1.0
 					Published: time.Unix(1714000000, 0).UTC(),
 				}, items[0])
 			},

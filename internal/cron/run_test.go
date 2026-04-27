@@ -207,6 +207,52 @@ func TestAggregator_Run(t *testing.T) {
 				assert.Empty(t, items)
 			},
 		},
+		"Sorts Items By Score Desc": {
+			registry: map[news.Source]news.Fetcher{
+				news.SourceDevTo: mockFetcher{
+					items: []news.Item{
+						{Title: "low", Published: inWindow, Score: 0.1},
+						{Title: "high", Published: inWindow, Score: 0.9},
+						{Title: "mid", Published: inWindow, Score: 0.5},
+					},
+				},
+			},
+			opts: RunOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				require.Len(t, items[0].Items, 3)
+				assert.Equal(t, "high", items[0].Items[0].Title)
+				assert.Equal(t, "mid", items[0].Items[1].Title)
+				assert.Equal(t, "low", items[0].Items[2].Title)
+			},
+		},
+		"Sorts Sources By Priority": {
+			registry: map[news.Source]news.Fetcher{
+				news.SourceMedium: mockFetcher{
+					items: []news.Item{{Title: "m", Published: inWindow}},
+				},
+				news.SourceGoBlog: mockFetcher{
+					items: []news.Item{{Title: "g", Published: inWindow}},
+				},
+				news.SourceReddit: mockFetcher{
+					items: []news.Item{{Title: "r", Published: inWindow}},
+				},
+			},
+			opts: RunOptions{
+				DryRun:  true,
+				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
+			},
+			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 3)
+				assert.Equal(t, news.SourceGoBlog, items[0].Source)
+				assert.Equal(t, news.SourceReddit, items[1].Source)
+				assert.Equal(t, news.SourceMedium, items[2].Source)
+			},
+		},
 		"Continues On Fetch Error": {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{err: errors.New("boom")},

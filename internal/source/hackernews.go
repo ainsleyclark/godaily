@@ -81,6 +81,7 @@ func (h hnHit) transform() news.Item {
 		Snippet:   sanitiseSnippet(h.StoryText),
 		Tag:       news.TagArticle,
 		Comments:  h.NumComments,
+		Score:     news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
 		Published: h.CreatedAt,
 	}
 }

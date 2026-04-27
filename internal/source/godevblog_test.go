@@ -88,6 +88,7 @@ func TestGoBlog_Fetch(t *testing.T) {
 					Author:    "The Go Team",
 					Snippet:   "Go 1.23 is now available.",
 					Tag:       news.TagArticle,
+					Score:     1.0, // no signal but official: weight 2.0 * constant 0.5
 					Published: time.Date(2024, time.August, 13, 0, 0, 0, 0, time.UTC),
 				}, items[0])
 			},

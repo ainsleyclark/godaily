@@ -67,6 +67,7 @@ func (d devToResponse) transform() news.Item {
 		Snippet:   d.Description,
 		Tag:       news.TagArticle,
 		Comments:  d.CommentsCount,
+		Score:     news.ScoreOf(news.SourceDevTo, news.TagArticle, float64(d.PositiveReactionsCount), true),
 		Published: d.PublishedAt,
 	}
 }

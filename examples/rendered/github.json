@@ -7,6 +7,7 @@
 		"Snippet": "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
 		"Tag": "proposal_accepted",
 		"Comments": 175,
+		"Score": 1.8,
 		"Published": "2026-01-22T23:13:22Z"
 	},
 	{
@@ -17,6 +18,7 @@
 		"Snippet": "Update (02/11/2026): The AMD64 low-level SIMD package is now available in Go 1.26 under GOEXPERIMENT=simd . There were minor bug fixes since the RC2. ",
 		"Tag": "proposal_accepted",
 		"Comments": 196,
+		"Score": 1.8,
 		"Published": "2025-05-19T20:43:15Z"
 	},
 	{
@@ -27,6 +29,7 @@
 		"Snippet": "Targeting Go 1.27 — Proposal Details [Design document.](https://go.googlesource.com/proposal/+/master/design/74609-goroutine-leak-detection-gc.md) This proposal involves ",
 		"Tag": "proposal_accepted",
 		"Comments": 29,
+		"Score": 1.5570770066804551,
 		"Published": "2025-07-14T14:34:00Z"
 	},
 	{
@@ -37,6 +40,7 @@
 		"Snippet": "Go 1.26 added an internal implementation of the ML-DSA post-quantum signature algorithm, specified in FIPS 204. I propose we expose a public crypto/ml",
 		"Tag": "proposal_accepted",
 		"Comments": 24,
+		"Score": 1.1375967266684757,
 		"Published": "2026-02-15T13:16:07Z"
 	},
 	{
@@ -47,6 +51,7 @@
 		"Snippet": "Background First off, flaky tests (a test that usually passes but sometimes fails) are the worst and you should not write them and fix them immediatel",
 		"Tag": "proposal_accepted",
 		"Comments": 36,
+		"Score": 1.8,
 		"Published": "2023-08-23T16:12:44Z"
 	},
 	{
@@ -57,6 +62,7 @@
 		"Snippet": "Targeting Go 1.27 — Proposal Details The last security update macOS 12 received was in [July 2024](https://support.apple.com/en-us/120910). I believe the summer of 2026 w",
 		"Tag": "proposal_accepted",
 		"Comments": 16,
+		"Score": 0.9,
 		"Published": "2025-10-09T20:36:46Z"
 	},
 	{
@@ -67,6 +73,7 @@
 		"Snippet": "Updated for status (adonovan): - [x] Scanner.Err analyzer implementation, enabled in gopls (https://go.dev/cl/730480) - [ ] sql.Rows analyzer implemen",
 		"Tag": "proposal_accepted",
 		"Comments": 69,
+		"Score": 1.20816730878679,
 		"Published": "2016-11-02T18:17:19Z"
 	},
 	{
@@ -77,6 +84,7 @@
 		"Snippet": "Composite literals construct values for structs, arrays, slices, and maps. They consist of a type followed by a brace-bound list of elements. e.g., go",
 		"Tag": "proposal_accepted",
 		"Comments": 263,
+		"Score": 1.8,
 		"Published": "2015-10-06T21:26:59Z"
 	},
 	{
@@ -87,6 +95,7 @@
 		"Snippet": "Background: One of the many tricky subtasks of the type checker is to compute the conversions implicitly applied to an expression that is used on the ",
 		"Tag": "proposal_accepted",
 		"Comments": 23,
+		"Score": 0.9,
 		"Published": "2024-12-02T15:37:22Z"
 	},
 	{
@@ -97,6 +106,7 @@
 		"Snippet": "Targeting Go 1.27 — In ae3d890202b2356fc0936f84349bdf08083884ac as part of addressing 51082, a change was made to go/doc that rewrite all '' to ” . This makes semantic ",
 		"Tag": "proposal_accepted",
 		"Comments": 47,
+		"Score": 1.7426999876489673,
 		"Published": "2022-08-06T07:30:09Z"
 	},
 	{
@@ -107,6 +117,7 @@
 		"Snippet": "Proposal Details The [golang.org/x/net/h2c](https://pkg.go.dev/golang.org/x/net/http2/h2c) package provides support for serving unencrypted HTTP/2 con",
 		"Tag": "proposal_accepted",
 		"Comments": 4,
+		"Score": 1.005895125737,
 		"Published": "2025-02-28T21:31:30Z"
 	},
 	{
@@ -117,6 +128,7 @@
 		"Snippet": "Status: accepted, implementation in progress: - [x] analysis API (https://go.dev/cl/676455) - [x] go/packages-based {single,multi}checkers (https://go",
 		"Tag": "proposal_accepted",
 		"Comments": 26,
+		"Score": 0.9,
 		"Published": "2025-05-27T08:38:09Z"
 	},
 	{
@@ -127,6 +139,7 @@
 		"Snippet": "Tests have an overall timeout for the entire binary but no timeout for a specific test case. You often want to limit any particular test case to a tim",
 		"Tag": "proposal_accepted",
 		"Comments": 52,
+		"Score": 1.8,
 		"Published": "2021-09-02T17:10:20Z"
 	},
 	{
@@ -137,6 +150,7 @@
 		"Snippet": "The crypto/tls package's GetCertificate and GetConfigForClient callbacks receive a tls.ClientHelloInfo with a Conn field (type net.Conn ). For QUIC, a",
 		"Tag": "proposal_accepted",
 		"Comments": 9,
+		"Score": 0.9,
 		"Published": "2026-01-28T23:48:37Z"
 	},
 	{
@@ -147,6 +161,7 @@
 		"Snippet": "The GODEBUG knob for http2 debugging (e.g. GODEBUG=http2debug=2 ) has proven to be very useful and popular. Unfortunately it only works for HTTP/2. Th",
 		"Tag": "proposal_accepted",
 		"Comments": 29,
+		"Score": 1.6771880492737306,
 		"Published": "2017-01-20T21:41:54Z"
 	},
 	{
@@ -157,6 +172,7 @@
 		"Snippet": "\u003c!-- Please answer these questions before submitting your issue. Thanks! --\u003e What version of Go are you using ( go version )? \u003cpre\u003e f90b4cd6554f4f2028",
 		"Tag": "proposal_accepted",
 		"Comments": 16,
+		"Score": 0.9,
 		"Published": "2023-05-26T10:52:46Z"
 	},
 	{
@@ -167,6 +183,7 @@
 		"Snippet": "Proposal Details The crypto/tls package requires tls.Config.MinVersion \u003e= VersionTLS13 for QUIC connections to enforce RFC 9001's TLS 1.3 requirement.",
 		"Tag": "proposal_accepted",
 		"Comments": 7,
+		"Score": 0.9,
 		"Published": "2026-02-16T00:57:56Z"
 	},
 	{
@@ -177,6 +194,7 @@
 		"Snippet": "Background The GOARCH=wasm architecture was first introduced alongside GOOS=js in 2019. The choice was made to use a 64 bit architecture because of We",
 		"Tag": "proposal_accepted",
 		"Comments": 77,
+		"Score": 1.5254918906867776,
 		"Published": "2023-09-20T20:51:29Z"
 	},
 	{
@@ -187,6 +205,7 @@
 		"Snippet": "This is a proposal to add -static flag to go build . Producing a static build with go already requires a non-trivial amount of flags passed to go buil",
 		"Tag": "proposal_accepted",
 		"Comments": 41,
+		"Score": 1.8,
 		"Published": "2018-07-19T23:58:53Z"
 	},
 	{
@@ -197,6 +216,7 @@
 		"Snippet": "cmd/go shells out to version control binaries to implement go get . [doc/install](https://tip.golang.org/doc/install) currently declares minimum suppo",
 		"Tag": "proposal_accepted",
 		"Comments": 28,
+		"Score": 0.9,
 		"Published": "2018-08-01T14:56:32Z"
 	},
 	{
@@ -207,6 +227,7 @@
 		"Snippet": "Targeting Go 1.27 — Proposal Details I am the creator of the https://github.com/jackc/pgx/ PostgreSQL driver. pgx implements a very flexible and convenient type system fo",
 		"Tag": "proposal",
 		"Comments": 77,
+		"Score": 1,
 		"Published": "2024-05-21T15:29:58Z"
 	},
 	{
@@ -217,6 +238,7 @@
 		"Snippet": "Proposal Details This proposal is to add a new Analyzer, atomic, to the go/analysis API: https://github.com/golang/go/issues/77352 The atomic analyzer",
 		"Tag": "proposal",
 		"Comments": 9,
+		"Score": 0.5,
 		"Published": "2026-03-06T15:30:57Z"
 	},
 	{
@@ -227,6 +249,7 @@
 		"Snippet": "Proposal Details A function that implements an O(1) delete from a slice as described in [SliceTricks](https://go.dev/wiki/SliceTricks delete-without-p",
 		"Tag": "proposal",
 		"Comments": 8,
+		"Score": 0.5,
 		"Published": "2026-04-25T14:40:27Z"
 	},
 	{
@@ -237,6 +260,7 @@
 		"Snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
 		"Tag": "proposal",
 		"Comments": 916,
+		"Score": 1,
 		"Published": "2017-08-17T18:29:52Z"
 	},
 	{
@@ -247,6 +271,7 @@
 		"Snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
 		"Tag": "proposal",
 		"Comments": 6,
+		"Score": 0.5,
 		"Published": "2026-02-28T01:00:58Z"
 	},
 	{
@@ -257,6 +282,7 @@
 		"Snippet": "Proposal Details (Split out from https://github.com/golang/go/issues/78865 issuecomment-4308283951 et seq.) C-style conditional expressions using x ? ",
 		"Tag": "proposal",
 		"Comments": 20,
+		"Score": 0.5,
 		"Published": "2026-04-24T15:21:12Z"
 	},
 	{
@@ -267,6 +293,7 @@
 		"Snippet": "Targeting Go 1.28 — ~This is a placeholder for planning purposes, to be exchanged for a proper proposal at a future date.~ EDIT(2024-02-06): Please see the actual proposa",
 		"Tag": "proposal",
 		"Comments": 15,
+		"Score": 0.5,
 		"Published": "2023-06-26T21:07:51Z"
 	},
 	{
@@ -277,6 +304,7 @@
 		"Snippet": "[Status: currently [on hold](https://github.com/golang/go/issues/74472 issuecomment-3494039191).] Proposal: Typed struct tags This is a fully fleshed ",
 		"Tag": "proposal",
 		"Comments": 111,
+		"Score": 1,
 		"Published": "2025-07-04T06:41:50Z"
 	},
 	{
@@ -287,6 +315,7 @@
 		"Snippet": "Proposal Details [The timeline of plausible CRQC has shifted](https://words.filippo.io/crqc-timeline/) which made my previous preference for a wait-an",
 		"Tag": "proposal",
 		"Comments": 2,
+		"Score": 0.5288743031666463,
 		"Published": "2026-04-21T15:38:31Z"
 	},
 	{
@@ -297,6 +326,7 @@
 		"Snippet": "Proposal Details Go's HTTP/2 implementation indexes all headers in the HPACK dynamic table by default. This has two primary impacts: - Go lacks a mech",
 		"Tag": "proposal",
 		"Comments": 6,
+		"Score": 0.5,
 		"Published": "2026-03-23T23:06:06Z"
 	},
 	{
@@ -307,6 +337,7 @@
 		"Snippet": "Proposal Details This is a continuation of https://github.com/golang/go/issues/47049, which was retracted with the following comment: \u003eTreating this a",
 		"Tag": "proposal",
 		"Comments": 20,
+		"Score": 0.5,
 		"Published": "2024-07-25T20:15:26Z"
 	},
 	{
@@ -317,6 +348,7 @@
 		"Snippet": "Proposal Details We had a service that had GOMEMLIMIT set. Over the years, due to natural growth of users, we increased the size of the machine that t",
 		"Tag": "proposal",
 		"Comments": 3,
+		"Score": 0.5,
 		"Published": "2026-04-22T21:52:02Z"
 	},
 	{
@@ -327,6 +359,7 @@
 		"Snippet": "Proposal Details This is the first version of the \"second level\" SIMD api described in 73787; the intent is to provide a portable interface to SIMD ve",
 		"Tag": "proposal",
 		"Comments": 5,
+		"Score": 0.5,
 		"Published": "2026-04-22T14:48:59Z"
 	},
 	{
@@ -337,6 +370,7 @@
 		"Snippet": "Proposal Details Background Supply chain attacks on open-source software dependencies have become a regular occurrence. Go already [takes measures](ht",
 		"Tag": "proposal",
 		"Comments": 31,
+		"Score": 0.8814571719444105,
 		"Published": "2025-11-27T06:21:59Z"
 	},
 	{
@@ -347,6 +381,7 @@
 		"Snippet": "Proposal Details Currently, in src/runtime/lock_spinbit.go, the constant mutexActiveSpinSize is hardcoded to 30，My tests on ARM64 platform indicate ",
 		"Tag": "proposal",
 		"Comments": 3,
+		"Score": 0.5,
 		"Published": "2026-04-21T13:41:30Z"
 	},
 	{
@@ -357,6 +392,7 @@
 		"Snippet": "The [proposal review group meets regularly](https://go.googlesource.com/proposal/+/master/README.md proposal-review) (roughly weekly) to review pendin",
 		"Tag": "proposal",
 		"Comments": 303,
+		"Score": 0.5,
 		"Published": "2019-08-06T21:04:51Z"
 	},
 	{
@@ -367,6 +403,7 @@
 		"Snippet": "Proposal Details For Go 1.27, we should implement MLKEM1024 from draft-ietf-tls-mlkem-07. [It is the only key exchange in the CNSA 2.0 profile](https:",
 		"Tag": "proposal",
 		"Comments": 2,
+		"Score": 0.5,
 		"Published": "2026-04-06T11:40:54Z"
 	},
 	{
@@ -377,6 +414,7 @@
 		"Snippet": "Proposal Details I'm working on an implementation of [Merkle Tree Certificates](https://datatracker.ietf.org/doc/draft-davidben-tls-merkle-tree-certs/",
 		"Tag": "proposal",
 		"Comments": 6,
+		"Score": 0.5,
 		"Published": "2025-10-31T16:20:56Z"
 	},
 	{
@@ -387,6 +425,7 @@
 		"Snippet": "Relative OID tag support is currently missing from the [encoding/asn1](https://pkg.go.dev/encoding/asn1) and [x/crypto/cryptobyte](https://pkg.go.dev/",
 		"Tag": "proposal",
 		"Comments": 12,
+		"Score": 0.5,
 		"Published": "2025-09-04T15:03:26Z"
 	},
 	{
@@ -397,6 +436,7 @@
 		"Snippet": "Proposal Details I use the httptest package a lot, and in particular NewServer rather than ResponseRecorder, because it picks up subtle real-world iss",
 		"Tag": "proposal",
 		"Comments": 13,
+		"Score": 0.7351220597983265,
 		"Published": "2025-11-27T22:10:15Z"
 	},
 	{
@@ -407,6 +447,7 @@
 		"Snippet": "Proposal Details Background ---------- {{template \"x\" .}} accepts a single data argument. Passing multiple named values to a reused template today req",
 		"Tag": "proposal",
 		"Comments": 5,
+		"Score": 0.5,
 		"Published": "2026-04-20T00:00:12Z"
 	},
 	{
@@ -417,6 +458,7 @@
 		"Snippet": "Paying off technical debt: a policy proposal for removing GODEBUG flags This is an umbrella issue for the decommissioning of GODEBUG flags. It propose",
 		"Tag": "proposal",
 		"Comments": 22,
+		"Score": 0.5588306254094444,
 		"Published": "2025-11-04T01:30:54Z"
 	},
 	{
@@ -427,6 +469,7 @@
 		"Snippet": "\u003c!-- Our proposal process is documented here: https://go.dev/s/proposal-process --\u003e _(I couldn't find an existing issue for this, but if there is, fee",
 		"Tag": "proposal",
 		"Comments": 8,
+		"Score": 0.6887513471002596,
 		"Published": "2023-08-03T08:10:25Z"
 	},
 	{
@@ -437,6 +480,7 @@
 		"Snippet": "Background gcexportdata.Write encodes a types.Package \"deeply\": the output contains a complete description of every object reachable from the package'",
 		"Tag": "proposal",
 		"Comments": 1,
+		"Score": 0.5,
 		"Published": "2026-04-19T22:23:51Z"
 	},
 	{
@@ -447,6 +491,7 @@
 		"Snippet": "Targeting Go 1.27 — I would like to suggest the addition to the standard library of a package to generate and parse UUID identifiers, specifically versions 3, 4 and 5. Th",
 		"Tag": "proposal_shipped",
 		"Comments": 343,
+		"Score": 1.7,
 		"Published": "2023-08-14T19:57:51Z"
 	},
 	{
@@ -457,6 +502,7 @@
 		"Snippet": "Targeting Go 1.26 — Proposal Details 32479 added a go vet warning for string(i) , because it has the surprising behavior of returning the character with that integer code",
 		"Tag": "proposal_shipped",
 		"Comments": 16,
+		"Score": 0.8990863153832986,
 		"Published": "2025-03-13T18:00:32Z"
 	},
 	{
@@ -467,6 +513,7 @@
 		"Snippet": "Targeting Go 1.25 — I recently diagnosed a bug in someone’s Go program where a user reported that they couldn’t get the program to connect, and it turned out the issu",
 		"Tag": "proposal_shipped",
 		"Comments": 18,
+		"Score": 1.1708772900704414,
 		"Published": "2018-10-22T12:04:32Z"
 	},
 	{
@@ -477,6 +524,7 @@
 		"Snippet": "Occasionally a GitHub user will post a comment on a commit. Frequently these are spam which leads to nuisance emails generated if you watch the repo. ",
 		"Tag": "proposal_shipped",
 		"Comments": 7,
+		"Score": 0.85,
 		"Published": "2018-05-18T06:01:14Z"
 	},
 	{
@@ -487,6 +535,7 @@
 		"Snippet": "During the review of my [CL 744880](https://go.dev/cl/744880), @alexbrainman requested that I remove all helper methods on the newly added structs. Th",
 		"Tag": "proposal_shipped",
 		"Comments": 21,
+		"Score": 0.85,
 		"Published": "2026-03-01T20:31:25Z"
 	},
 	{
@@ -497,6 +546,7 @@
 		"Snippet": "Targeting Go 1.26 — This is a mini-proposal to land the work powering 74609 behind a new GOEXPERIMENT , goroutineleakprofile (edited after discussion below), so 1. The im",
 		"Tag": "proposal_shipped",
 		"Comments": 16,
+		"Score": 0.8990863153832986,
 		"Published": "2025-09-05T16:16:59Z"
 	},
 	{
@@ -507,6 +557,7 @@
 		"Snippet": "Targeting Go 1.23 — Following discussion on 56413, I propose to add two new types that a [for-range statement](https://go.dev/ref/spec For_range) can range over: integers",
 		"Tag": "proposal_shipped",
 		"Comments": 417,
+		"Score": 1.7,
 		"Published": "2023-07-17T21:17:46Z"
 	},
 	{
@@ -517,6 +568,7 @@
 		"Snippet": "Proposal Details --- Accepted proposal: go // A History provides a (possibly bounded) queue of input lines read by [ReadLine]. type History interface ",
 		"Tag": "proposal_shipped",
 		"Comments": 79,
+		"Score": 0.85,
 		"Published": "2024-08-08T00:35:25Z"
 	},
 	{
@@ -527,6 +579,7 @@
 		"Snippet": "Targeting Go 1.27 — (Status: [referred](https://github.com/golang/go/issues/9859 issuecomment-2877895897) from LanguageChange to Proposal. --adonovan) Consider type E str",
 		"Tag": "proposal_shipped",
 		"Comments": 78,
+		"Score": 1.7,
 		"Published": "2015-02-12T23:21:33Z"
 	},
 	{
@@ -537,6 +590,7 @@
 		"Snippet": "Targeting Go 1.27 — The [Go 1.21 release](https://go.dev/doc/go1.21) introduced significantly improved type inference. Specifically: \u003e A (possibly partially instantiated ",
 		"Tag": "proposal_shipped",
 		"Comments": 21,
+		"Score": 1.3163574958800075,
 		"Published": "2026-01-20T22:38:56Z"
 	}
 ]

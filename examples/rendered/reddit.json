@@ -6,7 +6,8 @@
 		"Author": "Expensive_Ruin_1831",
 		"Snippet": "Hi guys. What project should make before we apply first job? \n\nIn my opinion, some project like sales, manager as newbie, that's no value.\n\nHelp me.",
 		"Tag": "article",
-		"Comments": 4,
+		"Comments": 5,
+		"Score": 0.5195737064824407,
 		"Published": "2026-04-27T07:39:17Z"
 	},
 	{
@@ -17,6 +18,7 @@
 		"Snippet": "Howdy!\n\nWho all is going to Gophercon 2026 in Seattle, WA this year?",
 		"Tag": "article",
 		"Comments": 4,
+		"Score": 0.7881887691669792,
 		"Published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -27,6 +29,7 @@
 		"Snippet": "Hi Gophers,\n\nA few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have ",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.3003809664473759,
 		"Published": "2026-04-26T15:58:00Z"
 	},
 	{
@@ -36,7 +39,8 @@
 		"Author": "self",
 		"Snippet": "",
 		"Tag": "article",
-		"Comments": 1,
+		"Comments": 2,
+		"Score": 0.6974630051635803,
 		"Published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -47,6 +51,7 @@
 		"Snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits.\n\nThe routine runs indefinitely on an interval delivered from a ticker.\n\n  \n`ticker := time.New",
 		"Tag": "article",
 		"Comments": 17,
+		"Score": 0.5867777864565255,
 		"Published": "2026-04-26T14:46:53Z"
 	},
 	{
@@ -57,6 +62,7 @@
 		"Snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.**\n\nI wrote kLex/FROG almost entirely using AI - only breaking from this as required.  I did this for",
 		"Tag": "article",
 		"Comments": 5,
+		"Score": 0.1,
 		"Published": "2026-04-26T14:38:55Z"
 	},
 	{
@@ -67,6 +73,7 @@
 		"Snippet": "made with go and bubbletea\n\nhttps://github.com/xdagiz/xytz",
 		"Tag": "article",
 		"Comments": 1,
+		"Score": 0.5557708294077383,
 		"Published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -76,7 +83,8 @@
 		"Author": "WorkingInitiative909",
 		"Snippet": "Are someone use this repo \n\nGOWA \n\n  \n[https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"Tag": "article",
-		"Comments": 3,
+		"Comments": 4,
+		"Score": 0.6379982859432913,
 		"Published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -87,6 +95,7 @@
 		"Snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go.\n\nUpload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → sp",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.3003809664473759,
 		"Published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -97,6 +106,7 @@
 		"Snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
 		"Tag": "article",
 		"Comments": 8,
+		"Score": 0.8098747594226537,
 		"Published": "2026-04-25T11:19:48Z"
 	},
 	{
@@ -107,6 +117,7 @@
 		"Snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap.\n\nIn contrast, the Flex family—suc",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.4760925677494707,
 		"Published": "2026-04-24T23:16:08Z"
 	},
 	{
@@ -117,6 +128,7 @@
 		"Snippet": "I released [ai-rulez v4](https://github.com/Goldziher/ai-rulez). Been using it constantly since I built it - and introduced it into several organizations, including https://github.com/kreuzberg-dev --",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-24T14:36:11Z"
 	},
 	{
@@ -127,6 +139,7 @@
 		"Snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2`  \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.",
 		"Tag": "article",
 		"Comments": 11,
+		"Score": 0.9867297885250814,
 		"Published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -137,6 +150,7 @@
 		"Snippet": "Hi everyone,\n\nI wanted to share Senchabot, an open-source bot I've been working on since 2022 to bridge Twitch and Discord.\n\nGitHub repo link: [https://github.com/senchabot-opensource/monorepo](https:",
 		"Tag": "article",
 		"Comments": 9,
+		"Score": 0.1,
 		"Published": "2026-04-24T06:18:30Z"
 	},
 	{
@@ -147,6 +161,7 @@
 		"Snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.5195737064824407,
 		"Published": "2026-04-23T21:58:26Z"
 	},
 	{
@@ -157,6 +172,7 @@
 		"Snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
 		"Tag": "article",
 		"Comments": 7,
+		"Score": 0.8098747594226537,
 		"Published": "2026-04-23T14:31:45Z"
 	},
 	{
@@ -167,6 +183,7 @@
 		"Snippet": "Im working on deploying Gatus application on ECS with launch type EC2, Gatus is an app health dashboard which tests connection to different domains and paths. \n\nAs part of increasing security posture ",
 		"Tag": "article",
 		"Comments": 7,
+		"Score": 0.1,
 		"Published": "2026-04-23T13:21:03Z"
 	},
 	{
@@ -177,6 +194,7 @@
 		"Snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
 		"Tag": "article",
 		"Comments": 45,
+		"Score": 0.7703694949060205,
 		"Published": "2026-04-23T09:36:02Z"
 	},
 	{
@@ -187,6 +205,7 @@
 		"Snippet": "\u0026gt;How much Go code do you need to ship an OpenAI-compatible provider?  \nAbout 84 lines for chat-only. 126 for one with embeddings and account-ID URL quirks (Cloudflare Workers AI). 132 with regional",
 		"Tag": "article",
 		"Comments": 0,
+		"Score": 0.1,
 		"Published": "2026-04-23T09:03:05Z"
 	},
 	{
@@ -197,6 +216,7 @@
 		"Snippet": "I've been learning Go and ran into something that I can't find a clean solution to.\n\n\n\nWhen a function accepts an interface like http.ResponseWriter, I know the concrete struct coming in satisfies tha",
 		"Tag": "article",
 		"Comments": 81,
+		"Score": 0.9844368669660623,
 		"Published": "2026-04-23T04:26:34Z"
 	},
 	{
@@ -207,6 +227,7 @@
 		"Snippet": "I want to stay updated on the golang and really know the language well but i find it very difficult to read the documentation.",
 		"Tag": "article",
 		"Comments": 16,
+		"Score": 0.1,
 		"Published": "2026-04-23T02:57:52Z"
 	},
 	{
@@ -217,6 +238,7 @@
 		"Snippet": "It started with a music bot. I was using disgo, Discord added DAVE (their E2E encryption for voice calls) and the only Go option was wrapping libdave via CGo. Cross-compilation became a nightmare so I",
 		"Tag": "article",
 		"Comments": 2,
+		"Score": 0.6596842761989657,
 		"Published": "2026-04-22T19:36:35Z"
 	},
 	{
@@ -227,6 +249,7 @@
 		"Snippet": "It's a CLI tool that stores your secrets in the OS keychain (Keychain on macOS, Credential Manager on Windows, libsecret on Linux) instead of plaintext files. Your credentials never touch the disk.\n\n*",
 		"Tag": "article",
 		"Comments": 13,
+		"Score": 0.613898019286257,
 		"Published": "2026-04-22T15:32:14Z"
 	},
 	{
@@ -237,6 +260,7 @@
 		"Snippet": "For the past few days, I had been working on Raftly: ([GitHub](https://github.com/ani03sha/raftly)), a from-scratch Raft consensus implementation in Go.\n\nI wanted something that did two things I wasn'",
 		"Tag": "article",
 		"Comments": 11,
+		"Score": 0.8561517958551143,
 		"Published": "2026-04-22T15:16:36Z"
 	}
 ]

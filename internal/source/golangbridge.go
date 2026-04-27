@@ -67,6 +67,7 @@ func (t golangBridgeTopic) transform() news.Item {
 		URL:       "https://forum.golangbridge.org/t/" + t.Slug + "/" + strconv.Itoa(t.ID),
 		Comments:  t.PostsCount,
 		Tag:       news.TagArticle,
+		Score:     news.ScoreOf(news.SourceGolangBridge, news.TagArticle, float64(t.Views), true),
 		Published: t.CreatedAt,
 	}
 }

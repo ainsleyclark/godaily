@@ -90,6 +90,7 @@ func TestLobsters_Fetch(t *testing.T) {
 					Snippet:   "A tutorial on building REST APIs with Go.",
 					Tag:       news.TagArticle,
 					Comments:  7,
+					Score:     0.9566039969802683, // log(43)/log(51); weight 1.0 * engagement
 					Published: time.Date(2024, 4, 25, 15, 30, 0, 0, time.UTC),
 				}, items[0])
 			},

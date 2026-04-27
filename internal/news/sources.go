@@ -53,6 +53,25 @@ func (s Source) String() string {
 	return string(s)
 }
 
+var sourcePriorities = map[Source]int{
+	SourceGoBlog:       9,
+	SourceGitHub:       8,
+	SourceHN:           7,
+	SourceLobsters:     6,
+	SourceReddit:       5,
+	SourceDevTo:        4,
+	SourceGolangBridge: 3,
+	SourceYouTube:      2,
+	SourceMedium:       1,
+}
+
+// Priority returns a stable per-source ordering weight, used to sort digest
+// sections so authoritative sources appear above noisy ones (Go Blog at the
+// top, Medium at the bottom).
+func (s Source) Priority() int {
+	return sourcePriorities[s]
+}
+
 var sourceNiceNames = map[Source]string{
 	SourceDevTo:        "Dev.to",
 	SourceGoBlog:       "Go Blog",

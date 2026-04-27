@@ -83,6 +83,7 @@ func (c redditChild) transform() news.Item {
 		Snippet:   strings.TrimSpace(p.SelfText),
 		Tag:       news.TagArticle,
 		Comments:  p.NumComments,
+		Score:     news.ScoreOf(news.SourceReddit, news.TagArticle, float64(p.Score), true),
 		Published: time.Unix(int64(p.CreatedUTC), 0).UTC(),
 	}
 }
