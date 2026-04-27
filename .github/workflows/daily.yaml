@@ -1,0 +1,43 @@
+name: Daily digest
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC. Two entries to keep firing at 08:00 London year-round:
+    # the London-time guard below skips whichever line is running outside 08:00 local.
+    - cron: "0 8 * * 1-5"   # 08:00 GMT (winter)  -> 08:00 London
+    - cron: "0 7 * * 1-5"   # 07:00 UTC (summer)  -> 08:00 BST
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Skip sending the email
+        type: boolean
+        default: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Check schedule matches London time
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          london_hour=$(TZ=Europe/London date +%H)
+          if [[ "$london_hour" != "08" ]]; then
+            echo "Skipping: London time is $london_hour:00, not 08:00."
+            exit 0
+          fi
+
+      - name: Run digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
+        run: go run ./cmd/godaily run ${{ inputs.dry-run && '--dry-run' || '' }}

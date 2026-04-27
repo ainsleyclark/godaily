@@ -6,7 +6,7 @@
 		<h3>{{ .Source }}</h3>
 		<ul>
 			{{ range .Items }}
-				<li><a href="{{ .URL }}">{{. Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}</li>
+				<li><a href="{{ .URL }}">{{ .Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}</li>
 			{{ end }}
 		</ul>
 	{{ end  }}

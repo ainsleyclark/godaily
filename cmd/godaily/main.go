@@ -26,6 +26,7 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 
@@ -42,6 +43,16 @@ var cmd = &cli.Command{
 		{
 			Name:  "run",
 			Usage: "Gather all news from sources.",
+			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:  "dry-run",
+					Usage: "Skip sending the digest email",
+				},
+				&cli.StringFlag{
+					Name:  "output",
+					Usage: "Write aggregated items as JSON to this path (skipped if empty)",
+				},
+			},
 			Action: func(ctx context.Context, cmd *cli.Command) error {
 				runner, err := cron.New()
 				if err != nil {
@@ -53,16 +64,21 @@ var cmd = &cli.Command{
 					return err
 				}
 
+				out := cmd.String("output")
+				if out == "" {
+					return nil
+				}
+
 				indent, err := json.MarshalIndent(items, "", "\t")
 				if err != nil {
 					return err
 				}
 
-				if err = os.MkdirAll("examples", os.ModePerm); err != nil {
+				if err = os.MkdirAll(filepath.Dir(out), os.ModePerm); err != nil {
 					return err
 				}
 
-				return os.WriteFile("examples/news.json", indent, 0o644)
+				return os.WriteFile(out, indent, 0o644)
 			},
 		},
 		{
