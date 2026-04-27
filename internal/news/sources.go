@@ -52,3 +52,24 @@ var Sources = []Source{
 func (s Source) String() string {
 	return string(s)
 }
+
+var sourceNiceNames = map[Source]string{
+	SourceDevTo:        "Dev.to",
+	SourceGoBlog:       "Go Blog",
+	SourceGitHub:       "GitHub",
+	SourceReddit:       "Reddit",
+	SourceHN:           "Hacker News",
+	SourceGolangBridge: "Golang Bridge",
+	SourceLobsters:     "Lobsters",
+	SourceMedium:       "Medium",
+	SourceYouTube:      "YouTube",
+}
+
+// NiceName returns a formatted string of the source.
+func (s Source) NiceName() string {
+	nn, ok := sourceNiceNames[s]
+	if !ok {
+		return ""
+	}
+	return nn
+}

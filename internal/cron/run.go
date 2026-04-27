@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/email"
@@ -24,7 +25,8 @@ type RunOptions struct {
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
-	email *email.Client
+	email         *email.Client
+	sendToAddress string
 }
 
 // New creates a new Aggregator, validating that all news sources have
@@ -33,8 +35,13 @@ func New() (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
+	to := os.Getenv("EMAIL_SEND_ADDRESS")
+	if to == "" {
+		slog.Warn("EMAIL_SEND_ADDRESS not set, digest emails will be skipped")
+	}
 	return &Aggregator{
-		email: email.New(),
+		email:         email.New(),
+		sendToAddress: to,
 	}, nil
 }
 
@@ -47,7 +54,7 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) (map[news.Source][
 	for _, source := range news.Sources {
 		fetched, err := a.fetchSource(ctx, source)
 		if err != nil {
-			slog.ErrorContext(ctx, "ailed to fetch source", "source", source, "err", err)
+			slog.ErrorContext(ctx, "failed to fetch source", "source", source, "err", err)
 			continue
 		}
 		for _, item := range fetched {
@@ -58,6 +65,12 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) (map[news.Source][
 			if item.Published.After(day) && item.Published.Before(next) {
 				items[source] = append(items[source], item)
 			}
+		}
+	}
+
+	if !opts.DryRun {
+		if err := a.sendDigest(ctx, items); err != nil {
+			slog.ErrorContext(ctx, "failed to send digest email", "err", err)
 		}
 	}
 

@@ -30,3 +30,23 @@ func TestSource_String(t *testing.T) {
 	got := input.String()
 	assert.IsType(t, got, "devto")
 }
+
+func TestSource_NiceName(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Empty", func(t *testing.T) {
+		t.Parallel()
+
+		input := Source("wrong")
+		got := input.NiceName()
+		assert.Empty(t, got)
+	})
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		input := SourceDevTo
+		got := input.NiceName()
+		assert.IsType(t, got, "devto")
+	})
+}

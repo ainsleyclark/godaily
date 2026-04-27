@@ -1,0 +1,8 @@
+GoDaily — {{.Date}}
+
+{{range .Sections}}{{.Source}}
+---
+{{range .Items}}• {{.Title}} ({{.Published}}){{if .Author}} — {{.Author}}{{end}}
+  {{.URL}}
+{{end}}
+{{end}}

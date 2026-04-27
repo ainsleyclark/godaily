@@ -195,16 +195,6 @@
 			"Tag": "article",
 			"Comments": 0,
 			"Published": "2026-04-26T18:31:16Z"
-		},
-		{
-			"Source": "medium",
-			"Title": "Kikplate: The Easiest Way to Start with Production-Ready Boilerplates",
-			"URL": "https://itnext.io/kikplate-the-easiest-way-to-start-with-production-ready-boilerplates-9ddd5ebe98c9?source=rss------golang-5",
-			"Author": "Moeid Heidari",
-			"Snippet": "For several years, I have been struggling to test and verify common boilerplates and starter projects across different programming… Continue reading on ITNEXT »",
-			"Tag": "article",
-			"Comments": 0,
-			"Published": "2026-04-26T18:05:17Z"
 		}
 	],
 	"reddit": [
@@ -225,7 +215,7 @@
 			"Author": "self",
 			"Snippet": "",
 			"Tag": "article",
-			"Comments": 1,
+			"Comments": 2,
 			"Published": "2026-04-26T15:31:39Z"
 		},
 		{

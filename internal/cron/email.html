@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>GoDaily &mdash; {{ .Date }}</h2>
+	{{ range .Sections }}
+		<h3>{{ .Source }}</h3>
+		<ul>
+			{{ range .Items }}
+				<li><a href="{{ .URL }}">{{. Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}</li>
+			{{ end }}
+		</ul>
+	{{ end  }}
+</body>
+</html>
