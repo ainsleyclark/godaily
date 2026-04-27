@@ -25,7 +25,7 @@ choose one and ignore the rest.
 
 - Short, punchy lines. Aggressive line breaks (one beat per line).
 - Pick a specific, concrete angle on the topic. Mention what it does,
-  why it is technically interesting, or what it changes — not "look at
+  why it is technically interesting, or what it changes. Not "look at
   this thing".
 
 ## Emojis
@@ -78,8 +78,12 @@ choose one and ignore the rest.
   popular" or "trending".
 - Always include direct URLs. Never shortened or wrapped.
 - No daily-roundup framing. No "today", no checklists, no `Today in Go`.
+- **No em dashes (—) anywhere.** Use periods, commas, colons, or
+  parentheses instead. This applies to both posts. Hyphens (-) in
+  compound words like "swiss-table" are fine; the em dash punctuation
+  mark is not.
 
-## Examples (style only — content is illustrative)
+## Examples (style only, content is illustrative)
 
 LinkedIn:
 
@@ -95,6 +99,6 @@ LinkedIn:
 
 Twitter:
 
-> Phil Pearl breaks down Go's swiss-table map implementation — open addressing, metadata bytes, vectorised lookups.
+> Phil Pearl breaks down Go's swiss-table map implementation: open addressing, metadata bytes, vectorised lookups.
 > https://philpearl.github.io/post/swissing_a_table/
 > #golang

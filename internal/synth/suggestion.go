@@ -60,7 +60,7 @@ type (
 func (s Suggestion) Markdown() string {
 	var b strings.Builder
 
-	fmt.Fprintf(&b, "## Suggested posts — %s\n\n", s.Date.Format("2006-01-02"))
+	fmt.Fprintf(&b, "## Suggested posts: %s\n\n", s.Date.Format("2006-01-02"))
 
 	b.WriteString("### Twitter\n\n")
 	b.WriteString(s.Twitter)
@@ -73,7 +73,7 @@ func (s Suggestion) Markdown() string {
 	if len(s.References) > 0 {
 		b.WriteString("### References\n\n")
 		for _, r := range s.References {
-			fmt.Fprintf(&b, "- [%s](%s) — %s\n", r.Title, r.URL, r.Source)
+			fmt.Fprintf(&b, "- [%s](%s) (%s)\n", r.Title, r.URL, r.Source)
 		}
 	}
 

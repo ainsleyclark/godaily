@@ -51,11 +51,11 @@ func TestSuggestion_Markdown(t *testing.T) {
 	t.Run("With References", func(t *testing.T) {
 		t.Parallel()
 		md := sampleSuggestion().Markdown()
-		assert.Contains(t, md, "## Suggested posts — 2026-04-27")
+		assert.Contains(t, md, "## Suggested posts: 2026-04-27")
 		assert.Contains(t, md, "### Twitter\n\ntweet text")
 		assert.Contains(t, md, "### LinkedIn\n\nlinkedin\npost")
 		assert.Contains(t, md, "### References")
-		assert.Contains(t, md, "[Go 1.24 ships](https://go.dev/blog/go1.24) — go_blog")
+		assert.Contains(t, md, "[Go 1.24 ships](https://go.dev/blog/go1.24) (go_blog)")
 	})
 
 	t.Run("Without References", func(t *testing.T) {
