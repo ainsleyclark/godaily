@@ -41,7 +41,7 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.6262830509731585,
+		"score": 0.6379982859432913,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -76,7 +76,7 @@
 		"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.3003809664473759,
+		"score": 0.23804628387473528,
 		"published": "2026-04-26T15:58:00Z"
 	},
 	{
@@ -122,7 +122,7 @@
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.5718284755479184,
+		"score": 0.5867777864565255,
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -134,7 +134,7 @@
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.6379982859432913,
+		"score": 0.6262830509731585,
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -157,7 +157,7 @@
 		"snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
 		"tag": "article",
 		"comments": 8,
-		"score": 0.799302952252854,
+		"score": 0.8046533244696281,
 		"published": "2026-04-25T11:19:48Z"
 	},
 	{
@@ -168,7 +168,7 @@
 		"snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap. In contrast, the Flex family—such",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.4760925677494707,
+		"score": 0.45057144967106383,
 		"published": "2026-04-24T23:16:08Z"
 	},
 	{
@@ -191,7 +191,7 @@
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
-		"score": 0.9934664678721489,
+		"score": 0.9821194217167522,
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{
@@ -213,7 +213,7 @@
 		"snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.5195737064824407,
+		"score": 0.49892198580547814,
 		"published": "2026-04-23T21:58:26Z"
 	},
 	{
@@ -225,7 +225,7 @@
 		"snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
 		"tag": "article",
 		"comments": 7,
-		"score": 0.8098747594226537,
+		"score": 0.8149733256083747,
 		"published": "2026-04-23T14:31:45Z"
 	},
 	{
@@ -247,7 +247,7 @@
 		"snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
 		"tag": "article",
 		"comments": 45,
-		"score": 0.7764735341968465,
+		"score": 0.764088502509945,
 		"published": "2026-04-23T09:36:02Z"
 	},
 	{

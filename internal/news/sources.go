@@ -34,6 +34,9 @@ const (
 	SourceLobsters       Source = "lobsters"
 	SourceMedium         Source = "medium"
 	SourceYouTube        Source = "youtube"
+	SourceGoPodcast      Source = "go_podcast"
+	SourceFallthrough    Source = "fallthrough"
+	SourceArdanLabs      Source = "ardanlabs_podcast"
 )
 
 // Sources defines a list of all source types.
@@ -48,6 +51,9 @@ var Sources = []Source{
 	SourceLobsters,
 	SourceMedium,
 	SourceYouTube,
+	SourceGoPodcast,
+	SourceFallthrough,
+	SourceArdanLabs,
 }
 
 // String implements fmt.Stringer on source.
@@ -56,14 +62,17 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
-	SourceGoBlog:         10,
-	SourceGitHub:         9,
-	SourceGitHubTrending: 8,
-	SourceHN:             7,
-	SourceLobsters:       6,
-	SourceReddit:         5,
-	SourceDevTo:          4,
-	SourceGolangBridge:   3,
+	SourceGoBlog:         13,
+	SourceGitHub:         12,
+	SourceGitHubTrending: 11,
+	SourceHN:             10,
+	SourceLobsters:       9,
+	SourceReddit:         8,
+	SourceDevTo:          7,
+	SourceGolangBridge:   6,
+	SourceGoPodcast:      5,
+	SourceFallthrough:    4,
+	SourceArdanLabs:      3,
 	SourceYouTube:        2,
 	SourceMedium:         1,
 }
@@ -86,6 +95,9 @@ var sourceNiceNames = map[Source]string{
 	SourceLobsters:       "Lobsters",
 	SourceMedium:         "Medium",
 	SourceYouTube:        "YouTube",
+	SourceGoPodcast:      "go podcast()",
+	SourceFallthrough:    "Fallthrough",
+	SourceArdanLabs:      "Ardan Labs Podcast",
 }
 
 // NiceName returns a formatted string of the source.

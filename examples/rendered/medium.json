@@ -1,6 +1,42 @@
 [
 	{
 		"source": "medium",
+		"title": "Why did my value receivers have the same address?",
+		"url": "https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*MRlX9aCNFzlsKliKvZ1nHQ.png",
+		"author": "Andrei Boar",
+		"snippet": "Intro Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-04-27T19:06:22Z"
+	},
+	{
+		"source": "medium",
+		"title": "Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️",
+		"url": "https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*sjNEM0K78xYl-_dp",
+		"author": "Anshu Singhal",
+		"snippet": "So, hey, have you ever found yourself squinting at a screen at, like, 2 AM, just staring at a wall of totally cryptic log messages, trying… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-04-27T19:01:08Z"
+	},
+	{
+		"source": "medium",
+		"title": "Building an HTTP Server in Go — Understanding How the Web Actually Works",
+		"url": "https://medium.com/@dipakrasal2009/building-an-http-server-in-go-understanding-how-the-web-actually-works-c3be243fd5d9?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*Jok8pPZEi_0PJC1qz1bO3Q.png",
+		"author": "Dipak Rasal",
+		"snippet": "A hands-on walkthrough of Go’s net/http package, HTTP requests, headers, body parsing, and more. Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-04-27T18:51:27Z"
+	},
+	{
+		"source": "medium",
 		"title": "TinyGo’s New Compiler Trick You Should Know in Golang",
 		"url": "https://medium.programmerscareer.com/tinygos-new-compiler-trick-you-should-know-in-golang-dde4a80fb1cd?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*8WhgAMBYUPaDfgGE7wmKsQ.png",
@@ -82,41 +118,5 @@
 		"comments": 0,
 		"score": 0.25,
 		"published": "2026-04-27T12:31:01Z"
-	},
-	{
-		"source": "medium",
-		"title": "Cryptopals Challenge 1: From Hex to Base64",
-		"url": "https://medium.com/@jinalipabasara/cryptopals-challenge-1-from-hex-to-base64-360f18fa31b4?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/0*Dy_GweVTLakCPo9h.png",
-		"author": "Jinali Pabasara",
-		"snippet": "The Cryptopals cryptography challenges are a fun way to dive into the world of cryptography and learn through hands-on exercises! In this… Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-27T10:07:30Z"
-	},
-	{
-		"source": "medium",
-		"title": "Deterministic Go toolchain with Mise and Just",
-		"url": "https://medium.com/codex/deterministic-go-toolchain-with-mise-and-just-f321d741263b?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:1200/0*3gLgIdwTfvMtFrib",
-		"author": "Yaninyz witty",
-		"snippet": "Eliminating “Works on my machine” fluff with deterministic builds Continue reading on CodeX »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-27T08:38:49Z"
-	},
-	{
-		"source": "medium",
-		"title": "Goroutine Made Easy :)",
-		"url": "https://medium.com/@abhay.tiwari.er/goroutine-made-easy-146c64b81c0e?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*uSNMzyZspWY4FKE5RCCSKw.png",
-		"author": "Er. Abhay Tiwari",
-		"snippet": "In this article I would like to cover what you need to know about goroutines… With almost zero jargon. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-27T07:37:48Z"
 	}
 ]

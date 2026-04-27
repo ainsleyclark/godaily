@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:cc="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html">
+    <channel>
+        <title><![CDATA[Golang on Medium]]></title>
+        <description><![CDATA[Latest stories tagged with Golang on Medium]]></description>
+        <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        <image>
+            <url>https://cdn-images-1.medium.com/proxy/1*TGH72Nnw24QL3iV9IOm4VA.png</url>
+            <title>Golang on Medium</title>
+            <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        </image>
+        <generator>Medium</generator>
+        <lastBuildDate>Mon, 27 Apr 2026 19:09:30 GMT</lastBuildDate>
+        <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
+        <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
+        <atom:link href="http://medium.superfeedr.com" rel="hub"/>
+        <item>
+            <title><![CDATA[Why did my value receivers have the same address?]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1552/1*MRlX9aCNFzlsKliKvZ1nHQ.png" width="1552"></a></p><p class="medium-feed-snippet">Intro</p><p class="medium-feed-link"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/224b35b849ec</guid>
+            <category><![CDATA[compilers]]></category>
+            <category><![CDATA[pointers]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[runtime]]></category>
+            <dc:creator><![CDATA[Andrei Boar]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:06:22 GMT</pubDate>
+            <atom:updated>2026-04-27T19:06:22.047Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/0*sjNEM0K78xYl-_dp" width="600"></a></p><p class="medium-feed-snippet">So, hey, have you ever found yourself squinting at a screen at, like, 2 AM, just staring at a wall of totally cryptic log messages, trying&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/130c8b791416</guid>
+            <category><![CDATA[golang-tutorial]]></category>
+            <category><![CDATA[error-handling]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[medium]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Anshu Singhal]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:01:08 GMT</pubDate>
+            <atom:updated>2026-04-27T19:01:08.490Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Building an HTTP Server in Go — Understanding How the Web Actually Works]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@dipakrasal2009/building-an-http-server-in-go-understanding-how-the-web-actually-works-c3be243fd5d9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1279/1*Jok8pPZEi_0PJC1qz1bO3Q.png" width="1279"></a></p><p class="medium-feed-snippet">A hands-on walkthrough of Go&#x2019;s net/http package, HTTP requests, headers, body parsing, and more.</p><p class="medium-feed-link"><a href="https://medium.com/@dipakrasal2009/building-an-http-server-in-go-understanding-how-the-web-actually-works-c3be243fd5d9?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@dipakrasal2009/building-an-http-server-in-go-understanding-how-the-web-actually-works-c3be243fd5d9?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/c3be243fd5d9</guid>
+            <category><![CDATA[networking]]></category>
+            <category><![CDATA[devops]]></category>
+            <category><![CDATA[development]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Dipak Rasal]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 18:51:27 GMT</pubDate>
+            <atom:updated>2026-04-27T18:51:27.779Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[TinyGo’s New Compiler Trick You Should Know in Golang]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.programmerscareer.com/tinygos-new-compiler-trick-you-should-know-in-golang-dde4a80fb1cd?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/1*8WhgAMBYUPaDfgGE7wmKsQ.png" width="600"></a></p><p class="medium-feed-link"><a href="https://medium.programmerscareer.com/tinygos-new-compiler-trick-you-should-know-in-golang-dde4a80fb1cd?source=rss------golang-5">Continue reading on Programmer’s Career »</a></p></div>]]></description>
+            <link>https://medium.programmerscareer.com/tinygos-new-compiler-trick-you-should-know-in-golang-dde4a80fb1cd?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/dde4a80fb1cd</guid>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[productivity]]></category>
+            <category><![CDATA[technology]]></category>
+            <category><![CDATA[coding]]></category>
+            <dc:creator><![CDATA[Wesley Wei]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 16:56:01 GMT</pubDate>
+            <atom:updated>2026-04-27T16:56:01.363Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Processing 1 Million Transactions in Under a second Using Go — Part 2]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-2-c075800fe7a4?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1693/1*9IZ7oWExS_YZeiIzgArFKQ.png" width="1693"></a></p><p class="medium-feed-snippet">In Part 1, we proved that a single Go process can handle 1 million transactions in under a second &#x2014; no Kafka, no GPU cluster, just&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-2-c075800fe7a4?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-2-c075800fe7a4?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/c075800fe7a4</guid>
+            <category><![CDATA[software-architecture]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[backend-development]]></category>
+            <category><![CDATA[redis]]></category>
+            <category><![CDATA[distributed-systems]]></category>
+            <dc:creator><![CDATA[Kennedy Karoko]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 15:20:14 GMT</pubDate>
+            <atom:updated>2026-04-27T15:20:14.955Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[The Green Tea GC Is Now Default in Go 1.26. Here Is What That Means for Your Backend Services.]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://levelup.gitconnected.com/the-green-tea-gc-is-now-default-in-go-1-26-here-is-what-that-means-for-your-backend-services-4f6cdf8fc136?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1672/1*f5zYtKUHaDwYFiUQjVl0WQ.png" width="1672"></a></p><p class="medium-feed-snippet">How a garbage collector redesign quietly makes every Go service faster without a single line of code change.</p><p class="medium-feed-link"><a href="https://levelup.gitconnected.com/the-green-tea-gc-is-now-default-in-go-1-26-here-is-what-that-means-for-your-backend-services-4f6cdf8fc136?source=rss------golang-5">Continue reading on Level Up Coding »</a></p></div>]]></description>
+            <link>https://levelup.gitconnected.com/the-green-tea-gc-is-now-default-in-go-1-26-here-is-what-that-means-for-your-backend-services-4f6cdf8fc136?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/4f6cdf8fc136</guid>
+            <category><![CDATA[technology]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[backend-development]]></category>
+            <category><![CDATA[golang-tutorial]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Renaldi Purwanto]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 15:03:33 GMT</pubDate>
+            <atom:updated>2026-04-27T15:03:33.568Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Mastering Backpressure in Go (Part II)]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://levelup.gitconnected.com/mastering-backpressure-in-go-part-ii-3472c85bbbd9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1376/1*1f1GRr-n-GxAy5uw666f4g.png" width="1376"></a></p><p class="medium-feed-snippet">Backpressure rarely shows up in textbooks &#x2014; but it is an integral part of enterprise production systems.</p><p class="medium-feed-link"><a href="https://levelup.gitconnected.com/mastering-backpressure-in-go-part-ii-3472c85bbbd9?source=rss------golang-5">Continue reading on Level Up Coding »</a></p></div>]]></description>
+            <link>https://levelup.gitconnected.com/mastering-backpressure-in-go-part-ii-3472c85bbbd9?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/3472c85bbbd9</guid>
+            <category><![CDATA[software-architecture]]></category>
+            <category><![CDATA[distributed-systems]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[concurrency]]></category>
+            <category><![CDATA[programming]]></category>
+            <dc:creator><![CDATA[Clint Edwards]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 15:02:55 GMT</pubDate>
+            <atom:updated>2026-04-27T15:02:55.357Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Rust Is Better Than Go. I’m Still Using Go.]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://levelup.gitconnected.com/rust-is-better-than-go-im-still-using-go-35ea2adc99cf?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1536/1*-y6u2xGxx83Vh4rRpOSNlg.png" width="1536"></a></p><p class="medium-feed-snippet">Why the &#x201C;best&#x201D; language rarely matters in a production team of 11 engineers</p><p class="medium-feed-link"><a href="https://levelup.gitconnected.com/rust-is-better-than-go-im-still-using-go-35ea2adc99cf?source=rss------golang-5">Continue reading on Level Up Coding »</a></p></div>]]></description>
+            <link>https://levelup.gitconnected.com/rust-is-better-than-go-im-still-using-go-35ea2adc99cf?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/35ea2adc99cf</guid>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[backend-development]]></category>
+            <category><![CDATA[rust]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[syarif]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 15:00:30 GMT</pubDate>
+            <atom:updated>2026-04-27T15:00:30.889Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Processing 1 Million Transactions in Under a Second Using Go — Part 1]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-1-98c9079375ac?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1536/1*0myhgmQjyYoHs9eUzOjijQ.png" width="1536"></a></p><p class="medium-feed-snippet">It&#x2019;s Black Friday. Millions of shoppers are flooding an e-commerce platform, buying everything from 75-inch TVs to phone chargers they&#x2019;ll&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-1-98c9079375ac?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@kennedykaroko/processing-1-million-transactions-in-under-a-second-using-go-part-1-98c9079375ac?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/98c9079375ac</guid>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[concurrency]]></category>
+            <category><![CDATA[distributed-systems]]></category>
+            <category><![CDATA[backend]]></category>
+            <category><![CDATA[postgresql]]></category>
+            <dc:creator><![CDATA[Kennedy Karoko]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 14:23:55 GMT</pubDate>
+            <atom:updated>2026-04-27T15:21:35.805Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[I Stopped Reaching for Go Frameworks. The Standard Library Was There All Along]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@danielvalev/i-stopped-reaching-for-go-frameworks-the-standard-library-was-there-all-along-f4566b33ed12?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1448/1*P72bmdySMBKOmE5cJnlYHg.png" width="1448"></a></p><p class="medium-feed-snippet">After years of instinctively adding dependencies, I started asking a different question first</p><p class="medium-feed-link"><a href="https://medium.com/@danielvalev/i-stopped-reaching-for-go-frameworks-the-standard-library-was-there-all-along-f4566b33ed12?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@danielvalev/i-stopped-reaching-for-go-frameworks-the-standard-library-was-there-all-along-f4566b33ed12?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/f4566b33ed12</guid>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[backend-development]]></category>
+            <dc:creator><![CDATA[Daniel Valev]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 12:31:01 GMT</pubDate>
+            <atom:updated>2026-04-27T12:31:01.434Z</atom:updated>
+        </item>
+    </channel>
+</rss>

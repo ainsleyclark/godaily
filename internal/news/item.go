@@ -63,4 +63,5 @@ const (
 	TagProposalAccepted Tag = "proposal_accepted"
 	TagProposalShipped  Tag = "proposal_shipped"
 	TagVideo            Tag = "video"
+	TagPodcast          Tag = "podcast"
 )
