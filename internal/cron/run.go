@@ -20,6 +20,9 @@ type Runner interface {
 type RunOptions struct {
 	// DryRun skips sending the email digest.
 	DryRun bool
+	// Sources restricts the run to the given sources. If empty,
+	// all registered sources (news.Sources) are used.
+	Sources []news.Source
 }
 
 // Aggregator fetches Go news from all registered sources and optionally
@@ -50,8 +53,13 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 	day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour) // Yesterday
 	next := day.AddDate(0, 0, 1)
 
+	sources := opts.Sources
+	if len(sources) == 0 {
+		sources = news.Sources
+	}
+
 	var results []news.SourceItems
-	for _, source := range news.Sources {
+	for _, source := range sources {
 		fetched, err := a.fetchSource(ctx, source)
 		if err != nil {
 			slog.ErrorContext(ctx, "failed to fetch source", "source", source, "err", err)

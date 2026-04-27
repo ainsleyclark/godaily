@@ -52,6 +52,10 @@ var cmd = &cli.Command{
 					Name:  "output",
 					Usage: "Write aggregated items as JSON to this path (skipped if empty)",
 				},
+				&cli.StringSliceFlag{
+					Name:  "source",
+					Usage: "Only run the named sources (repeatable). Defaults to all.",
+				},
 			},
 			Action: func(ctx context.Context, cmd *cli.Command) error {
 				runner, err := cron.New()
@@ -59,7 +63,24 @@ var cmd = &cli.Command{
 					return err
 				}
 
-				items, err := runner.Run(ctx, cron.RunOptions{DryRun: cmd.Bool("dry-run")})
+				raw := cmd.StringSlice("source")
+				known := make(map[news.Source]struct{}, len(news.Sources))
+				for _, s := range news.Sources {
+					known[s] = struct{}{}
+				}
+				sources := make([]news.Source, 0, len(raw))
+				for _, name := range raw {
+					s := news.Source(name)
+					if _, ok := known[s]; !ok {
+						return fmt.Errorf("unknown source %q (run `godaily sources` for the list)", name)
+					}
+					sources = append(sources, s)
+				}
+
+				items, err := runner.Run(ctx, cron.RunOptions{
+					DryRun:  cmd.Bool("dry-run"),
+					Sources: sources,
+				})
 				if err != nil {
 					return err
 				}

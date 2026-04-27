@@ -1,0 +1,89 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package email
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestNew(t *testing.T) {
+	t.Setenv("RESEND_TOKEN", "test-token")
+
+	c := New()
+
+	require.NotNil(t, c)
+	require.NotNil(t, c.resend)
+	assert.Equal(t, "test-token", c.resend.ApiKey)
+}
+
+func TestClient_Send(t *testing.T) {
+	t.Parallel()
+
+	newClient := func(t *testing.T, stub http.HandlerFunc) *Client {
+		t.Helper()
+		srv := httptest.NewServer(stub)
+		t.Cleanup(srv.Close)
+
+		c := New()
+		base, err := url.Parse(srv.URL + "/")
+		require.NoError(t, err)
+		c.resend.BaseURL = base
+		return c
+	}
+
+	req := SendEmailRequest{
+		From:    "from@example.com",
+		To:      []string{"to@example.com"},
+		Subject: "hello",
+		Text:    "world",
+	}
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		c := newClient(t, func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(`{"id":"abc-123"}`))
+		})
+
+		err := c.Send(t.Context(), req)
+		assert.NoError(t, err)
+	})
+
+	t.Run("API Error", func(t *testing.T) {
+		t.Parallel()
+
+		c := newClient(t, func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"message":"invalid sender"}`))
+		})
+
+		err := c.Send(t.Context(), req)
+		assert.ErrorContains(t, err, "invalid sender")
+	})
+}
