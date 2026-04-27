@@ -26,7 +26,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -134,29 +133,6 @@ func TestFetch(t *testing.T) {
 
 			got, err := fetch[fakeItem](t.Context(), url, "test", test.unmarshal)
 			test.want(t, got, err)
-		})
-	}
-}
-
-type fakeTransformer struct{ title string }
-
-func (f fakeTransformer) transform() news.Item { return news.Item{Title: f.title} }
-
-func TestTransformAll(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		items []fakeTransformer
-		want  []news.Item
-	}{
-		"Empty":    {items: nil, want: []news.Item{}},
-		"Multiple": {items: []fakeTransformer{{title: "A"}, {title: "B"}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, transformAll(test.items))
 		})
 	}
 }

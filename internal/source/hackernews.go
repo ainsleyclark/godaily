@@ -62,6 +62,8 @@ func (h HackerNews) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(response.Hits), nil
 }
 
+func (h hnHit) shouldInclude() bool { return true }
+
 // transform maps an hnHit to a news.Item.
 //
 // If the story has no external URL (Ask HN / self-posts), it falls back to the

@@ -55,12 +55,10 @@ func (m Medium) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(feed.Channel.Items), nil
 }
 
+func (i mediumItem) shouldInclude() bool { return true }
+
 func (i mediumItem) transform() news.Item {
-	snippet := sanitiseSnippet(i.Description)
-	snippet = strings.Join(strings.Fields(snippet), " ")
-	if len(snippet) > 200 {
-		snippet = snippet[:200]
-	}
+	snippet := strings.Join(strings.Fields(sanitiseSnippet(i.Description)), " ")
 	published, _ := time.Parse(time.RFC1123Z, i.PubDate)
 	return news.Item{
 		Source:    news.SourceMedium,

@@ -57,6 +57,8 @@ func (g GolangBridge) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(response.TopicList.Topics), nil
 }
 
+func (t golangBridgeTopic) shouldInclude() bool { return true }
+
 // transform maps a golangBridgeTopic to a news.Item.
 func (t golangBridgeTopic) transform() news.Item {
 	return news.Item{

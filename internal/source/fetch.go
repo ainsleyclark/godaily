@@ -24,18 +24,11 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 )
 
-// transformer is implemented by all per-source response item types.
-type transformer interface {
-	transform() news.Item
-}
-
-// httpClient is the shared HTTP client used by fetch. It can be replaced in
-// tests to inject custom transports.
+// httpClient is the shared HTTP client used by fetch.
 var httpClient = &http.Client{}
 
 // SetHTTPClient replaces the shared HTTP client used by all sources.
@@ -90,13 +83,4 @@ func fetch[T any](
 		return zero, errors.Wrap(err, "parsing response")
 	}
 	return out, nil
-}
-
-// transformAll maps a slice of items that implement transformer to []news.Item.
-func transformAll[T transformer](items []T) []news.Item {
-	out := make([]news.Item, len(items))
-	for i, item := range items {
-		out[i] = item.transform()
-	}
-	return out
 }

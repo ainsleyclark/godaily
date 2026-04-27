@@ -55,18 +55,16 @@ func (l Lobsters) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(stories), nil
 }
 
+func (s lobstersStory) shouldInclude() bool { return true }
+
 func (s lobstersStory) transform() news.Item {
-	snippet := strings.TrimSpace(s.Description)
-	if len(snippet) > 200 {
-		snippet = snippet[:200]
-	}
 	published, _ := time.Parse(time.RFC3339, s.CreatedAt)
 	return news.Item{
 		Source:    news.SourceLobsters,
 		Title:     s.Title,
 		URL:       s.URL,
 		Author:    s.SubmitterUser,
-		Snippet:   snippet,
+		Snippet:   strings.TrimSpace(s.Description),
 		Score:     s.Score,
 		Tag:       news.TagArticle,
 		Comments:  s.CommentCount,

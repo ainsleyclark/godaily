@@ -88,6 +88,8 @@ func (e goBlogEntry) url() string {
 	return ""
 }
 
+func (e goBlogEntry) shouldInclude() bool { return true }
+
 func (e goBlogEntry) transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, e.Published)
 	return news.Item{

@@ -65,22 +65,22 @@ func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
 //
 // Self-posts have a URL pointing back to reddit.com/r/… rather than an
 // external link. In that case we fall back to the full permalink.
+func (c redditChild) shouldInclude() bool {
+	return !strings.Contains(strings.ToLower(c.Data.Title), "help")
+}
+
 func (c redditChild) transform() news.Item {
 	p := c.Data
 	u := p.URL
 	if strings.Contains(u, "reddit.com/r/") {
 		u = "https://www.reddit.com" + p.Permalink
 	}
-	snippet := strings.TrimSpace(p.SelfText)
-	if len(snippet) > 200 {
-		snippet = snippet[:200]
-	}
 	return news.Item{
 		Source:    news.SourceReddit,
 		Title:     p.Title,
 		URL:       u,
 		Author:    p.Author,
-		Snippet:   snippet,
+		Snippet:   strings.TrimSpace(p.SelfText),
 		Score:     p.Score,
 		Tag:       news.TagArticle,
 		Comments:  p.NumComments,

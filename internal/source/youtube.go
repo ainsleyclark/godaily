@@ -70,18 +70,16 @@ func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(resp.Items), nil
 }
 
+func (v ytItem) shouldInclude() bool { return true }
+
 func (v ytItem) transform() news.Item {
-	snippet := v.Snippet.Description
-	if len(snippet) > 200 {
-		snippet = snippet[:200]
-	}
 	published, _ := time.Parse(time.RFC3339, v.Snippet.PublishedAt)
 	return news.Item{
 		Source:    news.SourceYouTube,
 		Title:     v.Snippet.Title,
 		URL:       "https://www.youtube.com/watch?v=" + v.ID.VideoID,
 		Author:    v.Snippet.ChannelTitle,
-		Snippet:   snippet,
+		Snippet:   v.Snippet.Description,
 		Tag:       news.TagVideo,
 		Published: published,
 	}

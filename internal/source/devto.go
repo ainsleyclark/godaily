@@ -56,6 +56,8 @@ func (d DevTo) Fetch(ctx context.Context) ([]news.Item, error) {
 	return transformAll(response), nil
 }
 
+func (d devToResponse) shouldInclude() bool { return true }
+
 func (d devToResponse) transform() news.Item {
 	return news.Item{
 		Source:    news.SourceDevTo,
