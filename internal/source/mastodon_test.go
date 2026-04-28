@@ -74,7 +74,7 @@ func TestMastodon_Fetch(t *testing.T) {
 				require.Len(t, items, 2)
 				assert.Equal(t, news.SourceMastodon, items[0].Source)
 				assert.Equal(t, "https://mastodon.world/@jobsfordevelopers/116481296525884754", items[0].URL)
-				assert.Equal(t, "Jobs for Developers", items[0].Author)
+				assert.Equal(t, &news.Author{Name: "Jobs for Developers", Username: "jobsfordevelopers"}, items[0].Author)
 				assert.Equal(t, news.TagArticle, items[0].Tag)
 				assert.Equal(t,
 					news.ScoreOf(news.SourceMastodon, news.TagArticle, 5, true),
