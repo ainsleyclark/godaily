@@ -61,15 +61,16 @@ func (s *Store) Tx(ctx context.Context, fn func(*Queries) error) error {
 		return errors.Wrap(err, "beginning transaction")
 	}
 
-	if err := fn(s.Queries.WithTx(tx)); err != nil {
+	if err = fn(s.Queries.WithTx(tx)); err != nil {
 		if rbErr := tx.Rollback(); rbErr != nil {
 			return errors.Wrapf(err, "rolling back: %v; original error", rbErr)
 		}
 		return err
 	}
 
-	if err := tx.Commit(); err != nil {
+	if err = tx.Commit(); err != nil {
 		return errors.Wrap(err, "committing transaction")
 	}
+
 	return nil
 }
