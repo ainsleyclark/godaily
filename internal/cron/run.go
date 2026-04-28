@@ -59,6 +59,8 @@ type Aggregator struct {
 	email         emailSender
 	sendToAddress string
 	suggester     suggester
+	issues        news.IssueRepository
+	items         news.ItemRepository
 }
 
 type (
@@ -74,11 +76,14 @@ type (
 	}
 )
 
-// New creates a new Aggregator, validating that all news sources have
-// registered fetchers before returning.
-func New() (*Aggregator, error) {
+// New creates a new Aggregator, validating that all news
+// sources have registered fetchers.
+func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
+	}
+	if (issues == nil) != (items == nil) {
+		return nil, errors.New("issues and items repositories must be both set or both nil")
 	}
 	to := os.Getenv("EMAIL_SEND_ADDRESS")
 	if to == "" {
@@ -98,6 +103,8 @@ func New() (*Aggregator, error) {
 		email:         email.New(),
 		sendToAddress: to,
 		suggester:     sg,
+		issues:        issues,
+		items:         items,
 	}, nil
 }
 
@@ -155,9 +162,30 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 		}
 	}
 
-	if !opts.DryRun {
-		if err := a.sendDigest(ctx, day, results, suggestion); err != nil {
+	if opts.DryRun || len(results) == 0 {
+		return results, nil
+	}
+
+	rendered, err := renderDigest(day, results, suggestion)
+	if err != nil {
+		slog.ErrorContext(ctx, "failed to render digest", "err", err)
+		return results, nil
+	}
+
+	status := "sent"
+	switch {
+	case a.sendToAddress == "":
+		status = "skipped"
+	default:
+		if err := a.sendDigest(ctx, rendered); err != nil {
 			slog.ErrorContext(ctx, "failed to send digest email", "err", err)
+			status = "failed"
+		}
+	}
+
+	if a.issues != nil {
+		if err = a.persistIssue(ctx, day, rendered, status, results); err != nil {
+			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
 		}
 	}
 
@@ -180,4 +208,31 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 	slog.InfoContext(ctx, "fetched from source", "source", source, "items", len(items))
 
 	return items, nil
+}
+
+func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
+	issue, err := a.issues.Create(ctx, news.Issue{
+		Slug:     day.Format("2006-01-02"),
+		SentAt:   time.Now().UTC(),
+		Subject:  r.Subject,
+		Status:   news.IssueStatus(status),
+		HtmlBody: r.HTML,
+		TextBody: r.Text,
+	})
+	if err != nil {
+		return fmt.Errorf("creating issue: %w", err)
+	}
+
+	var position int
+	for _, section := range sections {
+		for _, item := range section.Items {
+			position++
+			item.Source = section.Source
+			if _, err = a.items.Create(ctx, issue.ID, position, item); err != nil {
+				return fmt.Errorf("creating news item: %w", err)
+			}
+		}
+	}
+
+	return nil
 }

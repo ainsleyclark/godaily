@@ -35,6 +35,7 @@
 		"source": "github",
 		"title": "runtime/pprof,runtime: new goroutine leak profile",
 		"url": "https://github.com/golang/go/issues/74609",
+		"image_url": "https://opengraph.githubassets.com/7fc2a11a5f1e07ee23dc83a386862f9fff6d1950acd8de629ae5e673a9e4ae5e/golang/go/issues/74609",
 		"author": {
 			"username": "VladSaioc",
 			"avatar_url": "https://avatars.githubusercontent.com/u/11602035?v=4",
@@ -146,7 +147,6 @@
 		"source": "github",
 		"title": "x/net/http2/h2c: deprecate h2c package",
 		"url": "https://github.com/golang/go/issues/72039",
-		"image_url": "https://opengraph.githubassets.com/32aaa9255f7361f35f35bdf96f1d9d915a250c698e3d5e94d7ccee3fda97b057/golang/go/issues/72039",
 		"author": {
 			"username": "neild",
 			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",

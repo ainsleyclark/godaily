@@ -24,20 +24,30 @@ import (
 	"time"
 )
 
-// Fetcher defines the method for obtaining news items
-// from various sources.
-type Fetcher interface {
-	// Fetch obtains a transforms news articles.
-	//
-	// Source types are responsible for returning errors
-	// if they could not be obtained.
-	Fetch(ctx context.Context) ([]Item, error)
+// Item defines a Go Daily news item.
+type Item struct {
+	ID          int64     `json:"id"`
+	Source      Source    `json:"source"`
+	Title       string    `json:"title"`
+	URL         string    `json:"url"`                    // click target — the external content the source is linking to
+	OriginalURL string    `json:"original_url,omitempty"` // listing on the source platform (e.g. HN comments page), when different from URL
+	ImageURL    string    `json:"image_url,omitempty"`
+	Author      *Author   `json:"author,omitempty"`
+	Snippet     string    `json:"snippet"`
+	Tag         Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
+	Comments    int       `json:"comments"`
+	Score       float64   `json:"score"` // per-source relevance/popularity, normalised across sources
+	Published   time.Time `json:"published"`
 }
 
-// SourceItems groups a source with its fetched news items.
-type SourceItems struct {
-	Source Source `json:"source"`
-	Items  []Item `json:"items"`
+//go:generate mockgen -package=mocknews -destination=../mocks/news/ItemRepository.go . ItemRepository
+
+// ItemRepository defines the methods for interacting with the Item store.
+type ItemRepository interface {
+	Find(ctx context.Context, id int64) (Item, error)
+	ListByIssue(ctx context.Context, issueID int64) ([]Item, error)
+	Create(ctx context.Context, issueID int64, position int, item Item) (Item, error)
+	DeleteByIssue(ctx context.Context, issueID int64) error
 }
 
 // Author holds identity information about the person or entity that
@@ -58,21 +68,6 @@ func (a *Author) String() string {
 		return a.Name
 	}
 	return a.Username
-}
-
-// Item defines a Go Daily news item.
-type Item struct {
-	Source      Source    `json:"source"`
-	Title       string    `json:"title"`
-	URL         string    `json:"url"`                    // click target — the external content the source is linking to
-	OriginalURL string    `json:"original_url,omitempty"` // listing on the source platform (e.g. HN comments page), when different from URL
-	ImageURL    string    `json:"image_url,omitempty"`
-	Author      *Author   `json:"author,omitempty"`
-	Snippet     string    `json:"snippet"`
-	Tag         Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
-	Comments    int       `json:"comments"`
-	Score       float64   `json:"score"` // per-source relevance/popularity, normalised across sources
-	Published   time.Time `json:"published"`
 }
 
 type Tag string

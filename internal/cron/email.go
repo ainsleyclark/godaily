@@ -25,7 +25,6 @@ import (
 	_ "embed"
 	"fmt"
 	htmltemplate "html/template"
-	"log/slog"
 	texttemplate "text/template"
 	"time"
 
@@ -45,35 +44,48 @@ var (
 	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(emailText))
 )
 
-type digestData struct {
-	Date       time.Time
-	Sections   []news.SourceItems
-	Suggestion *synth.Suggestion
-}
-
-func (a Aggregator) sendDigest(ctx context.Context, day time.Time, sources []news.SourceItems, suggestion *synth.Suggestion) error {
-	data := digestData{Date: day, Sections: sources, Suggestion: suggestion}
-
-	if len(data.Sections) == 0 {
-		slog.InfoContext(ctx, "no items to send in digest")
-		return nil
+type (
+	digestData struct {
+		Date       time.Time
+		Sections   []news.SourceItems
+		Suggestion *synth.Suggestion
 	}
+	// renderedDigest carries the rendered email payload so the caller can
+	// both ship it via email and persist it to the issues table without
+	// re-rendering.
+	renderedDigest struct {
+		Subject string
+		HTML    string
+		Text    string
+	}
+)
+
+func renderDigest(day time.Time, sources []news.SourceItems, suggestion *synth.Suggestion) (renderedDigest, error) {
+	data := digestData{Date: day, Sections: sources, Suggestion: suggestion}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {
-		return fmt.Errorf("rendering html: %w", err)
+		return renderedDigest{}, fmt.Errorf("rendering html: %w", err)
 	}
 
 	var textBuf bytes.Buffer
 	if err := textTmpl.Execute(&textBuf, data); err != nil {
-		return fmt.Errorf("rendering text: %w", err)
+		return renderedDigest{}, fmt.Errorf("rendering text: %w", err)
 	}
 
+	return renderedDigest{
+		Subject: "GoDaily - " + day.Format("January 2, 2006"),
+		HTML:    htmlBuf.String(),
+		Text:    textBuf.String(),
+	}, nil
+}
+
+func (a Aggregator) sendDigest(ctx context.Context, d renderedDigest) error {
 	return a.email.Send(ctx, email.SendEmailRequest{
 		From:    "noreply@mail.ainsley.dev",
 		To:      []string{a.sendToAddress},
-		Subject: "GoDaily - " + day.Format("January 2, 2006"),
-		Html:    htmlBuf.String(),
-		Text:    textBuf.String(),
+		Subject: d.Subject,
+		Html:    d.HTML,
+		Text:    d.Text,
 	})
 }

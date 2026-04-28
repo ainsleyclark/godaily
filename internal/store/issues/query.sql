@@ -1,0 +1,22 @@
+-- name: IssueCreate :one
+INSERT INTO issues (
+    slug, sent_at, subject, summary, html_body, text_body, status
+) VALUES (
+    ?, ?, ?, ?, ?, ?, ?
+)
+RETURNING *;
+
+-- name: IssueBySlug :one
+SELECT * FROM issues WHERE slug = ? LIMIT 1;
+
+-- name: IssueByID :one
+SELECT * FROM issues WHERE id = ? LIMIT 1;
+
+-- name: IssueList :many
+SELECT * FROM issues
+WHERE status = 'sent'
+ORDER BY sent_at DESC
+LIMIT ? OFFSET ?;
+
+-- name: IssueCount :one
+SELECT COUNT(*) FROM issues WHERE status = 'sent';

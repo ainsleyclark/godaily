@@ -4,15 +4,15 @@ build: # Build
 
 generate: # Runs go generate
 	go generate ./...
-	go run ./cmd/godaily run --dry-run --output examples/news.json
+	go run main.go run --dry-run --output examples/news.json
 .PHONY: generate
 
 run: # Sends the godaily email
-	go run ./cmd/godaily run
+	go run main.go run
 .PHONY: run
 
 run-dry: # Run godaily and write the aggregated digest to examples/rendered/news.json
-	go run ./cmd/godaily run --dry-run --output examples/news.json
+	go run main.go run --dry-run --output examples/news.json
 .PHONY: run
 
 format: # Run gofmt
@@ -22,6 +22,18 @@ format: # Run gofmt
 gen: # Runs all //go:generate
 	go generate ./...
 .PHONY: gen
+
+sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
+	sqlc generate
+.PHONY: sqlc
+
+migrate-up: # Apply all pending database migrations against TURSO_URL
+	go run ./cmd/godaily migrate up
+.PHONY: migrate-up
+
+migrate-down: # Roll back the most recent database migration against TURSO_URL
+	go run ./cmd/godaily migrate down
+.PHONY: migrate-down
 
 excluded := grep -v gen | grep -v res
 
@@ -43,7 +55,7 @@ lint: # Run linter
 
 sec: # Run gosec security scan (matches CI)
 	@command -v gosec >/dev/null 2>&1 || go install github.com/securego/gosec/v2/cmd/gosec@latest
-	gosec ./...
+	gosec -exclude-generated ./...
 .PHONY: sec
 
 vuln: # Run govulncheck (matches CI)
@@ -71,7 +83,6 @@ all: # Make format, lint and test
 	$(MAKE) test-race
 	$(MAKE) vuln
 	$(MAKE) sec
-	$(MAKE) gen
 .PHONY: all
 
 todo: # Show to-do items per file

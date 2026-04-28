@@ -54,7 +54,7 @@ CREATE TABLE issues (
   status          TEXT NOT NULL DEFAULT 'sent' -- sent|skipped|failed
 );
 
-CREATE TABLE news_items (
+CREATE TABLE items (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
   issue_id  INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
   source    TEXT NOT NULL,                     -- hn|reddit|lobsters|...
@@ -64,9 +64,8 @@ CREATE TABLE news_items (
   score     INTEGER,
   summary   TEXT,
   position  INTEGER NOT NULL,                  -- order within issue
-  raw_json  TEXT                               -- original item for debugging
 );
-CREATE INDEX idx_news_items_issue ON news_items(issue_id);
+CREATE INDEX idx_items_issue ON items(issue_id);
 
 CREATE TABLE subscribers (
   id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -116,7 +115,7 @@ internal/
     ├── issues.sql            # sqlc input
     ├── issues.sql.go         # sqlc output
     ├── issues.go             # hand-rolled domain logic (only if needed)
-    ├── news_items.sql / .sql.go / .go
+    ├── items.sql / .sql.go / .go
     └── subscribers.sql / .sql.go / .go
 ```
 
@@ -128,7 +127,7 @@ To create:
 - `internal/db/migrate.go`: `Migrate(ctx, *sql.DB) error`, goose with embedded migrations
 - `internal/db/migrations/0001_init.sql`: schema above
 - `internal/store/store.go`: `New(*sql.DB) *Store`, shared tx helper
-- `internal/store/issues.sql`, `news_items.sql`, `subscribers.sql`: sqlc query files
+- `internal/store/issues.sql`, `items.sql`, `subscribers.sql`: sqlc query files
 - `internal/store/*.sql.go`: sqlc output (per-domain, generated)
 - `sqlc.yaml`: configures per-file output into `internal/store`
 
@@ -136,7 +135,7 @@ To modify:
 
 - `cmd/godaily/main.go`: add `migrate` subcommand, thread `*sql.DB` into `run`
 - `internal/cron/run.go`: at the end of a successful run, insert one
-  `issues` row plus all `news_items`. Keep `EMAIL_SEND_ADDRESS` as the
+  `issues` row plus all `items`. Keep `EMAIL_SEND_ADDRESS` as the
   current single recipient; subscriber-driven fan-out is Stage 2.
 - `Makefile`: `make sqlc`, `make migrate-up`, `make migrate-down`
 - `.env.example`: `TURSO_URL`, `TURSO_AUTH_TOKEN`
@@ -146,6 +145,6 @@ To modify:
 
 1. `turso db create godaily-dev` (or `turso dev` for local libsql)
 2. `go run ./cmd/godaily migrate`, confirm via `turso db shell`
-3. `make run-dry` then `make run`, confirm `issues` and `news_items` rows
+3. `make run-dry` then `make run`, confirm `issues` and `items` rows
 4. `make all` clean, including new unit tests in `internal/db` against
    ephemeral file-backed SQLite

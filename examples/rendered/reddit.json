@@ -10,7 +10,7 @@
 		"snippet": "I needed a way to make precise, scriptable file edits without sed/awk regex headaches — especially when working with AI coding assistants that say \"insert this after line 47\" but the file has shifte",
 		"tag": "article",
 		"comments": 6,
-		"score": 0.3003809664473759,
+		"score": 0.38823676709842325,
 		"published": "2026-04-28T03:30:02Z"
 	},
 	{
@@ -24,7 +24,7 @@
 		"snippet": "I'm building a caching layer and wanted to test go's struct pooling to make sure I understood it before I used it, and see if it was worth messing around with. I setup a little test that just counts t",
 		"tag": "article",
 		"comments": 7,
-		"score": 0.6697641897061287,
+		"score": 0.6262830509731585,
 		"published": "2026-04-28T03:15:36Z"
 	},
 	{
@@ -67,8 +67,8 @@
 		},
 		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
 		"tag": "article",
-		"comments": 6,
-		"score": 0.38823676709842325,
+		"comments": 7,
+		"score": 0.4216379923242304,
 		"published": "2026-04-27T19:00:54Z"
 	},
 	{
@@ -97,7 +97,7 @@
 		"snippet": "Hi gophers, Over the last year I've been building (in my spare time) a cross platform FUSE filesystem that also has a GUI. (altough the GUI is [slint.dev](http://slint.dev) and bound with rust, the en",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.34873150258179014,
+		"score": 0.3003809664473759,
 		"published": "2026-04-27T16:09:01Z"
 	},
 	{
@@ -111,7 +111,7 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.7764735341968465,
+		"score": 0.7881887691669792,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -155,7 +155,7 @@
 		"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.3003809664473759,
+		"score": 0.23804628387473528,
 		"published": "2026-04-26T15:58:00Z"
 	},
 	{
@@ -169,7 +169,7 @@
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.7509524161184398,
+		"score": 0.7440731378420168,
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -242,7 +242,7 @@
 		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.15019048322368794,
+		"score": 0.23804628387473528,
 		"published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -271,7 +271,7 @@
 		"snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap. In contrast, the Flex family—such",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.45057144967106383,
+		"score": 0.4760925677494707,
 		"published": "2026-04-24T23:16:08Z"
 	},
 	{
@@ -328,7 +328,7 @@
 		"snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.49892198580547814,
+		"score": 0.4760925677494707,
 		"published": "2026-04-23T21:58:26Z"
 	}
 ]

@@ -43,9 +43,11 @@ godaily/
 │   └── gen-examples/    # Example regenerator
 ├── internal/
 │   ├── cron/            # Orchestration + email templates
+│   ├── db/              # *sql.DB lifecycle + embedded goose migrations
 │   ├── email/           # Resend client
 │   ├── news/            # Item model, registry, scoring
 │   ├── source/          # Per-provider fetchers
+│   ├── store/           # sqlc-generated queries + hand-rolled domain logic
 │   └── synth/           # Claude synthesis (client, prompt, suggestions)
 ├── examples/            # Sample raw + rendered digests
 └── .github/workflows/   # Daily cron + CI
@@ -69,6 +71,9 @@ Use the `Makefile` targets — don't reinvent commands.
 | `make cover`             | Open the HTML coverage report.                             |
 | `make lic`               | Re-stamp MIT license headers on `.go` files.               |
 | `make all`               | `lic` + `format` + `lint` + `test`.                        |
+| `make sqlc`              | Regenerate query code from `internal/store/*.sql`.         |
+| `make migrate-up`        | Apply pending migrations against `TURSO_URL`.              |
+| `make migrate-down`      | Roll back the most recent migration.                       |
 
 Before declaring work done: run `make all` (or at minimum `make lint` and
 `make test`).
@@ -84,6 +89,8 @@ Reads env vars; `.env` in the working directory is auto-loaded.
 | `YOUTUBE_API_KEY`    | YouTube Data API key.                            |
 | `GITHUB_TOKEN`       | GitHub API token (trending source).              |
 | `EMAIL_SEND_ADDRESS` | Recipient address for the digest.                |
+| `TURSO_URL`          | libsql/Turso URL, or `file:./godaily.db` locally.|
+| `TURSO_AUTH_TOKEN`   | Turso auth token (omit for `file:` URLs).        |
 
 Copy `.env.example` to `.env` for local dev. Never commit `.env`.
 
@@ -525,6 +532,31 @@ func TestApp_OrderedCommands(t *testing.T) {
 ```
 
 ---
+
+## Database
+
+Stage 1 introduced two packages:
+
+- `internal/db` owns the `*sql.DB` lifecycle. `db.New(ctx, url, token)` opens
+  a connection — Turso URLs (`libsql://`, `https://`, `wss://`) go through
+  the `tursodatabase/libsql-client-go` driver; `file:` URLs use the pure-Go
+  `modernc.org/sqlite` driver. `db.Migrate` / `db.Down` apply embedded
+  `goose` migrations from `internal/db/migrations/`.
+- `internal/store` owns typed query access. `*.sql` files are sqlc input,
+  `*.sql.go` files are sqlc output (regenerate with `make sqlc` or
+  `go generate ./internal/store/...`). Hand-written `*.go` files only
+  appear when there is logic beyond a single query — e.g.
+  `subscribers.go` generates the confirm/unsubscribe tokens before
+  delegating to the generated `CreateSubscriber`.
+
+### Adding a migration
+
+1. Create `internal/db/migrations/000N_name.sql` with `-- +goose Up` and
+   `-- +goose Down` blocks.
+2. If it changes the schema shape used by queries, run `make sqlc` so the
+   generated models stay in sync.
+3. Ship via `make migrate-up` (production) or against a local `file:` DB
+   for dev.
 
 ## Repo-Specific Notes for Agents
 

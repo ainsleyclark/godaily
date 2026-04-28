@@ -1,6 +1,20 @@
 [
 	{
 		"source": "medium",
+		"title": "The One-Word Bug That Broke Our Worker for 6 Days",
+		"url": "https://medium.com/@tacherasasi/the-one-word-bug-that-broke-our-worker-for-6-days-9cadd534ee77?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*CtVFn53iNGx3lQ2MEe3JKw.png",
+		"author": {
+			"name": "Tachera Sasi"
+		},
+		"snippet": "For six days, our system was lying to us. Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-04-28T09:53:16Z"
+	},
+	{
+		"source": "medium",
 		"title": "Stop Talking to Your AI and Start Giving It Hands: A Beginner’s Guide to MCP and Go",
 		"url": "https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qFyDBjMsLgsjorA6AhCorA.png",
@@ -124,19 +138,5 @@
 		"comments": 0,
 		"score": 0.25,
 		"published": "2026-04-27T19:06:22Z"
-	},
-	{
-		"source": "medium",
-		"title": "Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️",
-		"url": "https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*sjNEM0K78xYl-_dp",
-		"author": {
-			"name": "Anshu Singhal"
-		},
-		"snippet": "So, hey, have you ever found yourself squinting at a screen at, like, 2 AM, just staring at a wall of totally cryptic log messages, trying… Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-27T19:01:08Z"
 	}
 ]

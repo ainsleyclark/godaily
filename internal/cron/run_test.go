@@ -22,11 +22,15 @@ package cron
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store/issues"
+	"github.com/ainsleyclark/godaily/internal/store/items"
 	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -117,7 +121,7 @@ func TestNew(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 			t.Setenv("EMAIL_SEND_ADDRESS", test.envAddr)
 
-			got, err := New()
+			got, err := New(nil, nil)
 			test.want(t, got, err)
 		})
 	}
@@ -403,6 +407,127 @@ func TestAggregator_Run_Synth(t *testing.T) {
 			test.want(t, m, test.suggester)
 		})
 	}
+}
+
+func TestAggregator_Run_Persistence(t *testing.T) {
+	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+	inWindow := yesterday.Add(time.Hour)
+
+	registry := map[news.Source]news.Fetcher{
+		news.SourceDevTo: mockFetcher{
+			items: []news.Item{
+				{
+					Title: "first",
+					URL:   "https://example.com/1",
+					Author: &news.Author{
+						Name:       "Ada Lovelace",
+						Username:   "ada",
+						AvatarURL:  "https://example.com/ada.png",
+						ProfileURL: "https://dev.to/ada",
+					},
+					Score:     0.5,
+					Published: inWindow,
+				},
+				{
+					Title:     "second",
+					URL:       "https://example.com/2",
+					Score:     0.9,
+					Published: inWindow,
+				},
+			},
+		},
+	}
+
+	t.Run("Persists Issue And News Items With Sent Status", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{
+			email:         &mockEmail{},
+			sendToAddress: "to@example.com",
+			issues:        issueRepo,
+			items:         itemRepo,
+		}
+
+		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+
+		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusSent, issue.Status)
+		assert.NotEmpty(t, issue.HtmlBody)
+		assert.NotEmpty(t, issue.TextBody)
+
+		got, err := itemRepo.ListByIssue(t.Context(), issue.ID)
+		require.NoError(t, err)
+		require.Len(t, got, 2)
+		// Items are persisted in score-descending order (Run sorts before
+		// passing them on), so "second" (score 0.9) comes before "first".
+		assert.Equal(t, "second", got[0].Title)
+		assert.Equal(t, "first", got[1].Title)
+
+		// "second" has no author.
+		assert.Nil(t, got[0].Author)
+
+		// "first" carries a fully-populated Author; each field round-trips.
+		require.NotNil(t, got[1].Author)
+		assert.Equal(t, "Ada Lovelace", got[1].Author.Name)
+		assert.Equal(t, "ada", got[1].Author.Username)
+		assert.Equal(t, "https://example.com/ada.png", got[1].Author.AvatarURL)
+		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
+	})
+
+	t.Run("Records Failed Status When Email Send Errors", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{
+			email:         &mockEmail{err: errors.New("send boom")},
+			sendToAddress: "to@example.com",
+			issues:        issueRepo,
+			items:         itemRepo,
+		}
+
+		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+
+		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatus("failed"), issue.Status)
+	})
+
+	t.Run("DryRun Does Not Persist", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{
+			email:         &mockEmail{},
+			sendToAddress: "to@example.com",
+			issues:        issueRepo,
+			items:         itemRepo,
+		}
+
+		_, err := agg.Run(t.Context(), RunOptions{
+			Sources: []news.Source{news.SourceDevTo},
+			DryRun:  true,
+		})
+		require.NoError(t, err)
+
+		count, err := issueRepo.Count(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, int64(0), count)
+	})
+}
+
+func newTestStores(t *testing.T) (*issues.Store, *items.Store) {
+	t.Helper()
+
+	url := "file:" + filepath.Join(t.TempDir(), "godaily.db")
+	conn, err := db.New(t.Context(), url, "")
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = conn.Close() })
+	require.NoError(t, db.Up(t.Context(), conn))
+	return issues.New(conn), items.New(conn)
 }
 
 func TestAggregator_FetchSource(t *testing.T) {

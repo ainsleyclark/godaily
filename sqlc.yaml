@@ -1,0 +1,31 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    schema: "internal/db/migrations"
+    queries:
+      - "internal/store/issues/query.sql"
+      - "internal/store/items/query.sql"
+      - "internal/store/subscribers/query.sql"
+    gen:
+      go:
+        package: "sqlc"
+        out: "internal/store/internal/sqlc"
+        sql_package: "database/sql"
+        emit_json_tags: true
+        emit_interface: false
+        emit_empty_slices: true
+        overrides:
+          - column: "issues.sent_at"
+            go_type: "time.Time"
+          - column: "subscribers.confirmed_at"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true
+          - column: "subscribers.unsubscribed_at"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true
+          - column: "subscribers.created_at"
+            go_type: "time.Time"
