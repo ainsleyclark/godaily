@@ -76,10 +76,12 @@ func (e ardanLabsEpisode) Transform() news.Item {
 		snippet = e.Description
 	}
 	return news.Item{
-		Source:    news.SourceArdanLabs,
-		Title:     strings.TrimSpace(e.Title),
-		URL:       buzzsproutEpisodeURL(e.Enclosure.URL),
-		Author:    e.Author,
+		Source: news.SourceArdanLabs,
+		Title:  strings.TrimSpace(e.Title),
+		URL:    buzzsproutEpisodeURL(e.Enclosure.URL),
+		Author: &news.Author{
+			Name: e.Author,
+		},
 		ImageURL:  e.channelImage,
 		Snippet:   snippet,
 		Tag:       news.TagPodcast,

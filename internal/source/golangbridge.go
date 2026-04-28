@@ -56,7 +56,22 @@ func (g GolangBridge) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(ctx, response.TopicList.Topics), nil
+
+	usersByID := make(map[int]golangBridgeUser, len(response.Users))
+	for _, u := range response.Users {
+		usersByID[u.ID] = u
+	}
+
+	topics := response.TopicList.Topics
+	for i := range topics {
+		if len(topics[i].Posters) > 0 {
+			if u, ok := usersByID[topics[i].Posters[0].UserId]; ok {
+				topics[i].resolvedUser = &u
+			}
+		}
+	}
+
+	return ingest.TransformAll(ctx, topics), nil
 }
 
 func (t golangBridgeTopic) ShouldInclude() bool   { return true }
@@ -71,11 +86,32 @@ func (t golangBridgeTopic) Transform() news.Item {
 			img = "https://forum.golangbridge.org" + img
 		}
 	}
+
+	var author *news.Author
+	if t.resolvedUser != nil {
+		u := t.resolvedUser
+		name := u.Name
+		if name == "" {
+			name = u.Username
+		}
+		avatar := ""
+		if u.AvatarTemplate != "" {
+			avatar = "https://forum.golangbridge.org" + strings.Replace(u.AvatarTemplate, "{size}", "90", 1)
+		}
+		author = &news.Author{
+			Name:       name,
+			Username:   u.Username,
+			AvatarURL:  avatar,
+			ProfileURL: "https://forum.golangbridge.org/u/" + u.Username,
+		}
+	}
+
 	return news.Item{
 		Source:    news.SourceGolangBridge,
 		Title:     t.Title,
 		URL:       "https://forum.golangbridge.org/t/" + t.Slug + "/" + strconv.Itoa(t.ID),
 		ImageURL:  img,
+		Author:    author,
 		Comments:  t.PostsCount,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceGolangBridge, news.TagArticle, float64(t.Views), true),
@@ -84,19 +120,20 @@ func (t golangBridgeTopic) Transform() news.Item {
 }
 
 type (
+	golangBridgeUser struct {
+		ID               int    `json:"id"`
+		Username         string `json:"username"`
+		Name             string `json:"name"`
+		AvatarTemplate   string `json:"avatar_template"`
+		Admin            bool   `json:"admin,omitempty"`
+		TrustLevel       int    `json:"trust_level"`
+		Moderator        bool   `json:"moderator,omitempty"`
+		PrimaryGroupName string `json:"primary_group_name,omitempty"`
+		FlairName        string `json:"flair_name,omitempty"`
+		FlairGroupId     int    `json:"flair_group_id,omitempty"`
+	}
 	golangBridgeResponse struct {
-		Users []struct {
-			ID               int    `json:"id"`
-			Username         string `json:"username"`
-			Name             string `json:"name"`
-			AvatarTemplate   string `json:"avatar_template"`
-			Admin            bool   `json:"admin,omitempty"`
-			TrustLevel       int    `json:"trust_level"`
-			Moderator        bool   `json:"moderator,omitempty"`
-			PrimaryGroupName string `json:"primary_group_name,omitempty"`
-			FlairName        string `json:"flair_name,omitempty"`
-			FlairGroupId     int    `json:"flair_group_id,omitempty"`
-		} `json:"users"`
+		Users         []golangBridgeUser `json:"users"`
 		PrimaryGroups []struct {
 			ID   int    `json:"id"`
 			Name string `json:"name"`
@@ -155,5 +192,6 @@ type (
 			PrimaryGroupId *int    `json:"primary_group_id"`
 			FlairGroupId   *int    `json:"flair_group_id"`
 		} `json:"posters"`
+		resolvedUser *golangBridgeUser // populated by Fetch from the top-level users list
 	}
 )

@@ -96,7 +96,7 @@ func TestReddit_Fetch(t *testing.T) {
 					Source:    news.SourceReddit,
 					Title:     "Small Projects",
 					URL:       "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
-					Author:    "AutoModerator",
+					Author:    &news.Author{Name: "AutoModerator", Username: "AutoModerator", ProfileURL: "https://www.reddit.com/user/AutoModerator"},
 					Snippet:   "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
 					Tag:       news.TagArticle,
 					Comments:  0,

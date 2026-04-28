@@ -65,10 +65,12 @@ func (e goPodcastEpisode) Transform() news.Item {
 		snippet = e.Description
 	}
 	return news.Item{
-		Source:    news.SourceGoPodcast,
-		Title:     e.Title,
-		URL:       e.Link,
-		Author:    e.Author,
+		Source: news.SourceGoPodcast,
+		Title:  e.Title,
+		URL:    e.Link,
+		Author: &news.Author{
+			Name: e.Author,
+		},
 		ImageURL:  e.Image.Href,
 		Snippet:   snippet,
 		Tag:       news.TagPodcast,

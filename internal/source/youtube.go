@@ -77,11 +77,15 @@ func (v ytItem) EnrichmentURL() string { return "" }
 func (v ytItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, v.Snippet.PublishedAt)
 	return news.Item{
-		Source:    news.SourceYouTube,
-		Title:     v.Snippet.Title,
-		URL:       "https://www.youtube.com/watch?v=" + v.ID.VideoID,
-		ImageURL:  "https://i.ytimg.com/vi/" + v.ID.VideoID + "/hqdefault.jpg",
-		Author:    v.Snippet.ChannelTitle,
+		Source:   news.SourceYouTube,
+		Title:    v.Snippet.Title,
+		URL:      "https://www.youtube.com/watch?v=" + v.ID.VideoID,
+		ImageURL: "https://i.ytimg.com/vi/" + v.ID.VideoID + "/hqdefault.jpg",
+		Author: &news.Author{
+			Name:       v.Snippet.ChannelTitle,
+			Username:   v.Snippet.ChannelID,
+			ProfileURL: "https://www.youtube.com/channel/" + v.Snippet.ChannelID,
+		},
 		Snippet:   v.Snippet.Description,
 		Tag:       news.TagVideo,
 		Score:     news.ScoreOf(news.SourceYouTube, news.TagVideo, 0, false),
@@ -106,5 +110,6 @@ type ytSnippet struct {
 	Title        string `json:"title"`
 	Description  string `json:"description"`
 	ChannelTitle string `json:"channelTitle"`
+	ChannelID    string `json:"channelId"`
 	PublishedAt  string `json:"publishedAt"`
 }

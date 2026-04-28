@@ -43,7 +43,7 @@ func sampleSections() []news.SourceItems {
 		Items: []news.Item{{
 			Title:     "hello",
 			URL:       "https://example.com",
-			Author:    "gopher",
+			Author:    &news.Author{Name: "gopher"},
 			Published: sendDigestDay.Add(time.Hour),
 		}},
 	}}

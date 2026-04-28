@@ -113,7 +113,7 @@ func filterItems(sections []news.SourceItems, cfg filterConfig) []promptItem {
 				Source:  string(it.Source),
 				Title:   it.Title,
 				URL:     it.URL,
-				Author:  it.Author,
+				Author:  it.Author.String(),
 				Tag:     string(it.Tag),
 				Snippet: it.Snippet,
 				Score:   it.Score,

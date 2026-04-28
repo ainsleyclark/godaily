@@ -100,7 +100,7 @@ func TestGitHubTrending_Fetch(t *testing.T) {
 				first := items[0]
 				assert.Equal(t, news.SourceGitHubTrending, first.Source)
 				assert.Equal(t, "gastownhall/beads", first.Title)
-				assert.Equal(t, "gastownhall", first.Author)
+				assert.Equal(t, &news.Author{Name: "gastownhall", Username: "gastownhall", ProfileURL: "https://github.com/gastownhall"}, first.Author)
 				assert.Equal(t, serverURL+"/gastownhall/beads", first.URL)
 				assert.Equal(t, "Beads - A memory upgrade for your coding agent", first.Snippet)
 				assert.Equal(t, news.TagArticle, first.Tag)
