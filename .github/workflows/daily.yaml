@@ -40,4 +40,6 @@ jobs:
           RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
+          TURSO_URL: ${{ secrets.TURSO_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
         run: go run ./cmd/godaily run ${{ inputs.dry-run && '--dry-run' || '' }}
