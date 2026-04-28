@@ -17,37 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package main
+package cmd
 
 import (
 	"context"
-	"log"
-	"log/slog"
-	"os"
+	"encoding/json"
+	"fmt"
 
-	"github.com/joho/godotenv"
-
-	_ "github.com/ainsleyclark/godaily/internal/source"
+	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-var cmd = &cli.Command{
-	Name:  "godaily",
-	Usage: "Daily Go news, straight to your inbox",
-	Commands: []*cli.Command{
-		runCmd,
-		sourcesCmd,
-		synthCmd,
-		migrateCmd,
-		fetchCmd,
+var fetchCmd = &cli.Command{
+	Name: "fetch",
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:  "provider",
+			Usage: "Provider of source information",
+		},
 	},
-}
+	Action: func(ctx context.Context, cmd *cli.Command) error {
+		fetcher, err := news.Get(news.Source(cmd.String("provider")))
+		if err != nil {
+			return err
+		}
 
-func main() {
-	if err := godotenv.Load(); err != nil {
-		slog.ErrorContext(context.Background(), "error loading .env file")
-	}
-	if err := cmd.Run(context.Background(), os.Args); err != nil {
-		log.Fatal(err)
-	}
+		items, err := fetcher.Fetch(ctx)
+		if err != nil {
+			return err
+		}
+
+		indent, err := json.MarshalIndent(items, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(indent)) //nolint
+		return nil
+	},
 }
