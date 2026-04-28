@@ -2,7 +2,10 @@ version: "2"
 sql:
   - engine: "sqlite"
     schema: "internal/db/migrations"
-    queries: "internal/store/queries"
+    queries:
+      - "internal/store/issues/query.sql"
+      - "internal/store/news_items/query.sql"
+      - "internal/store/subscribers/query.sql"
     gen:
       go:
         package: "sqlc"
