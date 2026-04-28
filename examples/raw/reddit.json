@@ -30,17 +30,10 @@
 					"name": "t3_1sxpukq",
 					"quarantine": false,
 					"link_flair_text_color": "light",
-<<<<<<< HEAD
-					"upvote_ratio": 0.63,
+					"upvote_ratio": 0.56,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 5,
-=======
-					"upvote_ratio": 0.52,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 1,
->>>>>>> main
+					"ups": 3,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -54,11 +47,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 5,
-=======
-					"score": 1,
->>>>>>> main
+					"score": 3,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -111,11 +100,7 @@
 					"report_reasons": null,
 					"author": "Character-Chicken522",
 					"discussion_type": null,
-<<<<<<< HEAD
-					"num_comments": 3,
-=======
-					"num_comments": 5,
->>>>>>> main
+					"num_comments": 6,
 					"send_replies": true,
 					"contest_mode": false,
 					"mod_reports": [],
@@ -124,11 +109,7 @@
 					"permalink": "/r/golang/comments/1sxpukq/i_built_fedit_a_zerodependency_cli_tool_for/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sxpukq/i_built_fedit_a_zerodependency_cli_tool_for/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777347002.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -159,17 +140,10 @@
 					"name": "t3_1sxpjgu",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.67,
+					"upvote_ratio": 0.77,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 6,
-=======
-					"upvote_ratio": 0.76,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 20,
->>>>>>> main
+					"ups": 21,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -183,11 +157,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "help",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 6,
-=======
-					"score": 20,
->>>>>>> main
+					"score": 21,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -240,11 +210,7 @@
 					"report_reasons": null,
 					"author": "canadiancoding",
 					"discussion_type": null,
-<<<<<<< HEAD
-					"num_comments": 6,
-=======
 					"num_comments": 7,
->>>>>>> main
 					"send_replies": true,
 					"contest_mode": false,
 					"mod_reports": [],
@@ -253,11 +219,7 @@
 					"permalink": "/r/golang/comments/1sxpjgu/why_is_go_pooling_worse_than_not_trying_to/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sxpjgu/why_is_go_pooling_worse_than_not_trying_to/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777346136.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -288,11 +250,7 @@
 					"name": "t3_1sxj0sq",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.33,
-=======
 					"upvote_ratio": 0.25,
->>>>>>> main
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 0,
@@ -418,11 +376,7 @@
 					"permalink": "/r/golang/comments/1sxj0sq/sphire_foundry_i_posted_my_cms_about_a_month_ago/",
 					"stickied": false,
 					"url": "https://github.com/sphireinc/Foundry",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777329170.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -453,14 +407,10 @@
 					"name": "t3_1sxdx95",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.92,
+					"upvote_ratio": 0.89,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-<<<<<<< HEAD
-					"ups": 30,
-=======
-					"ups": 33,
->>>>>>> main
+					"ups": 29,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": 140,
@@ -474,11 +424,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 30,
-=======
-					"score": 33,
->>>>>>> main
+					"score": 29,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -587,11 +533,7 @@
 					"permalink": "/r/golang/comments/1sxdx95/zeroconfig_go_heap_profiling/",
 					"stickied": false,
 					"url": "https://coroot.com/blog/zero-config-go-heap-profiling/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777318019.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -622,17 +564,10 @@
 					"name": "t3_1sxd6ei",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.86,
+					"upvote_ratio": 0.78,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 5,
-=======
-					"upvote_ratio": 0.8,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 6,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -646,11 +581,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "Small Projects",
 					"can_mod_post": false,
-<<<<<<< HEAD
 					"score": 5,
-=======
-					"score": 6,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": true,
@@ -703,11 +634,7 @@
 					"report_reasons": null,
 					"author": "AutoModerator",
 					"discussion_type": null,
-<<<<<<< HEAD
-					"num_comments": 4,
-=======
 					"num_comments": 6,
->>>>>>> main
 					"send_replies": true,
 					"contest_mode": false,
 					"mod_reports": [],
@@ -716,11 +643,7 @@
 					"permalink": "/r/golang/comments/1sxd6ei/small_projects/",
 					"stickied": true,
 					"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777316454.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -751,10 +674,10 @@
 					"name": "t3_1sx8eb4",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.8,
+					"upvote_ratio": 0.78,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 6,
+					"ups": 5,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -768,7 +691,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "help",
 					"can_mod_post": false,
-					"score": 6,
+					"score": 5,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -830,11 +753,7 @@
 					"permalink": "/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777306551.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -865,13 +784,9 @@
 					"name": "t3_1sx87ht",
 					"quarantine": false,
 					"link_flair_text_color": "light",
-<<<<<<< HEAD
-					"upvote_ratio": 0.63,
-=======
-					"upvote_ratio": 0.67,
->>>>>>> main
+					"upvote_ratio": 0.75,
 					"author_flair_background_color": null,
-					"ups": 3,
+					"ups": 4,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": 140,
@@ -885,7 +800,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-					"score": 3,
+					"score": 4,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -996,11 +911,7 @@
 					"permalink": "/r/golang/comments/1sx87ht/keibidrop_p2p_filesystem_ive_been_building_in_go/",
 					"stickied": false,
 					"url": "https://github.com/KeibiSoft/KeibiDrop",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777306141.0,
 					"num_crossposts": 1,
 					"media": null,
@@ -1031,17 +942,10 @@
 					"name": "t3_1sx5ezm",
 					"quarantine": false,
 					"link_flair_text_color": "light",
-<<<<<<< HEAD
-					"upvote_ratio": 0.95,
+					"upvote_ratio": 0.92,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 36,
-=======
-					"upvote_ratio": 0.93,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 37,
->>>>>>> main
+					"ups": 35,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -1055,11 +959,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 36,
-=======
-					"score": 37,
->>>>>>> main
+					"score": 35,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -1121,11 +1021,7 @@
 					"permalink": "/r/golang/comments/1sx5ezm/building_an_event_loop_in_go_from_syscalls/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sx5ezm/building_an_event_loop_in_go_from_syscalls/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777300255.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1235,11 +1131,7 @@
 					"permalink": "/r/golang/comments/1sx523q/sqlc_query_date_part_param_type/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sx523q/sqlc_query_date_part_param_type/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777299498.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1270,17 +1162,10 @@
 					"name": "t3_1sx2fw0",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.78,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 37,
-=======
 					"upvote_ratio": 0.8,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 44,
->>>>>>> main
+					"ups": 45,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -1294,11 +1179,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 37,
-=======
-					"score": 44,
->>>>>>> main
+					"score": 45,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -1359,11 +1240,7 @@
 					"permalink": "/r/golang/comments/1sx2fw0/please_help_me_understand_something_about_go/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sx2fw0/please_help_me_understand_something_about_go/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777293510.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1394,13 +1271,9 @@
 					"name": "t3_1swnxlx",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.96,
+					"upvote_ratio": 0.95,
 					"author_flair_background_color": null,
-<<<<<<< HEAD
-					"ups": 47,
-=======
 					"ups": 45,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": 140,
@@ -1414,11 +1287,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "discussion",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 47,
-=======
 					"score": 45,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -1529,11 +1398,7 @@
 					"permalink": "/r/golang/comments/1swnxlx/gophercon_2026/",
 					"stickied": false,
 					"url": "https://www.gophercon.com/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777248596.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1564,10 +1429,10 @@
 					"name": "t3_1swbc87",
 					"quarantine": false,
 					"link_flair_text_color": "light",
-					"upvote_ratio": 0.53,
+					"upvote_ratio": 0.6,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 1,
+					"ups": 3,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -1581,7 +1446,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-					"score": 1,
+					"score": 3,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -1690,11 +1555,7 @@
 					"permalink": "/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777219080.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1728,11 +1589,7 @@
 					"upvote_ratio": 0.92,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-<<<<<<< HEAD
-					"ups": 30,
-=======
 					"ups": 31,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -1746,11 +1603,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "discussion",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 30,
-=======
 					"score": 31,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": true,
@@ -1813,11 +1666,7 @@
 					"permalink": "/r/golang/comments/1swanbs/watgo_a_webassembly_toolkit_for_go/",
 					"stickied": false,
 					"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777217499.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1848,10 +1697,10 @@
 					"name": "t3_1sw9hdo",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.83,
+					"upvote_ratio": 0.86,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 15,
+					"ups": 16,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -1865,7 +1714,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-					"score": 15,
+					"score": 16,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -1926,11 +1775,7 @@
 					"permalink": "/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777214813.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -1961,11 +1806,7 @@
 					"name": "t3_1sw9a4w",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.37,
-=======
-					"upvote_ratio": 0.35,
->>>>>>> main
+					"upvote_ratio": 0.36,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 0,
@@ -2091,11 +1932,7 @@
 					"permalink": "/r/golang/comments/1sw9a4w/showcase_klex_frog_a_governed_language_with_30/",
 					"stickied": false,
 					"url": "https://github.com/kmcnally5/FROG",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777214335.0,
 					"num_crossposts": 2,
 					"media": null,
@@ -2129,11 +1966,7 @@
 					"upvote_ratio": 0.78,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-<<<<<<< HEAD
-					"ups": 16,
-=======
 					"ups": 15,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -2147,11 +1980,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 16,
-=======
 					"score": 15,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -2259,11 +2088,7 @@
 					"permalink": "/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777195657.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -2297,11 +2122,7 @@
 					"upvote_ratio": 0.79,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-<<<<<<< HEAD
-					"ups": 19,
-=======
 					"ups": 20,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -2315,11 +2136,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 19,
-=======
 					"score": 20,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -2427,11 +2244,7 @@
 					"permalink": "/r/golang/comments/1svs6tu/whatsapp_api/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777162079.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -2462,17 +2275,10 @@
 					"name": "t3_1svdj2t",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.56,
-					"author_flair_background_color": null,
-					"subreddit_type": "public",
-					"ups": 3,
-=======
 					"upvote_ratio": 0.52,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 1,
->>>>>>> main
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -2486,11 +2292,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 3,
-=======
 					"score": 1,
->>>>>>> main
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -2551,11 +2353,7 @@
 					"permalink": "/r/golang/comments/1svdj2t/gomirofish_built_infast_go_rewrite_of_mirofish/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1svdj2t/gomirofish_built_infast_go_rewrite_of_mirofish/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777126930.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -2589,7 +2387,7 @@
 					"upvote_ratio": 0.85,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 41,
+					"ups": 40,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": 140,
@@ -2603,7 +2401,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-					"score": 41,
+					"score": 40,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -2712,11 +2510,7 @@
 					"permalink": "/r/golang/comments/1sv9gn7/compile_go_to_brainfuck/",
 					"stickied": false,
 					"url": "https://github.com/itchyny/go2bf",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777115988.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -2747,10 +2541,10 @@
 					"name": "t3_1suvgap",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.79,
+					"upvote_ratio": 0.77,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 8,
+					"ups": 7,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -2764,7 +2558,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-					"score": 8,
+					"score": 7,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -2825,11 +2619,7 @@
 					"permalink": "/r/golang/comments/1suvgap/how_to_stack_widgets_and_shapes_in_go_and_gio/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1suvgap/how_to_stack_widgets_and_shapes_in_go_and_gio/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777072568.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -2860,7 +2650,7 @@
 					"name": "t3_1suhjab",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.26,
+					"upvote_ratio": 0.28,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 0,
@@ -2985,11 +2775,7 @@
 					"permalink": "/r/golang/comments/1suhjab/airulez_v4_released/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1suhjab/airulez_v4_released/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777041371.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -3023,11 +2809,7 @@
 					"upvote_ratio": 0.93,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-<<<<<<< HEAD
-					"ups": 99,
-=======
-					"ups": 100,
->>>>>>> main
+					"ups": 97,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -3041,11 +2823,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-<<<<<<< HEAD
-					"score": 99,
-=======
-					"score": 100,
->>>>>>> main
+					"score": 97,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -3107,11 +2885,7 @@
 					"permalink": "/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777040526.0,
 					"num_crossposts": 1,
 					"media": null,
@@ -3142,10 +2916,10 @@
 					"name": "t3_1sugo1r",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-					"upvote_ratio": 0.81,
+					"upvote_ratio": 0.85,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 13,
+					"ups": 14,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -3159,7 +2933,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": null,
 					"can_mod_post": false,
-					"score": 13,
+					"score": 14,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -3267,11 +3041,7 @@
 					"permalink": "/r/golang/comments/1sugo1r/i_need_help_with_e2e_tests/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1sugo1r/i_need_help_with_e2e_tests/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777039369.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -3302,11 +3072,7 @@
 					"name": "t3_1su7j4k",
 					"quarantine": false,
 					"link_flair_text_color": "dark",
-<<<<<<< HEAD
-					"upvote_ratio": 0.35,
-=======
-					"upvote_ratio": 0.33,
->>>>>>> main
+					"upvote_ratio": 0.4,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
 					"ups": 0,
@@ -3384,11 +3150,7 @@
 					"permalink": "/r/golang/comments/1su7j4k/i_built_an_opensource_discord_twitch_bot_in_go/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1su7j4k/i_built_an_opensource_discord_twitch_bot_in_go/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1777011510.0,
 					"num_crossposts": 0,
 					"media": null,
@@ -3419,10 +3181,10 @@
 					"name": "t3_1stwsl9",
 					"quarantine": false,
 					"link_flair_text_color": "light",
-					"upvote_ratio": 0.86,
+					"upvote_ratio": 0.85,
 					"author_flair_background_color": null,
 					"subreddit_type": "public",
-					"ups": 10,
+					"ups": 9,
 					"total_awards_received": 0,
 					"media_embed": {},
 					"thumbnail_width": null,
@@ -3436,7 +3198,7 @@
 					"secure_media_embed": {},
 					"link_flair_text": "show &amp; tell",
 					"can_mod_post": false,
-					"score": 10,
+					"score": 9,
 					"approved_by": null,
 					"is_created_from_ads_ui": false,
 					"author_premium": false,
@@ -3498,11 +3260,7 @@
 					"permalink": "/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
 					"stickied": false,
 					"url": "https://www.reddit.com/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
-<<<<<<< HEAD
-					"subreddit_subscribers": 356811,
-=======
-					"subreddit_subscribers": 356824,
->>>>>>> main
+					"subreddit_subscribers": 356826,
 					"created_utc": 1776981506.0,
 					"num_crossposts": 0,
 					"media": null,

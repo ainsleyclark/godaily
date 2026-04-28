@@ -5,15 +5,10 @@
 		"url": "https://github.com/kyleomalley/nocordhf",
 		"original_url": "https://news.ycombinator.com/item?id=47930598",
 		"image_url": "https://opengraph.githubassets.com/98304dee96804ed79a3f7da9de2c687b6ac2a29c1ec17fd35c366f5693e129a0/kyleomalley/nocordhf",
-<<<<<<< HEAD
 		"author": {
-			"name": "kyleomalley",
 			"username": "kyleomalley",
 			"profile_url": "https://news.ycombinator.com/user?id=kyleomalley"
 		},
-=======
-		"author": "kyleomalley",
->>>>>>> main
 		"snippet": "Open Source Digital Mode (FT8) Radio Software for Amateur Radio (MacOS) - kyleomalley/nocordhf",
 		"tag": "article",
 		"comments": 2,
@@ -27,7 +22,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47912690",
 		"image_url": "https://opengraph.githubassets.com/25bfd6b0741b1d4e23125a056dfa05fb3082b3ffa78f9171c81de80557cfbcd2/Ichihiroy/golings",
 		"author": {
-			"name": "ichihiroy",
 			"username": "ichihiroy",
 			"profile_url": "https://news.ycombinator.com/user?id=ichihiroy"
 		},
@@ -43,7 +37,6 @@
 		"url": "https://emmanuel326.github.io/blogs/sheriffdb.html",
 		"original_url": "https://news.ycombinator.com/item?id=47901892",
 		"author": {
-			"name": "Nya-kundi",
 			"username": "Nya-kundi",
 			"profile_url": "https://news.ycombinator.com/user?id=Nya-kundi"
 		},
@@ -60,7 +53,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47898927",
 		"image_url": "https://opengraph.githubassets.com/464ee9110beb601b5ff2af85beb70f7f99f20f1344d81351d4b1efa63a5c7f11/rcarmo/gte-go",
 		"author": {
-			"name": "rcarmo",
 			"username": "rcarmo",
 			"profile_url": "https://news.ycombinator.com/user?id=rcarmo"
 		},
@@ -77,7 +69,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47862215",
 		"image_url": "https://cdn.sanity.io/images/rdn92ihu/production/b844a57b507f441fe9d86605f6a7389f0870b2ff-1366x706.png?fit=max\u0026auto=format",
 		"author": {
-			"name": "ayoisaiah",
 			"username": "ayoisaiah",
 			"profile_url": "https://news.ycombinator.com/user?id=ayoisaiah"
 		},
@@ -93,7 +84,6 @@
 		"url": "https://play.google.com/store/apps/details?id=com.minaandrawos.golangnews\u0026hl=en_US",
 		"original_url": "https://news.ycombinator.com/item?id=47828954",
 		"author": {
-			"name": "minaandrawos",
 			"username": "minaandrawos",
 			"profile_url": "https://news.ycombinator.com/user?id=minaandrawos"
 		},
@@ -108,7 +98,6 @@
 		"title": "GoLand",
 		"url": "https://news.ycombinator.com/item?id=47802569",
 		"author": {
-			"name": "mukulmantosh",
 			"username": "mukulmantosh",
 			"profile_url": "https://news.ycombinator.com/user?id=mukulmantosh"
 		},
@@ -123,7 +112,6 @@
 		"title": "Ask HN: How to test a distributed Job Runner with an at-most once execution",
 		"url": "https://news.ycombinator.com/item?id=47779534",
 		"author": {
-			"name": "john-923",
 			"username": "john-923",
 			"profile_url": "https://news.ycombinator.com/user?id=john-923"
 		},
@@ -139,7 +127,6 @@
 		"url": "https://soppolang.dev/?2",
 		"original_url": "https://news.ycombinator.com/item?id=47729452",
 		"author": {
-			"name": "networked",
 			"username": "networked",
 			"profile_url": "https://news.ycombinator.com/user?id=networked"
 		},
@@ -154,7 +141,6 @@
 		"title": "Tell HN: Always ask \"is that how it works or\"?",
 		"url": "https://news.ycombinator.com/item?id=47708728",
 		"author": {
-			"name": "dakiol",
 			"username": "dakiol",
 			"profile_url": "https://news.ycombinator.com/user?id=dakiol"
 		},
@@ -171,7 +157,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47696189",
 		"image_url": "https://opengraph.githubassets.com/4b2112aa033439ecc80b6ca1dcb67342933438e1b8e218a9e9703c97bc22c693/golang/go/issues/77273",
 		"author": {
-			"name": "_ikke_",
 			"username": "_ikke_",
 			"profile_url": "https://news.ycombinator.com/user?id=_ikke_"
 		},
@@ -187,7 +172,6 @@
 		"url": "https://blog.mattsbit.co.uk/2026/04/06/systems-engineering-an-agent-thanks-to-the-world-of-golang/",
 		"original_url": "https://news.ycombinator.com/item?id=47661632",
 		"author": {
-			"name": "mrmattyboy",
 			"username": "mrmattyboy",
 			"profile_url": "https://news.ycombinator.com/user?id=mrmattyboy"
 		},
@@ -203,7 +187,6 @@
 		"url": "https://programmerscareer.com/golang-simd/",
 		"original_url": "https://news.ycombinator.com/item?id=47657752",
 		"author": {
-			"name": "djood",
 			"username": "djood",
 			"profile_url": "https://news.ycombinator.com/user?id=djood"
 		},
@@ -218,7 +201,6 @@
 		"title": "Ask HN: What is your dev set up like?",
 		"url": "https://news.ycombinator.com/item?id=47616250",
 		"author": {
-			"name": "break_the_bank",
 			"username": "break_the_bank",
 			"profile_url": "https://news.ycombinator.com/user?id=break_the_bank"
 		},
@@ -235,7 +217,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47603529",
 		"image_url": "https://thedream.work/static/og-image.png",
 		"author": {
-			"name": "vulk",
 			"username": "vulk",
 			"profile_url": "https://news.ycombinator.com/user?id=vulk"
 		},
@@ -250,7 +231,6 @@
 		"title": "Show HN: Bridging People Together via Podcasts",
 		"url": "https://news.ycombinator.com/item?id=47586188",
 		"author": {
-			"name": "fcpguru",
 			"username": "fcpguru",
 			"profile_url": "https://news.ycombinator.com/user?id=fcpguru"
 		},
@@ -266,7 +246,6 @@
 		"url": "https://twitter.com/lemire/status/2038320406432494059",
 		"original_url": "https://news.ycombinator.com/item?id=47584569",
 		"author": {
-			"name": "pjf",
 			"username": "pjf",
 			"profile_url": "https://news.ycombinator.com/user?id=pjf"
 		},
@@ -283,7 +262,6 @@
 		"original_url": "https://news.ycombinator.com/item?id=47555434",
 		"image_url": "https://opengraph.githubassets.com/0bd2754d5fd887c06af1e08462a16a4c0ce95f5fdcd17baf35db1a2ad940fb97/madflojo/go-style-agent-skill",
 		"author": {
-			"name": "madflojo",
 			"username": "madflojo",
 			"profile_url": "https://news.ycombinator.com/user?id=madflojo"
 		},
@@ -299,7 +277,6 @@
 		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
 		"original_url": "https://news.ycombinator.com/item?id=47518887",
 		"author": {
-			"name": "fanf2",
 			"username": "fanf2",
 			"profile_url": "https://news.ycombinator.com/user?id=fanf2"
 		},
@@ -314,7 +291,6 @@
 		"title": "Ask HN: Building a deterministic AI substrate on legacy hardware",
 		"url": "https://news.ycombinator.com/item?id=47516833",
 		"author": {
-			"name": "theantagonistai",
 			"username": "theantagonistai",
 			"profile_url": "https://news.ycombinator.com/user?id=theantagonistai"
 		},

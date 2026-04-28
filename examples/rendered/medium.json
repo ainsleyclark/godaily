@@ -1,18 +1,12 @@
 [
 	{
 		"source": "medium",
-<<<<<<< HEAD
-		"title": "Cold start mitigation strategies for Go services",
-		"url": "https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:1200/0*iqonU2Xm0zNFh07g",
-		"author": {
-			"name": "Yaninyz witty"
-		},
-=======
 		"title": "Stop Talking to Your AI and Start Giving It Hands: A Beginner’s Guide to MCP and Go",
 		"url": "https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qFyDBjMsLgsjorA6AhCorA.png",
-		"author": "Anna Sbrodova",
+		"author": {
+			"name": "Anna Sbrodova"
+		},
 		"snippet": "How to use Golang and the Model Context Protocol to automate your Google Cloud infrastructure. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -24,8 +18,9 @@
 		"title": "Cold start mitigation strategies for Go services",
 		"url": "https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:1200/0*iqonU2Xm0zNFh07g",
-		"author": "Yaninyz witty",
->>>>>>> main
+		"author": {
+			"name": "Yaninyz witty"
+		},
 		"snippet": "Lazy loading, warm pools and beyond: cold start mitigation in Go Continue reading on Dev Genius »",
 		"tag": "article",
 		"comments": 0,
@@ -37,13 +32,9 @@
 		"title": "The Hidden Costs of JSON in APIs: Why I Finally Ditched It for Internal Services",
 		"url": "https://medium.com/@erwindev/the-hidden-costs-of-json-in-apis-why-i-finally-ditched-it-for-internal-services-a7e7c4ab2640?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*Z_0mETHvKDv1xO8wspzNmg.png",
-<<<<<<< HEAD
 		"author": {
 			"name": "Erwin Hermanto"
 		},
-=======
-		"author": "Erwin Hermanto",
->>>>>>> main
 		"snippet": "It was 2 AM on a Tuesday when our monitoring dashboard lit up like a Christmas tree. Response times had spiked to 800ms — triple our usual… Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -55,13 +46,9 @@
 		"title": "Directed Acyclic Graph, Golang and Scheduling: What I Learned Building a Concurrent Task Scheduler",
 		"url": "https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*h4HkkqAbHuBpqzGJhjN7JA.png",
-<<<<<<< HEAD
 		"author": {
 			"name": "Iserganoff"
 		},
-=======
-		"author": "Iserganoff",
->>>>>>> main
 		"snippet": "A story about Kahn’s algorithm, atomic counters, and the quiet elegance of letting goroutines self-schedule. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -73,13 +60,9 @@
 		"title": "Go’s Interface System Is Different, and That Difference Is the Point",
 		"url": "https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1000/1*bRpUYV5lNXR_0eviFeabZA.png",
-<<<<<<< HEAD
 		"author": {
 			"name": "Shayan Holakouee"
 		},
-=======
-		"author": "Shayan Holakouee",
->>>>>>> main
 		"snippet": "Every language with interfaces or abstract types requires you to declare your intentions upfront. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -91,13 +74,9 @@
 		"title": "Autonomous Agent Networking in Distributed AI: Bypassing NAT and Centralized Brokers",
 		"url": "https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*KP8stEfAyfc7CprdKW2cgg.jpeg",
-<<<<<<< HEAD
 		"author": {
 			"name": "Philip Stayetski"
 		},
-=======
-		"author": "Philip Stayetski",
->>>>>>> main
 		"snippet": "The evolution of artificial intelligence is rapidly moving away from isolated conversational models toward decentralized, multi-agent… Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -109,13 +88,9 @@
 		"title": "Should Assignment Be an Expression?",
 		"url": "https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*OHnnYNUPKhJbVIEcFXhrrQ.png",
-<<<<<<< HEAD
 		"author": {
 			"name": "Narmin Aliyeva"
 		},
-=======
-		"author": "Narmin Aliyeva",
->>>>>>> main
 		"snippet": "Expressions produce values—for example, 3 + 4 evaluates to 7. If assignment is an expression, then it also produces a value, enabling… Continue reading on Stackademic »",
 		"tag": "article",
 		"comments": 0,
@@ -127,13 +102,9 @@
 		"title": "AI Didn’t Kill Engineering. It Moved Engineering Upstream.",
 		"url": "https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5",
 		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qTk_dSXD284Fz-RmjKnrFQ.png",
-<<<<<<< HEAD
 		"author": {
 			"name": "Oleg Ivanchenko"
 		},
-=======
-		"author": "Oleg Ivanchenko",
->>>>>>> main
 		"snippet": "\u003e How I use Claude Code, Go, oCMS, and an LLM Wiki to turn AI from a code generator into an engineering amplifier. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
@@ -167,22 +138,5 @@
 		"comments": 0,
 		"score": 0.25,
 		"published": "2026-04-27T19:01:08Z"
-<<<<<<< HEAD
-	},
-	{
-		"source": "medium",
-		"title": "Building an HTTP Server in Go — Understanding How the Web Actually Works",
-		"url": "https://medium.com/@dipakrasal2009/building-an-http-server-in-go-understanding-how-the-web-actually-works-c3be243fd5d9?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*Jok8pPZEi_0PJC1qz1bO3Q.png",
-		"author": {
-			"name": "Dipak Rasal"
-		},
-		"snippet": "A hands-on walkthrough of Go’s net/http package, HTTP requests, headers, body parsing, and more. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-27T18:51:27Z"
-=======
->>>>>>> main
 	}
 ]

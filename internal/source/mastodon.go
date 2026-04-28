@@ -92,7 +92,7 @@ func (s mastodonStatus) Transform() news.Item {
 			Name:     s.Account.DisplayName,
 			Username: s.Account.Username,
 		},
-		Snippet: s.Content,
+		Snippet:   s.Content,
 		ImageURL:  img,
 		Tag:       news.TagArticle,
 		Comments:  s.RepliesCount,
