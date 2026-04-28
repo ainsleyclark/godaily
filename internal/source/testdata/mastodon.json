@@ -1,0 +1,50 @@
+[
+  {
+    "id": "116481296577122189",
+    "created_at": "2026-04-28T08:05:33.000Z",
+    "url": "https://mastodon.world/@jobsfordevelopers/116481296525884754",
+    "content": "<p>SumUp is hiring Senior Backend Engineer</p><p>🔧 <a href=\"https://mastodon.world/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https:",
+    "replies_count": 0,
+    "favourites_count": 5,
+    "reblog": null,
+    "account": {
+      "username": "jobsfordevelopers",
+      "display_name": "Jobs for Developers"
+    },
+    "media_attachments": []
+  },
+  {
+    "id": "116481071732009342",
+    "created_at": "2026-04-28T07:08:23.336Z",
+    "url": "https://mastodon.social/@forge_cms/116481071732009342",
+    "content": "<p>Anthropic recommends rich tool semantics for MCP servers -- agents should know what fields mean without extra prompting.</p><p>Forge bakes this into the Go struct:</p><p>forge_description: &quot;1-",
+    "replies_count": 1,
+    "favourites_count": 7,
+    "reblog": null,
+    "account": {
+      "username": "forge_cms",
+      "display_name": "Forge CMS"
+    },
+    "media_attachments": [
+      {
+        "type": "image",
+        "url": "https://example.com/img.jpg",
+        "preview_url": "https://example.com/preview.jpg"
+      }
+    ]
+  },
+  {
+    "id": "116480099624556027",
+    "created_at": "2026-04-28T03:01:09.000Z",
+    "url": "https://goark.fedicity.net/@goark/116480099595958266",
+    "content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> ＞ Release v1.28.0 · uber-go/zap<br><a href=\"https://github.",
+    "replies_count": 0,
+    "favourites_count": 0,
+    "reblog": null,
+    "account": {
+      "username": "goark",
+      "display_name": "Goark"
+    },
+    "media_attachments": []
+  }
+]

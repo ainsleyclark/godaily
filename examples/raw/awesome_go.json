@@ -1,0 +1,1642 @@
+[
+	{
+		"sha": "05a987517e34d76afbd22d3460f7c5359fbee3b1",
+		"node_id": "C_kwDOAUivl9oAKDA1YTk4NzUxN2UzNGQ3NmFmYmQyMmQzNDYwZjdjNTM1OWZiZWUzYjE",
+		"commit": {
+			"author": {
+				"name": "Evgenii Orlov",
+				"email": "4623930+OrlovEvgeny@users.noreply.github.com",
+				"date": "2026-04-27T08:30:23Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-27T08:30:23Z"
+			},
+			"message": "Add lynxdb to databases (#6282)",
+			"tree": {
+				"sha": "97f19d5e9bf8da4d9695913e636229d68cbd166c",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/97f19d5e9bf8da4d9695913e636229d68cbd166c"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp7x6fCRC1aQ7uu5UhlAAA7yUQAAAA+tQlgrggvMOBnKQkApZZ\nbbGounoan7l+EwS+m4MNloiU8P0FaQjkQT/fmvbP/5KUgR6mystGv1ilRzxuOtvh\ncGure1VAed8vPorLMRr/Udq2t29nZNgDBRaon15esO61TktLHXqP8FcPDWYldjvt\nUPpu9Dzy2UahE4EFqaGs0qGDCHEiVORdt+4IexKTZX0Y6fqmsK4RCWlmiD14wbKc\nRfswcruKUOM3FLDGinX8n7R1Om2WxrZQU6jZ6Zq6mCMkcw0+ptONQYQmW2LKdiz4\nJ5744DBVy1/k3WatCpnATW3k4Igu26eH3plQvgNlb4HlyQjuPQ8ueZOBJNB9ndDu\nB32YMxAJpWkupfERPZmOQCnMPzfwMyeJqkzbIyEVC55aeMqaeggyr2AI94ag7rgU\n6ZtH+t7jXui9hiCMXODd5P0g57AL4TpwC7roS25FTMf38ZvE0+prX/+JB+VzL/Qj\nXsFYnFPjxoBe1G0WU/Vaxk/vvJtibtMmNIeR5GLVe7PB3II1Eafi4eXqevSJp8wG\nfJdPfXuqDScCpoDZtoqTTHIrl86a1d+8OA1l7RtAAbLGNmOx6PZTY/WciLybKThY\nZ5oGtWLM6V4yQIMf/roBDFSYLLdMNepDaHHxXQCFN5g5YfLTF+C3HzY7DXlXlJRN\nSBoBYeth/j1yUvhYA8EB\n=qmf7\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 97f19d5e9bf8da4d9695913e636229d68cbd166c\nparent a870df79861bdeadbc6e790122937cae34f35caa\nauthor Evgenii Orlov <4623930+OrlovEvgeny@users.noreply.github.com> 1777278623 +0200\ncommitter GitHub <noreply@github.com> 1777278623 +0000\n\nAdd lynxdb to databases (#6282)",
+				"verified_at": "2026-04-27T08:30:24Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+		"html_url": "https://github.com/avelino/awesome-go/commit/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/05a987517e34d76afbd22d3460f7c5359fbee3b1/comments",
+		"author": {
+			"login": "OrlovEvgeny",
+			"id": 4623930,
+			"node_id": "MDQ6VXNlcjQ2MjM5MzA=",
+			"avatar_url": "https://avatars.githubusercontent.com/u/4623930?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/OrlovEvgeny",
+			"html_url": "https://github.com/OrlovEvgeny",
+			"followers_url": "https://api.github.com/users/OrlovEvgeny/followers",
+			"following_url": "https://api.github.com/users/OrlovEvgeny/following{/other_user}",
+			"gists_url": "https://api.github.com/users/OrlovEvgeny/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/OrlovEvgeny/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/OrlovEvgeny/subscriptions",
+			"organizations_url": "https://api.github.com/users/OrlovEvgeny/orgs",
+			"repos_url": "https://api.github.com/users/OrlovEvgeny/repos",
+			"events_url": "https://api.github.com/users/OrlovEvgeny/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/OrlovEvgeny/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "a870df79861bdeadbc6e790122937cae34f35caa",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/a870df79861bdeadbc6e790122937cae34f35caa",
+				"html_url": "https://github.com/avelino/awesome-go/commit/a870df79861bdeadbc6e790122937cae34f35caa"
+			}
+		]
+	},
+	{
+		"sha": "a870df79861bdeadbc6e790122937cae34f35caa",
+		"node_id": "C_kwDOAUivl9oAKGE4NzBkZjc5ODYxYmRlYWRiYzZlNzkwMTIyOTM3Y2FlMzRmMzVjYWE",
+		"commit": {
+			"author": {
+				"name": "Guocheng Song",
+				"email": "songguocheng348@gmail.com",
+				"date": "2026-04-26T03:17:26Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-26T03:17:26Z"
+			},
+			"message": "docs: update NoKV description (#6280)",
+			"tree": {
+				"sha": "85f2bcad3485fad07569451a0b7837150dd01784",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/85f2bcad3485fad07569451a0b7837150dd01784"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/a870df79861bdeadbc6e790122937cae34f35caa",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp7YPGCRC1aQ7uu5UhlAAAiqcQABOhjLYzcCHmoL3dfpCHOCww\nz9Dv+K7LE7Za+j8sm9s0X1ijV+vYKQnTXNrNgFUSffOneaonQeW+jubT+yi5pSER\n6B1uVOfBObOKXBXasHtdSwd7n2lvO3IQgPqZM21kXHWhEUEkuchMaMnHs3qLNyy8\nMHJqXAigcMvtltlqMLMZdL5Tq0WFSQfpw3XNisyUn3BxDCjJbOALO/MD6B1pJDeA\ngR9dEZ4ZFYdHsWiuAKPLFVOh65AB1cALKnocr1XpjqhZRqsZel9y3tV8MpDWnkEs\nU0/F+SC6vQc5SuCI49IA+VaZo1LJE9ApSrPF21msXuW7SuXtf6NiaQOHmLJE9dZZ\nXUe2B9XiPeCAImPyK14bEphMjzAl0eujujnPpoGLGkMgweDFi1VLt2cfNYSRjoPH\nfQj/rAoYHIMi+D1YsmUwf9H3AIeFlOv0WQsjgTotEp4AHzLHmldZg9wVk2SekCP1\nDvwiRRWxm56i4rXo1YFs8QGJaFvP6ScrfJsarGKtkc8EGVg9STgvTifa0ThC2S1E\njVbm27NQnAdGsfM3sge+JpiwkbvJeMemTvgCGYkxMQ4WJZ1koJM7E7rn7FtLfeuS\nMBu5ThtrYkqkpL9reAxV/J4uZ+DakNqSjzOkDpfCNaa+47rVLiRW36AkN/BAABrL\nh6wERNix4g266x9Sz9wP\n=FqyD\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 85f2bcad3485fad07569451a0b7837150dd01784\nparent 012a1638a20c05e39e7adca1609fad296c342ec3\nauthor Guocheng Song <songguocheng348@gmail.com> 1777173446 +1000\ncommitter GitHub <noreply@github.com> 1777173446 +0000\n\ndocs: update NoKV description (#6280)",
+				"verified_at": "2026-04-26T03:17:27Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/a870df79861bdeadbc6e790122937cae34f35caa",
+		"html_url": "https://github.com/avelino/awesome-go/commit/a870df79861bdeadbc6e790122937cae34f35caa",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/a870df79861bdeadbc6e790122937cae34f35caa/comments",
+		"author": {
+			"login": "feichai0017",
+			"id": 132118805,
+			"node_id": "U_kgDOB9_5FQ",
+			"avatar_url": "https://avatars.githubusercontent.com/u/132118805?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/feichai0017",
+			"html_url": "https://github.com/feichai0017",
+			"followers_url": "https://api.github.com/users/feichai0017/followers",
+			"following_url": "https://api.github.com/users/feichai0017/following{/other_user}",
+			"gists_url": "https://api.github.com/users/feichai0017/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/feichai0017/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/feichai0017/subscriptions",
+			"organizations_url": "https://api.github.com/users/feichai0017/orgs",
+			"repos_url": "https://api.github.com/users/feichai0017/repos",
+			"events_url": "https://api.github.com/users/feichai0017/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/feichai0017/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "012a1638a20c05e39e7adca1609fad296c342ec3",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/012a1638a20c05e39e7adca1609fad296c342ec3",
+				"html_url": "https://github.com/avelino/awesome-go/commit/012a1638a20c05e39e7adca1609fad296c342ec3"
+			}
+		]
+	},
+	{
+		"sha": "012a1638a20c05e39e7adca1609fad296c342ec3",
+		"node_id": "C_kwDOAUivl9oAKDAxMmExNjM4YTIwYzA1ZTM5ZTdhZGNhMTYwOWZhZDI5NmMzNDJlYzM",
+		"commit": {
+			"author": {
+				"name": "Gabriele V.",
+				"email": "10689839+vibridi@users.noreply.github.com",
+				"date": "2026-04-23T12:58:40Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-23T12:58:40Z"
+			},
+			"message": "Add vibridi/gomock to Mock section (#6277)\n\n* Add vibridi/gomock to Mock section\n\n* Remove gock (https://github.com/h2non/gock)\n\nNot updated in a long time, issues are seemingly not responded to in a timely manner.",
+			"tree": {
+				"sha": "ab3be6043e96a16bc308c9b3c3e158123dbcfcd1",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/ab3be6043e96a16bc308c9b3c3e158123dbcfcd1"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/012a1638a20c05e39e7adca1609fad296c342ec3",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp6heACRC1aQ7uu5UhlAAAAvMQAFzlJhgux67bPJAQGmbXo3Bb\nE1CS+TsMwE/6mi7VY9J7YkiaxLopQCjRJIKf3NyCcxTzwvL6esu1iLtFeXUfj7Ff\nkRoMqXg/AFJa9dMx7SsfOD/QcRxvxiF/1fM31vVymG1wAnvTFEDxTjNAOyhEPnZp\nyYbdKBCJemqL1M6vg1G241l+H4G6Jrw1Gzf6W7JecsE+15oL6NLpAtlsOPoVv/7P\nj6w4KrcsQ2XQ06XeGZMULmKdVjHt6QwD4oCZ8EtuDWQAGVrf3o9KkstP+g/9y1Du\nuWD/kQak1Pt9780sUj0mbjFA4DQuWl8ixyzH+T8SpgokIcz8Hqn0o7dpTdiUXOzs\nMMQZdYEmKqVw+WuJwh1XsBpYPzS8Kd1+njsjj+/idmPFadI8gYsd70iFcqUlQ+wg\n3Hh0/Ut2y3cReOejxGNUgyLRrKWzVvhXs0Q6JnaAui0EjmWxwKaRkd/b6VNUZ4Lp\n9X6AaKwqDf1B5ZPa3Nw3LYL4ghgkji5U5t7uGmtp0l+unfjEHGA/qkYLBfLgWsu8\nsHPnn2aPOwrg6SrIuLQwo7GjOrYJqWNOMlV5XwHyt7dXhOkC6ltKjiDE6UQClncy\nneH6doWz/ay0Rtg+YaLJX7xa/lZOi5Cy1gil3P4GQ0JvnzEQpuqlxKWjTKVkCssP\n6UMB40f2iL+67z2BPBKU\n=AkjE\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree ab3be6043e96a16bc308c9b3c3e158123dbcfcd1\nparent dc5c2a5436a594b1b945075eb058316ff7c07a47\nauthor Gabriele V. <10689839+vibridi@users.noreply.github.com> 1776949120 +0200\ncommitter GitHub <noreply@github.com> 1776949120 +0000\n\nAdd vibridi/gomock to Mock section (#6277)\n\n* Add vibridi/gomock to Mock section\n\n* Remove gock (https://github.com/h2non/gock)\n\nNot updated in a long time, issues are seemingly not responded to in a timely manner.",
+				"verified_at": "2026-04-23T12:58:40Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/012a1638a20c05e39e7adca1609fad296c342ec3",
+		"html_url": "https://github.com/avelino/awesome-go/commit/012a1638a20c05e39e7adca1609fad296c342ec3",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/012a1638a20c05e39e7adca1609fad296c342ec3/comments",
+		"author": {
+			"login": "vibridi",
+			"id": 10689839,
+			"node_id": "MDQ6VXNlcjEwNjg5ODM5",
+			"avatar_url": "https://avatars.githubusercontent.com/u/10689839?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/vibridi",
+			"html_url": "https://github.com/vibridi",
+			"followers_url": "https://api.github.com/users/vibridi/followers",
+			"following_url": "https://api.github.com/users/vibridi/following{/other_user}",
+			"gists_url": "https://api.github.com/users/vibridi/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/vibridi/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/vibridi/subscriptions",
+			"organizations_url": "https://api.github.com/users/vibridi/orgs",
+			"repos_url": "https://api.github.com/users/vibridi/repos",
+			"events_url": "https://api.github.com/users/vibridi/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/vibridi/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "dc5c2a5436a594b1b945075eb058316ff7c07a47",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/dc5c2a5436a594b1b945075eb058316ff7c07a47",
+				"html_url": "https://github.com/avelino/awesome-go/commit/dc5c2a5436a594b1b945075eb058316ff7c07a47"
+			}
+		]
+	},
+	{
+		"sha": "dc5c2a5436a594b1b945075eb058316ff7c07a47",
+		"node_id": "C_kwDOAUivl9oAKGRjNWMyYTU0MzZhNTk0YjFiOTQ1MDc1ZWIwNTgzMTZmZjdjMDdhNDc",
+		"commit": {
+			"author": {
+				"name": "Jaison Erick",
+				"email": "jaisonreis@gmail.com",
+				"date": "2026-04-22T21:16:21Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-22T21:16:21Z"
+			},
+			"message": "Add macwifi (#6276)",
+			"tree": {
+				"sha": "7ed7564fa8c028be7b8150e4d0e64bb4ce6efce3",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/7ed7564fa8c028be7b8150e4d0e64bb4ce6efce3"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/dc5c2a5436a594b1b945075eb058316ff7c07a47",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp6TqlCRC1aQ7uu5UhlAAAZ9cQAFbF/VoMF3xPNLcko3/xrtWy\nbOfvi7SACf95STmE3pipn9A0EjcdKVFS4Kq+xyx2TZ7Ttm8oU+BGU9ciZxg+U9/o\nLWmlJFVgPJPSMgnPlf2A1xwPQlqbKEIRsFyOviU8TI3URf3sLYXnW1uxPnm5JXit\nzhtukdqSRG3cejRJ8381dAio7iQ8E5geIab+VjctgwcYcl1d3wO2OHeOEaxw7vEJ\n1RKWA5cIMdx/2f8s2BL2+u2a0pw+I+ge5A5UNQy594qP3ldpjGxQgFSMchKmI631\ncoAA4eH6fUNARFZroVZDIeESviGZ1KalZWeSzRoJYJS4CnYMHFdP9sFCCkGpFc33\nnUkqc1pdIMdCd/I/ZH8utnE9II2c/HDEyfbDNCkmej7GsWTkYKr9pdTWg0ig/M21\nGwVqZnoN+yuN6plWeWDXd1fBFWyTEOx+iVbSHtEhg7mRbLUswYLy3cpXbu2JG8Cd\nyQ8EgYVOq/07TLmUArlZP4J/3YH3TsB/AkEaDxD4swkhV04kx5gsNtjroSscoi7C\nSZelOZ9/LMo6lVQ8nHfnKjPK6/emjPJJflxUeBjdR3HJmTXJgWnL5ePhuITIXE9W\nAJX/6d8xME6ndY7c1eXwM7AP4/nQKe8hf+CPNs0HNOkzfYx7C7ZbONbvF7NQ9Yr3\nB8mQJqAEuRi8KFS3KYcA\n=Vw8z\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 7ed7564fa8c028be7b8150e4d0e64bb4ce6efce3\nparent 48b7b1fd78b530fba3838c3e65e4741ff544fc98\nauthor Jaison Erick <jaisonreis@gmail.com> 1776892581 -0300\ncommitter GitHub <noreply@github.com> 1776892581 +0000\n\nAdd macwifi (#6276)",
+				"verified_at": "2026-04-22T21:16:21Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/dc5c2a5436a594b1b945075eb058316ff7c07a47",
+		"html_url": "https://github.com/avelino/awesome-go/commit/dc5c2a5436a594b1b945075eb058316ff7c07a47",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/dc5c2a5436a594b1b945075eb058316ff7c07a47/comments",
+		"author": {
+			"login": "jaisonerick",
+			"id": 332253,
+			"node_id": "MDQ6VXNlcjMzMjI1Mw==",
+			"avatar_url": "https://avatars.githubusercontent.com/u/332253?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/jaisonerick",
+			"html_url": "https://github.com/jaisonerick",
+			"followers_url": "https://api.github.com/users/jaisonerick/followers",
+			"following_url": "https://api.github.com/users/jaisonerick/following{/other_user}",
+			"gists_url": "https://api.github.com/users/jaisonerick/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/jaisonerick/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/jaisonerick/subscriptions",
+			"organizations_url": "https://api.github.com/users/jaisonerick/orgs",
+			"repos_url": "https://api.github.com/users/jaisonerick/repos",
+			"events_url": "https://api.github.com/users/jaisonerick/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/jaisonerick/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+				"html_url": "https://github.com/avelino/awesome-go/commit/48b7b1fd78b530fba3838c3e65e4741ff544fc98"
+			}
+		]
+	},
+	{
+		"sha": "48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+		"node_id": "C_kwDOAUivl9oAKDQ4YjdiMWZkNzhiNTMwZmJhMzgzOGMzZTY1ZTQ3NDFmZjU0NGZjOTg",
+		"commit": {
+			"author": {
+				"name": "Sylvain Muller",
+				"email": "26261762+tigerwill90@users.noreply.github.com",
+				"date": "2026-04-22T19:45:42Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-22T19:45:42Z"
+			},
+			"message": "docs(routers): add fox HTTP router (#6020)",
+			"tree": {
+				"sha": "674eb3e3d254bb4d812c178ee311752007b367d8",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/674eb3e3d254bb4d812c178ee311752007b367d8"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp6SVmCRC1aQ7uu5UhlAAAbeUQAKxSEZa2XEjF5JN5TMaBaJl4\nloCob0IEe7Tfn+L0tPY/CFYKItaMhkQ3uOuACZ3qN+mdW1f4f+RwTwON5bfvaWvh\nT2SJbWmaMxHTrJ3BFwyWpkP/hdtMlKvYT63cSSDbP0aDHQaEFPuDwW/574azQuFt\nVHYiiHig8EUG/pGW9kAvDfNyaz9vx5tqFGEx866ALdX1MuPXaBqCC+VIG0nN6GZz\nd94iWpN813fCuLwzhdwAbMLfzX3/0uHZnDycZrBsXoP4bMlrJCg5QZ1xK05M99iL\n2b7T0GhlcvMI05ncimNBBKtuZ2Wui2QAWHZMKwKZq2stT/2Rycp3MqqlmUxz2bBR\n58o1rVgAEBua4VQ7UQ4aUIVmMdPrCERUCqj/UTzIeFYgMYhCMgMuvYDamBb7z7uT\nOn13lthoIjLrSQXtO6uydu0rRt76Ag0vGfx9jzKAcR1gCDMz6MToCROX3ZwFDsU4\n+vXPYhki1yogJhbxuUYyURUIB1i0JxHYv1xRhyGw2jdgV6AQHciti1OFPxRN6bni\nQ+we76EBdiXOoI/nnyo344dve5jv4jP+VCkF3KvxogBcIUvVj/fbEsJazxFlfh2V\nJdGbDvS2/wB36Q3Zt7QVn1GXTuoya6L3B7YUkLGLWFbe7G6UeDOuUncjKXApfQ53\nYvTO8cdv9wtgAlnYuJcR\n=O6+s\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 674eb3e3d254bb4d812c178ee311752007b367d8\nparent fb2bd48bd8810488147b21ff35439fa0fa9f39bb\nauthor Sylvain Muller <26261762+tigerwill90@users.noreply.github.com> 1776887142 +0200\ncommitter GitHub <noreply@github.com> 1776887142 +0000\n\ndocs(routers): add fox HTTP router (#6020)",
+				"verified_at": "2026-04-22T19:45:43Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+		"html_url": "https://github.com/avelino/awesome-go/commit/48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/48b7b1fd78b530fba3838c3e65e4741ff544fc98/comments",
+		"author": {
+			"login": "tigerwill90",
+			"id": 26261762,
+			"node_id": "MDQ6VXNlcjI2MjYxNzYy",
+			"avatar_url": "https://avatars.githubusercontent.com/u/26261762?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/tigerwill90",
+			"html_url": "https://github.com/tigerwill90",
+			"followers_url": "https://api.github.com/users/tigerwill90/followers",
+			"following_url": "https://api.github.com/users/tigerwill90/following{/other_user}",
+			"gists_url": "https://api.github.com/users/tigerwill90/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/tigerwill90/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/tigerwill90/subscriptions",
+			"organizations_url": "https://api.github.com/users/tigerwill90/orgs",
+			"repos_url": "https://api.github.com/users/tigerwill90/repos",
+			"events_url": "https://api.github.com/users/tigerwill90/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/tigerwill90/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+				"html_url": "https://github.com/avelino/awesome-go/commit/fb2bd48bd8810488147b21ff35439fa0fa9f39bb"
+			}
+		]
+	},
+	{
+		"sha": "fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+		"node_id": "C_kwDOAUivl9oAKGZiMmJkNDhiZDg4MTA0ODgxNDdiMjFmZjM1NDM5ZmEwZmE5ZjM5YmI",
+		"commit": {
+			"author": {
+				"name": "mike392",
+				"email": "englishman@tut.by",
+				"date": "2026-04-22T10:07:56Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-22T10:07:56Z"
+			},
+			"message": "Add tickstem/verify - email verification (syntax, MX, disposable, role-based) (#6274)\n\n* Add tickstem/verify to Email section\n\n* Add tickstem/verify to Email section\n\n* Add tickstem/verify to Email section\n\n---------\n\nCo-authored-by: mikhail.barsukou <m.barsukou@gmail.com>",
+			"tree": {
+				"sha": "7db948a2e6ec06efb5d3b6b13c68e89795f81c94",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/7db948a2e6ec06efb5d3b6b13c68e89795f81c94"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp6J38CRC1aQ7uu5UhlAAACzsQAFdRkYQ4zeEXTurnyGZqUTwk\nObiYdP0uHu/i/GnyYSaAU8kS2GklmUEHjvg9QDvmaSrKmDCbBiH+7MQMwL/eg1KD\nwCidghD7hWfe3MvPWQJiYdUrxiSXvyoj/6TL1BHTfP8e+3lmltNURrQfGFOY3fRA\nUqkhaWWgfxVZVUi4gf2SLDVXLiezchHlRTd2ryov3lBkyBqkPse3J0m115ccISe/\nRcLMQL6emxLtU1JlxvAQmWxG0CdUXbQaFQ0QWp6lFEBGV0z85vp9cB3R9pwfzJSH\npKd3kIVpVdmoAwE4NX2zKJmmFkQ4juY6pgRGpxZnLGLT9hWSwbTZA+uz6AHrNk+l\nb4yx7CI3HQLmxg5OnF2E8l0VTkOiq1qvEU+8R5lPLiHYfvhOpyjPxLm0GVp6IGIs\nbAMSDRjMxuWqoWyt11itB1GLRruw3tFvoMvypJFmi3UYUB/oz5uxh2K4M83zSvwR\nue3WAmps798Xfzfu8Uibz2FURuYAfLjWG/1Dh7UqaO9Gx/xaEDaef9SKPo7qsK0M\nfGkFYkm0tCBhQ+I2sX1o6d4vqW9gbhQyAnzQB83w7A1fDHwFEB57DOuGsbHNuFEp\naY2yvFGqKFeWkbcs2MNsIcpAW2mEtipkQtEioiO6ZZXVRSVK+RZaWdhHh7HrQqwp\nbwxMgeoHma6BQEEdUnUD\n=uqjG\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 7db948a2e6ec06efb5d3b6b13c68e89795f81c94\nparent 3156c0490f01527f606eabef86e16d1f8b872686\nauthor mike392 <englishman@tut.by> 1776852476 +0200\ncommitter GitHub <noreply@github.com> 1776852476 +0000\n\nAdd tickstem/verify - email verification (syntax, MX, disposable, role-based) (#6274)\n\n* Add tickstem/verify to Email section\n\n* Add tickstem/verify to Email section\n\n* Add tickstem/verify to Email section\n\n---------\n\nCo-authored-by: mikhail.barsukou <m.barsukou@gmail.com>",
+				"verified_at": "2026-04-22T10:07:56Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+		"html_url": "https://github.com/avelino/awesome-go/commit/fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/fb2bd48bd8810488147b21ff35439fa0fa9f39bb/comments",
+		"author": {
+			"login": "mike392",
+			"id": 16647651,
+			"node_id": "MDQ6VXNlcjE2NjQ3NjUx",
+			"avatar_url": "https://avatars.githubusercontent.com/u/16647651?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/mike392",
+			"html_url": "https://github.com/mike392",
+			"followers_url": "https://api.github.com/users/mike392/followers",
+			"following_url": "https://api.github.com/users/mike392/following{/other_user}",
+			"gists_url": "https://api.github.com/users/mike392/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/mike392/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/mike392/subscriptions",
+			"organizations_url": "https://api.github.com/users/mike392/orgs",
+			"repos_url": "https://api.github.com/users/mike392/repos",
+			"events_url": "https://api.github.com/users/mike392/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/mike392/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "3156c0490f01527f606eabef86e16d1f8b872686",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/3156c0490f01527f606eabef86e16d1f8b872686",
+				"html_url": "https://github.com/avelino/awesome-go/commit/3156c0490f01527f606eabef86e16d1f8b872686"
+			}
+		]
+	},
+	{
+		"sha": "3156c0490f01527f606eabef86e16d1f8b872686",
+		"node_id": "C_kwDOAUivl9oAKDMxNTZjMDQ5MGYwMTUyN2Y2MDZlYWJlZjg2ZTE2ZDFmOGI4NzI2ODY",
+		"commit": {
+			"author": {
+				"name": "mike392",
+				"email": "englishman@tut.by",
+				"date": "2026-04-21T16:45:51Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-21T16:45:51Z"
+			},
+			"message": "feat: add tickstem/cron to Job Scheduler (#6272)\n\nCo-authored-by: mikhail.barsukou <m.barsukou@gmail.com>",
+			"tree": {
+				"sha": "320504f9c0bf1a52e7e71c8c9e616ce04014cf48",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/320504f9c0bf1a52e7e71c8c9e616ce04014cf48"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/3156c0490f01527f606eabef86e16d1f8b872686",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp56m/CRC1aQ7uu5UhlAAAA+QQAI/odVUivay4UsI+6k6o/N42\ni67m+0eZJQllw1UPvTT7B3ZLFaxLT6cZGMED/ksAeaIo/WM3i0PZysE7anSmeQ8y\ndI5m+BYD9XRHPI5uUZMaKIWCuIvYV5EnIFgc5NvrMzB5wmFOJA4dYK7yYWviN0ua\n5NuKvj0hnydZEB5xscWIFoMWoENC6wyQ0MINIY5OH/Gfug9aUc4VV7Ebq7L8Fr9I\n6Z7eLoym2mQOveOifaLJJAANtTwfzWgw6hgRKsucfN8Wtye8fbhMow9gVJ8Ijy0X\nb1OzU/QlKIPKRVyeEu5GHDK7mgaRPxY3HO+aR+NLw5Vq41fwllr1jFqGBvQymwXm\nVmOdfbJv4ajz5Op76gzlCVXtk50BSglfuuEwpOC9mHs8NpugsKjYcn/71xfhHqAp\nUdpOnSGFpaoHzmOc0WtIZjx5yK5+jGGCzphzKz3e6yzJehCA6l818HATuhqgYsm+\nWo5jytJs1lbGZyPL2Zz5dPFJiG2/DRAO1UznA0kN9A8gJuY3wLsbcUI2wM7FR1v0\nTYKk+Ia9cR1SoCUHfL7VXXjyT/f82RNph3TcsfsZV0de3ZH1kTvkCWeGOlGw0kqM\ntldhpO4c2SHYSbtJNr0SMt17Xvy/D/MSXaDtu7M6rm6sFfETml0Q3oAb9CbAHhsU\nhXaMqrowdv8WiikRne48\n=ST7k\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 320504f9c0bf1a52e7e71c8c9e616ce04014cf48\nparent 47c4e6969bd157125a09cf3bea68e2feeeba0417\nauthor mike392 <englishman@tut.by> 1776789951 +0200\ncommitter GitHub <noreply@github.com> 1776789951 +0000\n\nfeat: add tickstem/cron to Job Scheduler (#6272)\n\nCo-authored-by: mikhail.barsukou <m.barsukou@gmail.com>",
+				"verified_at": "2026-04-21T16:45:52Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/3156c0490f01527f606eabef86e16d1f8b872686",
+		"html_url": "https://github.com/avelino/awesome-go/commit/3156c0490f01527f606eabef86e16d1f8b872686",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/3156c0490f01527f606eabef86e16d1f8b872686/comments",
+		"author": {
+			"login": "mike392",
+			"id": 16647651,
+			"node_id": "MDQ6VXNlcjE2NjQ3NjUx",
+			"avatar_url": "https://avatars.githubusercontent.com/u/16647651?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/mike392",
+			"html_url": "https://github.com/mike392",
+			"followers_url": "https://api.github.com/users/mike392/followers",
+			"following_url": "https://api.github.com/users/mike392/following{/other_user}",
+			"gists_url": "https://api.github.com/users/mike392/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/mike392/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/mike392/subscriptions",
+			"organizations_url": "https://api.github.com/users/mike392/orgs",
+			"repos_url": "https://api.github.com/users/mike392/repos",
+			"events_url": "https://api.github.com/users/mike392/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/mike392/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "47c4e6969bd157125a09cf3bea68e2feeeba0417",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/47c4e6969bd157125a09cf3bea68e2feeeba0417",
+				"html_url": "https://github.com/avelino/awesome-go/commit/47c4e6969bd157125a09cf3bea68e2feeeba0417"
+			}
+		]
+	},
+	{
+		"sha": "47c4e6969bd157125a09cf3bea68e2feeeba0417",
+		"node_id": "C_kwDOAUivl9oAKDQ3YzRlNjk2OWJkMTU3MTI1YTA5Y2YzYmVhNjhlMmZlZWViYTA0MTc",
+		"commit": {
+			"author": {
+				"name": "Dhananjay Mishra",
+				"email": "technicaldmcontact@gmail.com",
+				"date": "2026-04-21T10:18:59Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-21T10:18:59Z"
+			},
+			"message": "Add NotNet framework for building RESTful APIs (#6270)",
+			"tree": {
+				"sha": "6ad17e3132f625492976305ce9614e995a85e5c2",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/6ad17e3132f625492976305ce9614e995a85e5c2"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/47c4e6969bd157125a09cf3bea68e2feeeba0417",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp508TCRC1aQ7uu5UhlAAALi0QABMWikE9UDeOVoXA5jE8l7lO\nogRGt8a0cmIOpZlx4sZHgOsaw/R4Ev6ycRhTuCNN5kUCEj+ZvKQq59AZsTfuCRNJ\n8a2ukKzZ9ABiXPiSR+lXXpVRYlMXIKJwPcM5XEp9KQNBGhCw69Cqfs1TMesg+Hz0\nX3z4b4itoXrpa1OVXYe7iq1SbMhojKga3SZALJxbYsJDTSkWruJRmFKmrCZ+kYgG\njmtRhqTGVVOuT9JiOYNAYyThIqV+i3jLcQhk8i9e13qv0hTt7u4hFaTsSUjoLrG8\ny3EwCbwjBfSh3xqMsf26sIeG8jIDGz9CstjMDHnrqoFbPzehJ73tx50U+N0pI/VT\n8sfSjeN6HTaPCbL/8R2g88wt+rkpWhM3e7aUQZpTMdWBBUaOcwG2LnANxg2/b7HT\nzKuTcNQ028NXlP+ii49f9pbNwVPAdTmPPAgmhqP63AnCpnOC4ZexUl/7MduAyCem\njwCxU/jgURfFxBaGT+OXrknLt4S+2VHWAyChWyUv9no8zPXN15LgcAlNQawItchv\n+utPsduPiu12Na9hi3R7x0lIs9hzh/MLmuvYcLO0tzEnOSlFWfHEO9MT5qGRFYMy\n9+fjNPaotf4lEQbTHgfsNvF0BqvErwZCmvYt4nb33BPlqlZ4NzgcXd1Cx1mDbN8t\ni0YktnwMYF9JTvpipCIr\n=rrtx\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 6ad17e3132f625492976305ce9614e995a85e5c2\nparent fb1be1186c0545f99ba1a03e9d1ca40dc2319b67\nauthor Dhananjay Mishra <technicaldmcontact@gmail.com> 1776766739 +0530\ncommitter GitHub <noreply@github.com> 1776766739 +0000\n\nAdd NotNet framework for building RESTful APIs (#6270)",
+				"verified_at": "2026-04-21T10:18:59Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/47c4e6969bd157125a09cf3bea68e2feeeba0417",
+		"html_url": "https://github.com/avelino/awesome-go/commit/47c4e6969bd157125a09cf3bea68e2feeeba0417",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/47c4e6969bd157125a09cf3bea68e2feeeba0417/comments",
+		"author": {
+			"login": "Not-Dhananjay-Mishra",
+			"id": 218332346,
+			"node_id": "U_kgDODQN8ug",
+			"avatar_url": "https://avatars.githubusercontent.com/u/218332346?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/Not-Dhananjay-Mishra",
+			"html_url": "https://github.com/Not-Dhananjay-Mishra",
+			"followers_url": "https://api.github.com/users/Not-Dhananjay-Mishra/followers",
+			"following_url": "https://api.github.com/users/Not-Dhananjay-Mishra/following{/other_user}",
+			"gists_url": "https://api.github.com/users/Not-Dhananjay-Mishra/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/Not-Dhananjay-Mishra/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/Not-Dhananjay-Mishra/subscriptions",
+			"organizations_url": "https://api.github.com/users/Not-Dhananjay-Mishra/orgs",
+			"repos_url": "https://api.github.com/users/Not-Dhananjay-Mishra/repos",
+			"events_url": "https://api.github.com/users/Not-Dhananjay-Mishra/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/Not-Dhananjay-Mishra/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+				"html_url": "https://github.com/avelino/awesome-go/commit/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67"
+			}
+		]
+	},
+	{
+		"sha": "fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+		"node_id": "C_kwDOAUivl9oAKGZiMWJlMTE4NmMwNTQ1Zjk5YmExYTAzZTlkMWNhNDBkYzIzMTliNjc",
+		"commit": {
+			"author": {
+				"name": "Mutasem Kharma",
+				"email": "140179052+Mutasem-mk4@users.noreply.github.com",
+				"date": "2026-04-19T22:35:49Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-19T22:35:49Z"
+			},
+			"message": "Add gspy to Security section (#6263)",
+			"tree": {
+				"sha": "6d684e4f40895ef2766d5ac334a644bcd6664f1b",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/6d684e4f40895ef2766d5ac334a644bcd6664f1b"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp5VjFCRC1aQ7uu5UhlAAAGtMQAABvthe9oYyfp7VGMOpN18iM\nOocY9NyjJ+5DXRohzdEFix9qgq5P8Ou4Wlo0+QoJAPe+XMX+P8lEnhLhl2E1itFz\ny9ITxkrYsNw//xPNAlEpHx0KIvAM5nrNE2A48bBl1VmGe8U2JZLAOGvDlPHP5AYx\nW3rvQLaq4PIpyZ81hnLd2uWgAIVzJxOSrPJkQjvJskFfCnq9f7qtPV8APECHqj8m\ntzUiRzFszY/SRaDhSP7UjYvoPRYEtsZ4lJ3ujQ5XXoFar9LawDgDd+W7r1t43gGU\nJqjXKP6VdTVDo/lJpIT0Dn8bbLGg+1Ik/1eodubLTAl/VZTJNFXHeB5ORcd1d/R8\nWio9Os7aK80TJuOZpLUebRJWm+XP5hlW2QrxFUyU20uHh/QrCQ3FrgdTzPfPXyke\n0qQj/vTibSR3zRnGRCNQ5KzzY+cT3d8qX35yyFC++oPMnXk4O6xD6Tnl99pJ0ime\nf0vGoXDIG+aTMq7DAHavw7dDzXxij96FxtOOI11eDQOtLGLnHcsFg/u/CrW4Mv2k\nzmCvNjPHKUFymv+kapzbMrhT2t49JznEAom8UbM9/FTQ489nv2l+5pW7FsfKrbGI\nIiTlGkUknHKCgUvPlRT5VtbP0zcgokf+mgi80tE18+gFWfbZbBWueVJuWQB4ePNs\nUXD+L6QqheEmpQzp10go\n=1/4U\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 6d684e4f40895ef2766d5ac334a644bcd6664f1b\nparent 78a453a9365c21bd05caafc1a4668abb7c839a85\nauthor Mutasem Kharma <140179052+Mutasem-mk4@users.noreply.github.com> 1776638149 +0300\ncommitter GitHub <noreply@github.com> 1776638149 +0000\n\nAdd gspy to Security section (#6263)",
+				"verified_at": "2026-04-19T22:35:50Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+		"html_url": "https://github.com/avelino/awesome-go/commit/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67/comments",
+		"author": {
+			"login": "Mutasem-mk4",
+			"id": 140179052,
+			"node_id": "U_kgDOCFr2bA",
+			"avatar_url": "https://avatars.githubusercontent.com/u/140179052?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/Mutasem-mk4",
+			"html_url": "https://github.com/Mutasem-mk4",
+			"followers_url": "https://api.github.com/users/Mutasem-mk4/followers",
+			"following_url": "https://api.github.com/users/Mutasem-mk4/following{/other_user}",
+			"gists_url": "https://api.github.com/users/Mutasem-mk4/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/Mutasem-mk4/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/Mutasem-mk4/subscriptions",
+			"organizations_url": "https://api.github.com/users/Mutasem-mk4/orgs",
+			"repos_url": "https://api.github.com/users/Mutasem-mk4/repos",
+			"events_url": "https://api.github.com/users/Mutasem-mk4/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/Mutasem-mk4/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "78a453a9365c21bd05caafc1a4668abb7c839a85",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/78a453a9365c21bd05caafc1a4668abb7c839a85",
+				"html_url": "https://github.com/avelino/awesome-go/commit/78a453a9365c21bd05caafc1a4668abb7c839a85"
+			}
+		]
+	},
+	{
+		"sha": "78a453a9365c21bd05caafc1a4668abb7c839a85",
+		"node_id": "C_kwDOAUivl9oAKDc4YTQ1M2E5MzY1YzIxYmQwNWNhYWZjMWE0NjY4YWJiN2M4MzlhODU",
+		"commit": {
+			"author": {
+				"name": "matthias",
+				"email": "35371986+matzehuels@users.noreply.github.com",
+				"date": "2026-04-19T16:03:07Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-19T16:03:07Z"
+			},
+			"message": "update stacktower repository link (#6260)\n\nPoint the stacktower entry to the new GitHub org URL so the awesome-go reference uses the canonical repository path.\n\nMade-with: Cursor",
+			"tree": {
+				"sha": "b3d9aff97e2f0ebb24b5cfe49c2f5d6054c96ce4",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/b3d9aff97e2f0ebb24b5cfe49c2f5d6054c96ce4"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/78a453a9365c21bd05caafc1a4668abb7c839a85",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp5Py7CRC1aQ7uu5UhlAAAE6wQAKlihL1QVqlu7xG1mbBhyCY9\nRJUMF/urldhMeXeYbgDmTNGUTqC/MMkTjadXP977XfuFPdezLJeYIUOIqYT4Yb5M\nr0uBvGqYPyjxPQfhNkcwv1pEQ/keoNFJ1J705wgdhjJBz+J3x7LG9xno5sKzVLzt\n5VfSULqnQo0OFaKBRLdaHA61VPh2hFithFGVMkRvEvhSZo5nzMGrbRuY5rM7H40S\nVpDTrUOmPzpo9T8ZWNtyksMaPbjQUUDrOCmdxAV416sv6PZIkwt1wjYx8rRQo8Q1\nIOPBq37WVe3MSnEb13YBQfRz2LiCnLzuPWRgVtlmMrFv66Mfobdhtoef76FUHL/X\nmzxi6YizeDk0LB2pmNdi0ONXEOoXE6WgfyPmew1ff8cqGjErOQmpO/OpcKZXV+Bi\nYOhgY3FOjF5iudb9QYTMcFMC7czfvYCOmuRA/o6R92GJZd5vGeq8falK3gZsDqjg\nMP5bPP8T8d+no7OEV3xRVHlMcwYnMD4ZDz+fBf64F0wXKMNORl8NcYFl8jYz9RnR\n0xCShhE8PdEVTQnP7gDfPQICYeWU1yZFo24l7Ojkp6lphhwSS+OPGddIcmCzXYF6\nk6azERmntXtHx6FeATqvJqxAP+8+u2ixWba4JwNVRkcY5afjJ0P/h+fFlOmUhImC\nUK85Q6zJM0c0TCsUj1aF\n=agud\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree b3d9aff97e2f0ebb24b5cfe49c2f5d6054c96ce4\nparent 3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee\nauthor matthias <35371986+matzehuels@users.noreply.github.com> 1776614587 -0400\ncommitter GitHub <noreply@github.com> 1776614587 +0000\n\nupdate stacktower repository link (#6260)\n\nPoint the stacktower entry to the new GitHub org URL so the awesome-go reference uses the canonical repository path.\n\nMade-with: Cursor",
+				"verified_at": "2026-04-19T16:03:07Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/78a453a9365c21bd05caafc1a4668abb7c839a85",
+		"html_url": "https://github.com/avelino/awesome-go/commit/78a453a9365c21bd05caafc1a4668abb7c839a85",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/78a453a9365c21bd05caafc1a4668abb7c839a85/comments",
+		"author": {
+			"login": "matzehuels",
+			"id": 35371986,
+			"node_id": "MDQ6VXNlcjM1MzcxOTg2",
+			"avatar_url": "https://avatars.githubusercontent.com/u/35371986?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/matzehuels",
+			"html_url": "https://github.com/matzehuels",
+			"followers_url": "https://api.github.com/users/matzehuels/followers",
+			"following_url": "https://api.github.com/users/matzehuels/following{/other_user}",
+			"gists_url": "https://api.github.com/users/matzehuels/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/matzehuels/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/matzehuels/subscriptions",
+			"organizations_url": "https://api.github.com/users/matzehuels/orgs",
+			"repos_url": "https://api.github.com/users/matzehuels/repos",
+			"events_url": "https://api.github.com/users/matzehuels/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/matzehuels/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+				"html_url": "https://github.com/avelino/awesome-go/commit/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee"
+			}
+		]
+	},
+	{
+		"sha": "3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+		"node_id": "C_kwDOAUivl9oAKDNiOWI1NTAxN2FkOGZmZWZkM2EyMmQ3NThkNGI0YzY4ZTExYjkwZWU",
+		"commit": {
+			"author": {
+				"name": "Yuri Zinchenko",
+				"email": "ymz.ncnk@outlook.com",
+				"date": "2026-04-19T00:47:24Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-19T00:47:24Z"
+			},
+			"message": "Add mus-go to Serialization (#6257)",
+			"tree": {
+				"sha": "8e25b5f79d6fe237e8241e1489d42935590e79f5",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/8e25b5f79d6fe237e8241e1489d42935590e79f5"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp5CYcCRC1aQ7uu5UhlAAAaFYQAEXMtKCGb+HTRNTeMYlyRWm7\nqoMUefke85f2IJR3/7ksTlhTdDt7BstqwoqQumSQTj9oIdaIMTl1GhxsxooJ6N9K\nT5JCyI0JPLbRSfxFB2/sQHiAqMXVXb1WNj6JTnvTP3qHIr3GJ39DCm4oA0UmoVF2\nU4Bbx7Wl87D1wSdFeGNPQsobUINmXYcK9NOfo5xwYBNc5ZiBW4XRSMrxpowNsQ67\nLl7B7r1ksb7QVEAfFA2ZeBn4ckO79PgWTtzXlDYIaGGumXosClpTV35pcpqx9cN2\nrJWk3D3aDvi3Yx00N3WFpDGmJUkSHs/4E54+t3Xv6B3egzdh0QE8v4MIw3qX6hvv\nqJyIdzuKkHzqJbpFhbHQhT5KGc/ue49MxRhFTxdY0Orvg5vcF/9Co31D+4u6WRyS\nTgHg6zT3rwimHApw65vgchwKshEhdC0UUPBMSzipF+Ncwr3gBgBgUqtjnDzXWdvm\n87aJ8b0sohwwxunHfu5PViyM8/Pgy6l6AliLOrxRizL0G47j3844B9br6fWBXUqs\n1x+zkgOadVkrijqkrmP3trx+9nvsOREc7KEdONu3AeaLKNuNJ4lNk3i5AUQolIAa\nsRLuebL9FV8ApNygcbxkGAqKZTCwZDUSDmeRvFcOeYpyIPHomRBVrYjfojao/0ua\nOUtB3/m+wAzMVpHvRkr0\n=gPvq\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 8e25b5f79d6fe237e8241e1489d42935590e79f5\nparent cf53a7406542b7e64eaa1ae2fc630803d5d7baa5\nauthor Yuri Zinchenko <ymz.ncnk@outlook.com> 1776559644 +0100\ncommitter GitHub <noreply@github.com> 1776559644 +0000\n\nAdd mus-go to Serialization (#6257)",
+				"verified_at": "2026-04-19T00:47:25Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+		"html_url": "https://github.com/avelino/awesome-go/commit/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee/comments",
+		"author": {
+			"login": "ymz-ncnk",
+			"id": 84965459,
+			"node_id": "MDQ6VXNlcjg0OTY1NDU5",
+			"avatar_url": "https://avatars.githubusercontent.com/u/84965459?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/ymz-ncnk",
+			"html_url": "https://github.com/ymz-ncnk",
+			"followers_url": "https://api.github.com/users/ymz-ncnk/followers",
+			"following_url": "https://api.github.com/users/ymz-ncnk/following{/other_user}",
+			"gists_url": "https://api.github.com/users/ymz-ncnk/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/ymz-ncnk/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/ymz-ncnk/subscriptions",
+			"organizations_url": "https://api.github.com/users/ymz-ncnk/orgs",
+			"repos_url": "https://api.github.com/users/ymz-ncnk/repos",
+			"events_url": "https://api.github.com/users/ymz-ncnk/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/ymz-ncnk/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+				"html_url": "https://github.com/avelino/awesome-go/commit/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5"
+			}
+		]
+	},
+	{
+		"sha": "cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+		"node_id": "C_kwDOAUivl9oAKGNmNTNhNzQwNjU0MmI3ZTY0ZWFhMWFlMmZjNjMwODAzZDVkN2JhYTU",
+		"commit": {
+			"author": {
+				"name": "Yuri Zinchenko",
+				"email": "ymz.ncnk@outlook.com",
+				"date": "2026-04-18T20:26:07Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-18T20:26:07Z"
+			},
+			"message": "Add cmd-stream-go to Distributed Systems (#6256)",
+			"tree": {
+				"sha": "6b001a75a5e56a88dc27050062d11b93820be4ef",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/6b001a75a5e56a88dc27050062d11b93820be4ef"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4+jfCRC1aQ7uu5UhlAAAV9AQADIsp1PYzk4daHk1uh2m4whR\nQ+awacL+EmO41TTys4HQBZDB3/9xXjzTOUzgwf60ujcEIF1odfsk7zQGsA3h+jbf\nE2BchYF8MX8u6yfOrTUnt6f6tQFBeUOX8gMJt2msPJI5weEa8JRK3n2UwZWtE8PT\nvrbUXQ3EyqMiTqiX7p5dc1AFYHTUgxgYSvg400C/a7l6vwJ+9RPSnxPtS3MiRJtd\njX9vTfwX0YrAajyWeY4AtBiwJyRNCz2c6GD/oj/Eivd4N7yiYKlk2vTnbo/Sr9sm\nK95wimgXkkbDxaVMcJumlOqBQb0s3Yv23IOO3t6Ngli38Z9L3Xkf8KkES12AXede\n17yEuScJBENKYWA+CPZXwygbCZbSSLrOIv9lrahAKCq12utlaBxJPDMIKXGrMx6h\naT/KDvET087posPI++qAdT2K3ZFDdqj9pdSCe//XpX3eBgm3UMKpuAe15cj25A4t\nlMU7hfJ45CjPCE+P7MVOEbKlvdkJkoZVKkQ7zkcKhAUKblesf3cQPAc2C4AghgAO\nSlI3/geAfEkBQNmO+a2j+H6GVMZBdhb2qzz5FBzUGw7cl5xIDOdRhTS3HoG9pWzq\nwF+DSF/fMs4OTCgm53RSRAei4X+DWc/oUiBGuZe7c1KDs9I1oc45Nl2+ndy+inQb\npYzO++hrxXjITWGniILK\n=h/J+\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 6b001a75a5e56a88dc27050062d11b93820be4ef\nparent c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999\nauthor Yuri Zinchenko <ymz.ncnk@outlook.com> 1776543967 +0100\ncommitter GitHub <noreply@github.com> 1776543967 +0000\n\nAdd cmd-stream-go to Distributed Systems (#6256)",
+				"verified_at": "2026-04-18T20:26:07Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+		"html_url": "https://github.com/avelino/awesome-go/commit/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5/comments",
+		"author": {
+			"login": "ymz-ncnk",
+			"id": 84965459,
+			"node_id": "MDQ6VXNlcjg0OTY1NDU5",
+			"avatar_url": "https://avatars.githubusercontent.com/u/84965459?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/ymz-ncnk",
+			"html_url": "https://github.com/ymz-ncnk",
+			"followers_url": "https://api.github.com/users/ymz-ncnk/followers",
+			"following_url": "https://api.github.com/users/ymz-ncnk/following{/other_user}",
+			"gists_url": "https://api.github.com/users/ymz-ncnk/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/ymz-ncnk/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/ymz-ncnk/subscriptions",
+			"organizations_url": "https://api.github.com/users/ymz-ncnk/orgs",
+			"repos_url": "https://api.github.com/users/ymz-ncnk/repos",
+			"events_url": "https://api.github.com/users/ymz-ncnk/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/ymz-ncnk/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+				"html_url": "https://github.com/avelino/awesome-go/commit/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999"
+			}
+		]
+	},
+	{
+		"sha": "c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+		"node_id": "C_kwDOAUivl9oAKGMxYzVjYjRlNGU2YjFiYzUzYmExMDEzZDkyZTU3NjRmNjk0OWQ5OTk",
+		"commit": {
+			"author": {
+				"name": "Alejandro",
+				"email": "jy4fwdd4b7@privaterelay.appleid.com",
+				"date": "2026-04-18T19:05:46Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-18T19:05:46Z"
+			},
+			"message": "Add git-courer to Version Control (#6255)\n\nCo-authored-by: Alejandro-M-P <jyfwdd4b7@privaterelay.appleid.com>",
+			"tree": {
+				"sha": "5411f57419abd3c0350fba97673bf4345fc4183e",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/5411f57419abd3c0350fba97673bf4345fc4183e"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp49YKCRC1aQ7uu5UhlAAAb2EQAFiy2v8psAbmPvREnMylTkts\nr1tDCKMmcb2ByGixx3g77s8KHpdjLHbAc/CiJxX123WOZCqbBcdHWeEAWonzb3IO\nCDxHF5E1JNpbPN3xTQsyuwqpY8Eu5fs7ydHM+Q/1OTGRbFah4+YlrHzlALDaXVuB\n/p/dK0JAkCXRqS2+GMphUexxGOjAcWS55O1vv7yQ72Qwhsxo+tFW/R7DfWojb8Pp\nGqM86IfQm93874c4Km5ghwC1QBjHXdqMTIET0AyyzcWmcNiwkjv5ZW1wIjugDV+Y\nAXWxb7QM0eJIDujgwmIZB3M2cSkqpp1bAT7j/lEkYal8C0w9+KpA31/sxR3SES9S\n6o0iNXzzUXAEj1RC/KGdABdmOBN7JbUtOA+cAxni6K8awXZdj/sFFgWfxdWfw+MI\nALEUcX8v0bE7v0JzGpC0GYZOxcYQ/IM6EYgFQkBa/5++aYLI/g/v/sQrkk3JCoKq\nkgHMnElZ3E3KwFtX+WEwkRa4PDTdJy1wYj+QTTHqYGcly2YSomicq2PY8Fs+G2C0\n56ktDJeLLWznB8l9Bqjy0vPCNc1VIVvCk5wfHqWrcMUUPAkpif37gx7CxRibeP74\nQ+5YvByMz0l8G7EiRf6VySU8GSviUM68gESUBbDY6GcFELFPT6XMj3m2bADH+EkW\nfHZqPurRBKdiTmv3V/m1\n=z7QM\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 5411f57419abd3c0350fba97673bf4345fc4183e\nparent 9bb38d8850d783798d7b2e7a87e5e6286b500116\nauthor Alejandro <jy4fwdd4b7@privaterelay.appleid.com> 1776539146 +0200\ncommitter GitHub <noreply@github.com> 1776539146 +0000\n\nAdd git-courer to Version Control (#6255)\n\nCo-authored-by: Alejandro-M-P <jyfwdd4b7@privaterelay.appleid.com>",
+				"verified_at": "2026-04-18T19:05:47Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+		"html_url": "https://github.com/avelino/awesome-go/commit/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999/comments",
+		"author": {
+			"login": "Alejandro-M-P",
+			"id": 239351098,
+			"node_id": "U_kgDODkQ1Og",
+			"avatar_url": "https://avatars.githubusercontent.com/u/239351098?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/Alejandro-M-P",
+			"html_url": "https://github.com/Alejandro-M-P",
+			"followers_url": "https://api.github.com/users/Alejandro-M-P/followers",
+			"following_url": "https://api.github.com/users/Alejandro-M-P/following{/other_user}",
+			"gists_url": "https://api.github.com/users/Alejandro-M-P/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/Alejandro-M-P/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/Alejandro-M-P/subscriptions",
+			"organizations_url": "https://api.github.com/users/Alejandro-M-P/orgs",
+			"repos_url": "https://api.github.com/users/Alejandro-M-P/repos",
+			"events_url": "https://api.github.com/users/Alejandro-M-P/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/Alejandro-M-P/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "9bb38d8850d783798d7b2e7a87e5e6286b500116",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/9bb38d8850d783798d7b2e7a87e5e6286b500116",
+				"html_url": "https://github.com/avelino/awesome-go/commit/9bb38d8850d783798d7b2e7a87e5e6286b500116"
+			}
+		]
+	},
+	{
+		"sha": "9bb38d8850d783798d7b2e7a87e5e6286b500116",
+		"node_id": "C_kwDOAUivl9oAKDliYjM4ZDg4NTBkNzgzNzk4ZDdiMmU3YTg3ZTVlNjI4NmI1MDAxMTY",
+		"commit": {
+			"author": {
+				"name": "Chris Leonard",
+				"email": "35844395+crleonard@users.noreply.github.com",
+				"date": "2026-04-18T06:17:12Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-18T06:17:12Z"
+			},
+			"message": "Add pingtower to DevOps Tools (#6254)",
+			"tree": {
+				"sha": "de4462b8e9382941ee060248167049a32a53e28b",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/de4462b8e9382941ee060248167049a32a53e28b"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/9bb38d8850d783798d7b2e7a87e5e6286b500116",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4yHoCRC1aQ7uu5UhlAAAJVYQAALtRBL6JjmgcS9Bdh79MuVx\n4owzEw04/fqBWG9tz/HJjXOOuHdYChzPwr4uKvlq7m7Kp9Nka8zk9X/FaFB0xQr2\nSiwdGYEiZs7iEsZOutt9gwHwUOqzqWYpKN0wqP741ko9GC3mXeirpmxNUHrgyzgk\nIWeidDmIUR5lUD78JuSJvhcvPGMyHTKVZiIaHQSRbqIZT3wRiT+CREmUM9hOQKOg\nv49SWeZIuqzf0jVew/B6UakDDym2EqZdmeTiKIMj2s0xxN4WXcxYWPkDxf8jQfpc\nH484UnkooeR8aeIaM+9T8zSB9TQ6IREjXePKiI8tqB1zTNO7uQZH1BdL2WT28chQ\nr8R9RIWFr+0UknO2mNAWBfTP9n+Z5uS1N+/tO1TJhYBcjVuw7pm7+L5gi3kbA+yB\n8EMN/todq8Stqz3piS2aycU59sLbZY6ackK7UurLb+ADcNYSkUJE2OEH2lC6zJ/A\nz/Nk+FMM4Lbji1WTDa/htCFzCDiZuO8gGzDfP0mxgE+7Gdj+GCMX96mu7JhdzREm\nAL58BDVjBBnAU2n0UqMShMmmzsG6o8/rS9bGXI5pxSyDsuFx+VZur1JraKyX77fr\nfsXUiguQu2kvERsnXbLiZyHF6cJZMV0VSBe6j/zgv7n+Us7OXWzET2POkMTDBkeu\nrJ92sEptT7mns04T4gLO\n=JZoo\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree de4462b8e9382941ee060248167049a32a53e28b\nparent dea0ff2378e3170f1e2a18c7baf2d29082d070ef\nauthor Chris Leonard <35844395+crleonard@users.noreply.github.com> 1776493032 +0100\ncommitter GitHub <noreply@github.com> 1776493032 +0000\n\nAdd pingtower to DevOps Tools (#6254)",
+				"verified_at": "2026-04-18T06:17:12Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/9bb38d8850d783798d7b2e7a87e5e6286b500116",
+		"html_url": "https://github.com/avelino/awesome-go/commit/9bb38d8850d783798d7b2e7a87e5e6286b500116",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/9bb38d8850d783798d7b2e7a87e5e6286b500116/comments",
+		"author": {
+			"login": "crleonard",
+			"id": 35844395,
+			"node_id": "MDQ6VXNlcjM1ODQ0Mzk1",
+			"avatar_url": "https://avatars.githubusercontent.com/u/35844395?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/crleonard",
+			"html_url": "https://github.com/crleonard",
+			"followers_url": "https://api.github.com/users/crleonard/followers",
+			"following_url": "https://api.github.com/users/crleonard/following{/other_user}",
+			"gists_url": "https://api.github.com/users/crleonard/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/crleonard/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/crleonard/subscriptions",
+			"organizations_url": "https://api.github.com/users/crleonard/orgs",
+			"repos_url": "https://api.github.com/users/crleonard/repos",
+			"events_url": "https://api.github.com/users/crleonard/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/crleonard/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+				"html_url": "https://github.com/avelino/awesome-go/commit/dea0ff2378e3170f1e2a18c7baf2d29082d070ef"
+			}
+		]
+	},
+	{
+		"sha": "dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+		"node_id": "C_kwDOAUivl9oAKGRlYTBmZjIzNzhlMzE3MGYxZTJhMThjN2JhZjJkMjkwODJkMDcwZWY",
+		"commit": {
+			"author": {
+				"name": "Prathamesh Bhope",
+				"email": "pratham.bhope@gmail.com",
+				"date": "2026-04-18T01:44:49Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-18T01:44:49Z"
+			},
+			"message": "Add hedge to HTTP Clients (#6253)",
+			"tree": {
+				"sha": "e884b8e42c31cec3e1d2a30dd05ffaf595bc257b",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/e884b8e42c31cec3e1d2a30dd05ffaf595bc257b"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4uIRCRC1aQ7uu5UhlAAA0HsQAGBWdJ+ML04qM2tFYXR4suwI\nAf2Rvy0lXiw3ZJubyIDCOGdNdndQFL+X+C+EoR6SvliTP0fmldGdFLFDFHPJHZP4\nh1mIrPV5BslZEi4gLAmkJ3gPZjWPApwFLaWJiOdCkUnxI9kkqgPwTmceq4d7zLhb\nvqeB5iwVZglUa/YK3VFYNMlgAHtaMxYPl312ouUpqtU3uhQLoQ0MuN611BbfP49E\nwyu3fW0XVrHpp+1ps8r1o69YlNvv6vDEt+cv+cPgQeFa+x1g+RJuTykpGoWkPiOy\nuAJrcj7RXKcxd9Oy+Z5XQLPjTWefjsz92xQen200H+3fOQcHNx8yS9BnYEkP1m2u\nVDD+Ehv9uDI8RNCwTJ2t5ljp3AYImPiRQ6o/E/vey0MnMy5XUYnULoB34ot0JiS8\nDAAmv3maSwskm0NU/Du2sBv+/qoV0gIj2n8I8IR998Ln905sco7mkzkwgcpXMrFf\nOuzSCjVS4jJ8Sbp9xicATSKqjP7yl3yvVDpGhIUPc46MlPRsJf5435ZUdY33zl0q\nTh3hErhqWozO2oSbsRhrUrgM7MwrF7PSTfoJguk7Kr98RHdoPmCdQeLSbR5hxRum\nN5574m7W9RcnToh1b1rUX0nVDaUVpo/A3BVy0vBYwesjhGLK71STL2x0/okRfCr8\nqP2T9zhTSe6VKnnRTxbj\n=DP5H\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree e884b8e42c31cec3e1d2a30dd05ffaf595bc257b\nparent cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4\nauthor Prathamesh Bhope <pratham.bhope@gmail.com> 1776476689 -0700\ncommitter GitHub <noreply@github.com> 1776476689 +0000\n\nAdd hedge to HTTP Clients (#6253)",
+				"verified_at": "2026-04-18T01:44:49Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+		"html_url": "https://github.com/avelino/awesome-go/commit/dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/dea0ff2378e3170f1e2a18c7baf2d29082d070ef/comments",
+		"author": {
+			"login": "bhope",
+			"id": 7515346,
+			"node_id": "MDQ6VXNlcjc1MTUzNDY=",
+			"avatar_url": "https://avatars.githubusercontent.com/u/7515346?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/bhope",
+			"html_url": "https://github.com/bhope",
+			"followers_url": "https://api.github.com/users/bhope/followers",
+			"following_url": "https://api.github.com/users/bhope/following{/other_user}",
+			"gists_url": "https://api.github.com/users/bhope/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/bhope/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/bhope/subscriptions",
+			"organizations_url": "https://api.github.com/users/bhope/orgs",
+			"repos_url": "https://api.github.com/users/bhope/repos",
+			"events_url": "https://api.github.com/users/bhope/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/bhope/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+				"html_url": "https://github.com/avelino/awesome-go/commit/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4"
+			}
+		]
+	},
+	{
+		"sha": "cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+		"node_id": "C_kwDOAUivl9oAKGNmZTZjYmFkZmUzZGE2NWVlODk4N2UwM2M5NjY0ZWI2MTcyYWQ1YTQ",
+		"commit": {
+			"author": {
+				"name": "Alessandro Resta",
+				"email": "alessandro.resta@proton.me",
+				"date": "2026-04-17T18:33:34Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-17T18:33:34Z"
+			},
+			"message": "Security: add Redact (#6252)",
+			"tree": {
+				"sha": "dc2d4c6f093ab0ebaadbecb9131e7030b0ad16c2",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/dc2d4c6f093ab0ebaadbecb9131e7030b0ad16c2"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4nz+CRC1aQ7uu5UhlAAAZY8QAEKhHL12Zn80hKB5RvHVzuwP\nRAq902ffDNWW5T95eShscaQ/vDGRr8dX9mMML/BIsyB/4eLMK6oyn/btK78fSfdd\nvO6wOxKO4Mw8cCvf7rZT7yI5GI7sAMGKvPZHRaOx7EBDk1Q+xo4lTIDF4EBiyrLO\n2pRzVzXXHZ2LdJTuv6uavAWYxZDiKhyp/TRmIERbfRmSGPvZPlBWKk0kbYU22FS6\nfsKPYORzS7+FmYgp7tuw9g3u0YLuZrynqV3SVP6NvRE09xpd1lG6zw+oQgML2dSm\nm3OQewA3/1VpIWnoGtqX99RaTDjBIp2Y03Z0SKIGOLJGtqxdrCVOwLM3NG11noNO\ny3XHKRLzkk6JkP5Vn6qOO/W8VUJIM35XNQZuo3pN6sQeuQ2pLISDyLoIB2AqiK9m\ngKW5NtRtPYWXntPm557O3O81GOS1qeWPbAiKKTky0sqRodAAKOfzGk5vk7ZWQ8oy\nXyJOqAUrQOufQmq1JY7zErPi79ecsKKbfuMW+ozxAVgocIxgYoQ6kLk+Ds4RhHtz\nxfG6SRB0rZnCkruqY5KkBMuBf4hDnSVT1YW2Wy7cExpAZUiXdXqGEjLZUO6NCAaz\nqlb5+kvUlUmQvCR+qJZ+hnySL++cXjzqpJID7mihfuyWicwriKTBFlvzJYlz1fKa\nOvMhSgxANYvRNJMryYwt\n=4YxI\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree dc2d4c6f093ab0ebaadbecb9131e7030b0ad16c2\nparent 0d63a6e88e5043afea39190c0b74880b6145c717\nauthor Alessandro Resta <alessandro.resta@proton.me> 1776450814 +0300\ncommitter GitHub <noreply@github.com> 1776450814 +0000\n\nSecurity: add Redact (#6252)",
+				"verified_at": "2026-04-17T18:33:35Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+		"html_url": "https://github.com/avelino/awesome-go/commit/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4/comments",
+		"author": {
+			"login": "alesr",
+			"id": 4883432,
+			"node_id": "MDQ6VXNlcjQ4ODM0MzI=",
+			"avatar_url": "https://avatars.githubusercontent.com/u/4883432?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/alesr",
+			"html_url": "https://github.com/alesr",
+			"followers_url": "https://api.github.com/users/alesr/followers",
+			"following_url": "https://api.github.com/users/alesr/following{/other_user}",
+			"gists_url": "https://api.github.com/users/alesr/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/alesr/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/alesr/subscriptions",
+			"organizations_url": "https://api.github.com/users/alesr/orgs",
+			"repos_url": "https://api.github.com/users/alesr/repos",
+			"events_url": "https://api.github.com/users/alesr/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/alesr/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "0d63a6e88e5043afea39190c0b74880b6145c717",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/0d63a6e88e5043afea39190c0b74880b6145c717",
+				"html_url": "https://github.com/avelino/awesome-go/commit/0d63a6e88e5043afea39190c0b74880b6145c717"
+			}
+		]
+	},
+	{
+		"sha": "0d63a6e88e5043afea39190c0b74880b6145c717",
+		"node_id": "C_kwDOAUivl9oAKDBkNjNhNmU4OGU1MDQzYWZlYTM5MTkwYzBiNzQ4ODBiNjE0NWM3MTc",
+		"commit": {
+			"author": {
+				"name": "Mutasem-mk4",
+				"email": "140179052+Mutasem-mk4@users.noreply.github.com",
+				"date": "2026-04-17T11:46:11Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-17T11:46:11Z"
+			},
+			"message": "Security: Add procscope (#6251)\n\n* Security: Add procscope\n\n* fix: remove duplicated links breaking CI\n\n* Revert \"fix: remove duplicated links breaking CI\"\n\nThis reverts commit 0480305fedac31b48bf03f0187cc6426d51cf0ca.",
+			"tree": {
+				"sha": "80921e8ea61af093dabade90d7eb90350108bcc2",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/80921e8ea61af093dabade90d7eb90350108bcc2"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/0d63a6e88e5043afea39190c0b74880b6145c717",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4h2DCRC1aQ7uu5UhlAAAN5oQAE5ltC6pWW9MoYf90SQSLpAM\nLkXWvB5uZF/KbeOSDzoOyi4K8PYdAMppRsM82rbXEmuaGp3CK7lTSy8DAC/Oybjl\n/TzI6i+VWJgVDS89PTBOSS2pzzs/QJmSDv7HOF6yIjXLLV6m2RC/Eon0juNe6ZYA\nKf5r6AZz+ge4+49FzNjrMafVZn6QM9GWhXJIoUuv3YMMYdQNSzzVBZAeIManMlr0\nHTzupL7erTw4v6UfT1o1Elg2wc8W4phIYqv+0C0TLk1HyAC5x0odHgb/+AFKbJLm\nSgl86qaCN1Cb9Ud2uV8zPqM9gtcZLx2S8evFcopivVpVf7QIWICMeATlf6T2/bZL\n4e3XuYDIiKRPMy2iz75r+geYl2X38RaMZCnyZlCTchy4R7g9K6U7qPEqlasLC8HH\nLYXAFXV8fPOv6Crm4HJwqUhiJ9KzXqyE4X5aN9LniLfAgGJGwnvVqr4BP75etqGE\nXG5NcbnvPmgA+d4n8yrGW1tW5NvOZjFSbsNr/Kqyj6iSmduBAjN9VTLzTBB7OVCB\nsork719kL8thsjKqh/dtbDqaOJIYoh6FTcpeOvkGJ01rL/w10aTlVmvAUJNIGPAz\nOhFhehtvYhhglsFWUUv/59ghbQhyxslx+J2hwYpPusiJyHuJDZX19tKWg4gaD8ps\nkLrf/KUSmr0kohxqCrcW\n=g9X1\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree 80921e8ea61af093dabade90d7eb90350108bcc2\nparent cfdbf02bd4dbe75079e28ea74ea9ac66beab1274\nauthor Mutasem-mk4 <140179052+Mutasem-mk4@users.noreply.github.com> 1776426371 +0300\ncommitter GitHub <noreply@github.com> 1776426371 +0000\n\nSecurity: Add procscope (#6251)\n\n* Security: Add procscope\n\n* fix: remove duplicated links breaking CI\n\n* Revert \"fix: remove duplicated links breaking CI\"\n\nThis reverts commit 0480305fedac31b48bf03f0187cc6426d51cf0ca.",
+				"verified_at": "2026-04-17T11:46:11Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/0d63a6e88e5043afea39190c0b74880b6145c717",
+		"html_url": "https://github.com/avelino/awesome-go/commit/0d63a6e88e5043afea39190c0b74880b6145c717",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/0d63a6e88e5043afea39190c0b74880b6145c717/comments",
+		"author": {
+			"login": "Mutasem-mk4",
+			"id": 140179052,
+			"node_id": "U_kgDOCFr2bA",
+			"avatar_url": "https://avatars.githubusercontent.com/u/140179052?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/Mutasem-mk4",
+			"html_url": "https://github.com/Mutasem-mk4",
+			"followers_url": "https://api.github.com/users/Mutasem-mk4/followers",
+			"following_url": "https://api.github.com/users/Mutasem-mk4/following{/other_user}",
+			"gists_url": "https://api.github.com/users/Mutasem-mk4/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/Mutasem-mk4/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/Mutasem-mk4/subscriptions",
+			"organizations_url": "https://api.github.com/users/Mutasem-mk4/orgs",
+			"repos_url": "https://api.github.com/users/Mutasem-mk4/repos",
+			"events_url": "https://api.github.com/users/Mutasem-mk4/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/Mutasem-mk4/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+				"html_url": "https://github.com/avelino/awesome-go/commit/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274"
+			}
+		]
+	},
+	{
+		"sha": "cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+		"node_id": "C_kwDOAUivl9oAKGNmZGJmMDJiZDRkYmU3NTA3OWUyOGVhNzRlYTlhYzY2YmVhYjEyNzQ",
+		"commit": {
+			"author": {
+				"name": "Kazutomo Deguchi",
+				"email": "131741597+shinagawa-web@users.noreply.github.com",
+				"date": "2026-04-17T09:40:33Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-17T09:40:33Z"
+			},
+			"message": "feat: add gomarklint to Code Analysis (#6250)",
+			"tree": {
+				"sha": "bd2d89a0ff3bd69fbc739210fc6f12cd7c3ddade",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/bd2d89a0ff3bd69fbc739210fc6f12cd7c3ddade"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4gARCRC1aQ7uu5UhlAAAsAEQAJ47kvjokm6vijL4JTSM01H7\nJtoYvLZLxk2If2L0+a1BsBREXV7DzOogkWHaddZo369GRpnBhEqtcSwn8ca4TX57\nUL3Egsmsu5GVYHJsyT7pq+CWcA/TsrWcfqFkNicnK1gozBULas7up4ElVzmyAA8m\n96tKy9MqR8S48AhpS2C/dciyjchq2oJpaeHbFuaD6J7znXD9eV544opyh2C0dQCg\n8gXhCxXd0KwRKhxrABBOYmb7qxGnynY2fIkqy9wUjd37bBXbpBY3qgUSHdQ4vcR8\na+W7XSRAiFRbZiiDCNhN3B24uMs5ZE2tqYmQPopYmpVKANyuIeY9dcvORMddkfJm\nv69nTkjmOXCzmNsmMyHfFiuOdfIeZhwloeuWdQ64pTiirytNy8/N4hy0btZvu/Sw\ncsii/3gS9DQOzWlcUVShZ1UTNjQy5H2g+GzFFg38/R/h8Ndvk/YIUNF2zvoOf39b\nrCsDydrBaObEwfm/1aiEDB9nsQbJr0D7h3piC1iZwACPJATH8w91d1mEDa1vxOOf\nC6ZYxLet14KdhazxK/qaMHbTXZYuCMYKDvX9z1xmlWyMh94dr7Kzj/IvbYE6gk3E\nmEkftK5OwtqCwZI8usJiDLiXjWOANUDLTWIS+xxk9NX2ak2DySfe06KrcGKX5nCI\n/B6Z9A83FkTNNy7INyzx\n=Hfdx\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree bd2d89a0ff3bd69fbc739210fc6f12cd7c3ddade\nparent 525a0ba6db199b5fece3c7f564b76b5036244033\nauthor Kazutomo Deguchi <131741597+shinagawa-web@users.noreply.github.com> 1776418833 +0900\ncommitter GitHub <noreply@github.com> 1776418833 +0000\n\nfeat: add gomarklint to Code Analysis (#6250)",
+				"verified_at": "2026-04-17T09:40:33Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+		"html_url": "https://github.com/avelino/awesome-go/commit/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274/comments",
+		"author": {
+			"login": "shinagawa-web",
+			"id": 131741597,
+			"node_id": "U_kgDOB9o3nQ",
+			"avatar_url": "https://avatars.githubusercontent.com/u/131741597?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/shinagawa-web",
+			"html_url": "https://github.com/shinagawa-web",
+			"followers_url": "https://api.github.com/users/shinagawa-web/followers",
+			"following_url": "https://api.github.com/users/shinagawa-web/following{/other_user}",
+			"gists_url": "https://api.github.com/users/shinagawa-web/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/shinagawa-web/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/shinagawa-web/subscriptions",
+			"organizations_url": "https://api.github.com/users/shinagawa-web/orgs",
+			"repos_url": "https://api.github.com/users/shinagawa-web/repos",
+			"events_url": "https://api.github.com/users/shinagawa-web/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/shinagawa-web/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "525a0ba6db199b5fece3c7f564b76b5036244033",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/525a0ba6db199b5fece3c7f564b76b5036244033",
+				"html_url": "https://github.com/avelino/awesome-go/commit/525a0ba6db199b5fece3c7f564b76b5036244033"
+			}
+		]
+	},
+	{
+		"sha": "525a0ba6db199b5fece3c7f564b76b5036244033",
+		"node_id": "C_kwDOAUivl9oAKDUyNWEwYmE2ZGIxOTliNWZlY2UzYzdmNTY0Yjc2YjUwMzYyNDQwMzM",
+		"commit": {
+			"author": {
+				"name": "Patrick Hener",
+				"email": "patrickhener@users.noreply.github.com",
+				"date": "2026-04-17T06:53:16Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-17T06:53:16Z"
+			},
+			"message": "add goshs (#6249)",
+			"tree": {
+				"sha": "f25dee3b80f7533a3482e14459b577b509d229eb",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/f25dee3b80f7533a3482e14459b577b509d229eb"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/525a0ba6db199b5fece3c7f564b76b5036244033",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4djcCRC1aQ7uu5UhlAAAZrYQAKUqMhALeWE/WLApOgCZpkUN\nLjRMg3S3otfVBrbFcuf8K/UWv9ETpzkhhYbBDHcbCLA6GzFHSZIeveg+KsgkkUwR\nsI3dy6Rje1tWe0aPhxjM7qx3d2PRazLIfgnE508OeUjPTlsHQJ49wmLLeMLXdz9Q\nEvNENMBhLu+KyNrQU5KJ4AbuS2ti9qS6R/nh5IS6m3mMZLf8QV+w0YtYmYcunyoB\nk/G2zlGj4JtlsHQfuCS3Dk6gKXnLSvjaY5cdPlH8r4w3KIFkUN4IGETLbr6tDb3K\nnVOqBqDcuMCL9aqeDugCWiAODhhiCCeiYtyJG02KJXZ+Ck2Wi/YPmelNvEUC21O2\nixeBkJ+Br88OHql0tMpUFoPiupAyWcwapztJbiTKYTR7HoLKTCL/fxvpzQ++WK88\n1nLFv+bWy8TbT3y+uWZ6eeAOy9+mjBa8JEozbcAmkppj8IFxPEwqRurotWw0Ozbu\nyouejQbQMs7IEDmL3tcjEn5liDDBfTEEiawj0xK6bUwPDCUzrRSTT1smabSyjZb5\nb5ind7BbFawVXo5raevJ7jlETcuy0FgmWu9JWwuWSWQMxVrKvrlXoiM8mduo77jA\n5/pX1p3KYjSqIUaNQdeto3XxcqG5yRwqG3R+Mq1EK3/8kfpILk7esM8/fIfOivdx\nWgmfrIa1masJNptMEa0M\n=s8YJ\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree f25dee3b80f7533a3482e14459b577b509d229eb\nparent d46f07bcadf528582668dd4b94d9090d2fd7649b\nauthor Patrick Hener <patrickhener@users.noreply.github.com> 1776408796 +0200\ncommitter GitHub <noreply@github.com> 1776408796 +0000\n\nadd goshs (#6249)",
+				"verified_at": "2026-04-17T06:53:16Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/525a0ba6db199b5fece3c7f564b76b5036244033",
+		"html_url": "https://github.com/avelino/awesome-go/commit/525a0ba6db199b5fece3c7f564b76b5036244033",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/525a0ba6db199b5fece3c7f564b76b5036244033/comments",
+		"author": {
+			"login": "patrickhener",
+			"id": 7579055,
+			"node_id": "MDQ6VXNlcjc1NzkwNTU=",
+			"avatar_url": "https://avatars.githubusercontent.com/u/7579055?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/patrickhener",
+			"html_url": "https://github.com/patrickhener",
+			"followers_url": "https://api.github.com/users/patrickhener/followers",
+			"following_url": "https://api.github.com/users/patrickhener/following{/other_user}",
+			"gists_url": "https://api.github.com/users/patrickhener/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/patrickhener/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/patrickhener/subscriptions",
+			"organizations_url": "https://api.github.com/users/patrickhener/orgs",
+			"repos_url": "https://api.github.com/users/patrickhener/repos",
+			"events_url": "https://api.github.com/users/patrickhener/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/patrickhener/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "d46f07bcadf528582668dd4b94d9090d2fd7649b",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/d46f07bcadf528582668dd4b94d9090d2fd7649b",
+				"html_url": "https://github.com/avelino/awesome-go/commit/d46f07bcadf528582668dd4b94d9090d2fd7649b"
+			}
+		]
+	},
+	{
+		"sha": "d46f07bcadf528582668dd4b94d9090d2fd7649b",
+		"node_id": "C_kwDOAUivl9oAKGQ0NmYwN2JjYWRmNTI4NTgyNjY4ZGQ0Yjk0ZDkwOTBkMmZkNzY0OWI",
+		"commit": {
+			"author": {
+				"name": "Vinod Babu Vanjarapu",
+				"email": "vinodbabu.v@gmail.com",
+				"date": "2026-04-15T06:13:12Z"
+			},
+			"committer": {
+				"name": "GitHub",
+				"email": "noreply@github.com",
+				"date": "2026-04-15T06:13:12Z"
+			},
+			"message": "Add agent-sdk-go to AI libraries list in README (#6246)\n\nAdded agent-sdk-go to the Artificial Intelligence section. It is a Go SDK for building durable AI agents on Temporal.",
+			"tree": {
+				"sha": "bdd92bd39d79517d2df09885a49d4256547264cb",
+				"url": "https://api.github.com/repos/avelino/awesome-go/git/trees/bdd92bd39d79517d2df09885a49d4256547264cb"
+			},
+			"url": "https://api.github.com/repos/avelino/awesome-go/git/commits/d46f07bcadf528582668dd4b94d9090d2fd7649b",
+			"comment_count": 0,
+			"verification": {
+				"verified": true,
+				"reason": "valid",
+				"signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp3yx4CRC1aQ7uu5UhlAAAhxgQAEov2Qd/QWjlUmtk24z5x8lB\nc21dZwpsyW0v8B8AGd68gVvGArDuDRsqfFCFH2FUVN7rSCD8Ih+N0I0y/XJQmvbc\ngMyWey/QmRmW4ERKpudxpVuTnaot5A8u14EvX5Wok7lqAsUFr4/Es+rc2O6aGD4v\nAGHWhDnrQlsdmm0mLJN+XApCLWnvuiOnVV2YjPF6GnNclUpMXz1v09MXHxWXJXuY\nTX+G6G3lVSeySbjrQ5ivDt0K2kCJbf5TAkvKyIh5grk+BQNuSrPlCbgBy6//vvuk\nheK7rd2S+Fe9vz3ZjGgMrKnmyzrHNJiwycqsR4nPYsX8ac75y8WUFubv2NCSsNKS\n9s0lJKX48TdTKrsQm6Mt4seoR419U09cYSh9RSl8rYZnKo0tJGtbpRdWmqstE2O/\nHUkURQ1BwLy7xogo3HqUlEcVeNZ5DfPyEptwyKbCF2zeIPPAP9zNpDc0RNr3oaQe\n5lo3StuYo7juHxLcbbfmWDMuG5vDkVBxMX+irRJYDQPvYZw+g0e3ssc2pDXJVOFz\nfAWIJiz6H89wnKX1EqpXeq+VLUz7fSNq38Iz5tm3EyAvlMPlBXzDAG3f6k1LWOFE\n8SKFSWje8zwTAVUlI/guSPBfFa9ufUccLUnNe1faQABcpmqqZtpmV3ce8heLyRym\n9GR4+kCCIVJrcUZZHt+y\n=Q3Ix\n-----END PGP SIGNATURE-----\n",
+				"payload": "tree bdd92bd39d79517d2df09885a49d4256547264cb\nparent dbd29a8fd206ab7aab9ea856cdc2b43014b2c4f6\nauthor Vinod Babu Vanjarapu <vinodbabu.v@gmail.com> 1776233592 -0700\ncommitter GitHub <noreply@github.com> 1776233592 +0000\n\nAdd agent-sdk-go to AI libraries list in README (#6246)\n\nAdded agent-sdk-go to the Artificial Intelligence section. It is a Go SDK for building durable AI agents on Temporal.",
+				"verified_at": "2026-04-15T06:13:13Z"
+			}
+		},
+		"url": "https://api.github.com/repos/avelino/awesome-go/commits/d46f07bcadf528582668dd4b94d9090d2fd7649b",
+		"html_url": "https://github.com/avelino/awesome-go/commit/d46f07bcadf528582668dd4b94d9090d2fd7649b",
+		"comments_url": "https://api.github.com/repos/avelino/awesome-go/commits/d46f07bcadf528582668dd4b94d9090d2fd7649b/comments",
+		"author": {
+			"login": "vinodvanj",
+			"id": 8429554,
+			"node_id": "MDQ6VXNlcjg0Mjk1NTQ=",
+			"avatar_url": "https://avatars.githubusercontent.com/u/8429554?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/vinodvanj",
+			"html_url": "https://github.com/vinodvanj",
+			"followers_url": "https://api.github.com/users/vinodvanj/followers",
+			"following_url": "https://api.github.com/users/vinodvanj/following{/other_user}",
+			"gists_url": "https://api.github.com/users/vinodvanj/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/vinodvanj/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/vinodvanj/subscriptions",
+			"organizations_url": "https://api.github.com/users/vinodvanj/orgs",
+			"repos_url": "https://api.github.com/users/vinodvanj/repos",
+			"events_url": "https://api.github.com/users/vinodvanj/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/vinodvanj/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"committer": {
+			"login": "web-flow",
+			"id": 19864447,
+			"node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+			"avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+			"gravatar_id": "",
+			"url": "https://api.github.com/users/web-flow",
+			"html_url": "https://github.com/web-flow",
+			"followers_url": "https://api.github.com/users/web-flow/followers",
+			"following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+			"gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+			"starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+			"subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+			"organizations_url": "https://api.github.com/users/web-flow/orgs",
+			"repos_url": "https://api.github.com/users/web-flow/repos",
+			"events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+			"received_events_url": "https://api.github.com/users/web-flow/received_events",
+			"type": "User",
+			"user_view_type": "public",
+			"site_admin": false
+		},
+		"parents": [
+			{
+				"sha": "dbd29a8fd206ab7aab9ea856cdc2b43014b2c4f6",
+				"url": "https://api.github.com/repos/avelino/awesome-go/commits/dbd29a8fd206ab7aab9ea856cdc2b43014b2c4f6",
+				"html_url": "https://github.com/avelino/awesome-go/commit/dbd29a8fd206ab7aab9ea856cdc2b43014b2c4f6"
+			}
+		]
+	}
+]

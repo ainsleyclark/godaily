@@ -1,0 +1,35 @@
+[
+	{
+		"source": "go_release",
+		"title": "Go 1.26.2 released",
+		"url": "https://go.dev/doc/devel/release#go1.26.2",
+		"author": "",
+		"snippet": "Stable Go release. See release notes for changes.",
+		"tag": "release",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-04-07T19:39:30Z"
+	},
+	{
+		"source": "go_release",
+		"title": "Go 1.26.1 released",
+		"url": "https://go.dev/doc/devel/release#go1.26.1",
+		"author": "",
+		"snippet": "Stable Go release. See release notes for changes.",
+		"tag": "release",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-03-06T00:27:01Z"
+	},
+	{
+		"source": "go_release",
+		"title": "Go 1.26.0 released",
+		"url": "https://go.dev/doc/devel/release#go1.26.0",
+		"author": "",
+		"snippet": "Stable Go release. See release notes for changes.",
+		"tag": "release",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-02-10T19:28:39Z"
+	}
+]
