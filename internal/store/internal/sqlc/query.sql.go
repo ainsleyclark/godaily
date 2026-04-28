@@ -23,7 +23,7 @@ func (q *Queries) ConfirmSubscriber(ctx context.Context, confirmToken string) er
 }
 
 const createNewsItem = `-- name: CreateNewsItem :one
-INSERT INTO news_items (
+INSERT INTO items (
     issue_id, source, title, url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position, raw_json
@@ -115,7 +115,7 @@ func (q *Queries) CreateSubscriber(ctx context.Context, arg CreateSubscriberPara
 }
 
 const deleteNewsItemsByIssue = `-- name: DeleteNewsItemsByIssue :exec
-DELETE FROM news_items WHERE issue_id = ?
+DELETE FROM items WHERE issue_id = ?
 `
 
 func (q *Queries) DeleteNewsItemsByIssue(ctx context.Context, issueID int64) error {
@@ -124,7 +124,7 @@ func (q *Queries) DeleteNewsItemsByIssue(ctx context.Context, issueID int64) err
 }
 
 const getNewsItem = `-- name: GetNewsItem :one
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM news_items WHERE id = ? LIMIT 1
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM items WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) GetNewsItem(ctx context.Context, id int64) (NewsItem, error) {
@@ -381,7 +381,7 @@ func (q *Queries) ListActiveSubscribers(ctx context.Context) ([]Subscriber, erro
 }
 
 const listNewsItemsByIssue = `-- name: ListNewsItemsByIssue :many
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM news_items
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM items
 WHERE issue_id = ?
 ORDER BY position ASC
 `

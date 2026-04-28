@@ -59,7 +59,7 @@ func TestMigrate(t *testing.T) {
 		require.NoError(t, Migrate(t.Context(), conn))
 
 		// Each declared table must exist exactly once.
-		for _, table := range []string{"issues", "news_items", "subscribers"} {
+		for _, table := range []string{"issues", "items", "subscribers"} {
 			var got string
 			err := conn.QueryRowContext(t.Context(),
 				"SELECT name FROM sqlite_master WHERE type='table' AND name = ?", table,
@@ -88,7 +88,7 @@ func TestMigrate(t *testing.T) {
 
 		var count int
 		err = conn.QueryRowContext(t.Context(),
-			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','news_items','subscribers')",
+			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','items','subscribers')",
 		).Scan(&count)
 		require.NoError(t, err)
 		assert.Equal(t, 0, count, "schema tables should be gone after Down")

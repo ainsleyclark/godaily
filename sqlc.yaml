@@ -4,7 +4,7 @@ sql:
     schema: "internal/db/migrations"
     queries:
       - "internal/store/issues/query.sql"
-      - "internal/store/news_items/query.sql"
+      - "internal/store/items/query.sql"
       - "internal/store/subscribers/query.sql"
     gen:
       go:
