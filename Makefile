@@ -83,7 +83,6 @@ all: # Make format, lint and test
 	$(MAKE) test-race
 	$(MAKE) vuln
 	$(MAKE) sec
-	$(MAKE) gen
 .PHONY: all
 
 todo: # Show to-do items per file

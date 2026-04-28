@@ -33,20 +33,6 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-func newProvider(db *sql.DB) (*goose.Provider, error) {
-	sub, err := fs.Sub(migrations, "migrations")
-	if err != nil {
-		return nil, errors.Wrap(err, "rooting migrations FS")
-	}
-
-	provider, err := goose.NewProvider(goose.DialectSQLite3, db, sub)
-	if err != nil {
-		return nil, errors.Wrap(err, "creating goose provider")
-	}
-
-	return provider, nil
-}
-
 // Up applies any pending schema migrations to db using goose with the
 // embedded migrations FS. Safe to call repeatedly; goose tracks applied
 // versions in goose_db_version.
@@ -81,4 +67,18 @@ func Down(ctx context.Context, db *sql.DB) error {
 	}
 
 	return nil
+}
+
+func newProvider(db *sql.DB) (*goose.Provider, error) {
+	sub, err := fs.Sub(migrations, "migrations")
+	if err != nil {
+		return nil, errors.Wrap(err, "rooting migrations FS")
+	}
+
+	provider, err := goose.NewProvider(goose.DialectSQLite3, db, sub)
+	if err != nil {
+		return nil, errors.Wrap(err, "creating goose provider")
+	}
+
+	return provider, nil
 }

@@ -65,7 +65,6 @@ func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error)
 		TextBody: issue.TextBody,
 		Status:   issue.Status.String(),
 	})
-
 	if err != nil {
 		return news.Issue{}, err
 	}

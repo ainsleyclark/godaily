@@ -76,10 +76,8 @@ type (
 	}
 )
 
-// New creates a new Aggregator, validating that all news sources have
-// registered fetchers before returning. issues and items are optional —
-// pass nil to disable archival persistence (useful in tests). They must
-// be supplied as a pair: passing one without the other panics.
+// New creates a new Aggregator, validating that all news
+// sources have registered fetchers.
 func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
@@ -186,42 +184,12 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 	}
 
 	if a.issues != nil {
-		if err := a.persistIssue(ctx, day, rendered, status, results); err != nil {
+		if err = a.persistIssue(ctx, day, rendered, status, results); err != nil {
 			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
 		}
 	}
 
 	return results, nil
-}
-
-// persistIssue archives the rendered digest and its constituent news items.
-// The issue row is created first; each item is then inserted in score order.
-// If item insertion fails partway through the issue row remains, which is
-// acceptable for a daily cron — re-runs are manual and visible.
-func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
-	issue, err := a.issues.Create(ctx, news.Issue{
-		Slug:     day.Format("2006-01-02"),
-		SentAt:   time.Now().UTC(),
-		Subject:  r.Subject,
-		Status:   news.IssueStatus(status),
-		HtmlBody: r.HTML,
-		TextBody: r.Text,
-	})
-	if err != nil {
-		return fmt.Errorf("creating issue: %w", err)
-	}
-
-	var position int
-	for _, section := range sections {
-		for _, item := range section.Items {
-			position++
-			item.Source = section.Source
-			if _, err := a.items.Create(ctx, issue.ID, position, item); err != nil {
-				return fmt.Errorf("creating news item: %w", err)
-			}
-		}
-	}
-	return nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {
@@ -240,4 +208,31 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 	slog.InfoContext(ctx, "fetched from source", "source", source, "items", len(items))
 
 	return items, nil
+}
+
+func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
+	issue, err := a.issues.Create(ctx, news.Issue{
+		Slug:     day.Format("2006-01-02"),
+		SentAt:   time.Now().UTC(),
+		Subject:  r.Subject,
+		Status:   news.IssueStatus(status),
+		HtmlBody: r.HTML,
+		TextBody: r.Text,
+	})
+	if err != nil {
+		return fmt.Errorf("creating issue: %w", err)
+	}
+
+	var position int
+	for _, section := range sections {
+		for _, item := range section.Items {
+			position++
+			item.Source = section.Source
+			if _, err = a.items.Create(ctx, issue.ID, position, item); err != nil {
+				return fmt.Errorf("creating news item: %w", err)
+			}
+		}
+	}
+
+	return nil
 }

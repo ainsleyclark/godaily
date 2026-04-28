@@ -31,23 +31,14 @@ import (
 	"github.com/ainsleyclark/godaily/internal/db"
 )
 
-// Timeout is the amount of time before an individual database test
-// is cancelled from context.
-const Timeout = time.Minute * 3
-
-// NewContext creates a new context with a timeout for running an
-// individual database test.
-func NewContext() (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), Timeout)
-}
-
 // Setup creates a new SQLite *sql.DB with all migrations applied,
 // ready for testing. The DB is file-backed under t.TempDir() so it
 // is torn down automatically when the test ends.
 func Setup(t *testing.T) (context.Context, *sql.DB, func()) {
 	t.Helper()
 
-	ctx, cancel := NewContext()
+	// Allow some time for the test to run.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*3)
 
 	url := "file:" + filepath.Join(t.TempDir(), "godaily.db")
 	conn, err := db.New(ctx, url, "")
@@ -56,7 +47,8 @@ func Setup(t *testing.T) (context.Context, *sql.DB, func()) {
 	require.NoError(t, db.Up(ctx, conn), "applying migrations")
 
 	cleanup := func() {
-		_ = conn.Close()
+		err = conn.Close()
+		require.NoError(t, err, "closing sqlite database")
 		cancel()
 	}
 
