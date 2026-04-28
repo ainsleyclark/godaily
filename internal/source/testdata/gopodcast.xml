@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0">
+  <channel>
+    <title>go podcast()</title>
+    <description>15 minutes news, tips, and tricks on the Go programming language.</description>
+    <itunes:author>Dominic St-Pierre</itunes:author>
+    <itunes:image href="https://img.transistorcdn.com/show-artwork.jpg"/>
+    <item>
+      <title>082: Streaming, product updates, and marketing</title>
+      <itunes:episode>82</itunes:episode>
+      <itunes:title>082: Streaming, product updates, and marketing</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">5f6c4274-67c5-4b5a-b29f-7a3c95c0638d</guid>
+      <link>https://share.transistor.fm/s/e97475c0</link>
+      <description><![CDATA[<p>Hey we talk about streaming programming session, some updates on our products, and challenges related to marketing.</p>]]></description>
+      <pubDate>Thu, 23 Apr 2026 05:00:00 -0400</pubDate>
+      <author>Dominic St-Pierre</author>
+      <enclosure url="https://media.transistor.fm/e97475c0/c1e441c8.mp3" length="44429202" type="audio/mpeg"/>
+      <itunes:author>Dominic St-Pierre</itunes:author>
+      <itunes:duration>3700</itunes:duration>
+      <itunes:summary><![CDATA[<p>Hey we talk about streaming programming session, some updates on our products, and challenges related to marketing.</p>]]></itunes:summary>
+      <itunes:image href="https://img.transistorcdn.com/episode-082.jpg"/>
+    </item>
+    <item>
+      <title>Trailer: Welcome to go podcast()</title>
+      <itunes:episodeType>trailer</itunes:episodeType>
+      <guid isPermaLink="false">trailer-guid</guid>
+      <link>https://share.transistor.fm/s/trailer</link>
+      <description><![CDATA[<p>A short trailer.</p>]]></description>
+      <pubDate>Mon, 01 Jan 2024 00:00:00 -0500</pubDate>
+      <author>Dominic St-Pierre</author>
+      <enclosure url="https://media.transistor.fm/trailer.mp3" length="100000" type="audio/mpeg"/>
+      <itunes:author>Dominic St-Pierre</itunes:author>
+      <itunes:duration>60</itunes:duration>
+      <itunes:summary><![CDATA[<p>A short trailer.</p>]]></itunes:summary>
+    </item>
+  </channel>
+</rss>

@@ -25,12 +25,14 @@ import "math"
 // engagement 1.0; values are tuned against examples/raw/*.json so a top-of-the-
 // day item lands near the cap rather than midway up the curve.
 const (
-	hnPointsSaturation          = 50.0
-	redditScoreSaturation       = 100.0
-	lobstersScoreSaturation     = 50.0
-	devtoReactionsSaturation    = 20.0
-	githubPlusOneSaturation     = 50.0
-	golangBridgeViewsSaturation = 5000.0
+	hnPointsSaturation            = 50.0
+	redditScoreSaturation         = 100.0
+	lobstersScoreSaturation       = 50.0
+	devtoReactionsSaturation      = 20.0
+	githubPlusOneSaturation       = 50.0
+	githubTrendingStarsSaturation = 200.0
+	golangBridgeViewsSaturation   = 5000.0
+	mastodonFavouritesSaturation  = 20.0
 )
 
 // Engagement floors. The GitHub floor is higher so the tag-driven source weight
@@ -46,6 +48,8 @@ const (
 // Tag is consulted only for GitHub; other sources ignore it.
 func SourceWeight(s Source, t Tag) float64 {
 	switch s {
+	case SourceGoRelease:
+		return 2.0
 	case SourceGoBlog:
 		return 2.0
 	case SourceGitHub:
@@ -110,8 +114,12 @@ func saturationFor(s Source) float64 {
 		return devtoReactionsSaturation
 	case SourceGitHub:
 		return githubPlusOneSaturation
+	case SourceGitHubTrending:
+		return githubTrendingStarsSaturation
 	case SourceGolangBridge:
 		return golangBridgeViewsSaturation
+	case SourceMastodon:
+		return mastodonFavouritesSaturation
 	default:
 		return 0
 	}

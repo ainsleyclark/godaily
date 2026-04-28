@@ -1,0 +1,272 @@
+[
+	{
+		"source": "github_trending",
+		"title": "gastownhall/beads",
+		"url": "https://github.com/gastownhall/beads",
+		"image_url": "https://opengraph.githubassets.com/ac9b093f0d306c1a681a0675cf42f484869cce385394ab2c9b91277792e571ae/gastownhall/beads",
+		"author": {
+			"username": "gastownhall",
+			"profile_url": "https://github.com/gastownhall"
+		},
+		"snippet": "Beads - A memory upgrade for your coding agent",
+		"tag": "article",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "CJackHwang/ds2api",
+		"url": "https://github.com/CJackHwang/ds2api",
+		"image_url": "https://opengraph.githubassets.com/7e00d848e0374a630d36155d547eef8ed0b1adea6e3cb4c85f2b80dc03e98e13/CJackHwang/ds2api",
+		"author": {
+			"username": "CJackHwang",
+			"profile_url": "https://github.com/CJackHwang"
+		},
+		"snippet": "Deepseek to API: A lightweight, high-performance full-stack middleware converting client protocols to universal APIs. Supports multi-account rotation, compiled binaries, Vercel Serverless, and Docker.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.9304526175050021,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "gastownhall/gascity",
+		"url": "https://github.com/gastownhall/gascity",
+		"image_url": "https://opengraph.githubassets.com/8e94fbcc3a004f36c8349da46783c94ed32c7a6b348c86e4352dc11af60547fe/gastownhall/gascity",
+		"author": {
+			"username": "gastownhall",
+			"profile_url": "https://github.com/gastownhall"
+		},
+		"snippet": "Orchestration-builder SDK for multi-agent coding workflows",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.6535049300169562,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "vxcontrol/pentagi",
+		"url": "https://github.com/vxcontrol/pentagi",
+		"image_url": "https://repository-images.githubusercontent.com/913030762/c8502908-380f-4897-aaba-87cfa16d67b4",
+		"author": {
+			"username": "vxcontrol",
+			"profile_url": "https://github.com/vxcontrol"
+		},
+		"snippet": "Fully autonomous AI Agents system capable of performing complex penetration testing tasks",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.9221323708524131,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "masterking32/MasterDnsVPN",
+		"url": "https://github.com/masterking32/MasterDnsVPN",
+		"image_url": "https://opengraph.githubassets.com/1594d061f5a0d6a9da32ea614f382f94f59ad5ea5279c2710b820f3e97a4a005/masterking32/MasterDnsVPN",
+		"author": {
+			"username": "masterking32",
+			"profile_url": "https://github.com/masterking32"
+		},
+		"snippet": "Advanced DNS tunneling VPN for censorship bypass, optimized beyond DNSTT and SlipStream with low-overhead ARQ, resolver load balancing, high packet-loss stability and speed.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.6859093004814019,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "Wei-Shaw/sub2api",
+		"url": "https://github.com/Wei-Shaw/sub2api",
+		"image_url": "https://opengraph.githubassets.com/a1250fad63266b467eafabb2ff815b0b4b64432d6f701d6a4dbee78e4655fdc1/Wei-Shaw/sub2api",
+		"author": {
+			"username": "Wei-Shaw",
+			"profile_url": "https://github.com/Wei-Shaw"
+		},
+		"snippet": "Sub2API-CRS2 一站式开源中转服务，让 Claude、Openai 、Gemini、Antigravity订阅统一接入，支持拼车共享，更高效分摊成本，原生工具无缝使用。",
+		"tag": "article",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "XTLS/Xray-core",
+		"url": "https://github.com/XTLS/Xray-core",
+		"image_url": "https://opengraph.githubassets.com/ec5eddf138821baeb02f631a4b68ca8911ecedab6d30670f6a7c7d62b243a1c6/XTLS/Xray-core",
+		"author": {
+			"username": "XTLS",
+			"profile_url": "https://github.com/XTLS"
+		},
+		"snippet": "Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.7450530918139344,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "knadh/listmonk",
+		"url": "https://github.com/knadh/listmonk",
+		"image_url": "https://repository-images.githubusercontent.com/193833307/8d94bb7b-e76e-4a8e-8944-ebee3c0d0e70",
+		"author": {
+			"username": "knadh",
+			"profile_url": "https://github.com/knadh"
+		},
+		"snippet": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard. Single binary app.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.8979634430524636,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "agentscope-ai/HiClaw",
+		"url": "https://github.com/agentscope-ai/HiClaw",
+		"image_url": "https://repository-images.githubusercontent.com/1163358617/4dd369b7-fe70-457b-a7f6-85603a970564",
+		"author": {
+			"username": "agentscope-ai",
+			"profile_url": "https://github.com/agentscope-ai"
+		},
+		"snippet": "An open-source Collaborative Multi-Agent OS for transparent, human-in-the-loop task coordination via Matrix rooms.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.6349429060489095,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "dstotijn/hetty",
+		"url": "https://github.com/dstotijn/hetty",
+		"image_url": "https://repository-images.githubusercontent.com/222258954/97473f06-84ac-4fc6-ad06-6392a920ac97",
+		"author": {
+			"username": "dstotijn",
+			"profile_url": "https://github.com/dstotijn"
+		},
+		"snippet": "An HTTP toolkit for security research.",
+		"tag": "article",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "shridarpatil/whatomate",
+		"url": "https://github.com/shridarpatil/whatomate",
+		"image_url": "https://opengraph.githubassets.com/cfcde4c5405163930ef260a19aa1a1572a7488409b29025126be88c9c101a1f4/shridarpatil/whatomate",
+		"author": {
+			"username": "shridarpatil",
+			"profile_url": "https://github.com/shridarpatil"
+		},
+		"snippet": "Whatomate is an open-source WhatsApp integration",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5648802634375365,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "putyy/res-downloader",
+		"url": "https://github.com/putyy/res-downloader",
+		"image_url": "https://opengraph.githubassets.com/fd67905cbed09ca096d914cca050c0fe9d57e8df99527b3afc022d1fd405f313/putyy/res-downloader",
+		"author": {
+			"username": "putyy",
+			"profile_url": "https://github.com/putyy"
+		},
+		"snippet": "视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.8546745042445834,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "bjdgyc/anylink",
+		"url": "https://github.com/bjdgyc/anylink",
+		"image_url": "https://opengraph.githubassets.com/be3254f51dec00f9e513b06129526c2257b04930d1f1d27387a8131d8dedbcb7/bjdgyc/anylink",
+		"author": {
+			"username": "bjdgyc",
+			"profile_url": "https://github.com/bjdgyc"
+		},
+		"snippet": "AnyLink是一个企业级远程办公 ssl vpn 软件，可以支持多人同时在线使用。基于 openconnect 协议开发，并且借鉴了 ocserv 的开发思路，可以完全兼容 AnyConnect \ufffd",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.4521511235672025,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "Gentleman-Programming/engram",
+		"url": "https://github.com/Gentleman-Programming/engram",
+		"image_url": "https://opengraph.githubassets.com/42467032fa78a2479dc01df092f868296a63bc721905422c15a3375764ae6d26/Gentleman-Programming/engram",
+		"author": {
+			"username": "Gentleman-Programming",
+			"profile_url": "https://github.com/Gentleman-Programming"
+		},
+		"snippet": "Persistent memory system for AI coding agents. Agent-agnostic Go binary with SQLite + FTS5, MCP server, HTTP API, CLI, and TUI.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.7376575688648993,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "krillinai/KrillinAI",
+		"url": "https://github.com/krillinai/KrillinAI",
+		"image_url": "https://opengraph.githubassets.com/95a507bed58e31c340c3b3b0176e7107024c2b2da20548b1b443a73834dd0990/krillinai/KrillinAI",
+		"author": {
+			"username": "krillinai",
+			"profile_url": "https://github.com/krillinai"
+		},
+		"snippet": "Video translation and dubbing tool powered by LLMs. The video translator offers 100 language translations and one-click full-process deployment. The video translation output is optimized for platforms",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.303478291430754,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "canopy-network/canopy",
+		"url": "https://github.com/canopy-network/canopy",
+		"image_url": "https://opengraph.githubassets.com/9129f39b0cc223366f9b9f4dff2edeec4b7c01aa3c911ecbf0fefa95ce4e0937/canopy-network/canopy",
+		"author": {
+			"username": "canopy-network",
+			"profile_url": "https://github.com/canopy-network"
+		},
+		"snippet": "The official go implementation of the Canopy Network protocol",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.8442540815773762,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "hatchet-dev/hatchet",
+		"url": "https://github.com/hatchet-dev/hatchet",
+		"image_url": "https://opengraph.githubassets.com/951c78044bc0a8c6659587481d3a8de4a66ea6faa595456f5ef3189ec94eb659/hatchet-dev/hatchet",
+		"author": {
+			"username": "hatchet-dev",
+			"profile_url": "https://github.com/hatchet-dev"
+		},
+		"snippet": "🪓 Run Background Tasks at Scale",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5106344530534098,
+		"published": "2026-04-27T12:00:00Z"
+	},
+	{
+		"source": "github_trending",
+		"title": "go-vikunja/vikunja",
+		"url": "https://github.com/go-vikunja/vikunja",
+		"image_url": "https://opengraph.githubassets.com/fc556f34ed689926c0aea639bd1729a412ec522fdee1f9f6b5c985e2ef75d2f0/go-vikunja/vikunja",
+		"author": {
+			"username": "go-vikunja",
+			"profile_url": "https://github.com/go-vikunja"
+		},
+		"snippet": "The to-do app to organize your life.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.4341792774341453,
+		"published": "2026-04-27T12:00:00Z"
+	}
+]

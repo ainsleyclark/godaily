@@ -20,32 +20,17 @@
 package source
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// %s is filled with the test server URL — the story URL points at the same
-// server so enrichment requests get a non-HTML response and silently skip.
-const hnOKResponseTpl = `{
-  "hits": [
-    {
-      "objectID": "43920000",
-      "title": "Building a high-performance HTTP server in Go",
-      "url": "%s",
-      "author": "gopher42",
-      "story_text": "<p>A deep dive into Go&#x27;s net/http &amp; stdlib.",
-      "points": 350,
-      "num_comments": 42,
-      "created_at": "2026-04-20T10:00:00.000Z"
-    }
-  ]
-}`
 
 // hnNoURLResponse is a hit where the url field is absent (Ask HN / self-post),
 // exercising the HN permalink fallback in transform().
@@ -67,6 +52,12 @@ const hnNoURLResponse = `{
 func TestHackerNews_Fetch(t *testing.T) {
 	t.Parallel()
 
+	// Real Algolia response captured from hn.algolia.com — every hit's "url"
+	// field is replaced with __SERVER_URL__ so enrichment requests land on
+	// the test server (which returns JSON, not HTML, and silently skips).
+	fixture, err := os.ReadFile("testdata/hackernews.json")
+	require.NoError(t, err)
+
 	tt := map[string]struct {
 		stub func(serverURL string) http.HandlerFunc
 		want func(t *testing.T, items []news.Item, err error, serverURL string)
@@ -85,7 +76,7 @@ func TestHackerNews_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(hnOKResponseTpl, serverURL)
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, err := w.Write([]byte(body))
@@ -95,18 +86,17 @@ func TestHackerNews_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 2)
 				assert.Equal(t, news.Item{
 					Source:      news.SourceHN,
-					Title:       "Building a high-performance HTTP server in Go",
+					Title:       "I learned Rust with rustlings, so I built the same thing for Go",
 					URL:         serverURL,
-					OriginalURL: "https://news.ycombinator.com/item?id=43920000",
-					Author:      "gopher42",
-					Snippet:     "A deep dive into Go's net/http & stdlib.",
+					OriginalURL: "https://news.ycombinator.com/item?id=47912690",
+					Author:      &news.Author{Username: "ichihiroy", ProfileURL: "https://news.ycombinator.com/user?id=ichihiroy"},
 					Tag:         news.TagArticle,
-					Comments:    42,
-					Score:       1.2, // 350 points saturates the curve; weight 1.2 * engagement 1.0
-					Published:   time.Date(2026, time.April, 20, 10, 0, 0, 0, time.UTC),
+					Comments:    0,
+					Score:       0.4230994425333170, // 3 points: log(4)/log(101); weight 1.2
+					Published:   time.Date(2026, time.April, 26, 18, 40, 36, 0, time.UTC),
 				}, items[0])
 			},
 		},

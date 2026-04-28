@@ -95,13 +95,15 @@ func (e goBlogEntry) EnrichmentURL() string { return e.url() }
 func (e goBlogEntry) Transform() news.Item {
 	published, _ := time.Parse(time.RFC3339, e.Published)
 	return news.Item{
-		Source:    news.SourceGoBlog,
-		Title:     e.Title,
-		URL:       e.url(),
-		Author:    e.Author.Name,
+		Source: news.SourceGoBlog,
+		Title:  e.Title,
+		URL:    e.url(),
+		Author: &news.Author{
+			Name: e.Author.Name,
+		},
 		Snippet:   e.Summary,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceGoBlog, news.TagArticle, 0, false),
-		Published: published,
+		Published: published.UTC(),
 	}
 }

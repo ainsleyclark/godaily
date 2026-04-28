@@ -106,6 +106,17 @@ Copy `.env.example` to `.env` for local dev. Never commit `.env`.
 - **Internal helpers**: `github.com/ainsleydev/webkit` (notably the `enforce`
   package — see Constructors).
 
+## Go Templates
+
+All Go template actions use spaces inside the delimiters:
+
+```
+{{ if .Author }} - {{ .Author.String }}{{ end }}
+{{ range .Items }}…{{ end }}
+```
+
+Never write `{{if .Author}}` or `{{.Author.Name}}` without the surrounding spaces.
+
 ---
 
 # Go Coding Guidelines

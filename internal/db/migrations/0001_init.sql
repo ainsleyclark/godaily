@@ -12,16 +12,19 @@ CREATE TABLE issues (
 );
 
 CREATE TABLE news_items (
-    id        INTEGER PRIMARY KEY AUTOINCREMENT,
-    issue_id  INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
-    source    TEXT NOT NULL,
-    title     TEXT NOT NULL,
-    url       TEXT NOT NULL,
-    author    TEXT,
-    score     REAL,
-    summary   TEXT,
-    position  INTEGER NOT NULL,
-    raw_json  TEXT
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+    issue_id           INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
+    source             TEXT NOT NULL,
+    title              TEXT NOT NULL,
+    url                TEXT NOT NULL,
+    author_name        TEXT,
+    author_username    TEXT,
+    author_avatar_url  TEXT,
+    author_profile_url TEXT,
+    score              REAL,
+    summary            TEXT,
+    position           INTEGER NOT NULL,
+    raw_json           TEXT
 );
 CREATE INDEX idx_news_items_issue ON news_items(issue_id);
 

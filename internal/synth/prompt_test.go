@@ -124,7 +124,7 @@ func TestFilterItems(t *testing.T) {
 					Source:  news.SourceGoBlog,
 					Title:   "t",
 					URL:     "https://u",
-					Author:  "a",
+					Author:  &news.Author{Name: "a"},
 					Tag:     news.TagArticle,
 					Snippet: "snip",
 					Score:   0.5,

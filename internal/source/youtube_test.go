@@ -22,29 +22,23 @@ package source
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-const youtubeOKResponse = `{
-  "items": [
-    {
-      "id": {"videoId": "dQw4w9WgXcQ"},
-      "snippet": {
-        "title": "Go Concurrency Patterns",
-        "description": "An introduction to concurrency patterns in Go.",
-        "channelTitle": "GopherCon",
-        "publishedAt": "2024-04-25T14:00:00Z"
-      }
-    }
-  ]
-}`
 
 func TestYouTube_Fetch(t *testing.T) {
 	t.Parallel()
+
+	// YouTube Data API v3 sample response shape (matches Google's documented
+	// schema). YouTube has no enrichment hop (EnrichmentURL returns ""),
+	// so no URL substitution is required.
+	fixture, err := os.ReadFile("testdata/youtube.json")
+	require.NoError(t, err)
 
 	tt := map[string]struct {
 		key  string
@@ -73,7 +67,7 @@ func TestYouTube_Fetch(t *testing.T) {
 			key: "test-key",
 			stub: func(w http.ResponseWriter, _ *http.Request) {
 				w.WriteHeader(http.StatusOK)
-				_, err := w.Write([]byte(youtubeOKResponse))
+				_, err := w.Write(fixture)
 				assert.NoError(t, err)
 			},
 			want: func(items []news.Item, err error) {
@@ -84,7 +78,7 @@ func TestYouTube_Fetch(t *testing.T) {
 					Title:     "Go Concurrency Patterns",
 					URL:       "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 					ImageURL:  "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-					Author:    "GopherCon",
+					Author:    &news.Author{Name: "GopherCon", Username: "UCx0L2ZdYfiq-tsAXb8IXpQg", ProfileURL: "https://www.youtube.com/channel/UCx0L2ZdYfiq-tsAXb8IXpQg"},
 					Snippet:   "An introduction to concurrency patterns in Go.",
 					Tag:       news.TagVideo,
 					Score:     0.5, // no signal: weight 1.0 * constant 0.5

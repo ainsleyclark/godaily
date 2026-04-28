@@ -1,0 +1,1068 @@
+[
+	{
+		"source": "go_podcast",
+		"title": "082: Streaming, product updates, and marketing",
+		"url": "https://share.transistor.fm/s/e97475c0",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Hey we talk about streaming programming session, some updates on our produicts, and challenges related to marketing. Ho and Morten quit the call for a second time in a row, this streak has to stop ;).",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-23T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "081: Weird Redis bug and we talk text editors",
+		"url": "https://share.transistor.fm/s/1f5cb2ea",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about a weird issue I'm having all of a sudden with Redis. VPS hosting in general, the famous 5 years mark for a server. Morten is using neovim, which I find very interesting, so we took an un-",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-16T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "080: Ship it anyway: fighting the urge to refactor",
+		"url": "https://share.transistor.fm/s/59f12952",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "In this episode, we dive into the dangerous \"pre-launch purgatory\"—that final stretch after reaching V1 but before the first paying customers arrive. It’s a period where the temptation to start ov",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "079: WireGuard and don't mix social engagement w/ product validation",
+		"url": "https://share.transistor.fm/s/2592f326",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week we talk about what's new with what we're working on. And as always we cover / comment what we've found intreesting or disturbing in the last week or so.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-02T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "078: Uncloud, bridging the gap between Docker and Kubernetes",
+		"url": "https://share.transistor.fm/s/8bf31d9f",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "We talk to the author of Uncloud, a tool that helps with self-hosting and managing your own infrastructure / make it easy to deploy your services to your servers. Links: Uncloud on GitHub",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-26T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "077: LLMs, with great power comes great responsibility",
+		"url": "https://share.transistor.fm/s/0b9352c3",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Ramesh contacted me regarding what we've been saying lately in the pod regarding using LLM and some bad experiences we've had and maybe even some negativity etc. He wanted to give his perspective and ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-19T09:14:25Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "076: From nginx to Caddy and we both had LLM quality issues/concerns",
+		"url": "https://share.transistor.fm/s/3e8e2a72",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "We hop into the call and start recording, and what we found, we had both issues / concerns about quality of LLM produce code. Morten is reviewing some aspect of his project before releasing the public",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-12T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "075: Fyne apps are easier to design and build with Andy Williams",
+		"url": "https://share.transistor.fm/s/04981647",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Andy, the creator of the Fyne toolkit returns and talk about a new visual designer for Fyne apps and a service to make building to all platform very easy. We talk about the state of Fyne, AppTrix Andy",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-05T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "074: Andurel got contributors and OSS licenses",
+		"url": "https://share.transistor.fm/s/6ff4fd4c",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "We give an update on our respective projects and talk about the difficulties of changing license from MIT to LGPL once there's contributions to the project.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-26T11:16:27Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "073: Heroku in maintenance mode and surfacing observability",
+		"url": "https://share.transistor.fm/s/445c1d3b",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week we talk about multiple in-the-news topics like the SalesForce announcement that Heroku is in ~maintenance mode and we surface the big observability topic as I'm preparing to implement someth",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-19T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "072: The tools we're using as Go SWE",
+		"url": "https://share.transistor.fm/s/af6c9349",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week we're talking about the tools we're using in our day-to-day as Go software engineers. Which tools we like, of course there's always the story driven aspect of go podcast(), so there's a coup",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-12T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "071: February projects updates",
+		"url": "https://share.transistor.fm/s/120fe4c9",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "We're trying something, each first episode of the month we'll talk about our respective open source projects. This episode will be more story driven than others, and you'll be able to follow our journ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-04T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "070: Morten, a new co-host; Discussing the current state of education and AI",
+		"url": "https://share.transistor.fm/s/679008fc",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Meet Morten, I said I wanted to try and bring co-hosts in 2026 to test how it feel to have co-hosts. We're starting this with a discussion on LLM and tech education and a little bit of education more ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-01-27T15:31:42Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "069: I'm having fun again! Un-archiving StaticBackend",
+		"url": "https://share.transistor.fm/s/cb288869",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I'm restarting this year after a small break, go podcast() turned 4 years which is crazy, although I'd have hope to have had a better consistency publishing episodes, it is what it is ;). I'm looking ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-01-22T10:29:13Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "068: Revisiting Datastar with Delaney Gillilan",
+		"url": "https://share.transistor.fm/s/dc554734",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I asked Delaney Gillilan to return to go podcast() to revisit datastar, a very impressive tool that enable backend to push changes to the frontend of a web application. In episode 54 we covered the \"w",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-11-21T09:51:13Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "067: LLM/AI as agents in your Go system with Markus Wüstenberg",
+		"url": "https://share.transistor.fm/s/342cb266",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I try to keep an open mind and we talk LLMs and AI with Markus Wüstenberg. Markus is a friend of the show and I noticed he was using a lot of LLM lately, I basically learn a lot by doing th",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-11-11T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "066: Xp, CI, CD with Jon Barber",
+		"url": "https://share.transistor.fm/s/15ad2092",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Jon helped a lot of teams improve their software engineer processes. We talk about the importance of testing, having sane Ci and CD pipeline, pairing and a lot of other extreme programing concepts. Li",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-11-04T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "065: We're in the 3rd age of SaaS",
+		"url": "https://share.transistor.fm/s/569d6825",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "My desire to run a sustainable software business started somewhere near 2003 in the Business of Software forum. I've built, sold, and acquired a dozen of products since that time, with I have to admit",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-29T12:57:51Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "064: Podman, the root-less alternative to Docker",
+		"url": "https://share.transistor.fm/s/6971e3c6",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I retried Podman to replace a production service and did not wanted to re-installed Docker, mainly for security reasons. The fact that podman runs containers on the user-level and completely isolated ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-21T11:07:30Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "063: Common mistakes when testing with Jakub Jarosz",
+		"url": "https://share.transistor.fm/s/85436796",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Jakub is returning to the show, he's about to launch a book called \"50 Go Testing Mistakes\" and we talk about the most common mistakes Gophers are making when it testing. Having a trustable testing su",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-14T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "062: Your Go linters don't know how to fix your code",
+		"url": "https://share.transistor.fm/s/ebdd20e7",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "One university published attracted my attention, because it was on Go, it's titled: \" Assessing Golang Static Analysis Tools on Real-World Issues \". Do you find your static analysis and linters tools ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-08T15:56:04Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "061: As a Gopher I'm excited about Gleam, maybe you'll too",
+		"url": "https://share.transistor.fm/s/db7ea269",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I finally gave Gleam a serious look and ho boy I'm excited. I've looked at Gleam a long time ago back when it started with the ML-like syntax. I've always been an Elm fan, I discovered functional prog",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-09-30T15:17:28Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "060: 10x Developer, or 10x Distraction? A Reality Check on AI",
+		"url": "https://share.transistor.fm/s/bb039a66",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "The message is everywhere: LLMs are here to make us 10x more productive and change software development forever. Venture capitalists are pouring billions into the vision, and big tech companies are pu",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-09-23T14:59:16Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "059: Is Go over with John Arundel",
+		"url": "https://share.transistor.fm/s/4db7a19c",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Let's talk with a friend of the pod, John Arundel. We talk about state of thing a little regarding Go's maturity, a bit of AI, I personally am a bit fatigue of the noise and \"agent\". The podcast is re",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-09-08T08:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "058: Starting in Go with Yann Bizeul",
+		"url": "https://share.transistor.fm/s/0710dad0",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Go is used by multiple programmers and software engineers. Lots of path can lead to want to try Go, and this week I talk with Yann whom eventually found Go and talks about his experiences writing inte",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-06-03T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "057: I unite with another technical professional, and we talk about being blind in tech (part 2)",
+		"url": "https://share.transistor.fm/s/9e429cfe",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "The part 2 of my talk with Ivan Fetch. We cover the remaining listener questions and go over some aspects in more details of being blind in tech.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-04-15T16:02:44Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "056: I unite with another technical professional, and we talk about being blind in tech",
+		"url": "https://share.transistor.fm/s/33b511a9",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Ivan Fetch. We talk about challenges and day-to-day life as tech professionals being blind, using a screen reader. This is the part one as we've a lot to cover. Since I started",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-04-01T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "055: Zog, a Go validation pkg with Tristan Mayo",
+		"url": "https://share.transistor.fm/s/ac63ec43",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Tristan Mayo, the creator of Zog, a Go library that helps with validation when receiving data from an HTTP POST or parsing data. Links: Zog on GitHub",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-03-18T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "054: Datastar with Delaney Gillilan",
+		"url": "https://share.transistor.fm/s/2fc25fd2",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I talk with Delaney Gillilan, the creator of Datastar, a framework that helps building web applications with the reactivity of a single page app but with the programming model of a good old ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-03-11T09:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "053: My exp w/ Gomponent in prod with Markus Wustenberg",
+		"url": "https://share.transistor.fm/s/af1e33f0",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Markus is back to talk about Gomponent. I've used the library in production and wanted to tell the story of my experience converting my html/template to Gomponent and get his thoughts and reactions. T",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-03-04T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "052: Gost, a Go headless browser with Peter Strøiman",
+		"url": "https://share.transistor.fm/s/1e2da00d",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Peter Strøiman, the author of Gost, a Go headless browser that can be pretty useful when doing TDD and even (especially) if you're using HTMX. We talk about the challenges and",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-02-25T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "051: Event sourcing with Morgan Hallgren",
+		"url": "https://share.transistor.fm/s/8544eefe",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Morgan Hallgren and we talk about Event Sourcing. Morgan created an open source library that helps with the parts involved when doing event sourcing. Links: eventsourcing libra",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-02-18T10:00:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "050: Security, devops, testing in Go with Jakub Jarosz",
+		"url": "https://share.transistor.fm/s/ed7d0aa9",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Jakub Jarosz and we talk about security, devops, testing a lot of topics that are fun and comfortable doing in Go. Links: Jakub on Bluesky Jakub's website As always I'd appreci",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-02-11T10:41:17Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "049: I hate e2e tests, but I love unit tests",
+		"url": "https://share.transistor.fm/s/7068f08a",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "go podcast() is back. After debating about canceling or continuing the pod, I've took 2 months and decided to resume publishing episode. I'm looking at a formula for the 4th year of the podcast. I'll ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-02-03T14:06:22Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "048: Lea Anthony on Wails",
+		"url": "https://share.transistor.fm/s/853e16ae",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I'm receiving Lea, creator of the Wails project. Allowing Gophers to build desktop application using web tech for the frontend. Links: Wails.io Want to support me with the show, talk about it and rate",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-11-27T14:28:30Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "047: Fyne toolkit with Andy Williams",
+		"url": "https://share.transistor.fm/s/921388d5",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I talk with Andy Williams about the Fyne toolkit. It's impressive how much you can do with Fyne targeting mostly all platform where you'd want your application to run. In a world where web i",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-11-06T11:13:11Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "046: Let's talk about Rust with John Arundel",
+		"url": "https://share.transistor.fm/s/104628fe",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "John is proposing learning Rust to enhance Gophers programming knowledge. I do enjoy learning new thing personally, Rust always has been or at least seems to required an extra effort to get started wi",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-10-29T08:50:40Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "045: Gomponent with Markus Wustenberg",
+		"url": "https://share.transistor.fm/s/c698778b",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Markus Wustenberg, the author of Gomponent, a library that lets you write your HTML directly in Go using a component approach with type safety. Links: Gomponent main website Ma",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-10-15T09:31:41Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "Toying with static analysis of HTML templates",
+		"url": "https://share.transistor.fm/s/75007bed",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "After last episode with Templ maintainers I was really pumped to try Templ and see if it would work for me. Without spoiling too much I believe it would have been easier to start from scratch with Tem",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-09-30T13:58:33Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "Adrian Hesketh and Joe Davidson on Templ",
+		"url": "https://share.transistor.fm/s/89ba833f",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "In this episode Adrian Hesketh and Joe Davidson from Templ joins me and we talk about the what, why, and how of Templ. If you haven't checked it out, Templ helps creating strongly typed html template ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-09-10T13:04:48Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "042: Gate keeping and teaching of programming with Ramesh Sringeri",
+		"url": "https://share.transistor.fm/s/79995145",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Ramesh joins me this week to talk about his experiences teaching programming in Girls who code club and gate keeping that can discourage some people from choosing computer science as their career path",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-07-03T13:28:02Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "041: Speaking at conferences with Matt Boyle",
+		"url": "https://share.transistor.fm/s/10f4ec8e",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Getting out there, showing what you're currently doing / learning, starting a blog, creating content to help other software engineers, those are all good way to distinguish yourself. You might want to",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-06-25T09:50:55Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "040: CLI in Go and other tech talks with Marian Montagnino",
+		"url": "https://share.transistor.fm/s/e0e308c7",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I'm joined by Marian Montagnino this week. We talk about CLI in Go, programming languages. Java and Elm mentioned, be warned .;) and other tech related stuff. Marian wrote a book on building CLI in Go",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-06-18T12:28:32Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "039: Go is now more fun to build web apps",
+		"url": "https://share.transistor.fm/s/61233229",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I started a monolith-style web application couple of weeks ago and force to admit that Go is more and more fun to use where I was considering more like Django or Rails before. For me there was still t",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-06-05T10:03:25Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "038: Finally, found a good use case for Go's plugin",
+		"url": "https://share.transistor.fm/s/442c0ca0",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I've restarted active development on my open source Go backend server API StaticBackend. For a long time I wanted to make its CLI size smaller, and I decided to use Go's plugin package to extract a fu",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-05-21T10:25:23Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "037: Is Go a good choice for your Startup?",
+		"url": "https://share.transistor.fm/s/4a320a58",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I've been building SaaS since 2008 and built two with Go. Big spoiler, the technology you choose has a little impact in the early stage of a software business. There's some danger to over-engineer and",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-05-09T11:14:38Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "036: Game UI in Go with EbitenUI maintainer Mark Carpenter",
+		"url": "https://share.transistor.fm/s/d9df98f4",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I'm joined by Mark Carpenter, the maintainer of EbitenUI, a UI library you may use with your Ebitengine Go game. Game dev is slowly making its way to Go with game library like Ebitengine and Raylib. T",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-05-02T13:16:58Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "035: Going deeper into Encore with its founder André Eriksson",
+		"url": "https://share.transistor.fm/s/be8117e2",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "A follow-up episode on last week episode. We go a little bit deeper into Encore with André Eriksson. Encore can do a lot for your Go project and infrastructure. It allows your team to focus on your p",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-04-16T09:52:14Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "034: Encore, domain design in Go with Bill Kennedy",
+		"url": "https://share.transistor.fm/s/d46fb2d2",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week I'm joined by Bill Kennedy. Bill makes me discover Encore which can handles service-to-service communication while programmers focus on their application. We talk about domain design in Go a",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-04-10T10:33:17Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "033: Deployment orchestrator in Go, part of my upcoming SaaS",
+		"url": "https://share.transistor.fm/s/6ddc1514",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "My upcoming SaaS product at first wasn't suppose to be rolled out as a product, but was for my own usage. Turns out as I was using it and selling my online courses that it appears to me as being fairl",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-04-02T12:38:00Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "032: Go cryptography with John Arundel",
+		"url": "https://share.transistor.fm/s/c9b680a6",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "In this episode I talk with John Arundel about cryptography in Go. John wrote a great book on the subject called Explore Go: Cryptography. Security is a growing concerns and you should up your game as",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-03-19T10:27:37Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "031: Using shim on API to prevent breaking changes",
+		"url": "https://share.transistor.fm/s/5c0d745d",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "In 2021 Twilio sent a termination email on their Fax services. I was consulting as the CTO in a credit bureau that was in the start of an acquisition process with Equifax Canada. There was just no tim",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-03-14T10:11:15Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "030: gRPC in Go with Chris Shepherd",
+		"url": "https://share.transistor.fm/s/86b8d65c",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I receive Chris Shepherd and we talk about gRPC in Go. If you're building systems with lots of micro-services, gRPC is a good way to provide strong contracts between your services and improve communic",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-03-07T10:51:42Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "029: I've a confession to make, I've wrote 2 apps in Django",
+		"url": "https://share.transistor.fm/s/662d6d88",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This episode was supposed to be focussing on templ, the tempalte library, but as I was going in details I found it hard not to explain the back story of why I started looking for something to help htm",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-02-28T12:23:03Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "028: To TDD or not... or when",
+		"url": "https://share.transistor.fm/s/ae25d32a",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Quick solo episode on TDD and when I experienced it was used best and when I personally not use it but use an approach of writing a bit of code, than tests, thant another bit of code, etc. Buying my c",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-02-16T12:03:29Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "027: Debugging in Go with Matt Boyle",
+		"url": "https://share.transistor.fm/s/a8221b52",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I chatted with Matt Boyle about debugging Go code. Matt is creating a course about this topic and discussing debugging as a tool you may add to your toolbelt. Links The Ultimate Guide to Debugging Wit",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-02-05T11:03:13Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "026: We can do better with interviews and onboarding",
+		"url": "https://share.transistor.fm/s/2cd926fa",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I believe we can do better regarding software engineer interviews and this entire process (also including onboarding). I think companies that will be mediocre at those two aspects will have a hard tim",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-01-25T11:51:40Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "025: Iterators are coming to Go",
+		"url": "https://share.transistor.fm/s/048da65c",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Iterators are going to be useful to process large amount of data without having to load an entire slice or maps in memory but instead create iterators that can be used from a for item := range myItera",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-01-17T14:58:22Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "024: Do you understand this weird production behavior?",
+		"url": "https://share.transistor.fm/s/58525901",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Something absurd happened in 2024 for one of my consulting client's production web application, and this code for a time. The time zero value is behaving differently than it has been since 2018. Date ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-01-10T11:58:53Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "023: Reaction to reddit post on null pointer error in Go",
+		"url": "https://share.transistor.fm/s/2ad776aa",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I react to the post on the Go subreddit of last week talking about a null pointer error occuring in production for a Go program. This is the YouTube video I made. If you'd want to support this podcast",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2024-01-03T15:13:41Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "022: What to answer to \"Why Go?\"",
+		"url": "https://share.transistor.fm/s/ee34933f",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Typical reasons to use Go might sounds exciting for us used to Go, but might not be as attractive for people that haven't experienced Go yet and might not realize they have some small heritants that G",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-12-19T12:17:08Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "021: Why I had to work 30h straight in 2002",
+		"url": "https://share.transistor.fm/s/46d37756",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Things were very different when I started as a junior developer. This is a story of an out of the ordinary day where worked from ~9h am to 11am (the next day), the two of us that were in charge of eve",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-12-06T11:59:33Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "020: Discipline is required to build long-live software",
+		"url": "https://share.transistor.fm/s/fac9cd52",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "As we're building more and more of distributed systems I believe that one trait / culture successful team will require is discipline. Personal opinion, we tend to complicate our lives in the last deca",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-11-23T11:49:20Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "019: Dependencies maintenance in Go",
+		"url": "https://share.transistor.fm/s/2fefbddc",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about dependencies management in Go. How to keep your dependencies up-to-date and how to check if there's any updates available. What to do when a package change their major version. List all p",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-07-14T13:26:10Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "018: WebAssembly runner, a real-world use case",
+		"url": "https://share.transistor.fm/s/489aca45",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I was toying with the idea of using WebAssembly runner as a plugin / extension mechanism from a Go (host) program to extend the capabilities of a program at runtime. * min/max bult-ins coming in 1.21:",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-06-30T14:11:45Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "Help your OSS with GitHub CLI, Codespaces and linters",
+		"url": "https://share.transistor.fm/s/7c77e66b",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I'm trying to make my open source backend API project StaticBackend as easy as possible to contribute. Couple of things I've added lately was worth mentionning. GitHub Codespaces is helpful and nicely",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-05-29T10:26:47Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "016: What I'd hope  WASM brought to web dev",
+		"url": "https://share.transistor.fm/s/cd5bda37",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about what I'd love to see coming to web development. While WebAssembly can be used as an alternative to JavaScript, I believe we're not looking into the real problems related to building web a",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-05-08T14:10:48Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "015: How do you put things in production?",
+		"url": "https://share.transistor.fm/s/fa4cdf80",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "It has been a rough last 4 months for me and I finally get a chance to restart publishing episodes. In this episode I talk a bit about what I've seen so far as process / flow for deploing software in ",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2023-03-27T10:48:42Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "014: We should contribute more to open source",
+		"url": "https://share.transistor.fm/s/e538aeed",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "An ode to open source. I believe we should try to help more the projects \u0026 libraries we're using to build our software. Maintaining and contributing to open source projects is very hard. Thanks to eve",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-12-23T12:35:15Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "013: Go's concurrency to the rescue",
+		"url": "https://share.transistor.fm/s/30bfa76a",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Real-world story about how Go's concurrency save a .NET performance issue I was having where I needed to call a process that takes 5 to 15 seconds to complete 6m times.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-11-30T11:22:31Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "012: Concurrency isn't Go main selling point",
+		"url": "https://share.transistor.fm/s/625ba422",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Concurrency is hard, building concurrent systems is difficult. I don't think the major selling point of Go is its concurrency model. When trying to have a team adopt Go, there's better advantages, lik",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-11-16T11:39:26Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "011: Options where to deploy your Go servers",
+		"url": "https://share.transistor.fm/s/b5d8dd9b",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about the three main options to deploy your Go web API. From managing your own server to PaaS to function-as-a-service.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-10-28T14:34:53Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "010: internal package gotchas",
+		"url": "https://share.transistor.fm/s/2fa5945e",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about how the internal package can be used wrongly. I recently had to expose a Go package that I never thought would be expose, hence I've heavily used the internal package, a bad decision.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-09-27T10:53:33Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "009: Set variables at build time with -LDFLAGS",
+		"url": "https://share.transistor.fm/s/45e4c4dc",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about how I'm using the -LDFLAGS to inject variables value at build time so it's easier to grab the exact Git commit hash that user are using when reporting issues.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-08-10T11:15:05Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "008: The day my Go service got csharpify",
+		"url": "https://share.transistor.fm/s/936615a9",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about a personal experience where a Go micro-service got csharpify via OOP design pattern and why I think C# / Java developers should approach Go with a much simpler mindset and use Go's design",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-07-19T19:03:56Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "007: Is Go's database/sql verbosity that bad?",
+		"url": "https://share.transistor.fm/s/972f686c",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I go over some choices and scenarios Go programmers have regarding options to talk to databases.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-07-01T11:41:52Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "006: Build softwares that stand the test of time",
+		"url": "https://share.transistor.fm/s/bf3e35cd",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I gave 3 reasons why I think Go is one of the best language to build long-live programs. Programs that need to run for 15-20+ years.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-04-25T15:41:14Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "005: Spring arriving, so is Go 1.18 and Generics",
+		"url": "https://share.transistor.fm/s/8f5ef1b4",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "Is Generics going to cause a fragmentation in the community? What's the big deal about it, I personally will appreciate less for-loop where it make sense to reduce verbosity.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-03-04T11:06:46Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "004: Using interfaces for major refactor",
+		"url": "https://share.transistor.fm/s/3edb465f",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talked about a major refactor I did with StaticBackend adding PostgreSQL support into a tightly coupled MongoDB code base using interface to clean everything up.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-02-17T15:31:54Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "003: Pointers or !Pointers, stack, and heap",
+		"url": "https://share.transistor.fm/s/32a63202",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "What are pointers. When not to use pointers and are pointers an optimization vs. using variables.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-02-03T12:01:13Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "002: Project structure \u0026 package name",
+		"url": "https://share.transistor.fm/s/4d3d5f7f",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talked about project structure and why it's intimidating at first, coming from other languages with established structure \u0026 frameworks. However, it's OK not to have the optimal project structure; no",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-01-20T12:30:17Z"
+	},
+	{
+		"source": "go_podcast",
+		"title": "001: Error handling in Go",
+		"url": "https://share.transistor.fm/s/b7069162",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "I talk about error handling in Go, why I think it's good but after a little bit of time getting used to have error as values.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2022-01-10T19:53:41Z"
+	}
+]

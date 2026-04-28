@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:cc="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html">
+    <channel>
+        <title><![CDATA[Golang on Medium]]></title>
+        <description><![CDATA[Latest stories tagged with Golang on Medium]]></description>
+        <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        <image>
+            <url>https://cdn-images-1.medium.com/proxy/1*TGH72Nnw24QL3iV9IOm4VA.png</url>
+            <title>Golang on Medium</title>
+            <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        </image>
+        <generator>Medium</generator>
+        <lastBuildDate>Tue, 28 Apr 2026 10:12:32 GMT</lastBuildDate>
+        <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
+        <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
+        <atom:link href="http://medium.superfeedr.com" rel="hub"/>
+        <item>
+            <title><![CDATA[The One-Word Bug That Broke Our Worker for 6 Days]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@tacherasasi/the-one-word-bug-that-broke-our-worker-for-6-days-9cadd534ee77?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1536/1*CtVFn53iNGx3lQ2MEe3JKw.png" width="1536"></a></p><p class="medium-feed-snippet">For six days, our system was lying to us.</p><p class="medium-feed-link"><a href="https://medium.com/@tacherasasi/the-one-word-bug-that-broke-our-worker-for-6-days-9cadd534ee77?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@tacherasasi/the-one-word-bug-that-broke-our-worker-for-6-days-9cadd534ee77?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/9cadd534ee77</guid>
+            <category><![CDATA[devops]]></category>
+            <category><![CDATA[docker]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Tachera Sasi]]></dc:creator>
+            <pubDate>Tue, 28 Apr 2026 09:53:16 GMT</pubDate>
+            <atom:updated>2026-04-28T09:53:16.967Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Stop Talking to Your AI and Start Giving It Hands: A Beginner’s Guide to MCP and Go]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1376/1*qFyDBjMsLgsjorA6AhCorA.png" width="1376"></a></p><p class="medium-feed-snippet">How to use Golang and the Model Context Protocol to automate your Google Cloud infrastructure.</p><p class="medium-feed-link"><a href="https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/40f696c01d13</guid>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[google-cloud-platform]]></category>
+            <category><![CDATA[model-context-protocol]]></category>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[artificial-intelligence]]></category>
+            <dc:creator><![CDATA[Anna Sbrodova]]></dc:creator>
+            <pubDate>Tue, 28 Apr 2026 06:44:58 GMT</pubDate>
+            <atom:updated>2026-04-28T06:44:58.003Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Cold start mitigation strategies for Go services]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/0*iqonU2Xm0zNFh07g" width="4012"></a></p><p class="medium-feed-snippet">Lazy loading, warm pools and beyond: cold start mitigation in Go</p><p class="medium-feed-link"><a href="https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5">Continue reading on Dev Genius »</a></p></div>]]></description>
+            <link>https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/5adf84d4b6dd</guid>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[coding]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[writing]]></category>
+            <dc:creator><![CDATA[Yaninyz witty]]></dc:creator>
+            <pubDate>Tue, 28 Apr 2026 05:01:30 GMT</pubDate>
+            <atom:updated>2026-04-28T05:01:30.558Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[The Hidden Costs of JSON in APIs: Why I Finally Ditched It for Internal Services]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@erwindev/the-hidden-costs-of-json-in-apis-why-i-finally-ditched-it-for-internal-services-a7e7c4ab2640?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1024/1*Z_0mETHvKDv1xO8wspzNmg.png" width="1024"></a></p><p class="medium-feed-snippet">It was 2 AM on a Tuesday when our monitoring dashboard lit up like a Christmas tree. Response times had spiked to 800ms &#x2014; triple our usual&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@erwindev/the-hidden-costs-of-json-in-apis-why-i-finally-ditched-it-for-internal-services-a7e7c4ab2640?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@erwindev/the-hidden-costs-of-json-in-apis-why-i-finally-ditched-it-for-internal-services-a7e7c4ab2640?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/a7e7c4ab2640</guid>
+            <category><![CDATA[performance-optimization]]></category>
+            <category><![CDATA[api-design]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[backend-engineering]]></category>
+            <category><![CDATA[microservices]]></category>
+            <dc:creator><![CDATA[Erwin Hermanto]]></dc:creator>
+            <pubDate>Tue, 28 Apr 2026 02:11:01 GMT</pubDate>
+            <atom:updated>2026-04-28T02:11:01.336Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Directed Acyclic Graph, Golang and Scheduling: What I Learned Building a Concurrent Task Scheduler]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2240/1*h4HkkqAbHuBpqzGJhjN7JA.png" width="2240"></a></p><p class="medium-feed-snippet">A story about Kahn&#x2019;s algorithm, atomic counters, and the quiet elegance of letting goroutines self-schedule.</p><p class="medium-feed-link"><a href="https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/cf8ea18ecaaa</guid>
+            <category><![CDATA[interfaces]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[concurrency]]></category>
+            <category><![CDATA[algorithms]]></category>
+            <dc:creator><![CDATA[Iserganoff]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 22:06:46 GMT</pubDate>
+            <atom:updated>2026-04-27T22:06:46.303Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Go’s Interface System Is Different, and That Difference Is the Point]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1000/1*bRpUYV5lNXR_0eviFeabZA.png" width="1000"></a></p><p class="medium-feed-snippet">Every language with interfaces or abstract types requires you to declare your intentions upfront.</p><p class="medium-feed-link"><a href="https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/fc7fce12eb2e</guid>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[web-development]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[google]]></category>
+            <category><![CDATA[ai]]></category>
+            <dc:creator><![CDATA[Shayan Holakouee]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 20:19:53 GMT</pubDate>
+            <atom:updated>2026-04-27T20:19:53.767Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Autonomous Agent Networking in Distributed AI: Bypassing NAT and Centralized Brokers]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1280/1*KP8stEfAyfc7CprdKW2cgg.jpeg" width="1280"></a></p><p class="medium-feed-snippet">The evolution of artificial intelligence is rapidly moving away from isolated conversational models toward decentralized, multi-agent&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/1690ad783d5a</guid>
+            <category><![CDATA[artificial-intelligence]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[ai-agent]]></category>
+            <category><![CDATA[networking]]></category>
+            <category><![CDATA[distributed-systems]]></category>
+            <dc:creator><![CDATA[Philip Stayetski]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:58:56 GMT</pubDate>
+            <atom:updated>2026-04-27T19:58:56.321Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Should Assignment Be an Expression?]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1774/1*OHnnYNUPKhJbVIEcFXhrrQ.png" width="1774"></a></p><p class="medium-feed-snippet">Expressions produce values&#x2014;for example, 3 + 4 evaluates to 7. If assignment is an expression, then it also produces a value, enabling&#x2026;</p><p class="medium-feed-link"><a href="https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5">Continue reading on Stackademic »</a></p></div>]]></description>
+            <link>https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/600ed1a4ba95</guid>
+            <category><![CDATA[python-programming]]></category>
+            <category><![CDATA[javascript]]></category>
+            <category><![CDATA[rust]]></category>
+            <category><![CDATA[programming-languages]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Narmin Aliyeva]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:54:33 GMT</pubDate>
+            <atom:updated>2026-04-28T08:19:55.784Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[AI Didn’t Kill Engineering. It Moved Engineering Upstream.]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1672/1*qTk_dSXD284Fz-RmjKnrFQ.png" width="1672"></a></p><p class="medium-feed-snippet">&gt; How I use Claude Code, Go, oCMS, and an LLM Wiki to turn AI from a code generator into an engineering amplifier.</p><p class="medium-feed-link"><a href="https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/e422a56a30d3</guid>
+            <category><![CDATA[ai]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[claude-code]]></category>
+            <category><![CDATA[vibe-coding]]></category>
+            <dc:creator><![CDATA[Oleg Ivanchenko]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:42:28 GMT</pubDate>
+            <atom:updated>2026-04-27T19:42:28.239Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Why do my value receivers have the same address?]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1552/1*MRlX9aCNFzlsKliKvZ1nHQ.png" width="1552"></a></p><p class="medium-feed-snippet">Intro</p><p class="medium-feed-link"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/224b35b849ec</guid>
+            <category><![CDATA[compilers]]></category>
+            <category><![CDATA[pointers]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[runtime]]></category>
+            <dc:creator><![CDATA[Andrei Boar]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:06:22 GMT</pubDate>
+            <atom:updated>2026-04-28T05:53:04.640Z</atom:updated>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0">
+  <channel>
+    <title>Fallthrough</title>
+    <description>A deep and nuanced conversational podcast focused on technology, software, and computing.</description>
+    <itunes:author>Fallthrough Media</itunes:author>
+    <itunes:image href="https://img.transistorcdn.com/fallthrough-show.jpg"/>
+    <item>
+      <title>Episode 68: Distributed systems and Go</title>
+      <itunes:episode>68</itunes:episode>
+      <itunes:title>Episode 68: Distributed systems and Go</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">a8d3e217-c9b2-4d11-9e47-1c7a1b3e9d22</guid>
+      <link>https://share.transistor.fm/s/9a1b2c3d</link>
+      <description><![CDATA[<p>Kris and Jamie chat about <em>distributed systems</em> and writing them in Go.</p>]]></description>
+      <pubDate>Tue, 22 Apr 2026 12:00:00 -0400</pubDate>
+      <author>Fallthrough Media</author>
+      <enclosure url="https://media.transistor.fm/9a1b2c3d/show.mp3" length="55000000" type="audio/mpeg"/>
+      <itunes:author>Kris Brandow, Jamie Tanna</itunes:author>
+      <itunes:duration>4521</itunes:duration>
+      <itunes:summary><![CDATA[<p>Kris and Jamie chat about distributed systems and writing them in Go.</p>]]></itunes:summary>
+      <itunes:image href="https://img.transistorcdn.com/fallthrough-068.jpg"/>
+    </item>
+  </channel>
+</rss>

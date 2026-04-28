@@ -74,12 +74,15 @@ func (s lobstersStory) Transform() news.Item {
 		Title:       s.Title,
 		URL:         s.URL,
 		OriginalURL: original,
-		Author:      s.SubmitterUser,
-		Snippet:     s.Description,
-		Tag:         news.TagArticle,
-		Comments:    s.CommentCount,
-		Score:       news.ScoreOf(news.SourceLobsters, news.TagArticle, float64(s.Score), true),
-		Published:   published.UTC(),
+		Author: &news.Author{
+			Username:   s.SubmitterUser,
+			ProfileURL: "https://lobste.rs/u/" + s.SubmitterUser,
+		},
+		Snippet:   s.Description,
+		Tag:       news.TagArticle,
+		Comments:  s.CommentCount,
+		Score:     news.ScoreOf(news.SourceLobsters, news.TagArticle, float64(s.Score), true),
+		Published: published.UTC(),
 	}
 }
 

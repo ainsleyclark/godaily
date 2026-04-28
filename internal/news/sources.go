@@ -24,15 +24,23 @@ type Source string
 
 // Source constants
 const (
-	SourceDevTo        Source = "dev_to"
-	SourceGoBlog       Source = "go_blog"
-	SourceGitHub       Source = "github"
-	SourceReddit       Source = "reddit"
-	SourceHN           Source = "hacker_news"
-	SourceGolangBridge Source = "golangbridge"
-	SourceLobsters     Source = "lobsters"
-	SourceMedium       Source = "medium"
-	SourceYouTube      Source = "youtube"
+	SourceDevTo          Source = "dev_to"
+	SourceGoBlog         Source = "go_blog"
+	SourceGitHub         Source = "github"
+	SourceGitHubTrending Source = "github_trending"
+	SourceReddit         Source = "reddit"
+	SourceHN             Source = "hacker_news"
+	SourceGolangBridge   Source = "golangbridge"
+	SourceLobsters       Source = "lobsters"
+	SourceMedium         Source = "medium"
+	SourceYouTube        Source = "youtube"
+	SourceGoPodcast      Source = "go_podcast"
+	SourceFallthrough    Source = "fallthrough"
+	SourceArdanLabs      Source = "ardanlabs_podcast"
+	SourceGoRelease      Source = "go_release"
+	SourceMastodon       Source = "mastodon"
+	SourceAwesomeGo      Source = "awesome_go"
+	SourceJetBrains      Source = "jetbrains"
 )
 
 // Sources defines a list of all source types.
@@ -40,12 +48,20 @@ var Sources = []Source{
 	SourceDevTo,
 	SourceGoBlog,
 	SourceGitHub,
+	SourceGitHubTrending,
 	SourceReddit,
 	SourceHN,
 	SourceGolangBridge,
 	SourceLobsters,
 	SourceMedium,
 	SourceYouTube,
+	SourceGoPodcast,
+	SourceFallthrough,
+	SourceArdanLabs,
+	SourceGoRelease,
+	SourceMastodon,
+	SourceAwesomeGo,
+	SourceJetBrains,
 }
 
 // String implements fmt.Stringer on source.
@@ -54,15 +70,23 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
-	SourceGoBlog:       9,
-	SourceGitHub:       8,
-	SourceHN:           7,
-	SourceLobsters:     6,
-	SourceReddit:       5,
-	SourceDevTo:        4,
-	SourceGolangBridge: 3,
-	SourceYouTube:      2,
-	SourceMedium:       1,
+	SourceGoRelease:      18,
+	SourceGoBlog:         17,
+	SourceGitHub:         16,
+	SourceGitHubTrending: 15,
+	SourceHN:             14,
+	SourceLobsters:       13,
+	SourceReddit:         12,
+	SourceJetBrains:      11,
+	SourceDevTo:          10,
+	SourceGolangBridge:   9,
+	SourceGoPodcast:      8,
+	SourceFallthrough:    7,
+	SourceArdanLabs:      6,
+	SourceYouTube:        5,
+	SourceMastodon:       4,
+	SourceAwesomeGo:      3,
+	SourceMedium:         2,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -73,15 +97,23 @@ func (s Source) Priority() int {
 }
 
 var sourceNiceNames = map[Source]string{
-	SourceDevTo:        "Dev.to",
-	SourceGoBlog:       "Go Blog",
-	SourceGitHub:       "GitHub",
-	SourceReddit:       "Reddit",
-	SourceHN:           "Hacker News",
-	SourceGolangBridge: "Golang Bridge",
-	SourceLobsters:     "Lobsters",
-	SourceMedium:       "Medium",
-	SourceYouTube:      "YouTube",
+	SourceDevTo:          "Dev.to",
+	SourceGoBlog:         "Go Blog",
+	SourceGitHub:         "GitHub",
+	SourceGitHubTrending: "GitHub Trending",
+	SourceReddit:         "Reddit",
+	SourceHN:             "Hacker News",
+	SourceGolangBridge:   "Golang Bridge",
+	SourceLobsters:       "Lobsters",
+	SourceMedium:         "Medium",
+	SourceYouTube:        "YouTube",
+	SourceGoPodcast:      "go podcast()",
+	SourceFallthrough:    "Fallthrough",
+	SourceArdanLabs:      "Ardan Labs Podcast",
+	SourceGoRelease:      "Go Releases",
+	SourceMastodon:       "Mastodon",
+	SourceAwesomeGo:      "Awesome Go",
+	SourceJetBrains:      "JetBrains GoLand",
 }
 
 // NiceName returns a formatted string of the source.

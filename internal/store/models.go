@@ -21,16 +21,19 @@ type Issue struct {
 }
 
 type NewsItem struct {
-	ID       int64           `json:"id"`
-	IssueID  int64           `json:"issue_id"`
-	Source   string          `json:"source"`
-	Title    string          `json:"title"`
-	Url      string          `json:"url"`
-	Author   sql.NullString  `json:"author"`
-	Score    sql.NullFloat64 `json:"score"`
-	Summary  sql.NullString  `json:"summary"`
-	Position int64           `json:"position"`
-	RawJson  sql.NullString  `json:"raw_json"`
+	ID               int64           `json:"id"`
+	IssueID          int64           `json:"issue_id"`
+	Source           string          `json:"source"`
+	Title            string          `json:"title"`
+	Url              string          `json:"url"`
+	AuthorName       sql.NullString  `json:"author_name"`
+	AuthorUsername   sql.NullString  `json:"author_username"`
+	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
+	AuthorProfileUrl sql.NullString  `json:"author_profile_url"`
+	Score            sql.NullFloat64 `json:"score"`
+	Summary          sql.NullString  `json:"summary"`
+	Position         int64           `json:"position"`
+	RawJson          sql.NullString  `json:"raw_json"`
 }
 
 type Subscriber struct {

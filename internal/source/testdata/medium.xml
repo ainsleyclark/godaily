@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:cc="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html">
+    <channel>
+        <title><![CDATA[Golang on Medium]]></title>
+        <description><![CDATA[Latest stories tagged with Golang on Medium]]></description>
+        <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        <image>
+            <url>https://cdn-images-1.medium.com/proxy/1*TGH72Nnw24QL3iV9IOm4VA.png</url>
+            <title>Golang on Medium</title>
+            <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
+        </image>
+        <generator>Medium</generator>
+        <lastBuildDate>Mon, 27 Apr 2026 19:09:30 GMT</lastBuildDate>
+        <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
+        <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
+        <atom:link href="http://medium.superfeedr.com" rel="hub"/>
+        <item>
+            <title><![CDATA[Why did my value receivers have the same address?]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1552/1*MRlX9aCNFzlsKliKvZ1nHQ.png" width="1552"></a></p><p class="medium-feed-snippet">Intro</p><p class="medium-feed-link"><a href="https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>__SERVER_URL__</link>
+            <guid isPermaLink="false">https://medium.com/p/224b35b849ec</guid>
+            <category><![CDATA[compilers]]></category>
+            <category><![CDATA[pointers]]></category>
+            <category><![CDATA[programming]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[runtime]]></category>
+            <dc:creator><![CDATA[Andrei Boar]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:06:22 GMT</pubDate>
+            <atom:updated>2026-04-27T19:06:22.047Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/0*sjNEM0K78xYl-_dp" width="600"></a></p><p class="medium-feed-snippet">So, hey, have you ever found yourself squinting at a screen at, like, 2 AM, just staring at a wall of totally cryptic log messages, trying&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>__SERVER_URL__</link>
+            <guid isPermaLink="false">https://medium.com/p/130c8b791416</guid>
+            <category><![CDATA[golang-tutorial]]></category>
+            <category><![CDATA[error-handling]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[medium]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Anshu Singhal]]></dc:creator>
+            <pubDate>Mon, 27 Apr 2026 19:01:08 GMT</pubDate>
+            <atom:updated>2026-04-27T19:01:08.490Z</atom:updated>
+        </item>
+    </channel>
+</rss>

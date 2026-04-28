@@ -1,0 +1,262 @@
+[
+	{
+		"source": "awesome_go",
+		"title": "Add lynxdb to databases (#6282)",
+		"url": "https://github.com/avelino/awesome-go/commit/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+		"author": {
+			"name": "Evgenii Orlov"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-27T08:30:23Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "docs: update NoKV description (#6280)",
+		"url": "https://github.com/avelino/awesome-go/commit/a870df79861bdeadbc6e790122937cae34f35caa",
+		"author": {
+			"name": "Guocheng Song"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-26T03:17:26Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add vibridi/gomock to Mock section (#6277)",
+		"url": "https://github.com/avelino/awesome-go/commit/012a1638a20c05e39e7adca1609fad296c342ec3",
+		"author": {
+			"name": "Gabriele V."
+		},
+		"snippet": "* Add vibridi/gomock to Mock section * Remove gock (https://github.com/h2non/gock) Not updated in a long time, issues are seemingly not responded to in a timely manner.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-23T12:58:40Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add macwifi (#6276)",
+		"url": "https://github.com/avelino/awesome-go/commit/dc5c2a5436a594b1b945075eb058316ff7c07a47",
+		"author": {
+			"name": "Jaison Erick"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T21:16:21Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "docs(routers): add fox HTTP router (#6020)",
+		"url": "https://github.com/avelino/awesome-go/commit/48b7b1fd78b530fba3838c3e65e4741ff544fc98",
+		"author": {
+			"name": "Sylvain Muller"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T19:45:42Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add tickstem/verify - email verification (syntax, MX, disposable, role-based) (#6274)",
+		"url": "https://github.com/avelino/awesome-go/commit/fb2bd48bd8810488147b21ff35439fa0fa9f39bb",
+		"author": {
+			"name": "mike392"
+		},
+		"snippet": "* Add tickstem/verify to Email section * Add tickstem/verify to Email section * Add tickstem/verify to Email section --------- Co-authored-by: mikhail.barsukou",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T10:07:56Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "feat: add tickstem/cron to Job Scheduler (#6272)",
+		"url": "https://github.com/avelino/awesome-go/commit/3156c0490f01527f606eabef86e16d1f8b872686",
+		"author": {
+			"name": "mike392"
+		},
+		"snippet": "Co-authored-by: mikhail.barsukou",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-21T16:45:51Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add NotNet framework for building RESTful APIs (#6270)",
+		"url": "https://github.com/avelino/awesome-go/commit/47c4e6969bd157125a09cf3bea68e2feeeba0417",
+		"author": {
+			"name": "Dhananjay Mishra"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-21T10:18:59Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add gspy to Security section (#6263)",
+		"url": "https://github.com/avelino/awesome-go/commit/fb1be1186c0545f99ba1a03e9d1ca40dc2319b67",
+		"author": {
+			"name": "Mutasem Kharma"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-19T22:35:49Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "update stacktower repository link (#6260)",
+		"url": "https://github.com/avelino/awesome-go/commit/78a453a9365c21bd05caafc1a4668abb7c839a85",
+		"author": {
+			"name": "matthias"
+		},
+		"snippet": "Point the stacktower entry to the new GitHub org URL so the awesome-go reference uses the canonical repository path. Made-with: Cursor",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-19T16:03:07Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add mus-go to Serialization (#6257)",
+		"url": "https://github.com/avelino/awesome-go/commit/3b9b55017ad8ffefd3a22d758d4b4c68e11b90ee",
+		"author": {
+			"name": "Yuri Zinchenko"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-19T00:47:24Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add cmd-stream-go to Distributed Systems (#6256)",
+		"url": "https://github.com/avelino/awesome-go/commit/cf53a7406542b7e64eaa1ae2fc630803d5d7baa5",
+		"author": {
+			"name": "Yuri Zinchenko"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-18T20:26:07Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add git-courer to Version Control (#6255)",
+		"url": "https://github.com/avelino/awesome-go/commit/c1c5cb4e4e6b1bc53ba1013d92e5764f6949d999",
+		"author": {
+			"name": "Alejandro"
+		},
+		"snippet": "Co-authored-by: Alejandro-M-P",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-18T19:05:46Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add pingtower to DevOps Tools (#6254)",
+		"url": "https://github.com/avelino/awesome-go/commit/9bb38d8850d783798d7b2e7a87e5e6286b500116",
+		"author": {
+			"name": "Chris Leonard"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-18T06:17:12Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add hedge to HTTP Clients (#6253)",
+		"url": "https://github.com/avelino/awesome-go/commit/dea0ff2378e3170f1e2a18c7baf2d29082d070ef",
+		"author": {
+			"name": "Prathamesh Bhope"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-18T01:44:49Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Security: add Redact (#6252)",
+		"url": "https://github.com/avelino/awesome-go/commit/cfe6cbadfe3da65ee8987e03c9664eb6172ad5a4",
+		"author": {
+			"name": "Alessandro Resta"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T18:33:34Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Security: Add procscope (#6251)",
+		"url": "https://github.com/avelino/awesome-go/commit/0d63a6e88e5043afea39190c0b74880b6145c717",
+		"author": {
+			"name": "Mutasem-mk4"
+		},
+		"snippet": "* Security: Add procscope * fix: remove duplicated links breaking CI * Revert \"fix: remove duplicated links breaking CI\" This reverts commit 0480305fedac31b48bf03f0187cc6426d51cf0ca.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T11:46:11Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "feat: add gomarklint to Code Analysis (#6250)",
+		"url": "https://github.com/avelino/awesome-go/commit/cfdbf02bd4dbe75079e28ea74ea9ac66beab1274",
+		"author": {
+			"name": "Kazutomo Deguchi"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T09:40:33Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "add goshs (#6249)",
+		"url": "https://github.com/avelino/awesome-go/commit/525a0ba6db199b5fece3c7f564b76b5036244033",
+		"author": {
+			"name": "Patrick Hener"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T06:53:16Z"
+	},
+	{
+		"source": "awesome_go",
+		"title": "Add agent-sdk-go to AI libraries list in README (#6246)",
+		"url": "https://github.com/avelino/awesome-go/commit/d46f07bcadf528582668dd4b94d9090d2fd7649b",
+		"author": {
+			"name": "Vinod Babu Vanjarapu"
+		},
+		"snippet": "Added agent-sdk-go to the Artificial Intelligence section. It is a Go SDK for building durable AI agents on Temporal.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-15T06:13:12Z"
+	}
+]

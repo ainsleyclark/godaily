@@ -318,7 +318,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 	}{
 		"Disabled By Default": {
 			opts:      RunOptions{Sources: []news.Source{news.SourceDevTo}},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.False(t, sg.called, "synth must not be called without IncludeSynth")
@@ -330,13 +330,13 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				Sources:      []news.Source{news.SourceDevTo},
 				IncludeSynth: true,
 			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "tweetytweet", LinkedIn: "linky"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called)
-				assert.Contains(t, m.req.Html, "tweetytweet")
-				assert.Contains(t, m.req.Text, "linky")
+				assert.Contains(t, m.req.Html, "punchy-post")
+				assert.Contains(t, m.req.Text, "punchy-post")
 			},
 		},
 		"Suggester Error Logged Not Returned": {
@@ -349,7 +349,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called, "digest still ships when synth fails")
-				assert.NotContains(t, m.req.Html, "Suggested posts")
+				assert.NotContains(t, m.req.Html, "Suggested post")
 			},
 		},
 		"Suggester ErrNoItems Skipped Silently": {
@@ -362,7 +362,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called)
-				assert.NotContains(t, m.req.Html, "Suggested posts")
+				assert.NotContains(t, m.req.Html, "Suggested post")
 			},
 		},
 		"DryRun Skips Suggester": {
@@ -371,7 +371,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				IncludeSynth: true,
 				DryRun:       true,
 			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.False(t, sg.called, "synth must not be called when DryRun is set")
@@ -415,8 +415,24 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 	registry := map[news.Source]news.Fetcher{
 		news.SourceDevTo: mockFetcher{
 			items: []news.Item{
-				{Title: "first", URL: "https://example.com/1", Author: "a", Score: 0.5, Published: inWindow},
-				{Title: "second", URL: "https://example.com/2", Score: 0.9, Published: inWindow},
+				{
+					Title: "first",
+					URL:   "https://example.com/1",
+					Author: &news.Author{
+						Name:       "Ada Lovelace",
+						Username:   "ada",
+						AvatarURL:  "https://example.com/ada.png",
+						ProfileURL: "https://dev.to/ada",
+					},
+					Score:     0.5,
+					Published: inWindow,
+				},
+				{
+					Title:     "second",
+					URL:       "https://example.com/2",
+					Score:     0.9,
+					Published: inWindow,
+				},
 			},
 		},
 	}
@@ -449,6 +465,18 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		// passing them on), so "second" (score 0.9) comes before "first".
 		assert.Equal(t, "second", items[0].Title)
 		assert.Equal(t, "first", items[1].Title)
+
+		// "second" has no author; all four columns must be NULL.
+		assert.False(t, items[0].AuthorName.Valid)
+		assert.False(t, items[0].AuthorUsername.Valid)
+		assert.False(t, items[0].AuthorAvatarUrl.Valid)
+		assert.False(t, items[0].AuthorProfileUrl.Valid)
+
+		// "first" carries a fully-populated Author; each column round-trips.
+		assert.Equal(t, "Ada Lovelace", items[1].AuthorName.String)
+		assert.Equal(t, "ada", items[1].AuthorUsername.String)
+		assert.Equal(t, "https://example.com/ada.png", items[1].AuthorAvatarUrl.String)
+		assert.Equal(t, "https://dev.to/ada", items[1].AuthorProfileUrl.String)
 	})
 
 	t.Run("Records Failed Status When Email Send Errors", func(t *testing.T) {

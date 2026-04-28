@@ -20,31 +20,17 @@
 package source
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
-
-// atomOKResponseTpl is a minimal Atom 1.0 feed with one entry. The %s
-// placeholder is filled with the test server URL so enrichment requests
-// land on the same server (which returns Atom XML, not HTML, and so
-// enrichment silently fails — keeping the test hermetic).
-const atomOKResponseTpl = `<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>The Go Blog</title>
-  <entry>
-    <title>Go 1.23 Released</title>
-    <link rel="alternate" href="%s"/>
-    <author><name>The Go Team</name></author>
-    <published>2024-08-13T00:00:00Z</published>
-    <summary>Go 1.23 is now available.</summary>
-  </entry>
-</feed>`
 
 // atomNoLinkResponse is a feed where the entry's link has a non-alternate rel,
 // exercising the url() fallback that returns an empty string.
@@ -61,6 +47,12 @@ const atomNoLinkResponse = `<?xml version="1.0" encoding="utf-8"?>
 
 func TestGoBlog_Fetch(t *testing.T) {
 	t.Parallel()
+
+	// Real Atom feed captured from go.dev/blog/feed.atom — content bodies
+	// stripped to keep the fixture lean, and each entry's alternate link
+	// replaced with __SERVER_URL__ so enrichment lands on the test server.
+	fixture, err := os.ReadFile("testdata/godevblog.atom")
+	require.NoError(t, err)
 
 	tt := map[string]struct {
 		stub func(serverURL string) http.HandlerFunc
@@ -80,7 +72,7 @@ func TestGoBlog_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(serverURL string) http.HandlerFunc {
-				body := fmt.Sprintf(atomOKResponseTpl, serverURL)
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, err := w.Write([]byte(body))
@@ -90,16 +82,16 @@ func TestGoBlog_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				assert.NoError(t, err)
-				assert.Len(t, items, 1)
+				assert.Len(t, items, 2)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGoBlog,
-					Title:     "Go 1.23 Released",
+					Title:     "Type Construction and Cycle Detection",
 					URL:       serverURL,
-					Author:    "The Go Team",
-					Snippet:   "Go 1.23 is now available.",
+					Author:    &news.Author{Name: "Mark Freeman"},
+					Snippet:   "Go 1.26 simplifies type construction and enhances cycle detection for certain kinds of recursive types.",
 					Tag:       news.TagArticle,
 					Score:     1.0, // no signal but official: weight 2.0 * constant 0.5
-					Published: time.Date(2024, time.August, 13, 0, 0, 0, 0, time.UTC),
+					Published: time.Date(2026, time.March, 24, 0, 0, 0, 0, time.UTC),
 				}, items[0])
 			},
 		},

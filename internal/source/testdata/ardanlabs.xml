@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://podcastindex.org/namespace/1.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Ardan Labs Podcast</title>
+  <link>https://www.ardanlabs.com</link>
+  <description><![CDATA[Conversations with engineers building tech.]]></description>
+  <itunes:author>Bill Kennedy</itunes:author>
+  <itunes:image href="https://storage.buzzsprout.com/show.jpg" />
+  <item>
+    <itunes:title>Creativity, AI, and Supreme Robot with Victor Varnado</itunes:title>
+    <title>Creativity, AI, and Supreme Robot with Victor Varnado</title>
+    <itunes:summary><![CDATA[Ale Kennedy talks with Victor Varnado about creativity and tech.]]></itunes:summary>
+    <description><![CDATA[<p>Ale Kennedy talks with <b>Victor Varnado</b> about creativity and tech.</p>]]></description>
+    <enclosure url="https://www.buzzsprout.com/1466944/episodes/18828808-creativity-ai-and-supreme-robot-with-victor-varnado.mp3" length="57778796" type="audio/mpeg" />
+    <itunes:author>Victor Varnado</itunes:author>
+    <guid isPermaLink="false">Buzzsprout-18828808</guid>
+    <pubDate>Wed, 11 Mar 2026 10:00:00 -0400</pubDate>
+    <itunes:duration>4812</itunes:duration>
+    <itunes:episodeType>full</itunes:episodeType>
+  </item>
+</channel>
+</rss>

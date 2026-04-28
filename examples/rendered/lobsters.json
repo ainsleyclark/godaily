@@ -4,11 +4,14 @@
 		"title": "Swissing a table",
 		"url": "https://philpearl.github.io/post/swissing_a_table/",
 		"original_url": "https://lobste.rs/s/2lzsw6/swissing_table",
-		"author": "carlana",
+		"author": {
+			"username": "carlana",
+			"profile_url": "https://lobste.rs/u/carlana"
+		},
 		"snippet": "Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation.",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.9042486604437607,
+		"score": 0.9114134941872086,
 		"published": "2026-04-26T14:19:13Z"
 	},
 	{
@@ -17,7 +20,10 @@
 		"url": "https://github.blog/engineering/infrastructure/how-github-uses-ebpf-to-improve-deployment-safety/",
 		"original_url": "https://lobste.rs/s/9xgleb/how_github_uses_ebpf_improve_deployment",
 		"image_url": "https://github.blog/wp-content/uploads/2026/01/4ba0cd42388a255e04c78e5143548f22e577d68e0f15f68e6a3c76c18b927981-1920x1080-1.png?fit=1920%2C1080",
-		"author": "eduard",
+		"author": {
+			"username": "eduard",
+			"profile_url": "https://lobste.rs/u/eduard"
+		},
 		"snippet": "Learn how Github uses eBPF to detect and prevent circular dependencies in its deployment tooling.",
 		"tag": "article",
 		"comments": 6,
@@ -29,7 +35,10 @@
 		"title": "Many-Step Sequences in Go",
 		"url": "https://lesiw.dev/go/step/",
 		"original_url": "https://lobste.rs/s/y8shi7/many_step_sequences_go",
-		"author": "iv",
+		"author": {
+			"username": "iv",
+			"profile_url": "https://lobste.rs/u/iv"
+		},
 		"snippet": "Breaking up programs with lots of linear steps.",
 		"tag": "article",
 		"comments": 4,
@@ -42,7 +51,10 @@
 		"url": "https://blog.xaner.dev/post/wake-on-lan/",
 		"original_url": "https://lobste.rs/s/hbyclt/how_do_wake_on_lan_works",
 		"image_url": "https://blog.xaner.dev/img/avatar-icon.png",
-		"author": "pondidum",
+		"author": {
+			"username": "pondidum",
+			"profile_url": "https://lobste.rs/u/pondidum"
+		},
 		"snippet": "A look on how Wake-On-Lan work and how to create your own Golang packet",
 		"tag": "article",
 		"comments": 1,
@@ -55,7 +67,10 @@
 		"url": "https://antonz.org/porting-go-strings/",
 		"original_url": "https://lobste.rs/s/ioszzg/porting_go_s_strings_package_c",
 		"image_url": "https://antonz.org/porting-go-strings/cover.png",
-		"author": "abhin4v",
+		"author": {
+			"username": "abhin4v",
+			"profile_url": "https://lobste.rs/u/abhin4v"
+		},
 		"snippet": "With allocators, benchmarks, and some optimizations.",
 		"tag": "article",
 		"comments": 0,
@@ -67,7 +82,10 @@
 		"title": "watgo - a WebAssembly Toolkit for Go",
 		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
 		"original_url": "https://lobste.rs/s/pulywh/watgo_webassembly_toolkit_for_go",
-		"author": "cgrinds",
+		"author": {
+			"username": "cgrinds",
+			"profile_url": "https://lobste.rs/u/cgrinds"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 0,
@@ -79,7 +97,10 @@
 		"title": "When the compiler lies: breaking memory safety in safe Go",
 		"url": "https://ciolek.dev/posts/when-the-compiler-lies",
 		"original_url": "https://lobste.rs/s/214wj4/when_compiler_lies_breaking_memory",
-		"author": "samuelkarp",
+		"author": {
+			"username": "samuelkarp",
+			"profile_url": "https://lobste.rs/u/samuelkarp"
+		},
 		"snippet": "Cloud security, Go internals, and systems engineering: bugs, edge cases, and things that weren’t supposed to happen.",
 		"tag": "article",
 		"comments": 2,
@@ -92,7 +113,10 @@
 		"url": "https://github.com/dredozubov/hazmat",
 		"original_url": "https://lobste.rs/s/exrybd/hazmat_os_level_containment_for_ai_coding",
 		"image_url": "https://repository-images.githubusercontent.com/1193685928/6b39b3ac-9d97-4748-bd36-82f613d45e66",
-		"author": "dredozubov",
+		"author": {
+			"username": "dredozubov",
+			"profile_url": "https://lobste.rs/u/dredozubov"
+		},
 		"snippet": "Blog post with the full write-up and threat model: https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/",
 		"tag": "article",
 		"comments": 0,
@@ -105,7 +129,10 @@
 		"url": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/",
 		"original_url": "https://lobste.rs/s/faksz1/stamp_it_all_programs_must_report_their",
 		"image_url": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/2026-04-05-lea-common-case-build-from-git-featured_hu_574969fcd942fcaa.png",
-		"author": "stapelberg",
+		"author": {
+			"username": "stapelberg",
+			"profile_url": "https://lobste.rs/u/stapelberg"
+		},
 		"snippet": "Recently, during a production incident response, I guessed the root cause of an outage correctly within less than an hour (cool!) and submitted a fix just to rule it out, only to then spend many hours",
 		"tag": "article",
 		"comments": 40,
@@ -118,7 +145,10 @@
 		"url": "https://alexrios.me/blog/slogbox-devlog/",
 		"original_url": "https://lobste.rs/s/uffroj/building_slogbox",
 		"image_url": "https://alexrios.me/og-image/slogbox-devlog.png",
-		"author": "carlana",
+		"author": {
+			"username": "carlana",
+			"profile_url": "https://lobste.rs/u/carlana"
+		},
 		"snippet": "A design journal for slogbox, a zero-dependency slog.Handler that keeps recent logs in a ring buffer",
 		"tag": "article",
 		"comments": 0,
@@ -131,7 +161,10 @@
 		"url": "https://lisette.run",
 		"original_url": "https://lobste.rs/s/rw62j7/lisette_rust_syntax_go_runtime",
 		"image_url": "https://lisette.run/og.png",
-		"author": "telemachus",
+		"author": {
+			"username": "telemachus",
+			"profile_url": "https://lobste.rs/u/telemachus"
+		},
 		"snippet": "Little language inspired by Rust that compiles to Go.",
 		"tag": "article",
 		"comments": 40,
@@ -143,7 +176,10 @@
 		"title": "Making Services With Go Right Way",
 		"url": "https://snawoot.github.io/go_web_right_way.html",
 		"original_url": "https://lobste.rs/s/9wwopb/making_services_with_go_right_way",
-		"author": "lr0",
+		"author": {
+			"username": "lr0",
+			"profile_url": "https://lobste.rs/u/lr0"
+		},
 		"snippet": "Website",
 		"tag": "article",
 		"comments": 0,
@@ -156,7 +192,10 @@
 		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
 		"original_url": "https://lobste.rs/s/gtb0fc/game_with_programmable_space_combat",
 		"image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3024370/b17cabdf36aa10f92f15492462563c7a34425238/capsule_616x353.jpg?t=1766523735",
-		"author": "quasilyte",
+		"author": {
+			"username": "quasilyte",
+			"profile_url": "https://lobste.rs/u/quasilyte"
+		},
 		"snippet": "Lead a paramilitary force against a growing space Cult threat. Program your units, build a fleet, trade, research, and engage in deep tactical combat in this RPG-strategy hybrid.",
 		"tag": "article",
 		"comments": 18,
@@ -168,7 +207,10 @@
 		"title": "Data Indexing in Golang",
 		"url": "https://hister.org/posts/data-indexing-in-golang",
 		"original_url": "https://lobste.rs/s/wlgi4a/data_indexing_golang",
-		"author": "kvch",
+		"author": {
+			"username": "kvch",
+			"profile_url": "https://lobste.rs/u/kvch"
+		},
 		"snippet": "A practical guide to fast, content-based document retrieval in Go using Bleve. From simple indexing to custom query languages and performance fine-tuning",
 		"tag": "article",
 		"comments": 5,
@@ -181,7 +223,10 @@
 		"url": "https://github.com/lemire/constmap",
 		"original_url": "https://lobste.rs/s/h1hr9m/fast_compact_immutable_map_from_strings",
 		"image_url": "https://repository-images.githubusercontent.com/1195465008/f6357c87-c603-449a-917c-f90f913e516e",
-		"author": "eatonphil",
+		"author": {
+			"username": "eatonphil",
+			"profile_url": "https://lobste.rs/u/eatonphil"
+		},
 		"snippet": "Contribute to lemire/constmap development by creating an account on GitHub.",
 		"tag": "article",
 		"comments": 2,
@@ -193,7 +238,10 @@
 		"title": "I Made a Terminal Pager",
 		"url": "https://theleo.zone/posts/pager/",
 		"original_url": "https://lobste.rs/s/y5hfo9/i_made_terminal_pager",
-		"author": "robinovitch61",
+		"author": {
+			"username": "robinovitch61",
+			"profile_url": "https://lobste.rs/u/robinovitch61"
+		},
 		"snippet": "A writeup on implementing my own terminal viewport component in Go, which is used in my Terminal pager robinovitch61/lore and in my Kubernetes log viewer terminal application robinovitch61/kl.",
 		"tag": "article",
 		"comments": 0,
@@ -206,7 +254,10 @@
 		"url": "https://antonz.org/porting-go-io/",
 		"original_url": "https://lobste.rs/s/36tumc/porting_go_s_io_package_c",
 		"image_url": "https://antonz.org/porting-go-io/cover.png",
-		"author": "telemachus",
+		"author": {
+			"username": "telemachus",
+			"profile_url": "https://lobste.rs/u/telemachus"
+		},
 		"snippet": "Interfaces, slices, multi-returns and alloca.",
 		"tag": "article",
 		"comments": 0,
@@ -219,7 +270,10 @@
 		"url": "https://github.com/ada-url/goada",
 		"original_url": "https://lobste.rs/s/77pwzi/goada_fast_whatwg_spec_compliant_url",
 		"image_url": "https://opengraph.githubassets.com/11ef4dc96c14be6f91cde5712bef7e16930388046cc7f56187b1af3634494f13/ada-url/goada",
-		"author": "eatonphil",
+		"author": {
+			"username": "eatonphil",
+			"profile_url": "https://lobste.rs/u/eatonphil"
+		},
 		"snippet": "Fast WHATWG spec compliant URL library written in Go - ada-url/goada",
 		"tag": "article",
 		"comments": 1,
@@ -231,7 +285,10 @@
 		"title": "Deploying Go Apps to Google Cloud Run",
 		"url": "https://www.josephspurrier.com/google-cloud-run-deployment",
 		"original_url": "https://lobste.rs/s/hjxi2b/deploying_go_apps_google_cloud_run",
-		"author": "carlana",
+		"author": {
+			"username": "carlana",
+			"profile_url": "https://lobste.rs/u/carlana"
+		},
 		"snippet": "A few of my projects use the same Makefile and Dockerfile to handle deployment to Google Cloud Run.",
 		"tag": "article",
 		"comments": 3,
@@ -244,7 +301,10 @@
 		"url": "https://go.dev/blog/type-construction-and-cycle-detection",
 		"original_url": "https://lobste.rs/s/fqeydw/type_construction_cycle_detection",
 		"image_url": "https://go.dev/doc/gopher/runningsquare.jpg",
-		"author": "binjip978",
+		"author": {
+			"username": "binjip978",
+			"profile_url": "https://lobste.rs/u/binjip978"
+		},
 		"snippet": "Go 1.26 simplifies type construction and enhances cycle detection for certain kinds of recursive types.",
 		"tag": "article",
 		"comments": 0,
@@ -256,7 +316,10 @@
 		"title": "Structuring Go projects",
 		"url": "https://www.alexedwards.net/blog/11-tips-for-structuring-your-go-projects",
 		"original_url": "https://lobste.rs/s/ucympz/structuring_go_projects",
-		"author": "runxiyu",
+		"author": {
+			"username": "runxiyu",
+			"profile_url": "https://lobste.rs/u/runxiyu"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 0,
@@ -268,7 +331,10 @@
 		"title": "Go Naming Conventions: A Practical Guide",
 		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
 		"original_url": "https://lobste.rs/s/xarlmy/go_naming_conventions_practical_guide",
-		"author": "cgrinds",
+		"author": {
+			"username": "cgrinds",
+			"profile_url": "https://lobste.rs/u/cgrinds"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 24,
@@ -281,7 +347,10 @@
 		"url": "https://xuri.me/2022/04/15/go-shared-libraries.html",
 		"original_url": "https://lobste.rs/s/fad6ua/using_go_dynamic_static_shared_libraries",
 		"image_url": "https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png",
-		"author": "runxiyu",
+		"author": {
+			"username": "runxiyu",
+			"profile_url": "https://lobste.rs/u/runxiyu"
+		},
 		"snippet": "In this post, I build a shared library and dynamic library by a Go source code and use it for spreadsheet decryption. A Shared Object/Library is a binary file with a dynamic/static loading table for f",
 		"tag": "article",
 		"comments": 2,
@@ -294,7 +363,10 @@
 		"url": "https://antonz.org/solod/",
 		"original_url": "https://lobste.rs/s/uqeo3m/solod_go_can_be_better_c",
 		"image_url": "https://antonz.org/solod/cover.png",
-		"author": "gcollazo",
+		"author": {
+			"username": "gcollazo",
+			"profile_url": "https://lobste.rs/u/gcollazo"
+		},
 		"snippet": "A subset of Go that transpiles to regular C, with zero runtime.",
 		"tag": "article",
 		"comments": 9,
@@ -306,7 +378,10 @@
 		"title": "Adding Live Reload to a Static Site Generator Written in Go",
 		"url": "https://jon.chrt.dev/2026/03/20/adding-live-reload-to-a-static-site-generator-written-in-go.html",
 		"original_url": "https://lobste.rs/s/ldglpx/adding_live_reload_static_site_generator",
-		"author": "bugsmith",
+		"author": {
+			"username": "bugsmith",
+			"profile_url": "https://lobste.rs/u/bugsmith"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 14,

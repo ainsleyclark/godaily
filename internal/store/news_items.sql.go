@@ -12,23 +12,30 @@ import (
 
 const createNewsItem = `-- name: CreateNewsItem :one
 INSERT INTO news_items (
-    issue_id, source, title, url, author, score, summary, position, raw_json
+    issue_id, source, title, url,
+    author_name, author_username, author_avatar_url, author_profile_url,
+    score, summary, position, raw_json
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?,
+    ?, ?, ?, ?,
+    ?, ?, ?, ?
 )
-RETURNING id, issue_id, source, title, url, author, score, summary, position, raw_json
+RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json
 `
 
 type CreateNewsItemParams struct {
-	IssueID  int64           `json:"issue_id"`
-	Source   string          `json:"source"`
-	Title    string          `json:"title"`
-	Url      string          `json:"url"`
-	Author   sql.NullString  `json:"author"`
-	Score    sql.NullFloat64 `json:"score"`
-	Summary  sql.NullString  `json:"summary"`
-	Position int64           `json:"position"`
-	RawJson  sql.NullString  `json:"raw_json"`
+	IssueID          int64           `json:"issue_id"`
+	Source           string          `json:"source"`
+	Title            string          `json:"title"`
+	Url              string          `json:"url"`
+	AuthorName       sql.NullString  `json:"author_name"`
+	AuthorUsername   sql.NullString  `json:"author_username"`
+	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
+	AuthorProfileUrl sql.NullString  `json:"author_profile_url"`
+	Score            sql.NullFloat64 `json:"score"`
+	Summary          sql.NullString  `json:"summary"`
+	Position         int64           `json:"position"`
+	RawJson          sql.NullString  `json:"raw_json"`
 }
 
 func (q *Queries) CreateNewsItem(ctx context.Context, arg CreateNewsItemParams) (NewsItem, error) {
@@ -37,7 +44,10 @@ func (q *Queries) CreateNewsItem(ctx context.Context, arg CreateNewsItemParams) 
 		arg.Source,
 		arg.Title,
 		arg.Url,
-		arg.Author,
+		arg.AuthorName,
+		arg.AuthorUsername,
+		arg.AuthorAvatarUrl,
+		arg.AuthorProfileUrl,
 		arg.Score,
 		arg.Summary,
 		arg.Position,
@@ -50,7 +60,10 @@ func (q *Queries) CreateNewsItem(ctx context.Context, arg CreateNewsItemParams) 
 		&i.Source,
 		&i.Title,
 		&i.Url,
-		&i.Author,
+		&i.AuthorName,
+		&i.AuthorUsername,
+		&i.AuthorAvatarUrl,
+		&i.AuthorProfileUrl,
 		&i.Score,
 		&i.Summary,
 		&i.Position,
@@ -69,7 +82,7 @@ func (q *Queries) DeleteNewsItemsByIssue(ctx context.Context, issueID int64) err
 }
 
 const getNewsItem = `-- name: GetNewsItem :one
-SELECT id, issue_id, source, title, url, author, score, summary, position, raw_json FROM news_items WHERE id = ? LIMIT 1
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM news_items WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) GetNewsItem(ctx context.Context, id int64) (NewsItem, error) {
@@ -81,7 +94,10 @@ func (q *Queries) GetNewsItem(ctx context.Context, id int64) (NewsItem, error) {
 		&i.Source,
 		&i.Title,
 		&i.Url,
-		&i.Author,
+		&i.AuthorName,
+		&i.AuthorUsername,
+		&i.AuthorAvatarUrl,
+		&i.AuthorProfileUrl,
 		&i.Score,
 		&i.Summary,
 		&i.Position,
@@ -91,7 +107,7 @@ func (q *Queries) GetNewsItem(ctx context.Context, id int64) (NewsItem, error) {
 }
 
 const listNewsItemsByIssue = `-- name: ListNewsItemsByIssue :many
-SELECT id, issue_id, source, title, url, author, score, summary, position, raw_json FROM news_items
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM news_items
 WHERE issue_id = ?
 ORDER BY position ASC
 `
@@ -111,7 +127,10 @@ func (q *Queries) ListNewsItemsByIssue(ctx context.Context, issueID int64) ([]Ne
 			&i.Source,
 			&i.Title,
 			&i.Url,
-			&i.Author,
+			&i.AuthorName,
+			&i.AuthorUsername,
+			&i.AuthorAvatarUrl,
+			&i.AuthorProfileUrl,
 			&i.Score,
 			&i.Summary,
 			&i.Position,

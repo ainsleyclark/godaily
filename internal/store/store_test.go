@@ -62,13 +62,15 @@ func TestStore_CreateIssueAndNewsItems(t *testing.T) {
 	assert.NotZero(t, issue.ID)
 
 	item, err := s.CreateNewsItem(t.Context(), store.CreateNewsItemParams{
-		IssueID:  issue.ID,
-		Source:   "hacker_news",
-		Title:    "Generics are great",
-		Url:      "https://example.com/x",
-		Author:   sql.NullString{String: "gopher", Valid: true},
-		Score:    sql.NullFloat64{Float64: 0.8, Valid: true},
-		Position: 1,
+		IssueID:          issue.ID,
+		Source:           "hacker_news",
+		Title:            "Generics are great",
+		Url:              "https://example.com/x",
+		AuthorName:       sql.NullString{String: "Gopher", Valid: true},
+		AuthorUsername:   sql.NullString{String: "gopher", Valid: true},
+		AuthorProfileUrl: sql.NullString{String: "https://news.ycombinator.com/user?id=gopher", Valid: true},
+		Score:            sql.NullFloat64{Float64: 0.8, Valid: true},
+		Position:         1,
 	})
 	require.NoError(t, err)
 	assert.Equal(t, issue.ID, item.IssueID)
@@ -77,6 +79,9 @@ func TestStore_CreateIssueAndNewsItems(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, listed, 1)
 	assert.Equal(t, "Generics are great", listed[0].Title)
+	assert.Equal(t, "Gopher", listed[0].AuthorName.String)
+	assert.Equal(t, "gopher", listed[0].AuthorUsername.String)
+	assert.False(t, listed[0].AuthorAvatarUrl.Valid)
 }
 
 func TestStore_Subscribe(t *testing.T) {

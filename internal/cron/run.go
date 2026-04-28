@@ -221,16 +221,20 @@ func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedD
 				if err != nil {
 					return fmt.Errorf("marshalling raw item: %w", err)
 				}
+				name, username, avatar, profile := authorFields(item.Author)
 				if _, err := q.CreateNewsItem(ctx, store.CreateNewsItemParams{
-					IssueID:  issue.ID,
-					Source:   string(section.Source),
-					Title:    item.Title,
-					Url:      item.URL,
-					Author:   nullString(item.Author),
-					Score:    sql.NullFloat64{Float64: item.Score, Valid: true},
-					Summary:  nullString(item.Snippet),
-					Position: position,
-					RawJson:  sql.NullString{String: string(raw), Valid: true},
+					IssueID:          issue.ID,
+					Source:           string(section.Source),
+					Title:            item.Title,
+					Url:              item.URL,
+					AuthorName:       name,
+					AuthorUsername:   username,
+					AuthorAvatarUrl:  avatar,
+					AuthorProfileUrl: profile,
+					Score:            sql.NullFloat64{Float64: item.Score, Valid: true},
+					Summary:          nullString(item.Snippet),
+					Position:         position,
+					RawJson:          sql.NullString{String: string(raw), Valid: true},
 				}); err != nil {
 					return fmt.Errorf("creating news item: %w", err)
 				}
@@ -245,6 +249,13 @@ func nullString(s string) sql.NullString {
 		return sql.NullString{}
 	}
 	return sql.NullString{String: s, Valid: true}
+}
+
+func authorFields(a *news.Author) (name, username, avatar, profile sql.NullString) {
+	if a == nil {
+		return
+	}
+	return nullString(a.Name), nullString(a.Username), nullString(a.AvatarURL), nullString(a.ProfileURL)
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

@@ -82,12 +82,15 @@ func (h hnHit) Transform() news.Item {
 		Title:       h.Title,
 		URL:         u,
 		OriginalURL: original,
-		Author:      h.Author,
-		Snippet:     h.StoryText,
-		Tag:         news.TagArticle,
-		Comments:    h.NumComments,
-		Score:       news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
-		Published:   h.CreatedAt,
+		Author: &news.Author{
+			Username:   h.Author,
+			ProfileURL: "https://news.ycombinator.com/user?id=" + h.Author,
+		},
+		Snippet:   h.StoryText,
+		Tag:       news.TagArticle,
+		Comments:  h.NumComments,
+		Score:     news.ScoreOf(news.SourceHN, news.TagArticle, float64(h.Points), true),
+		Published: h.CreatedAt,
 	}
 }
 

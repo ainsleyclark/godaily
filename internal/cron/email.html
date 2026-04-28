@@ -8,18 +8,15 @@
 			{{ range .Items }}
 				<li>
 					{{ if .ImageURL }}<img src="{{ .ImageURL }}" alt="" width="80" style="vertical-align:middle;border-radius:4px;margin-right:8px;">{{ end }}
-					<a href="{{ .URL }}">{{ .Title }}</a>{{if .Author}} - {{ .Author }}{{ end }}
+					<a href="{{ .URL }}">{{ .Title }}</a>{{ if .Author }} - {{ .Author.String }}{{ end }}
 				</li>
 			{{ end }}
 		</ul>
 	{{ end  }}
 	{{ if .Suggestion }}
 		<hr>
-		<h3>Suggested posts</h3>
-		<h4>Twitter</h4>
-		<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Suggestion.Twitter }}</pre>
-		<h4>LinkedIn</h4>
-		<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Suggestion.LinkedIn }}</pre>
+		<h3>Suggested post</h3>
+		<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Suggestion.Post }}</pre>
 	{{ end }}
 </body>
 </html>

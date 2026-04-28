@@ -66,11 +66,16 @@ func (d devToResponse) Transform() news.Item {
 		img = *d.CoverImage
 	}
 	return news.Item{
-		Source:    news.SourceDevTo,
-		Title:     d.Title,
-		URL:       d.Url,
-		ImageURL:  img,
-		Author:    d.User.Name,
+		Source:   news.SourceDevTo,
+		Title:    d.Title,
+		URL:      d.Url,
+		ImageURL: img,
+		Author: &news.Author{
+			Name:       d.User.Name,
+			Username:   d.User.Username,
+			AvatarURL:  d.User.ProfileImage,
+			ProfileURL: "https://dev.to/" + d.User.Username,
+		},
 		Snippet:   d.Description,
 		Tag:       news.TagArticle,
 		Comments:  d.CommentsCount,

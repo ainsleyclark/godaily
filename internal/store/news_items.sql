@@ -1,8 +1,12 @@
 -- name: CreateNewsItem :one
 INSERT INTO news_items (
-    issue_id, source, title, url, author, score, summary, position, raw_json
+    issue_id, source, title, url,
+    author_name, author_username, author_avatar_url, author_profile_url,
+    score, summary, position, raw_json
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?,
+    ?, ?, ?, ?,
+    ?, ?, ?, ?
 )
 RETURNING *;
 
