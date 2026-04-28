@@ -75,7 +75,6 @@ func (s lobstersStory) Transform() news.Item {
 		URL:         s.URL,
 		OriginalURL: original,
 		Author: &news.Author{
-			Name:       s.SubmitterUser,
 			Username:   s.SubmitterUser,
 			ProfileURL: "https://lobste.rs/u/" + s.SubmitterUser,
 		},

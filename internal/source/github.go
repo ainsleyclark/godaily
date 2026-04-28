@@ -115,7 +115,6 @@ func (i ghIssue) Transform() news.Item {
 		Title:  i.Title,
 		URL:    i.HTMLURL,
 		Author: &news.Author{
-			Name:       i.User.Login,
 			Username:   i.User.Login,
 			AvatarURL:  i.User.AvatarURL,
 			ProfileURL: i.User.HTMLURL,

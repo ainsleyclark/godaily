@@ -83,7 +83,6 @@ func (h hnHit) Transform() news.Item {
 		URL:         u,
 		OriginalURL: original,
 		Author: &news.Author{
-			Name:       h.Author,
 			Username:   h.Author,
 			ProfileURL: "https://news.ycombinator.com/user?id=" + h.Author,
 		},

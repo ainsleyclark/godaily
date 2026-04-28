@@ -92,7 +92,6 @@ func (c redditChild) Transform() news.Item {
 		URL:      u,
 		ImageURL: redditImage(p),
 		Author: &news.Author{
-			Name:       p.Author,
 			Username:   p.Author,
 			ProfileURL: "https://www.reddit.com/user/" + p.Author,
 		},

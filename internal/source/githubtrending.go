@@ -94,7 +94,6 @@ func (r trendingRepo) Transform() news.Item {
 		Title:  r.Title,
 		URL:    r.URL,
 		Author: &news.Author{
-			Name:       r.Author,
 			Username:   r.Author,
 			ProfileURL: "https://github.com/" + r.Author,
 		},

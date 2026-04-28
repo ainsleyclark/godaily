@@ -93,7 +93,7 @@ func TestLobsters_Fetch(t *testing.T) {
 					Title:       "Swissing a table",
 					URL:         serverURL,
 					OriginalURL: "https://lobste.rs/s/2lzsw6/swissing_table",
-					Author:      &news.Author{Name: "carlana", Username: "carlana", ProfileURL: "https://lobste.rs/u/carlana"},
+					Author:      &news.Author{Username: "carlana", ProfileURL: "https://lobste.rs/u/carlana"},
 					Tag:         news.TagArticle,
 					Comments:    4,
 					Score:       0.9042486604437607, // log(35)/log(51); weight 1.0 * engagement

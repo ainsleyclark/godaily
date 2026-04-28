@@ -69,7 +69,7 @@ func TestGitHub_Fetch(t *testing.T) {
 				assert.True(t, strings.HasPrefix(items[0].Snippet, "Targeting Go 1.27 \u2014 "), "snippet: %q", items[0].Snippet)
 				assert.Equal(t, news.TagProposalAccepted, items[0].Tag)
 				assert.Equal(t, 5, items[0].Comments)
-				assert.Equal(t, &news.Author{Name: "gopher", Username: "gopher"}, items[0].Author)
+				assert.Equal(t, &news.Author{Username: "gopher"}, items[0].Author)
 			},
 		},
 		"Backlog milestone omitted from snippet": {
@@ -196,7 +196,6 @@ func TestGitHub_RealResponse(t *testing.T) {
 		Title:  "spec: generic methods for Go",
 		URL:    serverURL,
 		Author: &news.Author{
-			Name:       "griesemer",
 			Username:   "griesemer",
 			AvatarURL:  "https://avatars.githubusercontent.com/u/8528975?v=4",
 			ProfileURL: "https://github.com/griesemer",

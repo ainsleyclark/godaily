@@ -90,16 +90,12 @@ func (t golangBridgeTopic) Transform() news.Item {
 	var author *news.Author
 	if t.resolvedUser != nil {
 		u := t.resolvedUser
-		name := u.Name
-		if name == "" {
-			name = u.Username
-		}
 		avatar := ""
 		if u.AvatarTemplate != "" {
 			avatar = "https://forum.golangbridge.org" + strings.Replace(u.AvatarTemplate, "{size}", "90", 1)
 		}
 		author = &news.Author{
-			Name:       name,
+			Name:       u.Name,
 			Username:   u.Username,
 			AvatarURL:  avatar,
 			ProfileURL: "https://forum.golangbridge.org/u/" + u.Username,
