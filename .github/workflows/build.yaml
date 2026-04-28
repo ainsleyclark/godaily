@@ -20,4 +20,4 @@ jobs:
         run: go vet ./...
 
       - name: Build
-        run: go build -o godaily ./cmd/godaily
+        run: go build -o godaily main.go

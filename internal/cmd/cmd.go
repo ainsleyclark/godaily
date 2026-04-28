@@ -36,7 +36,7 @@ func Run() {
 		slog.ErrorContext(context.Background(), "error loading .env file")
 	}
 
-	var cmd = &cli.Command{
+	cmd := &cli.Command{
 		Name:  "godaily",
 		Usage: "Daily Go news, straight to your inbox",
 		Commands: []*cli.Command{
