@@ -40,6 +40,8 @@ type Item struct {
 	Published   time.Time `json:"published"`
 }
 
+//go:generate mockgen -package=mocknews -destination=../mocks/news/ItemRepository.go . ItemRepository
+
 // ItemRepository defines the methods for interacting with the Item store.
 type ItemRepository interface {
 	Find(ctx context.Context, id int64) (Item, error)

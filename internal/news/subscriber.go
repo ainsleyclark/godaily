@@ -35,6 +35,8 @@ type Subscriber struct {
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
+//go:generate mockgen -package=mocknews -destination=../mocks/news/SubscriberRepository.go . SubscriberRepository
+
 // SubscriberRepository defines the methods for interacting with the
 // Subscriber store.
 type SubscriberRepository interface {
