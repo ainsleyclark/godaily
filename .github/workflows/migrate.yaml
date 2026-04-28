@@ -20,4 +20,4 @@ jobs:
         env:
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-        run: go run ./cmd/godaily migrate up
+        run: go run . migrate up
