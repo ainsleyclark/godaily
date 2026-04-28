@@ -1,7 +1,7 @@
 # Future uses for the synth (AI) package
 
 The `internal/synth` package currently has one job: take the day's
-scored news and draft a Twitter + LinkedIn post about the single most
+scored news and draft one short, punchy post about the single most
 notable item. The Anthropic client, cached system prompt, and JSON
 parsing scaffolding are general-purpose, so there is room to extend
 them without restructuring the package.
