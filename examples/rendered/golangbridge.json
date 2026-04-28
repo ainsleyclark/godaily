@@ -3,7 +3,12 @@
 		"source": "golangbridge",
 		"title": "An Unofficial Discourse User Reference Guide",
 		"url": "https://forum.golangbridge.org/t/an-unofficial-discourse-user-reference-guide/9738",
-		"author": "",
+		"author": {
+			"name": "Kristoffer",
+			"username": "flexd",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/flexd/90/25_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/flexd"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 4,
@@ -14,7 +19,12 @@
 		"source": "golangbridge",
 		"title": "Welcome to the Go Forum",
 		"url": "https://forum.golangbridge.org/t/welcome-to-the-go-forum/8",
-		"author": "",
+		"author": {
+			"name": "system",
+			"username": "system",
+			"avatar_url": "https://forum.golangbridge.org/uploads/default/original/2X/5/5ad234f7c3dbc68b6cc72d338ce4f2973d9fd81c.png",
+			"profile_url": "https://forum.golangbridge.org/u/system"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -25,18 +35,28 @@
 		"source": "golangbridge",
 		"title": "[open source]PC-Gui: A lightweight desktop GUI framework built for AI, natively supporting real-time typewriter streaming output like Gemini!",
 		"url": "https://forum.golangbridge.org/t/open-source-pc-gui-a-lightweight-desktop-gui-framework-built-for-ai-natively-supporting-real-time-typewriter-streaming-output-like-gemini/41870",
-		"author": "",
+		"author": {
+			"name": "ew re",
+			"username": "ew_re",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/ew_re/90/17581_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/ew_re"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.3179435475855905,
+		"score": 0.3255208097641333,
 		"published": "2026-04-27T13:02:32.57Z"
 	},
 	{
 		"source": "golangbridge",
 		"title": "Service propagation from middleware chain to handlers",
 		"url": "https://forum.golangbridge.org/t/service-propagation-from-middleware-chain-to-handlers/41840",
-		"author": "",
+		"author": {
+			"name": "z3ntl3",
+			"username": "Z3NTL3",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/z3ntl3/90/17372_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Z3NTL3"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 4,
@@ -47,7 +67,12 @@
 		"source": "golangbridge",
 		"title": "Integrate React Email with Go Templates",
 		"url": "https://forum.golangbridge.org/t/integrate-react-email-with-go-templates/41864",
-		"author": "",
+		"author": {
+			"name": "Orim Dominic Adah",
+			"username": "orimdominic",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/orimdominic/90/17583_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/orimdominic"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -59,7 +84,12 @@
 		"title": "Golang for Playdate handheld. Compiler, SDK Bindings, Tools and Examples",
 		"url": "https://forum.golangbridge.org/t/golang-for-playdate-handheld-compiler-sdk-bindings-tools-and-examples/41524",
 		"image_url": "https://forum.golangbridge.org/uploads/default/optimized/3X/d/5/d5988954ce5ccff2ea223d37b9bf764c33aaadd9_2_768x1024.jpeg",
-		"author": "",
+		"author": {
+			"name": "Roman Bielyi",
+			"username": "romanbielyi.amor",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/romanbielyi.amor/90/17379_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/romanbielyi.amor"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 9,
@@ -70,29 +100,44 @@
 		"source": "golangbridge",
 		"title": "Free Android app for learning Go",
 		"url": "https://forum.golangbridge.org/t/free-android-app-for-learning-go/41821",
-		"author": "",
+		"author": {
+			"name": "J-MEN",
+			"username": "jmen",
+			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/j/7ea924/90.png",
+			"profile_url": "https://forum.golangbridge.org/u/jmen"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 3,
-		"score": 0.48828121464619995,
+		"score": 0.49010151179861877,
 		"published": "2026-04-09T09:26:38.398Z"
 	},
 	{
 		"source": "golangbridge",
 		"title": "Founding Engineer - Go / TypeScript / Incus - Pre-seed equity only",
 		"url": "https://forum.golangbridge.org/t/founding-engineer-go-typescript-incus-pre-seed-equity-only/41856",
-		"author": "",
+		"author": {
+			"name": "Omar Alani",
+			"username": "omarluq",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/omarluq/90/17446_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/omarluq"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.4442896503376815,
+		"score": 0.44692811675572464,
 		"published": "2026-04-21T15:51:12.047Z"
 	},
 	{
 		"source": "golangbridge",
 		"title": "How do I run a Go testable example with CLI-provided arguments?",
 		"url": "https://forum.golangbridge.org/t/how-do-i-run-a-go-testable-example-with-cli-provided-arguments/41851",
-		"author": "",
+		"author": {
+			"name": "Jacob Hummer",
+			"username": "jcbhmr",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/jcbhmr/90/17577_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/jcbhmr"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 3,
@@ -103,7 +148,12 @@
 		"source": "golangbridge",
 		"title": "[Tool] SunGo Project Manager – Go productivity with a Demoscene soul (and custom hardware!)",
 		"url": "https://forum.golangbridge.org/t/tool-sungo-project-manager-go-productivity-with-a-demoscene-soul-and-custom-hardware/41653",
-		"author": "",
+		"author": {
+			"name": "Andrzej Gromczyński",
+			"username": "Andrzej_Gromczynski",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/andrzej_gromczynski/90/17464_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Andrzej_Gromczynski"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -115,7 +165,12 @@
 		"title": "Bouncy Blob, an infinite climbing and bouncing game (Go + Ebitengine)",
 		"url": "https://forum.golangbridge.org/t/bouncy-blob-an-infinite-climbing-and-bouncing-game-go-ebitengine/41846",
 		"image_url": "https://forum.golangbridge.org/uploads/default/optimized/3X/c/e/ce218f67a2e099b8502edf94498caadf8cef0248_2_1024x576.png",
-		"author": "",
+		"author": {
+			"name": "Trevor Slocum",
+			"username": "tslocum",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/tslocum/90/7029_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/tslocum"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -126,7 +181,12 @@
 		"source": "golangbridge",
 		"title": "When is v2 draft design reality especially for error handling",
 		"url": "https://forum.golangbridge.org/t/when-is-v2-draft-design-reality-especially-for-error-handling/41506",
-		"author": "",
+		"author": {
+			"name": "z3ntl3",
+			"username": "Z3NTL3",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/z3ntl3/90/17372_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Z3NTL3"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 10,
@@ -137,7 +197,12 @@
 		"source": "golangbridge",
 		"title": "Troubles with go mod",
 		"url": "https://forum.golangbridge.org/t/troubles-with-go-mod/41651",
-		"author": "",
+		"author": {
+			"name": "Yamil Bracho",
+			"username": "Yamil_Bracho",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/yamil_bracho/90/5141_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Yamil_Bracho"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 8,
@@ -148,7 +213,12 @@
 		"source": "golangbridge",
 		"title": "EXEC format error cygwin/windows new problem in 1.25",
 		"url": "https://forum.golangbridge.org/t/exec-format-error-cygwin-windows-new-problem-in-1-25/41809",
-		"author": "",
+		"author": {
+			"name": "Caryn Babstock",
+			"username": "Caryn_Babstock",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/caryn_babstock/90/17549_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Caryn_Babstock"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 3,
@@ -159,7 +229,12 @@
 		"source": "golangbridge",
 		"title": "park: Pause a process and free its TCP port via ptrace/Mach injection",
 		"url": "https://forum.golangbridge.org/t/park-pause-a-process-and-free-its-tcp-port-via-ptrace-mach-injection/41836",
-		"author": "",
+		"author": {
+			"name": "Vaibhav Shukla",
+			"username": "mrvaibh",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/mrvaibh/90/17561_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/mrvaibh"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -170,7 +245,12 @@
 		"source": "golangbridge",
 		"title": "Responder: When the Interview Is a Bot, So Am I",
 		"url": "https://forum.golangbridge.org/t/responder-when-the-interview-is-a-bot-so-am-i/41822",
-		"author": "",
+		"author": {
+			"name": "Karl",
+			"username": "Karl",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/karl/90/14890_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Karl"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -181,7 +261,12 @@
 		"source": "golangbridge",
 		"title": "Resources For Getting Started With Go",
 		"url": "https://forum.golangbridge.org/t/resources-for-getting-started-with-go/6277",
-		"author": "",
+		"author": {
+			"name": "Kristoffer",
+			"username": "flexd",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/flexd/90/25_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/flexd"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 12,
@@ -192,7 +277,12 @@
 		"source": "golangbridge",
 		"title": "Best api testing tool as Postman Alternative",
 		"url": "https://forum.golangbridge.org/t/best-api-testing-tool-as-postman-alternative/41734",
-		"author": "",
+		"author": {
+			"name": "FG QA",
+			"username": "FG_QA",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/fg_qa/90/17503_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/FG_QA"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 8,
@@ -203,7 +293,12 @@
 		"source": "golangbridge",
 		"title": "Why url query skip param key value with semicolon ;?",
 		"url": "https://forum.golangbridge.org/t/why-url-query-skip-param-key-value-with-semicolon/41808",
-		"author": "",
+		"author": {
+			"name": "Mike",
+			"username": "linlh",
+			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/l/59ef9b/90.png",
+			"profile_url": "https://forum.golangbridge.org/u/linlh"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 3,
@@ -214,7 +309,12 @@
 		"source": "golangbridge",
 		"title": "Request: better namespacing for vendor/ directory",
 		"url": "https://forum.golangbridge.org/t/request-better-namespacing-for-vendor-directory/41782",
-		"author": "",
+		"author": {
+			"name": "Andrew",
+			"username": "mcandre",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/mcandre/90/3126_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/mcandre"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 5,
@@ -225,7 +325,12 @@
 		"source": "golangbridge",
 		"title": "Beyond the Compiler: External SSA Analysis Workflows",
 		"url": "https://forum.golangbridge.org/t/beyond-the-compiler-external-ssa-analysis-workflows/41758",
-		"author": "",
+		"author": {
+			"name": "Ashutosh Sharma",
+			"username": "Ashutosh_Sharma",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/ashutosh_sharma/90/16965_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Ashutosh_Sharma"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -236,7 +341,12 @@
 		"source": "golangbridge",
 		"title": "Kata v1.0.0: in-process compensation workflows for Go",
 		"url": "https://forum.golangbridge.org/t/kata-v1-0-0-in-process-compensation-workflows-for-go/41803",
-		"author": "",
+		"author": {
+			"name": "Semyon",
+			"username": "kerlenton",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/kerlenton/90/17547_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/kerlenton"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -248,7 +358,12 @@
 		"title": "PVS-Studio static analyzer for Go",
 		"url": "https://forum.golangbridge.org/t/pvs-studio-static-analyzer-for-go/41731",
 		"image_url": "https://forum.golangbridge.org/uploads/default/optimized/3X/3/f/3f349625f75805ed1e3e2dc5f2efadd510205645_2_1024x577.png",
-		"author": "",
+		"author": {
+			"name": "Maria H.",
+			"username": "maremaple",
+			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/m/58956e/90.png",
+			"profile_url": "https://forum.golangbridge.org/u/maremaple"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -259,7 +374,12 @@
 		"source": "golangbridge",
 		"title": "SIP-exporter — eBPF-based SIP monitoring service written in Go",
 		"url": "https://forum.golangbridge.org/t/sip-exporter-ebpf-based-sip-monitoring-service-written-in-go/41790",
-		"author": "",
+		"author": {
+			"name": "Aleksey Budaev",
+			"username": "aibudaevv",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/aibudaevv/90/17543_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/aibudaevv"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -271,7 +391,12 @@
 		"title": "Go-mock-gen: type-safe, minimal and zero-dependency mock generator",
 		"url": "https://forum.golangbridge.org/t/go-mock-gen-type-safe-minimal-and-zero-dependency-mock-generator/41789",
 		"image_url": "https://forum.golangbridge.org/uploads/default/original/3X/9/2/921d2261c2d555bb367dd0e5c8ad98db9a2b3595.png",
-		"author": "",
+		"author": {
+			"name": "Nhat Phan",
+			"username": "toniphan21",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/toniphan21/90/17497_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/toniphan21"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -283,7 +408,12 @@
 		"title": " Indicator: A high-performance, zero-dependency technical analysis library",
 		"url": "https://forum.golangbridge.org/t/indicator-a-high-performance-zero-dependency-technical-analysis-library/41786",
 		"image_url": "https://forum.golangbridge.org/uploads/default/original/3X/7/c/7c121531c6074335ddc7d60d70bb3eb86cfb062e.png",
-		"author": "",
+		"author": {
+			"name": "Onur Cinar",
+			"username": "cinar",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/cinar/90/17540_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/cinar"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -294,7 +424,12 @@
 		"source": "golangbridge",
 		"title": "Go-cabinet: Pure Go Microsoft Cabinet (.cab) file reader and writer",
 		"url": "https://forum.golangbridge.org/t/go-cabinet-pure-go-microsoft-cabinet-cab-file-reader-and-writer/41783",
-		"author": "",
+		"author": {
+			"name": "Adam Bouqdib",
+			"username": "abemedia",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/abemedia/90/17476_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/abemedia"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -305,7 +440,12 @@
 		"source": "golangbridge",
 		"title": "Go-Gui: Immediate-mode GUI framework",
 		"url": "https://forum.golangbridge.org/t/go-gui-immediate-mode-gui-framework/41777",
-		"author": "",
+		"author": {
+			"name": "Mike Ward",
+			"username": "mrw",
+			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/m/c4cdca/90.png",
+			"profile_url": "https://forum.golangbridge.org/u/mrw"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 3,
@@ -316,7 +456,12 @@
 		"source": "golangbridge",
 		"title": "Toon Package Recommendation",
 		"url": "https://forum.golangbridge.org/t/toon-package-recommendation/41778",
-		"author": "",
+		"author": {
+			"name": "Derick Schaefer",
+			"username": "dericksc",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/dericksc/90/16781_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/dericksc"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -327,7 +472,12 @@
 		"source": "golangbridge",
 		"title": "Wt — WebTransport framework for Go, feedback welcome",
 		"url": "https://forum.golangbridge.org/t/wt-webtransport-framework-for-go-feedback-welcome/41773",
-		"author": "",
+		"author": {
+			"name": "Nodirbek Numonov",
+			"username": "Nodirbek_Numonov",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/nodirbek_numonov/90/17525_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Nodirbek_Numonov"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,

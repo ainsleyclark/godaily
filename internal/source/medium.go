@@ -61,10 +61,12 @@ func (i mediumItem) EnrichmentURL() string { return i.Link }
 func (i mediumItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC1123, i.PubDate)
 	return news.Item{
-		Source:    news.SourceMedium,
-		Title:     i.Title,
-		URL:       i.Link,
-		Author:    i.Creator,
+		Source: news.SourceMedium,
+		Title:  i.Title,
+		URL:    i.Link,
+		Author: &news.Author{
+			Name: i.Creator,
+		},
 		Snippet:   i.Description,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceMedium, news.TagArticle, 0, false),

@@ -74,7 +74,7 @@ func TestMedium_Fetch(t *testing.T) {
 					Source:    news.SourceMedium,
 					Title:     "Why did my value receivers have the same address?",
 					URL:       serverURL,
-					Author:    "Andrei Boar",
+					Author:    &news.Author{Name: "Andrei Boar"},
 					Snippet:   "Intro Continue reading on Medium »",
 					Tag:       news.TagArticle,
 					Score:     0.25, // no signal: weight 0.5 * constant 0.5

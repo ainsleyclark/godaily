@@ -90,10 +90,13 @@ func (r trendingRepo) EnrichmentURL() string { return r.URL }
 
 func (r trendingRepo) Transform() news.Item {
 	return news.Item{
-		Source:    news.SourceGitHubTrending,
-		Title:     r.Title,
-		URL:       r.URL,
-		Author:    r.Author,
+		Source: news.SourceGitHubTrending,
+		Title:  r.Title,
+		URL:    r.URL,
+		Author: &news.Author{
+			Username:   r.Author,
+			ProfileURL: "https://github.com/" + r.Author,
+		},
 		Snippet:   r.Description,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceGitHubTrending, news.TagArticle, float64(r.StarsToday), true),

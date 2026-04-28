@@ -111,10 +111,14 @@ func (i ghIssue) EnrichmentURL() string { return i.HTMLURL }
 // (set in Fetch from the originating endpoint).
 func (i ghIssue) Transform() news.Item {
 	return news.Item{
-		Source:    news.SourceGitHub,
-		Title:     i.Title,
-		URL:       i.HTMLURL,
-		Author:    i.User.Login,
+		Source: news.SourceGitHub,
+		Title:  i.Title,
+		URL:    i.HTMLURL,
+		Author: &news.Author{
+			Username:   i.User.Login,
+			AvatarURL:  i.User.AvatarURL,
+			ProfileURL: i.User.HTMLURL,
+		},
 		Snippet:   ghSnippet(i.Body, i.Milestone),
 		Tag:       i.tag,
 		Comments:  i.Comments,
@@ -158,7 +162,9 @@ type (
 		tag       news.Tag     // populated by Fetch from the endpoint that returned this issue
 	}
 	ghUser struct {
-		Login string `json:"login"`
+		Login     string `json:"login"`
+		AvatarURL string `json:"avatar_url"`
+		HTMLURL   string `json:"html_url"`
 	}
 	ghMilestone struct {
 		Title string `json:"title"`

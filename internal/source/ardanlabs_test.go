@@ -63,7 +63,7 @@ func TestArdanLabs_Fetch(t *testing.T) {
 					Source:    news.SourceArdanLabs,
 					Title:     "Creativity, AI, and Supreme Robot with Victor Varnado",
 					URL:       "https://www.buzzsprout.com/1466944/episodes/18828808-creativity-ai-and-supreme-robot-with-victor-varnado",
-					Author:    "Victor Varnado",
+					Author:    &news.Author{Name: "Victor Varnado"},
 					ImageURL:  "https://storage.buzzsprout.com/show.jpg",
 					Snippet:   "Ale Kennedy talks with Victor Varnado about creativity and tech.",
 					Tag:       news.TagPodcast,

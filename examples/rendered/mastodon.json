@@ -4,7 +4,10 @@
 		"title": "Just wait until you see what I am doing with these Arduino UNO Q boards that jus",
 		"url": "https://social.tinygo.org/@deadprogram/116460128066397944",
 		"image_url": "https://files.mastodon.social/cache/media_attachments/files/116/460/128/925/140/481/original/47f50ebe66da59af.jpg",
-		"author": "deadprogram",
+		"author": {
+			"name": "deadprogram",
+			"username": "deadprogram"
+		},
 		"snippet": "Just wait until you see what I am doing with these Arduino UNO Q boards that just arrived... # tinygo # arduino # golang # yzma # kronk",
 		"tag": "article",
 		"comments": 0,

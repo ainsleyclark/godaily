@@ -77,10 +77,6 @@ func (s mastodonStatus) EnrichmentURL() string { return "" }
 // Transform maps a mastodonStatus to a news.Item. Mastodon posts have no
 // title field, so the title is derived from the cleaned content.
 func (s mastodonStatus) Transform() news.Item {
-	author := s.Account.DisplayName
-	if author == "" {
-		author = "@" + s.Account.Username
-	}
 	var img string
 	for _, m := range s.MediaAttachments {
 		if m.Type == "image" && m.URL != "" {
@@ -89,10 +85,13 @@ func (s mastodonStatus) Transform() news.Item {
 		}
 	}
 	return news.Item{
-		Source:    news.SourceMastodon,
-		Title:     mastodonTitle(s.Content),
-		URL:       s.URL,
-		Author:    author,
+		Source: news.SourceMastodon,
+		Title:  mastodonTitle(s.Content),
+		URL:    s.URL,
+		Author: &news.Author{
+			Name:     s.Account.DisplayName,
+			Username: s.Account.Username,
+		},
 		Snippet:   s.Content,
 		ImageURL:  img,
 		Tag:       news.TagArticle,

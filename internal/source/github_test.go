@@ -69,7 +69,7 @@ func TestGitHub_Fetch(t *testing.T) {
 				assert.True(t, strings.HasPrefix(items[0].Snippet, "Targeting Go 1.27 \u2014 "), "snippet: %q", items[0].Snippet)
 				assert.Equal(t, news.TagProposalAccepted, items[0].Tag)
 				assert.Equal(t, 5, items[0].Comments)
-				assert.Equal(t, "gopher", items[0].Author)
+				assert.Equal(t, &news.Author{Username: "gopher"}, items[0].Author)
 			},
 		},
 		"Backlog milestone omitted from snippet": {
@@ -192,10 +192,14 @@ func TestGitHub_RealResponse(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, got, 1)
 	assert.Equal(t, news.Item{
-		Source:    news.SourceGitHub,
-		Title:     "spec: generic methods for Go",
-		URL:       serverURL,
-		Author:    "griesemer",
+		Source: news.SourceGitHub,
+		Title:  "spec: generic methods for Go",
+		URL:    serverURL,
+		Author: &news.Author{
+			Username:   "griesemer",
+			AvatarURL:  "https://avatars.githubusercontent.com/u/8528975?v=4",
+			ProfileURL: "https://github.com/griesemer",
+		},
 		Snippet:   "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
 		Tag:       news.TagProposalAccepted,
 		Comments:  175,

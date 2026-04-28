@@ -70,7 +70,7 @@ func TestJetBrains_Fetch(t *testing.T) {
 					Source:    news.SourceJetBrains,
 					Title:     "Code like a PIRATE with Junie and GoLand",
 					URL:       serverURL,
-					Author:    "Anna Protsenko",
+					Author:    &news.Author{Name: "Anna Protsenko"},
 					Snippet:   "This is a guest post from John Arundel, a Go writer and teacher who runs a free email course for Go learners.",
 					Tag:       news.TagArticle,
 					Score:     0.5, // weight 1.0 * constantNoSignal 0.5

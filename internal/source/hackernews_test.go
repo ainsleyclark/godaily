@@ -92,7 +92,7 @@ func TestHackerNews_Fetch(t *testing.T) {
 					Title:       "I learned Rust with rustlings, so I built the same thing for Go",
 					URL:         serverURL,
 					OriginalURL: "https://news.ycombinator.com/item?id=47912690",
-					Author:      "ichihiroy",
+					Author:      &news.Author{Username: "ichihiroy", ProfileURL: "https://news.ycombinator.com/user?id=ichihiroy"},
 					Tag:         news.TagArticle,
 					Comments:    0,
 					Score:       0.4230994425333170, // 3 points: log(4)/log(101); weight 1.2

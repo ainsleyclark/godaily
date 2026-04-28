@@ -62,11 +62,16 @@ func TestDevTo_Fetch(t *testing.T) {
 				assert.NoError(t, err)
 				assert.Len(t, items, 3)
 				assert.Equal(t, news.Item{
-					Source:    news.SourceDevTo,
-					Title:     "🚀 Building a CRUD API in Go with PostgreSQL (Step-by-Step)",
-					URL:       "https://dev.to/ahmedraza_fyntune/building-a-crud-api-in-go-with-postgresql-step-by-step-2n34",
-					ImageURL:  "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fas19p9v7rfz1vj7ip25e.png",
-					Author:    "Ahmed Raza Idrisi",
+					Source:   news.SourceDevTo,
+					Title:    "🚀 Building a CRUD API in Go with PostgreSQL (Step-by-Step)",
+					URL:      "https://dev.to/ahmedraza_fyntune/building-a-crud-api-in-go-with-postgresql-step-by-step-2n34",
+					ImageURL: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fas19p9v7rfz1vj7ip25e.png",
+					Author: &news.Author{
+						Name:       "Ahmed Raza Idrisi",
+						Username:   "ahmedraza_fyntune",
+						AvatarURL:  "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2533524%2F63d54c29-49fc-4cf7-8a18-18a098084828.png",
+						ProfileURL: "https://dev.to/ahmedraza_fyntune",
+					},
 					Snippet:   "In the previous post, we built a simple CRUD API in Go using in-memory storage. Now let\u2019s make it...",
 					Tag:       news.TagArticle,
 					Comments:  0,

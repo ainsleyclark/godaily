@@ -78,7 +78,7 @@ func TestYouTube_Fetch(t *testing.T) {
 					Title:     "Go Concurrency Patterns",
 					URL:       "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 					ImageURL:  "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-					Author:    "GopherCon",
+					Author:    &news.Author{Name: "GopherCon", Username: "UCx0L2ZdYfiq-tsAXb8IXpQg", ProfileURL: "https://www.youtube.com/channel/UCx0L2ZdYfiq-tsAXb8IXpQg"},
 					Snippet:   "An introduction to concurrency patterns in Go.",
 					Tag:       news.TagVideo,
 					Score:     0.5, // no signal: weight 1.0 * constant 0.5

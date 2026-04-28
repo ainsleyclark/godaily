@@ -87,11 +87,14 @@ func (c redditChild) Transform() news.Item {
 		u = "https://www.reddit.com" + p.Permalink
 	}
 	return news.Item{
-		Source:    news.SourceReddit,
-		Title:     p.Title,
-		URL:       u,
-		ImageURL:  redditImage(p),
-		Author:    p.Author,
+		Source:   news.SourceReddit,
+		Title:    p.Title,
+		URL:      u,
+		ImageURL: redditImage(p),
+		Author: &news.Author{
+			Username:   p.Author,
+			ProfileURL: "https://www.reddit.com/user/" + p.Author,
+		},
 		Snippet:   p.SelfText,
 		Tag:       news.TagArticle,
 		Comments:  p.NumComments,

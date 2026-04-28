@@ -40,6 +40,26 @@ type SourceItems struct {
 	Items  []Item `json:"items"`
 }
 
+// Author holds identity information about the person or entity that
+// published or submitted a news item.
+type Author struct {
+	Name       string `json:"name,omitempty"`
+	Username   string `json:"username,omitempty"`
+	AvatarURL  string `json:"avatar_url,omitempty"`
+	ProfileURL string `json:"profile_url,omitempty"`
+}
+
+// String returns the best display name for the author, safe on a nil receiver.
+func (a *Author) String() string {
+	if a == nil {
+		return ""
+	}
+	if a.Name != "" {
+		return a.Name
+	}
+	return a.Username
+}
+
 // Item defines a Go Daily news item.
 type Item struct {
 	Source      Source    `json:"source"`
@@ -47,7 +67,7 @@ type Item struct {
 	URL         string    `json:"url"`                    // click target — the external content the source is linking to
 	OriginalURL string    `json:"original_url,omitempty"` // listing on the source platform (e.g. HN comments page), when different from URL
 	ImageURL    string    `json:"image_url,omitempty"`
-	Author      string    `json:"author"`
+	Author      *Author   `json:"author,omitempty"`
 	Snippet     string    `json:"snippet"`
 	Tag         Tag       `json:"tag"` // source-specific hint ("proposal-accepted", "trending", "official")
 	Comments    int       `json:"comments"`

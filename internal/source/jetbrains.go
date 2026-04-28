@@ -70,7 +70,7 @@ func (i jetbrainsItem) Transform() news.Item {
 		Source:    news.SourceJetBrains,
 		Title:     i.Title,
 		URL:       i.Link,
-		Author:    i.Creator,
+		Author:    &news.Author{Name: i.Creator},
 		Snippet:   i.Description,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceJetBrains, news.TagArticle, 0, false),

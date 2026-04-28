@@ -63,7 +63,7 @@ func TestGoPodcast_Fetch(t *testing.T) {
 					Source:    news.SourceGoPodcast,
 					Title:     "082: Streaming, product updates, and marketing",
 					URL:       "https://share.transistor.fm/s/e97475c0",
-					Author:    "Dominic St-Pierre",
+					Author:    &news.Author{Name: "Dominic St-Pierre"},
 					ImageURL:  "https://img.transistorcdn.com/episode-082.jpg",
 					Snippet:   "Hey we talk about streaming programming session, some updates on our products, and challenges related to marketing.",
 					Tag:       news.TagPodcast,

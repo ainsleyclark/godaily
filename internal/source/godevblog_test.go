@@ -87,7 +87,7 @@ func TestGoBlog_Fetch(t *testing.T) {
 					Source:    news.SourceGoBlog,
 					Title:     "Type Construction and Cycle Detection",
 					URL:       serverURL,
-					Author:    "Mark Freeman",
+					Author:    &news.Author{Name: "Mark Freeman"},
 					Snippet:   "Go 1.26 simplifies type construction and enhances cycle detection for certain kinds of recursive types.",
 					Tag:       news.TagArticle,
 					Score:     1.0, // no signal but official: weight 2.0 * constant 0.5

@@ -4,7 +4,12 @@
 		"title": "Don’t Trust Backups You Haven’t Restored",
 		"url": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fkdli0h37f49jl4m1c9rx.png",
-		"author": "alexey.zh",
+		"author": {
+			"name": "alexey.zh",
+			"username": "alzhi_f93e67fa45b972",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2662567%2F21a8587a-f22f-4f4b-acf6-e0c17d9ee873.jpeg",
+			"profile_url": "https://dev.to/alzhi_f93e67fa45b972"
+		},
 		"snippet": "0. A Backup Is Not a File, but a Promise You can write anything you want in the...",
 		"tag": "article",
 		"comments": 0,
@@ -16,7 +21,12 @@
 		"title": "I built ssmctl because AWS SSM deserved a better user experience",
 		"url": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fz48lf910ehd27seg79n8.png",
-		"author": "Rhys | Senior Cloud Infrastructure Engineer",
+		"author": {
+			"name": "Rhys | Senior Cloud Infrastructure Engineer",
+			"username": "rhysmcneill",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3899076%2F97ca7b9c-9b8f-48cd-b160-f2027ad528ba.png",
+			"profile_url": "https://dev.to/rhysmcneill"
+		},
 		"snippet": "Github: github.com/rhysmcneill/ssmctl I use AWS Session Manager a lot. No bastion hosts, no open...",
 		"tag": "article",
 		"comments": 0,
@@ -28,7 +38,12 @@
 		"title": "DDD in Go applied to crypto exchange APIs",
 		"url": "https://dev.to/ohugonnot/ddd-in-go-applied-to-crypto-exchange-apis-3on4",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fa52ktqyobc1csf99pwpf.png",
-		"author": "Odilon HUGONNOT",
+		"author": {
+			"name": "Odilon HUGONNOT",
+			"username": "ohugonnot",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3833552%2F48d32eab-68ed-4496-8ba6-f01e32806723.png",
+			"profile_url": "https://dev.to/ohugonnot"
+		},
 		"snippet": "Bounded contexts, aggregates, value objects and anti-corruption layer — DDD is the 'why' behind CQRS and event sourcing. Applied to a Go service consuming Binance, OKEx and Coinbase.",
 		"tag": "article",
 		"comments": 0,
@@ -40,7 +55,12 @@
 		"title": "Message Queue Example using RabbitMQ in Go",
 		"url": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgzxjn033ve578b3gd51h.png",
-		"author": "nadirbasalamah",
+		"author": {
+			"name": "nadirbasalamah",
+			"username": "nadirbasalamah",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F387704%2Fb7a4d34b-c3e5-418f-9d23-7d3091ea86e2.jpeg",
+			"profile_url": "https://dev.to/nadirbasalamah"
+		},
 		"snippet": "Introduction A message queue is an essential component in a distributed system, allowing...",
 		"tag": "article",
 		"comments": 0,
@@ -52,7 +72,12 @@
 		"title": "The Invisible Layer Protecting Your Go Dependencies",
 		"url": "https://dev.to/logicco/the-invisible-layer-protecting-your-go-dependencies-4n9m",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq28asjos7jqhbw1ykbye.png",
-		"author": "LogicCo",
+		"author": {
+			"name": "LogicCo",
+			"username": "logicco",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3850047%2F142b69d5-83f4-45c0-8ede-f5a7d32f528d.png",
+			"profile_url": "https://dev.to/logicco"
+		},
 		"snippet": "Before starting, I want to be clear: this is not a deep dive into the Golang Proxy, but an...",
 		"tag": "article",
 		"comments": 0,
@@ -64,7 +89,12 @@
 		"title": "WEB UI in Go? Nothing Can Stop Me!",
 		"url": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ft2nkzbcv5ijg3boclsmp.png",
-		"author": "alexey.zh",
+		"author": {
+			"name": "alexey.zh",
+			"username": "alzhi_f93e67fa45b972",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2662567%2F21a8587a-f22f-4f4b-acf6-e0c17d9ee873.jpeg",
+			"profile_url": "https://dev.to/alzhi_f93e67fa45b972"
+		},
 		"snippet": "Introduction Author's note: This article is not technical in nature. Rather, it is a set...",
 		"tag": "article",
 		"comments": 0,
@@ -76,7 +106,12 @@
 		"title": "The Airgap Test: Refactoring a Cobra CLI into a Library API",
 		"url": "https://dev.to/bala_paranj_059d338e44e7e/the-airgap-test-refactoring-a-cobra-cli-into-a-library-api-1h0k",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fhxokmtzm8zhgv4c2u2dp.png",
-		"author": "Bala Paranj",
+		"author": {
+			"name": "Bala Paranj",
+			"username": "bala_paranj_059d338e44e7e",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3862804%2F7ea6c560-63cb-4daf-a713-450532280b0a.jpg",
+			"profile_url": "https://dev.to/bala_paranj_059d338e44e7e"
+		},
 		"snippet": "How a single rule — only RunE touches *cobra.Command — turned a CLI codebase into a library that...",
 		"tag": "article",
 		"comments": 0,
@@ -88,7 +123,12 @@
 		"title": "Every Request Looked the Same in My Logs. Then I Added One Line.",
 		"url": "https://dev.to/abhishek_sharma_a9792aee8/every-request-looked-the-same-in-my-logs-then-i-added-one-line-19m7",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F4d0x4vo13a90qvviixqv.png",
-		"author": "Abhishek Sharma",
+		"author": {
+			"name": "Abhishek Sharma",
+			"username": "abhishek_sharma_a9792aee8",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1904340%2F8b4e504b-61b0-4e3e-a1c7-a6f1bec45410.png",
+			"profile_url": "https://dev.to/abhishek_sharma_a9792aee8"
+		},
 		"snippet": "In Part 9, I Dockerized my backend and added database migrations. One command (docker compose up) now...",
 		"tag": "article",
 		"comments": 0,
@@ -100,7 +140,12 @@
 		"title": "I learned Rust with rustlings, so I built the same thing for Go",
 		"url": "https://dev.to/ichihiroy/i-learned-rust-with-rustlings-so-i-built-the-same-thing-for-go-4f4m",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgvs2yks2z20v9du333e5.png",
-		"author": "Yunis Quliyev",
+		"author": {
+			"name": "Yunis Quliyev",
+			"username": "ichihiroy",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3899221%2Fffe1c7c1-f796-4965-b418-b6b2014cedba.jpeg",
+			"profile_url": "https://dev.to/ichihiroy"
+		},
 		"snippet": "I've been wanting to learn Go properly for a while. Tried the usual — read the docs, watched...",
 		"tag": "article",
 		"comments": 0,
@@ -112,7 +157,12 @@
 		"title": "8 Cursor Rules for Go Developers — 2026 Edition",
 		"url": "https://dev.to/olivia_craft/8-cursor-rules-for-go-developers-2026-edition-2c25",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fiyqlr718pth6fvy16pck.png",
-		"author": "Olivia Craft",
+		"author": {
+			"name": "Olivia Craft",
+			"username": "olivia_craft",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3860999%2Fbb205e04-9977-4cb0-88e0-ffbbf2f009ab.png",
+			"profile_url": "https://dev.to/olivia_craft"
+		},
 		"snippet": "Eight Cursor rules that make your AI write idiomatic Go — proper error handling, accept interfaces, context-first signatures, owned goroutines, directional channels, no init() tricks, table-driven t",
 		"tag": "article",
 		"comments": 0,
@@ -124,7 +174,12 @@
 		"title": "GopherWhisper: A burrow full of malware",
 		"url": "https://dev.to/mark0_617b45cda9782a/gopherwhisper-a-burrow-full-of-malware-1cfj",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F0xgpb55rdy8qsqdtjki5.png",
-		"author": "Mark0",
+		"author": {
+			"name": "Mark0",
+			"username": "mark0_617b45cda9782a",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3702447%2F0301e2c9-634f-4567-8171-fd5d9da0b3aa.jpg",
+			"profile_url": "https://dev.to/mark0_617b45cda9782a"
+		},
 		"snippet": "ESET researchers have identified a new China-aligned APT group dubbed GopherWhisper, which has been...",
 		"tag": "article",
 		"comments": 0,

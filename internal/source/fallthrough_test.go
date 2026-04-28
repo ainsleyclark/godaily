@@ -63,7 +63,7 @@ func TestFallthrough_Fetch(t *testing.T) {
 					Source:    news.SourceFallthrough,
 					Title:     "Episode 68: Distributed systems and Go",
 					URL:       "https://share.transistor.fm/s/9a1b2c3d",
-					Author:    "Kris Brandow, Jamie Tanna",
+					Author:    &news.Author{Name: "Kris Brandow, Jamie Tanna"},
 					ImageURL:  "https://img.transistorcdn.com/fallthrough-068.jpg",
 					Snippet:   "Kris and Jamie chat about distributed systems and writing them in Go.",
 					Tag:       news.TagPodcast,

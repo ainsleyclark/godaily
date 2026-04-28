@@ -89,7 +89,7 @@ func (c awesomeCommit) Transform() news.Item {
 		Source:    news.SourceAwesomeGo,
 		Title:     title,
 		URL:       c.HTMLURL,
-		Author:    c.Commit.Author.Name,
+		Author:    &news.Author{Name: c.Commit.Author.Name},
 		Snippet:   body,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourceAwesomeGo, news.TagArticle, 0, false),
