@@ -142,7 +142,7 @@ func openStores(ctx context.Context) (*issues.Store, *items.Store, *sql.DB, erro
 		return nil, nil, nil, err
 	}
 	if err = db.Up(ctx, conn); err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return nil, nil, nil, fmt.Errorf("running migrations: %w", err)
 	}
 	return issues.New(conn), items.New(conn), conn, nil
