@@ -28,11 +28,11 @@ sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
 .PHONY: sqlc
 
 migrate-up: # Apply all pending database migrations against TURSO_URL
-	go run ./cmd/godaily migrate
+	go run ./cmd/godaily migrate up
 .PHONY: migrate-up
 
 migrate-down: # Roll back the most recent database migration against TURSO_URL
-	go run ./cmd/godaily migrate --down
+	go run ./cmd/godaily migrate down
 .PHONY: migrate-down
 
 excluded := grep -v gen | grep -v res
