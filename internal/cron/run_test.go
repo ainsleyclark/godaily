@@ -526,7 +526,7 @@ func newTestStores(t *testing.T) (*issues.Store, *items.Store) {
 	conn, err := db.New(t.Context(), url, "")
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = conn.Close() })
-	require.NoError(t, db.Migrate(t.Context(), conn))
+	require.NoError(t, db.Up(t.Context(), conn))
 	return issues.New(conn), items.New(conn)
 }
 

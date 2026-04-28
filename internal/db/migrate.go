@@ -47,10 +47,10 @@ func newProvider(db *sql.DB) (*goose.Provider, error) {
 	return provider, nil
 }
 
-// Migrate applies any pending schema migrations to db using goose with the
+// Up applies any pending schema migrations to db using goose with the
 // embedded migrations FS. Safe to call repeatedly; goose tracks applied
 // versions in goose_db_version.
-func Migrate(ctx context.Context, db *sql.DB) error {
+func Up(ctx context.Context, db *sql.DB) error {
 	enforce.NotNil(db, "database connection is required")
 
 	provider, err := newProvider(db)

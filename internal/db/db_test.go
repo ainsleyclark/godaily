@@ -56,7 +56,7 @@ func TestMigrate(t *testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = conn.Close() })
 
-		require.NoError(t, Migrate(t.Context(), conn))
+		require.NoError(t, Up(t.Context(), conn))
 
 		// Each declared table must exist exactly once.
 		for _, table := range []string{"issues", "items", "subscribers"} {
@@ -74,8 +74,8 @@ func TestMigrate(t *testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = conn.Close() })
 
-		require.NoError(t, Migrate(t.Context(), conn))
-		require.NoError(t, Migrate(t.Context(), conn), "second call must be a no-op")
+		require.NoError(t, Up(t.Context(), conn))
+		require.NoError(t, Up(t.Context(), conn), "second call must be a no-op")
 	})
 
 	t.Run("Up Then Down", func(t *testing.T) {
@@ -83,7 +83,7 @@ func TestMigrate(t *testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = conn.Close() })
 
-		require.NoError(t, Migrate(t.Context(), conn))
+		require.NoError(t, Up(t.Context(), conn))
 		require.NoError(t, Down(t.Context(), conn))
 
 		var count int

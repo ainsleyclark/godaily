@@ -53,7 +53,7 @@ func Setup(t *testing.T) (context.Context, *sql.DB, func()) {
 	conn, err := db.New(ctx, url, "")
 	require.NoError(t, err, "opening sqlite database")
 
-	require.NoError(t, db.Migrate(ctx, conn), "applying migrations")
+	require.NoError(t, db.Up(ctx, conn), "applying migrations")
 
 	cleanup := func() {
 		_ = conn.Close()
