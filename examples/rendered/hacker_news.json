@@ -1,11 +1,32 @@
 [
 	{
 		"source": "hacker_news",
+		"title": "Nocord HF – A discord style FT8 client written in Golang",
+		"url": "https://github.com/kyleomalley/nocordhf",
+		"original_url": "https://news.ycombinator.com/item?id=47930598",
+		"image_url": "https://opengraph.githubassets.com/98304dee96804ed79a3f7da9de2c687b6ac2a29c1ec17fd35c366f5693e129a0/kyleomalley/nocordhf",
+		"author": {
+			"name": "kyleomalley",
+			"username": "kyleomalley",
+			"profile_url": "https://news.ycombinator.com/user?id=kyleomalley"
+		},
+		"snippet": "Open Source Digital Mode (FT8) Radio Software for Amateur Radio (MacOS) - kyleomalley/nocordhf",
+		"tag": "article",
+		"comments": 2,
+		"score": 0.3352983752456666,
+		"published": "2026-04-28T05:01:01Z"
+	},
+	{
+		"source": "hacker_news",
 		"title": "I learned Rust with rustlings, so I built the same thing for Go",
 		"url": "https://github.com/Ichihiroy/golings",
 		"original_url": "https://news.ycombinator.com/item?id=47912690",
 		"image_url": "https://opengraph.githubassets.com/25bfd6b0741b1d4e23125a056dfa05fb3082b3ffa78f9171c81de80557cfbcd2/Ichihiroy/golings",
-		"author": "ichihiroy",
+		"author": {
+			"name": "ichihiroy",
+			"username": "ichihiroy",
+			"profile_url": "https://news.ycombinator.com/user?id=ichihiroy"
+		},
 		"snippet": "🐹 Learn Go through small, interactive exercises — inspired by rustlings. - Ichihiroy/golings",
 		"tag": "article",
 		"comments": 0,
@@ -17,7 +38,11 @@
 		"title": "Show HN: SherifDB, a databe written in Golang under 500 LOC",
 		"url": "https://emmanuel326.github.io/blogs/sheriffdb.html",
 		"original_url": "https://news.ycombinator.com/item?id=47901892",
-		"author": "Nya-kundi",
+		"author": {
+			"name": "Nya-kundi",
+			"username": "Nya-kundi",
+			"profile_url": "https://news.ycombinator.com/user?id=Nya-kundi"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
@@ -30,7 +55,11 @@
 		"url": "https://github.com/rcarmo/gte-go",
 		"original_url": "https://news.ycombinator.com/item?id=47898927",
 		"image_url": "https://opengraph.githubassets.com/464ee9110beb601b5ff2af85beb70f7f99f20f1344d81351d4b1efa63a5c7f11/rcarmo/gte-go",
-		"author": "rcarmo",
+		"author": {
+			"name": "rcarmo",
+			"username": "rcarmo",
+			"profile_url": "https://news.ycombinator.com/user?id=rcarmo"
+		},
 		"snippet": "Golang inference for the GTE Small embedding model - rcarmo/gte-go",
 		"tag": "article",
 		"comments": 0,
@@ -43,7 +72,11 @@
 		"url": "https://www.dash0.com/guides/golang-logging-libraries",
 		"original_url": "https://news.ycombinator.com/item?id=47862215",
 		"image_url": "https://cdn.sanity.io/images/rdn92ihu/production/b844a57b507f441fe9d86605f6a7389f0870b2ff-1366x706.png?fit=max\u0026auto=format",
-		"author": "ayoisaiah",
+		"author": {
+			"name": "ayoisaiah",
+			"username": "ayoisaiah",
+			"profile_url": "https://news.ycombinator.com/user?id=ayoisaiah"
+		},
 		"snippet": "Which Go logging library should you use We compare slog zerolog zap phuslulog and others with real benchmarks and practical advice",
 		"tag": "article",
 		"comments": 0,
@@ -55,7 +88,11 @@
 		"title": "Go news Android app revamped with the help of Claude Code",
 		"url": "https://play.google.com/store/apps/details?id=com.minaandrawos.golangnews\u0026hl=en_US",
 		"original_url": "https://news.ycombinator.com/item?id=47828954",
-		"author": "minaandrawos",
+		"author": {
+			"name": "minaandrawos",
+			"username": "minaandrawos",
+			"profile_url": "https://news.ycombinator.com/user?id=minaandrawos"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -66,7 +103,11 @@
 		"source": "hacker_news",
 		"title": "GoLand",
 		"url": "https://news.ycombinator.com/item?id=47802569",
-		"author": "mukulmantosh",
+		"author": {
+			"name": "mukulmantosh",
+			"username": "mukulmantosh",
+			"profile_url": "https://news.ycombinator.com/user?id=mukulmantosh"
+		},
 		"snippet": "A curated guide to the best tips and tricks for mastering GoLand. https://github.com/mukulmantosh/awesome_goland",
 		"tag": "article",
 		"comments": 0,
@@ -77,7 +118,11 @@
 		"source": "hacker_news",
 		"title": "Ask HN: How to test a distributed Job Runner with an at-most once execution",
 		"url": "https://news.ycombinator.com/item?id=47779534",
-		"author": "john-923",
+		"author": {
+			"name": "john-923",
+			"username": "john-923",
+			"profile_url": "https://news.ycombinator.com/user?id=john-923"
+		},
 		"snippet": "Hey everyone. I'm currently building a distributed job runner that can guarantee an at-most once execution under crashes \u0026 system failures. I'm still in the early stages, building it from scratch. Thi",
 		"tag": "article",
 		"comments": 0,
@@ -89,7 +134,11 @@
 		"title": "Soppo: Golang, with the features it's missing",
 		"url": "https://soppolang.dev/?2",
 		"original_url": "https://news.ycombinator.com/item?id=47729452",
-		"author": "networked",
+		"author": {
+			"name": "networked",
+			"username": "networked",
+			"profile_url": "https://news.ycombinator.com/user?id=networked"
+		},
 		"snippet": "Go, with the features it's missing. Type safety, enums, pattern matching, nil safety, and ergonomic error handling.",
 		"tag": "article",
 		"comments": 2,
@@ -100,7 +149,11 @@
 		"source": "hacker_news",
 		"title": "Tell HN: Always ask \"is that how it works or\"?",
 		"url": "https://news.ycombinator.com/item?id=47708728",
-		"author": "dakiol",
+		"author": {
+			"name": "dakiol",
+			"username": "dakiol",
+			"profile_url": "https://news.ycombinator.com/user?id=dakiol"
+		},
 		"snippet": "I asked Claude: \u003e In \"The pre-release suffix indicates a version is a pre-release. Pre-release versions sort before the corresponding release versions. For example, v1.2.3-pre comes before v1.2.3.\", W",
 		"tag": "article",
 		"comments": 0,
@@ -113,7 +166,11 @@
 		"url": "https://github.com/golang/go/issues/77273",
 		"original_url": "https://news.ycombinator.com/item?id=47696189",
 		"image_url": "https://opengraph.githubassets.com/4b2112aa033439ecc80b6ca1dcb67342933438e1b8e218a9e9703c97bc22c693/golang/go/issues/77273",
-		"author": "_ikke_",
+		"author": {
+			"name": "_ikke_",
+			"username": "_ikke_",
+			"profile_url": "https://news.ycombinator.com/user?id=_ikke_"
+		},
 		"snippet": "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the context is clear) to describe a non-interface me...",
 		"tag": "article",
 		"comments": 0,
@@ -125,7 +182,11 @@
 		"title": "System Engineering an agent thanks to Golang",
 		"url": "https://blog.mattsbit.co.uk/2026/04/06/systems-engineering-an-agent-thanks-to-the-world-of-golang/",
 		"original_url": "https://news.ycombinator.com/item?id=47661632",
-		"author": "mrmattyboy",
+		"author": {
+			"name": "mrmattyboy",
+			"username": "mrmattyboy",
+			"profile_url": "https://news.ycombinator.com/user?id=mrmattyboy"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 0,
@@ -137,7 +198,11 @@
 		"title": "SIMD in Go",
 		"url": "https://programmerscareer.com/golang-simd/",
 		"original_url": "https://news.ycombinator.com/item?id=47657752",
-		"author": "djood",
+		"author": {
+			"name": "djood",
+			"username": "djood",
+			"profile_url": "https://news.ycombinator.com/user?id=djood"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 0,
@@ -148,7 +213,11 @@
 		"source": "hacker_news",
 		"title": "Ask HN: What is your dev set up like?",
 		"url": "https://news.ycombinator.com/item?id=47616250",
-		"author": "break_the_bank",
+		"author": {
+			"name": "break_the_bank",
+			"username": "break_the_bank",
+			"profile_url": "https://news.ycombinator.com/user?id=break_the_bank"
+		},
 		"snippet": "Curious what HackerNews users are using right now. Mapping my IDE usage since 2022 Goland (2022-2024)-\u003e Cursor(November 2024 to February 2026) -\u003e Claude Code (\u0026 VSCode or Cursor for manual edits) The ",
 		"tag": "article",
 		"comments": 28,
@@ -161,7 +230,11 @@
 		"url": "https://thedream.work/",
 		"original_url": "https://news.ycombinator.com/item?id=47603529",
 		"image_url": "https://thedream.work/static/og-image.png",
-		"author": "vulk",
+		"author": {
+			"name": "vulk",
+			"username": "vulk",
+			"profile_url": "https://news.ycombinator.com/user?id=vulk"
+		},
 		"snippet": "Hey everyone, Long time lurker finally took the leap to share something with the community. From a long time I wanted to build something and I had this idea about a job board but not just a simple agg",
 		"tag": "article",
 		"comments": 0,
@@ -172,7 +245,11 @@
 		"source": "hacker_news",
 		"title": "Show HN: Bridging People Together via Podcasts",
 		"url": "https://news.ycombinator.com/item?id=47586188",
-		"author": "fcpguru",
+		"author": {
+			"name": "fcpguru",
+			"username": "fcpguru",
+			"profile_url": "https://news.ycombinator.com/user?id=fcpguru"
+		},
 		"snippet": "Hi, I'm Andrew, a long-time hacker about to turn 50 in a few days. Today I'd like to tell you how taout.tv came into my life. It stands for \"talk it out\" and I'm told this is a \"portmanteau\" when you ",
 		"tag": "article",
 		"comments": 0,
@@ -184,7 +261,11 @@
 		"title": "Golang Constmap by Daniel Lemire",
 		"url": "https://twitter.com/lemire/status/2038320406432494059",
 		"original_url": "https://news.ycombinator.com/item?id=47584569",
-		"author": "pjf",
+		"author": {
+			"name": "pjf",
+			"username": "pjf",
+			"profile_url": "https://news.ycombinator.com/user?id=pjf"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 1,
@@ -197,7 +278,11 @@
 		"url": "https://github.com/madflojo/go-style-agent-skill",
 		"original_url": "https://news.ycombinator.com/item?id=47555434",
 		"image_url": "https://opengraph.githubassets.com/0bd2754d5fd887c06af1e08462a16a4c0ce95f5fdcd17baf35db1a2ad940fb97/madflojo/go-style-agent-skill",
-		"author": "madflojo",
+		"author": {
+			"name": "madflojo",
+			"username": "madflojo",
+			"profile_url": "https://news.ycombinator.com/user?id=madflojo"
+		},
 		"snippet": "Agent Skill for writing Golang code. Contribute to madflojo/go-style-agent-skill development by creating an account on GitHub.",
 		"tag": "article",
 		"comments": 0,
@@ -209,7 +294,11 @@
 		"title": "Golang naming conventions: a practical guide",
 		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
 		"original_url": "https://news.ycombinator.com/item?id=47518887",
-		"author": "fanf2",
+		"author": {
+			"name": "fanf2",
+			"username": "fanf2",
+			"profile_url": "https://news.ycombinator.com/user?id=fanf2"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 0,
@@ -220,24 +309,15 @@
 		"source": "hacker_news",
 		"title": "Ask HN: Building a deterministic AI substrate on legacy hardware",
 		"url": "https://news.ycombinator.com/item?id=47516833",
-		"author": "theantagonistai",
+		"author": {
+			"name": "theantagonistai",
+			"username": "theantagonistai",
+			"profile_url": "https://news.ycombinator.com/user?id=theantagonistai"
+		},
 		"snippet": "I have been working on this in isolation for the last 7+ years. I have reached the absolute limit of what I can do as a solo architect without \"production plumbing.\" I am at a survival wall and am loo",
 		"tag": "article",
 		"comments": 1,
 		"score": 0.2115497212666585,
 		"published": "2026-03-25T13:05:32Z"
-	},
-	{
-		"source": "hacker_news",
-		"title": "A collection of 35 Golang Agent Skills",
-		"url": "https://github.com/samber/cc-skills-golang",
-		"original_url": "https://news.ycombinator.com/item?id=47487741",
-		"image_url": "https://opengraph.githubassets.com/98336d4bbc3c1ca9a5ba455e8bb3e930373b7563830e026e7cec85a32934dda7/samber/cc-skills-golang",
-		"author": "samber",
-		"snippet": "🧑‍🎨 A collection of Golang agentic skills that works - samber/cc-skills-golang",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.423099442533317,
-		"published": "2026-03-23T11:03:49Z"
 	}
 ]

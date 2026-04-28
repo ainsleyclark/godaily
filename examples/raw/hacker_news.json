@@ -1,11 +1,52 @@
 {
 	"exhaustive": {
-		"nbHits": true,
-		"typo": true
+		"nbHits": false,
+		"typo": false
 	},
-	"exhaustiveNbHits": true,
-	"exhaustiveTypo": true,
+	"exhaustiveNbHits": false,
+	"exhaustiveTypo": false,
 	"hits": [
+		{
+			"_highlightResult": {
+				"author": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "kyleomalley"
+				},
+				"title": {
+					"fullyHighlighted": false,
+					"matchLevel": "full",
+					"matchedWords": [
+						"golang"
+					],
+					"value": "Nocord HF \u2013 A discord style FT8 client written in <em>Golang</em>"
+				},
+				"url": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "https://github.com/kyleomalley/nocordhf"
+				}
+			},
+			"_tags": [
+				"story",
+				"author_kyleomalley",
+				"story_47930598"
+			],
+			"author": "kyleomalley",
+			"children": [
+				47930599,
+				47930620
+			],
+			"created_at": "2026-04-28T05:01:01Z",
+			"created_at_i": 1777352461,
+			"num_comments": 2,
+			"objectID": "47930598",
+			"points": 2,
+			"story_id": 47930598,
+			"title": "Nocord HF \u2013 A discord style FT8 client written in Golang",
+			"updated_at": "2026-04-28T06:41:13Z",
+			"url": "https://github.com/kyleomalley/nocordhf"
+		},
 		{
 			"_highlightResult": {
 				"author": {
@@ -785,70 +826,30 @@
 			"story_text": "I have been working on this in isolation for the last 7+ years. I have reached the absolute limit of what I can do as a solo architect without &quot;production plumbing.&quot; I am at a survival wall and am looking for a bridge and technical partners to move this from a research PoC to a production-grade engine. I am developing a deterministic alternative to the current probabilistic &quot;Token Economy.&quot;<p>The Asset: A zero-inference, symbolic AI substrate. It is not an LLM wrapper. It is a linguistic coordinate system that acts as software without code generation, predefined templates, or schemas.<p>The Proof: I have 4 videos showing a primitive order management system (roles, CRUD, dynamic rules) built entirely from ~195 Simple Single Sentences . It runs on a 2010 AMD Phenom. To stress-test the logic, I ran an audit through Grok, which verified the architecture at 9.7&#x2F;10 for logical soundness.<p>Current status: Research is complete; hardening and feature development for a production-grade product are pending.<p>The Verification (Live Demo): I do not have a hosted demo because I lack the &quot;production plumbing&quot;  more required for public traffic as well as some feature gaps that needs to be implemented before a hosted demo . However, I am ready to jump on a live screen-share with any serious peer to verify that the functionality shown in the videos is real. I am not offering a &quot;feature-on-demand&quot; demo\u2014just a live execution of the existing PoC to prove the substrate is functional .<p>Roadmap:<p>Live hosted demo: in 12-16 weeks.<p>Alpha: A software builder that renders logic from natural language (no code generation&#x2F;no predefined domain models--no class or schema defs&#x2F;no back-end&#x2F;front-end APIs). 10-12 months away.<p>Fluency: Cognitive bots based on grammar + experience + psychology.<p>Physical AI: A substrate designed for local execution (robotics&#x2F;edge) rather than massive GPU clusters.<p>The Ask: I am seeking a Survival Bridge (via SAFE note) to move this from my desktop to a production-grade infrastructure. I am also looking for co-founders with C&#x2F;C++&#x2F;Java&#x2F;Golang backgrounds who have deep experience in building transactions, scalability, and persistence layers.\nI&#x27;m not looking for advice. I&#x27;m looking for the pragmatists who want to help an Architect bridge this gap.<p>Links &amp; Grok Audit: https:&#x2F;&#x2F;theantagonistai.substack.com&#x2F;<p>https:&#x2F;&#x2F;substack.com&#x2F;@theantagonistai&#x2F;note&#x2F;c-231903873",
 			"title": "Ask HN: Building a deterministic AI substrate on legacy hardware",
 			"updated_at": "2026-03-25T14:09:00Z"
-		},
-		{
-			"_highlightResult": {
-				"author": {
-					"matchLevel": "none",
-					"matchedWords": [],
-					"value": "samber"
-				},
-				"title": {
-					"fullyHighlighted": false,
-					"matchLevel": "full",
-					"matchedWords": [
-						"golang"
-					],
-					"value": "A collection of 35 <em>Golang</em> Agent Skills"
-				},
-				"url": {
-					"fullyHighlighted": false,
-					"matchLevel": "full",
-					"matchedWords": [
-						"golang"
-					],
-					"value": "https://github.com/samber/cc-skills-<em>golang</em>"
-				}
-			},
-			"_tags": [
-				"story",
-				"author_samber",
-				"story_47487741"
-			],
-			"author": "samber",
-			"children": [
-				47487742,
-				47492808,
-				47487830
-			],
-			"created_at": "2026-03-23T11:03:49Z",
-			"created_at_i": 1774263829,
-			"num_comments": 2,
-			"objectID": "47487741",
-			"points": 3,
-			"story_id": 47487741,
-			"title": "A collection of 35 Golang Agent Skills",
-			"updated_at": "2026-03-24T06:02:38Z",
-			"url": "https://github.com/samber/cc-skills-golang"
 		}
 	],
 	"hitsPerPage": 20,
-	"nbHits": 6661,
+	"nbHits": 6657,
 	"nbPages": 50,
 	"page": 0,
 	"params": "query=golang&tags=story&advancedSyntax=true&analyticsTags=backend",
-	"processingTimeMS": 9,
+	"processingTimeMS": 15,
 	"processingTimingsMS": {
 		"_request": {
-			"roundTrip": 16
+			"roundTrip": 18
+		},
+		"afterFetch": {
+			"format": {
+				"total": 1
+			}
 		},
 		"fetch": {
 			"query": 2,
-			"scanning": 5,
-			"total": 8
+			"scanning": 11,
+			"total": 14
 		},
-		"total": 9
+		"total": 15
 	},
 	"query": "golang",
-	"serverTimeMS": 10
+	"serverTimeMS": 16
 }

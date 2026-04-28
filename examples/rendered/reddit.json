@@ -1,36 +1,94 @@
 [
 	{
 		"source": "reddit",
+		"title": "I built fedit — a zero-dependency CLI tool for surgical file edits from the terminal (11 ops, 17 language mappers, single binary)",
+		"url": "https://www.reddit.com/r/golang/comments/1sxpukq/i_built_fedit_a_zerodependency_cli_tool_for/",
+		"author": {
+			"name": "Character-Chicken522",
+			"username": "Character-Chicken522",
+			"profile_url": "https://www.reddit.com/user/Character-Chicken522"
+		},
+		"snippet": "I needed a way to make precise, scriptable file edits without sed/awk regex headaches — especially when working with AI coding assistants that say \"insert this after line 47\" but the file has shifte",
+		"tag": "article",
+		"comments": 3,
+		"score": 0.38823676709842325,
+		"published": "2026-04-28T03:30:02Z"
+	},
+	{
+		"source": "reddit",
+		"title": "Why is go pooling worse than not trying to optimize anything?",
+		"url": "https://www.reddit.com/r/golang/comments/1sxpjgu/why_is_go_pooling_worse_than_not_trying_to/",
+		"author": {
+			"name": "canadiancoding",
+			"username": "canadiancoding",
+			"profile_url": "https://www.reddit.com/user/canadiancoding"
+		},
+		"snippet": "I'm building a caching layer and wanted to test go's struct pooling to make sure I understood it before I used it, and see if it was worth messing around with. I setup a little test that just counts t",
+		"tag": "article",
+		"comments": 6,
+		"score": 0.4216379923242304,
+		"published": "2026-04-28T03:15:36Z"
+	},
+	{
+		"source": "reddit",
+		"title": "Sphire Foundry - I posted my CMS about a month ago, and since then I've added more features, and I just merged the first contributor PR. Come check it out !",
+		"url": "https://github.com/sphireinc/Foundry",
+		"image_url": "https://external-preview.redd.it/KRY9qHb_axlww9itga85k9mtsDQ2W-jRl4pvdqt07k0.png?auto=webp\u0026s=8f41aa842d7a6b9a177427b3c550768a10f997c7",
+		"author": {
+			"name": "SovereignZ3r0",
+			"username": "SovereignZ3r0",
+			"profile_url": "https://www.reddit.com/user/SovereignZ3r0"
+		},
+		"snippet": "Slowly adding more and more features to this baby - have a few open issues, and just merged the first contributor PR (a syntax highlighting plugin - though typically plugins should be their own github",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-04-27T22:32:50Z"
+	},
+	{
+		"source": "reddit",
 		"title": "Zero-config Go heap profiling",
 		"url": "https://coroot.com/blog/zero-config-go-heap-profiling/",
 		"image_url": "https://external-preview.redd.it/4l64GFfghifmYot9kg43cQE0s-qMlelSqjTddw8pY1Q.png?auto=webp\u0026s=b534ecb68432bcb684bb9b2cb5e165eca6c30063",
-		"author": "NikolaySivko",
+		"author": {
+			"name": "NikolaySivko",
+			"username": "NikolaySivko",
+			"profile_url": "https://www.reddit.com/user/NikolaySivko"
+		},
 		"snippet": "How we added continuous Go heap profiling to coroot-node-agent without requiring any code changes, pprof endpoints, or annotations, by reading runtime.mbuckets directly from process memory.",
 		"tag": "article",
-		"comments": 0,
-		"score": 0.15019048322368794,
+		"comments": 1,
+		"score": 0.7440731378420168,
 		"published": "2026-04-27T19:26:59Z"
 	},
 	{
 		"source": "reddit",
 		"title": "Small Projects",
 		"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
-		"author": "AutoModerator",
+		"author": {
+			"name": "AutoModerator",
+			"username": "AutoModerator",
+			"profile_url": "https://www.reddit.com/user/AutoModerator"
+		},
 		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
 		"tag": "article",
-		"comments": 0,
-		"score": 0.23804628387473528,
+		"comments": 4,
+		"score": 0.38823676709842325,
 		"published": "2026-04-27T19:00:54Z"
 	},
 	{
 		"source": "reddit",
 		"title": "two apps in one project , how can i structure it ?",
 		"url": "https://www.reddit.com/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
-		"author": "Radonish",
+		"author": {
+			"name": "Radonish",
+			"username": "Radonish",
+			"profile_url": "https://www.reddit.com/user/Radonish"
+		},
 		"snippet": "im making a 2d multiplayer ascii game from scratch in golang , i need to saperate the two apps ( server and client ) while also making them share some packages , how can i go about structuring that fi",
 		"tag": "article",
-		"comments": 5,
-		"score": 0.23804628387473528,
+		"comments": 7,
+		"score": 0.4216379923242304,
 		"published": "2026-04-27T16:15:51Z"
 	},
 	{
@@ -38,7 +96,11 @@
 		"title": "KEIBIDROP: P2P filesystem I've been building in go for the last year",
 		"url": "https://github.com/KeibiSoft/KeibiDrop",
 		"image_url": "https://external-preview.redd.it/dPO1rdVPcQIjDtaC-_nSO1s6eOYinb_Ulxl0jnuAaYg.png?auto=webp\u0026s=caf82181dbe27be98168c946045c4a659217808a",
-		"author": "Secret-Employer282",
+		"author": {
+			"name": "Secret-Employer282",
+			"username": "Secret-Employer282",
+			"profile_url": "https://www.reddit.com/user/Secret-Employer282"
+		},
 		"snippet": "Hi gophers, Over the last year I've been building (in my spare time) a cross platform FUSE filesystem that also has a GUI. (altough the GUI is [slint.dev](http://slint.dev) and bound with rust, the en",
 		"tag": "article",
 		"comments": 0,
@@ -49,18 +111,26 @@
 		"source": "reddit",
 		"title": "Building an Event Loop in Go from syscalls",
 		"url": "https://www.reddit.com/r/golang/comments/1sx5ezm/building_an_event_loop_in_go_from_syscalls/",
-		"author": "Pop_the_glock_1",
+		"author": {
+			"name": "Pop_the_glock_1",
+			"username": "Pop_the_glock_1",
+			"profile_url": "https://www.reddit.com/user/Pop_the_glock_1"
+		},
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
-		"comments": 4,
-		"score": 0.649112469029166,
+		"comments": 5,
+		"score": 0.7824103183150796,
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
 		"source": "reddit",
 		"title": "sqlc query date_part param type",
 		"url": "https://www.reddit.com/r/golang/comments/1sx523q/sqlc_query_date_part_param_type/",
-		"author": "tyrrminal",
+		"author": {
+			"name": "tyrrminal",
+			"username": "tyrrminal",
+			"profile_url": "https://www.reddit.com/user/tyrrminal"
+		},
 		"snippet": "I have a query that's designed to filter by year and group by month; within the query, it's doing: date_part('year', s.occurred_at) = $1 but when sqlc generates the go code for this, the signature is ",
 		"tag": "article",
 		"comments": 2,
@@ -72,11 +142,15 @@
 		"title": "Gophercon 2026",
 		"url": "https://www.gophercon.com/",
 		"image_url": "https://external-preview.redd.it/JFZM64I2Dd_nhkMDYmOLk7p_NYBh3oF36Yhc03MDxyo.png?auto=webp\u0026s=66904628018d64d229e85881afa2ebc2235cecf7",
-		"author": "cpustejovsky",
+		"author": {
+			"name": "cpustejovsky",
+			"username": "cpustejovsky",
+			"profile_url": "https://www.reddit.com/user/cpustejovsky"
+		},
 		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 		"tag": "article",
 		"comments": 4,
-		"score": 0.8199546729298166,
+		"score": 0.8388082167694871,
 		"published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -84,33 +158,45 @@
 		"title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
 		"url": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
 		"image_url": "https://external-preview.redd.it/fNQUIG1bxSEp7L4nuTEpjjI8I1NWtf1I4PtXGtDSj58.png?auto=webp\u0026s=354ed3344e514a033c260e280f53700e361fb13c",
-		"author": "Extension_Layer1825",
+		"author": {
+			"name": "Extension_Layer1825",
+			"username": "Extension_Layer1825",
+			"profile_url": "https://www.reddit.com/user/Extension_Layer1825"
+		},
 		"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.23804628387473528,
+		"score": 0.15019048322368794,
 		"published": "2026-04-26T15:58:00Z"
 	},
 	{
 		"source": "reddit",
 		"title": "watgo - a WebAssembly Toolkit for Go",
 		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
-		"author": "self",
+		"author": {
+			"name": "self",
+			"username": "self",
+			"profile_url": "https://www.reddit.com/user/self"
+		},
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.7220189587716063,
+		"score": 0.7440731378420168,
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
 		"source": "reddit",
 		"title": "potential goroutine leak or nah",
 		"url": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
-		"author": "KaleidoscopePlusPlus",
+		"author": {
+			"name": "KaleidoscopePlusPlus",
+			"username": "KaleidoscopePlusPlus",
+			"profile_url": "https://www.reddit.com/user/KaleidoscopePlusPlus"
+		},
 		"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
 		"tag": "article",
 		"comments": 17,
-		"score": 0.613898019286257,
+		"score": 0.6007619328947518,
 		"published": "2026-04-26T14:46:53Z"
 	},
 	{
@@ -118,7 +204,11 @@
 		"title": "Showcase: kLex (FROG) – A 'Governed' language with 30+ libs written in Go.",
 		"url": "https://github.com/kmcnally5/FROG",
 		"image_url": "https://external-preview.redd.it/zV3AYQYZ9cwq84Hz8RIoX6PJzpwW3BatUSVE1vIiDDE.png?auto=webp\u0026s=bd8af23cd6836095c0df76e2c7955d65ce621909",
-		"author": "Ill-Plum-7348",
+		"author": {
+			"name": "Ill-Plum-7348",
+			"username": "Ill-Plum-7348",
+			"profile_url": "https://www.reddit.com/user/Ill-Plum-7348"
+		},
 		"snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.** I wrote kLex/FROG almost entirely using AI - only breaking from this as required. I did this for m",
 		"tag": "article",
 		"comments": 5,
@@ -130,11 +220,15 @@
 		"title": "xytz - a beautiful TUI YouTube Downloader/Player",
 		"url": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
 		"image_url": "https://external-preview.redd.it/2MgRP5tx0OWQMvvGfwpfDd23K_g4Mvw2pZp2_h7GUa0.png?auto=webp\u0026s=d1462ac22b673e2e084d70c5ac3a8d3855ae94fc",
-		"author": "Upbeat_Equivalent519",
+		"author": {
+			"name": "Upbeat_Equivalent519",
+			"username": "Upbeat_Equivalent519",
+			"profile_url": "https://www.reddit.com/user/Upbeat_Equivalent519"
+		},
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.5718284755479184,
+		"score": 0.613898019286257,
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -142,22 +236,30 @@
 		"title": "WhatsApp api",
 		"url": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
 		"image_url": "https://external-preview.redd.it/wBDTeTAJFIfyckGDocxz0fY2ODHwOzKIVKKvnG-vX_k.png?auto=webp\u0026s=83747421d44b4e49ebdbb04dfa7e38545aacf82c",
-		"author": "WorkingInitiative909",
+		"author": {
+			"name": "WorkingInitiative909",
+			"username": "WorkingInitiative909",
+			"profile_url": "https://www.reddit.com/user/WorkingInitiative909"
+		},
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
-		"score": 0.6379982859432913,
+		"score": 0.649112469029166,
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
 		"source": "reddit",
 		"title": "go-mirofish: built in-fast Go rewrite of MiroFish – local AI swarm predictor (198 rps on laptop)",
 		"url": "https://www.reddit.com/r/golang/comments/1svdj2t/gomirofish_built_infast_go_rewrite_of_mirofish/",
-		"author": "Odd_Army_7385",
+		"author": {
+			"name": "Odd_Army_7385",
+			"username": "Odd_Army_7385",
+			"profile_url": "https://www.reddit.com/user/Odd_Army_7385"
+		},
 		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
 		"tag": "article",
 		"comments": 1,
-		"score": 0.23804628387473528,
+		"score": 0.3003809664473759,
 		"published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -165,10 +267,14 @@
 		"title": "Compile Go to Brainfuck!",
 		"url": "https://github.com/itchyny/go2bf",
 		"image_url": "https://external-preview.redd.it/TP9BnoPmFvCiUXnFSSdeXfXdnNBg9UYFzuOX9IRYAII.png?auto=webp\u0026s=d247bbcb9a16359d042f6c7634a73c9a83aafec0",
-		"author": "itchyny",
+		"author": {
+			"name": "itchyny",
+			"username": "itchyny",
+			"profile_url": "https://www.reddit.com/user/itchyny"
+		},
 		"snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
 		"tag": "article",
-		"comments": 8,
+		"comments": 10,
 		"score": 0.8098747594226537,
 		"published": "2026-04-25T11:19:48Z"
 	},
@@ -176,7 +282,11 @@
 		"source": "reddit",
 		"title": "How to stack widgets and shapes in Go and Gio",
 		"url": "https://www.reddit.com/r/golang/comments/1suvgap/how_to_stack_widgets_and_shapes_in_go_and_gio/",
-		"author": "Warm_Low_4155",
+		"author": {
+			"name": "Warm_Low_4155",
+			"username": "Warm_Low_4155",
+			"profile_url": "https://www.reddit.com/user/Warm_Low_4155"
+		},
 		"snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap. In contrast, the Flex family—such",
 		"tag": "article",
 		"comments": 0,
@@ -188,7 +298,11 @@
 		"title": "AI-Rulez V4 Released",
 		"url": "https://www.reddit.com/r/golang/comments/1suhjab/airulez_v4_released/",
 		"image_url": "https://external-preview.redd.it/6SSWzelhR7s4IB5AJtrdEPWadyAPWHOtQgJBUowHzQ8.png?auto=webp\u0026s=9100d7bca675842790411be3eca6f82ee6d08231",
-		"author": "Goldziher",
+		"author": {
+			"name": "Goldziher",
+			"username": "Goldziher",
+			"profile_url": "https://www.reddit.com/user/Goldziher"
+		},
 		"snippet": "I released [ai-rulez v4](https://github.com/Goldziher/ai-rulez). Been using it constantly since I built it - and introduced it into several organizations, including https://github.com/kreuzberg-dev --",
 		"tag": "article",
 		"comments": 0,
@@ -199,18 +313,26 @@
 		"source": "reddit",
 		"title": "Limen: a composable auth library for Go, inspired by better-auth",
 		"url": "https://www.reddit.com/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
-		"author": "thecodearcher",
+		"author": {
+			"name": "thecodearcher",
+			"username": "thecodearcher",
+			"profile_url": "https://www.reddit.com/user/thecodearcher"
+		},
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
-		"score": 0.9867297885250814,
+		"score": 0.9978439716109563,
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{
 		"source": "reddit",
 		"title": "I built an open-source Discord \u0026amp; Twitch bot in Go",
 		"url": "https://www.reddit.com/r/golang/comments/1su7j4k/i_built_an_opensource_discord_twitch_bot_in_go/",
-		"author": "cfi_go",
+		"author": {
+			"name": "cfi_go",
+			"username": "cfi_go",
+			"profile_url": "https://www.reddit.com/user/cfi_go"
+		},
 		"snippet": "Hi everyone, I wanted to share Senchabot, an open-source bot I've been working on since 2022 to bridge Twitch and Discord. GitHub repo link: [https://github.com/senchabot-opensource/monorepo](https://",
 		"tag": "article",
 		"comments": 9,
@@ -221,45 +343,15 @@
 		"source": "reddit",
 		"title": "go-openngc: stdlib-only deep-sky catalog",
 		"url": "https://www.reddit.com/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
-		"author": "xenol",
+		"author": {
+			"name": "xenol",
+			"username": "xenol",
+			"profile_url": "https://www.reddit.com/user/xenol"
+		},
 		"snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.49892198580547814,
+		"score": 0.5195737064824407,
 		"published": "2026-04-23T21:58:26Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Introducing LFK, a Yazi-inspired Kubernetes TUI",
-		"url": "https://github.com/janosmiko/lfk",
-		"image_url": "https://external-preview.redd.it/aDe_w7KKJsfiJeTu5oBM9NNLCAVJEjVnelbOvDWzBZ0.png?auto=webp\u0026s=9a299036751a5889f5277ed5a7b8c304aea3ad7f",
-		"author": "Mixe3y",
-		"snippet": "LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user interface for navigating and managing Kubernetes clusters. Built for speed and efficiency, it brings a three-column Miller column",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.8248240703312607,
-		"published": "2026-04-23T14:31:45Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Non-Root User Docker image issues pinging",
-		"url": "https://www.reddit.com/r/golang/comments/1stim5s/nonroot_user_docker_image_issues_pinging/",
-		"author": "bizbaaz",
-		"snippet": "Im working on deploying Gatus application on ECS with launch type EC2, Gatus is an app health dashboard which tests connection to different domains and paths. As part of increasing security posture of",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.1,
-		"published": "2026-04-23T13:21:03Z"
-	},
-	{
-		"source": "reddit",
-		"title": "3 reasons I’m choosing Taskfile over Make for my project automation",
-		"url": "https://www.reddit.com/r/golang/comments/1stdwxz/3_reasons_im_choosing_taskfile_over_make_for_my/",
-		"author": "Marmelab",
-		"snippet": "I’ve spent years reaching for Makefile by default, but I recently started using Taskfile for my projects instead. While it’s still the industry standard, it often feels like a mismatch for the spe",
-		"tag": "article",
-		"comments": 45,
-		"score": 0.7703694949060205,
-		"published": "2026-04-23T09:36:02Z"
 	}
 ]
