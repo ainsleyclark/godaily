@@ -2,11 +2,11 @@ version: "2"
 sql:
   - engine: "sqlite"
     schema: "internal/db/migrations"
-    queries: "internal/store"
+    queries: "internal/store/queries"
     gen:
       go:
-        package: "store"
-        out: "internal/store"
+        package: "sqlc"
+        out: "internal/store/internal/sqlc"
         sql_package: "database/sql"
         emit_json_tags: true
         emit_interface: false

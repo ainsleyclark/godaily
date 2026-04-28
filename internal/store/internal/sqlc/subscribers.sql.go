@@ -3,7 +3,7 @@
 //   sqlc v1.31.1
 // source: subscribers.sql
 
-package store
+package sqlc
 
 import (
 	"context"

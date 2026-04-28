@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package store
+package subscribers
 
 import (
 	"context"
@@ -25,6 +25,7 @@ import (
 	"encoding/base64"
 	"strings"
 
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/pkg/errors"
 )
 
@@ -36,19 +37,19 @@ const tokenBytes = 32
 // Subscribe inserts a new subscriber row with freshly generated confirm
 // and unsubscribe tokens. The email is lowercased and trimmed; an empty
 // email returns an error without touching the DB.
-func (s *Store) Subscribe(ctx context.Context, email string) (Subscriber, error) {
+func (s *store.Store) Subscribe(ctx context.Context, email string) (store.Subscriber, error) {
 	email = strings.ToLower(strings.TrimSpace(email))
 	if email == "" {
-		return Subscriber{}, errors.New("email is required")
+		return store.Subscriber{}, errors.New("email is required")
 	}
 
 	confirm, err := newToken()
 	if err != nil {
-		return Subscriber{}, errors.Wrap(err, "generating confirm token")
+		return store.Subscriber{}, errors.Wrap(err, "generating confirm token")
 	}
 	unsubscribe, err := newToken()
 	if err != nil {
-		return Subscriber{}, errors.Wrap(err, "generating unsubscribe token")
+		return store.Subscriber{}, errors.Wrap(err, "generating unsubscribe token")
 	}
 
 	sub, err := s.CreateSubscriber(ctx, CreateSubscriberParams{
@@ -57,7 +58,7 @@ func (s *Store) Subscribe(ctx context.Context, email string) (Subscriber, error)
 		UnsubscribeToken: unsubscribe,
 	})
 	if err != nil {
-		return Subscriber{}, errors.Wrap(err, "creating subscriber")
+		return store.Subscriber{}, errors.Wrap(err, "creating subscriber")
 	}
 	return sub, nil
 }
