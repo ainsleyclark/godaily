@@ -3,6 +3,7 @@
 		"source": "reddit",
 		"title": "I built fedit — a zero-dependency CLI tool for surgical file edits from the terminal (11 ops, 17 language mappers, single binary)",
 		"url": "https://www.reddit.com/r/golang/comments/1sxpukq/i_built_fedit_a_zerodependency_cli_tool_for/",
+<<<<<<< HEAD
 		"author": {
 			"name": "Character-Chicken522",
 			"username": "Character-Chicken522",
@@ -12,12 +13,20 @@
 		"tag": "article",
 		"comments": 3,
 		"score": 0.38823676709842325,
+=======
+		"author": "Character-Chicken522",
+		"snippet": "I needed a way to make precise, scriptable file edits without sed/awk regex headaches — especially when working with AI coding assistants that say \"insert this after line 47\" but the file has shifte",
+		"tag": "article",
+		"comments": 5,
+		"score": 0.15019048322368794,
+>>>>>>> main
 		"published": "2026-04-28T03:30:02Z"
 	},
 	{
 		"source": "reddit",
 		"title": "Why is go pooling worse than not trying to optimize anything?",
 		"url": "https://www.reddit.com/r/golang/comments/1sxpjgu/why_is_go_pooling_worse_than_not_trying_to/",
+<<<<<<< HEAD
 		"author": {
 			"name": "canadiancoding",
 			"username": "canadiancoding",
@@ -27,6 +36,13 @@
 		"tag": "article",
 		"comments": 6,
 		"score": 0.4216379923242304,
+=======
+		"author": "canadiancoding",
+		"snippet": "I'm building a caching layer and wanted to test go's struct pooling to make sure I understood it before I used it, and see if it was worth messing around with. I setup a little test that just counts t",
+		"tag": "article",
+		"comments": 7,
+		"score": 0.6596842761989657,
+>>>>>>> main
 		"published": "2026-04-28T03:15:36Z"
 	},
 	{
@@ -34,11 +50,15 @@
 		"title": "Sphire Foundry - I posted my CMS about a month ago, and since then I've added more features, and I just merged the first contributor PR. Come check it out !",
 		"url": "https://github.com/sphireinc/Foundry",
 		"image_url": "https://external-preview.redd.it/KRY9qHb_axlww9itga85k9mtsDQ2W-jRl4pvdqt07k0.png?auto=webp\u0026s=8f41aa842d7a6b9a177427b3c550768a10f997c7",
+<<<<<<< HEAD
 		"author": {
 			"name": "SovereignZ3r0",
 			"username": "SovereignZ3r0",
 			"profile_url": "https://www.reddit.com/user/SovereignZ3r0"
 		},
+=======
+		"author": "SovereignZ3r0",
+>>>>>>> main
 		"snippet": "Slowly adding more and more features to this baby - have a few open issues, and just merged the first contributor PR (a syntax highlighting plugin - though typically plugins should be their own github",
 		"tag": "article",
 		"comments": 0,
@@ -58,7 +78,11 @@
 		"snippet": "How we added continuous Go heap profiling to coroot-node-agent without requiring any code changes, pprof endpoints, or annotations, by reading runtime.mbuckets directly from process memory.",
 		"tag": "article",
 		"comments": 1,
+<<<<<<< HEAD
 		"score": 0.7440731378420168,
+=======
+		"score": 0.764088502509945,
+>>>>>>> main
 		"published": "2026-04-27T19:26:59Z"
 	},
 	{
@@ -72,8 +96,13 @@
 		},
 		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
 		"tag": "article",
+<<<<<<< HEAD
 		"comments": 4,
 		"score": 0.38823676709842325,
+=======
+		"comments": 6,
+		"score": 0.4216379923242304,
+>>>>>>> main
 		"published": "2026-04-27T19:00:54Z"
 	},
 	{
@@ -104,7 +133,7 @@
 		"snippet": "Hi gophers, Over the last year I've been building (in my spare time) a cross platform FUSE filesystem that also has a GUI. (altough the GUI is [slint.dev](http://slint.dev) and bound with rust, the en",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.23804628387473528,
+		"score": 0.3003809664473759,
 		"published": "2026-04-27T16:09:01Z"
 	},
 	{
@@ -119,7 +148,11 @@
 		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 		"tag": "article",
 		"comments": 5,
+<<<<<<< HEAD
 		"score": 0.7824103183150796,
+=======
+		"score": 0.7881887691669792,
+>>>>>>> main
 		"published": "2026-04-27T14:30:55Z"
 	},
 	{
@@ -150,7 +183,11 @@
 		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 		"tag": "article",
 		"comments": 4,
+<<<<<<< HEAD
 		"score": 0.8388082167694871,
+=======
+		"score": 0.8295864392961818,
+>>>>>>> main
 		"published": "2026-04-27T00:09:56Z"
 	},
 	{
@@ -181,7 +218,11 @@
 		"snippet": "",
 		"tag": "article",
 		"comments": 2,
+<<<<<<< HEAD
 		"score": 0.7440731378420168,
+=======
+		"score": 0.7509524161184398,
+>>>>>>> main
 		"published": "2026-04-26T15:31:39Z"
 	},
 	{
@@ -228,7 +269,11 @@
 		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
 		"tag": "article",
 		"comments": 1,
+<<<<<<< HEAD
 		"score": 0.613898019286257,
+=======
+		"score": 0.6007619328947518,
+>>>>>>> main
 		"published": "2026-04-26T09:27:37Z"
 	},
 	{
@@ -244,7 +289,11 @@
 		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
 		"tag": "article",
 		"comments": 5,
+<<<<<<< HEAD
 		"score": 0.649112469029166,
+=======
+		"score": 0.6596842761989657,
+>>>>>>> main
 		"published": "2026-04-26T00:07:59Z"
 	},
 	{
@@ -259,7 +308,11 @@
 		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
 		"tag": "article",
 		"comments": 1,
+<<<<<<< HEAD
 		"score": 0.3003809664473759,
+=======
+		"score": 0.15019048322368794,
+>>>>>>> main
 		"published": "2026-04-25T14:22:10Z"
 	},
 	{
@@ -321,7 +374,11 @@
 		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
 		"tag": "article",
 		"comments": 11,
+<<<<<<< HEAD
 		"score": 0.9978439716109563,
+=======
+		"score": 1,
+>>>>>>> main
 		"published": "2026-04-24T14:22:06Z"
 	},
 	{

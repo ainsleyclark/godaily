@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:media="http://search.yahoo.com/mrss/" >
+
+<channel>
+	<title>GoLand : The IDE for professional development in Go | The JetBrains Blog</title>
+	<atom:link href="https://blog.jetbrains.com/go/feed/" rel="self" type="application/rss+xml" />
+	<link>https://blog.jetbrains.com</link>
+	<description>Developer Tools for Professionals and Teams</description>
+	<lastBuildDate>Thu, 02 Apr 2026 13:43:46 +0000</lastBuildDate>
+	<language>en-US</language>
+
+	<item>
+		<title>Code like a PIRATE with Junie and GoLand</title>
+		<link>__SERVER_URL__</link>
+		<dc:creator><![CDATA[Anna Protsenko]]></dc:creator>
+		<pubDate>Thu, 02 Apr 2026 13:34:24 +0000</pubDate>
+		<guid isPermaLink="false">__SERVER_URL__</guid>
+		<description><![CDATA[This is a guest post from John Arundel, a Go writer and teacher who runs a free email course for Go learners.]]></description>
+	</item>
+
+	<item>
+		<title>GoLand 2026.1 EAP Is Out</title>
+		<link>__SERVER_URL__</link>
+		<dc:creator><![CDATA[GoLand Team]]></dc:creator>
+		<pubDate>Wed, 12 Mar 2026 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">__SERVER_URL__</guid>
+		<description><![CDATA[The first GoLand 2026.1 Early Access Program build is now available with new inspections and a refreshed debugger UI.]]></description>
+	</item>
+
+</channel>
+</rss>

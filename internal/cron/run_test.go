@@ -315,7 +315,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 	}{
 		"Disabled By Default": {
 			opts:      RunOptions{Sources: []news.Source{news.SourceDevTo}},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.False(t, sg.called, "synth must not be called without IncludeSynth")
@@ -327,13 +327,13 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				Sources:      []news.Source{news.SourceDevTo},
 				IncludeSynth: true,
 			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "tweetytweet", LinkedIn: "linky"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called)
-				assert.Contains(t, m.req.Html, "tweetytweet")
-				assert.Contains(t, m.req.Text, "linky")
+				assert.Contains(t, m.req.Html, "punchy-post")
+				assert.Contains(t, m.req.Text, "punchy-post")
 			},
 		},
 		"Suggester Error Logged Not Returned": {
@@ -346,7 +346,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called, "digest still ships when synth fails")
-				assert.NotContains(t, m.req.Html, "Suggested posts")
+				assert.NotContains(t, m.req.Html, "Suggested post")
 			},
 		},
 		"Suggester ErrNoItems Skipped Silently": {
@@ -359,7 +359,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				t.Helper()
 				assert.True(t, sg.called)
 				assert.True(t, m.called)
-				assert.NotContains(t, m.req.Html, "Suggested posts")
+				assert.NotContains(t, m.req.Html, "Suggested post")
 			},
 		},
 		"DryRun Skips Suggester": {
@@ -368,7 +368,7 @@ func TestAggregator_Run_Synth(t *testing.T) {
 				IncludeSynth: true,
 				DryRun:       true,
 			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Twitter: "t", LinkedIn: "l"}},
+			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
 			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
 				t.Helper()
 				assert.False(t, sg.called, "synth must not be called when DryRun is set")

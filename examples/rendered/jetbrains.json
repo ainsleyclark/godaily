@@ -1,0 +1,134 @@
+[
+	{
+		"source": "jetbrains",
+		"title": "Code like a PIRATE with Junie and GoLand",
+		"url": "https://blog.jetbrains.com/go/2026/04/02/code-like-a-pirate-with-junie-and-goland/",
+		"author": "Anna Protsenko",
+		"snippet": "This is a guest post from John Arundel, a Go writer and teacher who runs a free email course for Go learners. His most recent book is The Deeper Love of Go. Ahoy, maties! Cap’n Long John Arundel her",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-02T13:34:24Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "GoLand 2026.1 Is Released",
+		"url": "https://blog.jetbrains.com/go/2026/03/26/goland-2026-1-is-released/",
+		"author": "Artem Pronichev",
+		"snippet": "GoLand 2026.1 helps you keep your Go code modern and your workflow efficient. This release introduces guided syntax updates for Go 1.26, making it easier to adopt new language improvements across your",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-26T12:11:42Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "Best Practices for Secure Error Handling in Go",
+		"url": "https://blog.jetbrains.com/go/2026/03/02/secure-go-error-handling-best-practices/",
+		"author": "Dominika Stankiewicz",
+		"snippet": "When you’re new to Go, error handling is definitely a paradigm shift that you need to come to terms with. Unlike in other popular languages, in Go, errors are values, not exceptions. What this means",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-02T10:31:07Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "Write Modern Go Code With Junie and Claude Code",
+		"url": "https://blog.jetbrains.com/go/2026/02/20/write-modern-go-code-with-junie-and-claude-code/",
+		"author": "Arseniy Terekhov",
+		"snippet": "Go developers can now confidently write modern Go code using the AI agents Junie and Claude Code. We at JetBrains have just released a new plugin with guidelines for AI agents that ensure they use the",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-20T13:29:52Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "Moving Your Codebase to Go 1.26 With GoLand Syntax Updates",
+		"url": "https://blog.jetbrains.com/go/2026/02/13/moving-your-codebase-to-go-1-26-with-goland-syntax-updates/",
+		"author": "Artem Pronichev",
+		"snippet": "Working on an existing Go project rarely starts with a plan to modernize it. More often, you open a file to make a small change, add a field, or adjust some logic. The code compiles, tests pass, and e",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-13T12:33:36Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "[Livestream] Go 1.26 Release Party",
+		"url": "https://blog.jetbrains.com/go/2026/02/10/new-livestream-go-1-26-release-party/",
+		"author": "Anna Protsenko",
+		"snippet": "Updated on February 23. On February 19, we hosted the Go 1.26 Release Party, celebrating the latest Go release together with the community. During the livestream, Go experts walked through what’s ne",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-10T13:12:58Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "Dancing Backwards With Go",
+		"url": "https://blog.jetbrains.com/go/2026/01/12/dancing-backwards-with-go/",
+		"author": "Dominika Stankiewicz",
+		"snippet": "This is a guest post from John Arundel, a Go writer and teacher who runs a free email course for Go learners. His book The Power of Go: Tests is a love letter to test-driven development in Go. Have yo",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-01-12T12:07:51Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "Preventing Resource Leaks in Go: How GoLand Helps You Write Safer Code",
+		"url": "https://blog.jetbrains.com/go/2025/12/09/preventing-resource-leaks-in-go-how-goland-helps-you-write-safer-code/",
+		"author": "Nikita Kuchur",
+		"snippet": "Every Go application uses resources, such as files, network connections, HTTP responses, and database query results. But when a resource is left unclosed, it can cause a leak, which drains memory, exh",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-12-09T17:13:17Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "GoLand 2025.3 Is Out!",
+		"url": "https://blog.jetbrains.com/go/2025/12/08/goland-2025-3-is-out/",
+		"author": "Artem Pronichev",
+		"snippet": "GoLand 2025.3 brings a set of powerful upgrades designed to help you write cleaner and more efficient code. This release introduces on-the-fly resource leak detection, bundled Terraform support, smoot",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-12-08T12:49:42Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "The Go Ecosystem in 2025: Key Trends in Frameworks, Tools, and Developer Practices",
+		"url": "https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/",
+		"author": "Elena Ufliand",
+		"snippet": "Go turns 16 this year. To celebrate this milestone, we have taken a closer look at the latest Developer Ecosystem Survey results and examined the evolution of the Go ecosystem over the past five years",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-11-10T09:24:35Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "The “10x” Commandments of Highly Effective Go",
+		"url": "https://blog.jetbrains.com/go/2025/10/16/the-10x-commandments-of-highly-effective-go/",
+		"author": "Anna Protsenko",
+		"snippet": "This is a guest post from John Arundel of Bitfield Consulting, a Go trainer and writer who runs a free newsletter for Go learners. His most recent book is The Deeper Love of Go. Ever wondered if there",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-16T11:13:18Z"
+	},
+	{
+		"source": "jetbrains",
+		"title": "8 Common DevOps Problems And How to Solve Them With GoLand",
+		"url": "https://blog.jetbrains.com/go/2025/09/17/8-common-devops-problems-and-how-to-solve-them-with-goland/",
+		"author": "Olga Bedrina",
+		"snippet": "One of the most popular posts on the /devops subreddit says, “After 24 years in IT, I’m done. I don’t want to debug another YAML file. This is not how I foresee spending my life.” DevOps can b",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-09-17T18:15:54Z"
+	}
+]

@@ -30,7 +30,7 @@ import (
 func TestRegisteredSources(t *testing.T) {
 	t.Parallel()
 
-	for _, s := range []news.Source{news.SourceDevTo, news.SourceGoBlog, news.SourceHN, news.SourceLobsters, news.SourceMedium, news.SourceYouTube} {
+	for _, s := range []news.Source{news.SourceDevTo, news.SourceGoBlog, news.SourceHN, news.SourceLobsters, news.SourceMedium, news.SourceYouTube, news.SourceGoRelease, news.SourceMastodon, news.SourceAwesomeGo, news.SourceJetBrains} {
 		t.Run(string(s), func(t *testing.T) {
 			t.Parallel()
 

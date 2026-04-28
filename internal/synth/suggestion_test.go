@@ -34,9 +34,8 @@ import (
 
 func sampleSuggestion() Suggestion {
 	return Suggestion{
-		Date:     time.Date(2026, 4, 27, 0, 0, 0, 0, time.UTC),
-		Twitter:  "tweet text",
-		LinkedIn: "linkedin\npost",
+		Date: time.Date(2026, 4, 27, 0, 0, 0, 0, time.UTC),
+		Post: "post text",
 		References: []Ref{{
 			Title:  "Go 1.24 ships",
 			URL:    "https://go.dev/blog/go1.24",
@@ -51,9 +50,8 @@ func TestSuggestion_Markdown(t *testing.T) {
 	t.Run("With References", func(t *testing.T) {
 		t.Parallel()
 		md := sampleSuggestion().Markdown()
-		assert.Contains(t, md, "## Suggested posts: 2026-04-27")
-		assert.Contains(t, md, "### Twitter\n\ntweet text")
-		assert.Contains(t, md, "### LinkedIn\n\nlinkedin\npost")
+		assert.Contains(t, md, "## Suggested post: 2026-04-27")
+		assert.Contains(t, md, "post text")
 		assert.Contains(t, md, "### References")
 		assert.Contains(t, md, "[Go 1.24 ships](https://go.dev/blog/go1.24) (go_blog)")
 	})
@@ -121,7 +119,7 @@ func TestStripFences(t *testing.T) {
 func TestParseResponse(t *testing.T) {
 	t.Parallel()
 
-	validJSON := `{"twitter":"hello","linkedin":"hello\nworld","references":[{"title":"t","url":"u","source":"hacker_news"}]}`
+	validJSON := `{"post":"hello","references":[{"title":"t","url":"u","source":"hacker_news"}]}`
 
 	tt := map[string]struct {
 		msg     *anthropic.Message
@@ -146,24 +144,19 @@ func TestParseResponse(t *testing.T) {
 			msg:     makeTextMessage("not json"),
 			wantErr: "parse:",
 		},
-		"Missing Twitter": {
-			msg:     makeTextMessage(`{"twitter":"","linkedin":"x"}`),
-			wantErr: "missing twitter or linkedin",
+		"Missing Post": {
+			msg:     makeTextMessage(`{"post":""}`),
+			wantErr: "missing post field",
 		},
-		"Missing LinkedIn": {
-			msg:     makeTextMessage(`{"twitter":"x","linkedin":""}`),
-			wantErr: "missing twitter or linkedin",
-		},
-		"Twitter Too Long": {
-			msg:     makeTextMessage(`{"twitter":"` + strings.Repeat("a", 281) + `","linkedin":"x"}`),
-			wantErr: "twitter post is 281 chars",
+		"Post Too Long": {
+			msg:     makeTextMessage(`{"post":"` + strings.Repeat("a", 281) + `"}`),
+			wantErr: "post is 281 chars",
 		},
 		"Valid": {
 			msg: makeTextMessage(validJSON),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "hello", s.Twitter)
-				assert.Equal(t, "hello\nworld", s.LinkedIn)
+				assert.Equal(t, "hello", s.Post)
 				require.Len(t, s.References, 1)
 				assert.Equal(t, news.SourceHN, s.References[0].Source)
 			},
@@ -172,15 +165,14 @@ func TestParseResponse(t *testing.T) {
 			msg: makeTextMessage("```json\n" + validJSON + "\n```"),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "hello", s.Twitter)
+				assert.Equal(t, "hello", s.Post)
 			},
 		},
 		"Multiple Text Blocks Concatenated": {
-			msg: makeTextMessage(`{"twitter":"x","linkedin":`, `"y","references":[]}`),
+			msg: makeTextMessage(`{"post":`, `"y","references":[]}`),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "x", s.Twitter)
-				assert.Equal(t, "y", s.LinkedIn)
+				assert.Equal(t, "y", s.Post)
 			},
 		},
 	}

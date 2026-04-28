@@ -5,11 +5,15 @@
 		"url": "https://github.com/kyleomalley/nocordhf",
 		"original_url": "https://news.ycombinator.com/item?id=47930598",
 		"image_url": "https://opengraph.githubassets.com/98304dee96804ed79a3f7da9de2c687b6ac2a29c1ec17fd35c366f5693e129a0/kyleomalley/nocordhf",
+<<<<<<< HEAD
 		"author": {
 			"name": "kyleomalley",
 			"username": "kyleomalley",
 			"profile_url": "https://news.ycombinator.com/user?id=kyleomalley"
 		},
+=======
+		"author": "kyleomalley",
+>>>>>>> main
 		"snippet": "Open Source Digital Mode (FT8) Radio Software for Amateur Radio (MacOS) - kyleomalley/nocordhf",
 		"tag": "article",
 		"comments": 2,

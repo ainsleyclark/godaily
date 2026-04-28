@@ -84,4 +84,5 @@ const (
 	TagProposalShipped  Tag = "proposal_shipped"
 	TagVideo            Tag = "video"
 	TagPodcast          Tag = "podcast"
+	TagRelease          Tag = "release"
 )
