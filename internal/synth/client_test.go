@@ -91,10 +91,9 @@ func sampleSections() []news.SourceItems {
 // validResponse mimics the JSON shape Anthropic returns for a Messages
 // call, with a single text block that contains the strict-JSON payload
 // our parser expects.
-func validResponse(twitter, linkedin string) string {
+func validResponse(post string) string {
 	inner, _ := json.Marshal(map[string]any{
-		"twitter":  twitter,
-		"linkedin": linkedin,
+		"post": post,
 		"references": []map[string]string{{
 			"title":  "Go 1.24 ships",
 			"url":    "https://go.dev/blog/go1.24",
@@ -141,7 +140,7 @@ func TestClient_Suggest(t *testing.T) {
 		got, err := c.Suggest(context.Background(), day, nil)
 
 		require.ErrorIs(t, err, ErrNoItems)
-		assert.Empty(t, got.Twitter)
+		assert.Empty(t, got.Post)
 		assert.Equal(t, 0, called, "must not call API when there are no items")
 	})
 
@@ -177,14 +176,13 @@ func TestClient_Suggest(t *testing.T) {
 
 	t.Run("OK Populates Date And Sends Cached Prompt", func(t *testing.T) {
 		t.Parallel()
-		srv, got := fakeServer(t, http.StatusOK, validResponse("hi", "hi\nworld"))
+		srv, got := fakeServer(t, http.StatusOK, validResponse("hi"))
 
 		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
 		sug, err := c.Suggest(context.Background(), day, sampleSections())
 		require.NoError(t, err)
 
-		assert.Equal(t, "hi", sug.Twitter)
-		assert.Equal(t, "hi\nworld", sug.LinkedIn)
+		assert.Equal(t, "hi", sug.Post)
 		assert.Equal(t, day, sug.Date)
 		require.Len(t, sug.References, 1)
 		assert.Equal(t, news.SourceGoBlog, sug.References[0].Source)
@@ -202,7 +200,7 @@ func TestClient_Suggest(t *testing.T) {
 
 	t.Run("Filter Caps Items In User Prompt", func(t *testing.T) {
 		t.Parallel()
-		srv, got := fakeServer(t, http.StatusOK, validResponse("hi", "hi"))
+		srv, got := fakeServer(t, http.StatusOK, validResponse("hi"))
 
 		// 50 items in one source — filter must drop to 3 in the user prompt.
 		si := news.SourceItems{Source: news.SourceReddit}

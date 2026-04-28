@@ -17,10 +17,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package synth turns a day's scored news into suggested social posts
-// (Twitter + LinkedIn) by calling the Anthropic Messages API. It keeps
-// input cheap by filtering to top-N items and caching the static system
-// prompt (the embedded style guide) on the request.
+// Package synth turns a day's scored news into a short suggested social
+// post by calling the Anthropic Messages API. It keeps input cheap by
+// filtering to top-N items and caching the static system prompt (the
+// embedded style guide) on the request.
 package synth
 
 import (

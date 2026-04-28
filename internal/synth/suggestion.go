@@ -32,7 +32,7 @@ import (
 	"github.com/ainsleyclark/godaily/internal/news"
 )
 
-const maxTwitterChars = 280
+const maxPostChars = 280
 
 // ErrNoItems is returned by Suggest when there is nothing to summarise.
 // Callers can treat this as a soft skip rather than a hard error.
@@ -42,8 +42,7 @@ type (
 	// Suggestion is the structured output returned by Suggest.
 	Suggestion struct {
 		Date       time.Time `json:"date"`
-		Twitter    string    `json:"twitter"`
-		LinkedIn   string    `json:"linkedin"`
+		Post       string    `json:"post"`
 		References []Ref     `json:"references"`
 	}
 	// Ref is a single item the model cited when drafting the posts. Source
@@ -60,14 +59,9 @@ type (
 func (s Suggestion) Markdown() string {
 	var b strings.Builder
 
-	fmt.Fprintf(&b, "## Suggested posts: %s\n\n", s.Date.Format("2006-01-02"))
+	fmt.Fprintf(&b, "## Suggested post: %s\n\n", s.Date.Format("2006-01-02"))
 
-	b.WriteString("### Twitter\n\n")
-	b.WriteString(s.Twitter)
-	b.WriteString("\n\n")
-
-	b.WriteString("### LinkedIn\n\n")
-	b.WriteString(s.LinkedIn)
+	b.WriteString(s.Post)
 	b.WriteString("\n\n")
 
 	if len(s.References) > 0 {
@@ -125,24 +119,22 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 	}
 
 	var out struct {
-		Twitter    string `json:"twitter"`
-		LinkedIn   string `json:"linkedin"`
+		Post       string `json:"post"`
 		References []Ref  `json:"references"`
 	}
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
 		return Suggestion{}, fmt.Errorf("parse: %w (raw=%q)", err, body)
 	}
 
-	if out.Twitter == "" || out.LinkedIn == "" {
-		return Suggestion{}, errors.New("missing twitter or linkedin field")
+	if out.Post == "" {
+		return Suggestion{}, errors.New("missing post field")
 	}
-	if n := utf8.RuneCountInString(out.Twitter); n > maxTwitterChars {
-		return Suggestion{}, fmt.Errorf("twitter post is %d chars, max %d", n, maxTwitterChars)
+	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
+		return Suggestion{}, fmt.Errorf("post is %d chars, max %d", n, maxPostChars)
 	}
 
 	return Suggestion{
-		Twitter:    out.Twitter,
-		LinkedIn:   out.LinkedIn,
+		Post:       out.Post,
 		References: out.References,
 	}, nil
 }
