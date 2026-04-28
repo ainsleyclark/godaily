@@ -230,26 +230,3 @@ func TestSubscribers_Store(t *testing.T) {
 		}
 	})
 }
-
-// errReader fails on every call.
-type errReader struct{ err error }
-
-func (e errReader) Read(_ []byte) (int, error) { return 0, e.err }
-
-// errAfterReader succeeds once, then fails — used to drive the unsubscribe
-// token branch into its error path while letting the confirm token succeed.
-type errAfterReader struct {
-	calls int
-	err   error
-}
-
-func (e *errAfterReader) Read(p []byte) (int, error) {
-	e.calls++
-	if e.calls == 1 {
-		for i := range p {
-			p[i] = byte(i)
-		}
-		return len(p), nil
-	}
-	return 0, e.err
-}
