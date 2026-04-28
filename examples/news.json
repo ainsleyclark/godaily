@@ -1,30 +1,59 @@
 [
 	{
+		"source": "github",
+		"items": [
+			{
+				"source": "github",
+				"title": "proposal: simd/archsimd: enable AMD64 architecture-specific SIMD by default",
+				"url": "https://github.com/golang/go/issues/78979",
+				"image_url": "https://opengraph.githubassets.com/fd10cc9d15c44a609e4a5f4da42d90ae4b2a3c72d7859950e055276c97f9e4c2/golang/go/issues/78979",
+				"author": "cherrymui",
+				"snippet": "Proposal Details In Go 1.26, we introduced AMD64 architecture-specific SIMD intrinsics in the simd/archsimd package under GOEXPERIMENT=simd . Thanks t",
+				"tag": "proposal",
+				"comments": 2,
+				"score": 0.5288743031666463,
+				"published": "2026-04-27T19:29:32Z"
+			},
+			{
+				"source": "github",
+				"title": "proposal: crypto/x509: Add functions for working with TBS Certificates, Revocation Lists and Certificate Requests",
+				"url": "https://github.com/golang/go/issues/78978",
+				"image_url": "https://opengraph.githubassets.com/a013a629bf9f288c97e620dc5bad616cfe11a8ed1aa0f9c125cf89cccfc6477e/golang/go/issues/78978",
+				"author": "mcpherrinm",
+				"snippet": "Proposal Details Golang’s crypto/x509 library is widely used in the WebPKI. As a certificate authority, it would be helpful if there was support for",
+				"tag": "proposal",
+				"comments": 2,
+				"score": 0.5,
+				"published": "2026-04-27T18:07:30Z"
+			}
+		]
+	},
+	{
 		"source": "github_trending",
 		"items": [
 			{
 				"source": "github_trending",
 				"title": "gastownhall/beads",
 				"url": "https://github.com/gastownhall/beads",
-				"image_url": "https://opengraph.githubassets.com/c7b27d558b6855eb1a1c8a19678b7ffd42cf2ee4691b2ed4aa5d552e2741d8b2/gastownhall/beads",
+				"image_url": "https://opengraph.githubassets.com/ba9cc06c65ca7f77233b125e3b7cf36ee8bdc926de3ef173a174660fa7eb4658/gastownhall/beads",
 				"author": "gastownhall",
 				"snippet": "Beads - A memory upgrade for your coding agent",
 				"tag": "article",
 				"comments": 0,
 				"score": 1,
-				"published": "2026-04-26T12:00:00Z"
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "Wei-Shaw/sub2api",
 				"url": "https://github.com/Wei-Shaw/sub2api",
-				"image_url": "https://opengraph.githubassets.com/9016f6ac809e50fc1af12d7c561f845e81c1c1a120bfa9b7601c6206eb5e2448/Wei-Shaw/sub2api",
+				"image_url": "https://opengraph.githubassets.com/06e81bcddb5002f74964d44193de6529a43e4b1370a0b5a6580f635ea7bb4532/Wei-Shaw/sub2api",
 				"author": "Wei-Shaw",
 				"snippet": "Sub2API-CRS2 一站式开源中转服务，让 Claude、Openai 、Gemini、Antigravity订阅统一接入，支持拼车共享，更高效分摊成本，原生工具无缝使用。",
 				"tag": "article",
 				"comments": 0,
 				"score": 1,
-				"published": "2026-04-26T12:00:00Z"
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
@@ -36,7 +65,19 @@
 				"tag": "article",
 				"comments": 0,
 				"score": 1,
-				"published": "2026-04-26T12:00:00Z"
+				"published": "2026-04-27T12:00:00Z"
+			},
+			{
+				"source": "github_trending",
+				"title": "CJackHwang/ds2api",
+				"url": "https://github.com/CJackHwang/ds2api",
+				"image_url": "https://opengraph.githubassets.com/7bf3704b5282ef7944b5f3a82cb5491e4b05a793276d8a6e448b91b8e6eb645f/CJackHwang/ds2api",
+				"author": "CJackHwang",
+				"snippet": "Deepseek to API: A lightweight, high-performance full-stack middleware converting client protocols to universal APIs. Supports multi-account rotation, compiled binaries, Vercel Serverless, and Docker.",
+				"tag": "article",
+				"comments": 0,
+				"score": 0.9304526175050021,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
@@ -47,20 +88,8 @@
 				"snippet": "Fully autonomous AI Agents system capable of performing complex penetration testing tasks",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.9749550675807673,
-				"published": "2026-04-26T12:00:00Z"
-			},
-			{
-				"source": "github_trending",
-				"title": "CJackHwang/ds2api",
-				"url": "https://github.com/CJackHwang/ds2api",
-				"image_url": "https://opengraph.githubassets.com/96a98f9f91cd641d18e013b1c067e89e9fdcb72a345b3f79f3c9b7f1c3709ffc/CJackHwang/ds2api",
-				"author": "CJackHwang",
-				"snippet": "Deepseek to API: A lightweight, high-performance full-stack middleware converting client protocols to universal APIs. Supports multi-account rotation, compiled binaries, Vercel Serverless, and Docker.",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.9384211974796635,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.9221323708524131,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
@@ -71,80 +100,80 @@
 				"snippet": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard. Single binary app.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.8963448780556919,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.8979634430524636,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "putyy/res-downloader",
 				"url": "https://github.com/putyy/res-downloader",
-				"image_url": "https://opengraph.githubassets.com/f2609ca5f371301e67375a1c6b1f40565b393e429d6500da03856c7c35028bbe/putyy/res-downloader",
+				"image_url": "https://opengraph.githubassets.com/1dbcc3540d2518f70f8e3c687dc964c78ad95564774754c11d79cac6846bf6e7/putyy/res-downloader",
 				"author": "putyy",
 				"snippet": "视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.8484916006794568,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.8546745042445834,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "canopy-network/canopy",
 				"url": "https://github.com/canopy-network/canopy",
-				"image_url": "https://opengraph.githubassets.com/488ea359dc6a218502dd81487fcf4d2763dbc3dd81182586278e4e2e1e27fadf/canopy-network/canopy",
+				"image_url": "https://opengraph.githubassets.com/9129f39b0cc223366f9b9f4dff2edeec4b7c01aa3c911ecbf0fefa95ce4e0937/canopy-network/canopy",
 				"author": "canopy-network",
 				"snippet": "The official go implementation of the Canopy Network protocol",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.8239103593359427,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.8442540815773762,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "XTLS/Xray-core",
 				"url": "https://github.com/XTLS/Xray-core",
-				"image_url": "https://opengraph.githubassets.com/0aeaa9be384cb5146170139633216992f2066421f618761bd683a22d41ef097e/XTLS/Xray-core",
+				"image_url": "https://opengraph.githubassets.com/32448fd7b1d899a89820d0605db22bee339addc2429aa794083ca03b900e0c86/XTLS/Xray-core",
 				"author": "XTLS",
 				"snippet": "Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.7656438920523007,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.7450530918139344,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "Gentleman-Programming/engram",
 				"url": "https://github.com/Gentleman-Programming/engram",
-				"image_url": "https://opengraph.githubassets.com/e8b6d96cbe9692b470b95276dd71ebb01b79b7ed3c1fea23593d9349f4374db3/Gentleman-Programming/engram",
+				"image_url": "https://opengraph.githubassets.com/6ec68545e0d2b6100bac58201528e242d8230f3f9166af83ff35aae1e8de37f0/Gentleman-Programming/engram",
 				"author": "Gentleman-Programming",
 				"snippet": "Persistent memory system for AI coding agents. Agent-agnostic Go binary with SQLite + FTS5, MCP server, HTTP API, CLI, and TUI.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.7413915852262982,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.7376575688648993,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "masterking32/MasterDnsVPN",
 				"url": "https://github.com/masterking32/MasterDnsVPN",
-				"image_url": "https://opengraph.githubassets.com/474aeb454c540e94dc5febf77a49f3a796f015d7a31d91bdde8b4bdefa885d4a/masterking32/MasterDnsVPN",
+				"image_url": "https://opengraph.githubassets.com/c85d30d91b8a3e22820282b3664b13bde51cc69d691975107fc3bbd9159ef305/masterking32/MasterDnsVPN",
 				"author": "masterking32",
 				"snippet": "Advanced DNS tunneling VPN for censorship bypass, optimized beyond DNSTT and SlipStream with low-overhead ARQ, resolver load balancing, high packet-loss stability and speed.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.6955812494409277,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.6859093004814019,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "gastownhall/gascity",
 				"url": "https://github.com/gastownhall/gascity",
-				"image_url": "https://opengraph.githubassets.com/fa6ddd8143637b155d9a40618bee48a2038452418714736c5e2ce4b98510ae55/gastownhall/gascity",
+				"image_url": "https://opengraph.githubassets.com/ae3a9d3ae4227e0076bf0d2db7ebae52dc42c72e4050132d7f128d217e7ec264/gastownhall/gascity",
 				"author": "gastownhall",
 				"snippet": "Orchestration-builder SDK for multi-agent coding workflows",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.675714295252094,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.6535049300169562,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
@@ -155,103 +184,68 @@
 				"snippet": "An open-source Collaborative Multi-Agent OS for transparent, human-in-the-loop task coordination via Matrix rooms.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.6413354390568011,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.6349429060489095,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "shridarpatil/whatomate",
 				"url": "https://github.com/shridarpatil/whatomate",
-				"image_url": "https://opengraph.githubassets.com/c9f11878cc17ccdff9b1d6b046d16f8d767ce763e4f17e982332918fa54d13f2/shridarpatil/whatomate",
+				"image_url": "https://opengraph.githubassets.com/cf588c2e023fdc25b411441215cbe93da04714e0a58d4770e7d5f6520817cef9/shridarpatil/whatomate",
 				"author": "shridarpatil",
 				"snippet": "Whatomate is an open-source WhatsApp integration",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.5552083144780106,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.5648802634375365,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "hatchet-dev/hatchet",
 				"url": "https://github.com/hatchet-dev/hatchet",
-				"image_url": "https://opengraph.githubassets.com/c6f0a6e7c51d257839c980ef019400218bc95bb4eeddbd6d3591cb5774f396d5/hatchet-dev/hatchet",
+				"image_url": "https://opengraph.githubassets.com/951c78044bc0a8c6659587481d3a8de4a66ea6faa595456f5ef3189ec94eb659/hatchet-dev/hatchet",
 				"author": "hatchet-dev",
 				"snippet": "🪓 Run Background Tasks at Scale",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.5552083144780106,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.5106344530534098,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "bjdgyc/anylink",
 				"url": "https://github.com/bjdgyc/anylink",
-				"image_url": "https://opengraph.githubassets.com/0a77335c6d9bab4e4550de6afed8f223b2f86316c3bc4805f4bdf0b83cd1ba26/bjdgyc/anylink",
+				"image_url": "https://opengraph.githubassets.com/fa88167a3e1d721c1bd49b0058a7ea09020b46277282fb510e593c30409dbf1b/bjdgyc/anylink",
 				"author": "bjdgyc",
 				"snippet": "AnyLink是一个企业级远程办公 ssl vpn 软件，可以支持多人同时在线使用。基于 openconnect 协议开发，并且借鉴了 ocserv 的开发思路，可以完全兼容 AnyConnect \ufffd",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.5342354236036424,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.4521511235672025,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "go-vikunja/vikunja",
 				"url": "https://github.com/go-vikunja/vikunja",
-				"image_url": "https://opengraph.githubassets.com/8edb11612b92a4cdd4f2d73a0ef1cbf0bfe1909ae31dbb288c2c5c724c8db151/go-vikunja/vikunja",
+				"image_url": "https://opengraph.githubassets.com/ed24dccfe212bdc56d4402290d1efccbc5414b784e5b4042fc1d3800691a01df/go-vikunja/vikunja",
 				"author": "go-vikunja",
 				"snippet": "The to-do app to organize your life.",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.4836511198071519,
-				"published": "2026-04-26T12:00:00Z"
+				"score": 0.4341792774341453,
+				"published": "2026-04-27T12:00:00Z"
 			},
 			{
 				"source": "github_trending",
 				"title": "krillinai/KrillinAI",
 				"url": "https://github.com/krillinai/KrillinAI",
-				"image_url": "https://opengraph.githubassets.com/ecb08185f0648dc249bdba584942a834f76e884054b60de0db43ea4047cc39bc/krillinai/KrillinAI",
+				"image_url": "https://opengraph.githubassets.com/98151ccecf0d92db8706ccece5eef82c00e2044a9a646e146f678fa94f789cd9/krillinai/KrillinAI",
 				"author": "krillinai",
 				"snippet": "Video translation and dubbing tool powered by LLMs. The video translator offers 100 language translations and one-click full-process deployment. The video translation output is optimized for platforms",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.46855813362943827,
-				"published": "2026-04-26T12:00:00Z"
-			}
-		]
-	},
-	{
-		"source": "hacker_news",
-		"items": [
-			{
-				"source": "hacker_news",
-				"title": "I learned Rust with rustlings, so I built the same thing for Go",
-				"url": "https://github.com/Ichihiroy/golings",
-				"original_url": "https://news.ycombinator.com/item?id=47912690",
-				"image_url": "https://opengraph.githubassets.com/25bfd6b0741b1d4e23125a056dfa05fb3082b3ffa78f9171c81de80557cfbcd2/Ichihiroy/golings",
-				"author": "ichihiroy",
-				"snippet": "🐹 Learn Go through small, interactive exercises — inspired by rustlings. - Ichihiroy/golings",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.423099442533317,
-				"published": "2026-04-26T18:40:36Z"
-			}
-		]
-	},
-	{
-		"source": "lobsters",
-		"items": [
-			{
-				"source": "lobsters",
-				"title": "Swissing a table",
-				"url": "https://philpearl.github.io/post/swissing_a_table/",
-				"original_url": "https://lobste.rs/s/2lzsw6/swissing_table",
-				"author": "carlana",
-				"snippet": "Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation.",
-				"tag": "article",
-				"comments": 4,
-				"score": 0.9042486604437607,
-				"published": "2026-04-26T14:19:13Z"
+				"score": 0.303478291430754,
+				"published": "2026-04-27T12:00:00Z"
 			}
 		]
 	},
@@ -260,210 +254,216 @@
 		"items": [
 			{
 				"source": "reddit",
-				"title": "watgo - a WebAssembly Toolkit for Go",
-				"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
-				"author": "self",
-				"snippet": "",
+				"title": "Gophercon 2026",
+				"url": "https://www.gophercon.com/",
+				"image_url": "https://external-preview.redd.it/JFZM64I2Dd_nhkMDYmOLk7p_NYBh3oF36Yhc03MDxyo.png?auto=webp\u0026s=66904628018d64d229e85881afa2ebc2235cecf7",
+				"author": "cpustejovsky",
+				"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
 				"tag": "article",
-				"comments": 2,
-				"score": 0.714138851624206,
-				"published": "2026-04-26T15:31:39Z"
+				"comments": 4,
+				"score": 0.8248240703312607,
+				"published": "2026-04-27T00:09:56Z"
 			},
 			{
 				"source": "reddit",
-				"title": "WhatsApp api",
-				"url": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
-				"image_url": "https://external-preview.redd.it/wBDTeTAJFIfyckGDocxz0fY2ODHwOzKIVKKvnG-vX_k.png?auto=webp\u0026s=83747421d44b4e49ebdbb04dfa7e38545aacf82c",
-				"author": "WorkingInitiative909",
-				"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
+				"title": "Building an Event Loop in Go from syscalls",
+				"url": "https://www.reddit.com/r/golang/comments/1sx5ezm/building_an_event_loop_in_go_from_syscalls/",
+				"author": "Pop_the_glock_1",
+				"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
 				"tag": "article",
 				"comments": 5,
-				"score": 0.6379982859432913,
-				"published": "2026-04-26T00:07:59Z"
+				"score": 0.799302952252854,
+				"published": "2026-04-27T14:30:55Z"
 			},
 			{
 				"source": "reddit",
-				"title": "potential goroutine leak or nah",
-				"url": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
-				"author": "KaleidoscopePlusPlus",
-				"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
-				"tag": "article",
-				"comments": 17,
-				"score": 0.613898019286257,
-				"published": "2026-04-26T14:46:53Z"
-			},
-			{
-				"source": "reddit",
-				"title": "xytz - a beautiful TUI YouTube Downloader/Player",
-				"url": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
-				"image_url": "https://external-preview.redd.it/2MgRP5tx0OWQMvvGfwpfDd23K_g4Mvw2pZp2_h7GUa0.png?auto=webp\u0026s=d1462ac22b673e2e084d70c5ac3a8d3855ae94fc",
-				"author": "Upbeat_Equivalent519",
-				"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
+				"title": "Zero-config Go heap profiling",
+				"url": "https://coroot.com/blog/zero-config-go-heap-profiling/",
+				"image_url": "https://external-preview.redd.it/4l64GFfghifmYot9kg43cQE0s-qMlelSqjTddw8pY1Q.png?auto=webp\u0026s=b534ecb68432bcb684bb9b2cb5e165eca6c30063",
+				"author": "NikolaySivko",
+				"snippet": "How we added continuous Go heap profiling to coroot-node-agent without requiring any code changes, pprof endpoints, or annotations, by reading runtime.mbuckets directly from process memory.",
 				"tag": "article",
 				"comments": 1,
-				"score": 0.5867777864565255,
-				"published": "2026-04-26T09:27:37Z"
+				"score": 0.7509524161184398,
+				"published": "2026-04-27T19:26:59Z"
 			},
 			{
 				"source": "reddit",
-				"title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
-				"url": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
-				"image_url": "https://external-preview.redd.it/fNQUIG1bxSEp7L4nuTEpjjI8I1NWtf1I4PtXGtDSj58.png?auto=webp\u0026s=354ed3344e514a033c260e280f53700e361fb13c",
-				"author": "Extension_Layer1825",
-				"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
+				"title": "Small Projects",
+				"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
+				"author": "AutoModerator",
+				"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
+				"tag": "article",
+				"comments": 6,
+				"score": 0.38823676709842325,
+				"published": "2026-04-27T19:00:54Z"
+			},
+			{
+				"source": "reddit",
+				"title": "two apps in one project , how can i structure it ?",
+				"url": "https://www.reddit.com/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
+				"author": "Radonish",
+				"snippet": "im making a 2d multiplayer ascii game from scratch in golang , i need to saperate the two apps ( server and client ) while also making them share some packages , how can i go about structuring that fi",
+				"tag": "article",
+				"comments": 7,
+				"score": 0.38823676709842325,
+				"published": "2026-04-27T16:15:51Z"
+			},
+			{
+				"source": "reddit",
+				"title": "KEIBIDROP: P2P filesystem I've been building in go for the last year",
+				"url": "https://github.com/KeibiSoft/KeibiDrop",
+				"image_url": "https://external-preview.redd.it/dPO1rdVPcQIjDtaC-_nSO1s6eOYinb_Ulxl0jnuAaYg.png?auto=webp\u0026s=caf82181dbe27be98168c946045c4a659217808a",
+				"author": "Secret-Employer282",
+				"snippet": "Hi gophers, Over the last year I've been building (in my spare time) a cross platform FUSE filesystem that also has a GUI. (altough the GUI is [slint.dev](http://slint.dev) and bound with rust, the en",
+				"tag": "article",
+				"comments": 0,
+				"score": 0.34873150258179014,
+				"published": "2026-04-27T16:09:01Z"
+			},
+			{
+				"source": "reddit",
+				"title": "Sphire Foundry - I posted my CMS about a month ago, and since then I've added more features, and I just merged the first contributor PR. Come check it out !",
+				"url": "https://github.com/sphireinc/Foundry",
+				"image_url": "https://external-preview.redd.it/KRY9qHb_axlww9itga85k9mtsDQ2W-jRl4pvdqt07k0.png?auto=webp\u0026s=8f41aa842d7a6b9a177427b3c550768a10f997c7",
+				"author": "SovereignZ3r0",
+				"snippet": "Slowly adding more and more features to this baby - have a few open issues, and just merged the first contributor PR (a syntax highlighting plugin - though typically plugins should be their own github",
+				"tag": "article",
+				"comments": 0,
+				"score": 0.1,
+				"published": "2026-04-27T22:32:50Z"
+			},
+			{
+				"source": "reddit",
+				"title": "sqlc query date_part param type",
+				"url": "https://www.reddit.com/r/golang/comments/1sx523q/sqlc_query_date_part_param_type/",
+				"author": "tyrrminal",
+				"snippet": "I have a query that's designed to filter by year and group by month; within the query, it's doing: date_part('year', s.occurred_at) = $1 but when sqlc generates the go code for this, the signature is ",
 				"tag": "article",
 				"comments": 2,
-				"score": 0.23804628387473528,
-				"published": "2026-04-26T15:58:00Z"
-			},
-			{
-				"source": "reddit",
-				"title": "Showcase: kLex (FROG) – A 'Governed' language with 30+ libs written in Go.",
-				"url": "https://github.com/kmcnally5/FROG",
-				"image_url": "https://external-preview.redd.it/zV3AYQYZ9cwq84Hz8RIoX6PJzpwW3BatUSVE1vIiDDE.png?auto=webp\u0026s=bd8af23cd6836095c0df76e2c7955d65ce621909",
-				"author": "Ill-Plum-7348",
-				"snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.** I wrote kLex/FROG almost entirely using AI - only breaking from this as required. I did this for m",
-				"tag": "article",
-				"comments": 5,
 				"score": 0.1,
-				"published": "2026-04-26T14:38:55Z"
+				"published": "2026-04-27T14:18:18Z"
 			}
 		]
 	},
 	{
-		"source": "dev_to",
+		"source": "golangbridge",
 		"items": [
 			{
-				"source": "dev_to",
-				"title": "The Airgap Test: Refactoring a Cobra CLI into a Library API",
-				"url": "https://dev.to/bala_paranj_059d338e44e7e/the-airgap-test-refactoring-a-cobra-cli-into-a-library-api-1h0k",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fhxokmtzm8zhgv4c2u2dp.png",
-				"author": "Bala Paranj",
-				"snippet": "How a single rule — only RunE touches *cobra.Command — turned a CLI codebase into a library that...",
+				"source": "golangbridge",
+				"title": "[open source]PC-Gui: A lightweight desktop GUI framework built for AI, natively supporting real-time typewriter streaming output like Gemini!",
+				"url": "https://forum.golangbridge.org/t/open-source-pc-gui-a-lightweight-desktop-gui-framework-built-for-ai-natively-supporting-real-time-typewriter-streaming-output-like-gemini/41870",
+				"author": "",
+				"snippet": "",
+				"tag": "article",
+				"comments": 1,
+				"score": 0.3255208097641333,
+				"published": "2026-04-27T13:02:32.57Z"
+			}
+		]
+	},
+	{
+		"source": "awesome_go",
+		"items": [
+			{
+				"source": "awesome_go",
+				"title": "Add lynxdb to databases (#6282)",
+				"url": "https://github.com/avelino/awesome-go/commit/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+				"author": "Evgenii Orlov",
+				"snippet": "",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.227670248696953,
-				"published": "2026-04-26T12:06:42Z"
+				"score": 0.5,
+				"published": "2026-04-27T08:30:23Z"
+			}
+		]
+	},
+	{
+		"source": "medium",
+		"items": [
+			{
+				"source": "medium",
+				"title": "Directed Acyclic Graph, Golang and Scheduling: What I Learned Building a Concurrent Task Scheduler",
+				"url": "https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*h4HkkqAbHuBpqzGJhjN7JA.png",
+				"author": "Iserganoff",
+				"snippet": "A story about Kahn’s algorithm, atomic counters, and the quiet elegance of letting goroutines self-schedule. Continue reading on Medium »",
+				"tag": "article",
+				"comments": 0,
+				"score": 0.25,
+				"published": "2026-04-27T22:06:46Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "Don’t Trust Backups You Haven’t Restored",
-				"url": "https://dev.to/alzhi_f93e67fa45b972/backups-are-useless-until-you-restore-them-50do",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fkdli0h37f49jl4m1c9rx.png",
-				"author": "alexey.zh",
-				"snippet": "0. A Backup Is Not a File, but a Promise You can write anything you want in the...",
+				"source": "medium",
+				"title": "Go’s Interface System Is Different, and That Difference Is the Point",
+				"url": "https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1000/1*bRpUYV5lNXR_0eviFeabZA.png",
+				"author": "Shayan Holakouee",
+				"snippet": "Every language with interfaces or abstract types requires you to declare your intentions upfront. Continue reading on Medium »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T14:39:58Z"
+				"score": 0.25,
+				"published": "2026-04-27T20:19:53Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "I built ssmctl because AWS SSM deserved a better user experience",
-				"url": "https://dev.to/rhysmcneill/i-built-ssmctl-because-aws-ssm-deserved-a-better-user-experience-29e6",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fz48lf910ehd27seg79n8.png",
-				"author": "Rhys | Senior Cloud Infrastructure Engineer",
-				"snippet": "Github: github.com/rhysmcneill/ssmctl I use AWS Session Manager a lot. No bastion hosts, no open...",
+				"source": "medium",
+				"title": "Autonomous Agent Networking in Distributed AI: Bypassing NAT and Centralized Brokers",
+				"url": "https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*KP8stEfAyfc7CprdKW2cgg.jpeg",
+				"author": "Philip Stayetski",
+				"snippet": "The evolution of artificial intelligence is rapidly moving away from isolated conversational models toward decentralized, multi-agent… Continue reading on Medium »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T17:00:37Z"
+				"score": 0.25,
+				"published": "2026-04-27T19:58:56Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "DDD in Go applied to crypto exchange APIs",
-				"url": "https://dev.to/ohugonnot/ddd-in-go-applied-to-crypto-exchange-apis-3on4",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fa52ktqyobc1csf99pwpf.png",
-				"author": "Odilon HUGONNOT",
-				"snippet": "Bounded contexts, aggregates, value objects and anti-corruption layer — DDD is the 'why' behind CQRS and event sourcing. Applied to a Go service consuming Binance, OKEx and Coinbase.",
+				"source": "medium",
+				"title": "Should Assignment Be an Expression?",
+				"url": "https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*OHnnYNUPKhJbVIEcFXhrrQ.png",
+				"author": "Narmin Aliyeva",
+				"snippet": "Expressions produce values—for example, 3 + 4 evaluates to 7. If assignment is an expression, then it also produces a value, enabling… Continue reading on Stackademic »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T09:00:04Z"
+				"score": 0.25,
+				"published": "2026-04-27T19:54:33Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "Message Queue Example using RabbitMQ in Go",
-				"url": "https://dev.to/nadirbasalamah/message-queue-example-using-rabbitmq-in-go-2oo8",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgzxjn033ve578b3gd51h.png",
-				"author": "nadirbasalamah",
-				"snippet": "Introduction A message queue is an essential component in a distributed system, allowing...",
+				"source": "medium",
+				"title": "AI Didn’t Kill Engineering. It Moved Engineering Upstream.",
+				"url": "https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qTk_dSXD284Fz-RmjKnrFQ.png",
+				"author": "Oleg Ivanchenko",
+				"snippet": "\u003e How I use Claude Code, Go, oCMS, and an LLM Wiki to turn AI from a code generator into an engineering amplifier. Continue reading on Medium »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T07:22:51Z"
+				"score": 0.25,
+				"published": "2026-04-27T19:42:28Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "The Invisible Layer Protecting Your Go Dependencies",
-				"url": "https://dev.to/logicco/the-invisible-layer-protecting-your-go-dependencies-4n9m",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq28asjos7jqhbw1ykbye.png",
-				"author": "LogicCo",
-				"snippet": "Before starting, I want to be clear: this is not a deep dive into the Golang Proxy, but an...",
+				"source": "medium",
+				"title": "Why do my value receivers have the same address?",
+				"url": "https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*MRlX9aCNFzlsKliKvZ1nHQ.png",
+				"author": "Andrei Boar",
+				"snippet": "Intro Continue reading on Medium »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T03:39:30Z"
+				"score": 0.25,
+				"published": "2026-04-27T19:06:22Z"
 			},
 			{
-				"source": "dev_to",
-				"title": "WEB UI in Go? Nothing Can Stop Me!",
-				"url": "https://dev.to/alzhi_f93e67fa45b972/web-ui-in-go-nothing-can-stop-me-2j7k",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ft2nkzbcv5ijg3boclsmp.png",
-				"author": "alexey.zh",
-				"snippet": "Introduction Author's note: This article is not technical in nature. Rather, it is a set...",
+				"source": "medium",
+				"title": "Go Error Logging: 7 Best Practices for Bulletproof Applications in 2026 ️",
+				"url": "https://medium.com/@anshusinghal703/go-error-logging-7-best-practices-for-bulletproof-applications-in-2026-%EF%B8%8F-130c8b791416?source=rss------golang-5",
+				"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*sjNEM0K78xYl-_dp",
+				"author": "Anshu Singhal",
+				"snippet": "So, hey, have you ever found yourself squinting at a screen at, like, 2 AM, just staring at a wall of totally cryptic log messages, trying… Continue reading on Medium »",
 				"tag": "article",
 				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T09:58:48Z"
-			},
-			{
-				"source": "dev_to",
-				"title": "Every Request Looked the Same in My Logs. Then I Added One Line.",
-				"url": "https://dev.to/abhishek_sharma_a9792aee8/every-request-looked-the-same-in-my-logs-then-i-added-one-line-19m7",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F4d0x4vo13a90qvviixqv.png",
-				"author": "Abhishek Sharma",
-				"snippet": "In Part 9, I Dockerized my backend and added database migrations. One command (docker compose up) now...",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T14:11:32Z"
-			},
-			{
-				"source": "dev_to",
-				"title": "I learned Rust with rustlings, so I built the same thing for Go",
-				"url": "https://dev.to/ichihiroy/i-learned-rust-with-rustlings-so-i-built-the-same-thing-for-go-4f4m",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgvs2yks2z20v9du333e5.png",
-				"author": "Yunis Quliyev",
-				"snippet": "I've been wanting to learn Go properly for a while. Tried the usual — read the docs, watched...",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T18:44:00Z"
-			},
-			{
-				"source": "dev_to",
-				"title": "8 Cursor Rules for Go Developers — 2026 Edition",
-				"url": "https://dev.to/olivia_craft/8-cursor-rules-for-go-developers-2026-edition-2c25",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fiyqlr718pth6fvy16pck.png",
-				"author": "Olivia Craft",
-				"snippet": "Eight Cursor rules that make your AI write idiomatic Go — proper error handling, accept interfaces, context-first signatures, owned goroutines, directional channels, no init() tricks, table-driven t",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T09:55:03Z"
-			},
-			{
-				"source": "dev_to",
-				"title": "GopherWhisper: A burrow full of malware",
-				"url": "https://dev.to/mark0_617b45cda9782a/gopherwhisper-a-burrow-full-of-malware-1cfj",
-				"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F0xgpb55rdy8qsqdtjki5.png",
-				"author": "Mark0",
-				"snippet": "ESET researchers have identified a new China-aligned APT group dubbed GopherWhisper, which has been...",
-				"tag": "article",
-				"comments": 0,
-				"score": 0.1,
-				"published": "2026-04-26T06:45:55Z"
+				"score": 0.25,
+				"published": "2026-04-27T19:01:08Z"
 			}
 		]
 	}

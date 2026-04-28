@@ -1,6 +1,19 @@
 [
 	{
 		"source": "hacker_news",
+		"title": "Nocord HF – A discord style FT8 client written in Golang",
+		"url": "https://github.com/kyleomalley/nocordhf",
+		"original_url": "https://news.ycombinator.com/item?id=47930598",
+		"image_url": "https://opengraph.githubassets.com/98304dee96804ed79a3f7da9de2c687b6ac2a29c1ec17fd35c366f5693e129a0/kyleomalley/nocordhf",
+		"author": "kyleomalley",
+		"snippet": "Open Source Digital Mode (FT8) Radio Software for Amateur Radio (MacOS) - kyleomalley/nocordhf",
+		"tag": "article",
+		"comments": 2,
+		"score": 0.3352983752456666,
+		"published": "2026-04-28T05:01:01Z"
+	},
+	{
+		"source": "hacker_news",
 		"title": "I learned Rust with rustlings, so I built the same thing for Go",
 		"url": "https://github.com/Ichihiroy/golings",
 		"original_url": "https://news.ycombinator.com/item?id=47912690",
@@ -226,18 +239,5 @@
 		"comments": 1,
 		"score": 0.2115497212666585,
 		"published": "2026-03-25T13:05:32Z"
-	},
-	{
-		"source": "hacker_news",
-		"title": "A collection of 35 Golang Agent Skills",
-		"url": "https://github.com/samber/cc-skills-golang",
-		"original_url": "https://news.ycombinator.com/item?id=47487741",
-		"image_url": "https://opengraph.githubassets.com/98336d4bbc3c1ca9a5ba455e8bb3e930373b7563830e026e7cec85a32934dda7/samber/cc-skills-golang",
-		"author": "samber",
-		"snippet": "🧑‍🎨 A collection of Golang agentic skills that works - samber/cc-skills-golang",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.423099442533317,
-		"published": "2026-03-23T11:03:49Z"
 	}
 ]

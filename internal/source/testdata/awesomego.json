@@ -1,0 +1,38 @@
+[
+  {
+    "sha": "05a987517e34d76afbd22d3460f7c5359fbee3b1",
+    "html_url": "https://github.com/avelino/awesome-go/commit/05a987517e34d76afbd22d3460f7c5359fbee3b1",
+    "commit": {
+      "message": "Add lynxdb to databases (#6282)",
+      "author": {
+        "name": "Evgenii Orlov",
+        "email": "4623930+OrlovEvgeny@users.noreply.github.com",
+        "date": "2026-04-27T08:30:23Z"
+      }
+    }
+  },
+  {
+    "sha": "a870df79861bdeadbc6e790122937cae34f35caa",
+    "html_url": "https://github.com/avelino/awesome-go/commit/a870df79861bdeadbc6e790122937cae34f35caa",
+    "commit": {
+      "message": "docs: update NoKV description (#6280)",
+      "author": {
+        "name": "Guocheng Song",
+        "email": "songguocheng348@gmail.com",
+        "date": "2026-04-26T03:17:26Z"
+      }
+    }
+  },
+  {
+    "sha": "012a1638a20c05e39e7adca1609fad296c342ec3",
+    "html_url": "https://github.com/avelino/awesome-go/commit/012a1638a20c05e39e7adca1609fad296c342ec3",
+    "commit": {
+      "message": "Add vibridi/gomock to Mock section (#6277)\n\n* Add vibridi/gomock to Mock section\n\n* Remove gock (https://github.com/h2non/gock)\n\nNot updated in a long time, issues are seemingly not responded to in a timely manner.",
+      "author": {
+        "name": "Gabriele V.",
+        "email": "10689839+vibridi@users.noreply.github.com",
+        "date": "2026-04-23T12:58:40Z"
+      }
+    }
+  }
+]
