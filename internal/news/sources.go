@@ -19,8 +19,26 @@
 
 package news
 
+import "context"
+
+// Fetcher defines the method for obtaining news items
+// from various sources.
+type Fetcher interface {
+	// Fetch obtains a transforms news articles.
+	//
+	// Source types are responsible for returning errors
+	// if they could not be obtained.
+	Fetch(ctx context.Context) ([]Item, error)
+}
+
 // Source defines a provider or source of information.
 type Source string
+
+// SourceItems groups a source with its fetched news items.
+type SourceItems struct {
+	Source Source `json:"source"`
+	Items  []Item `json:"items"`
+}
 
 // Source constants
 const (

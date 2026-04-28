@@ -23,8 +23,7 @@ CREATE TABLE items (
     author_profile_url TEXT,
     score              REAL,
     summary            TEXT,
-    position           INTEGER NOT NULL,
-    raw_json           TEXT
+    position           INTEGER NOT NULL
 );
 CREATE INDEX idx_items_issue ON items(issue_id);
 

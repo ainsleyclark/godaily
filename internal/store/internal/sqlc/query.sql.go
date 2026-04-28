@@ -11,200 +11,6 @@ import (
 	"time"
 )
 
-const confirmSubscriber = `-- name: ConfirmSubscriber :exec
-UPDATE subscribers
-SET confirmed_at = CURRENT_TIMESTAMP
-WHERE confirm_token = ? AND confirmed_at IS NULL
-`
-
-func (q *Queries) ConfirmSubscriber(ctx context.Context, confirmToken string) error {
-	_, err := q.db.ExecContext(ctx, confirmSubscriber, confirmToken)
-	return err
-}
-
-const createNewsItem = `-- name: CreateNewsItem :one
-INSERT INTO items (
-    issue_id, source, title, url,
-    author_name, author_username, author_avatar_url, author_profile_url,
-    score, summary, position, raw_json
-) VALUES (
-    ?, ?, ?, ?,
-    ?, ?, ?, ?,
-    ?, ?, ?, ?
-)
-RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json
-`
-
-type CreateNewsItemParams struct {
-	IssueID          int64           `json:"issue_id"`
-	Source           string          `json:"source"`
-	Title            string          `json:"title"`
-	Url              string          `json:"url"`
-	AuthorName       sql.NullString  `json:"author_name"`
-	AuthorUsername   sql.NullString  `json:"author_username"`
-	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
-	AuthorProfileUrl sql.NullString  `json:"author_profile_url"`
-	Score            sql.NullFloat64 `json:"score"`
-	Summary          sql.NullString  `json:"summary"`
-	Position         int64           `json:"position"`
-	RawJson          sql.NullString  `json:"raw_json"`
-}
-
-func (q *Queries) CreateNewsItem(ctx context.Context, arg CreateNewsItemParams) (NewsItem, error) {
-	row := q.db.QueryRowContext(ctx, createNewsItem,
-		arg.IssueID,
-		arg.Source,
-		arg.Title,
-		arg.Url,
-		arg.AuthorName,
-		arg.AuthorUsername,
-		arg.AuthorAvatarUrl,
-		arg.AuthorProfileUrl,
-		arg.Score,
-		arg.Summary,
-		arg.Position,
-		arg.RawJson,
-	)
-	var i NewsItem
-	err := row.Scan(
-		&i.ID,
-		&i.IssueID,
-		&i.Source,
-		&i.Title,
-		&i.Url,
-		&i.AuthorName,
-		&i.AuthorUsername,
-		&i.AuthorAvatarUrl,
-		&i.AuthorProfileUrl,
-		&i.Score,
-		&i.Summary,
-		&i.Position,
-		&i.RawJson,
-	)
-	return i, err
-}
-
-const createSubscriber = `-- name: CreateSubscriber :one
-INSERT INTO subscribers (
-    email, confirm_token, unsubscribe_token
-) VALUES (
-    ?, ?, ?
-)
-RETURNING id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at
-`
-
-type CreateSubscriberParams struct {
-	Email            string `json:"email"`
-	ConfirmToken     string `json:"confirm_token"`
-	UnsubscribeToken string `json:"unsubscribe_token"`
-}
-
-func (q *Queries) CreateSubscriber(ctx context.Context, arg CreateSubscriberParams) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, createSubscriber, arg.Email, arg.ConfirmToken, arg.UnsubscribeToken)
-	var i Subscriber
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.ConfirmToken,
-		&i.UnsubscribeToken,
-		&i.ConfirmedAt,
-		&i.UnsubscribedAt,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const deleteNewsItemsByIssue = `-- name: DeleteNewsItemsByIssue :exec
-DELETE FROM items WHERE issue_id = ?
-`
-
-func (q *Queries) DeleteNewsItemsByIssue(ctx context.Context, issueID int64) error {
-	_, err := q.db.ExecContext(ctx, deleteNewsItemsByIssue, issueID)
-	return err
-}
-
-const getNewsItem = `-- name: GetNewsItem :one
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM items WHERE id = ? LIMIT 1
-`
-
-func (q *Queries) GetNewsItem(ctx context.Context, id int64) (NewsItem, error) {
-	row := q.db.QueryRowContext(ctx, getNewsItem, id)
-	var i NewsItem
-	err := row.Scan(
-		&i.ID,
-		&i.IssueID,
-		&i.Source,
-		&i.Title,
-		&i.Url,
-		&i.AuthorName,
-		&i.AuthorUsername,
-		&i.AuthorAvatarUrl,
-		&i.AuthorProfileUrl,
-		&i.Score,
-		&i.Summary,
-		&i.Position,
-		&i.RawJson,
-	)
-	return i, err
-}
-
-const getSubscriberByConfirmToken = `-- name: GetSubscriberByConfirmToken :one
-SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE confirm_token = ? LIMIT 1
-`
-
-func (q *Queries) GetSubscriberByConfirmToken(ctx context.Context, confirmToken string) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, getSubscriberByConfirmToken, confirmToken)
-	var i Subscriber
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.ConfirmToken,
-		&i.UnsubscribeToken,
-		&i.ConfirmedAt,
-		&i.UnsubscribedAt,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const getSubscriberByEmail = `-- name: GetSubscriberByEmail :one
-SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE email = ? LIMIT 1
-`
-
-func (q *Queries) GetSubscriberByEmail(ctx context.Context, email string) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, getSubscriberByEmail, email)
-	var i Subscriber
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.ConfirmToken,
-		&i.UnsubscribeToken,
-		&i.ConfirmedAt,
-		&i.UnsubscribedAt,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const getSubscriberByUnsubscribeToken = `-- name: GetSubscriberByUnsubscribeToken :one
-SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
-`
-
-func (q *Queries) GetSubscriberByUnsubscribeToken(ctx context.Context, unsubscribeToken string) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, getSubscriberByUnsubscribeToken, unsubscribeToken)
-	var i Subscriber
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.ConfirmToken,
-		&i.UnsubscribeToken,
-		&i.ConfirmedAt,
-		&i.UnsubscribedAt,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
 const issueByID = `-- name: IssueByID :one
 SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues WHERE id = ? LIMIT 1
 `
@@ -343,14 +149,265 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 	return items, nil
 }
 
-const listActiveSubscribers = `-- name: ListActiveSubscribers :many
+const itemByID = `-- name: ItemByID :one
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position FROM items WHERE id = ? LIMIT 1
+`
+
+func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
+	row := q.db.QueryRowContext(ctx, itemByID, id)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.Source,
+		&i.Title,
+		&i.Url,
+		&i.AuthorName,
+		&i.AuthorUsername,
+		&i.AuthorAvatarUrl,
+		&i.AuthorProfileUrl,
+		&i.Score,
+		&i.Summary,
+		&i.Position,
+	)
+	return i, err
+}
+
+const itemCreate = `-- name: ItemCreate :one
+INSERT INTO items (
+    issue_id, source, title, url,
+    author_name, author_username, author_avatar_url, author_profile_url,
+    score, summary, position
+) VALUES (
+    ?, ?, ?, ?,
+    ?, ?, ?, ?,
+    ?, ?, ?
+)
+RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position
+`
+
+type ItemCreateParams struct {
+	IssueID          int64           `json:"issue_id"`
+	Source           string          `json:"source"`
+	Title            string          `json:"title"`
+	Url              string          `json:"url"`
+	AuthorName       sql.NullString  `json:"author_name"`
+	AuthorUsername   sql.NullString  `json:"author_username"`
+	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
+	AuthorProfileUrl sql.NullString  `json:"author_profile_url"`
+	Score            sql.NullFloat64 `json:"score"`
+	Summary          sql.NullString  `json:"summary"`
+	Position         int64           `json:"position"`
+}
+
+func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, error) {
+	row := q.db.QueryRowContext(ctx, itemCreate,
+		arg.IssueID,
+		arg.Source,
+		arg.Title,
+		arg.Url,
+		arg.AuthorName,
+		arg.AuthorUsername,
+		arg.AuthorAvatarUrl,
+		arg.AuthorProfileUrl,
+		arg.Score,
+		arg.Summary,
+		arg.Position,
+	)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.Source,
+		&i.Title,
+		&i.Url,
+		&i.AuthorName,
+		&i.AuthorUsername,
+		&i.AuthorAvatarUrl,
+		&i.AuthorProfileUrl,
+		&i.Score,
+		&i.Summary,
+		&i.Position,
+	)
+	return i, err
+}
+
+const itemDeleteByIssue = `-- name: ItemDeleteByIssue :exec
+DELETE FROM items WHERE issue_id = ?
+`
+
+func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID int64) error {
+	_, err := q.db.ExecContext(ctx, itemDeleteByIssue, issueID)
+	return err
+}
+
+const itemListByIssue = `-- name: ItemListByIssue :many
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position FROM items
+WHERE issue_id = ?
+ORDER BY position ASC
+`
+
+func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, itemListByIssue, issueID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Item{}
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Source,
+			&i.Title,
+			&i.Url,
+			&i.AuthorName,
+			&i.AuthorUsername,
+			&i.AuthorAvatarUrl,
+			&i.AuthorProfileUrl,
+			&i.Score,
+			&i.Summary,
+			&i.Position,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
+SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE confirm_token = ? LIMIT 1
+`
+
+func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken string) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberByConfirmToken, confirmToken)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.ConfirmToken,
+		&i.UnsubscribeToken,
+		&i.ConfirmedAt,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const subscriberByEmail = `-- name: SubscriberByEmail :one
+SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE email = ? LIMIT 1
+`
+
+func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberByEmail, email)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.ConfirmToken,
+		&i.UnsubscribeToken,
+		&i.ConfirmedAt,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const subscriberByID = `-- name: SubscriberByID :one
+SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE id = ? LIMIT 1
+`
+
+func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberByID, id)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.ConfirmToken,
+		&i.UnsubscribeToken,
+		&i.ConfirmedAt,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const subscriberByUnsubscribeToken = `-- name: SubscriberByUnsubscribeToken :one
+SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
+`
+
+func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeToken string) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberByUnsubscribeToken, unsubscribeToken)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.ConfirmToken,
+		&i.UnsubscribeToken,
+		&i.ConfirmedAt,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const subscriberConfirm = `-- name: SubscriberConfirm :exec
+UPDATE subscribers
+SET confirmed_at = CURRENT_TIMESTAMP
+WHERE confirm_token = ? AND confirmed_at IS NULL
+`
+
+func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken string) error {
+	_, err := q.db.ExecContext(ctx, subscriberConfirm, confirmToken)
+	return err
+}
+
+const subscriberCreate = `-- name: SubscriberCreate :one
+INSERT INTO subscribers (
+    email, confirm_token, unsubscribe_token
+) VALUES (
+    ?, ?, ?
+)
+RETURNING id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at
+`
+
+type SubscriberCreateParams struct {
+	Email            string `json:"email"`
+	ConfirmToken     string `json:"confirm_token"`
+	UnsubscribeToken string `json:"unsubscribe_token"`
+}
+
+func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreateParams) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberCreate, arg.Email, arg.ConfirmToken, arg.UnsubscribeToken)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.ConfirmToken,
+		&i.UnsubscribeToken,
+		&i.ConfirmedAt,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const subscriberListActive = `-- name: SubscriberListActive :many
 SELECT id, email, confirm_token, unsubscribe_token, confirmed_at, unsubscribed_at, created_at FROM subscribers
 WHERE confirmed_at IS NOT NULL AND unsubscribed_at IS NULL
 ORDER BY id ASC
 `
 
-func (q *Queries) ListActiveSubscribers(ctx context.Context) ([]Subscriber, error) {
-	rows, err := q.db.QueryContext(ctx, listActiveSubscribers)
+func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error) {
+	rows, err := q.db.QueryContext(ctx, subscriberListActive)
 	if err != nil {
 		return nil, err
 	}
@@ -380,56 +437,13 @@ func (q *Queries) ListActiveSubscribers(ctx context.Context) ([]Subscriber, erro
 	return items, nil
 }
 
-const listNewsItemsByIssue = `-- name: ListNewsItemsByIssue :many
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, raw_json FROM items
-WHERE issue_id = ?
-ORDER BY position ASC
-`
-
-func (q *Queries) ListNewsItemsByIssue(ctx context.Context, issueID int64) ([]NewsItem, error) {
-	rows, err := q.db.QueryContext(ctx, listNewsItemsByIssue, issueID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []NewsItem{}
-	for rows.Next() {
-		var i NewsItem
-		if err := rows.Scan(
-			&i.ID,
-			&i.IssueID,
-			&i.Source,
-			&i.Title,
-			&i.Url,
-			&i.AuthorName,
-			&i.AuthorUsername,
-			&i.AuthorAvatarUrl,
-			&i.AuthorProfileUrl,
-			&i.Score,
-			&i.Summary,
-			&i.Position,
-			&i.RawJson,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const unsubscribeByToken = `-- name: UnsubscribeByToken :exec
+const subscriberUnsubscribe = `-- name: SubscriberUnsubscribe :exec
 UPDATE subscribers
 SET unsubscribed_at = CURRENT_TIMESTAMP
 WHERE unsubscribe_token = ? AND unsubscribed_at IS NULL
 `
 
-func (q *Queries) UnsubscribeByToken(ctx context.Context, unsubscribeToken string) error {
-	_, err := q.db.ExecContext(ctx, unsubscribeByToken, unsubscribeToken)
+func (q *Queries) SubscriberUnsubscribe(ctx context.Context, unsubscribeToken string) error {
+	_, err := q.db.ExecContext(ctx, subscriberUnsubscribe, unsubscribeToken)
 	return err
 }

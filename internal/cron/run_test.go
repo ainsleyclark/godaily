@@ -29,7 +29,8 @@ import (
 	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
+	"github.com/ainsleyclark/godaily/internal/store/issues"
+	"github.com/ainsleyclark/godaily/internal/store/items"
 	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -120,7 +121,7 @@ func TestNew(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 			t.Setenv("EMAIL_SEND_ADDRESS", test.envAddr)
 
-			got, err := New(nil)
+			got, err := New(nil, nil)
 			test.want(t, got, err)
 		})
 	}
@@ -440,71 +441,70 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 	t.Run("Persists Issue And News Items With Sent Status", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		st := newTestStore(t)
+		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
 			email:         &mockEmail{},
 			sendToAddress: "to@example.com",
-			persister:     st,
+			issues:        issueRepo,
+			items:         itemRepo,
 		}
 
 		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		issue, err := st.GetIssueBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, "sent", issue.Status)
+		assert.Equal(t, news.IssueStatusSent, issue.Status)
 		assert.NotEmpty(t, issue.HtmlBody)
 		assert.NotEmpty(t, issue.TextBody)
 
-		items, err := st.ListNewsItemsByIssue(t.Context(), issue.ID)
+		got, err := itemRepo.ListByIssue(t.Context(), issue.ID)
 		require.NoError(t, err)
-		require.Len(t, items, 2)
-		assert.Equal(t, int64(1), items[0].Position)
-		assert.Equal(t, int64(2), items[1].Position)
+		require.Len(t, got, 2)
 		// Items are persisted in score-descending order (Run sorts before
 		// passing them on), so "second" (score 0.9) comes before "first".
-		assert.Equal(t, "second", items[0].Title)
-		assert.Equal(t, "first", items[1].Title)
+		assert.Equal(t, "second", got[0].Title)
+		assert.Equal(t, "first", got[1].Title)
 
-		// "second" has no author; all four columns must be NULL.
-		assert.False(t, items[0].AuthorName.Valid)
-		assert.False(t, items[0].AuthorUsername.Valid)
-		assert.False(t, items[0].AuthorAvatarUrl.Valid)
-		assert.False(t, items[0].AuthorProfileUrl.Valid)
+		// "second" has no author.
+		assert.Nil(t, got[0].Author)
 
-		// "first" carries a fully-populated Author; each column round-trips.
-		assert.Equal(t, "Ada Lovelace", items[1].AuthorName.String)
-		assert.Equal(t, "ada", items[1].AuthorUsername.String)
-		assert.Equal(t, "https://example.com/ada.png", items[1].AuthorAvatarUrl.String)
-		assert.Equal(t, "https://dev.to/ada", items[1].AuthorProfileUrl.String)
+		// "first" carries a fully-populated Author; each field round-trips.
+		require.NotNil(t, got[1].Author)
+		assert.Equal(t, "Ada Lovelace", got[1].Author.Name)
+		assert.Equal(t, "ada", got[1].Author.Username)
+		assert.Equal(t, "https://example.com/ada.png", got[1].Author.AvatarURL)
+		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
 	})
 
 	t.Run("Records Failed Status When Email Send Errors", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		st := newTestStore(t)
+		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
 			email:         &mockEmail{err: errors.New("send boom")},
 			sendToAddress: "to@example.com",
-			persister:     st,
+			issues:        issueRepo,
+			items:         itemRepo,
 		}
 
 		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		issue, err := st.GetIssueBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, "failed", issue.Status)
+		assert.Equal(t, news.IssueStatus("failed"), issue.Status)
 	})
 
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		st := newTestStore(t)
+		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
 			email:         &mockEmail{},
 			sendToAddress: "to@example.com",
-			persister:     st,
+			issues:        issueRepo,
+			items:         itemRepo,
 		}
 
 		_, err := agg.Run(t.Context(), RunOptions{
@@ -513,13 +513,13 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		count, err := st.CountIssues(t.Context())
+		count, err := issueRepo.Count(t.Context())
 		require.NoError(t, err)
 		assert.Equal(t, int64(0), count)
 	})
 }
 
-func newTestStore(t *testing.T) *store.Store {
+func newTestStores(t *testing.T) (*issues.Store, *items.Store) {
 	t.Helper()
 
 	url := "file:" + filepath.Join(t.TempDir(), "godaily.db")
@@ -527,7 +527,7 @@ func newTestStore(t *testing.T) *store.Store {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = conn.Close() })
 	require.NoError(t, db.Migrate(t.Context(), conn))
-	return store.NewStore(conn)
+	return issues.New(conn), items.New(conn)
 }
 
 func TestAggregator_FetchSource(t *testing.T) {

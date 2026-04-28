@@ -28,64 +28,101 @@ func TestIssues_Store(t *testing.T) {
 		SentAt:   time.Date(2026, time.April, 28, 8, 0, 0, 0, time.UTC),
 	}
 
-	t.Log("Create")
-	{
-		got, err := s.Create(ctx, mock)
-		require.NoError(t, err)
-		assert.NotZero(t, got.ID)
-		assert.Equal(t, mock.Slug, got.Slug)
-		assert.Equal(t, mock.Subject, got.Subject)
-		assert.Equal(t, mock.Status, got.Status)
-		assert.Equal(t, mock.Summary, got.Summary)
-		mock.ID = got.ID // For subsequent tests.
-	}
+	t.Run("Create", func(t *testing.T) {
+		t.Log("Happy path")
+		{
+			got, err := s.Create(ctx, mock)
+			require.NoError(t, err)
+			assert.NotZero(t, got.ID)
+			assert.Equal(t, mock.Slug, got.Slug)
+			assert.Equal(t, mock.Subject, got.Subject)
+			assert.Equal(t, mock.Status, got.Status)
+			assert.Equal(t, mock.Summary, got.Summary)
+			mock.ID = got.ID
+		}
 
-	t.Log("Find")
-	{
-		got, err := s.Find(ctx, mock.ID)
-		require.NoError(t, err)
-		assert.Equal(t, mock.ID, got.ID)
-		assert.Equal(t, mock.Slug, got.Slug)
-		assert.Equal(t, mock.Subject, got.Subject)
-	}
+		t.Log("Rejects duplicate slug")
+		{
+			_, err := s.Create(ctx, mock)
+			assert.Error(t, err)
+		}
+	})
 
-	t.Log("Find Not Found")
-	{
-		_, err := s.Find(ctx, 999_999)
-		assert.ErrorIs(t, err, store.ErrNotFound)
-	}
+	t.Run("Find", func(t *testing.T) {
+		t.Log("Happy path")
+		{
+			got, err := s.Find(ctx, mock.ID)
+			require.NoError(t, err)
+			assert.Equal(t, mock.ID, got.ID)
+			assert.Equal(t, mock.Slug, got.Slug)
+			assert.Equal(t, mock.Subject, got.Subject)
+		}
 
-	t.Log("Find By Slug")
-	{
-		got, err := s.FindBySlug(ctx, mock.Slug)
-		require.NoError(t, err)
-		assert.Equal(t, mock.ID, got.ID)
-		assert.Equal(t, mock.Slug, got.Slug)
-	}
+		t.Log("Not found")
+		{
+			_, err := s.Find(ctx, 999)
+			require.Error(t, err)
+			assert.Equal(t, store.ErrNotFound, err)
+		}
+	})
 
-	t.Log("Find By Slug Not Found")
-	{
-		_, err := s.FindBySlug(ctx, "missing-slug")
-		assert.ErrorIs(t, err, store.ErrNotFound)
-	}
+	t.Run("FindBySlug", func(t *testing.T) {
+		t.Log("Happy path")
+		{
+			got, err := s.FindBySlug(ctx, mock.Slug)
+			require.NoError(t, err)
+			assert.Equal(t, mock.ID, got.ID)
+			assert.Equal(t, mock.Slug, got.Slug)
+		}
 
-	t.Log("List")
-	{
+		t.Log("Not found")
+		{
+			_, err := s.FindBySlug(ctx, "wrong")
+			require.Error(t, err)
+			assert.Equal(t, store.ErrNotFound, err)
+		}
+	})
+
+	t.Run("List", func(t *testing.T) {
 		got, err := s.List(ctx)
 		require.NoError(t, err)
 		assert.Nil(t, got)
-	}
+	})
 
-	t.Log("Count")
-	{
+	t.Run("Count", func(t *testing.T) {
 		got, err := s.Count(ctx)
 		require.NoError(t, err)
 		assert.Equal(t, int64(1), got)
-	}
+	})
 
-	t.Log("Create Duplicate Slug")
-	{
-		_, err := s.Create(ctx, mock)
-		assert.Error(t, err)
-	}
+	// MUST be last: closing the DB makes every subsequent query fail.
+	t.Run("Query Error On Closed DB", func(t *testing.T) {
+		require.NoError(t, db.Close())
+
+		t.Log("Find")
+		{
+			_, err := s.Find(ctx, 1)
+			assert.Error(t, err)
+			assert.NotErrorIs(t, err, store.ErrNotFound)
+		}
+
+		t.Log("FindBySlug")
+		{
+			_, err := s.FindBySlug(ctx, "x")
+			assert.Error(t, err)
+			assert.NotErrorIs(t, err, store.ErrNotFound)
+		}
+
+		t.Log("Create")
+		{
+			_, err := s.Create(ctx, news.Issue{Slug: "x", Subject: "x", Status: news.IssueStatusSent, HtmlBody: "x", TextBody: "x"})
+			assert.Error(t, err)
+		}
+
+		t.Log("Count")
+		{
+			_, err := s.Count(ctx)
+			assert.Error(t, err)
+		}
+	})
 }

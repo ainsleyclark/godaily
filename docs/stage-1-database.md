@@ -64,7 +64,6 @@ CREATE TABLE items (
   score     INTEGER,
   summary   TEXT,
   position  INTEGER NOT NULL,                  -- order within issue
-  raw_json  TEXT                               -- original item for debugging
 );
 CREATE INDEX idx_items_issue ON items(issue_id);
 

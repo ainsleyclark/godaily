@@ -21,8 +21,6 @@ package cron
 
 import (
 	"context"
-	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -32,7 +30,6 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
@@ -62,7 +59,8 @@ type Aggregator struct {
 	email         emailSender
 	sendToAddress string
 	suggester     suggester
-	persister     Persister
+	issues        news.IssueRepository
+	items         news.ItemRepository
 }
 
 type (
@@ -76,19 +74,18 @@ type (
 	suggester interface {
 		Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
 	}
-	// Persister abstracts the store so tests can run the cron pipeline
-	// without standing up a real database. Implemented by *store.Store.
-	Persister interface {
-		Tx(ctx context.Context, fn func(*store.Queries) error) error
-	}
 )
 
 // New creates a new Aggregator, validating that all news sources have
-// registered fetchers before returning. The store argument is optional —
-// pass nil to disable archival persistence (useful in tests).
-func New(s Persister) (*Aggregator, error) {
+// registered fetchers before returning. issues and items are optional —
+// pass nil to disable archival persistence (useful in tests). They must
+// be supplied as a pair: passing one without the other panics.
+func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
+	}
+	if (issues == nil) != (items == nil) {
+		return nil, errors.New("issues and items repositories must be both set or both nil")
 	}
 	to := os.Getenv("EMAIL_SEND_ADDRESS")
 	if to == "" {
@@ -108,7 +105,8 @@ func New(s Persister) (*Aggregator, error) {
 		email:         email.New(),
 		sendToAddress: to,
 		suggester:     sg,
-		persister:     s,
+		issues:        issues,
+		items:         items,
 	}, nil
 }
 
@@ -187,7 +185,7 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 		}
 	}
 
-	if a.persister != nil {
+	if a.issues != nil {
 		if err := a.persistIssue(ctx, day, rendered, status, results); err != nil {
 			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
 		}
@@ -196,66 +194,34 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 	return results, nil
 }
 
-// persistIssue archives the rendered digest and its constituent news items
-// inside a single transaction. Failures are reported up; the caller decides
-// whether to surface or log.
+// persistIssue archives the rendered digest and its constituent news items.
+// The issue row is created first; each item is then inserted in score order.
+// If item insertion fails partway through the issue row remains, which is
+// acceptable for a daily cron — re-runs are manual and visible.
 func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
-	return a.persister.Tx(ctx, func(q *store.Queries) error {
-		issue, err := q.CreateIssue(ctx, store.CreateIssueParams{
-			Slug:     day.Format("2006-01-02"),
-			SentAt:   time.Now().UTC(),
-			Subject:  r.Subject,
-			HtmlBody: r.HTML,
-			TextBody: r.Text,
-			Status:   status,
-		})
-		if err != nil {
-			return fmt.Errorf("creating issue: %w", err)
-		}
+	issue, err := a.issues.Create(ctx, news.Issue{
+		Slug:     day.Format("2006-01-02"),
+		SentAt:   time.Now().UTC(),
+		Subject:  r.Subject,
+		Status:   news.IssueStatus(status),
+		HtmlBody: r.HTML,
+		TextBody: r.Text,
+	})
+	if err != nil {
+		return fmt.Errorf("creating issue: %w", err)
+	}
 
-		var position int64
-		for _, section := range sections {
-			for _, item := range section.Items {
-				position++
-				raw, err := json.Marshal(item)
-				if err != nil {
-					return fmt.Errorf("marshalling raw item: %w", err)
-				}
-				name, username, avatar, profile := authorFields(item.Author)
-				if _, err := q.CreateNewsItem(ctx, store.CreateNewsItemParams{
-					IssueID:          issue.ID,
-					Source:           string(section.Source),
-					Title:            item.Title,
-					Url:              item.URL,
-					AuthorName:       name,
-					AuthorUsername:   username,
-					AuthorAvatarUrl:  avatar,
-					AuthorProfileUrl: profile,
-					Score:            sql.NullFloat64{Float64: item.Score, Valid: true},
-					Summary:          nullString(item.Snippet),
-					Position:         position,
-					RawJson:          sql.NullString{String: string(raw), Valid: true},
-				}); err != nil {
-					return fmt.Errorf("creating news item: %w", err)
-				}
+	var position int
+	for _, section := range sections {
+		for _, item := range section.Items {
+			position++
+			item.Source = section.Source
+			if _, err := a.items.Create(ctx, issue.ID, position, item); err != nil {
+				return fmt.Errorf("creating news item: %w", err)
 			}
 		}
-		return nil
-	})
-}
-
-func nullString(s string) sql.NullString {
-	if s == "" {
-		return sql.NullString{}
 	}
-	return sql.NullString{String: s, Valid: true}
-}
-
-func authorFields(a *news.Author) (name, username, avatar, profile sql.NullString) {
-	if a == nil {
-		return
-	}
-	return nullString(a.Name), nullString(a.Username), nullString(a.AvatarURL), nullString(a.ProfileURL)
+	return nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

@@ -20,7 +20,7 @@ type Issue struct {
 	Status   string         `json:"status"`
 }
 
-type NewsItem struct {
+type Item struct {
 	ID               int64           `json:"id"`
 	IssueID          int64           `json:"issue_id"`
 	Source           string          `json:"source"`
@@ -33,7 +33,6 @@ type NewsItem struct {
 	Score            sql.NullFloat64 `json:"score"`
 	Summary          sql.NullString  `json:"summary"`
 	Position         int64           `json:"position"`
-	RawJson          sql.NullString  `json:"raw_json"`
 }
 
 type Subscriber struct {
