@@ -72,6 +72,14 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	}
 
 	db := sql.OpenDB(connector)
+	// The libsql HTTP driver marks a connection as streamClosed=true after any
+	// non-transactional query (e.g. the ping's SELECT 1) when the server returns
+	// no baton. ResetSession never resets that flag, so the post-ping connection
+	// sitting in the idle pool will hand driver.ErrBadConn back to callers on
+	// the next use, causing "sql: connection is already closed" when the closed
+	// driverConn is retried. Setting MaxIdleConns(0) ensures the poisoned
+	// post-ping connection is discarded immediately rather than re-pooled.
+	db.SetMaxIdleConns(0)
 	if err = db.PingContext(ctx); err != nil {
 		_ = db.Close()
 		return nil, errors.Wrap(err, "pinging libsql database")
