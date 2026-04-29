@@ -144,7 +144,7 @@ To modify:
 ## Verification
 
 1. `turso db create godaily-dev` (or `turso dev` for local libsql)
-2. `go run ./cmd/godaily migrate`, confirm via `turso db shell`
+2. `go run main.go migrate`, confirm via `turso db shell`
 3. `make run-dry` then `make run`, confirm `issues` and `items` rows
 4. `make all` clean, including new unit tests in `internal/db` against
    ephemeral file-backed SQLite

@@ -75,7 +75,7 @@ func newProvider(db *sql.DB) (*goose.Provider, error) {
 		return nil, errors.Wrap(err, "rooting migrations FS")
 	}
 
-	provider, err := goose.NewProvider(goose.DialectSQLite3, db, sub)
+	provider, err := goose.NewProvider(goose.DialectSQLite3, db, sub, goose.WithIsolateDDL(true))
 	if err != nil {
 		return nil, errors.Wrap(err, "creating goose provider")
 	}

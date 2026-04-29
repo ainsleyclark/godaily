@@ -62,7 +62,13 @@ func runMigrate(ctx context.Context, fn func(context.Context, *sql.DB) error) er
 	if err != nil {
 		return fmt.Errorf("opening database: %w", err)
 	}
-	defer conn.Close()
+	defer func(conn *sql.DB) {
+		//fmt.Println("closing")
+		//err := conn.Close()
+		//if err != nil {
+		//
+		//}
+	}(conn)
 
 	return fn(ctx, conn)
 }
