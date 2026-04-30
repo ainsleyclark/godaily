@@ -48,4 +48,3 @@ func TestNew(t *testing.T) {
 		require.Nil(t, conn)
 	})
 }
-
