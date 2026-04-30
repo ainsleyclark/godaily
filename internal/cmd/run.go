@@ -52,11 +52,6 @@ var runCmd = &cli.Command{
 			Name:  "source",
 			Usage: "Only run the named sources (repeatable). Defaults to all.",
 		},
-		&cli.BoolFlag{
-			Name:  "synth",
-			Value: true,
-			Usage: "Also generate suggested social posts via Anthropic and include them in the digest",
-		},
 	},
 	Action: func(ctx context.Context, cmd *cli.Command) error {
 		issueStore, itemStore, conn, err := openStores(ctx)
@@ -89,16 +84,15 @@ var runCmd = &cli.Command{
 		dryRun := cmd.Bool("dry-run")
 
 		issue, raw, err := runner.Collect(ctx, digest.CollectOptions{
-			DryRun:       dryRun,
-			Sources:      sources,
-			IncludeSynth: cmd.Bool("synth"),
+			DryRun:  dryRun,
+			Sources: sources,
 		})
 		if err != nil {
 			return err
 		}
 
-		if !dryRun && issue.ID > 0 {
-			if err = runner.Send(ctx, issue); err != nil {
+		if !dryRun && len(raw) > 0 {
+			if err = runner.Send(ctx, issue, raw); err != nil {
 				slog.ErrorContext(ctx, "failed to send digest", "err", err)
 			}
 		}

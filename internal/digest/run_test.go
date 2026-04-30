@@ -285,7 +285,7 @@ func TestAggregator_Collect(t *testing.T) {
 	}
 }
 
-func TestAggregator_Collect_Synth(t *testing.T) {
+func TestAggregator_Collect_NoSynth(t *testing.T) {
 	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 	inWindow := yesterday.Add(time.Hour)
 
@@ -295,97 +295,18 @@ func TestAggregator_Collect_Synth(t *testing.T) {
 		},
 	}
 
-	tt := map[string]struct {
-		opts      CollectOptions
-		suggester *mockSuggester
-		want      func(t *testing.T, issue news.Issue, sg *mockSuggester)
-	}{
-		"Disabled By Default": {
-			opts:      CollectOptions{Sources: []news.Source{news.SourceDevTo}},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
-			want: func(t *testing.T, issue news.Issue, sg *mockSuggester) {
-				t.Helper()
-				assert.False(t, sg.called, "synth must not be called without IncludeSynth")
-				assert.NotEmpty(t, issue.HtmlBody)
-			},
-		},
-		"Enabled Calls Suggester And Includes In Body": {
-			opts: CollectOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}},
-			want: func(t *testing.T, issue news.Issue, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.Contains(t, issue.HtmlBody, "punchy-post")
-				assert.Contains(t, issue.TextBody, "punchy-post")
-			},
-		},
-		"Suggester Error Logged Not Returned": {
-			opts: CollectOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{err: errors.New("api boom")},
-			want: func(t *testing.T, issue news.Issue, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.NotEmpty(t, issue.HtmlBody, "digest still renders when synth fails")
-				assert.NotContains(t, issue.HtmlBody, "Suggested post")
-			},
-		},
-		"Suggester ErrNoItems Skipped Silently": {
-			opts: CollectOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{err: synth.ErrNoItems},
-			want: func(t *testing.T, issue news.Issue, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.NotContains(t, issue.HtmlBody, "Suggested post")
-			},
-		},
-		"DryRun Skips Suggester": {
-			opts: CollectOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-				DryRun:       true,
-			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
-			want: func(t *testing.T, _ news.Issue, sg *mockSuggester) {
-				t.Helper()
-				assert.False(t, sg.called, "synth must not be called when DryRun is set")
-			},
-		},
-		"Nil Suggester Tolerated": {
-			opts: CollectOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: nil,
-			want: func(t *testing.T, issue news.Issue, _ *mockSuggester) {
-				t.Helper()
-				assert.NotEmpty(t, issue.HtmlBody)
-			},
-		},
-	}
+	t.Run("Suggester Is Never Called During Collect", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Cleanup(news.SwapRegistry(registry))
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		agg := Aggregator{suggester: sg}
 
-			agg := Aggregator{}
-			if test.suggester != nil {
-				agg.suggester = test.suggester
-			}
-
-			issue, _, err := agg.Collect(t.Context(), test.opts)
-			require.NoError(t, err)
-			test.want(t, issue, test.suggester)
-		})
-	}
+		issue, _, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+		assert.False(t, sg.called, "synth must not be called during Collect")
+		assert.NotContains(t, issue.HtmlBody, "Suggested post")
+		assert.NotContains(t, issue.TextBody, "Suggested post")
+	})
 }
 
 func TestAggregator_Collect_Persistence(t *testing.T) {
@@ -474,22 +395,24 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 }
 
 func TestAggregator_Send(t *testing.T) {
+	baseIssue := news.Issue{
+		Slug:     "2026-04-26",
+		Subject:  "GoDaily - April 26, 2026",
+		HtmlBody: "<p>hello</p>",
+		TextBody: "hello",
+		Status:   news.IssueStatusDraft,
+		SentAt:   time.Now().UTC(),
+	}
+
 	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
 		issueRepo, _ := newTestStores(t)
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
-			Slug:     "2026-04-26",
-			Subject:  "GoDaily - April 26, 2026",
-			HtmlBody: "<p>hello</p>",
-			TextBody: "hello",
-			Status:   news.IssueStatusDraft,
-			SentAt:   time.Now().UTC(),
-		})
+		stored, err := issueRepo.Create(t.Context(), baseIssue)
 		require.NoError(t, err)
 
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo}
 
-		require.NoError(t, agg.Send(t.Context(), stored))
+		require.NoError(t, agg.Send(t.Context(), stored, nil))
 
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Subject, "April 26, 2026")
@@ -514,7 +437,7 @@ func TestAggregator_Send(t *testing.T) {
 		m := &mockEmail{err: errors.New("send boom")}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo}
 
-		require.NoError(t, agg.Send(t.Context(), stored))
+		require.NoError(t, agg.Send(t.Context(), stored, nil))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
@@ -525,7 +448,7 @@ func TestAggregator_Send(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: ""}
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{Subject: "GoDaily"}))
+		require.NoError(t, agg.Send(t.Context(), news.Issue{Subject: "GoDaily"}, nil))
 		assert.False(t, m.called)
 	})
 
@@ -538,7 +461,67 @@ func TestAggregator_Send(t *testing.T) {
 			Subject:  "GoDaily",
 			HtmlBody: "<p>hi</p>",
 			TextBody: "hi",
-		}))
+		}, nil))
+		assert.True(t, m.called)
+	})
+
+	t.Run("Synth Called With Sections And Appended To Bodies", func(t *testing.T) {
+		yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+		sections := []news.SourceItems{{
+			Source: news.SourceDevTo,
+			Items:  []news.Item{{Title: "item", Published: yesterday.Add(time.Hour)}},
+		}}
+		m := &mockEmail{}
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+
+		require.NoError(t, agg.Send(t.Context(), news.Issue{
+			Subject:  "GoDaily",
+			HtmlBody: "<p>base</p>",
+			TextBody: "base",
+		}, sections))
+
+		assert.True(t, sg.called)
+		assert.True(t, m.called)
+		assert.Contains(t, m.req.Html, "punchy-post")
+		assert.Contains(t, m.req.Text, "punchy-post")
+		// Stored body must not be modified.
+		assert.NotContains(t, "<p>base</p>", "Suggested post")
+	})
+
+	t.Run("Synth Error Logged And Email Sent Without Suggestion", func(t *testing.T) {
+		yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+		sections := []news.SourceItems{{
+			Source: news.SourceDevTo,
+			Items:  []news.Item{{Title: "item", Published: yesterday.Add(time.Hour)}},
+		}}
+		m := &mockEmail{}
+		sg := &mockSuggester{err: errors.New("api boom")}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+
+		require.NoError(t, agg.Send(t.Context(), news.Issue{
+			Subject:  "GoDaily",
+			HtmlBody: "<p>base</p>",
+			TextBody: "base",
+		}, sections))
+
+		assert.True(t, sg.called)
+		assert.True(t, m.called, "email still sent when synth fails")
+		assert.NotContains(t, m.req.Html, "Suggested post")
+	})
+
+	t.Run("Nil Sections Skips Synth", func(t *testing.T) {
+		m := &mockEmail{}
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+
+		require.NoError(t, agg.Send(t.Context(), news.Issue{
+			Subject:  "GoDaily",
+			HtmlBody: "<p>base</p>",
+			TextBody: "base",
+		}, nil))
+
+		assert.False(t, sg.called)
 		assert.True(t, m.called)
 	})
 }

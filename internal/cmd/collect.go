@@ -47,11 +47,6 @@ var collectCmd = &cli.Command{
 			Name:  "source",
 			Usage: "Only run the named sources (repeatable). Defaults to all.",
 		},
-		&cli.BoolFlag{
-			Name:  "synth",
-			Value: true,
-			Usage: "Generate suggested social posts via Anthropic and include them in the digest",
-		},
 	},
 	Action: func(ctx context.Context, cmd *cli.Command) error {
 		issueStore, itemStore, conn, err := openStores(ctx)
@@ -82,9 +77,8 @@ var collectCmd = &cli.Command{
 		}
 
 		_, raw, err := runner.Collect(ctx, digest.CollectOptions{
-			DryRun:       cmd.Bool("dry-run"),
-			Sources:      sources,
-			IncludeSynth: cmd.Bool("synth"),
+			DryRun:  cmd.Bool("dry-run"),
+			Sources: sources,
 		})
 		if err != nil {
 			return err

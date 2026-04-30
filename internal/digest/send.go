@@ -21,25 +21,50 @@ package digest
 
 import (
 	"context"
+	"errors"
+	htmltemplate "html/template"
 	"log/slog"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
-// Send ships the rendered digest in issue via email and, when a repository is
-// configured and issue.ID > 0, updates the stored issue status to reflect the
-// outcome.
-func (a Aggregator) Send(ctx context.Context, issue news.Issue) error {
+// Send generates a synth suggestion from sections (when available), appends it
+// to the rendered bodies stored in issue, and ships the result via email. When
+// a repository is configured and issue.ID > 0, the stored issue status is
+// updated to reflect the outcome.
+//
+// sections may be nil; if so, or if no suggester is configured, the suggestion
+// step is skipped and the stored HTML/text is sent as-is.
+func (a Aggregator) Send(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
 	if a.sendToAddress == "" {
 		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping send")
 		return nil
 	}
 
+	htmlBody := issue.HtmlBody
+	textBody := issue.TextBody
+
+	if len(sections) > 0 && a.suggester != nil {
+		day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+		s, err := a.suggester.Suggest(ctx, day, sections)
+		switch {
+		case errors.Is(err, synth.ErrNoItems):
+			slog.InfoContext(ctx, "synth skipped: no items to summarise")
+		case err != nil:
+			slog.ErrorContext(ctx, "synth failed", "err", err)
+		default:
+			htmlBody += "\n<hr>\n<h3>Suggested post</h3>\n<pre style=\"white-space: pre-wrap; font-family: inherit;\">" +
+				string(htmltemplate.HTMLEscapeString(s.Post)) + "</pre>\n"
+			textBody += "\nSuggested post\n==============\n" + s.Post + "\n"
+		}
+	}
+
 	rendered := renderedDigest{
 		Subject: issue.Subject,
-		HTML:    issue.HtmlBody,
-		Text:    issue.TextBody,
+		HTML:    htmlBody,
+		Text:    textBody,
 	}
 
 	status := news.IssueStatusSent

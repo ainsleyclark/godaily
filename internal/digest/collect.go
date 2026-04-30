@@ -21,13 +21,11 @@ package digest
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
 // CollectOptions configures a Collect call.
@@ -39,16 +37,11 @@ type CollectOptions struct {
 	// Sources restricts the run to the given sources. If empty,
 	// all registered sources (news.Sources) are used.
 	Sources []news.Source
-
-	// IncludeSynth, when true, calls the synth package after scoring
-	// to draft suggested social posts and includes them in the digest.
-	// A synth failure is logged but does not abort the digest.
-	IncludeSynth bool
 }
 
 // Collect fetches Go news items published yesterday from all registered
-// sources, scores and sorts them, optionally synthesises social copy, renders
-// the digest and (unless DryRun) persists it as a draft issue in the database.
+// sources, scores and sorts them, renders the digest and (unless DryRun)
+// persists it as a draft issue in the database.
 //
 // Returns the persisted Issue (ID=0 when DryRun or no repository is set) and
 // the raw SourceItems so callers can inspect or serialise them.
@@ -92,24 +85,11 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (news.Issu
 		return results[i].Source.Priority() > results[j].Source.Priority()
 	})
 
-	var suggestion *synth.Suggestion
-	if opts.IncludeSynth && a.suggester != nil && !opts.DryRun {
-		s, err := a.suggester.Suggest(ctx, day, results)
-		switch {
-		case errors.Is(err, synth.ErrNoItems):
-			slog.InfoContext(ctx, "synth skipped: no items to summarise")
-		case err != nil:
-			slog.ErrorContext(ctx, "synth failed", "err", err)
-		default:
-			suggestion = &s
-		}
-	}
-
 	if opts.DryRun || len(results) == 0 {
 		return news.Issue{}, results, nil
 	}
 
-	rendered, err := renderDigest(day, results, suggestion)
+	rendered, err := renderDigest(day, results, nil)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to render digest", "err", err)
 		return news.Issue{}, results, nil

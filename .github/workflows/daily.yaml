@@ -36,6 +36,7 @@ jobs:
 
       - name: Send digest
         env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
           TURSO_URL: ${{ secrets.TURSO_URL }}
