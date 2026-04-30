@@ -21,28 +21,23 @@ package cmd
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"os"
 	"path/filepath"
 
 	"github.com/ainsleyclark/godaily/internal/digest"
-	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store/issues"
-	"github.com/ainsleyclark/godaily/internal/store/items"
 	"github.com/urfave/cli/v3"
 )
 
-var runCmd = &cli.Command{
-	Name:  "run",
-	Usage: "Collect and send the daily Go digest in one step.",
+var collectCmd = &cli.Command{
+	Name:  "collect",
+	Usage: "Fetch Go news from all sources and store the digest as a draft.",
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
 			Name:  "dry-run",
-			Usage: "Skip sending the digest email",
+			Usage: "Skip persisting the digest; only gather and return raw items",
 		},
 		&cli.StringFlag{
 			Name:  "output",
@@ -55,7 +50,7 @@ var runCmd = &cli.Command{
 		&cli.BoolFlag{
 			Name:  "synth",
 			Value: true,
-			Usage: "Also generate suggested social posts via Anthropic and include them in the digest",
+			Usage: "Generate suggested social posts via Anthropic and include them in the digest",
 		},
 	},
 	Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -86,21 +81,13 @@ var runCmd = &cli.Command{
 			return err
 		}
 
-		dryRun := cmd.Bool("dry-run")
-
-		issue, raw, err := runner.Collect(ctx, digest.CollectOptions{
-			DryRun:       dryRun,
+		_, raw, err := runner.Collect(ctx, digest.CollectOptions{
+			DryRun:       cmd.Bool("dry-run"),
 			Sources:      sources,
 			IncludeSynth: cmd.Bool("synth"),
 		})
 		if err != nil {
 			return err
-		}
-
-		if !dryRun && issue.ID > 0 {
-			if err = runner.Send(ctx, issue); err != nil {
-				slog.ErrorContext(ctx, "failed to send digest", "err", err)
-			}
 		}
 
 		out := cmd.String("output")
@@ -119,48 +106,4 @@ var runCmd = &cli.Command{
 
 		return os.WriteFile(out, indent, 0o600)
 	},
-}
-
-// openStores connects to the configured database and returns the issue
-// and item stores, plus the underlying *sql.DB so the caller can close it.
-//
-// If TURSO_URL is unset the function returns (nil, nil, nil, nil) so the
-// rest of the CLI can run without a database — useful for ad-hoc
-// fetch/synth commands during development.
-func openStores(ctx context.Context) (*issues.Store, *items.Store, *sql.DB, error) {
-	url := os.Getenv("TURSO_URL")
-	if url == "" {
-		slog.WarnContext(ctx, "TURSO_URL not set, persistence disabled")
-		return nil, nil, nil, nil
-	}
-
-	conn, err := db.New(ctx, url, os.Getenv("TURSO_AUTH_TOKEN"))
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	if err = db.Up(ctx, conn); err != nil {
-		_ = conn.Close()
-		return nil, nil, nil, fmt.Errorf("running migrations: %w", err)
-	}
-
-	return issues.New(conn), items.New(conn), conn, nil
-}
-
-// parseSources validates a slice of raw source name strings against the
-// registered sources list and returns the typed slice.
-func parseSources(raw []string) ([]news.Source, error) {
-	known := make(map[news.Source]struct{}, len(news.Sources))
-	for _, s := range news.Sources {
-		known[s] = struct{}{}
-	}
-	sources := make([]news.Source, 0, len(raw))
-	for _, name := range raw {
-		s := news.Source(name)
-		if _, ok := known[s]; !ok {
-			return nil, fmt.Errorf("unknown source %q (run `godaily sources` for the list)", name)
-		}
-		sources = append(sources, s)
-	}
-	return sources, nil
 }

@@ -46,6 +46,7 @@ type IssueRepository interface {
 	FindBySlug(ctx context.Context, slug string) (Issue, error)
 	List(ctx context.Context) ([]Issue, error)
 	Create(ctx context.Context, issue Issue) (Issue, error)
+	UpdateStatus(ctx context.Context, id int64, status IssueStatus, sentAt time.Time) (Issue, error)
 	Count(ctx context.Context) (int64, error)
 }
 

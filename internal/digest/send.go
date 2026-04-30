@@ -17,40 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package digest
 
 import (
 	"context"
-	"log"
 	"log/slog"
-	"os"
+	"time"
 
-	"github.com/joho/godotenv"
-
-	_ "github.com/ainsleyclark/godaily/internal/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/internal/news"
 )
 
-func Run() {
-	if err := godotenv.Load(); err != nil {
-		slog.ErrorContext(context.Background(), "error loading .env file")
+// Send ships the rendered digest in issue via email and, when a repository is
+// configured and issue.ID > 0, updates the stored issue status to reflect the
+// outcome.
+func (a Aggregator) Send(ctx context.Context, issue news.Issue) error {
+	if a.sendToAddress == "" {
+		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping send")
+		return nil
 	}
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd,
-			sendCmd,
-			runCmd,
-			sourcesCmd,
-			synthCmd,
-			migrateCmd,
-			fetchCmd,
-		},
+	rendered := renderedDigest{
+		Subject: issue.Subject,
+		HTML:    issue.HtmlBody,
+		Text:    issue.TextBody,
 	}
 
-	if err := cmd.Run(context.Background(), os.Args); err != nil {
-		log.Fatal(err)
+	status := news.IssueStatusSent
+	if err := a.sendDigest(ctx, rendered); err != nil {
+		slog.ErrorContext(ctx, "failed to send digest email", "err", err)
+		status = news.IssueStatusError
 	}
+
+	if a.issues != nil && issue.ID > 0 {
+		if _, err := a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
+			slog.ErrorContext(ctx, "failed to update issue status", "err", err)
+		}
+	}
+
+	return nil
 }

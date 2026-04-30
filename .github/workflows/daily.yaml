@@ -1,4 +1,4 @@
-name: Daily Digest
+name: Send Digest
 
 on:
   schedule:
@@ -34,12 +34,10 @@ jobs:
             exit 0
           fi
 
-      - name: Run digest
+      - name: Send digest
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-        run: go run main.go run ${{ inputs.dry-run && '--dry-run' || '' }}
+        run: go run main.go send

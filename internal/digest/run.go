@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cron
+package digest
 
 import (
 	"context"
@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/email"
@@ -33,24 +32,10 @@ import (
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
-// Runner is the interface for running the daily news aggregation.
+// Runner is the interface for the daily news aggregation pipeline.
 type Runner interface {
-	Run(ctx context.Context, opts RunOptions) ([]news.SourceItems, error)
-}
-
-// RunOptions configures a Run call.
-type RunOptions struct {
-	// DryRun skips sending the email digest and the synth API call.
-	DryRun bool
-
-	// Sources restricts the run to the given sources. If empty,
-	// all registered sources (news.Sources) are used.
-	Sources []news.Source
-
-	// IncludeSynth, when true, calls the synth package after scoring
-	// to draft suggested social posts and includes them in the digest.
-	// A synth failure is logged but does not abort the digest.
-	IncludeSynth bool
+	Collect(ctx context.Context, opts CollectOptions) (news.Issue, []news.SourceItems, error)
+	Send(ctx context.Context, issue news.Issue) error
 }
 
 // Aggregator fetches Go news from all registered sources and optionally
@@ -108,90 +93,6 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 	}, nil
 }
 
-// Run fetches Go news items published yesterday from all registered sources.
-func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItems, error) {
-	day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour) // Yesterday
-	next := day.AddDate(0, 0, 1)
-
-	sources := opts.Sources
-	if len(sources) == 0 {
-		sources = news.Sources
-	}
-
-	var results []news.SourceItems
-	for _, src := range sources {
-		fetched, err := a.fetchSource(ctx, src)
-		if err != nil {
-			slog.ErrorContext(ctx, "failed to fetch source", "source", src, "err", err)
-			continue
-		}
-		si := news.SourceItems{Source: src}
-
-		for _, item := range fetched {
-			if item.Published.IsZero() {
-				slog.ErrorContext(ctx, "item has zero published date", "source", src, "title", item.Title)
-				continue
-			}
-			if item.Published.After(day) && item.Published.Before(next) {
-				si.Items = append(si.Items, item)
-			}
-		}
-
-		if len(si.Items) > 0 {
-			sort.SliceStable(si.Items, func(i, j int) bool {
-				return si.Items[i].Score > si.Items[j].Score
-			})
-			results = append(results, si)
-		}
-	}
-
-	sort.SliceStable(results, func(i, j int) bool {
-		return results[i].Source.Priority() > results[j].Source.Priority()
-	})
-
-	var suggestion *synth.Suggestion
-	if opts.IncludeSynth && a.suggester != nil && !opts.DryRun {
-		s, err := a.suggester.Suggest(ctx, day, results)
-		switch {
-		case errors.Is(err, synth.ErrNoItems):
-			slog.InfoContext(ctx, "synth skipped: no items to summarise")
-		case err != nil:
-			slog.ErrorContext(ctx, "synth failed", "err", err)
-		default:
-			suggestion = &s
-		}
-	}
-
-	if opts.DryRun || len(results) == 0 {
-		return results, nil
-	}
-
-	rendered, err := renderDigest(day, results, suggestion)
-	if err != nil {
-		slog.ErrorContext(ctx, "failed to render digest", "err", err)
-		return results, nil
-	}
-
-	status := "sent"
-	switch {
-	case a.sendToAddress == "":
-		status = "skipped"
-	default:
-		if err := a.sendDigest(ctx, rendered); err != nil {
-			slog.ErrorContext(ctx, "failed to send digest email", "err", err)
-			status = "failed"
-		}
-	}
-
-	if a.issues != nil {
-		if err = a.persistIssue(ctx, day, rendered, status, results); err != nil {
-			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
-		}
-	}
-
-	return results, nil
-}
-
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {
 	slog.InfoContext(ctx, "fetching source", "source", source)
 
@@ -210,17 +111,10 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 	return items, nil
 }
 
-func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
-	issue, err := a.issues.Create(ctx, news.Issue{
-		Slug:     day.Format("2006-01-02"),
-		SentAt:   time.Now().UTC(),
-		Subject:  r.Subject,
-		Status:   news.IssueStatus(status),
-		HtmlBody: r.HTML,
-		TextBody: r.Text,
-	})
+func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) (news.Issue, error) {
+	created, err := a.issues.Create(ctx, issue)
 	if err != nil {
-		return fmt.Errorf("creating issue: %w", err)
+		return news.Issue{}, fmt.Errorf("creating issue: %w", err)
 	}
 
 	var position int
@@ -228,11 +122,11 @@ func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedD
 		for _, item := range section.Items {
 			position++
 			item.Source = section.Source
-			if _, err = a.items.Create(ctx, issue.ID, position, item); err != nil {
-				return fmt.Errorf("creating news item: %w", err)
+			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
+				return news.Issue{}, fmt.Errorf("creating news item: %w", err)
 			}
 		}
 	}
 
-	return nil
+	return created, nil
 }

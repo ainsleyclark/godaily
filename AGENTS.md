@@ -27,10 +27,13 @@ a GitHub Actions schedule (weekday mornings, 08:00 London). The pipeline is:
    provider registry and scoring/priority logic.
 3. **Synthesise** — `internal/synth` calls Anthropic Claude to summarise and
    rank items. Style guidance lives in `internal/synth/style.md`.
-4. **Render & send** — `internal/cron` orchestrates the full run; templates
-   are in `internal/cron/email.html` and `email.txt`. `internal/email` handles
-   Resend delivery.
-5. **Entry point** — `cmd/godaily/main.go` wires the CLI (`urfave/cli/v3`).
+4. **Collect** — `internal/digest.Aggregator.Collect` fetches, scores,
+   renders and persists the digest as a draft issue. Templates are in
+   `internal/digest/email.html` and `email.txt`.
+5. **Send** — `internal/digest.Aggregator.Send` loads the rendered draft and
+   ships it via `internal/email` (Resend). Updates the issue status to
+   `"sent"` or `"error"` in the database.
+6. **Entry point** — `cmd/godaily/main.go` wires the CLI (`urfave/cli/v3`).
 
 `cmd/gen-examples` regenerates the fixtures under `examples/`.
 
@@ -42,7 +45,7 @@ godaily/
 │   ├── godaily/         # CLI entry point
 │   └── gen-examples/    # Example regenerator
 ├── internal/
-│   ├── cron/            # Orchestration + email templates
+│   ├── digest/          # Collect + Send orchestration; email templates
 │   ├── db/              # *sql.DB lifecycle + embedded goose migrations
 │   ├── email/           # Resend client
 │   ├── news/            # Item model, registry, scoring
@@ -60,7 +63,7 @@ Use the `Makefile` targets — don't reinvent commands.
 | Command                  | Purpose                                                    |
 |--------------------------|------------------------------------------------------------|
 | `make build`             | Build the `godaily` binary.                                |
-| `make run`               | Run the full digest (sends email).                         |
+| `make run`               | Collect and send the full digest in one step.              |
 | `make run-dry`           | Dry run; writes JSON to `examples/news.json`.              |
 | `make generate`          | `go generate ./...` then regenerate the example digest.    |
 | `make format`            | `go fmt ./...`.                                            |
@@ -567,6 +570,9 @@ Stage 1 introduced two packages:
 - **Synthesis style** lives in `internal/synth/style.md`. Treat it as the
   source of truth for digest tone — change it there, not in prompt strings
   scattered across code.
+- **Digest orchestration** lives in `internal/digest`. `Collect` gathers and
+  persists; `Send` dispatches the stored draft. The two are wired together by
+  `godaily run` and separated by `godaily collect` / `godaily send`.
 - **Source providers** (`internal/source/*.go`) follow a common shape: a
   fetcher + a transform step. Add new sources by mirroring an existing one
   and wiring through `internal/news/registry.go` and `sources.go`.
