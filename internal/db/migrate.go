@@ -23,10 +23,8 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"io/fs"
 
 	"github.com/ainsleydev/webkit/pkg/enforce"
-	"github.com/pkg/errors"
 	"github.com/pressly/goose/v3"
 )
 
@@ -38,17 +36,11 @@ var migrations embed.FS
 // versions in goose_db_version.
 func Up(ctx context.Context, db *sql.DB) error {
 	enforce.NotNil(db, "database connection is required")
-
-	provider, err := newProvider(db)
-	if err != nil {
+	goose.SetBaseFS(migrations)
+	if err := goose.SetDialect("sqlite3"); err != nil {
 		return err
 	}
-
-	if _, err = provider.Up(ctx); err != nil {
-		return errors.Wrap(err, "applying migrations")
-	}
-
-	return nil
+	return goose.UpContext(ctx, db, "migrations")
 }
 
 // Down rolls back the most recently applied migration. Intended for `make
@@ -56,29 +48,9 @@ func Up(ctx context.Context, db *sql.DB) error {
 // migrations.
 func Down(ctx context.Context, db *sql.DB) error {
 	enforce.NotNil(db, "database connection is required")
-
-	provider, err := newProvider(db)
-	if err != nil {
+	goose.SetBaseFS(migrations)
+	if err := goose.SetDialect("sqlite3"); err != nil {
 		return err
 	}
-
-	if _, err = provider.Down(ctx); err != nil {
-		return errors.Wrap(err, "rolling back migration")
-	}
-
-	return nil
-}
-
-func newProvider(db *sql.DB) (*goose.Provider, error) {
-	sub, err := fs.Sub(migrations, "migrations")
-	if err != nil {
-		return nil, errors.Wrap(err, "rooting migrations FS")
-	}
-
-	provider, err := goose.NewProvider(goose.DialectSQLite3, db, sub, goose.WithIsolateDDL(true))
-	if err != nil {
-		return nil, errors.Wrap(err, "creating goose provider")
-	}
-
-	return provider, nil
+	return goose.DownContext(ctx, db, "migrations")
 }

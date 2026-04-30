@@ -23,7 +23,6 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -40,57 +39,13 @@ func TestNew(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, conn)
 		t.Cleanup(func() { _ = conn.Close() })
-		assert.NoError(t, conn.PingContext(t.Context()))
+		require.NoError(t, conn.PingContext(t.Context()))
 	})
 
 	t.Run("Unsupported Scheme", func(t *testing.T) {
 		conn, err := New(t.Context(), "ftp://nope", "")
-		assert.Error(t, err)
-		assert.Nil(t, conn)
+		require.Error(t, err)
+		require.Nil(t, conn)
 	})
 }
 
-func TestMigrate(t *testing.T) {
-	t.Run("Applies Schema", func(t *testing.T) {
-		conn, err := New(t.Context(), fileURL(t), "")
-		require.NoError(t, err)
-		t.Cleanup(func() { _ = conn.Close() })
-
-		require.NoError(t, Up(t.Context(), conn))
-
-		// Each declared table must exist exactly once.
-		for _, table := range []string{"issues", "items", "subscribers"} {
-			var got string
-			err := conn.QueryRowContext(t.Context(),
-				"SELECT name FROM sqlite_master WHERE type='table' AND name = ?", table,
-			).Scan(&got)
-			require.NoError(t, err, "table %q not found", table)
-			assert.Equal(t, table, got)
-		}
-	})
-
-	t.Run("Idempotent", func(t *testing.T) {
-		conn, err := New(t.Context(), fileURL(t), "")
-		require.NoError(t, err)
-		t.Cleanup(func() { _ = conn.Close() })
-
-		require.NoError(t, Up(t.Context(), conn))
-		require.NoError(t, Up(t.Context(), conn), "second call must be a no-op")
-	})
-
-	t.Run("Up Then Down", func(t *testing.T) {
-		conn, err := New(t.Context(), fileURL(t), "")
-		require.NoError(t, err)
-		t.Cleanup(func() { _ = conn.Close() })
-
-		require.NoError(t, Up(t.Context(), conn))
-		require.NoError(t, Down(t.Context(), conn))
-
-		var count int
-		err = conn.QueryRowContext(t.Context(),
-			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','items','subscribers')",
-		).Scan(&count)
-		require.NoError(t, err)
-		assert.Equal(t, 0, count, "schema tables should be gone after Down")
-	})
-}

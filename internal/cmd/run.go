@@ -137,13 +137,16 @@ func openStores(ctx context.Context) (*issues.Store, *items.Store, *sql.DB, erro
 		slog.WarnContext(ctx, "TURSO_URL not set, persistence disabled")
 		return nil, nil, nil, nil
 	}
+
 	conn, err := db.New(ctx, url, os.Getenv("TURSO_AUTH_TOKEN"))
 	if err != nil {
 		return nil, nil, nil, err
 	}
+
 	if err = db.Up(ctx, conn); err != nil {
 		_ = conn.Close()
 		return nil, nil, nil, fmt.Errorf("running migrations: %w", err)
 	}
+
 	return issues.New(conn), items.New(conn), conn, nil
 }

@@ -30,7 +30,10 @@ import (
 
 	"github.com/ainsleydev/webkit/pkg/enforce"
 	"github.com/pkg/errors"
-	"github.com/tursodatabase/libsql-client-go/libsql"
+	// Turso DB Driver, for more info, visit:
+	// https://docs.turso.tech/sdk/go/quickstart
+	//_ "turso.tech/database/tursogo"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 
 	// Pure-Go SQLite driver, registered as "sqlite". Used directly for
 	// file-backed URLs (local dev, tests) and as the underlying file
@@ -48,38 +51,28 @@ import (
 func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	enforce.NotEqual(url, "", "database url is required")
 
+	var db *sql.DB
+	var err error
+
 	if strings.HasPrefix(url, "file:") {
-		db, err := sql.Open("sqlite", url)
-		if err != nil {
-			return nil, errors.Wrap(err, "opening sqlite database")
+		db, err = sql.Open("sqlite", url)
+	} else {
+		url = url + "?authToken=" + token
+		db, err = sql.Open("libsql", url)
+		if err == nil {
+			// The libsql HTTP driver marks a connection streamClosed=true after
+			// any non-transactional query (e.g. the ping below). ResetSession
+			// never resets that flag, so the post-ping idle connection hands
+			// driver.ErrBadConn back on the next use. Discard idle connections
+			// immediately so the poisoned connection is never re-pooled.
+			db.SetMaxIdleConns(0)
 		}
-
-		if err = db.PingContext(ctx); err != nil {
-			_ = db.Close()
-			return nil, errors.Wrap(err, "pinging sqlite database")
-		}
-		return db, nil
 	}
 
-	var opts []libsql.Option
-	if token != "" {
-		opts = append(opts, libsql.WithAuthToken(token))
-	}
-
-	connector, err := libsql.NewConnector(url, opts...)
 	if err != nil {
-		return nil, errors.Wrap(err, "creating libsql connector")
+		return nil, err
 	}
 
-	db := sql.OpenDB(connector)
-	// The libsql HTTP driver marks a connection as streamClosed=true after any
-	// non-transactional query (e.g. the ping's SELECT 1) when the server returns
-	// no baton. ResetSession never resets that flag, so the post-ping connection
-	// sitting in the idle pool will hand driver.ErrBadConn back to callers on
-	// the next use, causing "sql: connection is already closed" when the closed
-	// driverConn is retried. Setting MaxIdleConns(0) ensures the poisoned
-	// post-ping connection is discarded immediately rather than re-pooled.
-	db.SetMaxIdleConns(0)
 	if err = db.PingContext(ctx); err != nil {
 		_ = db.Close()
 		return nil, errors.Wrap(err, "pinging libsql database")
