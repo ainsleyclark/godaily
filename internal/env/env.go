@@ -1,0 +1,46 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package env
+
+import (
+	"github.com/ainsleydev/webkit/pkg/env"
+)
+
+// Config holds all environment variables consumed by the service.
+// Optional fields are left empty if unset; callers guard against the zero value.
+type Config struct {
+	ResendToken      string `env:"RESEND_TOKEN,required"`
+	AnthropicAPIKey  string `env:"ANTHROPIC_API_KEY,required"`
+	YouTubeAPIKey    string `env:"YOUTUBE_API_KEY"`
+	GitHubToken      string `env:"GITHUB_TOKEN"`
+	EmailSendAddress string `env:"EMAIL_SEND_ADDRESS,required"`
+	TursoURL         string `env:"TURSO_URL,required"`
+	TursoAuthToken   string `env:"TURSO_AUTH_TOKEN,required"`
+}
+
+// New parses Config from the environment, overlaying values from a .env file
+// in the working directory when present.
+func New() (Config, error) {
+	var cfg Config
+	if err := env.ParseConfig(&cfg, ".env"); err != nil {
+		return Config{}, err
+	}
+	return cfg, nil
+}
