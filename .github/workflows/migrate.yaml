@@ -18,6 +18,7 @@ jobs:
 
       - name: Apply migrations
         env:
+          APP_ENV: production
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
         run: go run . migrate up

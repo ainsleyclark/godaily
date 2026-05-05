@@ -38,7 +38,7 @@ func TestNew(t *testing.T) {
 		t.Setenv("TURSO_URL", "file:./test.db")
 		t.Setenv("TURSO_AUTH_TOKEN", "turso_test")
 
-		cfg, err := New()
+		cfg, err := New(t.Context())
 
 		require.NoError(t, err)
 		assert.Equal(t, "re_test", cfg.ResendToken)
@@ -59,7 +59,7 @@ func TestNew(t *testing.T) {
 		t.Setenv("TURSO_URL", "")
 		t.Setenv("TURSO_AUTH_TOKEN", "")
 
-		cfg, err := New()
+		cfg, err := New(t.Context())
 
 		require.NoError(t, err)
 		assert.Empty(t, cfg.ResendToken)

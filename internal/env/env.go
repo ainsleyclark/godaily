@@ -20,24 +20,27 @@
 package env
 
 import (
+	"context"
+
 	"github.com/ainsleydev/webkit/pkg/env"
 )
 
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {
-	ResendToken      string `env:"RESEND_TOKEN,required"`
-	AnthropicAPIKey  string `env:"ANTHROPIC_API_KEY,required"`
-	YouTubeAPIKey    string `env:"YOUTUBE_API_KEY"`
-	GitHubToken      string `env:"GITHUB_TOKEN"`
-	EmailSendAddress string `env:"EMAIL_SEND_ADDRESS,required"`
-	TursoURL         string `env:"TURSO_URL,required"`
-	TursoAuthToken   string `env:"TURSO_AUTH_TOKEN,required"`
+	AppEnv           env.Environment `env:"APP_ENV"`
+	ResendToken      string          `env:"RESEND_TOKEN,required"`
+	AnthropicAPIKey  string          `env:"ANTHROPIC_API_KEY,required"`
+	YouTubeAPIKey    string          `env:"YOUTUBE_API_KEY"`
+	GitHubToken      string          `env:"GITHUB_TOKEN"`
+	EmailSendAddress string          `env:"EMAIL_SEND_ADDRESS,required"`
+	TursoURL         string          `env:"TURSO_URL,required"`
+	TursoAuthToken   string          `env:"TURSO_AUTH_TOKEN,required"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file
 // in the working directory when present.
-func New() (Config, error) {
+func New(_ context.Context) (Config, error) {
 	var cfg Config
 	if err := env.ParseConfig(&cfg, ".env"); err != nil {
 		return Config{}, err

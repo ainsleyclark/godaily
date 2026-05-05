@@ -50,7 +50,7 @@ type Repository struct {
 // Bootstrap ties all the app dependencies together
 // and returns a new App.
 func Bootstrap(ctx context.Context) (*App, error) {
-	config, err := env.New()
+	config, err := env.New(ctx)
 	if err != nil {
 		return nil, err
 	}
