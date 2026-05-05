@@ -22,18 +22,18 @@ package cmd
 import (
 	"context"
 	"log"
-	"log/slog"
 	"os"
-
-	"github.com/joho/godotenv"
 
 	_ "github.com/ainsleyclark/godaily/internal/source"
 	"github.com/urfave/cli/v3"
 )
 
 func Run() {
-	if err := godotenv.Load(); err != nil {
-		slog.ErrorContext(context.Background(), "error loading .env file")
+	ctx := context.Background()
+
+	app, err := Bootstrap(ctx)
+	if err != nil {
+		exit(err)
 	}
 
 	cmd := &cli.Command{
@@ -41,7 +41,7 @@ func Run() {
 		Usage: "Daily Go news, straight to your inbox",
 		Commands: []*cli.Command{
 			collectCmd,
-			sendCmd,
+			sendCmd(app),
 			runCmd,
 			sourcesCmd,
 			synthCmd,
@@ -50,7 +50,13 @@ func Run() {
 		},
 	}
 
-	if err := cmd.Run(context.Background(), os.Args); err != nil {
+	if err = cmd.Run(context.Background(), os.Args); err != nil {
+		exit(err)
+	}
+}
+
+func exit(err error) {
+	if err != nil {
 		log.Fatal(err)
 	}
 }

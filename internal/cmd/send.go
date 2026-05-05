@@ -32,61 +32,54 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var sendCmd = &cli.Command{
-	Name:  "send",
-	Usage: "Send the stored draft digest via email.",
-	Flags: []cli.Flag{
-		&cli.StringFlag{
-			Name:  "date",
-			Usage: "Date of the draft to send (YYYY-MM-DD). Defaults to yesterday.",
+func sendCmd(a *App) *cli.Command {
+	return &cli.Command{
+		Name:  "send",
+		Usage: "Send the stored draft digest via email.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "date",
+				Usage: "Date of the draft to send (YYYY-MM-DD). Defaults to yesterday.",
+			},
 		},
-	},
-	Action: func(ctx context.Context, cmd *cli.Command) error {
-		issueStore, itemStore, conn, err := openStores(ctx)
-		if err != nil {
-			return fmt.Errorf("opening database: %w", err)
-		}
-		if conn != nil {
-			defer conn.Close()
-		}
-		if issueStore == nil {
-			return fmt.Errorf("TURSO_URL must be set to send a digest")
-		}
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
+				if err != nil {
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				}
+				date = d
+			}
+			slug := date.Format("2006-01-02")
 
-		date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-		if raw := cmd.String("date"); raw != "" {
-			date, err = time.Parse("2006-01-02", raw)
+			issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
 			if err != nil {
-				return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				if errors.Is(err, store.ErrNotFound) {
+					return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
+				}
+				return fmt.Errorf("loading digest: %w", err)
 			}
-		}
-		slug := date.Format("2006-01-02")
-
-		issue, err := issueStore.FindBySlug(ctx, slug)
-		if err != nil {
-			if errors.Is(err, store.ErrNotFound) {
-				return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
+			if issue.Status != news.IssueStatusDraft {
+				return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
 			}
-			return fmt.Errorf("loading digest: %w", err)
-		}
-		if issue.Status != news.IssueStatusDraft {
-			return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
-		}
 
-		// Load stored items and reconstruct sections so the synth suggestion
-		// can be generated at send time without being persisted in the DB.
-		sections, err := sectionsFromDB(ctx, itemStore, issue.ID)
-		if err != nil {
-			return fmt.Errorf("loading items: %w", err)
-		}
+			// Load stored items and reconstruct sections so the synth suggestion
+			// can be generated at send time without being persisted in the DB.
+			sections, err := sectionsFromDB(ctx, itemStore, issue.ID)
+			if err != nil {
+				return fmt.Errorf("loading items: %w", err)
+			}
 
-		runner, err := digest.New(issueStore, itemStore)
-		if err != nil {
-			return err
-		}
+			runner, err := digest.New(a.Repository.Issues, a.Repository.Items)
+			if err != nil {
+				return err
+			}
 
-		return runner.Send(ctx, issue, sections)
-	},
+			return runner.Send(ctx, issue, sections)
+		},
+	}
+
 }
 
 // sectionsFromDB loads stored items for an issue and groups them into
