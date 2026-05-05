@@ -7,6 +7,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/graphics"
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
@@ -18,29 +19,29 @@ templ Digest(issue news.Issue) {
 			if issue.Summary != "" {
 				<p class="section__sub">{ issue.Summary }</p>
 			}
-			<div class="digest">
-				<div class="digest__topbar">
-					<div class="digest__topbar-dot digest__topbar-dot--red"></div>
-					<div class="digest__topbar-dot digest__topbar-dot--yellow"></div>
-					<div class="digest__topbar-dot digest__topbar-dot--green"></div>
-					<div class="digest__addr">GoDaily Digest &lt;digest@godaily.dev&gt; &#8594; you@example.com</div>
+			<div class="email-preview">
+				<div class="email-preview__topbar">
+					<div class="email-preview__topbar-dot email-preview__topbar-dot--red"></div>
+					<div class="email-preview__topbar-dot email-preview__topbar-dot--yellow"></div>
+					<div class="email-preview__topbar-dot email-preview__topbar-dot--green"></div>
+					<div class="email-preview__addr">GoDaily Digest &lt;digest@godaily.dev&gt; &#8594; you@example.com</div>
 				</div>
-				<div class="digest__body">
-					<div class="digest__header">
-						<div class="digest__logo-line">
-							@gopherLogoSVG()
+				<div class="email-preview__body">
+					<div class="email-preview__header">
+						<div class="email-preview__logo-line">
+							@graphics.GopherLogo(24)
 							<strong>GoDaily</strong>
 						</div>
-						<div class="digest__date">{ digestDate(issue.SentAt) } &middot; Issue #{ fmt.Sprintf("%d", issue.ID) }</div>
-						<div class="digest__subject">🐿️ { issue.Subject }</div>
+						<div class="email-preview__date">{ digestDate(issue.SentAt) } &middot; Issue #{ fmt.Sprintf("%d", issue.ID) }</div>
+						<div class="email-preview__subject">🐿️ { issue.Subject }</div>
 						if issue.Summary != "" {
-							<p class="digest__intro">{ issue.Summary }</p>
+							<p class="email-preview__intro">{ issue.Summary }</p>
 						}
 					</div>
 					for _, group := range digestSections(issue.Items) {
 						@components.DigestSection(group.emoji, group.title, group.items, group.ranked)
 					}
-					<div class="digest__footer">
+					<div class="email-preview__footer">
 						Sent by <strong>GoDaily</strong> &middot; <a href="#">Unsubscribe</a> &middot; <a href="#">View in browser</a>
 					</div>
 				</div>
@@ -49,32 +50,43 @@ templ Digest(issue news.Issue) {
 	}
 }
 
-templ gopherLogoSVG() {
-	<svg width="24" height="24" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<circle cx="16" cy="19" r="9" fill="#8DCFE8"></circle>
-		<ellipse cx="16" cy="21" rx="5.5" ry="5" fill="#C48A5E"></ellipse>
-		<circle cx="44" cy="19" r="9" fill="#8DCFE8"></circle>
-		<ellipse cx="44" cy="21" rx="5.5" ry="5" fill="#C48A5E"></ellipse>
-		<ellipse cx="30" cy="36" rx="23" ry="21" fill="#8DCFE8"></ellipse>
-		<ellipse cx="30" cy="42" rx="13" ry="9" fill="#CCE8F5"></ellipse>
-		<circle cx="21" cy="31" r="8" fill="white"></circle>
-		<circle cx="39" cy="31" r="8" fill="white"></circle>
-		<circle cx="22.5" cy="31.5" r="5" fill="#0d2236"></circle>
-		<circle cx="40.5" cy="31.5" r="5" fill="#0d2236"></circle>
-		<circle cx="24" cy="29.5" r="1.8" fill="white"></circle>
-		<circle cx="42" cy="29.5" r="1.8" fill="white"></circle>
-		<ellipse cx="30" cy="42" rx="8" ry="5.5" fill="#D4A07A"></ellipse>
-		<ellipse cx="30" cy="39" rx="3" ry="2" fill="#1a1a2e"></ellipse>
-		<rect x="26.5" y="44" width="3.5" height="4.5" rx="1" fill="white"></rect>
-		<rect x="30.5" y="44" width="3.5" height="4.5" rx="1" fill="white"></rect>
-	</svg>
-}
-
 type digestGroup struct {
 	emoji  string
 	title  string
 	items  []news.Item
 	ranked bool
+}
+
+type sourceLabel struct {
+	emoji string
+	title string
+}
+
+var sourceLabels = map[news.Source]sourceLabel{
+	news.SourceGoRelease:      {"🚀", "Go Releases"},
+	news.SourceGoBlog:         {"📝", "Go Blog"},
+	news.SourceGitHub:         {"🐙", "GitHub"},
+	news.SourceGitHubTrending: {"📦", "GitHub Trending"},
+	news.SourceHN:             {"🏆", "Hacker News"},
+	news.SourceLobsters:       {"🦞", "Lobsters"},
+	news.SourceReddit:         {"🤖", "Reddit"},
+	news.SourceYouTube:        {"🎥", "YouTube"},
+	news.SourceGoPodcast:      {"🎙", "go podcast()"},
+	news.SourceArdanLabs:      {"🎙", "Ardan Labs Podcast"},
+	news.SourceDevTo:          {"📰", "Dev.to"},
+	news.SourceMedium:         {"✍️", "Medium"},
+	news.SourceJetBrains:      {"🧠", "JetBrains"},
+	news.SourceAwesomeGo:      {"⭐", "Awesome Go"},
+	news.SourceMastodon:       {"🐘", "Mastodon"},
+	news.SourceGolangBridge:   {"🌉", "GolangBridge"},
+	news.SourceFallthrough:    {"📡", "Fallthrough"},
+}
+
+func sourceDisplay(s news.Source) (emoji, title string) {
+	if label, ok := sourceLabels[s]; ok {
+		return label.emoji, label.title
+	}
+	return "📰", s.NiceName()
 }
 
 func digestSections(items []news.Item) []digestGroup {
@@ -101,45 +113,6 @@ func digestSections(items []news.Item) []digestGroup {
 		})
 	}
 	return groups
-}
-
-func sourceDisplay(s news.Source) (emoji, title string) {
-	switch s {
-	case news.SourceGoRelease:
-		return "🚀", "Go Releases"
-	case news.SourceGoBlog:
-		return "📝", "Go Blog"
-	case news.SourceGitHub:
-		return "🐙", "GitHub"
-	case news.SourceGitHubTrending:
-		return "📦", "GitHub Trending"
-	case news.SourceHN:
-		return "🏆", "Hacker News"
-	case news.SourceLobsters:
-		return "🦞", "Lobsters"
-	case news.SourceReddit:
-		return "🤖", "Reddit"
-	case news.SourceYouTube:
-		return "🎥", "YouTube"
-	case news.SourceGoPodcast, news.SourceArdanLabs:
-		return "🎙", "Podcasts"
-	case news.SourceDevTo:
-		return "📰", "Dev.to"
-	case news.SourceMedium:
-		return "✍️", "Medium"
-	case news.SourceJetBrains:
-		return "🧠", "JetBrains"
-	case news.SourceAwesomeGo:
-		return "⭐", "Awesome Go"
-	case news.SourceMastodon:
-		return "🐘", "Mastodon"
-	case news.SourceGolangBridge:
-		return "🌉", "GolangBridge"
-	case news.SourceFallthrough:
-		return "📡", "Fallthrough"
-	default:
-		return "📰", s.NiceName()
-	}
 }
 
 func digestDate(t time.Time) string {

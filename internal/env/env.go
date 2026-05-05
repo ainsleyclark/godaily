@@ -47,3 +47,13 @@ func New(_ context.Context) (Config, error) {
 	}
 	return cfg, nil
 }
+
+// IsDevelopment returns whether we are running the app in development.
+func (c Config) IsDevelopment() bool {
+	return env.IsDevelopment()
+}
+
+// IsProduction returns whether we are running the app in production.
+func (c Config) IsProduction() bool {
+	return env.IsProduction()
+}

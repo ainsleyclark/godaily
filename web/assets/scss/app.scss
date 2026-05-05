@@ -3,4 +3,5 @@
 @use 'base/reset';
 @use 'base/typography';
 @use 'layout/section';
-@use 'components/digest';
+@use 'components/email-preview';
+@use 'components/digest-item';

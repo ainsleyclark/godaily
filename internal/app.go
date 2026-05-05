@@ -80,11 +80,21 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
+	var store cache.Store
+	store = cache.NewInMemory(time.Hour * 24 * 30)
+	if config.IsDevelopment() {
+		osCache, err := cache.NewOSCache(".cache", true)
+		if err != nil {
+			return nil, teardown, err
+		}
+		store = osCache
+	}
+
 	return &App{
 		Config:     &config,
 		DB:         conn,
 		Repository: repo,
 		Runner:     aggregator,
-		Cache:      cache.NewInMemory(time.Hour * 24 * 30),
+		Cache:      store,
 	}, teardown, nil
 }

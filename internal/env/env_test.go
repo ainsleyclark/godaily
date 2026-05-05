@@ -26,6 +26,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestConfig_IsDevelopment(t *testing.T) {
+	t.Run("True when development", func(t *testing.T) {
+		t.Setenv("APP_ENV", "development")
+		assert.True(t, Config{}.IsDevelopment())
+	})
+	t.Run("False when production", func(t *testing.T) {
+		t.Setenv("APP_ENV", "production")
+		assert.False(t, Config{}.IsDevelopment())
+	})
+}
+
+func TestConfig_IsProduction(t *testing.T) {
+	t.Run("True when production", func(t *testing.T) {
+		t.Setenv("APP_ENV", "production")
+		assert.True(t, Config{}.IsProduction())
+	})
+	t.Run("False when development", func(t *testing.T) {
+		t.Setenv("APP_ENV", "development")
+		assert.False(t, Config{}.IsProduction())
+	})
+}
+
 func TestNew(t *testing.T) {
 	t.Setenv("APP_ENV", "production")
 
