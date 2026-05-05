@@ -17,9 +17,9 @@ func Digest(a *godaily.App) webkit.Handler {
 
 		issue, err := a.Repository.Issues.FindBySlug(ctx, c.Param("slug"))
 		if err != nil && errors.Is(err, store.ErrNotFound) {
-			return c.Render(pages.Error(http.StatusNotFound))
+			return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))
 		} else if err != nil {
-			return c.Render(pages.Error(http.StatusInternalServerError))
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}
 
 		return c.Render(pages.Digest(issue))

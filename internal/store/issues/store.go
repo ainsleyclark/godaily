@@ -48,27 +48,47 @@ type Store struct {
 var _ news.IssueRepository = (*Store)(nil)
 
 func (s Store) Find(ctx context.Context, id int64) (news.Issue, error) {
-	i, err := s.sqlc.IssueByID(ctx, id)
-
+	rows, err := s.sqlc.IssueByID(ctx, id)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return news.Issue{}, store.ErrNotFound
 	} else if err != nil {
 		return news.Issue{}, err
 	}
 
-	return transformIssue(i), nil
+	if len(rows) == 0 {
+		return news.Issue{}, store.ErrNotFound
+	}
+
+	items := make([]sqlc.Item, 0, len(rows))
+	for _, r := range rows {
+		if r.Item.ID != 0 {
+			items = append(items, r.Item)
+		}
+	}
+
+	return issueFromRows(rows[0].Issue, items), nil
 }
 
 func (s Store) FindBySlug(ctx context.Context, slug string) (news.Issue, error) {
-	i, err := s.sqlc.IssueBySlug(ctx, slug)
-
+	rows, err := s.sqlc.IssueBySlug(ctx, slug)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return news.Issue{}, store.ErrNotFound
 	} else if err != nil {
 		return news.Issue{}, err
 	}
 
-	return transformIssue(i), nil
+	if len(rows) == 0 {
+		return news.Issue{}, store.ErrNotFound
+	}
+
+	items := make([]sqlc.Item, 0, len(rows))
+	for _, r := range rows {
+		if r.Item.ID != 0 {
+			items = append(items, r.Item)
+		}
+	}
+
+	return issueFromRows(rows[0].Issue, items), nil
 }
 
 func (s Store) List(ctx context.Context) ([]news.Issue, error) {
@@ -89,7 +109,7 @@ func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error)
 		return news.Issue{}, err
 	}
 
-	return transformIssue(i), nil
+	return issueFromRows(i, nil), nil
 }
 
 func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStatus, sentAt time.Time) (news.Issue, error) {
@@ -102,7 +122,7 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStat
 		return news.Issue{}, err
 	}
 
-	return transformIssue(i), nil
+	return issueFromRows(i, nil), nil
 }
 
 func (s Store) Count(ctx context.Context) (int64, error) {
@@ -117,8 +137,8 @@ func (s Store) Count(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-func transformIssue(i sqlc.Issue) news.Issue {
-	return news.Issue{
+func issueFromRows(i sqlc.Issue, rawItems []sqlc.Item) news.Issue {
+	out := news.Issue{
 		ID:       i.ID,
 		Slug:     i.Slug,
 		Subject:  i.Subject,
@@ -127,6 +147,30 @@ func transformIssue(i sqlc.Issue) news.Issue {
 		TextBody: i.TextBody,
 		Summary:  i.Summary.String,
 		SentAt:   i.SentAt,
-		Items:    nil,
+		Items:    make([]news.Item, 0, len(rawItems)),
 	}
+	for _, it := range rawItems {
+		out.Items = append(out.Items, transformItem(it))
+	}
+	return out
+}
+
+func transformItem(i sqlc.Item) news.Item {
+	out := news.Item{
+		ID:      i.ID,
+		Source:  news.Source(i.Source),
+		Title:   i.Title,
+		URL:     i.Url,
+		Snippet: i.Summary.String,
+		Score:   i.Score.Float64,
+	}
+	if i.AuthorName.Valid || i.AuthorUsername.Valid || i.AuthorAvatarUrl.Valid || i.AuthorProfileUrl.Valid {
+		out.Author = &news.Author{
+			Name:       i.AuthorName.String,
+			Username:   i.AuthorUsername.String,
+			AvatarURL:  i.AuthorAvatarUrl.String,
+			ProfileURL: i.AuthorProfileUrl.String,
+		}
+	}
+	return out
 }
