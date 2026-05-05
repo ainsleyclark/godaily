@@ -20,23 +20,32 @@
 package cmd
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/urfave/cli/v3"
 )
 
-func sourcesCmd(_ *godaily.App) *cli.Command {
-	return &cli.Command{
-		Name:  "sources",
-		Usage: "Lists registered source names",
-		Action: func(ctx context.Context, cmd *cli.Command) error {
-			for _, name := range news.Sources {
-				fmt.Println(name) //nolint
-			}
-			return nil
-		},
+func prettyJSON(v any) []byte {
+	b, err := json.MarshalIndent(v, "", "\t")
+	exit(err)
+	return b
+}
+
+// parseSources validates a slice of raw source name strings against the
+// registered sources list and returns the typed slice.
+func parseSources(raw []string) ([]news.Source, error) {
+	known := make(map[news.Source]struct{}, len(news.Sources))
+	for _, s := range news.Sources {
+		known[s] = struct{}{}
 	}
+	sources := make([]news.Source, 0, len(raw))
+	for _, name := range raw {
+		s := news.Source(name)
+		if _, ok := known[s]; !ok {
+			return nil, fmt.Errorf("unknown source %q (run `godaily sources` for the list)", name)
+		}
+		sources = append(sources, s)
+	}
+	return sources, nil
 }

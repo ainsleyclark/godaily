@@ -17,26 +17,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package env
 
 import (
-	"context"
-	"fmt"
-
-	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleydev/webkit/pkg/env"
 )
 
-func sourcesCmd(_ *godaily.App) *cli.Command {
-	return &cli.Command{
-		Name:  "sources",
-		Usage: "Lists registered source names",
-		Action: func(ctx context.Context, cmd *cli.Command) error {
-			for _, name := range news.Sources {
-				fmt.Println(name) //nolint
-			}
-			return nil
-		},
+// Config holds all environment variables consumed by the service.
+// Optional fields are left empty if unset; callers guard against the zero value.
+type Config struct {
+	ResendToken      string `env:"RESEND_TOKEN,required"`
+	AnthropicAPIKey  string `env:"ANTHROPIC_API_KEY,required"`
+	YouTubeAPIKey    string `env:"YOUTUBE_API_KEY"`
+	GitHubToken      string `env:"GITHUB_TOKEN"`
+	EmailSendAddress string `env:"EMAIL_SEND_ADDRESS,required"`
+	TursoURL         string `env:"TURSO_URL,required"`
+	TursoAuthToken   string `env:"TURSO_AUTH_TOKEN,required"`
+}
+
+// New parses Config from the environment, overlaying values from a .env file
+// in the working directory when present.
+func New() (Config, error) {
+	var cfg Config
+	if err := env.ParseConfig(&cfg, ".env"); err != nil {
+		return Config{}, err
 	}
+	return cfg, nil
 }

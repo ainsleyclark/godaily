@@ -114,6 +114,22 @@ func TestIssues_Store(t *testing.T) {
 		assert.Equal(t, int64(1), got)
 	})
 
+	t.Run("UpdateStatus", func(t *testing.T) {
+		t.Log("Happy path")
+		{
+			got, err := s.UpdateStatus(ctx, mock.ID, news.IssueStatusError, mock.SentAt)
+			require.NoError(t, err)
+			assert.Equal(t, news.IssueStatusError, got.Status)
+			assert.Equal(t, mock.ID, got.ID)
+		}
+
+		t.Log("Unknown ID returns sql.ErrNoRows via RETURNING *")
+		{
+			_, err := s.UpdateStatus(ctx, 999, news.IssueStatusSent, mock.SentAt)
+			assert.Error(t, err)
+		}
+	})
+
 	// MUST be last: closing the DB makes every subsequent query fail.
 	t.Run("Query Error On Closed DB", func(t *testing.T) {
 		require.NoError(t, db.Close())
@@ -135,6 +151,12 @@ func TestIssues_Store(t *testing.T) {
 		t.Log("Create")
 		{
 			_, err := s.Create(ctx, news.Issue{Slug: "x", Subject: "x", Status: news.IssueStatusSent, HtmlBody: "x", TextBody: "x"})
+			assert.Error(t, err)
+		}
+
+		t.Log("UpdateStatus")
+		{
+			_, err := s.UpdateStatus(ctx, 1, news.IssueStatusSent, mock.SentAt)
 			assert.Error(t, err)
 		}
 

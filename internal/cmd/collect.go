@@ -21,22 +21,58 @@ package cmd
 
 import (
 	"context"
-	"fmt"
+	"os"
+	"path/filepath"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/urfave/cli/v3"
 )
 
-func sourcesCmd(_ *godaily.App) *cli.Command {
+func collectCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
-		Name:  "sources",
-		Usage: "Lists registered source names",
+		Name:  "collect",
+		Usage: "Fetch Go news from all sources and store the digest as a draft.",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "dry-run",
+				Usage: "Skip persisting the digest; only gather and return raw items",
+			},
+			&cli.StringFlag{
+				Name:  "output",
+				Usage: "Write aggregated items as JSON to this path (skipped if empty)",
+			},
+			&cli.StringSliceFlag{
+				Name:  "source",
+				Usage: "Only run the named sources (repeatable). Defaults to all.",
+			},
+		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			for _, name := range news.Sources {
-				fmt.Println(name) //nolint
+			sources, err := parseSources(cmd.StringSlice("source"))
+			if err != nil {
+				return err
 			}
-			return nil
+
+			raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
+				DryRun:  cmd.Bool("dry-run"),
+				Sources: sources,
+			})
+			if err != nil {
+				return err
+			}
+
+			out := cmd.String("output")
+			if out == "" {
+				return nil
+			}
+
+			indent := prettyJSON(raw)
+
+			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
+				return err
+			}
+
+			return os.WriteFile(out, indent, 0o600)
 		},
 	}
 }

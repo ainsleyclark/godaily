@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cron
+package digest
 
 import (
 	htmltemplate "html/template"
@@ -51,7 +51,7 @@ func sampleSections() []news.SourceItems {
 
 func TestRenderDigest(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
-		got, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		got, err := renderDigest(sendDigestDay, sampleSections())
 		require.NoError(t, err)
 		assert.Contains(t, got.Subject, "April 26, 2026")
 		assert.Contains(t, got.HTML, "hello")
@@ -65,7 +65,7 @@ func TestRenderDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		_, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		_, err := renderDigest(sendDigestDay, sampleSections())
 		assert.ErrorContains(t, err, "rendering html")
 	})
 
@@ -74,7 +74,7 @@ func TestRenderDigest(t *testing.T) {
 		textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
 		t.Cleanup(func() { textTmpl = orig })
 
-		_, err := renderDigest(sendDigestDay, sampleSections(), nil)
+		_, err := renderDigest(sendDigestDay, sampleSections())
 		assert.ErrorContains(t, err, "rendering text")
 	})
 }
@@ -82,7 +82,7 @@ func TestRenderDigest(t *testing.T) {
 func TestAggregator_SendDigest(t *testing.T) {
 	t.Parallel()
 
-	rendered, err := renderDigest(sendDigestDay, sampleSections(), nil)
+	rendered, err := renderDigest(sendDigestDay, sampleSections())
 	require.NoError(t, err)
 
 	t.Run("Send Error", func(t *testing.T) {

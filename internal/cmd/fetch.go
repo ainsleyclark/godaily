@@ -21,38 +21,35 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-var fetchCmd = &cli.Command{
-	Name: "fetch",
-	Flags: []cli.Flag{
-		&cli.StringFlag{
-			Name:  "provider",
-			Usage: "Provider of source information",
+func fetchCmd(_ *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name: "fetch",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "provider",
+				Usage: "Provider of source information",
+			},
 		},
-	},
-	Action: func(ctx context.Context, cmd *cli.Command) error {
-		fetcher, err := news.Get(news.Source(cmd.String("provider")))
-		if err != nil {
-			return err
-		}
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			fetcher, err := news.Get(news.Source(cmd.String("provider")))
+			if err != nil {
+				return err
+			}
 
-		items, err := fetcher.Fetch(ctx)
-		if err != nil {
-			return err
-		}
+			items, err := fetcher.Fetch(ctx)
+			if err != nil {
+				return err
+			}
 
-		indent, err := json.MarshalIndent(items, "", "  ")
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(string(indent)) //nolint
-		return nil
-	},
+			fmt.Println(string(prettyJSON(items))) //nolint
+			return nil
+		},
+	}
 }

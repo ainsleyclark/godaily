@@ -22,21 +22,32 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-func sourcesCmd(_ *godaily.App) *cli.Command {
+func sendCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
-		Name:  "sources",
-		Usage: "Lists registered source names",
+		Name:  "send",
+		Usage: "Send the stored draft digest via email.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "date",
+				Usage: "Date of the draft to send (YYYY-MM-DD). Defaults to yesterday.",
+			},
+		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			for _, name := range news.Sources {
-				fmt.Println(name) //nolint
+			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
+				if err != nil {
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				}
+				date = d
 			}
-			return nil
+			return a.Aggregator.Send(ctx, date)
 		},
 	}
 }

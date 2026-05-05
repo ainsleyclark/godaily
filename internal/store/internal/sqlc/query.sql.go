@@ -149,6 +149,32 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 	return items, nil
 }
 
+const issueUpdateStatus = `-- name: IssueUpdateStatus :one
+UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, html_body, text_body, status
+`
+
+type IssueUpdateStatusParams struct {
+	Status string    `json:"status"`
+	SentAt time.Time `json:"sent_at"`
+	ID     int64     `json:"id"`
+}
+
+func (q *Queries) IssueUpdateStatus(ctx context.Context, arg IssueUpdateStatusParams) (Issue, error) {
+	row := q.db.QueryRowContext(ctx, issueUpdateStatus, arg.Status, arg.SentAt, arg.ID)
+	var i Issue
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.SentAt,
+		&i.Subject,
+		&i.Summary,
+		&i.HtmlBody,
+		&i.TextBody,
+		&i.Status,
+	)
+	return i, err
+}
+
 const itemByID = `-- name: ItemByID :one
 SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position FROM items WHERE id = ? LIMIT 1
 `

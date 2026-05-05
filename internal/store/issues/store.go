@@ -23,6 +23,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
@@ -83,6 +84,19 @@ func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error)
 		HtmlBody: issue.HtmlBody,
 		TextBody: issue.TextBody,
 		Status:   issue.Status.String(),
+	})
+	if err != nil {
+		return news.Issue{}, err
+	}
+
+	return transformIssue(i), nil
+}
+
+func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStatus, sentAt time.Time) (news.Issue, error) {
+	i, err := s.sqlc.IssueUpdateStatus(ctx, sqlc.IssueUpdateStatusParams{
+		ID:     id,
+		Status: status.String(),
+		SentAt: sentAt,
 	})
 	if err != nil {
 		return news.Issue{}, err

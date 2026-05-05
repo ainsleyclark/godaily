@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cron
+package digest
 
 import (
 	"context"
@@ -127,7 +127,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestAggregator_Run(t *testing.T) {
+func TestAggregator_Collect(t *testing.T) {
 	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 	inWindow := yesterday.Add(time.Hour)
 	beforeWindow := yesterday.Add(-time.Hour)
@@ -135,60 +135,41 @@ func TestAggregator_Run(t *testing.T) {
 
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
-		opts     RunOptions
-		emailErr error
-		want     func(t *testing.T, items []news.SourceItems, m *mockEmail, err error)
+		opts     CollectOptions
+		want     func(t *testing.T, items []news.SourceItems, err error)
 	}{
-		"DryRun Skips Email": {
+		"DryRun Returns Items Without Persisting": {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{
 					items: []news.Item{{Title: "in", Published: inWindow}},
 				},
 			},
-			opts: RunOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, m *mockEmail, err error) {
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
 				assert.Equal(t, news.SourceDevTo, items[0].Source)
 				assert.Len(t, items[0].Items, 1)
-				assert.False(t, m.called)
 			},
 		},
-		"Sends Digest When Not DryRun": {
+		"Returns Items When Not DryRun": {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{
 					items: []news.Item{{Title: "in", Published: inWindow}},
 				},
 			},
-			opts: RunOptions{Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, m *mockEmail, err error) {
+			opts: CollectOptions{Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
-				assert.True(t, m.called)
-				assert.Contains(t, m.req.Subject, "GoDaily")
-			},
-		},
-		"Send Error Is Logged Not Returned": {
-			registry: map[news.Source]news.Fetcher{
-				news.SourceDevTo: mockFetcher{
-					items: []news.Item{{Title: "in", Published: inWindow}},
-				},
-			},
-			opts:     RunOptions{Sources: []news.Source{news.SourceDevTo}},
-			emailErr: errors.New("send boom"),
-			want: func(t *testing.T, items []news.SourceItems, m *mockEmail, err error) {
-				t.Helper()
-				require.NoError(t, err)
-				require.Len(t, items, 1)
-				assert.True(t, m.called)
 			},
 		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
-			opts:     RunOptions{DryRun: true},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			opts:     CollectOptions{DryRun: true},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -200,8 +181,8 @@ func TestAggregator_Run(t *testing.T) {
 					items: []news.Item{{Title: "zero"}},
 				},
 			},
-			opts: RunOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -216,8 +197,8 @@ func TestAggregator_Run(t *testing.T) {
 					},
 				},
 			},
-			opts: RunOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -233,8 +214,8 @@ func TestAggregator_Run(t *testing.T) {
 					},
 				},
 			},
-			opts: RunOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -256,11 +237,11 @@ func TestAggregator_Run(t *testing.T) {
 					items: []news.Item{{Title: "r", Published: inWindow}},
 				},
 			},
-			opts: RunOptions{
+			opts: CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
 			},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 3)
@@ -276,11 +257,11 @@ func TestAggregator_Run(t *testing.T) {
 					items: []news.Item{{Title: "ok", Published: inWindow}},
 				},
 			},
-			opts: RunOptions{
+			opts: CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceDevTo, news.SourceLobsters},
 			},
-			want: func(t *testing.T, items []news.SourceItems, _ *mockEmail, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -293,16 +274,14 @@ func TestAggregator_Run(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 
-			m := &mockEmail{err: test.emailErr}
-			agg := Aggregator{email: m, sendToAddress: "to@example.com"}
-
-			got, err := agg.Run(t.Context(), test.opts)
-			test.want(t, got, m, err)
+			agg := Aggregator{}
+			got, err := agg.Collect(t.Context(), test.opts)
+			test.want(t, got, err)
 		})
 	}
 }
 
-func TestAggregator_Run_Synth(t *testing.T) {
+func TestAggregator_Collect_NoSynth(t *testing.T) {
 	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 	inWindow := yesterday.Add(time.Hour)
 
@@ -312,104 +291,19 @@ func TestAggregator_Run_Synth(t *testing.T) {
 		},
 	}
 
-	tt := map[string]struct {
-		opts      RunOptions
-		suggester *mockSuggester
-		want      func(t *testing.T, m *mockEmail, sg *mockSuggester)
-	}{
-		"Disabled By Default": {
-			opts:      RunOptions{Sources: []news.Source{news.SourceDevTo}},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
-			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
-				t.Helper()
-				assert.False(t, sg.called, "synth must not be called without IncludeSynth")
-				assert.True(t, m.called)
-			},
-		},
-		"Enabled Calls Suggester And Includes In Email": {
-			opts: RunOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}},
-			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.True(t, m.called)
-				assert.Contains(t, m.req.Html, "punchy-post")
-				assert.Contains(t, m.req.Text, "punchy-post")
-			},
-		},
-		"Suggester Error Logged Not Returned": {
-			opts: RunOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{err: errors.New("api boom")},
-			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.True(t, m.called, "digest still ships when synth fails")
-				assert.NotContains(t, m.req.Html, "Suggested post")
-			},
-		},
-		"Suggester ErrNoItems Skipped Silently": {
-			opts: RunOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: &mockSuggester{err: synth.ErrNoItems},
-			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
-				t.Helper()
-				assert.True(t, sg.called)
-				assert.True(t, m.called)
-				assert.NotContains(t, m.req.Html, "Suggested post")
-			},
-		},
-		"DryRun Skips Suggester": {
-			opts: RunOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-				DryRun:       true,
-			},
-			suggester: &mockSuggester{resp: synth.Suggestion{Post: "p"}},
-			want: func(t *testing.T, m *mockEmail, sg *mockSuggester) {
-				t.Helper()
-				assert.False(t, sg.called, "synth must not be called when DryRun is set")
-				assert.False(t, m.called)
-			},
-		},
-		"Nil Suggester Tolerated": {
-			opts: RunOptions{
-				Sources:      []news.Source{news.SourceDevTo},
-				IncludeSynth: true,
-			},
-			suggester: nil,
-			want: func(t *testing.T, m *mockEmail, _ *mockSuggester) {
-				t.Helper()
-				assert.True(t, m.called)
-			},
-		},
-	}
+	t.Run("Suggester Is Never Called During Collect", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Cleanup(news.SwapRegistry(registry))
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		agg := Aggregator{suggester: sg}
 
-			m := &mockEmail{}
-			agg := Aggregator{email: m, sendToAddress: "to@example.com"}
-			if test.suggester != nil {
-				agg.suggester = test.suggester
-			}
-
-			_, err := agg.Run(t.Context(), test.opts)
-			require.NoError(t, err)
-			test.want(t, m, test.suggester)
-		})
-	}
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+		assert.False(t, sg.called, "synth must not be called during Collect")
+	})
 }
 
-func TestAggregator_Run_Persistence(t *testing.T) {
+func TestAggregator_Collect_Persistence(t *testing.T) {
 	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 	inWindow := yesterday.Add(time.Hour)
 
@@ -438,38 +332,32 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		},
 	}
 
-	t.Run("Persists Issue And News Items With Sent Status", func(t *testing.T) {
+	t.Run("Persists Issue As Draft With Items", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			email:         &mockEmail{},
-			sendToAddress: "to@example.com",
-			issues:        issueRepo,
-			items:         itemRepo,
+			issues: issueRepo,
+			items:  itemRepo,
 		}
 
-		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusSent, issue.Status)
-		assert.NotEmpty(t, issue.HtmlBody)
-		assert.NotEmpty(t, issue.TextBody)
+		assert.Equal(t, news.IssueStatusDraft, stored.Status)
+		assert.NotEmpty(t, stored.HtmlBody)
+		assert.NotEmpty(t, stored.TextBody)
 
-		got, err := itemRepo.ListByIssue(t.Context(), issue.ID)
+		got, err := itemRepo.ListByIssue(t.Context(), stored.ID)
 		require.NoError(t, err)
 		require.Len(t, got, 2)
-		// Items are persisted in score-descending order (Run sorts before
-		// passing them on), so "second" (score 0.9) comes before "first".
+		// Items are persisted in score-descending order, so "second" (0.9) comes first.
 		assert.Equal(t, "second", got[0].Title)
 		assert.Equal(t, "first", got[1].Title)
 
-		// "second" has no author.
 		assert.Nil(t, got[0].Author)
-
-		// "first" carries a fully-populated Author; each field round-trips.
 		require.NotNil(t, got[1].Author)
 		assert.Equal(t, "Ada Lovelace", got[1].Author.Name)
 		assert.Equal(t, "ada", got[1].Author.Username)
@@ -477,48 +365,30 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
 	})
 
-	t.Run("Records Failed Status When Email Send Errors", func(t *testing.T) {
+	t.Run("Second Collect Same Day Is Skipped", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			email:         &mockEmail{err: errors.New("send boom")},
-			sendToAddress: "to@example.com",
-			issues:        issueRepo,
-			items:         itemRepo,
+			issues: issueRepo,
+			items:  itemRepo,
 		}
 
-		_, err := agg.Run(t.Context(), RunOptions{Sources: []news.Source{news.SourceDevTo}})
+		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
+
+		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		issue, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		first, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatus("failed"), issue.Status)
-	})
+		require.NotZero(t, first.ID)
 
-	t.Run("Second Run Same Day Is Skipped", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{
-			email:         &mockEmail{},
-			sendToAddress: "to@example.com",
-			issues:        issueRepo,
-			items:         itemRepo,
-		}
-
-		opts := RunOptions{Sources: []news.Source{news.SourceDevTo}}
-
-		_, err := agg.Run(t.Context(), opts)
+		_, err = agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		// Second run for the same day must not error and must not create a duplicate.
-		_, err = agg.Run(t.Context(), opts)
+		second, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
-
-		count, err := issueRepo.Count(t.Context())
-		require.NoError(t, err)
-		assert.Equal(t, int64(1), count, "only one issue should be persisted for a given day")
+		assert.Equal(t, first.ID, second.ID, "second collect must not create a duplicate issue")
 	})
 
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
@@ -526,13 +396,11 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			email:         &mockEmail{},
-			sendToAddress: "to@example.com",
-			issues:        issueRepo,
-			items:         itemRepo,
+			issues: issueRepo,
+			items:  itemRepo,
 		}
 
-		_, err := agg.Run(t.Context(), RunOptions{
+		_, err := agg.Collect(t.Context(), CollectOptions{
 			Sources: []news.Source{news.SourceDevTo},
 			DryRun:  true,
 		})
@@ -541,6 +409,179 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		count, err := issueRepo.Count(t.Context())
 		require.NoError(t, err)
 		assert.Equal(t, int64(0), count)
+	})
+}
+
+func TestAggregator_Send(t *testing.T) {
+	day := func(s string) time.Time {
+		t.Helper()
+		d, err := time.Parse("2006-01-02", s)
+		require.NoError(t, err)
+		return d
+	}
+
+	seedDraft := func(t *testing.T, repo *issues.Store, slug string) news.Issue {
+		t.Helper()
+		stored, err := repo.Create(t.Context(), news.Issue{
+			Slug:     slug,
+			Subject:  "GoDaily - " + slug,
+			HtmlBody: "<p>base</p>",
+			TextBody: "base",
+			Status:   news.IssueStatusDraft,
+			SentAt:   time.Now().UTC(),
+		})
+		require.NoError(t, err)
+		return stored
+	}
+
+	seedItem := func(t *testing.T, repo *items.Store, issueID int64, source news.Source) {
+		t.Helper()
+		_, err := repo.Create(t.Context(), issueID, 1, news.Item{
+			Source:    source,
+			Title:     "item",
+			URL:       "https://example.com/x",
+			Published: time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour).Add(time.Hour),
+		})
+		require.NoError(t, err)
+	}
+
+	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-26")
+		stored := seedDraft(t, issueRepo, "2026-04-26")
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+
+		assert.True(t, m.called)
+		assert.Contains(t, m.req.Subject, "2026-04-26")
+
+		updated, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusSent, updated.Status)
+	})
+
+	t.Run("Email Error Updates Status To Error", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-27")
+		stored := seedDraft(t, issueRepo, "2026-04-27")
+
+		m := &mockEmail{err: errors.New("send boom")}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+
+		updated, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusError, updated.Status)
+	})
+
+	t.Run("No Send Address Skips Email And Status Update", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-28")
+		stored := seedDraft(t, issueRepo, "2026-04-28")
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "", issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+		assert.False(t, m.called)
+
+		unchanged, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusDraft, unchanged.Status)
+	})
+
+	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com"}
+		err := agg.Send(t.Context(), day("2026-04-29"))
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "persistence")
+	})
+
+	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+
+		err := agg.Send(t.Context(), day("1999-01-01"))
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "no digest found")
+	})
+
+	t.Run("Returns Error When Status Not Draft", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		stored, err := issueRepo.Create(t.Context(), news.Issue{
+			Slug:     "2026-04-30",
+			Subject:  "GoDaily - 2026-04-30",
+			HtmlBody: "<p>x</p>",
+			TextBody: "x",
+			Status:   news.IssueStatusSent,
+			SentAt:   time.Now().UTC(),
+		})
+		require.NoError(t, err)
+		_ = stored
+
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		sendErr := agg.Send(t.Context(), day("2026-04-30"))
+		require.Error(t, sendErr)
+		assert.Contains(t, sendErr.Error(), "expected")
+	})
+
+	t.Run("Synth Called With Sections And Appended To Bodies", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-01")
+		stored := seedDraft(t, issueRepo, "2026-05-01")
+		seedItem(t, itemRepo, stored.ID, news.SourceDevTo)
+
+		m := &mockEmail{}
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+
+		assert.True(t, sg.called)
+		assert.True(t, m.called)
+		assert.Contains(t, m.req.Html, "punchy-post")
+		assert.Contains(t, m.req.Text, "punchy-post")
+
+		// Stored body must not be modified.
+		reloaded, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.NotContains(t, reloaded.HtmlBody, "Suggested post")
+	})
+
+	t.Run("Synth Error Logged And Email Sent Without Suggestion", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-02")
+		stored := seedDraft(t, issueRepo, "2026-05-02")
+		seedItem(t, itemRepo, stored.ID, news.SourceDevTo)
+
+		m := &mockEmail{}
+		sg := &mockSuggester{err: errors.New("api boom")}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+
+		assert.True(t, sg.called)
+		assert.True(t, m.called, "email still sent when synth fails")
+		assert.NotContains(t, m.req.Html, "Suggested post")
+	})
+
+	t.Run("No Items Skips Synth", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-03")
+		seedDraft(t, issueRepo, "2026-05-03")
+
+		m := &mockEmail{}
+		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
+
+		assert.False(t, sg.called)
+		assert.True(t, m.called)
 	})
 }
 

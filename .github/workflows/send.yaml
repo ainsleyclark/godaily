@@ -1,4 +1,4 @@
-name: Daily Digest
+name: Send Digest
 
 on:
   schedule:
@@ -37,7 +37,7 @@ jobs:
             echo "should_run=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run digest
+      - name: Send digest
         if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -46,4 +46,4 @@ jobs:
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-        run: go run main.go run ${{ inputs.dry-run && '--dry-run' || '' }}
+        run: go run main.go send

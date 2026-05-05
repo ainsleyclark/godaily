@@ -27,67 +27,72 @@ import (
 	"path/filepath"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/urfave/cli/v3"
 )
 
-var synthCmd = &cli.Command{
-	Name:  "synth",
-	Usage: "Suggest a tweet and LinkedIn post from a scored news JSON file",
-	Flags: []cli.Flag{
-		&cli.StringFlag{
-			Name:     "input",
-			Usage:    "Path to a scored news JSON file (the output of `godaily run --output`)",
-			Required: true,
+func synthCmd(_ *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "synth",
+		Usage: "Suggest a tweet and LinkedIn post from a scored news JSON file",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "input",
+				Usage:    "Path to a scored news JSON file (the output of `godaily run --output`)",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "output",
+				Usage: "Write suggestion to this path (otherwise prints to stdout)",
+			},
+			&cli.StringFlag{
+				Name:  "format",
+				Value: "md",
+				Usage: "Output format: md or json",
+			},
 		},
-		&cli.StringFlag{
-			Name:  "output",
-			Usage: "Write suggestion to this path (otherwise prints to stdout)",
-		},
-		&cli.StringFlag{
-			Name:  "format",
-			Value: "md",
-			Usage: "Output format: md or json",
-		},
-	},
-	Action: func(ctx context.Context, cmd *cli.Command) error {
-		raw, err := os.ReadFile(cmd.String("input"))
-		if err != nil {
-			return fmt.Errorf("read input: %w", err)
-		}
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			raw, err := os.ReadFile(cmd.String("input"))
+			if err != nil {
+				return fmt.Errorf("read input: %w", err)
+			}
 
-		var sections []news.SourceItems
-		if err := json.Unmarshal(raw, &sections); err != nil {
-			return fmt.Errorf("parse input: %w", err)
-		}
+			var sections []news.SourceItems
+			if err = json.Unmarshal(raw, &sections); err != nil {
+				return fmt.Errorf("parse input: %w", err)
+			}
 
-		sug, err := synth.New().Suggest(ctx, time.Now().AddDate(0, 0, -1).Truncate(24*time.Hour), sections)
-		if err != nil {
-			return err
-		}
-
-		var rendered []byte
-		switch cmd.String("format") {
-		case "json":
-			rendered, err = sug.JSON()
+			sug, err := synth.New().Suggest(ctx, time.Now().AddDate(0, 0, -1).Truncate(24*time.Hour), sections)
 			if err != nil {
 				return err
 			}
-		case "md", "":
-			rendered = []byte(sug.Markdown())
-		default:
-			return fmt.Errorf("unknown format %q (want md or json)", cmd.String("format"))
-		}
 
-		out := cmd.String("output")
-		if out == "" {
-			fmt.Println(string(rendered)) //nolint
-			return nil
-		}
-		if err := os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
-			return err
-		}
-		return os.WriteFile(out, rendered, 0o600)
-	},
+			var rendered []byte
+			switch cmd.String("format") {
+			case "json":
+				rendered, err = sug.JSON()
+				if err != nil {
+					return err
+				}
+			case "md", "":
+				rendered = []byte(sug.Markdown())
+			default:
+				return fmt.Errorf("unknown format %q (want md or json)", cmd.String("format"))
+			}
+
+			out := cmd.String("output")
+			if out == "" {
+				fmt.Println(string(rendered)) //nolint
+				return nil
+			}
+
+			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
+				return err
+			}
+
+			return os.WriteFile(out, rendered, 0o600)
+		},
+	}
 }
