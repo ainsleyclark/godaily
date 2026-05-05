@@ -1,0 +1,18 @@
+package pages
+
+import "github.com/ainsleyclark/godaily/web/views/layouts"
+import "github.com/ainsleyclark/godaily/internal/news"
+import "encoding/json"
+
+
+templ Digest(issue news.Issue) {
+	@layouts.Base() {
+		<h1>Digest</h1>
+		<pre>{ marshalStr(issue) }</pre>
+	}
+}
+
+func marshalStr(in any) string {
+	b, _ := json.MarshalIndent(in, "", "\t")
+	return string(b)
+}
