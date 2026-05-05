@@ -102,7 +102,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	}
 
 	if a.issues != nil {
-		if _, err := a.persistIssue(ctx, issue, results); err != nil {
+		if _, err = a.persistIssue(ctx, issue, results); err != nil {
 			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
 		}
 	}

@@ -1,0 +1,43 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main ."
+  bin = "./tmp/main"
+  full_bin = "./tmp/main serve --port 3000"
+  include_ext = ["go", "templ"]
+  exclude_dir = [
+    "tmp",
+    "web/dist",
+    "web/node_modules",
+    "web/assets",
+    "web/bin",
+    "examples",
+    "docs",
+    "internal/store/.gen",
+    "testdata",
+  ]
+  exclude_regex = ["_templ\\.go$", "_test\\.go$", "_mock\\.go$"]
+  exclude_unchanged = true
+  log = "build-errors.log"
+  delay = 300
+  stop_on_error = false
+  send_interrupt = true
+  kill_delay = "2s"
+
+[log]
+  main_only = false
+  time = false
+
+[color]
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[misc]
+  clean_on_exit = true
+
+[screen]
+  clear_on_rebuild = false
+  keep_scroll = true

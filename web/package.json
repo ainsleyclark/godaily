@@ -1,0 +1,20 @@
+{
+	"name": "web",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "node esbuild.mjs",
+		"dev": "node esbuild.mjs --watch",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.0",
+		"esbuild": "^0.28.0",
+		"esbuild-plugin-copy": "^2.1.1",
+		"esbuild-sass-plugin": "^3.7.0",
+		"sharp": "^0.34.5",
+		"svgo": "^4.0.1",
+		"typescript": "^6.0.3"
+	}
+}

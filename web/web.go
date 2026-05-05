@@ -17,49 +17,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package web
 
-import (
-	"context"
-	"log"
-	"os"
-
-	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
-	"github.com/urfave/cli/v3"
-)
-
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		exit(err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(err)
-	}
-}
-
-func exit(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+//go:generate go tool templ generate ./...

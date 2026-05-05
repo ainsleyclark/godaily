@@ -17,49 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package server
 
 import (
-	"context"
-	"log"
-	"os"
+	"fmt"
+	"net/http"
+
+	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/web/handlers"
+	"github.com/ainsleydev/webkit/pkg/env"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+// Start boots the HTTP server on the given port.
+func Start(a *godaily.App, port string) error {
+	kit := webkit.New()
 
-	app, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		exit(err)
+	kit.Plug(kitmiddleware.NonWWWRedirect)
+	kit.Plug(kitmiddleware.TrailingSlashRedirect)
+	kit.Plug(kitmiddleware.Logger)
+	kit.Plug(kitmiddleware.Recover)
+	kit.Plug(kitmiddleware.RequestID)
+	kit.Plug(kitmiddleware.Gzip)
+	kit.Plug(kitmiddleware.URL)
+
+	kit.Get("/", handlers.Home(a))
+	kit.Static("/assets/", "web/dist/") // From where main.go is
+	kit.NotFound(func(c *webkit.Context) error { return c.String(http.StatusNotFound, "Not Found") })
+
+	if env.IsDevelopment() {
+		// Register on the raw chi mux so SSE bypasses webkit's middleware chain
+		// (Logger's ResponseRecorder doesn't implement http.Flusher, which would
+		// buffer the stream).
+		kit.Mux().Get("/internal/reload/", handlers.ReloadHTTP)
 	}
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(err)
-	}
-}
-
-func exit(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
+	return kit.Start(fmt.Sprintf(":%s", port))
 }
