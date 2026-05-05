@@ -412,7 +412,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 	})
 }
 
-func TestAggregator_Send(t *testing.T) {
+func TestAggregator_SendDigest(t *testing.T) {
 	day := func(s string) time.Time {
 		t.Helper()
 		d, err := time.Parse("2006-01-02", s)
@@ -453,7 +453,7 @@ func TestAggregator_Send(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date))
 
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Subject, "2026-04-26")
@@ -471,7 +471,7 @@ func TestAggregator_Send(t *testing.T) {
 		m := &mockEmail{err: errors.New("send boom")}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
@@ -486,7 +486,7 @@ func TestAggregator_Send(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, sendToAddress: "", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date))
 		assert.False(t, m.called)
 
 		unchanged, err := issueRepo.Find(t.Context(), stored.ID)
@@ -496,7 +496,7 @@ func TestAggregator_Send(t *testing.T) {
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
 		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com"}
-		err := agg.Send(t.Context(), day("2026-04-29"))
+		err := agg.SendDigest(t.Context(), day("2026-04-29"))
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "persistence")
 	})
@@ -505,7 +505,7 @@ func TestAggregator_Send(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		err := agg.Send(t.Context(), day("1999-01-01"))
+		err := agg.SendDigest(t.Context(), day("1999-01-01"))
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "no digest found")
 	})
@@ -524,7 +524,7 @@ func TestAggregator_Send(t *testing.T) {
 		_ = stored
 
 		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
-		sendErr := agg.Send(t.Context(), day("2026-04-30"))
+		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"))
 		require.Error(t, sendErr)
 		assert.Contains(t, sendErr.Error(), "expected")
 	})
@@ -539,7 +539,7 @@ func TestAggregator_Send(t *testing.T) {
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
 		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date))
 
 		assert.False(t, sg.called, "synth must not be called during Send")
 		assert.True(t, m.called)

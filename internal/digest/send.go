@@ -31,9 +31,9 @@ import (
 	"github.com/ainsleyclark/godaily/internal/store"
 )
 
-// Send loads the draft digest for the given date, sends it to the
+// SendDigest loads the draft digest for the given date, sends it to the
 // configured address, and updates the stored issue status.
-func (a Aggregator) Send(ctx context.Context, date time.Time) error {
+func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
 	if a.issues == nil || a.items == nil {
 		return errors.New("send requires persistence (TURSO_URL not set)")
 	}

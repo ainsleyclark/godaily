@@ -79,7 +79,7 @@ func TestRenderDigest(t *testing.T) {
 	})
 }
 
-func TestAggregator_SendDigest(t *testing.T) {
+func TestAggregator_sendDigest(t *testing.T) {
 	t.Parallel()
 
 	rendered, err := renderDigest(sendDigestDay, sampleSections())
