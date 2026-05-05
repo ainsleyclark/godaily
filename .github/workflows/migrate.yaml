@@ -21,4 +21,7 @@ jobs:
           APP_ENV: production
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
         run: go run . migrate up
