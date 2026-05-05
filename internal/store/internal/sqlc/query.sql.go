@@ -11,118 +11,44 @@ import (
 	"time"
 )
 
-const issueByID = `-- name: IssueByID :many
-SELECT issues.id, issues.slug, issues.sent_at, issues.subject, issues.summary, issues.html_body, issues.text_body, issues.status, items.id, items.issue_id, items.source, items.title, items.url, items.author_name, items.author_username, items.author_avatar_url, items.author_profile_url, items.score, items.summary, items.position
-FROM issues
-LEFT JOIN items ON items.issue_id = issues.id
-WHERE issues.id = ?
-ORDER BY items.position ASC
+const issueByID = `-- name: IssueByID :one
+SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues WHERE id = ? LIMIT 1
 `
 
-type IssueByIDRow struct {
-	Issue Issue `json:"issue"`
-	Item  Item  `json:"item"`
+func (q *Queries) IssueByID(ctx context.Context, id int64) (Issue, error) {
+	row := q.db.QueryRowContext(ctx, issueByID, id)
+	var i Issue
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.SentAt,
+		&i.Subject,
+		&i.Summary,
+		&i.HtmlBody,
+		&i.TextBody,
+		&i.Status,
+	)
+	return i, err
 }
 
-func (q *Queries) IssueByID(ctx context.Context, id int64) ([]IssueByIDRow, error) {
-	rows, err := q.db.QueryContext(ctx, issueByID, id)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []IssueByIDRow{}
-	for rows.Next() {
-		var i IssueByIDRow
-		if err := rows.Scan(
-			&i.Issue.ID,
-			&i.Issue.Slug,
-			&i.Issue.SentAt,
-			&i.Issue.Subject,
-			&i.Issue.Summary,
-			&i.Issue.HtmlBody,
-			&i.Issue.TextBody,
-			&i.Issue.Status,
-			&i.Item.ID,
-			&i.Item.IssueID,
-			&i.Item.Source,
-			&i.Item.Title,
-			&i.Item.Url,
-			&i.Item.AuthorName,
-			&i.Item.AuthorUsername,
-			&i.Item.AuthorAvatarUrl,
-			&i.Item.AuthorProfileUrl,
-			&i.Item.Score,
-			&i.Item.Summary,
-			&i.Item.Position,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const issueBySlug = `-- name: IssueBySlug :many
-SELECT issues.id, issues.slug, issues.sent_at, issues.subject, issues.summary, issues.html_body, issues.text_body, issues.status, items.id, items.issue_id, items.source, items.title, items.url, items.author_name, items.author_username, items.author_avatar_url, items.author_profile_url, items.score, items.summary, items.position
-FROM issues
-LEFT JOIN items ON items.issue_id = issues.id
-WHERE issues.slug = ?
-ORDER BY items.position ASC
+const issueBySlug = `-- name: IssueBySlug :one
+SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues WHERE slug = ? LIMIT 1
 `
 
-type IssueBySlugRow struct {
-	Issue Issue `json:"issue"`
-	Item  Item  `json:"item"`
-}
-
-func (q *Queries) IssueBySlug(ctx context.Context, slug string) ([]IssueBySlugRow, error) {
-	rows, err := q.db.QueryContext(ctx, issueBySlug, slug)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []IssueBySlugRow{}
-	for rows.Next() {
-		var i IssueBySlugRow
-		if err := rows.Scan(
-			&i.Issue.ID,
-			&i.Issue.Slug,
-			&i.Issue.SentAt,
-			&i.Issue.Subject,
-			&i.Issue.Summary,
-			&i.Issue.HtmlBody,
-			&i.Issue.TextBody,
-			&i.Issue.Status,
-			&i.Item.ID,
-			&i.Item.IssueID,
-			&i.Item.Source,
-			&i.Item.Title,
-			&i.Item.Url,
-			&i.Item.AuthorName,
-			&i.Item.AuthorUsername,
-			&i.Item.AuthorAvatarUrl,
-			&i.Item.AuthorProfileUrl,
-			&i.Item.Score,
-			&i.Item.Summary,
-			&i.Item.Position,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) IssueBySlug(ctx context.Context, slug string) (Issue, error) {
+	row := q.db.QueryRowContext(ctx, issueBySlug, slug)
+	var i Issue
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.SentAt,
+		&i.Subject,
+		&i.Summary,
+		&i.HtmlBody,
+		&i.TextBody,
+		&i.Status,
+	)
+	return i, err
 }
 
 const issueCount = `-- name: IssueCount :one

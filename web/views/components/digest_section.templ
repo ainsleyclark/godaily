@@ -1,0 +1,14 @@
+package components
+
+import "github.com/ainsleyclark/godaily/internal/news"
+
+templ DigestSection(emoji string, title string, items []news.Item, ranked bool) {
+	<div class="digest__section-head">{ emoji + " " + title }</div>
+	for i, item := range items {
+		if ranked {
+			@DigestItem(item, i+1)
+		} else {
+			@DigestItem(item, 0)
+		}
+	}
+}

@@ -48,47 +48,33 @@ type Store struct {
 var _ news.IssueRepository = (*Store)(nil)
 
 func (s Store) Find(ctx context.Context, id int64) (news.Issue, error) {
-	rows, err := s.sqlc.IssueByID(ctx, id)
+	i, err := s.sqlc.IssueByID(ctx, id)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return news.Issue{}, store.ErrNotFound
 	} else if err != nil {
 		return news.Issue{}, err
 	}
-
-	if len(rows) == 0 {
-		return news.Issue{}, store.ErrNotFound
-	}
-
-	items := make([]sqlc.Item, 0, len(rows))
-	for _, r := range rows {
-		if r.Item.ID != 0 {
-			items = append(items, r.Item)
-		}
-	}
-
-	return issueFromRows(rows[0].Issue, items), nil
+	return s.withItems(ctx, i)
 }
 
 func (s Store) FindBySlug(ctx context.Context, slug string) (news.Issue, error) {
-	rows, err := s.sqlc.IssueBySlug(ctx, slug)
+	i, err := s.sqlc.IssueBySlug(ctx, slug)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return news.Issue{}, store.ErrNotFound
 	} else if err != nil {
 		return news.Issue{}, err
 	}
+	return s.withItems(ctx, i)
+}
 
-	if len(rows) == 0 {
-		return news.Issue{}, store.ErrNotFound
+func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) {
+	rows, err := s.sqlc.ItemListByIssue(ctx, i.ID)
+	if err != nil {
+		return news.Issue{}, err
 	}
-
-	items := make([]sqlc.Item, 0, len(rows))
-	for _, r := range rows {
-		if r.Item.ID != 0 {
-			items = append(items, r.Item)
-		}
-	}
-
-	return issueFromRows(rows[0].Issue, items), nil
+	items := make([]sqlc.Item, len(rows))
+	copy(items, rows)
+	return issueFromRows(i, items), nil
 }
 
 func (s Store) List(ctx context.Context) ([]news.Issue, error) {

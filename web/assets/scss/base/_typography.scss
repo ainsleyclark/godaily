@@ -1,0 +1,13 @@
+body {
+	font-family: 'DM Sans', sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code,
+pre {
+	font-family: 'DM Mono', monospace;
+}

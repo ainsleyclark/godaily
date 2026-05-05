@@ -6,19 +6,11 @@ INSERT INTO issues (
 )
 RETURNING *;
 
--- name: IssueBySlug :many
-SELECT sqlc.embed(issues), sqlc.embed(items)
-FROM issues
-LEFT JOIN items ON items.issue_id = issues.id
-WHERE issues.slug = ?
-ORDER BY items.position ASC;
+-- name: IssueBySlug :one
+SELECT * FROM issues WHERE slug = ? LIMIT 1;
 
--- name: IssueByID :many
-SELECT sqlc.embed(issues), sqlc.embed(items)
-FROM issues
-LEFT JOIN items ON items.issue_id = issues.id
-WHERE issues.id = ?
-ORDER BY items.position ASC;
+-- name: IssueByID :one
+SELECT * FROM issues WHERE id = ? LIMIT 1;
 
 -- name: IssueList :many
 SELECT * FROM issues

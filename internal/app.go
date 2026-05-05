@@ -22,6 +22,7 @@ package godaily
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/db"
@@ -60,7 +61,9 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	conn, err := db.New(ctx, config.TursoURL, config.TursoAuthToken)
 	teardown := func() {
-		conn.Close()
+		if err = conn.Close(); err != nil {
+			slog.ErrorContext(ctx, "closing connection to database", "error", err)
+		}
 	}
 	if err != nil {
 		return nil, teardown, err
