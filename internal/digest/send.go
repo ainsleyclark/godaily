@@ -23,20 +23,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	htmltemplate "html/template"
 	"log/slog"
 	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
-	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
-// Send loads the draft digest for the given date, generates a synth
-// suggestion when items are present, sends the result via email, and
-// updates the stored issue status to reflect the outcome.
-func (a Aggregator) Send(ctx context.Context, date time.Time) error {
+// SendDigest loads the draft digest for the given date, sends it to the
+// configured address, and updates the stored issue status.
+func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
 	if a.issues == nil || a.items == nil {
 		return errors.New("send requires persistence (TURSO_URL not set)")
 	}
@@ -54,37 +51,15 @@ func (a Aggregator) Send(ctx context.Context, date time.Time) error {
 		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
 	}
 
-	sections, err := loadSections(ctx, a.items, issue.ID)
-	if err != nil {
-		return fmt.Errorf("loading items: %w", err)
-	}
-
 	if a.sendToAddress == "" {
 		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping send")
 		return nil
 	}
 
-	htmlBody := issue.HtmlBody
-	textBody := issue.TextBody
-
-	if len(sections) > 0 && a.suggester != nil {
-		s, err := a.suggester.Suggest(ctx, date, sections)
-		switch {
-		case errors.Is(err, synth.ErrNoItems):
-			slog.InfoContext(ctx, "synth skipped: no items to summarise")
-		case err != nil:
-			slog.ErrorContext(ctx, "synth failed", "err", err)
-		default:
-			htmlBody += "\n<hr>\n<h3>Suggested post</h3>\n<pre style=\"white-space: pre-wrap; font-family: inherit;\">" +
-				htmltemplate.HTMLEscapeString(s.Post) + "</pre>\n"
-			textBody += "\nSuggested post\n==============\n" + s.Post + "\n"
-		}
-	}
-
 	rendered := renderedDigest{
 		Subject: issue.Subject,
-		HTML:    htmlBody,
-		Text:    textBody,
+		HTML:    issue.HtmlBody,
+		Text:    issue.TextBody,
 	}
 
 	status := news.IssueStatusSent

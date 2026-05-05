@@ -21,78 +21,33 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/urfave/cli/v3"
 )
 
-func synthCmd(_ *godaily.App) *cli.Command {
+func synthCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "synth",
-		Usage: "Suggest a tweet and LinkedIn post from a scored news JSON file",
+		Usage: "Generate an AI post suggestion from the stored digest and email it to the owner.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:     "input",
-				Usage:    "Path to a scored news JSON file (the output of `godaily run --output`)",
-				Required: true,
-			},
-			&cli.StringFlag{
-				Name:  "output",
-				Usage: "Write suggestion to this path (otherwise prints to stdout)",
-			},
-			&cli.StringFlag{
-				Name:  "format",
-				Value: "md",
-				Usage: "Output format: md or json",
+				Name:  "date",
+				Usage: "Date of the digest to use (YYYY-MM-DD). Defaults to yesterday.",
 			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			raw, err := os.ReadFile(cmd.String("input"))
-			if err != nil {
-				return fmt.Errorf("read input: %w", err)
-			}
-
-			var sections []news.SourceItems
-			if err = json.Unmarshal(raw, &sections); err != nil {
-				return fmt.Errorf("parse input: %w", err)
-			}
-
-			sug, err := synth.New().Suggest(ctx, time.Now().AddDate(0, 0, -1).Truncate(24*time.Hour), sections)
-			if err != nil {
-				return err
-			}
-
-			var rendered []byte
-			switch cmd.String("format") {
-			case "json":
-				rendered, err = sug.JSON()
+			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
 				if err != nil {
-					return err
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
 				}
-			case "md", "":
-				rendered = []byte(sug.Markdown())
-			default:
-				return fmt.Errorf("unknown format %q (want md or json)", cmd.String("format"))
+				date = d
 			}
-
-			out := cmd.String("output")
-			if out == "" {
-				fmt.Println(string(rendered)) //nolint
-				return nil
-			}
-
-			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
-				return err
-			}
-
-			return os.WriteFile(out, rendered, 0o600)
+			return a.Aggregator.SendSuggestion(ctx, date)
 		},
 	}
 }

@@ -48,3 +48,15 @@ jobs:
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
         run: go run main.go send
+
+      - name: Send synth suggestion
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
+        env:
+          APP_ENV: production
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
+          TURSO_URL: ${{ secrets.TURSO_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: go run main.go synth

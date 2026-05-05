@@ -36,7 +36,8 @@ import (
 // Runner is the interface for the daily news aggregation pipeline.
 type Runner interface {
 	Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error)
-	Send(ctx context.Context, date time.Time) error
+	SendDigest(ctx context.Context, date time.Time) error
+	SendSuggestion(ctx context.Context, date time.Time) error
 }
 
 // Aggregator fetches Go news from all registered sources and optionally

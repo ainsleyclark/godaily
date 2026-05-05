@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<h2>GoDaily Suggested Post &mdash; {{ .Date.Format "January 2, 2006" }}</h2>
+	<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Post }}</pre>
+	{{ if .References }}
+	<h3>References</h3>
+	<ul>
+		{{ range .References }}
+		<li><a href="{{ .URL }}">{{ .Title }}</a> ({{ .Source }})</li>
+		{{ end }}
+	</ul>
+	{{ end }}
+</body>
+</html>
