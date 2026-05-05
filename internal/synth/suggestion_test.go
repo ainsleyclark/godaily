@@ -24,6 +24,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/stretchr/testify/assert"
@@ -90,6 +91,36 @@ func makeTextMessage(parts ...string) *anthropic.Message {
 	return msg
 }
 
+func TestTruncatePost(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Short Post Unchanged", func(t *testing.T) {
+		t.Parallel()
+		assert.Equal(t, "hi", truncatePost("hi"))
+	})
+
+	t.Run("Exact Limit Unchanged", func(t *testing.T) {
+		t.Parallel()
+		s := strings.Repeat("a", maxPostChars)
+		assert.Equal(t, s, truncatePost(s))
+	})
+
+	t.Run("Over Limit Clipped", func(t *testing.T) {
+		t.Parallel()
+		s := strings.Repeat("a", maxPostChars+10)
+		got := truncatePost(s)
+		assert.LessOrEqual(t, utf8.RuneCountInString(got), maxPostChars)
+	})
+
+	t.Run("Clips At Word Boundary", func(t *testing.T) {
+		t.Parallel()
+		// Build a string that is >280 runes but has a space before the 280-rune mark.
+		got := truncatePost(strings.Repeat("word ", 60))
+		assert.LessOrEqual(t, utf8.RuneCountInString(got), maxPostChars)
+		assert.False(t, strings.HasSuffix(got, " "))
+	})
+}
+
 func TestStripFences(t *testing.T) {
 	t.Parallel()
 
@@ -148,9 +179,20 @@ func TestParseResponse(t *testing.T) {
 			msg:     makeTextMessage(`{"post":""}`),
 			wantErr: "missing post field",
 		},
-		"Post Too Long": {
-			msg:     makeTextMessage(`{"post":"` + strings.Repeat("a", 281) + `"}`),
-			wantErr: "post is 281 chars",
+		"Post Too Long Truncated": {
+			msg: makeTextMessage(`{"post":"` + strings.Repeat("a", 281) + `"}`),
+			check: func(t *testing.T, s Suggestion) {
+				t.Helper()
+				assert.LessOrEqual(t, utf8.RuneCountInString(s.Post), maxPostChars)
+			},
+		},
+		"Post Too Long Truncated At Word Boundary": {
+			msg: makeTextMessage(`{"post":"` + strings.Repeat("word ", 60) + `"}`),
+			check: func(t *testing.T, s Suggestion) {
+				t.Helper()
+				assert.LessOrEqual(t, utf8.RuneCountInString(s.Post), maxPostChars)
+				assert.False(t, strings.HasSuffix(s.Post, " "), "should not end with trailing space")
+			},
 		},
 		"Valid": {
 			msg: makeTextMessage(validJSON),
