@@ -56,6 +56,7 @@ const (
 	model       = anthropic.ModelClaudeSonnet4_6
 	maxTokens   = int64(1024)
 	temperature = 0.4
+	maxAttempts = 3
 )
 
 // Suggest filters the day's sections to top items, calls the model with
@@ -76,32 +77,39 @@ func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.Sou
 		"max_tokens", maxTokens,
 	)
 
-	resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       model,
-		MaxTokens:   maxTokens,
-		Temperature: anthropic.Float(temperature),
-		System:      buildSystemBlocks(),
-		Messages: []anthropic.MessageParam{
-			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
-		},
-	})
-	if err != nil {
-		return Suggestion{}, fmt.Errorf("anthropic: %w", err)
+	for attempt := range maxAttempts {
+		resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
+			Model:       model,
+			MaxTokens:   maxTokens,
+			Temperature: anthropic.Float(temperature),
+			System:      buildSystemBlocks(),
+			Messages: []anthropic.MessageParam{
+				anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
+			},
+		})
+		if err != nil {
+			return Suggestion{}, fmt.Errorf("anthropic: %w", err)
+		}
+
+		slog.InfoContext(ctx, "synth response",
+			"model", resp.Model,
+			"input_tokens", resp.Usage.InputTokens,
+			"output_tokens", resp.Usage.OutputTokens,
+			"cache_creation_tokens", resp.Usage.CacheCreationInputTokens,
+			"cache_read_tokens", resp.Usage.CacheReadInputTokens,
+		)
+
+		sug, err := parseResponse(resp)
+		if err != nil {
+			if attempt < maxAttempts-1 {
+				slog.WarnContext(ctx, "synth parse failed, retrying", "attempt", attempt+1, "err", err)
+				continue
+			}
+			return Suggestion{}, err
+		}
+
+		sug.Date = day
+		return sug, nil
 	}
-
-	slog.InfoContext(ctx, "synth response",
-		"model", resp.Model,
-		"input_tokens", resp.Usage.InputTokens,
-		"output_tokens", resp.Usage.OutputTokens,
-		"cache_creation_tokens", resp.Usage.CacheCreationInputTokens,
-		"cache_read_tokens", resp.Usage.CacheReadInputTokens,
-	)
-
-	sug, err := parseResponse(resp)
-	if err != nil {
-		return Suggestion{}, err
-	}
-
-	sug.Date = day
-	return sug, nil
+	return Suggestion{}, fmt.Errorf("synth: exhausted %d attempts", maxAttempts)
 }
