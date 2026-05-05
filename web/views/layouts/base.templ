@@ -1,0 +1,31 @@
+package layouts
+
+templ Base() {
+	<!DOCTYPE html>
+	<html lang="en" class="no-js">
+		<head>
+			<!-- Meta -->
+			<meta http-equiv="x-ua-compatible" content="IE=Edge"/>
+			<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
+			<meta name="mobile-web-app-capable" content="yes"/>
+			<title>GoDaily</title>
+			<!-- Favicon -->
+			<!-- Scripts -->
+			<script defer src="/assets/js/app.js"></script>
+			<script defer src="https://unpkg.com/htmx.org@2.0.1"></script>
+			<!-- Styles -->
+			<link rel="stylesheet" href="/assets/css/app.css"/>
+			<!-- Preload -->
+			<!-- Temp -->
+			<meta name="robots" content="noindex"/>
+		</head>
+		<body>
+			<!-- Content -->
+			<main>
+				{ children... }
+			</main>
+			<!-- Google Transition Fix -->
+			<script> </script>
+		</body>
+	</html>
+}

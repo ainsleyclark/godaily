@@ -36,3 +36,7 @@ godaily
 
 # Database
 *.db
+
+# Web
+dist/
+node_modules/

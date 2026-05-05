@@ -11,6 +11,9 @@ import (
 // Start boots the HTTP server on the given port.
 func Start(a *godaily.App, port string) error {
 	kit := webkit.New()
+
 	kit.Get("/", handlers.Home(a))
+	kit.Static("/assets/", "web/dist/") // From where main.go is
+
 	return kit.Start(fmt.Sprintf(":%s", port))
 }

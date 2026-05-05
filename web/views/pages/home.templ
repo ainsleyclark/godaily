@@ -1,5 +1,9 @@
 package pages
 
+import "github.com/ainsleyclark/godaily/web/views/layouts"
+
 templ Home() {
-	<h1>Hello</h1>
+	@layouts.Base() {
+		<h1>Hello</h1>
+	}
 }
