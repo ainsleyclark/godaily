@@ -21,54 +21,30 @@ package cmd
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
-	"os"
 
 	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/urfave/cli/v3"
 )
 
-var migrateCmd = &cli.Command{
-	Name:  "migrate",
-	Usage: "Manage database migrations",
-	Commands: []*cli.Command{
-		{
-			Name:  "up",
-			Usage: "Apply pending database migrations",
-			Action: func(ctx context.Context, cmd *cli.Command) error {
-				return runMigrate(ctx, db.Up)
+func migrateCmd(a *App) *cli.Command {
+	return &cli.Command{
+		Name:  "migrate",
+		Usage: "Manage database migrations",
+		Commands: []*cli.Command{
+			{
+				Name:  "up",
+				Usage: "Apply pending database migrations",
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					return db.Up(ctx, a.DB)
+				},
+			},
+			{
+				Name:  "down",
+				Usage: "Roll back the most recent migration",
+				Action: func(ctx context.Context, cmd *cli.Command) error {
+					return db.Down(ctx, a.DB)
+				},
 			},
 		},
-		{
-			Name:  "down",
-			Usage: "Roll back the most recent migration",
-			Action: func(ctx context.Context, cmd *cli.Command) error {
-				return runMigrate(ctx, db.Down)
-			},
-		},
-	},
-}
-
-// runMigrate opens the configured database and invokes fn. It is shared
-// between the `migrate up` and `migrate down` subcommands.
-func runMigrate(ctx context.Context, fn func(context.Context, *sql.DB) error) error {
-	url := os.Getenv("TURSO_URL")
-	if url == "" {
-		return fmt.Errorf("TURSO_URL is required for the migrate command")
 	}
-
-	conn, err := db.New(ctx, url, os.Getenv("TURSO_AUTH_TOKEN"))
-	if err != nil {
-		return fmt.Errorf("opening database: %w", err)
-	}
-	defer func(conn *sql.DB) {
-		//fmt.Println("closing")
-		//err := conn.Close()
-		//if err != nil {
-		//
-		//}
-	}(conn)
-
-	return fn(ctx, conn)
 }

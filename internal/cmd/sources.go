@@ -27,13 +27,15 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-var sourcesCmd = &cli.Command{
-	Name:  "sources",
-	Usage: "Lists registered source names",
-	Action: func(ctx context.Context, cmd *cli.Command) error {
-		for _, name := range news.Sources {
-			fmt.Println(name) //nolint
-		}
-		return nil
-	},
+func sourcesCmd(a *App) *cli.Command {
+	return &cli.Command{
+		Name:  "sources",
+		Usage: "Lists registered source names",
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			for _, name := range news.Sources {
+				fmt.Println(name) //nolint
+			}
+			return nil
+		},
+	}
 }

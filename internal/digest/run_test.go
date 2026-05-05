@@ -417,27 +417,50 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 }
 
 func TestAggregator_Send(t *testing.T) {
-	baseIssue := news.Issue{
-		Slug:     "2026-04-26",
-		Subject:  "GoDaily - April 26, 2026",
-		HtmlBody: "<p>hello</p>",
-		TextBody: "hello",
-		Status:   news.IssueStatusDraft,
-		SentAt:   time.Now().UTC(),
+	day := func(s string) time.Time {
+		t.Helper()
+		d, err := time.Parse("2006-01-02", s)
+		require.NoError(t, err)
+		return d
+	}
+
+	seedDraft := func(t *testing.T, repo *issues.Store, slug string) news.Issue {
+		t.Helper()
+		stored, err := repo.Create(t.Context(), news.Issue{
+			Slug:     slug,
+			Subject:  "GoDaily - " + slug,
+			HtmlBody: "<p>base</p>",
+			TextBody: "base",
+			Status:   news.IssueStatusDraft,
+			SentAt:   time.Now().UTC(),
+		})
+		require.NoError(t, err)
+		return stored
+	}
+
+	seedItem := func(t *testing.T, repo *items.Store, issueID int64, source news.Source) {
+		t.Helper()
+		_, err := repo.Create(t.Context(), issueID, 1, news.Item{
+			Source:    source,
+			Title:     "item",
+			URL:       "https://example.com/x",
+			Published: time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour).Add(time.Hour),
+		})
+		require.NoError(t, err)
 	}
 
 	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
-		issueRepo, _ := newTestStores(t)
-		stored, err := issueRepo.Create(t.Context(), baseIssue)
-		require.NoError(t, err)
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-26")
+		stored := seedDraft(t, issueRepo, "2026-04-26")
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), stored, nil))
+		require.NoError(t, agg.Send(t.Context(), date))
 
 		assert.True(t, m.called)
-		assert.Contains(t, m.req.Subject, "April 26, 2026")
+		assert.Contains(t, m.req.Subject, "2026-04-26")
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
@@ -445,103 +468,121 @@ func TestAggregator_Send(t *testing.T) {
 	})
 
 	t.Run("Email Error Updates Status To Error", func(t *testing.T) {
-		issueRepo, _ := newTestStores(t)
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
-			Slug:     "2026-04-27",
-			Subject:  "GoDaily - April 27, 2026",
-			HtmlBody: "<p>hello</p>",
-			TextBody: "hello",
-			Status:   news.IssueStatusDraft,
-			SentAt:   time.Now().UTC(),
-		})
-		require.NoError(t, err)
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-27")
+		stored := seedDraft(t, issueRepo, "2026-04-27")
 
 		m := &mockEmail{err: errors.New("send boom")}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), stored, nil))
+		require.NoError(t, agg.Send(t.Context(), date))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
 		assert.Equal(t, news.IssueStatusError, updated.Status)
 	})
 
-	t.Run("No Send Address Skips Email", func(t *testing.T) {
-		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: ""}
+	t.Run("No Send Address Skips Email And Status Update", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-28")
+		stored := seedDraft(t, issueRepo, "2026-04-28")
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{Subject: "GoDaily"}, nil))
+		m := &mockEmail{}
+		agg := Aggregator{email: m, sendToAddress: "", issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.Send(t.Context(), date))
 		assert.False(t, m.called)
+
+		unchanged, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusDraft, unchanged.Status)
 	})
 
-	t.Run("No Repository Skips Status Update", func(t *testing.T) {
-		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com"}
+		err := agg.Send(t.Context(), day("2026-04-29"))
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "persistence")
+	})
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{
-			ID:       1,
-			Subject:  "GoDaily",
-			HtmlBody: "<p>hi</p>",
-			TextBody: "hi",
-		}, nil))
-		assert.True(t, m.called)
+	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+
+		err := agg.Send(t.Context(), day("1999-01-01"))
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "no digest found")
+	})
+
+	t.Run("Returns Error When Status Not Draft", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		stored, err := issueRepo.Create(t.Context(), news.Issue{
+			Slug:     "2026-04-30",
+			Subject:  "GoDaily - 2026-04-30",
+			HtmlBody: "<p>x</p>",
+			TextBody: "x",
+			Status:   news.IssueStatusSent,
+			SentAt:   time.Now().UTC(),
+		})
+		require.NoError(t, err)
+		_ = stored
+
+		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		sendErr := agg.Send(t.Context(), day("2026-04-30"))
+		require.Error(t, sendErr)
+		assert.Contains(t, sendErr.Error(), "expected")
 	})
 
 	t.Run("Synth Called With Sections And Appended To Bodies", func(t *testing.T) {
-		yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-		sections := []news.SourceItems{{
-			Source: news.SourceDevTo,
-			Items:  []news.Item{{Title: "item", Published: yesterday.Add(time.Hour)}},
-		}}
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-01")
+		stored := seedDraft(t, issueRepo, "2026-05-01")
+		seedItem(t, itemRepo, stored.ID, news.SourceDevTo)
+
 		m := &mockEmail{}
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{
-			Subject:  "GoDaily",
-			HtmlBody: "<p>base</p>",
-			TextBody: "base",
-		}, sections))
+		require.NoError(t, agg.Send(t.Context(), date))
 
 		assert.True(t, sg.called)
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Html, "punchy-post")
 		assert.Contains(t, m.req.Text, "punchy-post")
+
 		// Stored body must not be modified.
-		assert.NotContains(t, "<p>base</p>", "Suggested post")
+		reloaded, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.NotContains(t, reloaded.HtmlBody, "Suggested post")
 	})
 
 	t.Run("Synth Error Logged And Email Sent Without Suggestion", func(t *testing.T) {
-		yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-		sections := []news.SourceItems{{
-			Source: news.SourceDevTo,
-			Items:  []news.Item{{Title: "item", Published: yesterday.Add(time.Hour)}},
-		}}
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-02")
+		stored := seedDraft(t, issueRepo, "2026-05-02")
+		seedItem(t, itemRepo, stored.ID, news.SourceDevTo)
+
 		m := &mockEmail{}
 		sg := &mockSuggester{err: errors.New("api boom")}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{
-			Subject:  "GoDaily",
-			HtmlBody: "<p>base</p>",
-			TextBody: "base",
-		}, sections))
+		require.NoError(t, agg.Send(t.Context(), date))
 
 		assert.True(t, sg.called)
 		assert.True(t, m.called, "email still sent when synth fails")
 		assert.NotContains(t, m.req.Html, "Suggested post")
 	})
 
-	t.Run("Nil Sections Skips Synth", func(t *testing.T) {
+	t.Run("No Items Skips Synth", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-03")
+		seedDraft(t, issueRepo, "2026-05-03")
+
 		m := &mockEmail{}
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg}
+		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.Send(t.Context(), news.Issue{
-			Subject:  "GoDaily",
-			HtmlBody: "<p>base</p>",
-			TextBody: "base",
-		}, nil))
+		require.NoError(t, agg.Send(t.Context(), date))
 
 		assert.False(t, sg.called)
 		assert.True(t, m.called)

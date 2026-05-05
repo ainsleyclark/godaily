@@ -24,6 +24,7 @@ import (
 	"database/sql"
 
 	"github.com/ainsleyclark/godaily/internal/db"
+	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/ainsleyclark/godaily/internal/env"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store/issues"
@@ -36,6 +37,7 @@ type App struct {
 	Config     *env.Config
 	DB         *sql.DB
 	Repository *Repository
+	Aggregator *digest.Aggregator
 }
 
 // Repository defines the datastore for the application.,
@@ -56,13 +58,19 @@ func Bootstrap(ctx context.Context) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+	repo := &Repository{
+		Issues:      issues.New(conn),
+		Items:       items.New(conn),
+		Subscribers: subscribers.New(conn),
+	}
+	aggregator, err := digest.New(repo.Issues, repo.Items)
+	if err != nil {
+		return nil, err
+	}
 	return &App{
-		Config: &config,
-		DB:     conn,
-		Repository: &Repository{
-			Issues:      issues.New(conn),
-			Items:       items.New(conn),
-			Subscribers: subscribers.New(conn),
-		},
+		Config:     &config,
+		DB:         conn,
+		Repository: repo,
+		Aggregator: aggregator,
 	}, nil
 }

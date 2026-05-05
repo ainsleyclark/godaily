@@ -40,13 +40,13 @@ func Run() {
 		Name:  "godaily",
 		Usage: "Daily Go news, straight to your inbox",
 		Commands: []*cli.Command{
-			collectCmd,
+			collectCm(app),
 			sendCmd(app),
-			runCmd,
-			sourcesCmd,
-			synthCmd,
-			migrateCmd,
-			fetchCmd,
+			runCmd(app),
+			sourcesCmd(app),
+			synthCmd(app),
+			migrateCmd(app),
+			fetchCmd(app),
 		},
 	}
 

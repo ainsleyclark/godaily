@@ -22,22 +22,43 @@ package digest
 import (
 	"context"
 	"errors"
+	"fmt"
 	htmltemplate "html/template"
 	"log/slog"
+	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
-// Send generates a synth suggestion from sections (when available), appends it
-// to the rendered bodies stored in issue, and ships the result via email. When
-// a repository is configured and issue.ID > 0, the stored issue status is
-// updated to reflect the outcome.
-//
-// sections may be nil; if so, or if no suggester is configured, the suggestion
-// step is skipped and the stored HTML/text is sent as-is.
-func (a Aggregator) Send(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
+// Send loads the draft digest for the given date, generates a synth
+// suggestion when items are present, sends the result via email, and
+// updates the stored issue status to reflect the outcome.
+func (a Aggregator) Send(ctx context.Context, date time.Time) error {
+	if a.issues == nil || a.items == nil {
+		return errors.New("send requires persistence (TURSO_URL not set)")
+	}
+
+	slug := date.Format("2006-01-02")
+
+	issue, err := a.issues.FindBySlug(ctx, slug)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
+		}
+		return fmt.Errorf("loading digest: %w", err)
+	}
+	if issue.Status != news.IssueStatusDraft {
+		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
+	}
+
+	sections, err := loadSections(ctx, a.items, issue.ID)
+	if err != nil {
+		return fmt.Errorf("loading items: %w", err)
+	}
+
 	if a.sendToAddress == "" {
 		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping send")
 		return nil
@@ -47,8 +68,7 @@ func (a Aggregator) Send(ctx context.Context, issue news.Issue, sections []news.
 	textBody := issue.TextBody
 
 	if len(sections) > 0 && a.suggester != nil {
-		day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-		s, err := a.suggester.Suggest(ctx, day, sections)
+		s, err := a.suggester.Suggest(ctx, date, sections)
 		switch {
 		case errors.Is(err, synth.ErrNoItems):
 			slog.InfoContext(ctx, "synth skipped: no items to summarise")
@@ -73,11 +93,40 @@ func (a Aggregator) Send(ctx context.Context, issue news.Issue, sections []news.
 		status = news.IssueStatusError
 	}
 
-	if a.issues != nil && issue.ID > 0 {
-		if _, err := a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
-			slog.ErrorContext(ctx, "failed to update issue status", "err", err)
-		}
+	if _, err := a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
+		slog.ErrorContext(ctx, "failed to update issue status", "err", err)
 	}
 
 	return nil
+}
+
+// loadSections fetches stored items for an issue and groups them into
+// SourceItems slices sorted by source priority, matching the shape
+// produced by Collect.
+func loadSections(ctx context.Context, repo news.ItemRepository, issueID int64) ([]news.SourceItems, error) {
+	items, err := repo.ListByIssue(ctx, issueID)
+	if err != nil {
+		return nil, err
+	}
+
+	order := make([]news.Source, 0)
+	bySource := make(map[news.Source]*news.SourceItems)
+	for _, item := range items {
+		if _, ok := bySource[item.Source]; !ok {
+			bySource[item.Source] = &news.SourceItems{Source: item.Source}
+			order = append(order, item.Source)
+		}
+		bySource[item.Source].Items = append(bySource[item.Source].Items, item)
+	}
+
+	sections := make([]news.SourceItems, 0, len(bySource))
+	for _, src := range order {
+		sections = append(sections, *bySource[src])
+	}
+
+	sort.SliceStable(sections, func(i, j int) bool {
+		return sections[i].Source.Priority() > sections[j].Source.Priority()
+	})
+
+	return sections, nil
 }

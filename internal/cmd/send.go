@@ -21,14 +21,9 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"sort"
 	"time"
 
-	"github.com/ainsleyclark/godaily/internal/digest"
-	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/urfave/cli/v3"
 )
 
@@ -51,65 +46,7 @@ func sendCmd(a *App) *cli.Command {
 				}
 				date = d
 			}
-			slug := date.Format("2006-01-02")
-
-			issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
-			if err != nil {
-				if errors.Is(err, store.ErrNotFound) {
-					return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
-				}
-				return fmt.Errorf("loading digest: %w", err)
-			}
-			if issue.Status != news.IssueStatusDraft {
-				return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
-			}
-
-			// Load stored items and reconstruct sections so the synth suggestion
-			// can be generated at send time without being persisted in the DB.
-			sections, err := sectionsFromDB(ctx, itemStore, issue.ID)
-			if err != nil {
-				return fmt.Errorf("loading items: %w", err)
-			}
-
-			runner, err := digest.New(a.Repository.Issues, a.Repository.Items)
-			if err != nil {
-				return err
-			}
-
-			return runner.Send(ctx, issue, sections)
+			return a.Aggregator.Send(ctx, date)
 		},
 	}
-
-}
-
-// sectionsFromDB loads stored items for an issue and groups them into
-// SourceItems slices sorted by source priority, matching the shape
-// produced by Collect.
-func sectionsFromDB(ctx context.Context, repo news.ItemRepository, issueID int64) ([]news.SourceItems, error) {
-	items, err := repo.ListByIssue(ctx, issueID)
-	if err != nil {
-		return nil, err
-	}
-
-	// Preserve position order (score-desc) within each source group.
-	order := make([]news.Source, 0)
-	bySource := make(map[news.Source]*news.SourceItems)
-	for _, item := range items {
-		if _, ok := bySource[item.Source]; !ok {
-			bySource[item.Source] = &news.SourceItems{Source: item.Source}
-			order = append(order, item.Source)
-		}
-		bySource[item.Source].Items = append(bySource[item.Source].Items, item)
-	}
-
-	sections := make([]news.SourceItems, 0, len(bySource))
-	for _, src := range order {
-		sections = append(sections, *bySource[src])
-	}
-
-	sort.SliceStable(sections, func(i, j int) bool {
-		return sections[i].Source.Priority() > sections[j].Source.Priority()
-	})
-
-	return sections, nil
 }
