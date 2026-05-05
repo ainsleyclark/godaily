@@ -87,9 +87,11 @@ func synthCmd(_ *godaily.App) *cli.Command {
 				fmt.Println(string(rendered)) //nolint
 				return nil
 			}
-			if err := os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
+
+			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
 				return err
 			}
+
 			return os.WriteFile(out, rendered, 0o600)
 		},
 	}

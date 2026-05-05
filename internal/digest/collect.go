@@ -42,10 +42,7 @@ type CollectOptions struct {
 // Collect fetches Go news items published yesterday from all registered
 // sources, scores and sorts them, renders the digest and (unless DryRun)
 // persists it as a draft issue in the database.
-//
-// Returns the persisted Issue (ID=0 when DryRun or no repository is set) and
-// the raw SourceItems so callers can inspect or serialise them.
-func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (news.Issue, []news.SourceItems, error) {
+func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error) {
 	day := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour) // Yesterday
 	next := day.AddDate(0, 0, 1)
 
@@ -86,13 +83,13 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (news.Issu
 	})
 
 	if opts.DryRun || len(results) == 0 {
-		return news.Issue{}, results, nil
+		return results, nil
 	}
 
 	rendered, err := renderDigest(day, results)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to render digest", "err", err)
-		return news.Issue{}, results, nil
+		return results, nil
 	}
 
 	issue := news.Issue{
@@ -105,13 +102,10 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (news.Issu
 	}
 
 	if a.issues != nil {
-		persisted, err := a.persistIssue(ctx, issue, results)
-		if err != nil {
+		if _, err := a.persistIssue(ctx, issue, results); err != nil {
 			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
-			return issue, results, nil
 		}
-		issue = persisted
 	}
 
-	return issue, results, nil
+	return results, nil
 }

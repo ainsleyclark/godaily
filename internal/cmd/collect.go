@@ -21,7 +21,6 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"os"
 	"path/filepath"
 
@@ -54,7 +53,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			_, raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
 				DryRun:  cmd.Bool("dry-run"),
 				Sources: sources,
 			})
@@ -67,10 +66,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				return nil
 			}
 
-			indent, err := json.MarshalIndent(raw, "", "\t")
-			if err != nil {
-				return err
-			}
+			indent := prettyJSON(raw)
 
 			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
 				return err

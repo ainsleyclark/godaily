@@ -136,7 +136,7 @@ func TestAggregator_Collect(t *testing.T) {
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
 		opts     CollectOptions
-		want     func(t *testing.T, issue news.Issue, items []news.SourceItems, err error)
+		want     func(t *testing.T, items []news.SourceItems, err error)
 	}{
 		"DryRun Returns Items Without Persisting": {
 			registry: map[news.Source]news.Fetcher{
@@ -145,35 +145,31 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, issue news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
 				assert.Equal(t, news.SourceDevTo, items[0].Source)
 				assert.Len(t, items[0].Items, 1)
-				assert.Zero(t, issue.ID)
 			},
 		},
-		"Returns Rendered Issue When Not DryRun": {
+		"Returns Items When Not DryRun": {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{
 					items: []news.Item{{Title: "in", Published: inWindow}},
 				},
 			},
 			opts: CollectOptions{Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, issue news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
-				assert.Contains(t, issue.Subject, "GoDaily")
-				assert.NotEmpty(t, issue.HtmlBody)
-				assert.NotEmpty(t, issue.TextBody)
 			},
 		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
 			opts:     CollectOptions{DryRun: true},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -186,7 +182,7 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -202,7 +198,7 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
@@ -219,7 +215,7 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -245,7 +241,7 @@ func TestAggregator_Collect(t *testing.T) {
 				DryRun:  true,
 				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
 			},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 3)
@@ -265,7 +261,7 @@ func TestAggregator_Collect(t *testing.T) {
 				DryRun:  true,
 				Sources: []news.Source{news.SourceDevTo, news.SourceLobsters},
 			},
-			want: func(t *testing.T, _ news.Issue, items []news.SourceItems, err error) {
+			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -279,8 +275,8 @@ func TestAggregator_Collect(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 
 			agg := Aggregator{}
-			issue, got, err := agg.Collect(t.Context(), test.opts)
-			test.want(t, issue, got, err)
+			got, err := agg.Collect(t.Context(), test.opts)
+			test.want(t, got, err)
 		})
 	}
 }
@@ -301,11 +297,9 @@ func TestAggregator_Collect_NoSynth(t *testing.T) {
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
 		agg := Aggregator{suggester: sg}
 
-		issue, _, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 		assert.False(t, sg.called, "synth must not be called during Collect")
-		assert.NotContains(t, issue.HtmlBody, "Suggested post")
-		assert.NotContains(t, issue.TextBody, "Suggested post")
 	})
 }
 
@@ -347,10 +341,8 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 			items:  itemRepo,
 		}
 
-		issue, _, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusDraft, issue.Status)
-		assert.NotZero(t, issue.ID)
 
 		stored, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
@@ -358,7 +350,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.NotEmpty(t, stored.HtmlBody)
 		assert.NotEmpty(t, stored.TextBody)
 
-		got, err := itemRepo.ListByIssue(t.Context(), issue.ID)
+		got, err := itemRepo.ListByIssue(t.Context(), stored.ID)
 		require.NoError(t, err)
 		require.Len(t, got, 2)
 		// Items are persisted in score-descending order, so "second" (0.9) comes first.
@@ -384,15 +376,19 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 
 		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
 
-		first, _, err := agg.Collect(t.Context(), opts)
+		_, err := agg.Collect(t.Context(), opts)
+		require.NoError(t, err)
+
+		first, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
 		require.NotZero(t, first.ID)
 
-		// Second collect for the same day must return the existing issue
-		// rather than creating a duplicate.
-		second, _, err := agg.Collect(t.Context(), opts)
+		_, err = agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
-		assert.Equal(t, first.ID, second.ID, "second collect must return the existing issue, not a duplicate")
+
+		second, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.Equal(t, first.ID, second.ID, "second collect must not create a duplicate issue")
 	})
 
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
@@ -404,7 +400,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 			items:  itemRepo,
 		}
 
-		_, _, err := agg.Collect(t.Context(), CollectOptions{
+		_, err := agg.Collect(t.Context(), CollectOptions{
 			Sources: []news.Source{news.SourceDevTo},
 			DryRun:  true,
 		})

@@ -20,36 +20,32 @@
 package cmd
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/urfave/cli/v3"
 )
 
-func fetchCmd(_ *godaily.App) *cli.Command {
-	return &cli.Command{
-		Name: "fetch",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:  "provider",
-				Usage: "Provider of source information",
-			},
-		},
-		Action: func(ctx context.Context, cmd *cli.Command) error {
-			fetcher, err := news.Get(news.Source(cmd.String("provider")))
-			if err != nil {
-				return err
-			}
+func prettyJSON(v any) []byte {
+	b, err := json.MarshalIndent(v, "", "\t")
+	exit(err)
+	return b
+}
 
-			items, err := fetcher.Fetch(ctx)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(string(prettyJSON(items))) //nolint
-			return nil
-		},
+// parseSources validates a slice of raw source name strings against the
+// registered sources list and returns the typed slice.
+func parseSources(raw []string) ([]news.Source, error) {
+	known := make(map[news.Source]struct{}, len(news.Sources))
+	for _, s := range news.Sources {
+		known[s] = struct{}{}
 	}
+	sources := make([]news.Source, 0, len(raw))
+	for _, name := range raw {
+		s := news.Source(name)
+		if _, ok := known[s]; !ok {
+			return nil, fmt.Errorf("unknown source %q (run `godaily sources` for the list)", name)
+		}
+		sources = append(sources, s)
+	}
+	return sources, nil
 }

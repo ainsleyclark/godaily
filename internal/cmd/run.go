@@ -21,16 +21,12 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"log/slog"
 	"os"
 	"path/filepath"
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/digest"
-	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
@@ -61,7 +57,7 @@ func runCmd(a *godaily.App) *cli.Command {
 			dryRun := cmd.Bool("dry-run")
 			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
-			_, raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
 				DryRun:  dryRun,
 				Sources: sources,
 			})
@@ -71,7 +67,7 @@ func runCmd(a *godaily.App) *cli.Command {
 
 			if !dryRun && len(raw) > 0 {
 				if err = a.Aggregator.Send(ctx, date); err != nil {
-					slog.ErrorContext(ctx, "failed to send digest", "err", err)
+					return err
 				}
 			}
 
@@ -80,10 +76,7 @@ func runCmd(a *godaily.App) *cli.Command {
 				return nil
 			}
 
-			indent, err := json.MarshalIndent(raw, "", "\t")
-			if err != nil {
-				return err
-			}
+			indent := prettyJSON(raw)
 
 			if err = os.MkdirAll(filepath.Dir(out), 0o750); err != nil {
 				return err
@@ -92,22 +85,4 @@ func runCmd(a *godaily.App) *cli.Command {
 			return os.WriteFile(out, indent, 0o600)
 		},
 	}
-}
-
-// parseSources validates a slice of raw source name strings against the
-// registered sources list and returns the typed slice.
-func parseSources(raw []string) ([]news.Source, error) {
-	known := make(map[news.Source]struct{}, len(news.Sources))
-	for _, s := range news.Sources {
-		known[s] = struct{}{}
-	}
-	sources := make([]news.Source, 0, len(raw))
-	for _, name := range raw {
-		s := news.Source(name)
-		if _, ok := known[s]; !ok {
-			return nil, fmt.Errorf("unknown source %q (run `godaily sources` for the list)", name)
-		}
-		sources = append(sources, s)
-	}
-	return sources, nil
 }
