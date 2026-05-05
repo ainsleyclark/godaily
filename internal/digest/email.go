@@ -30,7 +30,6 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
 //go:embed email.html
@@ -46,9 +45,8 @@ var (
 
 type (
 	digestData struct {
-		Date       time.Time
-		Sections   []news.SourceItems
-		Suggestion *synth.Suggestion
+		Date     time.Time
+		Sections []news.SourceItems
 	}
 	// renderedDigest carries the rendered email payload so the caller can
 	// both ship it via email and persist it to the issues table without
@@ -60,8 +58,8 @@ type (
 	}
 )
 
-func renderDigest(day time.Time, sources []news.SourceItems, suggestion *synth.Suggestion) (renderedDigest, error) {
-	data := digestData{Date: day, Sections: sources, Suggestion: suggestion}
+func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, error) {
+	data := digestData{Date: day, Sections: sources}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {

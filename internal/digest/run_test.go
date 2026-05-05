@@ -256,7 +256,7 @@ func TestAggregator_Collect(t *testing.T) {
 		},
 		"Continues On Fetch Error": {
 			registry: map[news.Source]news.Fetcher{
-				news.SourceDevTo:   mockFetcher{err: errors.New("boom")},
+				news.SourceDevTo: mockFetcher{err: errors.New("boom")},
 				news.SourceLobsters: mockFetcher{
 					items: []news.Item{{Title: "ok", Published: inWindow}},
 				},
@@ -371,6 +371,28 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.Equal(t, "ada", got[1].Author.Username)
 		assert.Equal(t, "https://example.com/ada.png", got[1].Author.AvatarURL)
 		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
+	})
+
+	t.Run("Second Collect Same Day Is Skipped", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{
+			issues: issueRepo,
+			items:  itemRepo,
+		}
+
+		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
+
+		first, _, err := agg.Collect(t.Context(), opts)
+		require.NoError(t, err)
+		require.NotZero(t, first.ID)
+
+		// Second collect for the same day must return the existing issue
+		// rather than creating a duplicate.
+		second, _, err := agg.Collect(t.Context(), opts)
+		require.NoError(t, err)
+		assert.Equal(t, first.ID, second.ID, "second collect must return the existing issue, not a duplicate")
 	})
 
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {

@@ -29,6 +29,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
@@ -112,6 +113,15 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 }
 
 func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) (news.Issue, error) {
+	existing, err := a.issues.FindBySlug(ctx, issue.Slug)
+	switch {
+	case err == nil:
+		slog.WarnContext(ctx, "issue already exists for this day, skipping persistence", "slug", issue.Slug)
+		return existing, nil
+	case !errors.Is(err, store.ErrNotFound):
+		return news.Issue{}, fmt.Errorf("checking existing issue: %w", err)
+	}
+
 	created, err := a.issues.Create(ctx, issue)
 	if err != nil {
 		return news.Issue{}, fmt.Errorf("creating issue: %w", err)

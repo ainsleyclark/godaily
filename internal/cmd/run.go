@@ -28,8 +28,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/ainsleyclark/godaily/internal/db"
+	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store/issues"
 	"github.com/ainsleyclark/godaily/internal/store/items"

@@ -56,7 +56,7 @@ func (a Aggregator) Send(ctx context.Context, issue news.Issue, sections []news.
 			slog.ErrorContext(ctx, "synth failed", "err", err)
 		default:
 			htmlBody += "\n<hr>\n<h3>Suggested post</h3>\n<pre style=\"white-space: pre-wrap; font-family: inherit;\">" +
-				string(htmltemplate.HTMLEscapeString(s.Post)) + "</pre>\n"
+				htmltemplate.HTMLEscapeString(s.Post) + "</pre>\n"
 			textBody += "\nSuggested post\n==============\n" + s.Post + "\n"
 		}
 	}

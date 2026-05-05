@@ -5,7 +5,7 @@ go 1.26.2
 require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/ainsleydev/webkit v0.13.2
-	github.com/anthropics/anthropic-sdk-go v1.38.0
+	github.com/anthropics/anthropic-sdk-go v1.39.0
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.27.1

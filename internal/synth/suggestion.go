@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -130,7 +131,7 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 		return Suggestion{}, errors.New("missing post field")
 	}
 	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
-		return Suggestion{}, fmt.Errorf("post is %d chars, max %d", n, maxPostChars)
+		slog.Warn("post exceeded char limit", "chars", n, "max", maxPostChars)
 	}
 
 	return Suggestion{

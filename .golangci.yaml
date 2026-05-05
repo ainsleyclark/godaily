@@ -1,7 +1,7 @@
 # From: https://github.com/ainsleydev/webkit/blob/main/internal/templates/.golangci.yaml
 version: "2"
 run:
-  go: "1.25"
+  go: "1.26"
 linters:
   enable:
     - forbidigo

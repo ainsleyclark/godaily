@@ -24,6 +24,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/stretchr/testify/assert"
@@ -148,9 +149,12 @@ func TestParseResponse(t *testing.T) {
 			msg:     makeTextMessage(`{"post":""}`),
 			wantErr: "missing post field",
 		},
-		"Post Too Long": {
-			msg:     makeTextMessage(`{"post":"` + strings.Repeat("a", 281) + `"}`),
-			wantErr: "post is 281 chars",
+		"Post Too Long Warns But Returns Post": {
+			msg: makeTextMessage(`{"post":"` + strings.Repeat("a", 281) + `"}`),
+			check: func(t *testing.T, s Suggestion) {
+				t.Helper()
+				assert.Equal(t, 281, utf8.RuneCountInString(s.Post), "post must be returned unmodified")
+			},
 		},
 		"Valid": {
 			msg: makeTextMessage(validJSON),

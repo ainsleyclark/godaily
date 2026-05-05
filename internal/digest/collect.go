@@ -89,7 +89,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (news.Issu
 		return news.Issue{}, results, nil
 	}
 
-	rendered, err := renderDigest(day, results, nil)
+	rendered, err := renderDigest(day, results)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to render digest", "err", err)
 		return news.Issue{}, results, nil
