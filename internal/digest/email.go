@@ -25,6 +25,7 @@ import (
 	_ "embed"
 	"fmt"
 	htmltemplate "html/template"
+	"strings"
 	texttemplate "text/template"
 	"time"
 
@@ -44,9 +45,21 @@ var (
 )
 
 type (
+	emailItem struct {
+		URL     string
+		Title   string
+		Snippet string
+		Meta    string
+		Rank    int
+	}
+	emailSection struct {
+		Emoji string
+		Title string
+		Items []emailItem
+	}
 	digestData struct {
 		Date     time.Time
-		Sections []news.SourceItems
+		Sections []emailSection
 	}
 	// renderedDigest carries the rendered email payload so the caller can
 	// both ship it via email and persist it to the issues table without
@@ -59,7 +72,36 @@ type (
 )
 
 func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, error) {
-	data := digestData{Date: day, Sections: sources}
+	sections := make([]emailSection, 0, len(sources))
+	for _, si := range sources {
+		sec := emailSection{
+			Emoji: si.Source.Emoji(),
+			Title: si.Source.NiceName(),
+		}
+		for i, item := range si.Items {
+			rank := 0
+			if si.Source.IsRanked() {
+				rank = i + 1
+			}
+			parts := []string{item.Source.NiceName()}
+			if item.Score > 0 {
+				parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
+			}
+			if item.Comments > 0 {
+				parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
+			}
+			sec.Items = append(sec.Items, emailItem{
+				URL:     item.URL,
+				Title:   item.Title,
+				Snippet: item.Snippet,
+				Meta:    strings.Join(parts, " · "),
+				Rank:    rank,
+			})
+		}
+		sections = append(sections, sec)
+	}
+
+	data := digestData{Date: day, Sections: sections}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {

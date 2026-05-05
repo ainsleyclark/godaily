@@ -21,6 +21,7 @@ package issues
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"testing"
 	"time"
@@ -62,10 +63,11 @@ func TestCachingStore_Find(t *testing.T) {
 	}{
 		"Cache hit": {
 			mock: func(repo *mocknews.MockIssueRepository, c *cachefakes.MockStore) {
+				encoded, _ := json.Marshal(testIssue)
 				c.EXPECT().
 					Get(gomock.Any(), "issue:id:1", gomock.Any()).
 					DoAndReturn(func(_ context.Context, _ string, out any) error {
-						*(out.(*news.Issue)) = testIssue
+						*(out.(*[]byte)) = encoded
 						return nil
 					})
 			},
@@ -73,6 +75,7 @@ func TestCachingStore_Find(t *testing.T) {
 		},
 		"Cache miss - repo ok": {
 			mock: func(repo *mocknews.MockIssueRepository, c *cachefakes.MockStore) {
+				encoded, _ := json.Marshal(testIssue)
 				c.EXPECT().
 					Get(gomock.Any(), "issue:id:1", gomock.Any()).
 					Return(cache.ErrNotFound)
@@ -80,7 +83,7 @@ func TestCachingStore_Find(t *testing.T) {
 					Find(gomock.Any(), testID).
 					Return(testIssue, nil)
 				c.EXPECT().
-					Set(gomock.Any(), "issue:id:1", testIssue, cache.Options{Expiration: cache.Forever})
+					Set(gomock.Any(), "issue:id:1", encoded, cache.Options{Expiration: cache.Forever})
 			},
 			wantIssue: testIssue,
 		},
@@ -123,10 +126,11 @@ func TestCachingStore_FindBySlug(t *testing.T) {
 	}{
 		"Cache hit": {
 			mock: func(repo *mocknews.MockIssueRepository, c *cachefakes.MockStore) {
+				encoded, _ := json.Marshal(testIssue)
 				c.EXPECT().
 					Get(gomock.Any(), "issue:slug:"+testSlug, gomock.Any()).
 					DoAndReturn(func(_ context.Context, _ string, out any) error {
-						*(out.(*news.Issue)) = testIssue
+						*(out.(*[]byte)) = encoded
 						return nil
 					})
 			},
@@ -134,6 +138,7 @@ func TestCachingStore_FindBySlug(t *testing.T) {
 		},
 		"Cache miss - repo ok": {
 			mock: func(repo *mocknews.MockIssueRepository, c *cachefakes.MockStore) {
+				encoded, _ := json.Marshal(testIssue)
 				c.EXPECT().
 					Get(gomock.Any(), "issue:slug:"+testSlug, gomock.Any()).
 					Return(cache.ErrNotFound)
@@ -141,7 +146,7 @@ func TestCachingStore_FindBySlug(t *testing.T) {
 					FindBySlug(gomock.Any(), testSlug).
 					Return(testIssue, nil)
 				c.EXPECT().
-					Set(gomock.Any(), "issue:slug:"+testSlug, testIssue, cache.Options{Expiration: cache.Forever})
+					Set(gomock.Any(), "issue:slug:"+testSlug, encoded, cache.Options{Expiration: cache.Forever})
 			},
 			wantIssue: testIssue,
 		},

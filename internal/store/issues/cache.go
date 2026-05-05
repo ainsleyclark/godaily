@@ -21,6 +21,7 @@ package issues
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -42,31 +43,15 @@ func NewCaching(repo news.IssueRepository, c cache.Store) *CachingStore {
 }
 
 func (s *CachingStore) Find(ctx context.Context, id int64) (news.Issue, error) {
-	key := fmt.Sprintf("issue:id:%d", id)
-	var issue news.Issue
-	if err := s.cache.Get(ctx, key, &issue); err == nil {
-		return issue, nil
-	}
-	issue, err := s.repo.Find(ctx, id)
-	if err != nil {
-		return news.Issue{}, err
-	}
-	s.cache.Set(ctx, key, issue, cache.Options{Expiration: cache.Forever})
-	return issue, nil
+	return s.cachedLookup(ctx, fmt.Sprintf("issue:id:%d", id), func() (news.Issue, error) {
+		return s.repo.Find(ctx, id)
+	})
 }
 
 func (s *CachingStore) FindBySlug(ctx context.Context, slug string) (news.Issue, error) {
-	key := fmt.Sprintf("issue:slug:%s", slug)
-	var issue news.Issue
-	if err := s.cache.Get(ctx, key, &issue); err == nil {
-		return issue, nil
-	}
-	issue, err := s.repo.FindBySlug(ctx, slug)
-	if err != nil {
-		return news.Issue{}, err
-	}
-	s.cache.Set(ctx, key, issue, cache.Options{Expiration: cache.Forever})
-	return issue, nil
+	return s.cachedLookup(ctx, fmt.Sprintf("issue:slug:%s", slug), func() (news.Issue, error) {
+		return s.repo.FindBySlug(ctx, slug)
+	})
 }
 
 func (s *CachingStore) List(ctx context.Context) ([]news.Issue, error) {
@@ -90,4 +75,23 @@ func (s *CachingStore) UpdateStatus(ctx context.Context, id int64, status news.I
 
 func (s *CachingStore) Count(ctx context.Context) (int64, error) {
 	return s.repo.Count(ctx)
+}
+
+// cachedLookup gets an issue from cache (JSON bytes) or falls through to fetch.
+func (s *CachingStore) cachedLookup(ctx context.Context, key string, fetch func() (news.Issue, error)) (news.Issue, error) {
+	var raw []byte
+	if err := s.cache.Get(ctx, key, &raw); err == nil {
+		var issue news.Issue
+		if err = json.Unmarshal(raw, &issue); err == nil {
+			return issue, nil
+		}
+	}
+	issue, err := fetch()
+	if err != nil {
+		return news.Issue{}, err
+	}
+	if data, err := json.Marshal(issue); err == nil {
+		s.cache.Set(ctx, key, data, cache.Options{Expiration: cache.Forever})
+	}
+	return issue, nil
 }

@@ -456,7 +456,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, agg.SendDigest(t.Context(), date))
 
 		assert.True(t, m.called)
-		assert.Contains(t, m.req.Subject, "2026-04-26")
+		assert.Contains(t, m.req.Subject, "April 26, 2026")
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
