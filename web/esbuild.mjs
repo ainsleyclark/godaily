@@ -21,30 +21,6 @@ const excludeImages = process.argv.includes('--exclude-images');
 /**
  * ESBuild options for building the project.
  *
- * @type {import('esbuild').Plugin}
- */
-const notifyReloadPlugin = {
-	name: 'notify-reload',
-	setup(build) {
-		build.onEnd(async (result) => {
-			if (result.errors.length === 0) {
-				console.log('✨ Rebuild successful!');
-				try {
-					await fetch('http://localhost:3000/internal/reload', { method: 'POST' });
-					console.log('🔄 Reload request sent to http://localhost:3000/internal/reload');
-				} catch (error) {
-					console.error('❌ Failed to send reload request:', error);
-				}
-			} else {
-				console.error('❌ Build completed with errors:', result.errors);
-			}
-		});
-	},
-};
-
-/**
- * ESBuild options for building the project.
- *
  * @type {import('esbuild').CommonOptions}
  */
 const options = {
@@ -111,7 +87,6 @@ const options = {
 			],
 		}),
 		svgoPlugin(),
-		// notifyReloadPlugin,
 	],
 	minify: isProd,
 	allowOverwrite: true,
@@ -127,14 +102,12 @@ const options = {
 	} else {
 		try {
 			const ctx = await esbuild.context(options);
-
-			ctx.watch();
-
+			await ctx.watch();
 			await ctx.serve({
 				port: 3002,
 				host: 'localhost',
 			});
-			console.log('👀 Watching for changes...');
+			console.log('👀 Watching for changes (live-reload SSE on :3002/esbuild)...');
 		} catch (err) {
 			console.error('Watch failed:', err);
 		}

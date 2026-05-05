@@ -40,3 +40,11 @@ godaily
 # Web
 dist/
 node_modules/
+
+# Templ generated files
+*_templ.go
+
+# Live-reload artefacts
+tmp/
+build-errors.log
+web/dist/_templ_reload/

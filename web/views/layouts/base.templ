@@ -1,5 +1,7 @@
 package layouts
 
+import "github.com/ainsleydev/webkit/pkg/env"
+
 templ Base() {
 	<!DOCTYPE html>
 	<html lang="en" class="no-js">
@@ -26,6 +28,12 @@ templ Base() {
 			</main>
 			<!-- Google Transition Fix -->
 			<script> </script>
+			if env.IsDevelopment() {
+				<script>
+					new EventSource("/internal/reload/").onmessage = () => location.reload();
+					new EventSource("http://localhost:3002/esbuild").addEventListener("change", () => location.reload());
+				</script>
+			}
 		</body>
 	</html>
 }
