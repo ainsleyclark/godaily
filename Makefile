@@ -11,6 +11,10 @@ run: # Sends the godaily email
 	go run main.go run
 .PHONY: run
 
+serve: # Start the HTTP web server
+	go run main.go serve
+.PHONY: serve
+
 run-dry: # Run godaily and write the aggregated digest to examples/rendered/news.json
 	go run main.go run --dry-run --output examples/news.json
 .PHONY: run

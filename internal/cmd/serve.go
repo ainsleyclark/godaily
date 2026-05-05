@@ -21,45 +21,25 @@ package cmd
 
 import (
 	"context"
-	"log"
-	"os"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
+	"github.com/ainsleyclark/godaily/web/server"
 	"github.com/urfave/cli/v3"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		exit(err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
+func serveCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "serve",
+		Usage: "Start the HTTP web server.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "port",
+				Usage: "Port to listen on",
+				Value: "3000",
+			},
 		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(err)
-	}
-}
-
-func exit(err error) {
-	if err != nil {
-		log.Fatal(err)
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			return server.Start(a, cmd.String("port"))
+		},
 	}
 }
