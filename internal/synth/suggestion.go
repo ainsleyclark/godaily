@@ -100,20 +100,6 @@ func stripFences(s string) string {
 	return strings.TrimSpace(s)
 }
 
-// truncatePost clips s to at most maxPostChars runes, stepping back to the
-// last space to avoid splitting mid-word.
-func truncatePost(s string) string {
-	runes := []rune(s)
-	if len(runes) <= maxPostChars {
-		return s
-	}
-	clipped := string(runes[:maxPostChars])
-	if i := strings.LastIndexByte(clipped, ' '); i > 0 {
-		clipped = clipped[:i]
-	}
-	return clipped
-}
-
 // parseResponse extracts the suggestion JSON from the model's text
 // blocks, validates length and required fields, and returns a populated
 // Suggestion (without Date — that is filled in by the caller).
@@ -145,8 +131,7 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 		return Suggestion{}, errors.New("missing post field")
 	}
 	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
-		slog.Warn("post exceeded char limit, truncating", "chars", n, "max", maxPostChars)
-		out.Post = truncatePost(out.Post)
+		slog.Warn("post exceeded char limit", "chars", n, "max", maxPostChars)
 	}
 
 	return Suggestion{
