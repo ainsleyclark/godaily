@@ -365,7 +365,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
 	})
 
-	t.Run("Second Collect Same Day Is Skipped", func(t *testing.T) {
+	t.Run("Second Collect Same Day Errors Without Creating Duplicate", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		issueRepo, itemRepo := newTestStores(t)

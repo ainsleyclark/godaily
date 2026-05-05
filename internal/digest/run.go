@@ -113,11 +113,10 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 }
 
 func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) (news.Issue, error) {
-	existing, err := a.issues.FindBySlug(ctx, issue.Slug)
+	_, err := a.issues.FindBySlug(ctx, issue.Slug)
 	switch {
 	case err == nil:
-		slog.WarnContext(ctx, "issue already exists for this day, skipping persistence", "slug", issue.Slug)
-		return existing, nil
+		return news.Issue{}, fmt.Errorf("%w: slug %s", store.ErrAlreadyExists, issue.Slug)
 	case !errors.Is(err, store.ErrNotFound):
 		return news.Issue{}, fmt.Errorf("checking existing issue: %w", err)
 	}
