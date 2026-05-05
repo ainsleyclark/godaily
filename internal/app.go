@@ -69,16 +69,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
-	repo := &Repository{
-		Issues:      issues.New(conn),
-		Items:       items.New(conn),
-		Subscribers: subscribers.New(conn),
-	}
-
-	aggregator, err := digest.New(repo.Issues, repo.Items)
-	if err != nil {
-		return nil, teardown, err
-	}
+	issueStore := issues.New(conn)
 
 	var store cache.Store
 	store = cache.NewInMemory(time.Hour * 24 * 30)
@@ -88,6 +79,17 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 			return nil, teardown, err
 		}
 		store = osCache
+	}
+
+	repo := &Repository{
+		Issues:      issues.NewCaching(issueStore, store),
+		Items:       items.New(conn),
+		Subscribers: subscribers.New(conn),
+	}
+
+	aggregator, err := digest.New(repo.Issues, repo.Items)
+	if err != nil {
+		return nil, teardown, err
 	}
 
 	return &App{
