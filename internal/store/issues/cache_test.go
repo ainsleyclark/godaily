@@ -35,9 +35,9 @@ import (
 )
 
 var (
-	errRepo  = errors.New("repo error")
-	testSlug = "go-weekly-1"
-	testID   = int64(1)
+	errRepo   = errors.New("repo error")
+	testSlug  = "go-weekly-1"
+	testID    = int64(1)
 	testIssue = news.Issue{
 		ID:      testID,
 		Slug:    testSlug,

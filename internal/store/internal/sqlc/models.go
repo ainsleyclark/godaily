@@ -10,14 +10,12 @@ import (
 )
 
 type Issue struct {
-	ID       int64          `json:"id"`
-	Slug     string         `json:"slug"`
-	SentAt   time.Time      `json:"sent_at"`
-	Subject  string         `json:"subject"`
-	Summary  sql.NullString `json:"summary"`
-	HtmlBody string         `json:"html_body"`
-	TextBody string         `json:"text_body"`
-	Status   string         `json:"status"`
+	ID      int64          `json:"id"`
+	Slug    string         `json:"slug"`
+	SentAt  time.Time      `json:"sent_at"`
+	Subject string         `json:"subject"`
+	Summary sql.NullString `json:"summary"`
+	Status  string         `json:"status"`
 }
 
 type Item struct {

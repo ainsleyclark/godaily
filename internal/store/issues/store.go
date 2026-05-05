@@ -83,13 +83,11 @@ func (s Store) List(ctx context.Context) ([]news.Issue, error) {
 
 func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error) {
 	i, err := s.sqlc.IssueCreate(ctx, sqlc.IssueCreateParams{
-		Slug:     issue.Slug,
-		SentAt:   issue.SentAt,
-		Subject:  issue.Subject,
-		Summary:  sql.NullString{String: issue.Summary, Valid: true},
-		HtmlBody: issue.HtmlBody,
-		TextBody: issue.TextBody,
-		Status:   issue.Status.String(),
+		Slug:    issue.Slug,
+		SentAt:  issue.SentAt,
+		Subject: issue.Subject,
+		Summary: sql.NullString{String: issue.Summary, Valid: true},
+		Status:  issue.Status.String(),
 	})
 	if err != nil {
 		return news.Issue{}, err
@@ -125,15 +123,13 @@ func (s Store) Count(ctx context.Context) (int64, error) {
 
 func issueFromRows(i sqlc.Issue, rawItems []sqlc.Item) news.Issue {
 	out := news.Issue{
-		ID:       i.ID,
-		Slug:     i.Slug,
-		Subject:  i.Subject,
-		Status:   news.IssueStatus(i.Status),
-		HtmlBody: i.HtmlBody,
-		TextBody: i.TextBody,
-		Summary:  i.Summary.String,
-		SentAt:   i.SentAt,
-		Items:    make([]news.Item, 0, len(rawItems)),
+		ID:      i.ID,
+		Slug:    i.Slug,
+		Subject: i.Subject,
+		Status:  news.IssueStatus(i.Status),
+		Summary: i.Summary.String,
+		SentAt:  i.SentAt,
+		Items:   make([]news.Item, 0, len(rawItems)),
 	}
 	for _, it := range rawItems {
 		out.Items = append(out.Items, transformItem(it))

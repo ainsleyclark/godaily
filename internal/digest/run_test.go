@@ -347,8 +347,6 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		stored, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, news.IssueStatusDraft, stored.Status)
-		assert.NotEmpty(t, stored.HtmlBody)
-		assert.NotEmpty(t, stored.TextBody)
 
 		got, err := itemRepo.ListByIssue(t.Context(), stored.ID)
 		require.NoError(t, err)
@@ -423,12 +421,10 @@ func TestAggregator_SendDigest(t *testing.T) {
 	seedDraft := func(t *testing.T, repo *issues.Store, slug string) news.Issue {
 		t.Helper()
 		stored, err := repo.Create(t.Context(), news.Issue{
-			Slug:     slug,
-			Subject:  "GoDaily - " + slug,
-			HtmlBody: "<p>base</p>",
-			TextBody: "base",
-			Status:   news.IssueStatusDraft,
-			SentAt:   time.Now().UTC(),
+			Slug:    slug,
+			Subject: "GoDaily - " + slug,
+			Status:  news.IssueStatusDraft,
+			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 		return stored
@@ -513,12 +509,10 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Returns Error When Status Not Draft", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
-			Slug:     "2026-04-30",
-			Subject:  "GoDaily - 2026-04-30",
-			HtmlBody: "<p>x</p>",
-			TextBody: "x",
-			Status:   news.IssueStatusSent,
-			SentAt:   time.Now().UTC(),
+			Slug:    "2026-04-30",
+			Subject: "GoDaily - 2026-04-30",
+			Status:  news.IssueStatusSent,
+			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 		_ = stored
@@ -558,12 +552,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	seedDraft := func(t *testing.T, repo *issues.Store, slug string) news.Issue {
 		t.Helper()
 		stored, err := repo.Create(t.Context(), news.Issue{
-			Slug:     slug,
-			Subject:  "GoDaily - " + slug,
-			HtmlBody: "<p>base</p>",
-			TextBody: "base",
-			Status:   news.IssueStatusDraft,
-			SentAt:   time.Now().UTC(),
+			Slug:    slug,
+			Subject: "GoDaily - " + slug,
+			Status:  news.IssueStatusDraft,
+			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 		return stored

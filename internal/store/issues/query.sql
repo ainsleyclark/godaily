@@ -1,8 +1,8 @@
 -- name: IssueCreate :one
 INSERT INTO issues (
-    slug, sent_at, subject, summary, html_body, text_body, status
+    slug, sent_at, subject, summary, status
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?
 )
 RETURNING *;
 
