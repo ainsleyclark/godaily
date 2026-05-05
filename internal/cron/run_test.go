@@ -496,6 +496,31 @@ func TestAggregator_Run_Persistence(t *testing.T) {
 		assert.Equal(t, news.IssueStatus("failed"), issue.Status)
 	})
 
+	t.Run("Second Run Same Day Is Skipped", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{
+			email:         &mockEmail{},
+			sendToAddress: "to@example.com",
+			issues:        issueRepo,
+			items:         itemRepo,
+		}
+
+		opts := RunOptions{Sources: []news.Source{news.SourceDevTo}}
+
+		_, err := agg.Run(t.Context(), opts)
+		require.NoError(t, err)
+
+		// Second run for the same day must not error and must not create a duplicate.
+		_, err = agg.Run(t.Context(), opts)
+		require.NoError(t, err)
+
+		count, err := issueRepo.Count(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, int64(1), count, "only one issue should be persisted for a given day")
+	})
+
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 

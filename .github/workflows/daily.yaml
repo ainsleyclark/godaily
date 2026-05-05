@@ -25,16 +25,20 @@ jobs:
           cache: true
 
       - name: Check schedule matches London time
+        id: check
         if: github.event_name == 'schedule'
         shell: bash
         run: |
           london_hour=$(TZ=Europe/London date +%H)
           if [[ "$london_hour" != "08" ]]; then
             echo "Skipping: London time is $london_hour:00, not 08:00."
-            exit 0
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run digest
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}

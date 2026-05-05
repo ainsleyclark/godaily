@@ -30,6 +30,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
@@ -156,7 +157,7 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 		case errors.Is(err, synth.ErrNoItems):
 			slog.InfoContext(ctx, "synth skipped: no items to summarise")
 		case err != nil:
-			slog.ErrorContext(ctx, "synth failed", "err", err)
+			slog.WarnContext(ctx, "synth failed", "err", err)
 		default:
 			suggestion = &s
 		}
@@ -185,7 +186,7 @@ func (a Aggregator) Run(ctx context.Context, opts RunOptions) ([]news.SourceItem
 
 	if a.issues != nil {
 		if err = a.persistIssue(ctx, day, rendered, status, results); err != nil {
-			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
+			slog.WarnContext(ctx, "failed to persist issue", "err", err)
 		}
 	}
 
@@ -211,8 +212,17 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 }
 
 func (a Aggregator) persistIssue(ctx context.Context, day time.Time, r renderedDigest, status string, sections []news.SourceItems) error {
+	slug := day.Format("2006-01-02")
+	if _, err := a.issues.FindBySlug(ctx, slug); !errors.Is(err, store.ErrNotFound) {
+		if err == nil {
+			slog.WarnContext(ctx, "issue already exists for this day, skipping persistence", "slug", slug)
+			return nil
+		}
+		return fmt.Errorf("checking existing issue: %w", err)
+	}
+
 	issue, err := a.issues.Create(ctx, news.Issue{
-		Slug:     day.Format("2006-01-02"),
+		Slug:     slug,
 		SentAt:   time.Now().UTC(),
 		Subject:  r.Subject,
 		Status:   news.IssueStatus(status),
