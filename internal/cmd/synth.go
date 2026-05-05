@@ -47,7 +47,7 @@ func synthCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			return a.Aggregator.SendSuggestion(ctx, date)
+			return a.Runner.SendSuggestion(ctx, date)
 		},
 	}
 }

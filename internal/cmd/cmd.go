@@ -33,7 +33,8 @@ import (
 func Run() {
 	ctx := context.Background()
 
-	app, err := godaily.Bootstrap(ctx)
+	app, teardown, err := godaily.Bootstrap(ctx)
+	defer teardown()
 	if err != nil {
 		exit(err)
 	}

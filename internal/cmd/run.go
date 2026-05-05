@@ -57,7 +57,7 @@ func runCmd(a *godaily.App) *cli.Command {
 			dryRun := cmd.Bool("dry-run")
 			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
-			raw, err := a.Aggregator.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Runner.Collect(ctx, digest.CollectOptions{
 				DryRun:  dryRun,
 				Sources: sources,
 			})
@@ -66,7 +66,7 @@ func runCmd(a *godaily.App) *cli.Command {
 			}
 
 			if !dryRun && len(raw) > 0 {
-				if err = a.Aggregator.SendDigest(ctx, date); err != nil {
+				if err = a.Runner.SendDigest(ctx, date); err != nil {
 					return err
 				}
 			}
