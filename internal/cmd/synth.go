@@ -33,10 +33,10 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func synthCmd(_ *godaily.App) *cli.Command {
+func synthCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "synth",
-		Usage: "Suggest a tweet and LinkedIn post from a scored news JSON file",
+		Usage: "Suggest a post from a scored news JSON file, or send the suggestion via email",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "input",
@@ -52,6 +52,9 @@ func synthCmd(_ *godaily.App) *cli.Command {
 				Value: "md",
 				Usage: "Output format: md or json",
 			},
+		},
+		Commands: []*cli.Command{
+			synthSendCmd(a),
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			raw, err := os.ReadFile(cmd.String("input"))
@@ -93,6 +96,30 @@ func synthCmd(_ *godaily.App) *cli.Command {
 			}
 
 			return os.WriteFile(out, rendered, 0o600)
+		},
+	}
+}
+
+func synthSendCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "send",
+		Usage: "Generate an AI post suggestion from the stored digest and email it to the owner.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "date",
+				Usage: "Date of the digest to use (YYYY-MM-DD). Defaults to yesterday.",
+			},
+		},
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
+				if err != nil {
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				}
+				date = d
+			}
+			return a.Aggregator.SendSuggestion(ctx, date)
 		},
 	}
 }
