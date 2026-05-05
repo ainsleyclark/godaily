@@ -28,12 +28,13 @@ import (
 	"path/filepath"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-func runCmd(a *App) *cli.Command {
+func runCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "run",
 		Usage: "Collect and send the daily Go digest in one step.",

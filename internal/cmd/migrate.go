@@ -22,11 +22,12 @@ package cmd
 import (
 	"context"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/urfave/cli/v3"
 )
 
-func migrateCmd(a *App) *cli.Command {
+func migrateCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "migrate",
 		Usage: "Manage database migrations",

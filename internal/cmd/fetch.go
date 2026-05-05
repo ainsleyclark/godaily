@@ -24,11 +24,12 @@ import (
 	"encoding/json"
 	"fmt"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-func fetchCmd(a *App) *cli.Command {
+func fetchCmd(_ *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name: "fetch",
 		Flags: []cli.Flag{

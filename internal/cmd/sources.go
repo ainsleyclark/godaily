@@ -23,11 +23,12 @@ import (
 	"context"
 	"fmt"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/urfave/cli/v3"
 )
 
-func sourcesCmd(a *App) *cli.Command {
+func sourcesCmd(_ *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "sources",
 		Usage: "Lists registered source names",

@@ -25,11 +25,12 @@ import (
 	"os"
 	"path/filepath"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/digest"
 	"github.com/urfave/cli/v3"
 )
 
-func collectCm(a *App) *cli.Command {
+func collectCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "collect",
 		Usage: "Fetch Go news from all sources and store the digest as a draft.",

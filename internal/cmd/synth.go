@@ -27,12 +27,13 @@ import (
 	"path/filepath"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/synth"
 	"github.com/urfave/cli/v3"
 )
 
-func synthCmd(a *App) *cli.Command {
+func synthCmd(_ *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "synth",
 		Usage: "Suggest a tweet and LinkedIn post from a scored news JSON file",

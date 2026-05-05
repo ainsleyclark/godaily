@@ -24,14 +24,16 @@ import (
 	"log"
 	"os"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	_ "github.com/ainsleyclark/godaily/internal/source"
 	"github.com/urfave/cli/v3"
 )
 
+// Run executes the cli command and runs the program.
 func Run() {
 	ctx := context.Background()
 
-	app, err := Bootstrap(ctx)
+	app, err := godaily.Bootstrap(ctx)
 	if err != nil {
 		exit(err)
 	}
@@ -40,7 +42,7 @@ func Run() {
 		Name:  "godaily",
 		Usage: "Daily Go news, straight to your inbox",
 		Commands: []*cli.Command{
-			collectCm(app),
+			collectCmd(app),
 			sendCmd(app),
 			runCmd(app),
 			sourcesCmd(app),

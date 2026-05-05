@@ -24,10 +24,11 @@ import (
 	"fmt"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/urfave/cli/v3"
 )
 
-func sendCmd(a *App) *cli.Command {
+func sendCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "send",
 		Usage: "Send the stored draft digest via email.",
