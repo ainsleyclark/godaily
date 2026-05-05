@@ -1,0 +1,9 @@
+GoDaily Suggested Post - {{ .Date.Format "January 2, 2006" }}
+
+{{ .Post }}
+{{ if .References }}
+References
+---
+{{ range .References }}• {{ .Title }} ({{ .Source }})
+  {{ .URL }}
+{{ end }}{{ end }}

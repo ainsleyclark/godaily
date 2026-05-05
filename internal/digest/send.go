@@ -23,16 +23,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	htmltemplate "html/template"
 	"log/slog"
 	"sort"
-	"strings"
 	"time"
 
-	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
-	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
 // Send loads the draft digest for the given date, sends it to the
@@ -77,72 +73,6 @@ func (a Aggregator) Send(ctx context.Context, date time.Time) error {
 	}
 
 	return nil
-}
-
-// SendSuggestion generates an AI post suggestion from the stored digest
-// items for the given date and emails it to the owner address only.
-func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
-	if a.suggester == nil {
-		return errors.New("synth send requires ANTHROPIC_API_KEY")
-	}
-	if a.issues == nil || a.items == nil {
-		return errors.New("synth send requires persistence (TURSO_URL not set)")
-	}
-	if a.sendToAddress == "" {
-		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping synth send")
-		return nil
-	}
-
-	slug := date.Format("2006-01-02")
-
-	issue, err := a.issues.FindBySlug(ctx, slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
-		}
-		return fmt.Errorf("loading digest: %w", err)
-	}
-
-	sections, err := loadSections(ctx, a.items, issue.ID)
-	if err != nil {
-		return fmt.Errorf("loading items: %w", err)
-	}
-
-	if len(sections) == 0 {
-		slog.InfoContext(ctx, "no items for synth suggestion, skipping")
-		return nil
-	}
-
-	s, err := a.suggester.Suggest(ctx, date, sections)
-	if err != nil {
-		return fmt.Errorf("synth: %w", err)
-	}
-
-	return a.email.Send(ctx, email.SendEmailRequest{
-		From:    "noreply@mail.ainsley.dev",
-		To:      []string{a.sendToAddress},
-		Subject: "GoDaily Synth - " + date.Format("2006-01-02"),
-		Html:    suggestionHTML(s),
-		Text:    s.Markdown(),
-	})
-}
-
-// suggestionHTML renders a Suggestion as a minimal HTML email body.
-func suggestionHTML(s synth.Suggestion) string {
-	var b strings.Builder
-	fmt.Fprintf(&b, "<h3>Suggested post: %s</h3>\n", s.Date.Format("2006-01-02"))
-	b.WriteString("<pre style=\"white-space: pre-wrap; font-family: inherit;\">")
-	b.WriteString(htmltemplate.HTMLEscapeString(s.Post))
-	b.WriteString("</pre>\n")
-	if len(s.References) > 0 {
-		b.WriteString("<h4>References</h4>\n<ul>\n")
-		for _, r := range s.References {
-			fmt.Fprintf(&b, "<li><a href=%q>%s</a> (%s)</li>\n",
-				r.URL, htmltemplate.HTMLEscapeString(r.Title), r.Source)
-		}
-		b.WriteString("</ul>\n")
-	}
-	return b.String()
 }
 
 // loadSections fetches stored items for an issue and groups them into
