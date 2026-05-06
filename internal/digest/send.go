@@ -34,7 +34,6 @@ import (
 // SendDigest loads the draft digest for the given date, sends it to the
 // configured address, and updates the stored issue status.
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
-
 	slug := date.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Preparing to send digest", "slug", slug)
