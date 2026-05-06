@@ -57,38 +57,6 @@ type digestGroup struct {
 	ranked bool
 }
 
-type sourceLabel struct {
-	emoji string
-	title string
-}
-
-var sourceLabels = map[news.Source]sourceLabel{
-	news.SourceGoRelease:      {"🚀", "Go Releases"},
-	news.SourceGoBlog:         {"📝", "Go Blog"},
-	news.SourceGitHub:         {"🐙", "GitHub"},
-	news.SourceGitHubTrending: {"📦", "GitHub Trending"},
-	news.SourceHN:             {"🏆", "Hacker News"},
-	news.SourceLobsters:       {"🦞", "Lobsters"},
-	news.SourceReddit:         {"🤖", "Reddit"},
-	news.SourceYouTube:        {"🎥", "YouTube"},
-	news.SourceGoPodcast:      {"🎙", "go podcast()"},
-	news.SourceArdanLabs:      {"🎙", "Ardan Labs Podcast"},
-	news.SourceDevTo:          {"📰", "Dev.to"},
-	news.SourceMedium:         {"✍️", "Medium"},
-	news.SourceJetBrains:      {"🧠", "JetBrains"},
-	news.SourceAwesomeGo:      {"⭐", "Awesome Go"},
-	news.SourceMastodon:       {"🐘", "Mastodon"},
-	news.SourceGolangBridge:   {"🌉", "GolangBridge"},
-	news.SourceFallthrough:    {"📡", "Fallthrough"},
-}
-
-func sourceDisplay(s news.Source) (emoji, title string) {
-	if label, ok := sourceLabels[s]; ok {
-		return label.emoji, label.title
-	}
-	return "📰", s.NiceName()
-}
-
 func digestSections(items []news.Item) []digestGroup {
 	bySource := map[news.Source][]news.Item{}
 	order := []news.Source{}
@@ -103,11 +71,10 @@ func digestSections(items []news.Item) []digestGroup {
 	})
 	groups := make([]digestGroup, 0, len(order))
 	for _, src := range order {
-		emoji, title := sourceDisplay(src)
 		ranked := src == news.SourceHN || src == news.SourceLobsters || src == news.SourceReddit
 		groups = append(groups, digestGroup{
-			emoji:  emoji,
-			title:  title,
+			emoji:  src.Emoji(),
+			title:  src.NiceName(),
 			items:  bySource[src],
 			ranked: ranked,
 		})
