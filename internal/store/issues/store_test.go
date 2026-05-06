@@ -101,6 +101,15 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 
+	t.Run("List", func(t *testing.T) {
+		t.Log("Returns nil, nil (unimplemented)")
+		{
+			got, err := s.List(ctx)
+			require.NoError(t, err)
+			assert.Nil(t, got)
+		}
+	})
+
 	t.Run("Latest", func(t *testing.T) {
 		t.Log("Returns most recent sent issues")
 		{

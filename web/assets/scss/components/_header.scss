@@ -4,17 +4,22 @@
 	position: sticky;
 	top: 0;
 	z-index: 100;
-	background: rgba(245, 251, 255, 0.9);
+	background: var(--bg-header);
 	backdrop-filter: blur(12px);
 	border-bottom: 1px solid var(--border);
-	padding: 0 2rem;
-	height: 64px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 
-	@include mobile {
-		padding: 0 1rem;
+	&__inner {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+		height: 64px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		@include mobile {
+			padding: 0 1rem;
+		}
 	}
 
 	&__logo {

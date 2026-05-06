@@ -117,6 +117,21 @@ func (mr *MockIssueRepositoryMockRecorder) Latest(ctx, limit any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Latest", reflect.TypeOf((*MockIssueRepository)(nil).Latest), ctx, limit)
 }
 
+// List mocks base method.
+func (m *MockIssueRepository) List(ctx context.Context) ([]news.Issue, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx)
+	ret0, _ := ret[0].([]news.Issue)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockIssueRepositoryMockRecorder) List(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIssueRepository)(nil).List), ctx)
+}
+
 // UpdateStatus mocks base method.
 func (m *MockIssueRepository) UpdateStatus(ctx context.Context, id int64, status news.IssueStatus, sentAt time.Time) (news.Issue, error) {
 	m.ctrl.T.Helper()

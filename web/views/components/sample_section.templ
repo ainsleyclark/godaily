@@ -11,6 +11,8 @@ templ SampleSection(issue news.Issue) {
 		<p class="section__sub">
 			A clean, readable digest. No ads, no cruft. Just the Go stories worth your time.
 		</p>
-		@Sample(issue)
+		<div class="email-preview email-preview--wide">
+			@sampleInner(issue)
+		</div>
 	</section>
 }

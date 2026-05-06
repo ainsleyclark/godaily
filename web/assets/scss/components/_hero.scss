@@ -70,7 +70,7 @@
 		padding: 13px 16px;
 		border-radius: 10px;
 		border: 1.5px solid var(--border);
-		background: #ffffff;
+		background: var(--bg-card);
 		font-family: var(--font);
 		font-size: 0.95rem;
 		color: var(--text);
@@ -82,7 +82,7 @@
 		}
 
 		&--error {
-			border-color: #fc5f5f;
+			border-color: var(--color-error);
 		}
 	}
 
@@ -93,7 +93,7 @@
 
 	&__visual {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-end;
 		align-items: center;
 
 		@include mobile {

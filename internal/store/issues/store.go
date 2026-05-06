@@ -77,6 +77,10 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) 
 	return issueFromRows(i, items), nil
 }
 
+func (s Store) List(ctx context.Context) ([]news.Issue, error) {
+	return nil, nil
+}
+
 func (s Store) Latest(ctx context.Context, limit int) ([]news.Issue, error) {
 	if limit <= 0 {
 		return nil, nil

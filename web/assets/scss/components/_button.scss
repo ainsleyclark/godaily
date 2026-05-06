@@ -14,13 +14,13 @@
 
 	&--primary {
 		background: var(--accent);
-		color: #ffffff;
-		box-shadow: 0 4px 14px rgba(42, 168, 216, 0.3);
+		color: var(--color-white);
+		box-shadow: var(--shadow-button-primary);
 
 		&:hover {
 			background: var(--accent-dark);
 			transform: translateY(-1px);
-			box-shadow: 0 6px 18px rgba(42, 168, 216, 0.4);
+			box-shadow: var(--shadow-button-primary-hover);
 		}
 
 		&:disabled {
@@ -31,9 +31,9 @@
 	}
 
 	&--success {
-		background: #2dbd7a;
-		color: #ffffff;
-		box-shadow: 0 4px 14px rgba(45, 189, 122, 0.25);
+		background: var(--color-success);
+		color: var(--color-white);
+		box-shadow: var(--shadow-button-success);
 	}
 
 	&--ghost {

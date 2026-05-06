@@ -4,10 +4,12 @@ import "github.com/ainsleyclark/godaily/web/views/graphics"
 
 templ Header() {
 	<header class="header">
-		<a class="header__logo" href="/">
-			@graphics.GopherLogo(34)
-			<span>GoDaily</span>
-		</a>
-		@Nav()
+		<div class="header__inner">
+			<a class="header__logo" href="/">
+				@graphics.GopherLogo(34)
+				<span>GoDaily</span>
+			</a>
+			@Nav()
+		</div>
 	</header>
 }

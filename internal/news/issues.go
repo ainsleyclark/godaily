@@ -42,8 +42,7 @@ type Issue struct {
 type IssueRepository interface {
 	Find(ctx context.Context, id int64) (Issue, error)
 	FindBySlug(ctx context.Context, slug string) (Issue, error)
-	// Latest returns up to limit most recently sent issues, with their items
-	// hydrated, ordered by sent_at descending.
+	List(ctx context.Context) ([]Issue, error)
 	Latest(ctx context.Context, limit int) ([]Issue, error)
 	Create(ctx context.Context, issue Issue) (Issue, error)
 	UpdateStatus(ctx context.Context, id int64, status IssueStatus, sentAt time.Time) (Issue, error)

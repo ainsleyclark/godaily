@@ -20,11 +20,10 @@
 package handlers
 
 import (
-	"errors"
+	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -35,8 +34,8 @@ func Home(a *godaily.App) webkit.Handler {
 		ctx := c.Request.Context()
 
 		latest, err := a.Repository.Issues.Latest(ctx, 1)
-		if err != nil && !errors.Is(err, store.ErrNotFound) {
-			return err
+		if err != nil {
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}
 
 		var issue news.Issue

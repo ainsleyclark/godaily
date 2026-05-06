@@ -16,9 +16,11 @@ templ Home(data HomeData) {
 	@layouts.Base() {
 		@components.Header()
 		@components.Hero()
+		@components.Rule()
 		@components.Features()
 		@components.Sources()
 		@components.Latest(data.LatestIssue)
+		@components.Rule()
 		@components.SampleSection(data.SampleIssue)
 		@components.Footer()
 	}
