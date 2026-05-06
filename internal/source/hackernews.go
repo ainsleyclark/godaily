@@ -22,6 +22,7 @@ package source
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/ingest"
@@ -39,13 +40,22 @@ func init() {
 	news.Register(news.SourceHN, NewHackerNews())
 }
 
-const hnURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story"
+const hnBaseURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story&hitsPerPage=50"
 
 // NewHackerNews creates a Hacker News Algolia client.
 func NewHackerNews() *HackerNews {
 	return &HackerNews{
-		url: hnURL,
+		url: hnYesterdayURL(),
 	}
+}
+
+// hnYesterdayURL builds an Algolia URL that restricts results to yesterday UTC,
+// so collect always retrieves the correct day's items regardless of run time.
+// Uses strict inequalities: >start-1 and <end+1 to cover the full 24-hour window.
+func hnYesterdayURL() string {
+	day := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+	next := day.Add(24 * time.Hour)
+	return fmt.Sprintf("%s&numericFilters=created_at_i>%d,created_at_i<%d", hnBaseURL, day.Unix()-1, next.Unix())
 }
 
 // Fetch retrieves all news items from Hacker News via the Algolia search API.

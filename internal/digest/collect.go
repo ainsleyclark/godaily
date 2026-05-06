@@ -21,6 +21,7 @@ package digest
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"sort"
 	"time"
@@ -70,6 +71,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 			}
 		}
 
+		slog.InfoContext(ctx, "date-filtered source", "source", src, "kept", len(si.Items), "total", len(fetched))
 		if len(si.Items) > 0 {
 			sort.SliceStable(si.Items, func(i, j int) bool {
 				return si.Items[i].Score > si.Items[j].Score
@@ -83,6 +85,9 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	})
 
 	if opts.DryRun || len(results) == 0 {
+		if !opts.DryRun {
+			slog.WarnContext(ctx, "no items found for date window, issue will not be created", "date", day.Format("2006-01-02"))
+		}
 		return results, nil
 	}
 
@@ -101,7 +106,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 
 	if a.issues != nil {
 		if _, err = a.persistIssue(ctx, issue, results); err != nil {
-			slog.ErrorContext(ctx, "failed to persist issue", "err", err)
+			return results, fmt.Errorf("persisting issue: %w", err)
 		}
 	}
 
