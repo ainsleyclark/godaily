@@ -26,8 +26,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/synth"
@@ -87,12 +85,12 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 
 	fetcher, err := news.Get(source)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("getting fetcher for %s", source))
+		return nil, fmt.Errorf("getting fetcher for %s: %w", source, err)
 	}
 
 	items, err := fetcher.Fetch(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, fmt.Sprintf("fetching %s", source))
+		return nil, fmt.Errorf("fetching %s: %w", source, err)
 	}
 
 	slog.InfoContext(ctx, "Fetched from source", "source", source, "items", len(items))

@@ -124,7 +124,7 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 		References []Ref  `json:"references"`
 	}
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
-		return Suggestion{}, errors.Wrap(err, fmt.Sprintf("parse (raw=%q)", body))
+		return Suggestion{}, fmt.Errorf("parse (raw=%q): %w", body, err)
 	}
 
 	if out.Post == "" {

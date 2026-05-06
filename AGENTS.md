@@ -360,10 +360,14 @@ func ValidatePort(port int) error {
 }
 ```
 
-When wrapping an error that also needs a single dynamic value in the message,
-use `errors.Wrap` with `fmt.Sprintf` for the message string:
+Use `fmt.Errorf` with `%w` whenever the message requires any formatting — even
+a single dynamic value. Never combine `errors.Wrap` with `fmt.Sprintf`:
 
 ```go
+// Correct — formatting needed, use fmt.Errorf
+return nil, fmt.Errorf("getting fetcher for %s: %w", source, err)
+
+// Wrong — don't combine errors.Wrap with fmt.Sprintf
 return nil, errors.Wrap(err, fmt.Sprintf("getting fetcher for %s", source))
 ```
 
