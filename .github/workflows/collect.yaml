@@ -37,6 +37,12 @@ jobs:
             echo "should_run=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@latest
+
+      - name: Generate templ
+        run: templ generate
+
       - name: Collect digest
         if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
         env:
