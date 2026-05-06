@@ -38,13 +38,11 @@ func TestIssues_Store(t *testing.T) {
 	s := issues.New(db)
 
 	mock := news.Issue{
-		Slug:     "2026-04-28",
-		Subject:  "GoDaily - April 28, 2026",
-		Status:   news.IssueStatusSent,
-		HtmlBody: "<p>hi</p>",
-		TextBody: "hi",
-		Summary:  "a summary",
-		SentAt:   time.Date(2026, time.April, 28, 8, 0, 0, 0, time.UTC),
+		Slug:    "2026-04-28",
+		Subject: "GoDaily - April 28, 2026",
+		Status:  news.IssueStatusSent,
+		Summary: "a summary",
+		SentAt:  time.Date(2026, time.April, 28, 8, 0, 0, 0, time.UTC),
 	}
 
 	t.Run("Create", func(t *testing.T) {
@@ -150,7 +148,7 @@ func TestIssues_Store(t *testing.T) {
 
 		t.Log("Create")
 		{
-			_, err := s.Create(ctx, news.Issue{Slug: "x", Subject: "x", Status: news.IssueStatusSent, HtmlBody: "x", TextBody: "x"})
+			_, err := s.Create(ctx, news.Issue{Slug: "x", Subject: "x", Status: news.IssueStatusSent})
 			assert.Error(t, err)
 		}
 

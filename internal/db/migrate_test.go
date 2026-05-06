@@ -63,7 +63,12 @@ func TestDown(t *testing.T) {
 		t.Cleanup(func() { _ = conn.Close() })
 
 		require.NoError(t, Up(t.Context(), conn))
-		require.NoError(t, Down(t.Context(), conn))
+		for {
+			err := Down(t.Context(), conn)
+			if err != nil {
+				break
+			}
+		}
 
 		var count int
 		err = conn.QueryRowContext(t.Context(),

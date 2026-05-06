@@ -1,0 +1,10 @@
+package pages
+
+import "github.com/ainsleyclark/godaily/web/views/layouts"
+
+templ Error(status int) {
+	@layouts.Base() {
+		<h1>Error</h1>
+		{ status }
+	}
+}

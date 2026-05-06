@@ -22,6 +22,8 @@ package godaily
 import (
 	"context"
 	"database/sql"
+	"log/slog"
+	"time"
 
 	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/digest"
@@ -30,6 +32,7 @@ import (
 	"github.com/ainsleyclark/godaily/internal/store/issues"
 	"github.com/ainsleyclark/godaily/internal/store/items"
 	"github.com/ainsleyclark/godaily/internal/store/subscribers"
+	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
 // App defines a global state for godaily.
@@ -37,7 +40,8 @@ type App struct {
 	Config     *env.Config
 	DB         *sql.DB
 	Repository *Repository
-	Aggregator *digest.Aggregator
+	Runner     *digest.Aggregator
+	Cache      cache.Store
 }
 
 // Repository defines the datastore for the application.,
@@ -49,28 +53,50 @@ type Repository struct {
 
 // Bootstrap ties all the app dependencies together
 // and returns a new App.
-func Bootstrap(ctx context.Context) (*App, error) {
+func Bootstrap(ctx context.Context) (*App, func(), error) {
 	config, err := env.New(ctx)
 	if err != nil {
-		return nil, err
+		return nil, func() {}, err
 	}
+
 	conn, err := db.New(ctx, config.TursoURL, config.TursoAuthToken)
-	if err != nil {
-		return nil, err
+	teardown := func() {
+		if err = conn.Close(); err != nil {
+			slog.ErrorContext(ctx, "closing connection to database", "error", err)
+		}
 	}
+	if err != nil {
+		return nil, teardown, err
+	}
+
+	issueStore := issues.New(conn)
+
+	var store cache.Store
+	store = cache.NewInMemory(time.Hour * 24 * 30)
+	if config.IsDevelopment() {
+		osCache, err := cache.NewOSCache(".cache", true)
+		if err != nil {
+			return nil, teardown, err
+		}
+		store = osCache
+	}
+
 	repo := &Repository{
-		Issues:      issues.New(conn),
+		Issues:      issues.NewCaching(issueStore, store),
 		Items:       items.New(conn),
 		Subscribers: subscribers.New(conn),
 	}
+
 	aggregator, err := digest.New(repo.Issues, repo.Items)
 	if err != nil {
-		return nil, err
+		return nil, teardown, err
 	}
+
 	return &App{
 		Config:     &config,
 		DB:         conn,
 		Repository: repo,
-		Aggregator: aggregator,
-	}, nil
+		Runner:     aggregator,
+		Cache:      store,
+	}, teardown, nil
 }

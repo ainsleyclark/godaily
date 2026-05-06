@@ -27,15 +27,13 @@ import (
 // Issue defines an issue of go daily that contains a collection
 // of news articles.
 type Issue struct {
-	ID       int64       `json:"id"`
-	Slug     string      `json:"slug"`
-	Subject  string      `json:"subject"`
-	Status   IssueStatus `json:"status"`
-	HtmlBody string      `json:"html_body"`
-	TextBody string      `json:"text_body"`
-	Summary  string      `json:"summary,omitzero"`
-	SentAt   time.Time   `json:"sent_at"`
-	Items    []Item      `json:"items"`
+	ID      int64       `json:"id"`
+	Slug    string      `json:"slug"`
+	Subject string      `json:"subject"`
+	Status  IssueStatus `json:"status"`
+	Summary string      `json:"summary,omitzero"`
+	SentAt  time.Time   `json:"sent_at"`
+	Items   []Item      `json:"items"`
 }
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../mocks/news/IssueRepository.go . IssueRepository

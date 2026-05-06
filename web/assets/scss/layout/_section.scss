@@ -1,0 +1,37 @@
+@use '../abstracts/mixins' as *;
+
+.section {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 4rem 2rem;
+
+	@include mobile {
+		padding: 2rem 1rem;
+	}
+
+	&__label {
+		display: inline-block;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 0.75rem;
+	}
+
+	&__title {
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+		font-weight: 700;
+		color: var(--text);
+		line-height: 1.2;
+		margin-bottom: 0.75rem;
+	}
+
+	&__sub {
+		font-size: 1rem;
+		color: var(--text-2);
+		margin-bottom: 2.5rem;
+		max-width: 600px;
+		line-height: 1.6;
+	}
+}

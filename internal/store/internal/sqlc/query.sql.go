@@ -12,7 +12,7 @@ import (
 )
 
 const issueByID = `-- name: IssueByID :one
-SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues WHERE id = ? LIMIT 1
+SELECT id, slug, sent_at, subject, summary, status FROM issues WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) IssueByID(ctx context.Context, id int64) (Issue, error) {
@@ -24,15 +24,13 @@ func (q *Queries) IssueByID(ctx context.Context, id int64) (Issue, error) {
 		&i.SentAt,
 		&i.Subject,
 		&i.Summary,
-		&i.HtmlBody,
-		&i.TextBody,
 		&i.Status,
 	)
 	return i, err
 }
 
 const issueBySlug = `-- name: IssueBySlug :one
-SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues WHERE slug = ? LIMIT 1
+SELECT id, slug, sent_at, subject, summary, status FROM issues WHERE slug = ? LIMIT 1
 `
 
 func (q *Queries) IssueBySlug(ctx context.Context, slug string) (Issue, error) {
@@ -44,8 +42,6 @@ func (q *Queries) IssueBySlug(ctx context.Context, slug string) (Issue, error) {
 		&i.SentAt,
 		&i.Subject,
 		&i.Summary,
-		&i.HtmlBody,
-		&i.TextBody,
 		&i.Status,
 	)
 	return i, err
@@ -64,21 +60,19 @@ func (q *Queries) IssueCount(ctx context.Context) (int64, error) {
 
 const issueCreate = `-- name: IssueCreate :one
 INSERT INTO issues (
-    slug, sent_at, subject, summary, html_body, text_body, status
+    slug, sent_at, subject, summary, status
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?
 )
-RETURNING id, slug, sent_at, subject, summary, html_body, text_body, status
+RETURNING id, slug, sent_at, subject, summary, status
 `
 
 type IssueCreateParams struct {
-	Slug     string         `json:"slug"`
-	SentAt   time.Time      `json:"sent_at"`
-	Subject  string         `json:"subject"`
-	Summary  sql.NullString `json:"summary"`
-	HtmlBody string         `json:"html_body"`
-	TextBody string         `json:"text_body"`
-	Status   string         `json:"status"`
+	Slug    string         `json:"slug"`
+	SentAt  time.Time      `json:"sent_at"`
+	Subject string         `json:"subject"`
+	Summary sql.NullString `json:"summary"`
+	Status  string         `json:"status"`
 }
 
 func (q *Queries) IssueCreate(ctx context.Context, arg IssueCreateParams) (Issue, error) {
@@ -87,8 +81,6 @@ func (q *Queries) IssueCreate(ctx context.Context, arg IssueCreateParams) (Issue
 		arg.SentAt,
 		arg.Subject,
 		arg.Summary,
-		arg.HtmlBody,
-		arg.TextBody,
 		arg.Status,
 	)
 	var i Issue
@@ -98,15 +90,13 @@ func (q *Queries) IssueCreate(ctx context.Context, arg IssueCreateParams) (Issue
 		&i.SentAt,
 		&i.Subject,
 		&i.Summary,
-		&i.HtmlBody,
-		&i.TextBody,
 		&i.Status,
 	)
 	return i, err
 }
 
 const issueList = `-- name: IssueList :many
-SELECT id, slug, sent_at, subject, summary, html_body, text_body, status FROM issues
+SELECT id, slug, sent_at, subject, summary, status FROM issues
 WHERE status = 'sent'
 ORDER BY sent_at DESC
 LIMIT ? OFFSET ?
@@ -132,8 +122,6 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 			&i.SentAt,
 			&i.Subject,
 			&i.Summary,
-			&i.HtmlBody,
-			&i.TextBody,
 			&i.Status,
 		); err != nil {
 			return nil, err
@@ -150,7 +138,7 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 }
 
 const issueUpdateStatus = `-- name: IssueUpdateStatus :one
-UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, html_body, text_body, status
+UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, status
 `
 
 type IssueUpdateStatusParams struct {
@@ -168,8 +156,6 @@ func (q *Queries) IssueUpdateStatus(ctx context.Context, arg IssueUpdateStatusPa
 		&i.SentAt,
 		&i.Subject,
 		&i.Summary,
-		&i.HtmlBody,
-		&i.TextBody,
 		&i.Status,
 	)
 	return i, err

@@ -142,3 +142,36 @@ func (s Source) NiceName() string {
 	}
 	return nn
 }
+
+var sourceEmojis = map[Source]string{
+	SourceGoRelease:      "🚀",
+	SourceGoBlog:         "📝",
+	SourceGitHub:         "🐙",
+	SourceGitHubTrending: "📦",
+	SourceHN:             "🏆",
+	SourceLobsters:       "🦞",
+	SourceReddit:         "🤖",
+	SourceYouTube:        "🎥",
+	SourceGoPodcast:      "🎙",
+	SourceArdanLabs:      "🎙",
+	SourceDevTo:          "📰",
+	SourceMedium:         "✍️",
+	SourceJetBrains:      "🧠",
+	SourceAwesomeGo:      "⭐",
+	SourceMastodon:       "🐘",
+	SourceGolangBridge:   "🌉",
+	SourceFallthrough:    "📡",
+}
+
+// Emoji returns the display emoji for the source.
+func (s Source) Emoji() string {
+	if e, ok := sourceEmojis[s]; ok {
+		return e
+	}
+	return "📰"
+}
+
+// IsRanked reports whether items from this source should display a rank badge.
+func (s Source) IsRanked() bool {
+	return s == SourceHN || s == SourceLobsters || s == SourceReddit
+}

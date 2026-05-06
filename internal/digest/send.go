@@ -56,10 +56,14 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
 		return nil
 	}
 
-	rendered := renderedDigest{
-		Subject: issue.Subject,
-		HTML:    issue.HtmlBody,
-		Text:    issue.TextBody,
+	sections, err := loadSections(ctx, a.items, issue.ID)
+	if err != nil {
+		return fmt.Errorf("loading sections: %w", err)
+	}
+
+	rendered, err := renderDigest(date, sections)
+	if err != nil {
+		return fmt.Errorf("rendering digest: %w", err)
 	}
 
 	status := news.IssueStatusSent

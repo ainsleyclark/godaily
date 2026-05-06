@@ -44,6 +44,7 @@ func Start(a *godaily.App, port string) error {
 	kit.Plug(kitmiddleware.URL)
 
 	kit.Get("/", handlers.Home(a))
+	kit.Get("/digest/{slug}/", handlers.Digest(a))
 	kit.Static("/assets/", "web/dist/") // From where main.go is
 	kit.NotFound(func(c *webkit.Context) error { return c.String(http.StatusNotFound, "Not Found") })
 

@@ -93,12 +93,10 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	}
 
 	issue := news.Issue{
-		Slug:     day.Format("2006-01-02"),
-		Subject:  rendered.Subject,
-		HtmlBody: rendered.HTML,
-		TextBody: rendered.Text,
-		Status:   news.IssueStatusDraft,
-		SentAt:   time.Now().UTC(),
+		Slug:    day.Format("2006-01-02"),
+		Subject: rendered.Subject,
+		Status:  news.IssueStatusDraft,
+		SentAt:  time.Now().UTC(),
 	}
 
 	if a.issues != nil {

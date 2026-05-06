@@ -25,6 +25,7 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
+// Home handles the GoDaily homepage.
 func Home(a *godaily.App) webkit.Handler {
 	return func(c *webkit.Context) error {
 		return c.Render(pages.Home())

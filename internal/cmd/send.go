@@ -47,7 +47,7 @@ func sendCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			return a.Aggregator.SendDigest(ctx, date)
+			return a.Runner.SendDigest(ctx, date)
 		},
 	}
 }

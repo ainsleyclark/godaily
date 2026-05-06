@@ -1,0 +1,114 @@
+@use '../abstracts/mixins' as *;
+
+.email-preview {
+	max-width: 680px;
+	margin: 0 auto;
+	border-radius: 20px;
+	border: 1px solid var(--border);
+	box-shadow: 0 8px 40px rgba(42, 168, 216, 0.12);
+	overflow: hidden;
+
+	&__topbar {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.65rem 1rem;
+		background: var(--bg-2);
+		border-bottom: 1px solid var(--border);
+	}
+
+	&__topbar-dot {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		flex-shrink: 0;
+
+		&--red    { background: #fc5f5f; }
+		&--yellow { background: #fdbc40; }
+		&--green  { background: #34c84a; }
+	}
+
+	&__addr {
+		margin-left: auto;
+		font-size: 0.72rem;
+		color: var(--text-3);
+		font-family: 'DM Mono', monospace;
+
+		@include mobile {
+			display: none;
+		}
+	}
+
+	&__body {
+		background: var(--bg-card);
+		padding: 2rem 2.5rem;
+
+		@include mobile {
+			padding: 1.25rem 1rem;
+		}
+	}
+
+	&__header {
+		padding-bottom: 1.25rem;
+		margin-bottom: 0.5rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	&__logo-line {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 700;
+		font-size: 0.95rem;
+		color: var(--text);
+		margin-bottom: 0.4rem;
+	}
+
+	&__date {
+		font-size: 0.78rem;
+		color: var(--text-3);
+		margin-bottom: 0.85rem;
+	}
+
+	&__subject {
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--text);
+		margin-bottom: 0.5rem;
+	}
+
+	&__intro {
+		font-size: 0.875rem;
+		color: var(--text-2);
+		line-height: 1.6;
+	}
+
+	&__section-head {
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--accent);
+		padding-bottom: 0.5rem;
+		margin: 1.5rem 0 0.75rem;
+		border-bottom: 1.5px solid var(--accent-light);
+	}
+
+	&__footer {
+		margin-top: 1.5rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
+		font-size: 0.75rem;
+		color: var(--text-3);
+		text-align: center;
+		line-height: 2;
+
+		a {
+			color: var(--accent-dark);
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}

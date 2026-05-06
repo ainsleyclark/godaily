@@ -34,8 +34,9 @@ go.work.sum
 # Binaries
 godaily
 
-# Database
+# Database & Cache
 *.db
+.cache/
 
 # Web
 dist/

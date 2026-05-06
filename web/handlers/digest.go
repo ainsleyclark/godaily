@@ -17,37 +17,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package handlers
 
 import (
-	"context"
-	"fmt"
-	"time"
+	"errors"
+	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/internal/store"
+	"github.com/ainsleyclark/godaily/web/views/pages"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-func synthCmd(a *godaily.App) *cli.Command {
-	return &cli.Command{
-		Name:  "synth",
-		Usage: "Generate an AI post suggestion from the stored digest and email it to the owner.",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:  "date",
-				Usage: "Date of the digest to use (YYYY-MM-DD). Defaults to yesterday.",
-			},
-		},
-		Action: func(ctx context.Context, cmd *cli.Command) error {
-			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-			if raw := cmd.String("date"); raw != "" {
-				d, err := time.Parse("2006-01-02", raw)
-				if err != nil {
-					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
-				}
-				date = d
-			}
-			return a.Runner.SendSuggestion(ctx, date)
-		},
+// Digest handles individual news issues.
+func Digest(a *godaily.App) webkit.Handler {
+	return func(c *webkit.Context) error {
+		ctx := c.Context()
+
+		issue, err := a.Repository.Issues.FindBySlug(ctx, c.Param("slug"))
+		if err != nil && errors.Is(err, store.ErrNotFound) {
+			return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))
+		} else if err != nil {
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+		}
+
+		return c.Render(pages.Digest(issue))
 	}
 }
