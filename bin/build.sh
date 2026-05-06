@@ -8,10 +8,10 @@ log "pnpm: $(pnpm --version 2>/dev/null || echo 'NOT FOUND')"
 log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
 log "Installing web dependencies"
-pnpm --dir web install
+npm --dir web install
 
 log "Building web assets"
-pnpm --dir web build
+npm --dir web build
 
 log "Generating static site"
 go run main.go generate
