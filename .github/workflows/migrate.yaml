@@ -16,6 +16,12 @@ jobs:
           go-version-file: go.mod
           cache: true
 
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@latest
+
+      - name: Generate templ
+        run: templ generate
+
       - name: Apply migrations
         env:
           APP_ENV: production
