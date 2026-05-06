@@ -144,7 +144,7 @@ func TestAggregator_Collect(t *testing.T) {
 		},
 		"Continues On Fetch Error": {
 			registry: map[news.Source]news.Fetcher{
-				news.SourceDevTo:   mockFetcher{err: errors.New("boom")},
+				news.SourceDevTo: mockFetcher{err: errors.New("boom")},
 				news.SourceLobsters: mockFetcher{
 					items: []news.Item{{Title: "ok", Published: inWindow}},
 				},

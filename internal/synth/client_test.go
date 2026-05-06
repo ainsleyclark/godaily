@@ -171,7 +171,7 @@ func TestClient_Suggest(t *testing.T) {
 		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
 		_, err := c.Suggest(context.Background(), day, sampleSections())
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "parse:")
+		assert.Contains(t, err.Error(), "parse (raw=")
 	})
 
 	t.Run("OK Populates Date And Sends Cached Prompt", func(t *testing.T) {

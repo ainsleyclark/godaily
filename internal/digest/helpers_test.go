@@ -85,9 +85,11 @@ type errItemRepo struct {
 func (e errItemRepo) Find(_ context.Context, _ int64) (news.Item, error) {
 	return news.Item{}, nil
 }
+
 func (e errItemRepo) ListByIssue(_ context.Context, _ int64) ([]news.Item, error) {
 	return nil, e.err
 }
+
 func (e errItemRepo) Create(_ context.Context, _ int64, _ int, _ news.Item) (news.Item, error) {
 	return news.Item{}, nil
 }
