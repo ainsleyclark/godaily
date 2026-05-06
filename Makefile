@@ -27,6 +27,10 @@ serve-prod: # Start the HTTP web server without live-reload
 	go run main.go serve
 .PHONY: serve-prod
 
+build-static: # Build static site into out/ (mirrors bin/build.sh used by Vercel)
+	bash bin/build.sh
+.PHONY: build-static
+
 run-dry: # Run godaily and write the aggregated digest to examples/rendered/news.json
 	go run main.go run --dry-run --output examples/news.json
 .PHONY: run

@@ -52,3 +52,4 @@ web/dist/_templ_reload/
 
 # Static site output
 out/
+.vercel
