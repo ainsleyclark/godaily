@@ -81,7 +81,7 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {
-	slog.InfoContext(ctx, "fetching source", "source", source)
+	slog.InfoContext(ctx, "Fetching source", "source", source)
 
 	fetcher, err := news.Get(source)
 	if err != nil {
@@ -93,7 +93,7 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 		return nil, fmt.Errorf("fetching %s: %w", source, err)
 	}
 
-	slog.InfoContext(ctx, "fetched from source", "source", source, "items", len(items))
+	slog.InfoContext(ctx, "Fetched from source", "source", source, "items", len(items))
 
 	return items, nil
 }

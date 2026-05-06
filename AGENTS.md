@@ -360,6 +360,37 @@ func ValidatePort(port int) error {
 }
 ```
 
+Use `fmt.Errorf` with `%w` whenever the message requires any formatting — even
+a single dynamic value. Never combine `errors.Wrap` with `fmt.Sprintf`:
+
+```go
+// Correct — formatting needed, use fmt.Errorf
+return nil, fmt.Errorf("getting fetcher for %s: %w", source, err)
+
+// Wrong — don't combine errors.Wrap with fmt.Sprintf
+return nil, errors.Wrap(err, fmt.Sprintf("getting fetcher for %s", source))
+```
+
+## Logging
+
+The project uses `log/slog` for structured logging throughout.
+
+### Message capitalisation
+
+Every `slog` message string must start with a capital letter:
+
+```go
+// Correct
+slog.InfoContext(ctx, "Fetching source", "source", src)
+slog.ErrorContext(ctx, "Failed to fetch source", "source", src, "err", err)
+
+// Wrong — lowercase first word
+slog.InfoContext(ctx, "fetching source", "source", src)
+```
+
+This applies to all log levels (`slog.Info`, `slog.Warn`, `slog.Error`,
+`slog.Debug`, and their `*Context` variants).
+
 ## Testing
 
 All Go tests are written in one of two ways:

@@ -49,7 +49,7 @@ func main() {
 	rawDir := filepath.Join("..", "..", "examples", "raw")
 	for _, dir := range []string{renderedDir, rawDir} {
 		if err := os.MkdirAll(dir, 0o750); err != nil {
-			slog.Error("create dir", "dir", dir, "err", err)
+			slog.Error("Create dir", "dir", dir, "err", err)
 			os.Exit(1)
 		}
 	}
@@ -59,7 +59,7 @@ func main() {
 	for _, s := range news.Sources {
 		fetcher, err := news.Get(s)
 		if err != nil {
-			slog.Warn("skipping source", "source", s, "err", err)
+			slog.Warn("Skipping source", "source", s, "err", err)
 			continue
 		}
 
@@ -68,7 +68,7 @@ func main() {
 
 		items, err := fetcher.Fetch(ctx)
 		if err != nil {
-			slog.Error("fetch failed", "source", s, "err", err)
+			slog.Error("Fetch failed", "source", s, "err", err)
 			continue
 		}
 
@@ -78,23 +78,23 @@ func main() {
 			ext, body := rawExtAndBody(rec.contentType, rec.body)
 			rawPath := filepath.Join(rawDir, string(s)+"."+ext)
 			if err := os.WriteFile(rawPath, body, 0o600); err != nil {
-				slog.Error("write raw", "source", s, "err", err)
+				slog.Error("Write raw", "source", s, "err", err)
 			}
 		}
 
 		// Write transformed items.
 		data, err := json.MarshalIndent(items, "", "\t")
 		if err != nil {
-			slog.Error("marshal", "source", s, "err", err)
+			slog.Error("Marshal", "source", s, "err", err)
 			continue
 		}
 		renderedPath := filepath.Join(renderedDir, string(s)+".json")
 		if err := os.WriteFile(renderedPath, data, 0o600); err != nil {
-			slog.Error("write rendered", "source", s, "err", err)
+			slog.Error("Write rendered", "source", s, "err", err)
 			continue
 		}
 
-		slog.Info("wrote", "source", s, "items", len(items))
+		slog.Info("Wrote", "source", s, "items", len(items))
 	}
 }
 

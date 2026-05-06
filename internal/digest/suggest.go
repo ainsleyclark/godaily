@@ -23,12 +23,13 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"errors"
 	"fmt"
 	htmltemplate "html/template"
 	"log/slog"
 	texttemplate "text/template"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/store"
@@ -67,22 +68,22 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 		if errors.Is(err, store.ErrNotFound) {
 			return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
 		}
-		return fmt.Errorf("loading digest: %w", err)
+		return errors.Wrap(err, "loading digest")
 	}
 
 	sections, err := loadSections(ctx, a.items, issue.ID)
 	if err != nil {
-		return fmt.Errorf("loading items: %w", err)
+		return errors.Wrap(err, "loading items")
 	}
 
 	if len(sections) == 0 {
-		slog.InfoContext(ctx, "no items for synth suggestion, skipping")
+		slog.InfoContext(ctx, "No items for synth suggestion, skipping")
 		return nil
 	}
 
 	s, err := a.suggester.Suggest(ctx, date, sections)
 	if err != nil {
-		return fmt.Errorf("synth: %w", err)
+		return errors.Wrap(err, "synth")
 	}
 	s.Date = date
 
@@ -103,12 +104,12 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 func renderSuggestion(s synth.Suggestion) (html, text string, err error) {
 	var htmlBuf bytes.Buffer
 	if err = suggestHTMLTmpl.Execute(&htmlBuf, s); err != nil {
-		return "", "", fmt.Errorf("rendering suggest html: %w", err)
+		return "", "", errors.Wrap(err, "rendering suggest html")
 	}
 
 	var textBuf bytes.Buffer
 	if err = suggestTextTmpl.Execute(&textBuf, s); err != nil {
-		return "", "", fmt.Errorf("rendering suggest text: %w", err)
+		return "", "", errors.Wrap(err, "rendering suggest text")
 	}
 
 	return htmlBuf.String(), textBuf.String(), nil

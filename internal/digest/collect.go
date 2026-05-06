@@ -21,14 +21,14 @@ package digest
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"sort"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
-	"github.com/pkg/errors"
 )
 
 // CollectOptions configures a Collect call.
@@ -58,14 +58,14 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	for _, src := range sources {
 		fetched, err := a.fetchSource(ctx, src)
 		if err != nil {
-			slog.ErrorContext(ctx, "failed to fetch source", "source", src, "err", err)
+			slog.ErrorContext(ctx, "Failed to fetch source", "source", src, "err", err)
 			continue
 		}
 		si := news.SourceItems{Source: src}
 
 		for _, item := range fetched {
 			if item.Published.IsZero() {
-				slog.ErrorContext(ctx, "item has zero published date", "source", src, "title", item.Title)
+				slog.ErrorContext(ctx, "Item has zero published date", "source", src, "title", item.Title)
 				continue
 			}
 			if item.Published.After(day) && item.Published.Before(next) {
@@ -73,7 +73,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 			}
 		}
 
-		slog.InfoContext(ctx, "date-filtered source", "source", src, "kept", len(si.Items), "total", len(fetched))
+		slog.InfoContext(ctx, "Date-filtered source", "source", src, "kept", len(si.Items), "total", len(fetched))
 		if len(si.Items) > 0 {
 			sort.SliceStable(si.Items, func(i, j int) bool {
 				return si.Items[i].Score > si.Items[j].Score
@@ -88,7 +88,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 
 	if opts.DryRun || len(results) == 0 {
 		if !opts.DryRun {
-			slog.WarnContext(ctx, "no items found for date window, issue will not be created", "date", day.Format("2006-01-02"))
+			slog.WarnContext(ctx, "No items found for date window, issue will not be created", "date", day.Format("2006-01-02"))
 		}
 		return results, nil
 	}
@@ -113,7 +113,7 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 	_, err := a.issues.FindBySlug(ctx, issue.Slug)
 	switch {
 	case err == nil: // No error indicates it exists.
-		slog.WarnContext(ctx, "issue already persisted in the store, skipping", "slug", issue.Slug)
+		slog.WarnContext(ctx, "Issue already persisted in the store, skipping", "slug", issue.Slug)
 		return nil
 	case !errors.Is(err, store.ErrNotFound): // Is a database error.
 		return errors.Wrap(err, "checking existing issue")
@@ -130,7 +130,7 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 			position++
 			item.Source = section.Source
 			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
-				return fmt.Errorf("creating news item: %w", err)
+				return errors.Wrap(err, "creating news item")
 			}
 		}
 	}
