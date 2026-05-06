@@ -29,7 +29,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
 )
 
@@ -302,7 +301,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
 	})
 
-	t.Run("Second Collect Same Day Errors Without Creating Duplicate", func(t *testing.T) {
+	t.Run("Second Collect Same Day Skips Without Creating Duplicate", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		issueRepo, itemRepo := newTestStores(t)
@@ -320,8 +319,10 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		require.NoError(t, err)
 		require.NotZero(t, first.ID)
 
+		// Second collect on the same day logs a warning and returns nil;
+		// the existing issue must not be duplicated.
 		_, err = agg.Collect(t.Context(), opts)
-		require.ErrorIs(t, err, store.ErrAlreadyExists)
+		require.NoError(t, err)
 
 		second, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)

@@ -113,7 +113,8 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 	_, err := a.issues.FindBySlug(ctx, issue.Slug)
 	switch {
 	case err == nil: // No error indicates it exists.
-		return store.ErrAlreadyExists
+		slog.WarnContext(ctx, "Issue already persisted in the store, skipping", "slug", issue.Slug)
+		return nil
 	case !errors.Is(err, store.ErrNotFound): // Is a database error.
 		return errors.Wrap(err, "checking existing issue")
 	}
