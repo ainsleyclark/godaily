@@ -9,10 +9,10 @@ log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
 log "Installing web dependencies"
 cd web
-npm install
+pnpm npm install
 
 log "Building web assets"
-npm run build
+pnpm run build
 
 log "Generating static site"
 cd ../
