@@ -21,7 +21,7 @@ package cmd
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
@@ -36,7 +36,7 @@ func Run() {
 	app, teardown, err := godaily.Bootstrap(ctx)
 	defer teardown()
 	if err != nil {
-		exit(err)
+		exit(ctx, err)
 	}
 
 	cmd := &cli.Command{
@@ -55,12 +55,13 @@ func Run() {
 	}
 
 	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(err)
+		exit(ctx, err)
 	}
 }
 
-func exit(err error) {
+func exit(ctx context.Context, err error) {
 	if err != nil {
-		log.Fatal(err)
+		slog.ErrorContext(ctx, err.Error())
+		os.Exit(1)
 	}
 }

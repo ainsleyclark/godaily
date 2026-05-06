@@ -69,27 +69,14 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	if (issues == nil) != (items == nil) {
-		return nil, errors.New("issues and items repositories must be both set or both nil")
-	}
 	to := os.Getenv("EMAIL_SEND_ADDRESS")
 	if to == "" {
 		slog.Warn("EMAIL_SEND_ADDRESS not set, digest emails will be skipped")
 	}
-
-	// Synth is optional; without an API key we leave it nil so the
-	// Aggregator still produces a digest.
-	var sg suggester
-	if os.Getenv("ANTHROPIC_API_KEY") != "" {
-		sg = synth.New()
-	} else {
-		slog.Warn("ANTHROPIC_API_KEY not set, synth suggestions disabled")
-	}
-
 	return &Aggregator{
 		email:         email.New(),
 		sendToAddress: to,
-		suggester:     sg,
+		suggester:     synth.New(),
 		issues:        issues,
 		items:         items,
 	}, nil
@@ -113,18 +100,18 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 	return items, nil
 }
 
-func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) (news.Issue, error) {
+func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
 	_, err := a.issues.FindBySlug(ctx, issue.Slug)
 	switch {
 	case err == nil:
-		return news.Issue{}, fmt.Errorf("%w: slug %s", store.ErrAlreadyExists, issue.Slug)
+		return fmt.Errorf("issue %w: slug %s", store.ErrAlreadyExists, issue.Slug)
 	case !errors.Is(err, store.ErrNotFound):
-		return news.Issue{}, fmt.Errorf("checking existing issue: %w", err)
+		return fmt.Errorf("checking existing issue: %w", err)
 	}
 
 	created, err := a.issues.Create(ctx, issue)
 	if err != nil {
-		return news.Issue{}, fmt.Errorf("creating issue: %w", err)
+		return fmt.Errorf("creating issue: %w", err)
 	}
 
 	var position int
@@ -133,10 +120,12 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 			position++
 			item.Source = section.Source
 			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
-				return news.Issue{}, fmt.Errorf("creating news item: %w", err)
+				return fmt.Errorf("creating news item: %w", err)
 			}
 		}
 	}
 
-	return created, nil
+	slog.InfoContext(ctx, "Persisted issue", "source", issue.Slug)
+
+	return nil
 }

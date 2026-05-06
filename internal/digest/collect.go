@@ -21,7 +21,6 @@ package digest
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"sort"
 	"time"
@@ -104,11 +103,5 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 		SentAt:  time.Now().UTC(),
 	}
 
-	if a.issues != nil {
-		if _, err = a.persistIssue(ctx, issue, results); err != nil {
-			return results, fmt.Errorf("persisting issue: %w", err)
-		}
-	}
-
-	return results, nil
+	return results, a.persistIssue(ctx, issue, results)
 }

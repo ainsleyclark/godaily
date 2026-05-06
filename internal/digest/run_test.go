@@ -154,19 +154,6 @@ func TestAggregator_Collect(t *testing.T) {
 				assert.Len(t, items[0].Items, 1)
 			},
 		},
-		"Returns Items When Not DryRun": {
-			registry: map[news.Source]news.Fetcher{
-				news.SourceDevTo: mockFetcher{
-					items: []news.Item{{Title: "in", Published: inWindow}},
-				},
-			},
-			opts: CollectOptions{Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
-				t.Helper()
-				require.NoError(t, err)
-				require.Len(t, items, 1)
-			},
-		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
 			opts:     CollectOptions{DryRun: true},
@@ -298,7 +285,7 @@ func TestAggregator_Collect_NoSynth(t *testing.T) {
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
 		agg := Aggregator{suggester: sg}
 
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 		assert.False(t, sg.called, "synth must not be called during Collect")
 	})

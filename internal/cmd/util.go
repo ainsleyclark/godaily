@@ -20,6 +20,7 @@
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -28,7 +29,7 @@ import (
 
 func prettyJSON(v any) []byte {
 	b, err := json.MarshalIndent(v, "", "\t")
-	exit(err)
+	exit(context.Background(), err)
 	return b
 }
 
