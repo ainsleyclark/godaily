@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "build": "bash bin/build.sh"
-  }
-}

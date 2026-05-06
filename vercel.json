@@ -1,17 +1,14 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"version": 2,
-	"builds": [
-		{
-			"src": "package.json",
-			"use": "@vercel/static-build",
-			"config": { "distDir": "out" }
-		},
-		{
-			"src": "api/*/index.go",
-			"use": "@vercel/go@3.6.0"
+	"framework": null,
+	"buildCommand": "bash bin/build.sh",
+	"outputDirectory": "out",
+	"functions": {
+		"api/**/*.go": {
+			"runtime": "@vercel/go@3.6.0"
 		}
-	],
+	},
 	"trailingSlash": true,
 	"cleanUrls": true
 }
