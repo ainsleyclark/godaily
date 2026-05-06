@@ -38,15 +38,29 @@ const brokenTpl = `{{ .Missing.NotAField }}`
 var sendDigestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)
 
 func sampleSections() []news.SourceItems {
-	return []news.SourceItems{{
-		Source: news.SourceDevTo,
-		Items: []news.Item{{
-			Title:     "hello",
-			URL:       "https://example.com",
-			Author:    &news.Author{Name: "gopher"},
-			Published: sendDigestDay.Add(time.Hour),
-		}},
-	}}
+	return []news.SourceItems{
+		{
+			Source: news.SourceHN, // ranked source to exercise the rank badge path
+			Items: []news.Item{
+				{
+					Title:     "hello",
+					URL:       "https://example.com",
+					Score:     42,
+					Comments:  7,
+					Published: sendDigestDay.Add(time.Hour),
+				},
+			},
+		},
+		{
+			Source: news.SourceDevTo,
+			Items: []news.Item{{
+				Title:     "world",
+				URL:       "https://dev.to/world",
+				Author:    &news.Author{Name: "gopher"},
+				Published: sendDigestDay.Add(time.Hour),
+			}},
+		},
+	}
 }
 
 func TestRenderDigest(t *testing.T) {
@@ -56,6 +70,8 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.Subject, "April 26, 2026")
 		assert.Contains(t, got.HTML, "hello")
 		assert.Contains(t, got.Text, "hello")
+		assert.Contains(t, got.HTML, "42 pts")
+		assert.Contains(t, got.HTML, "7 comments")
 	})
 
 	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl

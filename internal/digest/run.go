@@ -67,13 +67,9 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	adminEmailAddress := os.Getenv("EMAIL_SEND_ADDRESS")
-	if adminEmailAddress == "" {
-		adminEmailAddress = "hello@ainsley.dev"
-	}
 	return &Aggregator{
 		email:             email.New(),
-		adminEmailAddress: adminEmailAddress,
+		adminEmailAddress: os.Getenv("EMAIL_SEND_ADDRESS"),
 		suggester:         synth.New(),
 		issues:            issues,
 		items:             items,

@@ -22,7 +22,6 @@ package digest
 import (
 	"bytes"
 	"context"
-	_ "embed"
 	"fmt"
 	htmltemplate "html/template"
 	"strings"
@@ -33,17 +32,12 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/templates"
 )
 
-//go:embed email.html
-var emailHTML string
-
-//go:embed email.txt
-var emailText string
-
 var (
-	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(emailHTML))
-	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(emailText))
+	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(templates.EmailHTML))
+	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(templates.EmailText))
 )
 
 type (
