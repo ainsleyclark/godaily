@@ -21,11 +21,12 @@ package digest
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"sort"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
@@ -42,19 +43,19 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
 	if errors.Is(err, store.ErrNotFound) {
 		return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
 	} else if err != nil {
-		return fmt.Errorf("loading digest: %w", err)
+		return errors.Wrap(err, "loading digest")
 	} else if issue.Status != news.IssueStatusDraft {
 		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
 	}
 
 	sections, err := loadSections(ctx, a.items, issue.ID)
 	if err != nil {
-		return fmt.Errorf("loading sections: %w", err)
+		return errors.Wrap(err, "loading sections")
 	}
 
 	rendered, err := renderDigest(date, sections)
 	if err != nil {
-		return fmt.Errorf("rendering digest: %w", err)
+		return errors.Wrap(err, "rendering digest")
 	}
 
 	status := news.IssueStatusSent

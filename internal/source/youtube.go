@@ -57,7 +57,7 @@ func NewYouTube() *YouTube {
 // Fetch retrieves the latest Go-related videos from YouTube, sorted by upload date.
 func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if y.key == "" {
-		slog.Warn("youtube: YOUTUBE_API_KEY is not set, skipping")
+		slog.Warn("YOUTUBE_API_KEY is not set, skipping")
 		return nil, nil
 	}
 	sep := "?"

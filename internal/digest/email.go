@@ -29,6 +29,8 @@ import (
 	texttemplate "text/template"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
 )
@@ -105,12 +107,12 @@ func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, er
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {
-		return renderedDigest{}, fmt.Errorf("rendering html: %w", err)
+		return renderedDigest{}, errors.Wrap(err, "rendering html")
 	}
 
 	var textBuf bytes.Buffer
 	if err := textTmpl.Execute(&textBuf, data); err != nil {
-		return renderedDigest{}, fmt.Errorf("rendering text: %w", err)
+		return renderedDigest{}, errors.Wrap(err, "rendering text")
 	}
 
 	return renderedDigest{

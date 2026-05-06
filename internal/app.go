@@ -62,7 +62,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	conn, err := db.New(ctx, config.TursoURL, config.TursoAuthToken)
 	teardown := func() {
 		if err = conn.Close(); err != nil {
-			slog.ErrorContext(ctx, "closing connection to database", "error", err)
+			slog.ErrorContext(ctx, "Closing connection to database", "error", err)
 		}
 	}
 	if err != nil {

@@ -95,7 +95,7 @@ func enrich(ctx context.Context, targets []enrichTarget) {
 
 			doc, base, err := fetchPage(fetchCtx, t.URL)
 			if err != nil {
-				slog.DebugContext(ctx, "enrichment failed", "url", t.URL, "err", err)
+				slog.DebugContext(ctx, "Enrichment failed", "url", t.URL, "err", err)
 				return
 			}
 			if t.Item.Snippet == "" {

@@ -21,7 +21,6 @@ package synth
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"strings"
@@ -29,6 +28,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 )
@@ -124,14 +124,14 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 		References []Ref  `json:"references"`
 	}
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
-		return Suggestion{}, fmt.Errorf("parse: %w (raw=%q)", err, body)
+		return Suggestion{}, errors.Wrap(err, fmt.Sprintf("parse (raw=%q)", body))
 	}
 
 	if out.Post == "" {
 		return Suggestion{}, errors.New("missing post field")
 	}
 	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
-		slog.Warn("post exceeded char limit", "chars", n, "max", maxPostChars)
+		slog.Warn("Post exceeded char limit", "chars", n, "max", maxPostChars)
 	}
 
 	return Suggestion{

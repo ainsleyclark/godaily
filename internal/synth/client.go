@@ -25,12 +25,12 @@ package synth
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"time"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
+	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/internal/news"
 )
@@ -70,7 +70,7 @@ func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.Sou
 
 	user := buildUserPrompt(day, items)
 
-	slog.InfoContext(ctx, "calling anthropic",
+	slog.InfoContext(ctx, "Calling anthropic",
 		"model", model,
 		"items", len(items),
 		"max_tokens", maxTokens,
@@ -86,10 +86,10 @@ func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.Sou
 		},
 	})
 	if err != nil {
-		return Suggestion{}, fmt.Errorf("anthropic: %w", err)
+		return Suggestion{}, errors.Wrap(err, "anthropic")
 	}
 
-	slog.InfoContext(ctx, "synth response",
+	slog.InfoContext(ctx, "Synth response",
 		"model", resp.Model,
 		"input_tokens", resp.Usage.InputTokens,
 		"output_tokens", resp.Usage.OutputTokens,
