@@ -21,7 +21,6 @@ package digest
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -31,6 +30,7 @@ import (
 	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
+	"github.com/pkg/errors"
 )
 
 // Runner is the interface for the daily news aggregation pipeline.
@@ -103,15 +103,16 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
 	_, err := a.issues.FindBySlug(ctx, issue.Slug)
 	switch {
-	case err == nil:
-		return fmt.Errorf("issue %w: slug %s", store.ErrAlreadyExists, issue.Slug)
-	case !errors.Is(err, store.ErrNotFound):
-		return fmt.Errorf("checking existing issue: %w", err)
+	case err == nil: // No error indicates it exists.
+		slog.WarnContext(ctx, "issue already persisted in the store, skipping", "slug", issue.Slug)
+		return nil
+	case !errors.Is(err, store.ErrNotFound): // Is a database error.
+		return errors.Wrap(err, "checking existing issue")
 	}
 
 	created, err := a.issues.Create(ctx, issue)
 	if err != nil {
-		return fmt.Errorf("creating issue: %w", err)
+		return errors.Wrap(err, "creating issue")
 	}
 
 	var position int
@@ -125,7 +126,7 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 		}
 	}
 
-	slog.InfoContext(ctx, "Persisted issue", "source", issue.Slug)
+	slog.InfoContext(ctx, "Persisted issue", "slug", issue.Slug)
 
 	return nil
 }
