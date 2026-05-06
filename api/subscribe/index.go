@@ -20,9 +20,39 @@
 // Package handler is the Vercel serverless function for POST /api/subscribe.
 package handler
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+	"os"
+
+	"github.com/ainsleyclark/godaily/internal/db"
+	"github.com/ainsleyclark/godaily/internal/store/issues"
+)
 
 // Handler is the Vercel serverless function entry point.
+//
+// Temporary: lists the 5 most recent issues from Turso to verify DB
+// connectivity works from a Vercel Function before full implementation.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Not implemented", http.StatusNotImplemented)
+	ctx := r.Context()
+
+	conn, err := db.New(ctx, os.Getenv("TURSO_URL"), os.Getenv("TURSO_AUTH_TOKEN"))
+	if err != nil {
+		http.Error(w, "failed to connect to database: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer conn.Close()
+
+	store := issues.New(conn)
+	latest, err := store.Latest(ctx, 5)
+	if err != nil {
+		http.Error(w, "failed to query issues: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]any{
+		"ok":     true,
+		"issues": len(latest),
+	})
 }

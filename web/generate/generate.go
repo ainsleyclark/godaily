@@ -26,7 +26,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/fs"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -40,7 +39,7 @@ import (
 // Site renders all sent issues and the homepage to outDir, then copies
 // compiled frontend assets from assetsDir into outDir/assets.
 func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir string) error {
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
+	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return errors.Wrap(err, "creating output directory")
 	}
 
@@ -75,7 +74,7 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 			return fmt.Errorf("fetching issue %d: %w", issue.ID, err)
 		}
 		dir := filepath.Join(outDir, "digest", issue.Slug)
-		if err := os.MkdirAll(dir, 0o755); err != nil {
+		if err := os.MkdirAll(dir, 0o750); err != nil {
 			return fmt.Errorf("creating digest directory for %s: %w", issue.Slug, err)
 		}
 		if err := renderPage(ctx, filepath.Join(dir, "index.html"), pages.Digest(full)); err != nil {
@@ -96,11 +95,29 @@ func renderPage(ctx context.Context, path string, component templ.Component) err
 	if err := component.Render(ctx, &buf); err != nil {
 		return errors.Wrap(err, "rendering component")
 	}
-	return errors.Wrap(os.WriteFile(path, buf.Bytes(), 0o644), "writing file")
+	return errors.Wrap(os.WriteFile(path, buf.Bytes(), 0o600), "writing file")
 }
 
+// copyDir copies all files from src into dst using os.Root to scope both
+// directories, preventing directory traversal (gosec G304).
 func copyDir(src, dst string) error {
-	return filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
+	if err := os.MkdirAll(dst, 0o750); err != nil {
+		return errors.Wrap(err, "creating destination root")
+	}
+
+	srcRoot, err := os.OpenRoot(src)
+	if err != nil {
+		return errors.Wrap(err, "opening source root")
+	}
+	defer srcRoot.Close()
+
+	dstRoot, err := os.OpenRoot(dst)
+	if err != nil {
+		return errors.Wrap(err, "opening destination root")
+	}
+	defer dstRoot.Close()
+
+	return filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -108,26 +125,24 @@ func copyDir(src, dst string) error {
 		if relErr != nil {
 			return relErr
 		}
-		dstPath := filepath.Join(dst, rel)
-		if d.IsDir() {
-			return os.MkdirAll(dstPath, 0o755)
+		if rel == "." {
+			return nil
 		}
-		return copyFile(path, dstPath)
+		if d.IsDir() {
+			return dstRoot.MkdirAll(rel, 0o750)
+		}
+		return copyFile(srcRoot, dstRoot, rel)
 	})
 }
 
-func copyFile(src, dst string) error {
-	in, err := os.Open(src)
+func copyFile(src, dst *os.Root, rel string) error {
+	in, err := src.Open(rel)
 	if err != nil {
 		return errors.Wrap(err, "opening source file")
 	}
 	defer in.Close()
 
-	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
-		return errors.Wrap(err, "creating destination directory")
-	}
-
-	out, err := os.Create(dst)
+	out, err := dst.Create(rel)
 	if err != nil {
 		return errors.Wrap(err, "creating destination file")
 	}
