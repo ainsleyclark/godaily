@@ -8,12 +8,14 @@ log "pnpm: $(pnpm --version 2>/dev/null || echo 'NOT FOUND')"
 log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
 log "Installing web dependencies"
-npm --dir web install
+cd web
+npm install
 
 log "Building web assets"
-npm --dir web build
+npm run build
 
 log "Generating static site"
+cd ../
 go run main.go generate
 
 log "Done — output in out/"
