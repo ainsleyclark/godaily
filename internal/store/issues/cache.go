@@ -54,8 +54,8 @@ func (s *CachingStore) FindBySlug(ctx context.Context, slug string) (news.Issue,
 	})
 }
 
-func (s *CachingStore) List(ctx context.Context) ([]news.Issue, error) {
-	return s.repo.List(ctx)
+func (s *CachingStore) Latest(ctx context.Context, limit int) ([]news.Issue, error) {
+	return s.repo.Latest(ctx, limit)
 }
 
 func (s *CachingStore) Create(ctx context.Context, issue news.Issue) (news.Issue, error) {

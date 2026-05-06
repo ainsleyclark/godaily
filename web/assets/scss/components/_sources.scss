@@ -1,0 +1,43 @@
+.sources {
+	background: var(--bg-2);
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		gap: 1rem;
+		margin-top: 2.5rem;
+	}
+
+	&__pill {
+		background: #ffffff;
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 1.1rem 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--text);
+		transition: transform 0.15s, box-shadow 0.15s;
+
+		&:hover {
+			transform: translateY(-2px);
+			box-shadow: var(--shadow-pill);
+		}
+	}
+
+	&__icon {
+		width: 32px;
+		height: 32px;
+		border-radius: 8px;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__name {
+		line-height: 1.2;
+	}
+}

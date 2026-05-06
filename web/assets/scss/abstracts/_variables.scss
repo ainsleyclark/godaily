@@ -9,5 +9,18 @@
 	--text-2:       #3a6880;
 	--text-3:       #6b9ab8;
 	--border:       #d0e8f5;
+	--gopher:       #8dcfe8;
+	--gopher-dark:  #62b5d4;
+	--gopher-belly: #cce8f5;
+	--gopher-snout: #d4a07a;
+	--gopher-ear:   #c48a5e;
 	--radius:       16px;
+	--font:         'DM Sans', sans-serif;
+	--mono:         'DM Mono', monospace;
+	--shadow-card:  0 8px 28px rgba(42, 168, 216, 0.1);
+	--shadow-pill:  0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+html {
+	scroll-behavior: smooth;
 }

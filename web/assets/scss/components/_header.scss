@@ -1,0 +1,28 @@
+@use '../abstracts/mixins' as *;
+
+.header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: rgba(245, 251, 255, 0.9);
+	backdrop-filter: blur(12px);
+	border-bottom: 1px solid var(--border);
+	padding: 0 2rem;
+	height: 64px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	@include mobile {
+		padding: 0 1rem;
+	}
+
+	&__logo {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		font-weight: 700;
+		font-size: 1.2rem;
+		color: var(--text);
+	}
+}

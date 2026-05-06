@@ -102,19 +102,19 @@ func (mr *MockIssueRepositoryMockRecorder) FindBySlug(ctx, slug any) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindBySlug", reflect.TypeOf((*MockIssueRepository)(nil).FindBySlug), ctx, slug)
 }
 
-// List mocks base method.
-func (m *MockIssueRepository) List(ctx context.Context) ([]news.Issue, error) {
+// Latest mocks base method.
+func (m *MockIssueRepository) Latest(ctx context.Context, limit int) ([]news.Issue, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx)
+	ret := m.ctrl.Call(m, "Latest", ctx, limit)
 	ret0, _ := ret[0].([]news.Issue)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// List indicates an expected call of List.
-func (mr *MockIssueRepositoryMockRecorder) List(ctx any) *gomock.Call {
+// Latest indicates an expected call of Latest.
+func (mr *MockIssueRepositoryMockRecorder) Latest(ctx, limit any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIssueRepository)(nil).List), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Latest", reflect.TypeOf((*MockIssueRepository)(nil).Latest), ctx, limit)
 }
 
 // UpdateStatus mocks base method.

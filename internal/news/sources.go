@@ -82,6 +82,20 @@ var Sources = []Source{
 	SourceJetBrains,
 }
 
+// FeaturedSources is the curated subset rendered on the marketing homepage,
+// ordered for display.
+var FeaturedSources = []Source{
+	SourceHN,
+	SourceReddit,
+	SourceLobsters,
+	SourceDevTo,
+	SourceGitHubTrending,
+	SourceYouTube,
+	SourceGoBlog,
+	SourceGoRelease,
+	SourceJetBrains,
+}
+
 // String implements fmt.Stringer on source.
 func (s Source) String() string {
 	return string(s)

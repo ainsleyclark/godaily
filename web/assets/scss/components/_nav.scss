@@ -1,0 +1,32 @@
+@use '../abstracts/mixins' as *;
+
+.nav {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+
+	@include mobile {
+		gap: 0.9rem;
+	}
+
+	&__list {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+
+		@include mobile {
+			gap: 0.9rem;
+		}
+	}
+
+	&__link {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-2);
+		transition: color 0.2s;
+
+		&:hover {
+			color: var(--accent);
+		}
+	}
+}

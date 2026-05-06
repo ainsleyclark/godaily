@@ -1,9 +1,25 @@
 package pages
 
-import "github.com/ainsleyclark/godaily/web/views/layouts"
+import (
+	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
 
-templ Home() {
+// HomeData carries the dynamic content rendered on the marketing homepage.
+type HomeData struct {
+	LatestIssue news.Issue
+	SampleIssue news.Issue
+}
+
+templ Home(data HomeData) {
 	@layouts.Base() {
-		<h1>Hello World</h1>
+		@components.Header()
+		@components.Hero()
+		@components.Features()
+		@components.Sources()
+		@components.Latest(data.LatestIssue)
+		@components.SampleSection(data.SampleIssue)
+		@components.Footer()
 	}
 }

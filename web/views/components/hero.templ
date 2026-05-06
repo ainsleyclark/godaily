@@ -1,0 +1,35 @@
+package components
+
+templ Hero() {
+	<section id="hero" class="hero">
+		<div class="hero__content">
+			<div class="hero__badge">
+				<span class="hero__badge-dot"></span>
+				<span>Open source, built in Go</span>
+			</div>
+			<h1 class="hero__title">
+				Daily <span class="hero__title-accent">Go</span> news,<br/>
+				straight to your inbox
+			</h1>
+			<p class="hero__lead">
+				The best stories from the Go community, summarised by Claude and delivered before standup. Free, weekday mornings, no noise.
+			</p>
+			<form class="hero__form" data-subscribe>
+				<input
+					class="hero__input"
+					type="email"
+					name="email"
+					placeholder="you@example.com"
+					autocomplete="email"
+					aria-label="Email address"
+					required
+				/>
+				<button class="button button--primary" type="submit">Get the digest</button>
+			</form>
+			<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
+		</div>
+		<div class="hero__visual" aria-hidden="true">
+			<div class="hero__placeholder">illustration placeholder</div>
+		</div>
+	</section>
+}

@@ -1,0 +1,33 @@
+package components
+
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/web/views/graphics/logos"
+)
+
+templ Sources() {
+	<section id="sources" class="sources">
+		<div class="section">
+			<div class="section__label">Coverage</div>
+			<h2 class="section__title">{ fmt.Sprintf("%d sources. Zero tabs to babysit.", len(news.FeaturedSources)) }</h2>
+			<p class="section__sub">
+				GoDaily watches the places Go developers actually talk, then aggregates, deduplicates and ranks the day's best.
+			</p>
+			<div class="sources__grid">
+				for _, src := range news.FeaturedSources {
+					<div class="sources__pill">
+						<div
+							class="sources__icon"
+							style={ "background:" + logos.Background(src) }
+						>
+							@logos.SourceLogo(src, 18)
+						</div>
+						<span class="sources__name">{ src.NiceName() }</span>
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+}

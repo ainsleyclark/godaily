@@ -1,0 +1,30 @@
+.footer {
+	border-top: 1px solid var(--border);
+	padding: 2.5rem 2rem;
+	text-align: center;
+	font-size: 0.83rem;
+	color: var(--text-3);
+
+	&__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--text);
+		font-weight: 700;
+		margin-bottom: 1rem;
+	}
+
+	&__text {
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	&__link {
+		color: var(--accent);
+
+		&:hover {
+			color: var(--accent-dark);
+		}
+	}
+}

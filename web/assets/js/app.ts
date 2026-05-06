@@ -6,4 +6,8 @@
  * @author Email: hello@ainsley.dev
  */
 
-console.log('hello');
+import { initSubscribeForm } from './subscribe';
+
+document.addEventListener('DOMContentLoaded', () => {
+	initSubscribeForm();
+});
