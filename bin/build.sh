@@ -7,9 +7,6 @@ log "go:   $(go version 2>/dev/null || echo 'NOT FOUND')"
 log "pnpm: $(pnpm --version 2>/dev/null || echo 'NOT FOUND')"
 log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
-log "Installing pnpm"
-npm install -g pnpm
-
 log "Installing web dependencies"
 pnpm --dir web install
 
