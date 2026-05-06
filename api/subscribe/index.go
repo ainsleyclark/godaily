@@ -25,8 +25,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ainsleyclark/godaily/internal/db"
-	"github.com/ainsleyclark/godaily/internal/store/issues"
+	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/store/issues"
 )
 
 // Handler is the Vercel serverless function entry point.

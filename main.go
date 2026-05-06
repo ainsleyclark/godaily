@@ -20,7 +20,7 @@
 package main
 
 import (
-	"github.com/ainsleyclark/godaily/internal/cmd"
+	"github.com/ainsleyclark/godaily/pkg/cmd"
 )
 
 func main() {

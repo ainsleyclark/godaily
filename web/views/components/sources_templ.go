@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"fmt"
 
-	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/graphics/logos"
 )
 

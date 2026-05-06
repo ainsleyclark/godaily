@@ -38,9 +38,9 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/ainsleyclark/godaily/internal/ingest"
-	"github.com/ainsleyclark/godaily/internal/news"
-	_ "github.com/ainsleyclark/godaily/internal/source"
+	"github.com/ainsleyclark/godaily/pkg/ingest"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	_ "github.com/ainsleyclark/godaily/pkg/source"
 )
 
 func main() {

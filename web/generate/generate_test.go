@@ -29,8 +29,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	mocknews "github.com/ainsleyclark/godaily/internal/mocks/news"
-	"github.com/ainsleyclark/godaily/internal/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 

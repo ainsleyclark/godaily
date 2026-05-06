@@ -1,7 +1,6 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"version": 2,
-	"framework": "go",
 	"buildCommand": "bash bin/build.sh",
 	"outputDirectory": "out",
 	"trailingSlash": true,

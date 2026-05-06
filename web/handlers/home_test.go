@@ -30,9 +30,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
-	mocknews "github.com/ainsleyclark/godaily/internal/mocks/news"
-	"github.com/ainsleyclark/godaily/internal/news"
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 

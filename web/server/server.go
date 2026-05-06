@@ -25,7 +25,7 @@ import (
 
 	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleydev/webkit/pkg/env"
 	"github.com/ainsleydev/webkit/pkg/webkit"

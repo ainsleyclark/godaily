@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/ainsleyclark/godaily/internal/news"
+import "github.com/ainsleyclark/godaily/pkg/news"
 
 func DigestSection(emoji string, title string, items []news.Item, ranked bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

@@ -22,8 +22,8 @@ package handlers
 import (
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
-	"github.com/ainsleyclark/godaily/internal/news"
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )

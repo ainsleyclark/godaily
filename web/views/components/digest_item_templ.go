@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
 func DigestItem(item news.Item, rank int) templ.Component {

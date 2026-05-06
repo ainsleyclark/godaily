@@ -13,7 +13,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/graphics"
 )
 
