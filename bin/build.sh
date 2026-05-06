@@ -7,8 +7,11 @@ log "go:   $(go version 2>/dev/null || echo 'NOT FOUND')"
 log "pnpm: $(pnpm --version 2>/dev/null || echo 'NOT FOUND')"
 log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
-log "Building web assets"
+log "Installing web dependencies"
 cd web
+pnpm install
+
+log "Building web assets"
 pnpm run build
 
 log "Generating static site"
