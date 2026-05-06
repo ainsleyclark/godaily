@@ -3,5 +3,14 @@
 @use 'base/reset';
 @use 'base/typography';
 @use 'layout/section';
+@use 'components/button';
+@use 'components/rule';
+@use 'components/header';
+@use 'components/nav';
+@use 'components/hero';
+@use 'components/features';
+@use 'components/sources';
+@use 'components/latest';
+@use 'components/footer';
 @use 'components/email-preview';
 @use 'components/digest-item';

@@ -2,6 +2,7 @@
 	--bg:           #f5fbff;
 	--bg-2:         #e8f4fc;
 	--bg-card:      #ffffff;
+	--bg-header:    rgba(245, 251, 255, 0.9);
 	--accent:       #2aa8d8;
 	--accent-dark:  #1a7fa8;
 	--accent-light: #c8e9f6;
@@ -9,5 +10,27 @@
 	--text-2:       #3a6880;
 	--text-3:       #6b9ab8;
 	--border:       #d0e8f5;
+	--gopher:       #8dcfe8;
+	--gopher-dark:  #62b5d4;
+	--gopher-belly: #cce8f5;
+	--gopher-snout: #d4a07a;
+	--gopher-ear:   #c48a5e;
+	--color-white:       #ffffff;
+	--color-success:     #2dbd7a;
+	--color-error:       #fc5f5f;
+	--color-mac-yellow:  #fdbc40;
+	--color-mac-green:   #34c84a;
 	--radius:       16px;
+	--font:         'DM Sans', sans-serif;
+	--mono:         'DM Mono', monospace;
+	--shadow-card:              0 8px 28px rgba(42, 168, 216, 0.1);
+	--shadow-pill:              0 4px 16px rgba(0, 0, 0, 0.07);
+	--shadow-email:             0 8px 40px rgba(42, 168, 216, 0.12);
+	--shadow-button-primary:    0 4px 14px rgba(42, 168, 216, 0.3);
+	--shadow-button-primary-hover: 0 6px 18px rgba(42, 168, 216, 0.4);
+	--shadow-button-success:    0 4px 14px rgba(45, 189, 122, 0.25);
+}
+
+html {
+	scroll-behavior: smooth;
 }

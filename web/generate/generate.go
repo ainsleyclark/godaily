@@ -51,7 +51,21 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 
 	slog.InfoContext(ctx, "Generating static site", "issues", len(allIssues), "out", outDir)
 
-	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(allIssues)); err != nil {
+	latest, err := repo.Latest(ctx, 1)
+	if err != nil {
+		return errors.Wrap(err, "fetching latest issue")
+	}
+
+	var latestIssue news.Issue
+	if len(latest) > 0 {
+		latestIssue = latest[0]
+	}
+
+	homeData := pages.HomeData{
+		LatestIssue: latestIssue,
+		SampleIssue: latestIssue,
+	}
+	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
 		return errors.Wrap(err, "rendering homepage")
 	}
 

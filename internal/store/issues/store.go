@@ -89,6 +89,28 @@ func (s Store) List(ctx context.Context) ([]news.Issue, error) {
 	return out, nil
 }
 
+func (s Store) Latest(ctx context.Context, limit int) ([]news.Issue, error) {
+	if limit <= 0 {
+		return nil, nil
+	}
+	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{
+		Limit:  int64(limit),
+		Offset: 0,
+	})
+	if err != nil {
+		return nil, err
+	}
+	out := make([]news.Issue, 0, len(rows))
+	for _, r := range rows {
+		issue, err := s.withItems(ctx, r)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, issue)
+	}
+	return out, nil
+}
+
 func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error) {
 	i, err := s.sqlc.IssueCreate(ctx, sqlc.IssueCreateParams{
 		Slug:    issue.Slug,

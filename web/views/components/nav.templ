@@ -1,0 +1,26 @@
+package components
+
+type NavItem struct {
+	Label string
+	Href  string
+}
+
+var defaultNavItems = []NavItem{
+	{Label: "Subscribe", Href: "#hero"},
+	{Label: "Features", Href: "#features"},
+	{Label: "Sources", Href: "#sources"},
+	{Label: "Latest", Href: "#latest"},
+	{Label: "Sample", Href: "#sample"},
+}
+
+templ Nav() {
+	<nav class="nav" aria-label="Primary">
+		<ul class="nav__list">
+			for _, item := range defaultNavItems {
+				<li>
+					<a class="nav__link" href={ templ.SafeURL(item.Href) }>{ item.Label }</a>
+				</li>
+			}
+		</ul>
+	</nav>
+}
