@@ -1,9 +1,36 @@
 package pages
 
-import "github.com/ainsleyclark/godaily/web/views/layouts"
+import (
+	"fmt"
 
-templ Home() {
+	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
+
+templ Home(issues []news.Issue) {
 	@layouts.Base() {
-		<h1>Hello World</h1>
+		<div class="section">
+			<h1 class="section__title">GoDaily</h1>
+			<p class="section__sub">Daily Go news, straight to your inbox.</p>
+			<form action="/api/subscribe" method="POST" class="subscribe-form">
+				<input type="email" name="email" placeholder="you@example.com" required/>
+				<button type="submit">Subscribe</button>
+			</form>
+		</div>
+		if len(issues) > 0 {
+			<div class="section">
+				<h2>Past Issues</h2>
+				<ul class="issue-list">
+					for _, issue := range issues {
+						<li class="issue-list__item">
+							<a href={ templ.SafeURL(fmt.Sprintf("/digest/%s/", issue.Slug)) } class="issue-list__link">
+								{ issue.Subject }
+							</a>
+							<span class="issue-list__date">{ digestDate(issue.SentAt) }</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
 	}
 }

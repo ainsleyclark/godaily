@@ -78,7 +78,15 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) 
 }
 
 func (s Store) List(ctx context.Context) ([]news.Issue, error) {
-	return nil, nil
+	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{Limit: 10000, Offset: 0})
+	if err != nil {
+		return nil, err
+	}
+	out := make([]news.Issue, len(rows))
+	for i, r := range rows {
+		out[i] = issueFromRows(r, nil)
+	}
+	return out, nil
 }
 
 func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error) {

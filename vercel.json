@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "outputDirectory": "out",
+  "trailingSlash": true,
+  "cleanUrls": true,
+  "functions": {
+    "api/**/*.go": {
+      "runtime": "vercel-go@0.x"
+    }
+  }
+}

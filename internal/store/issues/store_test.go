@@ -103,7 +103,9 @@ func TestIssues_Store(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		got, err := s.List(ctx)
 		require.NoError(t, err)
-		assert.Nil(t, got)
+		require.Len(t, got, 1)
+		assert.Equal(t, mock.Slug, got[0].Slug)
+		assert.Equal(t, mock.Subject, got[0].Subject)
 	})
 
 	t.Run("Count", func(t *testing.T) {

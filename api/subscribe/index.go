@@ -17,52 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+// Package handler is the Vercel serverless function for POST /api/subscribe.
+package handler
 
-import (
-	"context"
-	"log/slog"
-	"os"
+import "net/http"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
-	"github.com/urfave/cli/v3"
-)
-
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
+// Handler is the Vercel serverless function entry point.
+func Handler(w http.ResponseWriter, r *http.Request) {
+	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }

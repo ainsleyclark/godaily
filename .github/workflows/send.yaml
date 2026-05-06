@@ -66,3 +66,32 @@ jobs:
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
         run: go run main.go synth
+
+      - uses: actions/setup-node@v4
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
+        with:
+          node-version: 22
+
+      - name: Build frontend assets
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
+        working-directory: web
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+          node esbuild.mjs
+
+      - name: Generate static site
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
+        env:
+          APP_ENV: production
+          TURSO_URL: ${{ secrets.TURSO_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+        run: go run main.go generate
+
+      - name: Deploy to Vercel
+        if: github.event_name != 'schedule' || steps.check.outputs.should_run == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN

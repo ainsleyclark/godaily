@@ -20,7 +20,10 @@
 package handlers
 
 import (
+	"log/slog"
+
 	godaily "github.com/ainsleyclark/godaily/internal"
+	"github.com/ainsleyclark/godaily/internal/news"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -28,6 +31,12 @@ import (
 // Home handles the GoDaily homepage.
 func Home(a *godaily.App) webkit.Handler {
 	return func(c *webkit.Context) error {
-		return c.Render(pages.Home())
+		ctx := c.Context()
+		issues, err := a.Repository.Issues.List(ctx)
+		if err != nil {
+			slog.ErrorContext(ctx, "Failed to list issues", "err", err)
+			issues = []news.Issue{}
+		}
+		return c.Render(pages.Home(issues))
 	}
 }

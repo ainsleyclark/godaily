@@ -21,48 +21,30 @@ package cmd
 
 import (
 	"context"
-	"log/slog"
-	"os"
 
 	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
+	"github.com/ainsleyclark/godaily/web/generate"
 	"github.com/urfave/cli/v3"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
+func generateCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "generate",
+		Usage: "Generate static HTML files into out/ for Vercel deployment.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "out",
+				Usage: "Output directory for static files",
+				Value: "out",
+			},
+			&cli.StringFlag{
+				Name:  "assets",
+				Usage: "Path to compiled frontend assets",
+				Value: "web/dist",
+			},
 		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			return generate.Site(ctx, a.Repository.Issues, cmd.String("out"), cmd.String("assets"))
+		},
 	}
 }
