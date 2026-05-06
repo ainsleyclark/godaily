@@ -35,14 +35,6 @@ import (
 // SendDigest loads the draft digest for the given date, sends it to the
 // configured address, and updates the stored issue status.
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
-	if a.issues == nil || a.items == nil {
-		return errors.New("send digest requires persistence (TURSO_URL not set)")
-	}
-	if a.adminEmailAddress == "" {
-		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping digest send")
-		return nil
-	}
-
 	slug := date.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Preparing to send digest", "slug", slug)

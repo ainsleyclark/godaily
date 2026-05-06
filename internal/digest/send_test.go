@@ -85,35 +85,6 @@ func TestAggregator_SendDigest(t *testing.T) {
 		assert.Equal(t, news.IssueStatusError, updated.Status)
 	})
 
-	t.Run("No Send Address Skips Email And Status Update", func(t *testing.T) {
-		issueRepo, itemRepo := newTestStores(t)
-		date := day("2026-04-28")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
-			Slug:    "2026-04-28",
-			Subject: "GoDaily - 2026-04-28",
-			Status:  news.IssueStatusDraft,
-			SentAt:  time.Now().UTC(),
-		})
-		require.NoError(t, err)
-
-		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "", issues: issueRepo, items: itemRepo}
-
-		require.NoError(t, agg.SendDigest(t.Context(), date))
-		assert.False(t, m.called)
-
-		unchanged, err := issueRepo.Find(t.Context(), stored.ID)
-		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusDraft, unchanged.Status)
-	})
-
-	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com"}
-		err := agg.SendDigest(t.Context(), day("2026-04-29"))
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "persistence")
-	})
-
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
