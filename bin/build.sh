@@ -9,7 +9,7 @@ log "node: $(node --version 2>/dev/null || echo 'NOT FOUND')"
 
 log "Installing web dependencies"
 cd web
-pnpm npm install
+pnpm install
 
 log "Building web assets"
 pnpm run build
