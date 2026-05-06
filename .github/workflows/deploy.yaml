@@ -21,12 +21,6 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
-
       - name: Build frontend assets
         working-directory: web
         run: |

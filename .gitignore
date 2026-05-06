@@ -42,9 +42,6 @@ godaily
 dist/
 node_modules/
 
-# Templ generated files
-*_templ.go
-
 # Live-reload artefacts
 tmp/
 build-errors.log

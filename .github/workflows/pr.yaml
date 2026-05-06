@@ -16,12 +16,6 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
-
       - name: go vet
         run: go vet ./...
 
@@ -38,12 +32,6 @@ jobs:
           go-version-file: go.mod
           cache: false
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
-
       - uses: golangci/golangci-lint-action@v9
         with:
           version: latest
@@ -58,12 +46,6 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
 
       - name: Run tests
         run: go test -race $(go list ./... | grep -v gen | grep -v res) -coverprofile=coverage.out -covermode=atomic
@@ -84,12 +66,6 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
-
       - name: Run govulncheck
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
@@ -104,12 +80,6 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-
-      - name: Install templ
-        run: go install github.com/a-h/templ/cmd/templ@latest
-
-      - name: Generate templ
-        run: templ generate
 
       - name: Run gosec
         run: |
