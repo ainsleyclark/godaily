@@ -49,3 +49,6 @@ node_modules/
 tmp/
 build-errors.log
 web/dist/_templ_reload/
+
+# Static site output
+out/

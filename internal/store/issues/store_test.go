@@ -101,12 +101,11 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		t.Log("Returns nil, nil (unimplemented)")
-		{
-			got, err := s.List(ctx)
-			require.NoError(t, err)
-			assert.Nil(t, got)
-		}
+		got, err := s.List(ctx)
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+		assert.Equal(t, mock.Slug, got[0].Slug)
+		assert.Equal(t, mock.Subject, got[0].Subject)
 	})
 
 	t.Run("Latest", func(t *testing.T) {

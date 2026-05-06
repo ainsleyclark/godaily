@@ -17,52 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+// Package handler is the Vercel serverless function for POST /api/subscribe.
+package handler
 
 import (
-	"context"
-	"log/slog"
+	"encoding/json"
+	"net/http"
 	"os"
 
-	godaily "github.com/ainsleyclark/godaily/internal"
-	_ "github.com/ainsleyclark/godaily/internal/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/internal/db"
+	"github.com/ainsleyclark/godaily/internal/store/issues"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+// Handler is the Vercel serverless function entry point.
+//
+// Temporary: lists the 5 most recent issues from Turso to verify DB
+// connectivity works from a Vercel Function before full implementation.
+func Handler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
+	conn, err := db.New(ctx, os.Getenv("TURSO_URL"), os.Getenv("TURSO_AUTH_TOKEN"))
 	if err != nil {
-		exit(ctx, err)
+		http.Error(w, "failed to connect to database: "+err.Error(), http.StatusInternalServerError)
+		return
 	}
+	defer conn.Close()
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
+	store := issues.New(conn)
+	latest, err := store.Latest(ctx, 5)
 	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
+		http.Error(w, "failed to query issues: "+err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]any{
+		"ok":     true,
+		"issues": len(latest),
+	})
 }
