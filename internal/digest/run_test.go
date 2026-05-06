@@ -29,6 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/internal/db"
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/store/issues"
 	"github.com/ainsleyclark/godaily/internal/store/items"
 	"github.com/ainsleyclark/godaily/internal/synth"
@@ -382,7 +383,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		require.NotZero(t, first.ID)
 
 		_, err = agg.Collect(t.Context(), opts)
-		require.NoError(t, err)
+		require.ErrorIs(t, err, store.ErrAlreadyExists)
 
 		second, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
 		require.NoError(t, err)
