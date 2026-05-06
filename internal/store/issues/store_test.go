@@ -100,7 +100,6 @@ func TestIssues_Store(t *testing.T) {
 		}
 	})
 
-
 	t.Run("List", func(t *testing.T) {
 		t.Log("Returns nil, nil (unimplemented)")
 		{
