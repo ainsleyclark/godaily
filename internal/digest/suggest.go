@@ -55,7 +55,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 	if a.issues == nil || a.items == nil {
 		return errors.New("synth send requires persistence (TURSO_URL not set)")
 	}
-	if a.sendToAddress == "" {
+	if a.adminEmailAddress == "" {
 		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping synth send")
 		return nil
 	}
@@ -93,7 +93,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 
 	return a.email.Send(ctx, email.SendEmailRequest{
 		From:    "noreply@mail.ainsley.dev",
-		To:      []string{a.sendToAddress},
+		To:      []string{a.adminEmailAddress},
 		Subject: "GoDaily Synth - " + date.Format("2006-01-02"),
 		Html:    html,
 		Text:    text,

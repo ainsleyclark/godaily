@@ -28,9 +28,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/news"
-	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
-	"github.com/pkg/errors"
 )
 
 // Runner is the interface for the daily news aggregation pipeline.
@@ -43,11 +41,11 @@ type Runner interface {
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
-	email         emailSender
-	sendToAddress string
-	suggester     suggester
-	issues        news.IssueRepository
-	items         news.ItemRepository
+	email             emailSender
+	adminEmailAddress string
+	suggester         suggester
+	issues            news.IssueRepository
+	items             news.ItemRepository
 }
 
 type (
@@ -69,16 +67,16 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	to := os.Getenv("EMAIL_SEND_ADDRESS")
-	if to == "" {
-		slog.Warn("EMAIL_SEND_ADDRESS not set, digest emails will be skipped")
+	adminEmailAddress := os.Getenv("EMAIL_SEND_ADDRESS")
+	if adminEmailAddress == "" {
+		adminEmailAddress = "hello@ainsley.dev"
 	}
 	return &Aggregator{
-		email:         email.New(),
-		sendToAddress: to,
-		suggester:     synth.New(),
-		issues:        issues,
-		items:         items,
+		email:             email.New(),
+		adminEmailAddress: adminEmailAddress,
+		suggester:         synth.New(),
+		issues:            issues,
+		items:             items,
 	}, nil
 }
 
@@ -98,35 +96,4 @@ func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news
 	slog.InfoContext(ctx, "fetched from source", "source", source, "items", len(items))
 
 	return items, nil
-}
-
-func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
-	_, err := a.issues.FindBySlug(ctx, issue.Slug)
-	switch {
-	case err == nil: // No error indicates it exists.
-		slog.WarnContext(ctx, "issue already persisted in the store, skipping", "slug", issue.Slug)
-		return nil
-	case !errors.Is(err, store.ErrNotFound): // Is a database error.
-		return errors.Wrap(err, "checking existing issue")
-	}
-
-	created, err := a.issues.Create(ctx, issue)
-	if err != nil {
-		return errors.Wrap(err, "creating issue")
-	}
-
-	var position int
-	for _, section := range sections {
-		for _, item := range section.Items {
-			position++
-			item.Source = section.Source
-			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
-				return fmt.Errorf("creating news item: %w", err)
-			}
-		}
-	}
-
-	slog.InfoContext(ctx, "Persisted issue", "slug", issue.Slug)
-
-	return nil
 }

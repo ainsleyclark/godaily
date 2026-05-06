@@ -89,7 +89,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		t.Parallel()
 
 		m := &mockEmail{err: errors.New("boom")}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
 		err := agg.sendDigest(t.Context(), rendered)
 		assert.True(t, m.called)
@@ -100,7 +100,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		t.Parallel()
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com"}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
 		err := agg.sendDigest(t.Context(), rendered)
 		require.NoError(t, err)

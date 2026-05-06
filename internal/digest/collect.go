@@ -21,11 +21,14 @@ package digest
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"sort"
 	"time"
 
 	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/internal/store"
+	"github.com/pkg/errors"
 )
 
 // CollectOptions configures a Collect call.
@@ -104,4 +107,35 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	}
 
 	return results, a.persistIssue(ctx, issue, results)
+}
+
+func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
+	_, err := a.issues.FindBySlug(ctx, issue.Slug)
+	switch {
+	case err == nil: // No error indicates it exists.
+		slog.WarnContext(ctx, "issue already persisted in the store, skipping", "slug", issue.Slug)
+		return nil
+	case !errors.Is(err, store.ErrNotFound): // Is a database error.
+		return errors.Wrap(err, "checking existing issue")
+	}
+
+	created, err := a.issues.Create(ctx, issue)
+	if err != nil {
+		return errors.Wrap(err, "creating issue")
+	}
+
+	var position int
+	for _, section := range sections {
+		for _, item := range section.Items {
+			position++
+			item.Source = section.Source
+			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
+				return fmt.Errorf("creating news item: %w", err)
+			}
+		}
+	}
+
+	slog.InfoContext(ctx, "Persisted issue", "slug", issue.Slug)
+
+	return nil
 }

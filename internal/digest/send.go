@@ -34,26 +34,18 @@ import (
 // SendDigest loads the draft digest for the given date, sends it to the
 // configured address, and updates the stored issue status.
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
-	if a.issues == nil || a.items == nil {
-		return errors.New("send requires persistence (TURSO_URL not set)")
-	}
 
 	slug := date.Format("2006-01-02")
 
-	issue, err := a.issues.FindBySlug(ctx, slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
-		}
-		return fmt.Errorf("loading digest: %w", err)
-	}
-	if issue.Status != news.IssueStatusDraft {
-		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
-	}
+	slog.InfoContext(ctx, "Preparing to send digest", "slug", slug)
 
-	if a.sendToAddress == "" {
-		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping send")
-		return nil
+	issue, err := a.issues.FindBySlug(ctx, slug)
+	if errors.Is(err, store.ErrNotFound) {
+		return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
+	} else if err != nil {
+		return fmt.Errorf("loading digest: %w", err)
+	} else if issue.Status != news.IssueStatusDraft {
+		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
 	}
 
 	sections, err := loadSections(ctx, a.items, issue.ID)
@@ -67,13 +59,13 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time) error {
 	}
 
 	status := news.IssueStatusSent
-	if err := a.sendDigest(ctx, rendered); err != nil {
-		slog.ErrorContext(ctx, "failed to send digest email", "err", err)
+	if err = a.sendDigest(ctx, rendered); err != nil {
+		slog.ErrorContext(ctx, "Failed to send digest email", "err", err)
 		status = news.IssueStatusError
 	}
 
-	if _, err := a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
-		slog.ErrorContext(ctx, "failed to update issue status", "err", err)
+	if _, err = a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
+		slog.ErrorContext(ctx, "Failed to update issue status", "err", err)
 	}
 
 	return nil

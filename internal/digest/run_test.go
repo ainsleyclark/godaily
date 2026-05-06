@@ -92,7 +92,7 @@ func TestNew(t *testing.T) {
 				t.Helper()
 				require.NoError(t, err)
 				require.NotNil(t, agg)
-				assert.Equal(t, "to@example.com", agg.sendToAddress)
+				assert.Equal(t, "to@example.com", agg.adminEmailAddress)
 				assert.NotNil(t, agg.email)
 			},
 		},
@@ -103,7 +103,7 @@ func TestNew(t *testing.T) {
 				t.Helper()
 				require.NoError(t, err)
 				require.NotNil(t, agg)
-				assert.Empty(t, agg.sendToAddress)
+				assert.Empty(t, agg.adminEmailAddress)
 			},
 		},
 		"Validate Error": {
@@ -435,7 +435,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		stored := seedDraft(t, issueRepo, "2026-04-26")
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date))
 
@@ -453,7 +453,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		stored := seedDraft(t, issueRepo, "2026-04-27")
 
 		m := &mockEmail{err: errors.New("send boom")}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date))
 
@@ -468,7 +468,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		stored := seedDraft(t, issueRepo, "2026-04-28")
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "", issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date))
 		assert.False(t, m.called)
@@ -479,7 +479,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 	})
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com"}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com"}
 		err := agg.SendDigest(t.Context(), day("2026-04-29"))
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "persistence")
@@ -487,7 +487,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
 		err := agg.SendDigest(t.Context(), day("1999-01-01"))
 		require.Error(t, err)
@@ -505,7 +505,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 		_ = stored
 
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"))
 		require.Error(t, sendErr)
 		assert.Contains(t, sendErr.Error(), "expected")
@@ -519,7 +519,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 		m := &mockEmail{}
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date))
 
@@ -568,7 +568,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		m := &mockEmail{}
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
@@ -582,7 +582,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Suggester Nil", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-11"))
 		require.Error(t, err)
@@ -591,7 +591,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
 		sg := &mockSuggester{}
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", suggester: sg}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-12"))
 		require.Error(t, err)
@@ -605,7 +605,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		m := &mockEmail{}
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
-		agg := Aggregator{email: m, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
@@ -617,7 +617,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		sg := &mockSuggester{}
 		m := &mockEmail{}
-		agg := Aggregator{email: m, sendToAddress: "", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), day("2026-05-14")))
 		assert.False(t, m.called)
@@ -626,7 +626,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		sg := &mockSuggester{}
-		agg := Aggregator{email: &mockEmail{}, sendToAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("1999-01-01"))
 		require.Error(t, err)

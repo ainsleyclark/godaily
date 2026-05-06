@@ -123,7 +123,7 @@ func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, er
 func (a Aggregator) sendDigest(ctx context.Context, d renderedDigest) error {
 	return a.email.Send(ctx, email.SendEmailRequest{
 		From:    "noreply@mail.ainsley.dev",
-		To:      []string{a.sendToAddress},
+		To:      []string{a.adminEmailAddress},
 		Subject: d.Subject,
 		Html:    d.HTML,
 		Text:    d.Text,
