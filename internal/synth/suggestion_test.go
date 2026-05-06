@@ -143,7 +143,7 @@ func TestParseResponse(t *testing.T) {
 		},
 		"Invalid JSON": {
 			msg:     makeTextMessage("not json"),
-			wantErr: "parse:",
+			wantErr: "parse (raw=",
 		},
 		"Missing Post": {
 			msg:     makeTextMessage(`{"post":""}`),

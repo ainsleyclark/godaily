@@ -22,7 +22,6 @@ package digest
 import (
 	"bytes"
 	"context"
-	_ "embed"
 	"fmt"
 	htmltemplate "html/template"
 	"log/slog"
@@ -34,17 +33,12 @@ import (
 	"github.com/ainsleyclark/godaily/internal/email"
 	"github.com/ainsleyclark/godaily/internal/store"
 	"github.com/ainsleyclark/godaily/internal/synth"
+	"github.com/ainsleyclark/godaily/internal/templates"
 )
 
-//go:embed suggest.html
-var suggestHTML string
-
-//go:embed suggest.txt
-var suggestText string
-
 var (
-	suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(suggestHTML))
-	suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest").Parse(suggestText))
+	suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(templates.SuggestHTML))
+	suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest").Parse(templates.SuggestText))
 )
 
 // SendSuggestion generates an AI post suggestion from the stored digest
