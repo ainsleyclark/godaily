@@ -1,0 +1,90 @@
+package components
+
+import (
+	"fmt"
+	"sort"
+	"time"
+
+	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/web/views/graphics"
+)
+
+// Sample renders the email-preview block used on the digest detail page.
+templ Sample(issue news.Issue) {
+	<div class="email-preview">
+		@sampleInner(issue)
+	</div>
+}
+
+// sampleInner renders the topbar and body content shared by Sample and SampleWide.
+templ sampleInner(issue news.Issue) {
+	<div class="email-preview__topbar">
+		<div class="email-preview__topbar-dot email-preview__topbar-dot--red"></div>
+		<div class="email-preview__topbar-dot email-preview__topbar-dot--yellow"></div>
+		<div class="email-preview__topbar-dot email-preview__topbar-dot--green"></div>
+		<div class="email-preview__addr">GoDaily Digest &lt;digest@godaily.dev&gt; &#8594; you@example.com</div>
+	</div>
+	<div class="email-preview__body">
+		<div class="email-preview__header">
+			<div class="email-preview__logo-line">
+				@graphics.GopherLogo(24)
+				<strong>GoDaily</strong>
+			</div>
+			if !issue.SentAt.IsZero() {
+				<div class="email-preview__date">
+					{ formatDigestDate(issue.SentAt) } &middot; { fmt.Sprintf("Issue #%d", issue.ID) }
+				</div>
+			}
+			if issue.Subject != "" {
+				<div class="email-preview__subject">🐿️ { issue.Subject }</div>
+			}
+			if issue.Summary != "" {
+				<p class="email-preview__intro">{ issue.Summary }</p>
+			}
+		</div>
+		for _, group := range groupItemsBySource(issue.Items) {
+			@DigestSection(group.emoji, group.title, group.items, group.ranked)
+		}
+		<div class="email-preview__footer">
+			Sent by <strong>GoDaily</strong> &middot; <a href="#">Unsubscribe</a> &middot; <a href="#">View in browser</a>
+		</div>
+	</div>
+}
+
+type sampleGroup struct {
+	emoji  string
+	title  string
+	items  []news.Item
+	ranked bool
+}
+
+func groupItemsBySource(items []news.Item) []sampleGroup {
+	bySource := map[news.Source][]news.Item{}
+	order := []news.Source{}
+	for _, item := range items {
+		if _, seen := bySource[item.Source]; !seen {
+			order = append(order, item.Source)
+		}
+		bySource[item.Source] = append(bySource[item.Source], item)
+	}
+	sort.Slice(order, func(i, j int) bool {
+		return order[i].Priority() > order[j].Priority()
+	})
+	groups := make([]sampleGroup, 0, len(order))
+	for _, src := range order {
+		groups = append(groups, sampleGroup{
+			emoji:  src.Emoji(),
+			title:  src.NiceName(),
+			items:  bySource[src],
+			ranked: src.IsRanked(),
+		})
+	}
+	return groups
+}
+
+func formatDigestDate(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	return t.Format("Monday, January 2, 2006")
+}

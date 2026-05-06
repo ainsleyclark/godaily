@@ -5,8 +5,12 @@
 	margin: 0 auto;
 	border-radius: 20px;
 	border: 1px solid var(--border);
-	box-shadow: 0 8px 40px rgba(42, 168, 216, 0.12);
+	box-shadow: var(--shadow-email);
 	overflow: hidden;
+
+	&--wide {
+		max-width: 100%;
+	}
 
 	&__topbar {
 		display: flex;
@@ -23,16 +27,16 @@
 		border-radius: 50%;
 		flex-shrink: 0;
 
-		&--red    { background: #fc5f5f; }
-		&--yellow { background: #fdbc40; }
-		&--green  { background: #34c84a; }
+		&--red    { background: var(--color-error); }
+		&--yellow { background: var(--color-mac-yellow); }
+		&--green  { background: var(--color-mac-green); }
 	}
 
 	&__addr {
 		margin-left: auto;
 		font-size: 0.72rem;
 		color: var(--text-3);
-		font-family: 'DM Mono', monospace;
+		font-family: var(--mono);
 
 		@include mobile {
 			display: none;
