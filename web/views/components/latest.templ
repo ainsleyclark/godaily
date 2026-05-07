@@ -16,9 +16,9 @@ templ Latest(issue news.Issue) {
 				The first issue lands soon. Subscribe above to be first to read it.
 			</div>
 		} else {
-			<div class="latest__grid">
+			@SwiperContainer("latest__swiper") {
 				for _, item := range latestItems(issue.Items) {
-					<a class="latest__card" href={ templ.URL(item.URL) } target="_blank" rel="noopener">
+					<a class="latest__card swiper-slide" href={ templ.URL(item.URL) } target="_blank" rel="noopener">
 						<span class="latest__source">
 							{ item.Source.Emoji() } { item.Source.NiceName() }
 						</span>
@@ -28,7 +28,7 @@ templ Latest(issue news.Issue) {
 						}
 					</a>
 				}
-			</div>
+			}
 		}
 	</section>
 }

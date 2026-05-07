@@ -7,7 +7,9 @@
  */
 
 import { initSubscribeForm } from './subscribe';
+import { initSwipers } from './swiper';
 
 document.addEventListener('DOMContentLoaded', () => {
 	initSubscribeForm();
+	initSwipers();
 });

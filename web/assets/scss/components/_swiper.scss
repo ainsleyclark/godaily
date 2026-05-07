@@ -1,0 +1,18 @@
+.section-swiper {
+	margin-top: 2.5rem;
+
+	@media (min-width: 900px) {
+		overflow: visible;
+
+		.swiper-wrapper {
+			display: grid;
+			grid-template-columns: var(--swiper-columns);
+			gap: var(--swiper-gap);
+			transform: none !important;
+		}
+
+		.swiper-slide {
+			width: auto;
+		}
+	}
+}
