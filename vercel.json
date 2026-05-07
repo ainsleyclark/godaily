@@ -7,8 +7,8 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"crons": [
-		{ "path": "/api/collect", "schedule": "0 1 * * 1-5" },
-		{ "path": "/api/send",    "schedule": "0 8 * * 1-5" }
+		{ "path": "/api/collect/", "schedule": "0 1 * * 1-5" },
+		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
 	],
 	"functions": {
 		"api/**/*.go": {
