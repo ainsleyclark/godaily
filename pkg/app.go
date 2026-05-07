@@ -29,6 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
