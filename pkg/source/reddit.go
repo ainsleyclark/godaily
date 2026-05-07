@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
@@ -57,6 +58,7 @@ func NewReddit() *Reddit {
 	u := redditURL
 	if key := os.Getenv("SCRAPER_API_KEY"); key != "" {
 		u = fmt.Sprintf("http://api.scraperapi.com?api_key=%s&url=%s", key, url.QueryEscape(redditURL))
+		slog.Info("reddit: routing fetch through ScraperAPI")
 	}
 	return &Reddit{url: u}
 }
