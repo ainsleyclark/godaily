@@ -23,22 +23,24 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/welcome"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleSubscribe(w, r, app.Repository.Subscribers)
+		handleSubscribe(w, r, app)
 	})
 }
 
-func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.SubscriberRepository) {
+func handleSubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -55,6 +57,7 @@ func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.Subscribe
 	}
 
 	ctx := r.Context()
+	repo := app.Repository.Subscribers
 
 	_, err := repo.FindByEmail(ctx, body.Email)
 	if err == nil {
@@ -68,9 +71,21 @@ func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.Subscribe
 		return
 	}
 
-	if _, err = repo.Create(ctx, body.Email); err != nil {
+	sub, err := repo.Create(ctx, body.Email)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+
+	// Send welcome email — non-fatal; a failed email must not block the subscription.
+	var latestIssueURL, latestIssueTitle string
+	if latest, err := app.Repository.Issues.Latest(ctx, 1); err == nil && len(latest) > 0 {
+		latestIssueURL = env.AppURL + "/digest/" + latest[0].Slug + "/"
+		latestIssueTitle = latest[0].Subject
+	}
+	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+	if err := welcome.Send(ctx, app.Email, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
+		slog.ErrorContext(ctx, "Failed to send welcome email", "email", sub.Email, "error", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -1,4 +1,4 @@
-GoDaily - {{.Date.Format "January 2, 2006"}}
+{{ define "email-body-text" }}GoDaily - {{.Date.Format "January 2, 2006"}}
 
 {{range .Sections}}{{.Emoji}} {{.Title}}
 ---
@@ -6,4 +6,4 @@ GoDaily - {{.Date.Format "January 2, 2006"}}
 {{if .Meta}}   {{.Meta}}{{end}}
    {{.URL}}
 {{end}}
-{{end}}
+{{end}}{{ end }}

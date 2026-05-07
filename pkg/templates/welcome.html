@@ -1,0 +1,23 @@
+{{ define "email-body" }}
+<!-- Header -->
+<tr>
+  <td style="padding:28px 32px 24px;border-bottom:1px solid #d0e8f5;">
+    <div style="font-size:15px;font-weight:700;color:#0d2236;margin-bottom:6px;">🐿️ GoDaily</div>
+    <div style="font-size:16px;font-weight:600;color:#0d2236;">Welcome to GoDaily!</div>
+  </td>
+</tr>
+
+<!-- Content -->
+<tr>
+  <td style="padding:28px 32px;">
+    <p style="font-size:15px;color:#0d2236;line-height:1.6;margin:0 0 16px;">You're subscribed! Your first digest arrives weekday mornings.</p>
+    {{ if .LatestIssueURL }}
+    <div style="padding:20px 24px;background:#f5fbff;border:1px solid #d0e8f5;border-radius:8px;margin-top:8px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2aa8d8;margin-bottom:12px;">Enjoy the latest issue now</div>
+      <p style="font-size:14px;color:#3a6880;line-height:1.6;margin:0 0 12px;">While you wait for the next issue of GoDaily, check out the latest issue here.</p>
+      <a href="{{ .LatestIssueURL }}" style="display:inline-block;font-size:14px;font-weight:600;color:#ffffff;background:#2aa8d8;padding:10px 20px;border-radius:8px;text-decoration:none;">{{ .LatestIssueTitle }}</a>
+    </div>
+    {{ end }}
+  </td>
+</tr>
+{{ end }}

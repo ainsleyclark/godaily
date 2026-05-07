@@ -1,0 +1,9 @@
+{{ define "email-body-text" }}Welcome to GoDaily!
+
+You're subscribed! Your first digest arrives weekday mornings.
+{{ if .LatestIssueURL }}
+Enjoy the latest issue now
+While you wait for the next issue, check out the latest one:
+{{ .LatestIssueTitle }}
+{{ .LatestIssueURL }}
+{{ end }}{{ end }}

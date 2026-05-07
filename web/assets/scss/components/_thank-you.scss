@@ -1,0 +1,79 @@
+@use '../abstracts/mixins' as *;
+
+.thank-you {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 6rem 2rem 5rem;
+	display: flex;
+	justify-content: center;
+
+	@include mobile {
+		padding: 4rem 1rem 3rem;
+	}
+
+	&__content {
+		max-width: 560px;
+		text-align: center;
+	}
+
+	&__check {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background: var(--color-success);
+		color: var(--color-white);
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin-bottom: 1.5rem;
+	}
+
+	&__title {
+		font-size: clamp(2rem, 4vw, 3rem);
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		color: var(--text);
+		margin-bottom: 1rem;
+	}
+
+	&__lead {
+		font-size: 1.1rem;
+		color: var(--text-2);
+		margin-bottom: 2rem;
+	}
+
+	&__issue {
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 1.5rem;
+		text-align: left;
+	}
+
+	&__issue-label {
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 0.5rem;
+	}
+
+	&__issue-text {
+		font-size: 0.95rem;
+		color: var(--text-2);
+		line-height: 1.6;
+	}
+
+	&__link {
+		color: var(--accent-dark);
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

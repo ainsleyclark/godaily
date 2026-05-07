@@ -1,0 +1,30 @@
+package pages
+
+import (
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
+
+templ ThankYou(issue news.Issue) {
+	@layouts.Base() {
+		@components.Header()
+		<section class="thank-you">
+			<div class="thank-you__content">
+				<div class="thank-you__check">✓</div>
+				<h1 class="thank-you__title">Thanks for subscribing!</h1>
+				<p class="thank-you__lead">Your first digest arrives weekday mornings.</p>
+				if issue.Slug != "" {
+					<div class="thank-you__issue">
+						<p class="thank-you__issue-label">Enjoy the latest issue now</p>
+						<p class="thank-you__issue-text">
+							While you wait for the next GoDaily,
+							<a class="thank-you__link" href={ templ.SafeURL("/digest/" + issue.Slug + "/") }>check out the latest issue here</a>.
+						</p>
+					</div>
+				}
+			</div>
+		</section>
+		@components.Footer()
+	}
+}

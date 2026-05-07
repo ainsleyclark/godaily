@@ -2,7 +2,8 @@
  * subscribe.ts
  *
  * Handles the homepage hero subscribe form. Validates the email client-side,
- * POSTs to /api/subscribe, then shows an inline success or error state.
+ * POSTs to /api/subscribe, then redirects to /thank-you/ on success or shows
+ * an inline error state.
  */
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,9 +28,12 @@ async function handleSubmit(event: Event): Promise<void> {
 		return;
 	}
 
+	const originalText = button.textContent;
 	input.classList.remove('hero__input--error');
 	input.disabled = true;
 	button.disabled = true;
+	button.textContent = 'Subscribing...';
+	button.classList.add('button--loading');
 
 	try {
 		const res = await fetch('/api/subscribe', {
@@ -39,23 +43,25 @@ async function handleSubmit(event: Event): Promise<void> {
 		});
 
 		if (res.ok) {
-			button.textContent = "✓ You're subscribed!";
-			button.classList.remove('button--primary');
-			button.classList.add('button--success');
+			window.location.href = '/thank-you/';
 		} else if (res.status === 409) {
-			setHint(hint, "You're already subscribed.");
+			resetButton(button, hint, originalText, "You're already subscribed.");
 			input.disabled = false;
-			button.disabled = false;
 		} else {
-			setHint(hint, 'Something went wrong. Please try again.');
+			resetButton(button, hint, originalText, 'Something went wrong. Please try again.');
 			input.disabled = false;
-			button.disabled = false;
 		}
 	} catch {
-		setHint(hint, 'Something went wrong. Please try again.');
+		resetButton(button, hint, originalText, 'Something went wrong. Please try again.');
 		input.disabled = false;
-		button.disabled = false;
 	}
+}
+
+function resetButton(button: HTMLButtonElement, hint: HTMLElement | null, originalText: string | null, message: string): void {
+	button.textContent = originalText;
+	button.classList.remove('button--loading');
+	button.disabled = false;
+	setHint(hint, message);
 }
 
 function setHint(el: HTMLElement | null, message: string): void {

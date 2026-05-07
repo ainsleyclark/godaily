@@ -27,6 +27,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/email"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
@@ -43,6 +44,7 @@ type App struct {
 	Repository *Repository
 	Runner     *digest.Aggregator
 	Cache      cache.Store
+	Email      *email.Client
 }
 
 // Repository defines the datastore for the application.,
@@ -99,5 +101,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Repository: repo,
 		Runner:     aggregator,
 		Cache:      store,
+		Email:      email.New(),
 	}, teardown, nil
 }

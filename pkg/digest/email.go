@@ -36,8 +36,8 @@ import (
 )
 
 var (
-	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(templates.EmailHTML))
-	textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(templates.EmailText))
+	htmlTmpl = htmltemplate.Must(htmltemplate.New("digest-html").Parse(templates.EmailLayout + templates.EmailHTML))
+	textTmpl = texttemplate.Must(texttemplate.New("digest-text").Parse(templates.EmailLayoutText + templates.EmailText))
 )
 
 type (
@@ -101,12 +101,12 @@ func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL stri
 	data := digestData{Date: day, Sections: sections, UnsubscribeURL: unsubscribeURL}
 
 	var htmlBuf bytes.Buffer
-	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {
+	if err := htmlTmpl.ExecuteTemplate(&htmlBuf, "email-layout", data); err != nil {
 		return renderedDigest{}, errors.Wrap(err, "rendering html")
 	}
 
 	var textBuf bytes.Buffer
-	if err := textTmpl.Execute(&textBuf, data); err != nil {
+	if err := textTmpl.ExecuteTemplate(&textBuf, "email-layout-text", data); err != nil {
 		return renderedDigest{}, errors.Wrap(err, "rendering text")
 	}
 
