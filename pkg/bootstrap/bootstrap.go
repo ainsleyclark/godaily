@@ -17,12 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for GET /api/unsubscribe.
-package handler
+// Package bootstrap provides shared bootstrap wiring for serverless handlers.
+package bootstrap
 
-import "net/http"
+import (
+	"log/slog"
+	"net/http"
 
-// Handler is the Vercel serverless function entry point.
-func Handler(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Not implemented", http.StatusNotImplemented)
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/digest"
+)
+
+// Handle bootstraps the app and calls fn with the runner. It writes a 500 and
+// returns early if Bootstrap fails, so fn is only called on success.
+func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
+	ctx := r.Context()
+
+	app, teardown, err := godaily.Bootstrap(ctx)
+	if err != nil {
+		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
+		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer teardown()
+
+	fn(app.Runner)
 }

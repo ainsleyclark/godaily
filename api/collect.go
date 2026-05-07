@@ -17,30 +17,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for POST /api/subscribe.
-package handler
+// Package api contains Vercel serverless function handlers.
+package api
 
 import (
-	"encoding/json"
+	"log/slog"
 	"net/http"
+	"os"
 
-	"github.com/ainsleyclark/godaily/pkg/source"
+	"github.com/ainsleyclark/godaily/pkg/bootstrap"
+	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
-// Handler is the Vercel serverless function entry point.
-//
-// Temporary: fetches r/golang news items via the Reddit public JSON API to
-// verify that Vercel's outbound IP range is accepted by Reddit.
-func Handler(w http.ResponseWriter, r *http.Request) {
-	items, err := source.NewReddit().Fetch(r.Context())
-	if err != nil {
-		http.Error(w, "failed to fetch from Reddit: "+err.Error(), http.StatusInternalServerError)
+// HandleCollect is the Vercel serverless function entry point for GET /api/collect.
+func HandleCollect(w http.ResponseWriter, r *http.Request) {
+	bootstrap.Handle(w, r, func(runner digest.Runner) {
+		handleCollect(w, r, runner)
+	})
+}
+
+func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+	ctx := r.Context()
+
+	if _, err := runner.Collect(ctx, digest.CollectOptions{}); err != nil {
+		slog.ErrorContext(ctx, "Collecting digest", "error", err)
+		http.Error(w, "collect failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]any{
-		"ok":    true,
-		"items": len(items),
-	})
+	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_COLLECT_HEARTBEAT_URL"))
+	w.WriteHeader(http.StatusOK)
 }
