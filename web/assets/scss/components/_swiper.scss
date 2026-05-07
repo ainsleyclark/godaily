@@ -1,0 +1,38 @@
+@use '../abstracts/mixins' as *;
+
+.section-swiper {
+	margin-top: 2.5rem;
+
+	@include mobile {
+		overflow: hidden;
+		margin-left: calc(-1 * var(--section-padding-x));
+		margin-right: calc(-1 * var(--section-padding-x));
+		padding-left: var(--section-padding-x);
+
+		.swiper-wrapper {
+			display: flex;
+			box-sizing: content-box;
+		}
+
+		.swiper-slide {
+			flex-shrink: 0;
+		}
+	}
+
+	@include desktop {
+		overflow: visible;
+
+		.swiper-wrapper {
+			display: grid;
+			grid-template-columns: var(--swiper-columns);
+			gap: var(--swiper-gap);
+			width: 100%;
+			transform: none !important;
+		}
+
+		.swiper-slide {
+			width: auto !important;
+			margin-right: 0 !important;
+		}
+	}
+}
