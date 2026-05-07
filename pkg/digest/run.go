@@ -19,8 +19,6 @@
 
 package digest
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../mocks/digest/Runner.go github.com/ainsleyclark/godaily/pkg/digest Runner
-
 import (
 	"context"
 	"fmt"
@@ -32,6 +30,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/synth"
 )
+
+//go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../mocks/digest/Runner.go github.com/ainsleyclark/godaily/pkg/digest Runner
 
 // Runner is the interface for the daily news aggregation pipeline.
 type Runner interface {
