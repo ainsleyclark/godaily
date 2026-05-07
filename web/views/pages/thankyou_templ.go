@@ -56,20 +56,20 @@ func ThankYou(issue news.Issue) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if issue.Slug != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"thank-you__issue\"><p class=\"thank-you__issue-label\">Enjoy the latest issue now</p><p class=\"thank-you__issue-text\">While you wait for the next GoDaily, <a class=\"thank-you__link\" href=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<p class=\"thank-you__issue-text\">While you wait for the next GoDaily, <a class=\"thank-you__link\" href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 templ.SafeURL
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/digest/" + issue.Slug + "/"))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/thankyou.templ`, Line: 22, Col: 85}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/thankyou.templ`, Line: 20, Col: 84}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">check out the latest issue here</a>.</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">check out the latest issue here</a>.</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

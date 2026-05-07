@@ -44,23 +44,6 @@
 		margin-bottom: 2rem;
 	}
 
-	&__issue {
-		background: var(--bg-card);
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		padding: 1.5rem;
-		text-align: left;
-	}
-
-	&__issue-label {
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--accent);
-		margin-bottom: 0.5rem;
-	}
-
 	&__issue-text {
 		font-size: 0.95rem;
 		color: var(--text-2);
