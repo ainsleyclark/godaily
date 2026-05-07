@@ -1,5 +1,4 @@
 import Swiper from 'swiper';
-import 'swiper/css';
 
 export function initSwipers(): void {
 	document.querySelectorAll<HTMLElement>('.section-swiper').forEach(el => {

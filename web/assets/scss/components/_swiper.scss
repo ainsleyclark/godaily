@@ -3,6 +3,19 @@
 .section-swiper {
 	margin-top: 2.5rem;
 
+	@include mobile {
+		overflow: hidden;
+
+		.swiper-wrapper {
+			display: flex;
+			box-sizing: content-box;
+		}
+
+		.swiper-slide {
+			flex-shrink: 0;
+		}
+	}
+
 	@include desktop {
 		overflow: visible;
 
@@ -10,6 +23,7 @@
 			display: grid;
 			grid-template-columns: var(--swiper-columns);
 			gap: var(--swiper-gap);
+			width: 100%;
 			transform: none !important;
 		}
 
