@@ -1,11 +1,6 @@
 name: Send Digest
 
 on:
-  schedule:
-    # GitHub Actions cron is UTC. Two entries to keep firing at 08:00 London year-round:
-    # the London-time guard below skips whichever line is running outside 08:00 local.
-    - cron: "0 8 * * 1-5"   # 08:00 GMT (winter)  -> 08:00 London
-    - cron: "0 7 * * 1-5"   # 07:00 UTC (summer)  -> 08:00 BST
   workflow_dispatch:
     inputs:
       dry-run:

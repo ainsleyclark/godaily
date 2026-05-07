@@ -19,6 +19,8 @@
 
 package digest
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../mocks/digest/Runner.go github.com/ainsleyclark/godaily/pkg/digest Runner
+
 import (
 	"context"
 	"fmt"
