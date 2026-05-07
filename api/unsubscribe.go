@@ -22,22 +22,22 @@ package api
 import (
 	"net/http"
 
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
 // HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
 func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := respond.GetApp(ctx)
+	a := api.GetApp(ctx)
 
 	token := r.URL.Query().Get("token")
 	if token == "" {
-		respond.Error(w, http.StatusBadRequest, "missing token")
+		api.Error(w, http.StatusBadRequest, "missing token")
 		return
 	}
 
 	if err := a.Subscribers.Unsubscribe(ctx, token); err != nil {
-		respond.Error(w, http.StatusInternalServerError, err.Error())
+		api.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

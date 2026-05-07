@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/stretchr/testify/assert"
@@ -58,7 +58,7 @@ func TestHandleCollect(t *testing.T) {
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
-			respond.App = &godaily.App{Runner: runner, Config: &env.Config{}}
+			api.App = &godaily.App{Runner: runner, Config: &env.Config{}}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)

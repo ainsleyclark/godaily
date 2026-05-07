@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/stretchr/testify/assert"
@@ -66,7 +66,7 @@ func TestHandleUnsubscribe(t *testing.T) {
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			test.mock(svc)
 
-			respond.App = &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			api.App = &godaily.App{Subscribers: svc, Config: &env.Config{}}
 
 			url := "/api/unsubscribe"
 			if test.token != "" {
