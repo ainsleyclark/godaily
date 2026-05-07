@@ -79,12 +79,12 @@ func allRegistered() map[news.Source]news.Fetcher {
 	return reg
 }
 
-// newSubsMock returns a MockSubscriberRepository whose ListActive returns subs and err.
+// newSubsMock returns a MockSubscriberRepository whose ListActive returns an empty list.
 // AnyTimes allows tests that return early before ListActive is called to pass without failure.
-func newSubsMock(t *testing.T, subs []news.Subscriber, err error) *mocknews.MockSubscriberRepository {
+func newSubsMock(t *testing.T) *mocknews.MockSubscriberRepository {
 	t.Helper()
 	m := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
-	m.EXPECT().ListActive(gomock.Any()).Return(subs, err).AnyTimes()
+	m.EXPECT().ListActive(gomock.Any()).Return(nil, nil).AnyTimes()
 	return m
 }
 
