@@ -6,8 +6,6 @@ CREATE TABLE issues (
     sent_at         TIMESTAMP NOT NULL,
     subject         TEXT NOT NULL,
     summary         TEXT,
-    html_body       TEXT NOT NULL,
-    text_body       TEXT NOT NULL,
     status          TEXT NOT NULL DEFAULT 'sent'
 );
 
