@@ -16,3 +16,6 @@
 @use 'components/email-preview';
 @use 'components/digest-item';
 @use 'components/thank-you';
+
+// Vendor — must come after all @use rules (SCSS constraint)
+@import 'swiper/swiper.css';
