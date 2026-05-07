@@ -17,37 +17,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api contains Vercel serverless function handlers.
 package api
 
 import (
-	"log/slog"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	respond "github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleCollect(w, r, app.Runner, *app.Config)
-	})
-}
-
-func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner, cfg env.Config) {
 	ctx := r.Context()
+	a := getApp(ctx)
 
-	if _, err := runner.Collect(ctx, digest.CollectOptions{}); err != nil {
-		slog.ErrorContext(ctx, "Collecting digest", "error", err)
+	if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
 		respond.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
 		return
 	}
 
-	hook.Heartbeat(ctx, cfg.BetterStackCollectHeartbeatURL)
+	hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
+
 	respond.OK(w)
 }

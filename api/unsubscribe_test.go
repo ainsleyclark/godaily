@@ -27,33 +27,33 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSend(t *testing.T) {
+func TestHandleUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
+		token      string
+		mock       func(s *mocksubscriber.MockSubscriber)
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(nil)
+			token: "valid-token",
+			mock: func(s *mocksubscriber.MockSubscriber) {
+				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 			},
-			wantStatus: http.StatusOK,
+			wantStatus: http.StatusFound,
 		},
-		"Send Digest Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
-			},
-			wantStatus: http.StatusInternalServerError,
+		"Missing Token": {
+			token:      "",
+			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			wantStatus: http.StatusBadRequest,
 		},
-		"Send Suggestion Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(errors.New("synth failed"))
+		"Unsubscribe Error": {
+			token: "bad-token",
+			mock: func(s *mocksubscriber.MockSubscriber) {
+				s.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -62,14 +62,19 @@ func TestHandleSend(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
+			svc := mocksubscriber.NewMockSubscriber(ctrl)
+			test.mock(svc)
 
-			app = &godaily.App{Runner: runner, Config: &env.Config{}}
+			app = &godaily.App{Subscribers: svc, Config: &env.Config{}}
+
+			url := "/api/unsubscribe"
+			if test.token != "" {
+				url += "?token=" + test.token
+			}
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-			HandleSend(w, r)
+			r := httptest.NewRequest(http.MethodGet, url, nil)
+			HandleUnsubscribe(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

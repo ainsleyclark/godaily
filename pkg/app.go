@@ -43,9 +43,9 @@ type App struct {
 	Config      *env.Config
 	DB          *sql.DB
 	Repository  *Repository
-	Runner      *digest.Aggregator
+	Runner      digest.Runner
 	Cache       cache.Store
-	Subscribers *subscriber.Service
+	Subscribers subscriber.Subscriber
 }
 
 // Repository defines the datastore for the application.

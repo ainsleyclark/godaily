@@ -25,6 +25,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/stretchr/testify/assert"
@@ -32,8 +33,6 @@ import (
 )
 
 func TestHandleCollect(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
 		wantStatus int
@@ -54,15 +53,15 @@ func TestHandleCollect(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
 			ctrl := gomock.NewController(t)
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
+			app = &godaily.App{Runner: runner, Config: &env.Config{}}
+
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
-			handleCollect(w, r, runner, env.Config{})
+			HandleCollect(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

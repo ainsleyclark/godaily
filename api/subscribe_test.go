@@ -23,37 +23,58 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSend(t *testing.T) {
+func TestHandleSubscribe(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
+		body       string
+		method     string
+		mock       func(s *mocksubscriber.MockSubscriber)
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(nil)
+			body:   `{"email":"test@example.com"}`,
+			method: http.MethodPost,
+			mock: func(s *mocksubscriber.MockSubscriber) {
+				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(news.Subscriber{}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
-		"Send Digest Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
-			},
-			wantStatus: http.StatusInternalServerError,
+		"Wrong Method": {
+			body:       `{"email":"test@example.com"}`,
+			method:     http.MethodGet,
+			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			wantStatus: http.StatusMethodNotAllowed,
 		},
-		"Send Suggestion Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(errors.New("synth failed"))
+		"Missing Email": {
+			body:       `{}`,
+			method:     http.MethodPost,
+			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			wantStatus: http.StatusBadRequest,
+		},
+		"Already Subscribed": {
+			body:   `{"email":"dupe@example.com"}`,
+			method: http.MethodPost,
+			mock: func(s *mocksubscriber.MockSubscriber) {
+				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(news.Subscriber{}, subscriber.ErrAlreadySubscribed)
+			},
+			wantStatus: http.StatusConflict,
+		},
+		"Subscribe Error": {
+			body:   `{"email":"err@example.com"}`,
+			method: http.MethodPost,
+			mock: func(s *mocksubscriber.MockSubscriber) {
+				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(news.Subscriber{}, errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -62,14 +83,14 @@ func TestHandleSend(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
+			svc := mocksubscriber.NewMockSubscriber(ctrl)
+			test.mock(svc)
 
-			app = &godaily.App{Runner: runner, Config: &env.Config{}}
+			app = &godaily.App{Subscribers: svc, Config: &env.Config{}}
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-			HandleSend(w, r)
+			r := httptest.NewRequest(test.method, "/api/subscribe", strings.NewReader(test.body))
+			HandleSubscribe(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

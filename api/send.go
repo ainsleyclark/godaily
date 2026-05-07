@@ -17,46 +17,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api contains Vercel serverless function handlers.
 package api
 
 import (
-	"log/slog"
 	"net/http"
 	"time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	respond "github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/bootstrap"
-	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleSend(w, r, app.Runner, *app.Config)
-	})
-}
-
-func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner, cfg env.Config) {
 	ctx := r.Context()
+	a := getApp(ctx)
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
-	if err := runner.SendDigest(ctx, yesterday, false); err != nil {
-		slog.ErrorContext(ctx, "Sending digest", "error", err)
+	if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
 		respond.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 		return
 	}
 
-	if err := runner.SendSuggestion(ctx, yesterday); err != nil {
-		slog.ErrorContext(ctx, "Sending suggestion", "error", err)
+	if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
 		respond.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
 		return
 	}
 
-	hook.Deploy(ctx, cfg.VercelDeployHookURL)
-	hook.Heartbeat(ctx, cfg.BetterStackSendHeartbeatURL)
+	hook.Deploy(ctx, a.Config.VercelDeployHookURL)
+	hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
+
 	respond.OK(w)
 }

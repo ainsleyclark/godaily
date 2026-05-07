@@ -17,28 +17,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package bootstrap provides shared bootstrap wiring for serverless handlers.
-package bootstrap
+package api
 
 import (
-	"log/slog"
-	"net/http"
+	"context"
+	"log"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 )
 
-// Handle bootstraps the app and calls fn with the fully initialised App. It writes a 500 and
-// returns early if Bootstrap fails, so fn is only called on success.
-func Handle(w http.ResponseWriter, r *http.Request, fn func(*godaily.App)) {
-	ctx := r.Context()
+var app *godaily.App
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
-		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
-		return
+// getApp returns the singleton App, bootstrapping it on first call.
+// Tests pre-set app directly to inject a mock before calling a handler.
+func getApp(ctx context.Context) *godaily.App {
+	if app != nil {
+		return app
 	}
-	defer teardown()
-
-	fn(app)
+	var err error
+	app, _, err = godaily.Bootstrap(ctx)
+	if err != nil {
+		log.Fatalf("bootstrapping app: %v", err)
+	}
+	return app
 }

@@ -17,33 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api contains Vercel serverless function handlers.
 package api
 
 import (
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	respond "github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 )
 
 // HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
 func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleUnsubscribe(w, r, app)
-	})
-}
+	ctx := r.Context()
+	a := getApp(ctx)
 
-func handleUnsubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
 	token := r.URL.Query().Get("token")
 	if token == "" {
 		respond.Error(w, http.StatusBadRequest, "missing token")
 		return
 	}
-	if err := app.Subscribers.Unsubscribe(r.Context(), token); err != nil {
+
+	if err := a.Subscribers.Unsubscribe(ctx, token); err != nil {
 		respond.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	http.Redirect(w, r, "/?unsubscribed=1", http.StatusFound)
 }

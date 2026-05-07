@@ -37,6 +37,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../mocks/subscriber/Subscriber.go . Subscriber
+
+// Subscriber defines the subscription lifecycle methods used by HTTP handlers.
+type Subscriber interface {
+	Subscribe(ctx context.Context, email string) (news.Subscriber, error)
+	Unsubscribe(ctx context.Context, token string) error
+}
+
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
 // already registered as an active subscriber.
 var ErrAlreadySubscribed = errors.New("already subscribed")
@@ -61,13 +69,17 @@ type Service struct {
 
 // New returns a Service wired to the provided dependencies.
 func New(repo news.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
-	return &Service{repo: repo, issues: issues, email: sender}
+	return &Service{
+		repo:   repo,
+		issues: issues,
+		email:  sender,
+	}
 }
 
 // Subscribe creates a new subscriber and sends a welcome email.
 // It returns ErrAlreadySubscribed if the email is already registered.
 // Welcome email failures are logged but do not fail the subscription.
-func (s *Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscriber, error) {
+func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscriber, error) {
 	if _, err := s.repo.FindByEmail(ctx, emailAddr); err == nil {
 		return news.Subscriber{}, ErrAlreadySubscribed
 	} else if !errors.Is(err, store.ErrNotFound) {
@@ -86,7 +98,7 @@ func (s *Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscri
 	}
 	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
 
-	if err := s.sendWelcome(ctx, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
+	if err = s.sendWelcome(ctx, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
 		slog.ErrorContext(ctx, "Failed to send welcome email", "email", sub.Email, "error", err)
 	}
 
@@ -94,11 +106,11 @@ func (s *Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscri
 }
 
 // Unsubscribe marks a subscriber as unsubscribed using their token.
-func (s *Service) Unsubscribe(ctx context.Context, token string) error {
+func (s Service) Unsubscribe(ctx context.Context, token string) error {
 	return s.repo.Unsubscribe(ctx, token)
 }
 
-func (s *Service) sendWelcome(ctx context.Context, to, unsubURL, latestIssueURL, latestIssueTitle string) error {
+func (s Service) sendWelcome(ctx context.Context, to, unsubURL, latestIssueURL, latestIssueTitle string) error {
 	data := welcomeData{
 		LatestIssueURL:   latestIssueURL,
 		LatestIssueTitle: latestIssueTitle,

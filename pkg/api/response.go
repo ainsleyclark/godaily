@@ -37,7 +37,11 @@ func JSON(w http.ResponseWriter, status int, v any) {
 }
 
 // Error writes a JSON body {"error": message} with the given HTTP status code.
+// For 5xx responses it also logs the message at error level.
 func Error(w http.ResponseWriter, status int, message string) {
+	if status >= http.StatusInternalServerError {
+		slog.Error(message)
+	}
 	JSON(w, status, map[string]string{"error": message})
 }
 
