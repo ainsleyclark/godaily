@@ -17,28 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package generate renders all godaily pages as static HTML files for
-// deployment to Vercel's CDN.
 package generate
 
 import (
-	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
 
-	"github.com/a-h/templ"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
 
-// Site renders all sent issues and the homepage to outDir, then copies
-// compiled frontend assets from assetsDir into outDir/assets.
-func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir string) error {
+// website holds all data required to generate the static site.
+type website struct {
+	Issues      []news.Issue
+	LatestIssue news.Issue
+}
+
+// Site renders all sent issues and the homepage to outDir, generates
+// sitemap.xml and rss.xml, copies static files from staticDir, then
+// copies compiled frontend assets from assetsDir into outDir/assets.
+func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, assetsDir string) error {
 	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return errors.Wrap(err, "creating output directory")
 	}
@@ -55,32 +56,25 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 		return errors.Wrap(err, "fetching latest issue")
 	}
 
-	var latestIssue news.Issue
+	w := website{Issues: allIssues}
 	if len(latest) > 0 {
-		latestIssue = latest[0]
+		w.LatestIssue = latest[0]
 	}
 
-	homeData := pages.HomeData{
-		LatestIssue: latestIssue,
-		SampleIssue: latestIssue,
-	}
-	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
-		return errors.Wrap(err, "rendering homepage")
+	if err := renderPages(ctx, repo, w, outDir); err != nil {
+		return errors.Wrap(err, "rendering pages")
 	}
 
-	if err := renderPageInDir(ctx, filepath.Join(outDir, "thank-you"), pages.ThankYou(latestIssue)); err != nil {
-		return errors.Wrap(err, "rendering thank-you page")
+	if err := sitemap(w, outDir); err != nil {
+		return errors.Wrap(err, "generating sitemap")
 	}
 
-	for _, issue := range allIssues {
-		full, err := repo.Find(ctx, issue.ID)
-		if err != nil {
-			return fmt.Errorf("fetching issue %d: %w", issue.ID, err)
-		}
-		if err := renderPageInDir(ctx, filepath.Join(outDir, "digest", issue.Slug), pages.Digest(full)); err != nil {
-			return fmt.Errorf("rendering digest %s: %w", issue.Slug, err)
-		}
-		slog.InfoContext(ctx, "Rendered digest", "slug", issue.Slug)
+	if err := rss(w, outDir); err != nil {
+		return errors.Wrap(err, "generating RSS feed")
+	}
+
+	if err := copyDir(staticDir, outDir); err != nil {
+		return errors.Wrap(err, "copying static files")
 	}
 
 	if err := copyDir(assetsDir, filepath.Join(outDir, "assets")); err != nil {
@@ -88,21 +82,6 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 	}
 
 	return nil
-}
-
-func renderPageInDir(ctx context.Context, dir string, component templ.Component) error {
-	if err := os.MkdirAll(dir, 0o750); err != nil {
-		return errors.Wrap(err, "creating directory")
-	}
-	return renderPage(ctx, filepath.Join(dir, "index.html"), component)
-}
-
-func renderPage(ctx context.Context, path string, component templ.Component) error {
-	var buf bytes.Buffer
-	if err := component.Render(ctx, &buf); err != nil {
-		return errors.Wrap(err, "rendering component")
-	}
-	return errors.Wrap(os.WriteFile(path, buf.Bytes(), 0o600), "writing file")
 }
 
 // copyDir copies all files from src into dst using os.Root to scope both

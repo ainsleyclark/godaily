@@ -17,54 +17,57 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package generate
 
 import (
-	"errors"
-	"net/http"
-	"net/http/httptest"
-	"testing"
+	"encoding/xml"
+	"os"
+	"path/filepath"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
+	"github.com/pkg/errors"
 )
 
-func TestHandleCollect(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Collect Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
-			},
-			wantStatus: http.StatusInternalServerError,
+const sitemapNamespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+
+type urlSet struct {
+	XMLName xml.Name     `xml:"urlset"`
+	Xmlns   string       `xml:"xmlns,attr"`
+	URLs    []sitemapURL `xml:"url"`
+}
+
+type sitemapURL struct {
+	Loc      string `xml:"loc"`
+	LastMod  string `xml:"lastmod,omitempty"`
+	Priority string `xml:"priority"`
+}
+
+// sitemap writes sitemap.xml to outDir containing the homepage and one entry
+// per issue at /digest/{slug}/.
+func sitemap(w website, outDir string) error {
+	set := urlSet{
+		Xmlns: sitemapNamespace,
+		URLs: []sitemapURL{
+			{Loc: env.AppURL + "/", Priority: "1.0"},
 		},
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
-
-			api.App = &godaily.App{Runner: runner, Config: &env.Config{}}
-
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
-			HandleCollect(w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
+	for _, issue := range w.Issues {
+		set.URLs = append(set.URLs, sitemapURL{
+			Loc:      env.AppURL + "/digest/" + issue.Slug + "/",
+			LastMod:  issue.SentAt.Format("2006-01-02"),
+			Priority: "0.8",
 		})
 	}
+
+	data, err := xml.MarshalIndent(set, "", "  ")
+	if err != nil {
+		return errors.Wrap(err, "marshalling sitemap")
+	}
+
+	out := append([]byte(xml.Header), data...)
+	return errors.Wrap(
+		os.WriteFile(filepath.Join(outDir, "sitemap.xml"), out, 0o600),
+		"writing sitemap.xml",
+	)
 }

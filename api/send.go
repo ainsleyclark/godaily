@@ -23,28 +23,28 @@ import (
 	"net/http"
 	"time"
 
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := api.GetApp(ctx)
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
 	if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
-		respond.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
+		api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 		return
 	}
 
 	if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
-		respond.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
+		api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
 		return
 	}
 
 	hook.Deploy(ctx, a.Config.VercelDeployHookURL)
 	hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
 
-	respond.OK(w)
+	api.OK(w)
 }

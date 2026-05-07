@@ -22,7 +22,7 @@ package api
 import (
 	"net/http"
 
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
@@ -30,14 +30,14 @@ import (
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := api.GetApp(ctx)
 
 	if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
-		respond.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
+		api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
 		return
 	}
 
 	hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
 
-	respond.OK(w)
+	api.OK(w)
 }

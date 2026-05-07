@@ -24,14 +24,14 @@ import (
 	"errors"
 	"net/http"
 
-	respond "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := api.GetApp(ctx)
 
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -42,18 +42,18 @@ func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 		Email string `json:"email"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
-		respond.Error(w, http.StatusBadRequest, "email is required")
+		api.Error(w, http.StatusBadRequest, "email is required")
 		return
 	}
 
 	if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
 		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
-			respond.Error(w, http.StatusConflict, "already subscribed")
+			api.Error(w, http.StatusConflict, "already subscribed")
 		} else {
-			respond.Error(w, http.StatusInternalServerError, err.Error())
+			api.Error(w, http.StatusInternalServerError, err.Error())
 		}
 		return
 	}
 
-	respond.OK(w)
+	api.OK(w)
 }
