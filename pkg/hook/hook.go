@@ -53,5 +53,7 @@ func fire(ctx context.Context, method, url, label string) {
 		slog.ErrorContext(ctx, "Firing "+label, "error", err)
 		return
 	}
-	resp.Body.Close()
+	if err = resp.Body.Close(); err != nil {
+		slog.ErrorContext(ctx, "Closing "+label+" response body", "error", err)
+	}
 }
