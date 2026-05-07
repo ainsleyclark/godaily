@@ -26,6 +26,7 @@ import (
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	respond "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
@@ -47,24 +48,18 @@ func handleSubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
 		Email string `json:"email"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "email is required"})
+		respond.Error(w, http.StatusBadRequest, "email is required")
 		return
 	}
 
 	if _, err := app.Subscribers.Subscribe(r.Context(), body.Email); err != nil {
-		w.Header().Set("Content-Type", "application/json")
 		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
-			w.WriteHeader(http.StatusConflict)
-			_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
+			respond.Error(w, http.StatusConflict, "already subscribed")
 		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-			_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			respond.Error(w, http.StatusInternalServerError, err.Error())
 		}
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+	respond.OK(w)
 }

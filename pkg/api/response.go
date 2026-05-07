@@ -17,33 +17,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api contains Vercel serverless function handlers.
+// Package api provides helpers for writing HTTP JSON responses.
 package api
 
 import (
+	"encoding/json"
+	"log/slog"
 	"net/http"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	respond "github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 )
 
-// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
-func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleUnsubscribe(w, r, app)
-	})
+// JSON writes v as JSON with the given HTTP status code and sets the
+// Content-Type header to application/json.
+func JSON(w http.ResponseWriter, status int, v any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		slog.Error("Encoding JSON response", "error", err)
+	}
 }
 
-func handleUnsubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
-	token := r.URL.Query().Get("token")
-	if token == "" {
-		respond.Error(w, http.StatusBadRequest, "missing token")
-		return
-	}
-	if err := app.Subscribers.Unsubscribe(r.Context(), token); err != nil {
-		respond.Error(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	http.Redirect(w, r, "/?unsubscribed=1", http.StatusFound)
+// Error writes a JSON body {"error": message} with the given HTTP status code.
+func Error(w http.ResponseWriter, status int, message string) {
+	JSON(w, status, map[string]string{"error": message})
+}
+
+// OK writes a 200 OK JSON body {"ok": true}.
+func OK(w http.ResponseWriter) {
+	JSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
