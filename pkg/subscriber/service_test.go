@@ -78,6 +78,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("Already Subscribed", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(sub, nil)
 
@@ -89,6 +90,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("FindByEmail Unexpected Error", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, errBoom)
 
@@ -100,6 +102,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("Create Error", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(news.Subscriber{}, errBoom)
@@ -112,6 +115,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("OK With Latest Issue", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
@@ -129,6 +133,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("OK Without Latest Issue", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
@@ -143,6 +148,7 @@ func TestService_Subscribe(t *testing.T) {
 
 	t.Run("Welcome Email Failure Is Non Fatal", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		sender.err = errBoom
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
@@ -161,6 +167,7 @@ func TestService_Unsubscribe(t *testing.T) {
 
 	t.Run("OK", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().Unsubscribe(gomock.Any(), "tok123").Return(nil)
 
@@ -170,6 +177,7 @@ func TestService_Unsubscribe(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		t.Parallel()
+
 		repo, issues, sender := setup(t)
 		repo.EXPECT().Unsubscribe(gomock.Any(), "tok123").Return(errBoom)
 
