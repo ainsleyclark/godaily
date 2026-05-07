@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package api
 
 import (
 	"errors"
@@ -30,7 +30,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandle_Send(t *testing.T) {
+func TestHandleCollect(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
@@ -39,21 +39,13 @@ func TestHandle_Send(t *testing.T) {
 	}{
 		"OK": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(nil)
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
-		"Send Digest Error": {
+		"Collect Error": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Send Suggestion Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(errors.New("synth failed"))
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -62,13 +54,14 @@ func TestHandle_Send(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			ctrl := gomock.NewController(t)
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-			handle(w, r, runner)
+			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
+			handleCollect(w, r, runner)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

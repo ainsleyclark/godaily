@@ -17,30 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for POST /api/subscribe.
-package handler
+// Package api contains Vercel serverless function handlers.
+package api
 
-import (
-	"encoding/json"
-	"net/http"
+import "net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/source"
-)
-
-// Handler is the Vercel serverless function entry point.
-//
-// Temporary: fetches r/golang news items via the Reddit public JSON API to
-// verify that Vercel's outbound IP range is accepted by Reddit.
-func Handler(w http.ResponseWriter, r *http.Request) {
-	items, err := source.NewReddit().Fetch(r.Context())
-	if err != nil {
-		http.Error(w, "failed to fetch from Reddit: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]any{
-		"ok":    true,
-		"items": len(items),
-	})
+// HandleConfirm is the Vercel serverless function entry point for GET /api/confirm.
+func HandleConfirm(w http.ResponseWriter, r *http.Request) {
+	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }

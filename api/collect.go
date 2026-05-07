@@ -17,27 +17,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for GET /api/collect.
-package handler
+// Package api contains Vercel serverless function handlers.
+package api
 
 import (
 	"log/slog"
 	"net/http"
 	"os"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
-// Handler is the Vercel serverless function entry point.
-func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Handle(w, r, func(runner digest.Runner) {
-		handle(w, r, runner)
+// HandleCollect is the Vercel serverless function entry point for GET /api/collect.
+func HandleCollect(w http.ResponseWriter, r *http.Request) {
+	bootstrap.Handle(w, r, func(runner digest.Runner) {
+		handleCollect(w, r, runner)
 	})
 }
 
-func handle(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
 	ctx := r.Context()
 
 	if _, err := runner.Collect(ctx, digest.CollectOptions{}); err != nil {

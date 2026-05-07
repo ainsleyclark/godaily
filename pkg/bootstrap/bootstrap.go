@@ -17,44 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for GET /api/send.
-package handler
+// Package bootstrap provides shared bootstrap wiring for serverless handlers.
+package bootstrap
 
 import (
 	"log/slog"
 	"net/http"
-	"os"
-	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
-// Handler is the Vercel serverless function entry point.
-func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Handle(w, r, func(runner digest.Runner) {
-		handle(w, r, runner)
-	})
-}
-
-func handle(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+// Handle bootstraps the app and calls fn with the runner. It writes a 500 and
+// returns early if Bootstrap fails, so fn is only called on success.
+func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
 	ctx := r.Context()
-	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
-	if err := runner.SendDigest(ctx, yesterday, false); err != nil {
-		slog.ErrorContext(ctx, "Sending digest", "error", err)
-		http.Error(w, "send digest failed: "+err.Error(), http.StatusInternalServerError)
+	app, teardown, err := godaily.Bootstrap(ctx)
+	if err != nil {
+		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
+		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	defer teardown()
 
-	if err := runner.SendSuggestion(ctx, yesterday); err != nil {
-		slog.ErrorContext(ctx, "Sending suggestion", "error", err)
-		http.Error(w, "send suggestion failed: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	hook.Deploy(ctx, os.Getenv("VERCEL_DEPLOY_HOOK_URL"))
-	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_SEND_HEARTBEAT_URL"))
-	w.WriteHeader(http.StatusOK)
+	fn(app.Runner)
 }

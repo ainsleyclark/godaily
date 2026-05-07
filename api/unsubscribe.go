@@ -17,12 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package handler is the Vercel serverless function for GET /api/confirm.
-package handler
+// Package api contains Vercel serverless function handlers.
+package api
 
 import "net/http"
 
-// Handler is the Vercel serverless function entry point.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
+func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Not implemented", http.StatusNotImplemented)
 }

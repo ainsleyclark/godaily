@@ -17,29 +17,44 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api provides shared bootstrap wiring for serverless handlers.
+// Package api contains Vercel serverless function handlers.
 package api
 
 import (
 	"log/slog"
 	"net/http"
+	"os"
+	"time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
-// Handle bootstraps the app and calls fn with the runner. It writes a 500 and
-// returns early if Bootstrap fails, so fn is only called on success.
-func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
-	ctx := r.Context()
+// HandleSend is the Vercel serverless function entry point for GET /api/send.
+func HandleSend(w http.ResponseWriter, r *http.Request) {
+	bootstrap.Handle(w, r, func(runner digest.Runner) {
+		handleSend(w, r, runner)
+	})
+}
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
-		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
+func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+	ctx := r.Context()
+	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+
+	if err := runner.SendDigest(ctx, yesterday, false); err != nil {
+		slog.ErrorContext(ctx, "Sending digest", "error", err)
+		http.Error(w, "send digest failed: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer teardown()
 
-	fn(app.Runner)
+	if err := runner.SendSuggestion(ctx, yesterday); err != nil {
+		slog.ErrorContext(ctx, "Sending suggestion", "error", err)
+		http.Error(w, "send suggestion failed: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	hook.Deploy(ctx, os.Getenv("VERCEL_DEPLOY_HOOK_URL"))
+	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_SEND_HEARTBEAT_URL"))
+	w.WriteHeader(http.StatusOK)
 }
