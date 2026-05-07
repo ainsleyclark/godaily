@@ -43,7 +43,7 @@ type Runner interface {
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
-	email             emailSender
+	email             email.Sender
 	adminEmailAddress string
 	suggester         suggester
 	issues            news.IssueRepository
@@ -51,18 +51,11 @@ type Aggregator struct {
 	subscribers       news.SubscriberRepository
 }
 
-type (
-	// emailSender abstracts the email client so tests can substitute a
-	// fake without standing up the real Resend transport.
-	emailSender interface {
-		Send(ctx context.Context, req email.SendEmailRequest) error
-	}
-	// suggester abstracts the synth client so tests can substitute a fake
-	// without hitting Anthropic. Mirrors emailSender.
-	suggester interface {
-		Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
-	}
-)
+// suggester abstracts the synth client so tests can substitute a fake
+// without hitting Anthropic.
+type suggester interface {
+	Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
+}
 
 // New creates a new Aggregator, validating that all news
 // sources have registered fetchers.

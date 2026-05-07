@@ -21,11 +21,23 @@ package templates
 
 import _ "embed"
 
+//go:embed email_layout.html
+var EmailLayout string
+
+//go:embed email_layout.txt
+var EmailLayoutText string
+
 //go:embed email.html
 var EmailHTML string
 
 //go:embed email.txt
 var EmailText string
+
+//go:embed welcome.html
+var WelcomeHTML string
+
+//go:embed welcome.txt
+var WelcomeText string
 
 //go:embed suggest.html
 var SuggestHTML string

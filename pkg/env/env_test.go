@@ -51,6 +51,23 @@ func TestConfig_IsProduction(t *testing.T) {
 func TestNew(t *testing.T) {
 	t.Setenv("APP_ENV", "production")
 
+	t.Run("Vercel skips dotenv loading", func(t *testing.T) {
+		t.Setenv("VERCEL", "1")
+		t.Setenv("APP_ENV", "development")
+		t.Setenv("RESEND_TOKEN", "re_vercel")
+		t.Setenv("ANTHROPIC_API_KEY", "sk-ant-vercel")
+		t.Setenv("EMAIL_SEND_ADDRESS", "vercel@example.com")
+		t.Setenv("TURSO_URL", "file:./vercel.db")
+		t.Setenv("TURSO_AUTH_TOKEN", "turso_vercel")
+
+		cfg, err := New(t.Context())
+
+		// No .env file exists, but VERCEL=1 should skip loading it.
+		require.NoError(t, err)
+		assert.Equal(t, "re_vercel", cfg.ResendToken)
+		assert.Equal(t, "sk-ant-vercel", cfg.AnthropicAPIKey)
+	})
+
 	t.Run("All vars set", func(t *testing.T) {
 		t.Setenv("RESEND_TOKEN", "re_test")
 		t.Setenv("ANTHROPIC_API_KEY", "sk-ant-test")

@@ -68,16 +68,16 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 		return errors.Wrap(err, "rendering homepage")
 	}
 
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "thank-you"), pages.ThankYou(latestIssue)); err != nil {
+		return errors.Wrap(err, "rendering thank-you page")
+	}
+
 	for _, issue := range allIssues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {
 			return fmt.Errorf("fetching issue %d: %w", issue.ID, err)
 		}
-		dir := filepath.Join(outDir, "digest", issue.Slug)
-		if err := os.MkdirAll(dir, 0o750); err != nil {
-			return fmt.Errorf("creating digest directory for %s: %w", issue.Slug, err)
-		}
-		if err := renderPage(ctx, filepath.Join(dir, "index.html"), pages.Digest(full)); err != nil {
+		if err := renderPageInDir(ctx, filepath.Join(outDir, "digest", issue.Slug), pages.Digest(full)); err != nil {
 			return fmt.Errorf("rendering digest %s: %w", issue.Slug, err)
 		}
 		slog.InfoContext(ctx, "Rendered digest", "slug", issue.Slug)
@@ -88,6 +88,13 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 	}
 
 	return nil
+}
+
+func renderPageInDir(ctx context.Context, dir string, component templ.Component) error {
+	if err := os.MkdirAll(dir, 0o750); err != nil {
+		return errors.Wrap(err, "creating directory")
+	}
+	return renderPage(ctx, filepath.Join(dir, "index.html"), component)
 }
 
 func renderPage(ctx context.Context, path string, component templ.Component) error {

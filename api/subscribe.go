@@ -27,18 +27,17 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 	bootstrap.Handle(w, r, func(app *godaily.App) {
-		handleSubscribe(w, r, app.Repository.Subscribers)
+		handleSubscribe(w, r, app)
 	})
 }
 
-func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.SubscriberRepository) {
+func handleSubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -54,22 +53,15 @@ func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.Subscribe
 		return
 	}
 
-	ctx := r.Context()
-
-	_, err := repo.FindByEmail(ctx, body.Email)
-	if err == nil {
+	if _, err := app.Subscribers.Subscribe(r.Context(), body.Email); err != nil {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusConflict)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
-		return
-	}
-	if !errors.Is(err, store.ErrNotFound) {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if _, err = repo.Create(ctx, body.Email); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
+			w.WriteHeader(http.StatusConflict)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		}
 		return
 	}
 

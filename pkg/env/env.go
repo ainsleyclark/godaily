@@ -21,8 +21,11 @@ package env
 
 import (
 	"context"
+	"os"
 
 	"github.com/ainsleydev/webkit/pkg/env"
+	cenv "github.com/caarlos0/env/v11"
+	"github.com/joho/godotenv"
 )
 
 // AppURL is the canonical production URL for godaily.
@@ -47,10 +50,22 @@ type Config struct {
 // New parses Config from the environment, overlaying values from a .env file
 // in the working directory when present.
 func New(_ context.Context) (Config, error) {
+	// Vercel injects VERCEL=1 in all environments (dev, preview, production).
+	// When present, env vars are provided by the platform, so we shouldn't
+	// load the env file.
+	isVercel := os.Getenv("VERCEL") != ""
+
 	var cfg Config
-	if err := env.ParseConfig(&cfg, ".env"); err != nil {
-		return Config{}, err
+	if !isVercel && env.IsDevelopment() {
+		if err := godotenv.Load(".env"); err != nil {
+			return cfg, err
+		}
 	}
+
+	if err := cenv.Parse(&cfg); err != nil {
+		return cfg, err
+	}
+
 	return cfg, nil
 }
 

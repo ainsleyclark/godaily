@@ -17,44 +17,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package server
+package handlers
 
 import (
-	"fmt"
 	"net/http"
 
-	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
-
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/web/handlers"
-	"github.com/ainsleydev/webkit/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Start boots the HTTP server on the given port.
-func Start(a *godaily.App, port string) error {
-	kit := webkit.New()
+// ThankYou handles the post-subscription confirmation page.
+func ThankYou(a *godaily.App) webkit.Handler {
+	return func(c *webkit.Context) error {
+		ctx := c.Request.Context()
 
-	kit.Plug(kitmiddleware.NonWWWRedirect)
-	kit.Plug(kitmiddleware.TrailingSlashRedirect)
-	kit.Plug(kitmiddleware.Logger)
-	kit.Plug(kitmiddleware.Recover)
-	kit.Plug(kitmiddleware.RequestID)
-	kit.Plug(kitmiddleware.Gzip)
-	kit.Plug(kitmiddleware.URL)
+		latest, err := a.Repository.Issues.Latest(ctx, 1)
+		if err != nil {
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+		}
 
-	kit.Get("/", handlers.Home(a))
-	kit.Get("/thank-you/", handlers.ThankYou(a))
-	kit.Get("/digest/{slug}/", handlers.Digest(a))
-	kit.Static("/assets/", "web/dist/") // From where main.go is
-	kit.NotFound(func(c *webkit.Context) error { return c.String(http.StatusNotFound, "Not Found") })
+		var issue news.Issue
+		if len(latest) > 0 {
+			issue = latest[0]
+		}
 
-	if env.IsDevelopment() {
-		// Register on the raw chi mux so SSE bypasses webkit's middleware chain
-		// (Logger's ResponseRecorder doesn't implement http.Flusher, which would
-		// buffer the stream).
-		kit.Mux().Get("/internal/reload/", handlers.ReloadHTTP)
+		return c.Render(pages.ThankYou(issue))
 	}
-
-	return kit.Start(fmt.Sprintf(":%s", port))
 }

@@ -27,25 +27,28 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/email"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
+	"github.com/ainsleyclark/godaily/pkg/subscriber"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
 // App defines a global state for godaily.
 type App struct {
-	Config     *env.Config
-	DB         *sql.DB
-	Repository *Repository
-	Runner     *digest.Aggregator
-	Cache      cache.Store
+	Config      *env.Config
+	DB          *sql.DB
+	Repository  *Repository
+	Runner      *digest.Aggregator
+	Cache       cache.Store
+	Subscribers *subscriber.Service
 }
 
-// Repository defines the datastore for the application.,
+// Repository defines the datastore for the application.
 type Repository struct {
 	Issues      news.IssueRepository
 	Items       news.ItemRepository
@@ -82,22 +85,27 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		store = osCache
 	}
 
+	cachedIssues := issues.NewCaching(issueStore, store)
+
+	subsStore := subscribers.New(conn)
+
 	repo := &Repository{
-		Issues:      issues.NewCaching(issueStore, store),
+		Issues:      cachedIssues,
 		Items:       items.New(conn),
-		Subscribers: subscribers.New(conn),
+		Subscribers: subsStore,
 	}
 
-	aggregator, err := digest.New(repo.Issues, repo.Items, repo.Subscribers)
+	aggregator, err := digest.New(cachedIssues, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
 
 	return &App{
-		Config:     &config,
-		DB:         conn,
-		Repository: repo,
-		Runner:     aggregator,
-		Cache:      store,
+		Config:      &config,
+		DB:          conn,
+		Repository:  repo,
+		Runner:      aggregator,
+		Cache:       store,
+		Subscribers: subscriber.New(subsStore, cachedIssues, email.New()),
 	}, teardown, nil
 }
