@@ -33,9 +33,10 @@ func serveCmd(a *godaily.App) *cli.Command {
 		Usage: "Start the HTTP web server.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "port",
-				Usage: "Port to listen on",
-				Value: "3000",
+				Name:    "port",
+				Usage:   "Port to listen on",
+				Value:   "3000",
+				Sources: cli.EnvVars("PORT"),
 			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {

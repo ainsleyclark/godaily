@@ -68,6 +68,14 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, assetsDir stri
 		return errors.Wrap(err, "rendering homepage")
 	}
 
+	thankYouDir := filepath.Join(outDir, "thank-you")
+	if err := os.MkdirAll(thankYouDir, 0o750); err != nil {
+		return errors.Wrap(err, "creating thank-you directory")
+	}
+	if err := renderPage(ctx, filepath.Join(thankYouDir, "index.html"), pages.ThankYou(latestIssue)); err != nil {
+		return errors.Wrap(err, "rendering thank-you page")
+	}
+
 	for _, issue := range allIssues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {

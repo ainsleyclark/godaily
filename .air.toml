@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 [build]
   cmd = "go build -o ./tmp/main ."
   bin = "./tmp/main"
-  full_bin = "./tmp/main serve --port 3000"
+  full_bin = "./tmp/main serve"
   include_ext = ["go", "templ"]
   exclude_dir = [
     "tmp",

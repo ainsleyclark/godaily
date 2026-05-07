@@ -11,16 +11,9 @@ run: # Sends the godaily email
 	go run main.go run
 .PHONY: run
 
-serve: # Start live-reload dev environment (templ + air + esbuild). Visit http://localhost:3000
-	@mkdir -p tmp
-	@command -v pnpm >/dev/null 2>&1 || { echo "pnpm is required (npm i -g pnpm)"; exit 1; }
-	@test -d web/node_modules || (cd web && pnpm install)
-	web/node_modules/.bin/concurrently -k \
-		-n templ,air,esbuild \
-		-c blue,green,magenta \
-		"go tool templ generate --watch --path=./web" \
-		"go tool air -c .air.toml" \
-		"pnpm --dir web dev"
+serve: # Start live-reload dev environment with Vercel API support. Visit http://localhost:3000
+	@command -v vercel >/dev/null 2>&1 || { echo "Vercel CLI is required (npm i -g vercel)"; exit 1; }
+	vercel dev
 .PHONY: serve
 
 serve-prod: # Start the HTTP web server without live-reload

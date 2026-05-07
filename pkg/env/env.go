@@ -21,6 +21,7 @@ package env
 
 import (
 	"context"
+	"os"
 
 	"github.com/ainsleydev/webkit/pkg/env"
 )
@@ -47,6 +48,13 @@ type Config struct {
 // New parses Config from the environment, overlaying values from a .env file
 // in the working directory when present.
 func New(_ context.Context) (Config, error) {
+	// Vercel injects VERCEL=1 in all environments (dev, preview, production).
+	// When present, env vars are provided by the platform, so force APP_ENV to
+	// production to prevent webkit from trying to load .env from a working
+	// directory that doesn't contain it.
+	if os.Getenv("VERCEL") != "" && os.Getenv("APP_ENV") == "" {
+		_ = os.Setenv("APP_ENV", string(env.Production))
+	}
 	var cfg Config
 	if err := env.ParseConfig(&cfg, ".env"); err != nil {
 		return Config{}, err
