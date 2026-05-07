@@ -26,9 +26,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/email"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
@@ -77,26 +79,13 @@ func allRegistered() map[news.Source]news.Fetcher {
 	return reg
 }
 
-type mockSubscriberRepo struct {
-	subs []news.Subscriber
-	err  error
-}
-
-func (m *mockSubscriberRepo) Find(_ context.Context, _ int64) (news.Subscriber, error) {
-	return news.Subscriber{}, nil
-}
-func (m *mockSubscriberRepo) FindByEmail(_ context.Context, _ string) (news.Subscriber, error) {
-	return news.Subscriber{}, nil
-}
-func (m *mockSubscriberRepo) FindByUnsubscribeToken(_ context.Context, _ string) (news.Subscriber, error) {
-	return news.Subscriber{}, nil
-}
-func (m *mockSubscriberRepo) Create(_ context.Context, _ string) (news.Subscriber, error) {
-	return news.Subscriber{}, nil
-}
-func (m *mockSubscriberRepo) Unsubscribe(_ context.Context, _ string) error { return nil }
-func (m *mockSubscriberRepo) ListActive(_ context.Context) ([]news.Subscriber, error) {
-	return m.subs, m.err
+// newSubsMock returns a MockSubscriberRepository whose ListActive returns subs and err.
+// AnyTimes allows tests that return early before ListActive is called to pass without failure.
+func newSubsMock(t *testing.T, subs []news.Subscriber, err error) *mocknews.MockSubscriberRepository {
+	t.Helper()
+	m := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+	m.EXPECT().ListActive(gomock.Any()).Return(subs, err).AnyTimes()
+	return m
 }
 
 // errItemRepo is an ItemRepository that always returns errItemRepoErr from ListByIssue.
