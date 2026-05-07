@@ -20,6 +20,8 @@
 package api
 
 import (
+	"bytes"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -63,6 +65,18 @@ func TestJSON(t *testing.T) {
 			assert.Equal(t, test.wantBody, strings.TrimSpace(w.Body.String()))
 		})
 	}
+}
+
+func TestJSON_EncodeError(t *testing.T) {
+	var buf bytes.Buffer
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	t.Cleanup(func() { slog.SetDefault(slog.Default()) })
+
+	w := httptest.NewRecorder()
+	JSON(w, http.StatusOK, make(chan int)) // channels are not JSON-serialisable
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Contains(t, buf.String(), "Encoding JSON response")
 }
 
 func TestError(t *testing.T) {

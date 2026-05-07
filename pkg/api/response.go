@@ -22,6 +22,7 @@ package api
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 )
 
@@ -30,7 +31,9 @@ import (
 func JSON(w http.ResponseWriter, status int, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(v)
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		slog.Error("Encoding JSON response", "error", err)
+	}
 }
 
 // Error writes a JSON body {"error": message} with the given HTTP status code.
