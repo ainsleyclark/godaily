@@ -17,8 +17,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package bootstrap provides shared bootstrap wiring for api/ serverless handlers.
-package bootstrap
+// Package api provides shared bootstrap wiring for serverless handlers.
+package api
 
 import (
 	"log/slog"

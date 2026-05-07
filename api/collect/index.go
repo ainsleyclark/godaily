@@ -25,14 +25,14 @@ import (
 	"net/http"
 	"os"
 
-	bootstrap "github.com/ainsleyclark/godaily/api/internal"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // Handler is the Vercel serverless function entry point.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(runner digest.Runner) {
+	api.Handle(w, r, func(runner digest.Runner) {
 		handle(w, r, runner)
 	})
 }
