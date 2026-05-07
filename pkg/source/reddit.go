@@ -22,8 +22,12 @@ package source
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"html"
+	"log/slog"
 	"net/http"
+	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -48,8 +52,15 @@ const (
 )
 
 // NewReddit creates a Reddit client targeting r/golang.
+// If SCRAPER_API_KEY is set, requests are routed through ScraperAPI to avoid
+// IP blocks on restricted hosting environments (e.g. Vercel, GitHub Actions).
 func NewReddit() *Reddit {
-	return &Reddit{url: redditURL}
+	u := redditURL
+	if key := os.Getenv("SCRAPER_API_KEY"); key != "" {
+		u = fmt.Sprintf("http://api.scraperapi.com?api_key=%s&url=%s", key, url.QueryEscape(redditURL))
+		slog.Info("reddit: routing fetch through ScraperAPI")
+	}
+	return &Reddit{url: u}
 }
 
 // Fetch retrieves the latest posts from r/golang via the public JSON API.
