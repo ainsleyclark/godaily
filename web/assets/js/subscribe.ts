@@ -39,7 +39,7 @@ async function handleSubmit(event: Event): Promise<void> {
 		});
 
 		if (res.ok) {
-			button.textContent = "✓ Check your email to confirm";
+			button.textContent = "✓ You're subscribed!";
 			button.classList.remove('button--primary');
 			button.classList.add('button--success');
 		} else if (res.status === 409) {

@@ -41,20 +41,6 @@ func (m *MockSubscriberRepository) EXPECT() *MockSubscriberRepositoryMockRecorde
 	return m.recorder
 }
 
-// Confirm mocks base method.
-func (m *MockSubscriberRepository) Confirm(ctx context.Context, token string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Confirm", ctx, token)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Confirm indicates an expected call of Confirm.
-func (mr *MockSubscriberRepositoryMockRecorder) Confirm(ctx, token any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Confirm", reflect.TypeOf((*MockSubscriberRepository)(nil).Confirm), ctx, token)
-}
-
 // Create mocks base method.
 func (m *MockSubscriberRepository) Create(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()
@@ -83,21 +69,6 @@ func (m *MockSubscriberRepository) Find(ctx context.Context, id int64) (news.Sub
 func (mr *MockSubscriberRepositoryMockRecorder) Find(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockSubscriberRepository)(nil).Find), ctx, id)
-}
-
-// FindByConfirmToken mocks base method.
-func (m *MockSubscriberRepository) FindByConfirmToken(ctx context.Context, token string) (news.Subscriber, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByConfirmToken", ctx, token)
-	ret0, _ := ret[0].(news.Subscriber)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByConfirmToken indicates an expected call of FindByConfirmToken.
-func (mr *MockSubscriberRepositoryMockRecorder) FindByConfirmToken(ctx, token any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByConfirmToken", reflect.TypeOf((*MockSubscriberRepository)(nil).FindByConfirmToken), ctx, token)
 }
 
 // FindByEmail mocks base method.

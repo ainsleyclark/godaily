@@ -28,12 +28,10 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
-
-// appURL is the canonical production URL, used to build per-subscriber unsubscribe links.
-const appURL = "https://godaily.dev"
 
 // SendDigest loads the draft digest for the given date, sends it to the
 // admin address and all active subscribers, then updates the stored issue status.
@@ -56,6 +54,11 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		return errors.Wrap(err, "loading sections")
 	}
 
+	subs, err := a.subscribers.ListActive(ctx)
+	if err != nil {
+		return errors.Wrap(err, "listing active subscribers")
+	}
+
 	// Render and send to admin (no unsubscribe link).
 	adminRendered, err := renderDigest(date, sections, "")
 	if err != nil {
@@ -68,23 +71,16 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		status = news.IssueStatusError
 	}
 
-	// Send personalized digests to all active subscribers.
-	if a.subscribers != nil {
-		subs, listErr := a.subscribers.ListActive(ctx)
-		if listErr != nil {
-			slog.ErrorContext(ctx, "Failed to list active subscribers", "err", listErr)
-		} else {
-			for _, sub := range subs {
-				unsubURL := appURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
-				subRendered, renderErr := renderDigest(date, sections, unsubURL)
-				if renderErr != nil {
-					slog.ErrorContext(ctx, "Failed to render digest for subscriber", "email", sub.Email, "err", renderErr)
-					continue
-				}
-				if sendErr := a.sendRendered(ctx, sub.Email, subRendered); sendErr != nil {
-					slog.ErrorContext(ctx, "Failed to send digest to subscriber", "email", sub.Email, "err", sendErr)
-				}
-			}
+	// Send personalized digests to active subscribers.
+	for _, sub := range subs {
+		unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+		subRendered, renderErr := renderDigest(date, sections, unsubURL)
+		if renderErr != nil {
+			slog.ErrorContext(ctx, "Failed to render digest for subscriber", "email", sub.Email, "err", renderErr)
+			continue
+		}
+		if sendErr := a.sendRendered(ctx, sub.Email, subRendered); sendErr != nil {
+			slog.ErrorContext(ctx, "Failed to send digest to subscriber", "email", sub.Email, "err", sendErr)
 		}
 	}
 

@@ -48,9 +48,8 @@ type Store struct {
 	sqlc *sqlc.Queries
 	db   *sql.DB
 
-	// RandReader is the entropy source for confirm/unsubscribe tokens.
-	// New defaults it to crypto/rand.Reader; tests may swap it for a
-	// failing reader to exercise the token-generation error path.
+	// RandReader is the entropy source for the unsubscribe token.
+	// New defaults it to crypto/rand.Reader; tests may swap it.
 	RandReader io.Reader
 }
 
@@ -80,18 +79,6 @@ func (s Store) FindByEmail(ctx context.Context, email string) (news.Subscriber, 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) FindByConfirmToken(ctx context.Context, token string) (news.Subscriber, error) {
-	sub, err := s.sqlc.SubscriberByConfirmToken(ctx, token)
-
-	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
-	} else if err != nil {
-		return news.Subscriber{}, err
-	}
-
-	return transformSubscriber(sub), nil
-}
-
 func (s Store) FindByUnsubscribeToken(ctx context.Context, token string) (news.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByUnsubscribeToken(ctx, token)
 
@@ -110,10 +97,6 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 		return news.Subscriber{}, errors.New("email is required")
 	}
 
-	confirm, err := newToken()
-	if err != nil {
-		return news.Subscriber{}, err
-	}
 	unsubscribe, err := newToken()
 	if err != nil {
 		return news.Subscriber{}, err
@@ -121,7 +104,6 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 
 	sub, err := s.sqlc.SubscriberCreate(ctx, sqlc.SubscriberCreateParams{
 		Email:            email,
-		ConfirmToken:     confirm,
 		UnsubscribeToken: unsubscribe,
 	})
 	if err != nil {
@@ -129,10 +111,6 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 	}
 
 	return transformSubscriber(sub), nil
-}
-
-func (s Store) Confirm(ctx context.Context, token string) error {
-	return s.sqlc.SubscriberConfirm(ctx, token)
 }
 
 func (s Store) Unsubscribe(ctx context.Context, token string) error {
@@ -156,9 +134,7 @@ func transformSubscriber(s sqlc.Subscriber) news.Subscriber {
 	return news.Subscriber{
 		ID:               s.ID,
 		Email:            s.Email,
-		ConfirmToken:     s.ConfirmToken,
 		UnsubscribeToken: s.UnsubscribeToken,
-		ConfirmedAt:      s.ConfirmedAt,
 		UnsubscribedAt:   s.UnsubscribedAt,
 		CreatedAt:        s.CreatedAt,
 	}

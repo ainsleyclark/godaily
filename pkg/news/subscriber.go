@@ -28,9 +28,7 @@ import (
 type Subscriber struct {
 	ID               int64      `json:"id"`
 	Email            string     `json:"email"`
-	ConfirmToken     string     `json:"confirm_token"`
 	UnsubscribeToken string     `json:"unsubscribe_token"`
-	ConfirmedAt      *time.Time `json:"confirmed_at,omitempty"`
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
 }
@@ -42,10 +40,8 @@ type Subscriber struct {
 type SubscriberRepository interface {
 	Find(ctx context.Context, id int64) (Subscriber, error)
 	FindByEmail(ctx context.Context, email string) (Subscriber, error)
-	FindByConfirmToken(ctx context.Context, token string) (Subscriber, error)
 	FindByUnsubscribeToken(ctx context.Context, token string) (Subscriber, error)
 	Create(ctx context.Context, email string) (Subscriber, error)
-	Confirm(ctx context.Context, token string) error
 	Unsubscribe(ctx context.Context, token string) error
 	ListActive(ctx context.Context) ([]Subscriber, error)
 }

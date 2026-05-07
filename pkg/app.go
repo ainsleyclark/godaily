@@ -35,9 +35,6 @@ import (
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
-// AppURL is the canonical production URL for godaily.
-const AppURL = "https://godaily.dev"
-
 // App defines a global state for godaily.
 type App struct {
 	Config     *env.Config

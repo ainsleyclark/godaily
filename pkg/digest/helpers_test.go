@@ -77,6 +77,28 @@ func allRegistered() map[news.Source]news.Fetcher {
 	return reg
 }
 
+type mockSubscriberRepo struct {
+	subs []news.Subscriber
+	err  error
+}
+
+func (m *mockSubscriberRepo) Find(_ context.Context, _ int64) (news.Subscriber, error) {
+	return news.Subscriber{}, nil
+}
+func (m *mockSubscriberRepo) FindByEmail(_ context.Context, _ string) (news.Subscriber, error) {
+	return news.Subscriber{}, nil
+}
+func (m *mockSubscriberRepo) FindByUnsubscribeToken(_ context.Context, _ string) (news.Subscriber, error) {
+	return news.Subscriber{}, nil
+}
+func (m *mockSubscriberRepo) Create(_ context.Context, _ string) (news.Subscriber, error) {
+	return news.Subscriber{}, nil
+}
+func (m *mockSubscriberRepo) Unsubscribe(_ context.Context, _ string) error { return nil }
+func (m *mockSubscriberRepo) ListActive(_ context.Context) ([]news.Subscriber, error) {
+	return m.subs, m.err
+}
+
 // errItemRepo is an ItemRepository that always returns errItemRepoErr from ListByIssue.
 type errItemRepo struct {
 	err error

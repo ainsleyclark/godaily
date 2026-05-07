@@ -36,9 +36,7 @@ type Item struct {
 type Subscriber struct {
 	ID               int64      `json:"id"`
 	Email            string     `json:"email"`
-	ConfirmToken     string     `json:"confirm_token"`
 	UnsubscribeToken string     `json:"unsubscribe_token"`
-	ConfirmedAt      *time.Time `json:"confirmed_at"`
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at"`
 	CreatedAt        time.Time  `json:"created_at"`
 }
