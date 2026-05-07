@@ -34,8 +34,8 @@ func TestJSON(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		status  int
-		v       any
+		status   int
+		v        any
 		wantBody string
 	}{
 		"Object": {
