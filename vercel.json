@@ -12,9 +12,9 @@
 		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
 	],
 	"functions": {
-		"api/**/*.go": {
-			"runtime": "@vercel/go@3.6.0",
-			"maxDuration": 300
-		}
+		"api/collect.go":     { "runtime": "@vercel/go@3.6.0", "maxDuration": 300 },
+		"api/send.go":        { "runtime": "@vercel/go@3.6.0", "maxDuration": 300 },
+		"api/subscribe.go":   { "runtime": "@vercel/go@3.6.0", "maxDuration": 300 },
+		"api/unsubscribe.go": { "runtime": "@vercel/go@3.6.0", "maxDuration": 300 }
 	}
 }

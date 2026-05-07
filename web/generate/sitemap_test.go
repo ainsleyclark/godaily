@@ -47,7 +47,7 @@ func TestSitemap(t *testing.T) {
 	}{
 		"No issues": {
 			w:      website{},
-			outDir: func(t *testing.T) string { return t.TempDir() },
+			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`https://godaily.dev/`,
 				`<priority>1.0</priority>`,
@@ -56,7 +56,7 @@ func TestSitemap(t *testing.T) {
 		},
 		"With issues": {
 			w:      website{Issues: []news.Issue{issue}},
-			outDir: func(t *testing.T) string { return t.TempDir() },
+			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`https://godaily.dev/`,
 				`https://godaily.dev/digest/2026-04-28/`,
@@ -66,7 +66,7 @@ func TestSitemap(t *testing.T) {
 		},
 		"Write error": {
 			w:       website{},
-			outDir:  func(t *testing.T) string { return filepath.Join(t.TempDir(), "nonexistent") },
+			outDir:  func(t *testing.T) string { t.Helper(); return filepath.Join(t.TempDir(), "nonexistent") },
 			wantErr: true,
 		},
 	}

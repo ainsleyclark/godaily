@@ -49,7 +49,7 @@ func TestRSS(t *testing.T) {
 	}{
 		"No issues": {
 			w:      website{},
-			outDir: func(t *testing.T) string { return t.TempDir() },
+			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`<title>GoDaily</title>`,
 				`<language>en-gb</language>`,
@@ -58,7 +58,7 @@ func TestRSS(t *testing.T) {
 		},
 		"With issues": {
 			w:      website{Issues: []news.Issue{issue}},
-			outDir: func(t *testing.T) string { return t.TempDir() },
+			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`<title>GoDaily - April 28, 2026</title>`,
 				`https://godaily.dev/digest/2026-04-28/`,
@@ -68,7 +68,7 @@ func TestRSS(t *testing.T) {
 		},
 		"Write error": {
 			w:       website{},
-			outDir:  func(t *testing.T) string { return filepath.Join(t.TempDir(), "nonexistent") },
+			outDir:  func(t *testing.T) string { t.Helper(); return filepath.Join(t.TempDir(), "nonexistent") },
 			wantErr: true,
 		},
 	}
