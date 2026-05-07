@@ -25,6 +25,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -61,7 +62,7 @@ func TestHandleCollect(t *testing.T) {
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
-			handleCollect(w, r, runner)
+			handleCollect(w, r, runner, env.Config{})
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

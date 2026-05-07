@@ -23,22 +23,23 @@ package api
 import (
 	"log/slog"
 	"net/http"
-	"os"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(runner digest.Runner) {
-		handleSend(w, r, runner)
+	bootstrap.Handle(w, r, func(app *godaily.App) {
+		handleSend(w, r, app.Runner, *app.Config)
 	})
 }
 
-func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner, cfg env.Config) {
 	ctx := r.Context()
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
@@ -54,7 +55,7 @@ func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
 		return
 	}
 
-	hook.Deploy(ctx, os.Getenv("VERCEL_DEPLOY_HOOK_URL"))
-	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_SEND_HEARTBEAT_URL"))
+	hook.Deploy(ctx, cfg.VercelDeployHookURL)
+	hook.Heartbeat(ctx, cfg.BetterStackSendHeartbeatURL)
 	w.WriteHeader(http.StatusOK)
 }

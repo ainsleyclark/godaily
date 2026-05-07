@@ -23,21 +23,22 @@ package api
 import (
 	"log/slog"
 	"net/http"
-	"os"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
-	bootstrap.Handle(w, r, func(runner digest.Runner) {
-		handleCollect(w, r, runner)
+	bootstrap.Handle(w, r, func(app *godaily.App) {
+		handleCollect(w, r, app.Runner, *app.Config)
 	})
 }
 
-func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
+func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner, cfg env.Config) {
 	ctx := r.Context()
 
 	if _, err := runner.Collect(ctx, digest.CollectOptions{}); err != nil {
@@ -46,6 +47,6 @@ func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner)
 		return
 	}
 
-	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_COLLECT_HEARTBEAT_URL"))
+	hook.Heartbeat(ctx, cfg.BetterStackCollectHeartbeatURL)
 	w.WriteHeader(http.StatusOK)
 }

@@ -25,12 +25,11 @@ import (
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/digest"
 )
 
-// Handle bootstraps the app and calls fn with the runner. It writes a 500 and
+// Handle bootstraps the app and calls fn with the fully initialised App. It writes a 500 and
 // returns early if Bootstrap fails, so fn is only called on success.
-func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
+func Handle(w http.ResponseWriter, r *http.Request, fn func(*godaily.App)) {
 	ctx := r.Context()
 
 	app, teardown, err := godaily.Bootstrap(ctx)
@@ -41,5 +40,5 @@ func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
 	}
 	defer teardown()
 
-	fn(app.Runner)
+	fn(app)
 }

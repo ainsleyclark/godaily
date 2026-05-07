@@ -28,14 +28,17 @@ import (
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {
-	AppEnv           env.Environment `env:"APP_ENV"`
-	ResendToken      string          `env:"RESEND_TOKEN,required"`
-	AnthropicAPIKey  string          `env:"ANTHROPIC_API_KEY,required"`
-	YouTubeAPIKey    string          `env:"YOUTUBE_API_KEY"`
-	GitHubToken      string          `env:"GITHUB_TOKEN"`
-	EmailSendAddress string          `env:"EMAIL_SEND_ADDRESS,required"`
-	TursoURL         string          `env:"TURSO_URL,required"`
-	TursoAuthToken   string          `env:"TURSO_AUTH_TOKEN,required"`
+	AppEnv                         env.Environment `env:"APP_ENV"`
+	ResendToken                    string          `env:"RESEND_TOKEN,required"`
+	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required"`
+	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY"`
+	GitHubToken                    string          `env:"GITHUB_TOKEN"`
+	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required"`
+	TursoURL                       string          `env:"TURSO_URL,required"`
+	TursoAuthToken                 string          `env:"TURSO_AUTH_TOKEN,required"`
+	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL"`
+	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL"`
+	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file
