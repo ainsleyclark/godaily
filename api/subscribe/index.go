@@ -23,36 +23,24 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
-	"github.com/ainsleyclark/godaily/pkg/db"
-	"github.com/ainsleyclark/godaily/pkg/store/issues"
+	"github.com/ainsleyclark/godaily/pkg/source"
 )
 
 // Handler is the Vercel serverless function entry point.
 //
-// Temporary: lists the 5 most recent issues from Turso to verify DB
-// connectivity works from a Vercel Function before full implementation.
+// Temporary: fetches r/golang news items via the Reddit public JSON API to
+// verify that Vercel's outbound IP range is accepted by Reddit.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	conn, err := db.New(ctx, os.Getenv("TURSO_URL"), os.Getenv("TURSO_AUTH_TOKEN"))
+	items, err := source.NewReddit().Fetch(r.Context())
 	if err != nil {
-		http.Error(w, "failed to connect to database: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer conn.Close()
-
-	store := issues.New(conn)
-	latest, err := store.Latest(ctx, 5)
-	if err != nil {
-		http.Error(w, "failed to query issues: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "failed to fetch from Reddit: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]any{
-		"ok":     true,
-		"issues": len(latest),
+		"ok":    true,
+		"items": len(items),
 	})
 }
