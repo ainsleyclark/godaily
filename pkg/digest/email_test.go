@@ -121,7 +121,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		err := agg.sendDigest(t.Context(), rendered)
 		require.NoError(t, err)
 		require.True(t, m.called)
-		assert.Equal(t, "noreply@mail.ainsley.dev", m.req.From)
+		assert.Equal(t, "noreply@godaily.dev", m.req.From)
 		assert.Equal(t, []string{"to@example.com"}, m.req.To)
 		assert.Contains(t, m.req.Subject, "April 26, 2026")
 		assert.Contains(t, m.req.Html, "hello")

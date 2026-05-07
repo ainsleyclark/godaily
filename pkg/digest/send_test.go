@@ -54,7 +54,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.SendDigest(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Subject, "April 26, 2026")
@@ -78,7 +78,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{err: errors.New("send boom")}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.SendDigest(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
@@ -89,7 +89,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
-		err := agg.SendDigest(t.Context(), day("1999-01-01"))
+		err := agg.SendDigest(t.Context(), day("1999-01-01"), false)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "no digest found")
 	})
@@ -105,9 +105,27 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
-		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"))
+		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"), false)
 		require.Error(t, sendErr)
 		assert.Contains(t, sendErr.Error(), "expected")
+	})
+
+	t.Run("Force Skips Status Check", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-04-30")
+		_, err := issueRepo.Create(t.Context(), news.Issue{
+			Slug:    "2026-04-30",
+			Subject: "GoDaily - 2026-04-30",
+			Status:  news.IssueStatusSent,
+			SentAt:  time.Now().UTC(),
+		})
+		require.NoError(t, err)
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+
+		require.NoError(t, agg.SendDigest(t.Context(), date, true))
+		assert.True(t, m.called)
 	})
 
 	t.Run("Returns Error When Loading Sections Fails", func(t *testing.T) {
@@ -124,7 +142,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		badItems := errItemRepo{err: errors.New("db failure")}
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: badItems}
 
-		err = agg.SendDigest(t.Context(), date)
+		err = agg.SendDigest(t.Context(), date, false)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "loading sections")
 	})
@@ -152,7 +170,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		t.Cleanup(func() { htmlTmpl = orig })
 
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
-		err = agg.SendDigest(t.Context(), date)
+		err = agg.SendDigest(t.Context(), date, false)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "rendering digest")
 	})
@@ -179,7 +197,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
-		require.NoError(t, agg.SendDigest(t.Context(), date))
+		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		assert.False(t, sg.called, "synth must not be called during Send")
 		assert.True(t, m.called)

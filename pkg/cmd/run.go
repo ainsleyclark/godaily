@@ -66,7 +66,7 @@ func runCmd(a *godaily.App) *cli.Command {
 			}
 
 			if !dryRun && len(raw) > 0 {
-				if err = a.Runner.SendDigest(ctx, date); err != nil {
+				if err = a.Runner.SendDigest(ctx, date, false); err != nil {
 					return err
 				}
 			}

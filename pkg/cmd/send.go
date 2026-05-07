@@ -37,6 +37,10 @@ func sendCmd(a *godaily.App) *cli.Command {
 				Name:  "date",
 				Usage: "Date of the draft to send (YYYY-MM-DD). Defaults to yesterday.",
 			},
+			&cli.BoolFlag{
+				Name:  "force",
+				Usage: "Send even if the digest is not in draft status.",
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
@@ -47,7 +51,7 @@ func sendCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			return a.Runner.SendDigest(ctx, date)
+			return a.Runner.SendDigest(ctx, date, cmd.Bool("force"))
 		},
 	}
 }
