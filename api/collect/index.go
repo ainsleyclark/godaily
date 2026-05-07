@@ -25,24 +25,16 @@ import (
 	"net/http"
 	"os"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
+	bootstrap "github.com/ainsleyclark/godaily/api/internal"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // Handler is the Vercel serverless function entry point.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	if err != nil {
-		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
-		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer teardown()
-
-	handle(w, r, app.Runner)
+	bootstrap.Handle(w, r, func(runner digest.Runner) {
+		handle(w, r, runner)
+	})
 }
 
 func handle(w http.ResponseWriter, r *http.Request, runner digest.Runner) {

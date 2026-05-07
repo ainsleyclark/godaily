@@ -17,41 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package hook provides fire-and-forget HTTP helpers used by serverless handlers.
-package hook
+// Package bootstrap provides shared bootstrap wiring for api/ serverless handlers.
+package bootstrap
 
 import (
-	"context"
 	"log/slog"
 	"net/http"
-	"strings"
+
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/digest"
 )
 
-// Heartbeat pings a BetterStack (or compatible) heartbeat URL to signal that a
-// job completed successfully. It is a no-op when url is empty.
-func Heartbeat(ctx context.Context, url string) {
-	fire(ctx, http.MethodGet, url, "heartbeat")
-}
+// Handle bootstraps the app and calls fn with the runner. It writes a 500 and
+// returns early if Bootstrap fails, so fn is only called on success.
+func Handle(w http.ResponseWriter, r *http.Request, fn func(digest.Runner)) {
+	ctx := r.Context()
 
-// Deploy triggers a Vercel deploy hook via POST. It is a no-op when url is empty.
-func Deploy(ctx context.Context, url string) {
-	fire(ctx, http.MethodPost, url, "deploy hook")
-}
+	app, teardown, err := godaily.Bootstrap(ctx)
+	if err != nil {
+		slog.ErrorContext(ctx, "Bootstrapping app", "error", err)
+		http.Error(w, "failed to bootstrap app: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer teardown()
 
-func fire(ctx context.Context, method, url, label string) {
-	if url == "" {
-		slog.DebugContext(ctx, "Skipping "+label+" — URL not configured")
-		return
-	}
-	req, err := http.NewRequestWithContext(ctx, method, url, strings.NewReader(""))
-	if err != nil {
-		slog.ErrorContext(ctx, "Creating "+label+" request", "error", err)
-		return
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		slog.ErrorContext(ctx, "Firing "+label, "error", err)
-		return
-	}
-	resp.Body.Close()
+	fn(app.Runner)
 }
