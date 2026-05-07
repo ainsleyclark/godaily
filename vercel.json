@@ -2,7 +2,7 @@
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"version": 2,
 	"buildCommand": "bash bin/build.sh",
-	"installCommand": "bash bin/install.sh",
+	"installCommand": "cd web && pnpm install",
 	"outputDirectory": "out",
 	"trailingSlash": true,
 	"cleanUrls": true,
