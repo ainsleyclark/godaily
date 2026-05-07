@@ -1,6 +1,6 @@
 package components
 
-templ Hero() {
+templ Hero(flash string) {
 	<section id="hero" class="hero">
 		<div class="hero__content">
 			<div class="hero__badge">
@@ -14,18 +14,23 @@ templ Hero() {
 			<p class="hero__lead">
 				The best stories from the Go community, summarised by Claude and delivered before standup. Free, weekday mornings, no noise.
 			</p>
-			<form class="hero__form" data-subscribe>
-				<input
-					class="hero__input"
-					type="email"
-					name="email"
-					placeholder="you@example.com"
-					autocomplete="email"
-					aria-label="Email address"
-					required
-				/>
-				<button class="button button--primary" type="submit">Get the digest</button>
-			</form>
+			if flash != "" {
+				<p class="hero__flash">{ flash }</p>
+			} else {
+				<form class="hero__form" data-subscribe>
+					<input
+						class="hero__input"
+						type="email"
+						name="email"
+						placeholder="you@example.com"
+						autocomplete="email"
+						aria-label="Email address"
+						required
+					/>
+					<button class="button button--primary" type="submit">Get the digest</button>
+				</form>
+				<p class="hero__hint" data-subscribe-hint hidden></p>
+			}
 			<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
 		</div>
 		<div class="hero__visual" aria-hidden="true">

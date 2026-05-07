@@ -32,8 +32,11 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
+// appURL is the canonical production URL, used to build per-subscriber unsubscribe links.
+const appURL = "https://godaily.dev"
+
 // SendDigest loads the draft digest for the given date, sends it to the
-// configured address, and updates the stored issue status.
+// admin address and all active subscribers, then updates the stored issue status.
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) error {
 	slug := date.Format("2006-01-02")
 
@@ -53,15 +56,36 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		return errors.Wrap(err, "loading sections")
 	}
 
-	rendered, err := renderDigest(date, sections)
+	// Render and send to admin (no unsubscribe link).
+	adminRendered, err := renderDigest(date, sections, "")
 	if err != nil {
 		return errors.Wrap(err, "rendering digest")
 	}
 
 	status := news.IssueStatusSent
-	if err = a.sendDigest(ctx, rendered); err != nil {
-		slog.ErrorContext(ctx, "Failed to send digest email", "err", err)
+	if err = a.sendRendered(ctx, a.adminEmailAddress, adminRendered); err != nil {
+		slog.ErrorContext(ctx, "Failed to send digest email to admin", "err", err)
 		status = news.IssueStatusError
+	}
+
+	// Send personalized digests to all active subscribers.
+	if a.subscribers != nil {
+		subs, listErr := a.subscribers.ListActive(ctx)
+		if listErr != nil {
+			slog.ErrorContext(ctx, "Failed to list active subscribers", "err", listErr)
+		} else {
+			for _, sub := range subs {
+				unsubURL := appURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+				subRendered, renderErr := renderDigest(date, sections, unsubURL)
+				if renderErr != nil {
+					slog.ErrorContext(ctx, "Failed to render digest for subscriber", "email", sub.Email, "err", renderErr)
+					continue
+				}
+				if sendErr := a.sendRendered(ctx, sub.Email, subRendered); sendErr != nil {
+					slog.ErrorContext(ctx, "Failed to send digest to subscriber", "email", sub.Email, "err", sendErr)
+				}
+			}
+		}
 	}
 
 	if _, err = a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {

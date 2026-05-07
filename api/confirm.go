@@ -20,9 +20,26 @@
 // Package api contains Vercel serverless function handlers.
 package api
 
-import "net/http"
+import (
+	"net/http"
+
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/bootstrap"
+)
 
 // HandleConfirm is the Vercel serverless function entry point for GET /api/confirm.
 func HandleConfirm(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Not implemented", http.StatusNotImplemented)
+	token := r.URL.Query().Get("token")
+	if token == "" {
+		http.Error(w, "missing token", http.StatusBadRequest)
+		return
+	}
+
+	bootstrap.Handle(w, r, func(app *godaily.App) {
+		if err := app.Repository.Subscribers.Confirm(r.Context(), token); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, "/?confirmed=1", http.StatusFound)
+	})
 }

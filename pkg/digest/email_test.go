@@ -65,7 +65,7 @@ func sampleSections() []news.SourceItems {
 
 func TestRenderDigest(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
-		got, err := renderDigest(sendDigestDay, sampleSections())
+		got, err := renderDigest(sendDigestDay, sampleSections(), "")
 		require.NoError(t, err)
 		assert.Contains(t, got.Subject, "April 26, 2026")
 		assert.Contains(t, got.HTML, "hello")
@@ -81,7 +81,7 @@ func TestRenderDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(brokenTpl))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		_, err := renderDigest(sendDigestDay, sampleSections())
+		_, err := renderDigest(sendDigestDay, sampleSections(), "")
 		assert.ErrorContains(t, err, "rendering html")
 	})
 
@@ -90,7 +90,7 @@ func TestRenderDigest(t *testing.T) {
 		textTmpl = texttemplate.Must(texttemplate.New("digest").Parse(brokenTpl))
 		t.Cleanup(func() { textTmpl = orig })
 
-		_, err := renderDigest(sendDigestDay, sampleSections())
+		_, err := renderDigest(sendDigestDay, sampleSections(), "")
 		assert.ErrorContains(t, err, "rendering text")
 	})
 }
@@ -98,7 +98,7 @@ func TestRenderDigest(t *testing.T) {
 func TestAggregator_SendDigestHelper(t *testing.T) {
 	t.Parallel()
 
-	rendered, err := renderDigest(sendDigestDay, sampleSections())
+	rendered, err := renderDigest(sendDigestDay, sampleSections(), "")
 	require.NoError(t, err)
 
 	t.Run("Send Error", func(t *testing.T) {
@@ -107,7 +107,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{err: errors.New("boom")}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), rendered)
+		err := agg.sendRendered(t.Context(), "to@example.com", rendered)
 		assert.True(t, m.called)
 		assert.ErrorContains(t, err, "boom")
 	})
@@ -118,7 +118,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
-		err := agg.sendDigest(t.Context(), rendered)
+		err := agg.sendRendered(t.Context(), "to@example.com", rendered)
 		require.NoError(t, err)
 		require.True(t, m.called)
 		assert.Equal(t, "noreply@godaily.dev", m.req.From)

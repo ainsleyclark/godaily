@@ -72,7 +72,7 @@ func TestNew(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 			t.Setenv("EMAIL_SEND_ADDRESS", test.envAddr)
 
-			got, err := New(nil, nil)
+			got, err := New(nil, nil, nil)
 			test.want(t, got, err)
 		})
 	}

@@ -54,8 +54,9 @@ type (
 		Items []emailItem
 	}
 	digestData struct {
-		Date     time.Time
-		Sections []emailSection
+		Date           time.Time
+		Sections       []emailSection
+		UnsubscribeURL string
 	}
 	// renderedDigest carries the rendered email payload so the caller can
 	// both ship it via email and persist it to the issues table without
@@ -67,7 +68,7 @@ type (
 	}
 )
 
-func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, error) {
+func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL string) (renderedDigest, error) {
 	sections := make([]emailSection, 0, len(sources))
 	for _, si := range sources {
 		sec := emailSection{
@@ -97,7 +98,7 @@ func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, er
 		sections = append(sections, sec)
 	}
 
-	data := digestData{Date: day, Sections: sections}
+	data := digestData{Date: day, Sections: sections, UnsubscribeURL: unsubscribeURL}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.Execute(&htmlBuf, data); err != nil {
@@ -116,10 +117,10 @@ func renderDigest(day time.Time, sources []news.SourceItems) (renderedDigest, er
 	}, nil
 }
 
-func (a Aggregator) sendDigest(ctx context.Context, d renderedDigest) error {
+func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {
 	return a.email.Send(ctx, email.SendEmailRequest{
 		From:    "noreply@godaily.dev",
-		To:      []string{a.adminEmailAddress},
+		To:      []string{to},
 		Subject: d.Subject,
 		Html:    d.HTML,
 		Text:    d.Text,

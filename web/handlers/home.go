@@ -43,9 +43,19 @@ func Home(a *godaily.App) webkit.Handler {
 			issue = latest[0]
 		}
 
+		var flash string
+		q := c.Request.URL.Query()
+		switch {
+		case q.Get("confirmed") != "":
+			flash = "You're confirmed! Digest arrives weekday mornings."
+		case q.Get("unsubscribed") != "":
+			flash = "You've been unsubscribed. Sorry to see you go!"
+		}
+
 		return c.Render(pages.Home(pages.HomeData{
 			LatestIssue: issue,
 			SampleIssue: issue,
+			Flash:       flash,
 		}))
 	}
 }

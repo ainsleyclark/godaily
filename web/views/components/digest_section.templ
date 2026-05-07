@@ -1,6 +1,6 @@
 package components
 
-import "github.com/ainsleyclark/godaily/internal/news"
+import "github.com/ainsleyclark/godaily/pkg/news"
 
 templ DigestSection(emoji string, title string, items []news.Item, ranked bool) {
 	<div class="email-preview__section-head">{ emoji + " " + title }</div>
