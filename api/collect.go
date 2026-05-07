@@ -25,6 +25,7 @@ import (
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	respond "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
@@ -43,10 +44,10 @@ func handleCollect(w http.ResponseWriter, r *http.Request, runner digest.Runner,
 
 	if _, err := runner.Collect(ctx, digest.CollectOptions{}); err != nil {
 		slog.ErrorContext(ctx, "Collecting digest", "error", err)
-		http.Error(w, "collect failed: "+err.Error(), http.StatusInternalServerError)
+		respond.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
 		return
 	}
 
 	hook.Heartbeat(ctx, cfg.BetterStackCollectHeartbeatURL)
-	w.WriteHeader(http.StatusOK)
+	respond.OK(w)
 }

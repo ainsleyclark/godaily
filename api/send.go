@@ -26,6 +26,7 @@ import (
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	respond "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
@@ -45,17 +46,17 @@ func handleSend(w http.ResponseWriter, r *http.Request, runner digest.Runner, cf
 
 	if err := runner.SendDigest(ctx, yesterday, false); err != nil {
 		slog.ErrorContext(ctx, "Sending digest", "error", err)
-		http.Error(w, "send digest failed: "+err.Error(), http.StatusInternalServerError)
+		respond.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 		return
 	}
 
 	if err := runner.SendSuggestion(ctx, yesterday); err != nil {
 		slog.ErrorContext(ctx, "Sending suggestion", "error", err)
-		http.Error(w, "send suggestion failed: "+err.Error(), http.StatusInternalServerError)
+		respond.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
 		return
 	}
 
 	hook.Deploy(ctx, cfg.VercelDeployHookURL)
 	hook.Heartbeat(ctx, cfg.BetterStackSendHeartbeatURL)
-	w.WriteHeader(http.StatusOK)
+	respond.OK(w)
 }
