@@ -21,15 +21,14 @@
 package handler
 
 import (
-	"context"
 	"log/slog"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // Handler is the Vercel serverless function entry point.
@@ -63,41 +62,7 @@ func handle(w http.ResponseWriter, r *http.Request, runner digest.Runner) {
 		return
 	}
 
-	triggerDeploy(ctx, os.Getenv("VERCEL_DEPLOY_HOOK_URL"))
-	pingHeartbeat(ctx, os.Getenv("BETTERSTACK_SEND_HEARTBEAT_URL"))
+	hook.Deploy(ctx, os.Getenv("VERCEL_DEPLOY_HOOK_URL"))
+	hook.Heartbeat(ctx, os.Getenv("BETTERSTACK_SEND_HEARTBEAT_URL"))
 	w.WriteHeader(http.StatusOK)
-}
-
-func triggerDeploy(ctx context.Context, url string) {
-	if url == "" {
-		return
-	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, strings.NewReader(""))
-	if err != nil {
-		slog.ErrorContext(ctx, "Creating deploy hook request", "error", err)
-		return
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		slog.ErrorContext(ctx, "Triggering deploy hook", "error", err)
-		return
-	}
-	resp.Body.Close()
-}
-
-func pingHeartbeat(ctx context.Context, url string) {
-	if url == "" {
-		return
-	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		slog.ErrorContext(ctx, "Creating heartbeat request", "error", err)
-		return
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		slog.ErrorContext(ctx, "Pinging heartbeat", "error", err)
-		return
-	}
-	resp.Body.Close()
 }

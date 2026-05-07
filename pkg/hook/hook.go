@@ -17,52 +17,43 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+// Package hook provides fire-and-forget HTTP helpers used by serverless handlers.
+package hook
 
 import (
-	"errors"
+	"context"
+	"log/slog"
 	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
+	"strings"
 )
 
-func TestHandle_Collect(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Collect Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
+// Heartbeat pings a BetterStack (or compatible) heartbeat URL to signal that a
+// job completed successfully. It is a no-op when url is empty.
+func Heartbeat(ctx context.Context, url string) {
+	if url == "" {
+		return
 	}
+	fire(ctx, http.MethodGet, url, "heartbeat")
+}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
-
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
-			handle(w, r, runner)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
+// Deploy triggers a Vercel deploy hook via POST. It is a no-op when url is empty.
+func Deploy(ctx context.Context, url string) {
+	if url == "" {
+		return
 	}
+	fire(ctx, http.MethodPost, url, "deploy hook")
+}
+
+func fire(ctx context.Context, method, url, label string) {
+	req, err := http.NewRequestWithContext(ctx, method, url, strings.NewReader(""))
+	if err != nil {
+		slog.ErrorContext(ctx, "Creating "+label+" request", "error", err)
+		return
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		slog.ErrorContext(ctx, "Firing "+label, "error", err)
+		return
+	}
+	resp.Body.Close()
 }

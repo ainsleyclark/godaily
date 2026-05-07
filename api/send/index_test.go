@@ -31,6 +31,8 @@ import (
 )
 
 func TestHandle_Send(t *testing.T) {
+	t.Parallel()
+
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
 		wantStatus int
@@ -59,6 +61,7 @@ func TestHandle_Send(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
