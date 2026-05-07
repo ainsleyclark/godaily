@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package subscriber_test
+package subscriber
 
 import (
 	"context"
@@ -32,7 +32,6 @@ import (
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
 
 // mockSender is a test double for email.Sender.
@@ -82,9 +81,9 @@ func TestService_Subscribe(t *testing.T) {
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(sub, nil)
 
-		_, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
-		assert.ErrorIs(t, err, subscriber.ErrAlreadySubscribed)
+		assert.ErrorIs(t, err, ErrAlreadySubscribed)
 		assert.False(t, sender.called)
 	})
 
@@ -94,7 +93,7 @@ func TestService_Subscribe(t *testing.T) {
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, errBoom)
 
-		_, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		assert.ErrorIs(t, err, errBoom)
 		assert.False(t, sender.called)
@@ -107,7 +106,7 @@ func TestService_Subscribe(t *testing.T) {
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(news.Subscriber{}, errBoom)
 
-		_, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		assert.ErrorIs(t, err, errBoom)
 		assert.False(t, sender.called)
@@ -121,7 +120,7 @@ func TestService_Subscribe(t *testing.T) {
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
 
-		got, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.NoError(t, err)
 		assert.Equal(t, sub, got)
@@ -139,7 +138,7 @@ func TestService_Subscribe(t *testing.T) {
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 		issues.EXPECT().Latest(gomock.Any(), 1).Return(nil, errBoom)
 
-		got, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.NoError(t, err)
 		assert.Equal(t, sub, got)
@@ -155,7 +154,7 @@ func TestService_Subscribe(t *testing.T) {
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
 
-		got, err := subscriber.New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.NoError(t, err)
 		assert.Equal(t, sub, got)
@@ -171,7 +170,7 @@ func TestService_Unsubscribe(t *testing.T) {
 		repo, issues, sender := setup(t)
 		repo.EXPECT().Unsubscribe(gomock.Any(), "tok123").Return(nil)
 
-		err := subscriber.New(repo, issues, sender).Unsubscribe(t.Context(), "tok123")
+		err := New(repo, issues, sender).Unsubscribe(t.Context(), "tok123")
 		require.NoError(t, err)
 	})
 
@@ -181,7 +180,7 @@ func TestService_Unsubscribe(t *testing.T) {
 		repo, issues, sender := setup(t)
 		repo.EXPECT().Unsubscribe(gomock.Any(), "tok123").Return(errBoom)
 
-		err := subscriber.New(repo, issues, sender).Unsubscribe(t.Context(), "tok123")
+		err := New(repo, issues, sender).Unsubscribe(t.Context(), "tok123")
 		assert.ErrorIs(t, err, errBoom)
 	})
 }

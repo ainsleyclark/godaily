@@ -50,8 +50,9 @@ type App struct {
 
 // Repository defines the datastore for the application.
 type Repository struct {
-	Issues news.IssueRepository
-	Items  news.ItemRepository
+	Issues      news.IssueRepository
+	Items       news.ItemRepository
+	Subscribers news.SubscriberRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -86,12 +87,13 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	cachedIssues := issues.NewCaching(issueStore, store)
 
-	repo := &Repository{
-		Issues: cachedIssues,
-		Items:  items.New(conn),
-	}
-
 	subsStore := subscribers.New(conn)
+
+	repo := &Repository{
+		Issues:      cachedIssues,
+		Items:       items.New(conn),
+		Subscribers: subsStore,
+	}
 
 	aggregator, err := digest.New(cachedIssues, repo.Items, subsStore)
 	if err != nil {
