@@ -55,7 +55,7 @@ func TestSite(t *testing.T) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{}, nil)
 			},
-			wantFiles: []string{"index.html"},
+			wantFiles: []string{"index.html", "sitemap.xml", "rss.xml"},
 		},
 		"Happy path with issue": {
 			mock: func(repo *mocknews.MockIssueRepository) {
@@ -65,6 +65,8 @@ func TestSite(t *testing.T) {
 			},
 			wantFiles: []string{
 				"index.html",
+				"sitemap.xml",
+				"rss.xml",
 				filepath.Join("digest", issue.Slug, "index.html"),
 			},
 		},
@@ -100,12 +102,13 @@ func TestSite(t *testing.T) {
 			test.mock(repo)
 
 			outDir := t.TempDir()
+			staticDir := t.TempDir()
 			assetsDir := t.TempDir()
 
 			// Write a sentinel asset file to verify copying.
 			require.NoError(t, os.WriteFile(filepath.Join(assetsDir, "app.css"), []byte("body{}"), 0o644))
 
-			err := generate.Site(t.Context(), repo, outDir, assetsDir)
+			err := generate.Site(t.Context(), repo, outDir, staticDir, assetsDir)
 			assert.Equal(t, test.wantErr, err != nil)
 
 			for _, f := range test.wantFiles {

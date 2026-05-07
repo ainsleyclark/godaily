@@ -42,9 +42,14 @@ func generateCmd(a *godaily.App) *cli.Command {
 				Usage: "Path to compiled frontend assets",
 				Value: "web/dist",
 			},
+			&cli.StringFlag{
+				Name:  "static",
+				Usage: "Path to static files copied verbatim to out/",
+				Value: "web/static",
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			return generate.Site(ctx, a.Repository.Issues, cmd.String("out"), cmd.String("assets"))
+			return generate.Site(ctx, a.Repository.Issues, cmd.String("out"), cmd.String("static"), cmd.String("assets"))
 		},
 	}
 }
