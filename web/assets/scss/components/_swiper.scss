@@ -5,6 +5,9 @@
 
 	@include mobile {
 		overflow: hidden;
+		margin-left: -1rem;
+		margin-right: -1rem;
+		padding-left: 1rem;
 
 		.swiper-wrapper {
 			display: flex;
