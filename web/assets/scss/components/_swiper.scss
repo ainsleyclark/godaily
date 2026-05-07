@@ -5,9 +5,9 @@
 
 	@include mobile {
 		overflow: hidden;
-		margin-left: -1rem;
-		margin-right: -1rem;
-		padding-left: 1rem;
+		margin-left: calc(-1 * var(--section-padding-x));
+		margin-right: calc(-1 * var(--section-padding-x));
+		padding-left: var(--section-padding-x);
 
 		.swiper-wrapper {
 			display: flex;
