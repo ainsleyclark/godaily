@@ -27,6 +27,13 @@ import (
 	"github.com/resend/resend-go/v3"
 )
 
+// Sender is satisfied by any type that can dispatch a transactional email.
+// Both pkg/digest and pkg/subscriber depend on this interface rather than
+// defining their own copies.
+type Sender interface {
+	Send(ctx context.Context, req SendEmailRequest) error
+}
+
 // Client wraps the Resend API client and exposes a minimal surface for
 // dispatching transactional emails from godaily.
 type Client struct {

@@ -23,14 +23,11 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"log/slog"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/bootstrap"
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleyclark/godaily/pkg/welcome"
+	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
@@ -56,36 +53,16 @@ func handleSubscribe(w http.ResponseWriter, r *http.Request, app *godaily.App) {
 		return
 	}
 
-	ctx := r.Context()
-	repo := app.Repository.Subscribers
-
-	_, err := repo.FindByEmail(ctx, body.Email)
-	if err == nil {
+	if _, err := app.Subscribers.Subscribe(r.Context(), body.Email); err != nil {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusConflict)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
+		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
+			w.WriteHeader(http.StatusConflict)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		}
 		return
-	}
-	if !errors.Is(err, store.ErrNotFound) {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	sub, err := repo.Create(ctx, body.Email)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Send welcome email — non-fatal; a failed email must not block the subscription.
-	var latestIssueURL, latestIssueTitle string
-	if latest, err := app.Repository.Issues.Latest(ctx, 1); err == nil && len(latest) > 0 {
-		latestIssueURL = env.AppURL + "/digest/" + latest[0].Slug + "/"
-		latestIssueTitle = latest[0].Subject
-	}
-	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
-	if err := welcome.Send(ctx, app.Email, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
-		slog.ErrorContext(ctx, "Failed to send welcome email", "email", sub.Email, "error", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
