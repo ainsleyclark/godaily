@@ -1,7 +1,9 @@
+@use '../abstracts/mixins' as *;
+
 .section-swiper {
 	margin-top: 2.5rem;
 
-	@media (min-width: 900px) {
+	@include desktop {
 		overflow: visible;
 
 		.swiper-wrapper {
