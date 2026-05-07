@@ -25,6 +25,9 @@ import (
 	"github.com/ainsleydev/webkit/pkg/env"
 )
 
+// AppURL is the canonical production URL for godaily.
+const AppURL = "https://godaily.dev"
+
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {

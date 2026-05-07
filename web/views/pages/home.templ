@@ -1,7 +1,7 @@
 package pages
 
 import (
-	"github.com/ainsleyclark/godaily/internal/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/components"
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
@@ -10,12 +10,13 @@ import (
 type HomeData struct {
 	LatestIssue news.Issue
 	SampleIssue news.Issue
+	Flash       string
 }
 
 templ Home(data HomeData) {
 	@layouts.Base() {
 		@components.Header()
-		@components.Hero()
+		@components.Hero(data.Flash)
 		@components.Rule()
 		@components.Features()
 		@components.Sources()

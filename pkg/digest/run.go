@@ -48,6 +48,7 @@ type Aggregator struct {
 	suggester         suggester
 	issues            news.IssueRepository
 	items             news.ItemRepository
+	subscribers       news.SubscriberRepository
 }
 
 type (
@@ -65,7 +66,7 @@ type (
 
 // New creates a new Aggregator, validating that all news
 // sources have registered fetchers.
-func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, error) {
+func New(issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
@@ -75,6 +76,7 @@ func New(issues news.IssueRepository, items news.ItemRepository) (*Aggregator, e
 		suggester:         synth.New(),
 		issues:            issues,
 		items:             items,
+		subscribers:       subscribers,
 	}, nil
 }
 

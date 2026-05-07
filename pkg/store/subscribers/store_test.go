@@ -39,16 +39,13 @@ func TestSubscribers_Store(t *testing.T) {
 	var created news.Subscriber
 
 	t.Run("Create", func(t *testing.T) {
-		t.Log("Normalises email and generates tokens")
+		t.Log("Normalises email and generates token")
 		{
 			got, err := s.Create(ctx, "  Hello@Example.COM  ")
 			require.NoError(t, err)
 			assert.NotZero(t, got.ID)
 			assert.Equal(t, "hello@example.com", got.Email)
-			assert.NotEmpty(t, got.ConfirmToken)
 			assert.NotEmpty(t, got.UnsubscribeToken)
-			assert.NotEqual(t, got.ConfirmToken, got.UnsubscribeToken)
-			assert.Nil(t, got.ConfirmedAt)
 			assert.Nil(t, got.UnsubscribedAt)
 			assert.False(t, got.CreatedAt.IsZero())
 			created = got
@@ -100,22 +97,6 @@ func TestSubscribers_Store(t *testing.T) {
 		}
 	})
 
-	t.Run("FindByConfirmToken", func(t *testing.T) {
-		t.Log("Happy path")
-		{
-			got, err := s.FindByConfirmToken(ctx, created.ConfirmToken)
-			require.NoError(t, err)
-			assert.Equal(t, created.ID, got.ID)
-		}
-
-		t.Log("Not found")
-		{
-			_, err := s.FindByConfirmToken(ctx, "missing")
-			require.Error(t, err)
-			assert.Equal(t, store.ErrNotFound, err)
-		}
-	})
-
 	t.Run("FindByUnsubscribeToken", func(t *testing.T) {
 		t.Log("Happy path")
 		{
@@ -129,22 +110,6 @@ func TestSubscribers_Store(t *testing.T) {
 			_, err := s.FindByUnsubscribeToken(ctx, "missing")
 			require.Error(t, err)
 			assert.Equal(t, store.ErrNotFound, err)
-		}
-	})
-
-	t.Run("Confirm", func(t *testing.T) {
-		t.Log("Happy path")
-		{
-			require.NoError(t, s.Confirm(ctx, created.ConfirmToken))
-
-			got, err := s.FindByEmail(ctx, "hello@example.com")
-			require.NoError(t, err)
-			require.NotNil(t, got.ConfirmedAt)
-		}
-
-		t.Log("Idempotent on already-confirmed token")
-		{
-			require.NoError(t, s.Confirm(ctx, created.ConfirmToken))
 		}
 	})
 
@@ -195,12 +160,6 @@ func TestSubscribers_Store(t *testing.T) {
 			assert.Error(t, err)
 		}
 
-		t.Log("FindByConfirmToken")
-		{
-			_, err := s.FindByConfirmToken(ctx, "x")
-			assert.Error(t, err)
-		}
-
 		t.Log("FindByUnsubscribeToken")
 		{
 			_, err := s.FindByUnsubscribeToken(ctx, "x")
@@ -211,11 +170,6 @@ func TestSubscribers_Store(t *testing.T) {
 		{
 			_, err := s.Create(ctx, "x@example.com")
 			assert.Error(t, err)
-		}
-
-		t.Log("Confirm")
-		{
-			assert.Error(t, s.Confirm(ctx, "x"))
 		}
 
 		t.Log("Unsubscribe")

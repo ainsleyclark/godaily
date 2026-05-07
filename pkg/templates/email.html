@@ -58,7 +58,7 @@
           <!-- Footer -->
           <tr>
             <td style="padding:20px 32px;border-top:1px solid #d0e8f5;text-align:center;font-size:12px;color:#6b9ab8;line-height:2;">
-              Sent by <strong style="color:#0d2236;">GoDaily</strong> &middot; <a href="#" style="color:#1a7fa8;text-decoration:none;">Unsubscribe</a> &middot; <a href="#" style="color:#1a7fa8;text-decoration:none;">View in browser</a>
+              Sent by <strong style="color:#0d2236;">GoDaily</strong>{{ if .UnsubscribeURL }} &middot; <a href="{{ .UnsubscribeURL }}" style="color:#1a7fa8;text-decoration:none;">Unsubscribe</a>{{ end }}
             </td>
           </tr>
 

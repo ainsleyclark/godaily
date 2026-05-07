@@ -26,9 +26,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/email"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
@@ -75,6 +77,15 @@ func allRegistered() map[news.Source]news.Fetcher {
 		reg[s] = mockFetcher{}
 	}
 	return reg
+}
+
+// newSubsMock returns a MockSubscriberRepository whose ListActive returns an empty list.
+// AnyTimes allows tests that return early before ListActive is called to pass without failure.
+func newSubsMock(t *testing.T) *mocknews.MockSubscriberRepository {
+	t.Helper()
+	m := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+	m.EXPECT().ListActive(gomock.Any()).Return(nil, nil).AnyTimes()
+	return m
 }
 
 // errItemRepo is an ItemRepository that always returns errItemRepoErr from ListByIssue.

@@ -1,9 +1,8 @@
 /**
  * subscribe.ts
  *
- * Handles the homepage hero subscribe form. V1 is UI-only: validate the email
- * client-side and swap the submit button to a fake success state. Wiring to a
- * real /subscribe endpoint will come in a follow-up.
+ * Handles the homepage hero subscribe form. Validates the email client-side,
+ * POSTs to /api/subscribe, then shows an inline success or error state.
  */
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,11 +12,12 @@ export function initSubscribeForm(): void {
 	forms.forEach((form) => form.addEventListener('submit', handleSubmit));
 }
 
-function handleSubmit(event: Event): void {
+async function handleSubmit(event: Event): Promise<void> {
 	event.preventDefault();
 	const form = event.currentTarget as HTMLFormElement;
 	const input = form.querySelector<HTMLInputElement>('input[type="email"]');
 	const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+	const hint = form.querySelector<HTMLElement>('[data-subscribe-hint]');
 	if (!input || !button) return;
 
 	const value = input.value.trim();
@@ -30,7 +30,36 @@ function handleSubmit(event: Event): void {
 	input.classList.remove('hero__input--error');
 	input.disabled = true;
 	button.disabled = true;
-	button.textContent = "✓ You're on the list";
-	button.classList.remove('button--primary');
-	button.classList.add('button--success');
+
+	try {
+		const res = await fetch('/api/subscribe', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email: value }),
+		});
+
+		if (res.ok) {
+			button.textContent = "✓ You're subscribed!";
+			button.classList.remove('button--primary');
+			button.classList.add('button--success');
+		} else if (res.status === 409) {
+			setHint(hint, "You're already subscribed.");
+			input.disabled = false;
+			button.disabled = false;
+		} else {
+			setHint(hint, 'Something went wrong. Please try again.');
+			input.disabled = false;
+			button.disabled = false;
+		}
+	} catch {
+		setHint(hint, 'Something went wrong. Please try again.');
+		input.disabled = false;
+		button.disabled = false;
+	}
+}
+
+function setHint(el: HTMLElement | null, message: string): void {
+	if (!el) return;
+	el.textContent = message;
+	el.hidden = false;
 }

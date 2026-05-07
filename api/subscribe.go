@@ -22,25 +22,57 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/source"
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/bootstrap"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
-//
-// Temporary: fetches r/golang news items via the Reddit public JSON API to
-// verify that Vercel's outbound IP range is accepted by Reddit.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
-	items, err := source.NewReddit().Fetch(r.Context())
-	if err != nil {
-		http.Error(w, "failed to fetch from Reddit: "+err.Error(), http.StatusInternalServerError)
+	bootstrap.Handle(w, r, func(app *godaily.App) {
+		handleSubscribe(w, r, app.Repository.Subscribers)
+	})
+}
+
+func handleSubscribe(w http.ResponseWriter, r *http.Request, repo news.SubscriberRepository) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var body struct {
+		Email string `json:"email"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "email is required"})
+		return
+	}
+
+	ctx := r.Context()
+
+	_, err := repo.FindByEmail(ctx, body.Email)
+	if err == nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusConflict)
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "already subscribed"})
+		return
+	}
+	if !errors.Is(err, store.ErrNotFound) {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if _, err = repo.Create(ctx, body.Email); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]any{
-		"ok":    true,
-		"items": len(items),
-	})
+	_ = json.NewEncoder(w).Encode(map[string]bool{"ok": true})
 }

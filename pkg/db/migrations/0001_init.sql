@@ -6,8 +6,6 @@ CREATE TABLE issues (
     sent_at         TIMESTAMP NOT NULL,
     subject         TEXT NOT NULL,
     summary         TEXT,
-    html_body       TEXT NOT NULL,
-    text_body       TEXT NOT NULL,
     status          TEXT NOT NULL DEFAULT 'sent'
 );
 
@@ -30,14 +28,11 @@ CREATE INDEX idx_items_issue ON items(issue_id);
 CREATE TABLE subscribers (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
     email             TEXT NOT NULL UNIQUE,
-    confirm_token     TEXT NOT NULL UNIQUE,
     unsubscribe_token TEXT NOT NULL UNIQUE,
-    confirmed_at      TIMESTAMP,
     unsubscribed_at   TIMESTAMP,
     created_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_subscribers_active
-    ON subscribers(confirmed_at) WHERE unsubscribed_at IS NULL;
+CREATE INDEX idx_subscribers_active ON subscribers(id) WHERE unsubscribed_at IS NULL;
 -- +goose StatementEnd
 
 -- +goose Down

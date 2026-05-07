@@ -87,7 +87,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers: subscribers.New(conn),
 	}
 
-	aggregator, err := digest.New(repo.Issues, repo.Items)
+	aggregator, err := digest.New(repo.Issues, repo.Items, repo.Subscribers)
 	if err != nil {
 		return nil, teardown, err
 	}
