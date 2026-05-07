@@ -1,7 +1,5 @@
 @use '../abstracts/mixins' as *;
 
-// Double-class specificity (.section-swiper.swiper) beats Swiper's own
-// .swiper { overflow: hidden } which is imported after this file in app.scss.
 .section-swiper {
 	margin-top: 2.5rem;
 
@@ -21,22 +19,20 @@
 		}
 	}
 
-	&.swiper {
-		@include desktop {
-			overflow: visible;
+	@include desktop {
+		overflow: visible;
 
-			.swiper-wrapper {
-				display: grid;
-				grid-template-columns: var(--swiper-columns);
-				gap: var(--swiper-gap);
-				width: 100%;
-				transform: none !important;
-			}
+		.swiper-wrapper {
+			display: grid;
+			grid-template-columns: var(--swiper-columns);
+			gap: var(--swiper-gap);
+			width: 100%;
+			transform: none !important;
+		}
 
-			.swiper-slide {
-				width: auto !important;
-				margin-right: 0 !important;
-			}
+		.swiper-slide {
+			width: auto !important;
+			margin-right: 0 !important;
 		}
 	}
 }
