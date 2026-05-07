@@ -52,7 +52,7 @@ func TestRSS(t *testing.T) {
 			outDir: func(t *testing.T) string { return t.TempDir() },
 			checks: []string{
 				`<title>GoDaily</title>`,
-				`<language>en-us</language>`,
+				`<language>en-gb</language>`,
 				`https://godaily.dev`,
 			},
 		},
