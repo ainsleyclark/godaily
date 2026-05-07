@@ -28,7 +28,7 @@ import (
 // HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
 func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := respond.GetApp(ctx)
 
 	token := r.URL.Query().Get("token")
 	if token == "" {

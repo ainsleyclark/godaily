@@ -31,7 +31,7 @@ import (
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := respond.GetApp(ctx)
 
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

@@ -30,7 +30,7 @@ import (
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := respond.GetApp(ctx)
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
 	if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {

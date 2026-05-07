@@ -26,18 +26,19 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 )
 
-var app *godaily.App
+// App is the singleton application instance shared across serverless function
+// invocations. Tests may overwrite this to inject mocks before calling a handler.
+var App *godaily.App
 
-// getApp returns the singleton App, bootstrapping it on first call.
-// Tests pre-set app directly to inject a mock before calling a handler.
-func getApp(ctx context.Context) *godaily.App {
-	if app != nil {
-		return app
+// GetApp returns the singleton App, bootstrapping it on first call.
+func GetApp(ctx context.Context) *godaily.App {
+	if App != nil {
+		return App
 	}
 	var err error
-	app, _, err = godaily.Bootstrap(ctx)
+	App, _, err = godaily.Bootstrap(ctx)
 	if err != nil {
 		log.Fatalf("bootstrapping app: %v", err)
 	}
-	return app
+	return App
 }

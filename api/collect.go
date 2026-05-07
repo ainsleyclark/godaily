@@ -30,7 +30,7 @@ import (
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	a := getApp(ctx)
+	a := respond.GetApp(ctx)
 
 	if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
 		respond.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())

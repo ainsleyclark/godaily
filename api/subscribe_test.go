@@ -27,6 +27,7 @@ import (
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	respond "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/news"
@@ -86,7 +87,7 @@ func TestHandleSubscribe(t *testing.T) {
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			test.mock(svc)
 
-			app = &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			respond.App = &godaily.App{Subscribers: svc, Config: &env.Config{}}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(test.method, "/api/subscribe", strings.NewReader(test.body))
