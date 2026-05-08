@@ -1,6 +1,6 @@
 module github.com/ainsleyclark/godaily
 
-go 1.26.2
+go 1.26.3
 
 require (
 	github.com/PuerkitoBio/goquery v1.12.0
