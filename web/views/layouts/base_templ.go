@@ -12,7 +12,7 @@ import "github.com/ainsleydev/webkit/pkg/env"
 
 const (
 	defaultTitle       = "GoDaily – Daily Go news straight to your inbox"
-	defaultDescription = "A weekday digest of the best Go stories from across the community, summarised by Claude and delivered before standup."
+	defaultDescription = "A weekday digest of the best Go stories from across the community, ranked and delivered before standup."
 )
 
 // PageMeta holds the SEO and social-sharing metadata rendered in <head>.

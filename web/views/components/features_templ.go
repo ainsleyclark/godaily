@@ -17,7 +17,7 @@ type featureCard struct {
 func featureCards() []featureCard {
 	return []featureCard{
 		{Title: "Every corner of the Go community", Body: "Hacker News, r/golang, Lobsters, Dev.to, the Go Blog, GitHub, YouTube and more, deduplicated into one read.", Icon: featureIconGlobe()},
-		{Title: "Ranked, summarised, opinionated", Body: "Claude reads each story, writes a tight summary, and surfaces the items most relevant to working Go developers.", Icon: featureIconStar()},
+		{Title: "Ranked, summarised, opinionated", Body: "Every story is read, summarised and scored for relevance. Only what matters to a working Go developer makes the cut.", Icon: featureIconStar()},
 		{Title: "Lands before your first coffee", Body: "A weekday-morning email. Skips weekends and public holidays. No drip, no upsell, no tracking pixels.", Icon: featureIconCalendar()},
 		{Title: "Free and open source", Body: "MIT-licensed Go binary you can self-host or read on the web. Star the repo, send a PR, or just enjoy the digest.", Icon: featureIconCode()},
 	}

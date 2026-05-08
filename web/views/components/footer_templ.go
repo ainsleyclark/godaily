@@ -39,7 +39,7 @@ func Footer() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span>GoDaily</span></div><nav class=\"footer__nav\" aria-label=\"Footer\"><a class=\"footer__link\" href=\"/issues/\">Archive</a> <a class=\"footer__link\" href=\"/rss.xml\">RSS</a> <a class=\"footer__link\" href=\"https://github.com/ainsleyclark/godaily\">GitHub</a> <a class=\"footer__link\" href=\"/privacy/\">Privacy</a></nav></div><p class=\"footer__text\">Built with Go and Claude. The Go Gopher was designed by <a class=\"footer__link\" href=\"https://reneefrench.blogspot.com/\">Renée French</a>, licensed under CC 4.0.</p></footer>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span>GoDaily</span></div><nav class=\"footer__nav\" aria-label=\"Footer\"><a class=\"footer__link\" href=\"/issues/\">Archive</a> <a class=\"footer__link\" href=\"/rss.xml\">RSS</a> <a class=\"footer__link\" href=\"https://github.com/ainsleyclark/godaily\">GitHub</a> <a class=\"footer__link\" href=\"/privacy/\">Privacy</a></nav></div><p class=\"footer__text\">Built with Go. The Go Gopher was designed by <a class=\"footer__link\" href=\"https://reneefrench.blogspot.com/\">Renée French</a>, licensed under CC 4.0.</p></footer>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
