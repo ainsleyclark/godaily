@@ -42,7 +42,7 @@ type Config struct {
 	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required"`
 	TursoURL                       string          `env:"TURSO_URL,required"`
 	TursoAuthToken                 string          `env:"TURSO_AUTH_TOKEN,required"`
-	CronSecret                     string          `env:"CRON_SECRET"`
+	APISecret                      string          `env:"API_SECRET"`
 	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL"`
 	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL"`
 	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL"`

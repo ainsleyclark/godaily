@@ -32,7 +32,7 @@ func HandleSend(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	a := api.GetApp(ctx)
 
-	if !api.Authenticated(r, a.Config.CronSecret) {
+	if !api.Authenticated(r, a.Config.APISecret) {
 		api.Error(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
