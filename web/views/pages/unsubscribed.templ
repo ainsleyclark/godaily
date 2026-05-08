@@ -17,29 +17,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package pages
 
 import (
-	"net/http"
-
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
-// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
-func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	token := r.URL.Query().Get("token")
-	if token == "" {
-		api.Error(w, http.StatusBadRequest, "missing token")
-		return
+templ Unsubscribed() {
+	@layouts.Base() {
+		@components.Header()
+		<section class="thank-you">
+			<div class="thank-you__content">
+				<div class="thank-you__check">✓</div>
+				<h1 class="thank-you__title">You've been unsubscribed.</h1>
+				<p class="thank-you__lead">Sorry to see you go! You won't receive any more digests.</p>
+			</div>
+		</section>
+		@components.Footer()
 	}
-
-	if err := a.Subscribers.Unsubscribe(ctx, token); err != nil {
-		api.Error(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	http.Redirect(w, r, "/unsubscribed/", http.StatusFound)
 }
