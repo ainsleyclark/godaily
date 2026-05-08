@@ -133,7 +133,7 @@ func Digest(issue news.Issue) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        fmt.Sprintf("Issue #%d – %s | GoDaily", issue.ID, issue.Subject),
+			Title:        fmt.Sprintf("Issue #%d – %s", issue.ID, issue.Subject),
 			Description:  issue.Summary,
 			CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)

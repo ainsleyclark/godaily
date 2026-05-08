@@ -97,7 +97,7 @@ func Privacy() templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "Privacy Policy | GoDaily",
+			Title:        "Privacy Policy",
 			Description:  "How GoDaily collects and uses your personal data.",
 			CanonicalURL: "https://godaily.dev/privacy/",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)

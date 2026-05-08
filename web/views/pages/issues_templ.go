@@ -170,7 +170,7 @@ func IssuesArchive(issues []news.Issue) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "All Issues | GoDaily",
+			Title:        "All Issues",
 			Description:  "Browse every issue of GoDaily, the daily Go news digest.",
 			CanonicalURL: "https://godaily.dev/issues/",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)

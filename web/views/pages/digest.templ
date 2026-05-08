@@ -10,7 +10,7 @@ import (
 
 templ Digest(issue news.Issue) {
 	@layouts.Base(layouts.PageMeta{
-		Title:        fmt.Sprintf("Issue #%d – %s | GoDaily", issue.ID, issue.Subject),
+		Title:        fmt.Sprintf("Issue #%d – %s", issue.ID, issue.Subject),
 		Description:  issue.Summary,
 		CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 	}) {

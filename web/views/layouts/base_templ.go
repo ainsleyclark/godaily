@@ -24,7 +24,7 @@ type PageMeta struct {
 
 func (m PageMeta) title() string {
 	if m.Title != "" {
-		return m.Title
+		return m.Title + " | GoDaily"
 	}
 	return defaultTitle
 }
