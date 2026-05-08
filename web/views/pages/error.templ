@@ -1,10 +1,40 @@
 package pages
 
-import "github.com/ainsleyclark/godaily/web/views/layouts"
+import (
+	"strconv"
+
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
+
+type errorInfo struct {
+	title   string
+	message string
+}
+
+var errorMessages = map[int]errorInfo{
+	404: {"Route not found", "No handler is registered at this path. Head back to the homepage."},
+	500: {"Unexpected error", "We returned a non-nil error somewhere. We're on it — try again shortly."},
+}
+
+func errorDetails(status int) errorInfo {
+	if info, ok := errorMessages[status]; ok {
+		return info
+	}
+	return errorInfo{"An error occurred", "Something went wrong. Please try again."}
+}
 
 templ Error(status int) {
 	@layouts.Base() {
-		<h1>Error</h1>
-		{ status }
+		@components.Header()
+		<section class="error">
+			<div class="error__content">
+				<p class="error__code">{ strconv.Itoa(status) }</p>
+				<h1 class="error__title">{ errorDetails(status).title }</h1>
+				<p class="error__lead">{ errorDetails(status).message }</p>
+				<a href="/" class="button button--primary">Back to home</a>
+			</div>
+		</section>
+		@components.Footer()
 	}
 }

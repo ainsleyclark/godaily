@@ -23,10 +23,12 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
 
@@ -63,6 +65,10 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, ass
 
 	if err := renderPages(ctx, repo, w, outDir); err != nil {
 		return errors.Wrap(err, "rendering pages")
+	}
+
+	if err := renderPage(ctx, filepath.Join(outDir, "404.html"), pages.Error(http.StatusNotFound)); err != nil {
+		return errors.Wrap(err, "rendering 404 page")
 	}
 
 	if err := sitemap(w, outDir); err != nil {
