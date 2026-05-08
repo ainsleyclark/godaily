@@ -47,6 +47,7 @@ func Start(a *godaily.App, port string) error {
 	kit.Get("/", handlers.Home(a))
 	kit.Get("/thank-you/", handlers.ThankYou(a))
 	kit.Get("/unsubscribed/", handlers.Unsubscribed())
+	kit.Get("/privacy/", handlers.Privacy())
 	kit.Get("/issues/", handlers.Issues(a))
 	kit.Get("/issues/{slug}/", handlers.Digest(a))
 	kit.Static("/assets/", "web/dist/") // From where main.go is

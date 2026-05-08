@@ -8,9 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/ainsleyclark/godaily/web/views/graphics"
-
-func Footer() templ.Component {
+func SubscribeCTA() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,15 +29,7 @@ func Footer() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<footer class=\"footer\"><div class=\"footer__top\"><div class=\"footer__brand\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = graphics.GopherLogo(28).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<span>GoDaily</span></div><nav class=\"footer__nav\" aria-label=\"Footer\"><a class=\"footer__link\" href=\"/issues/\">Archive</a> <a class=\"footer__link\" href=\"/rss.xml\">RSS</a> <a class=\"footer__link\" href=\"https://github.com/ainsleyclark/godaily\">GitHub</a> <a class=\"footer__link\" href=\"/privacy/\">Privacy</a></nav></div><p class=\"footer__text\">Built with Go and Claude. The Go Gopher was designed by <a class=\"footer__link\" href=\"https://reneefrench.blogspot.com/\">Renée French</a>, licensed under CC 4.0.</p></footer>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section class=\"section subscribe-cta\"><div class=\"subscribe-cta__inner\"><h2 class=\"subscribe-cta__title\">Get the digest in your inbox</h2><p class=\"subscribe-cta__lead\">The best Go stories from across the community, ranked by Claude and delivered weekday mornings. Free, no spam.</p><form class=\"subscribe-cta__form\" data-subscribe><input class=\"hero__input\" type=\"email\" name=\"email\" placeholder=\"you@example.com\" autocomplete=\"email\" aria-label=\"Email address\" required> <button class=\"button button--primary\" type=\"submit\">Subscribe</button></form><p class=\"hero__hint\" data-subscribe-hint hidden></p></div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

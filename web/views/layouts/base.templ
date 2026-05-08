@@ -2,7 +2,33 @@ package layouts
 
 import "github.com/ainsleydev/webkit/pkg/env"
 
-templ Base() {
+const (
+	defaultTitle       = "GoDaily – Daily Go news straight to your inbox"
+	defaultDescription = "A weekday digest of the best Go stories from across the community, summarised by Claude and delivered before standup."
+)
+
+// PageMeta holds the SEO and social-sharing metadata rendered in <head>.
+type PageMeta struct {
+	Title        string // falls back to defaultTitle when empty
+	Description  string // falls back to defaultDescription when empty
+	CanonicalURL string // full URL; omitted when empty
+}
+
+func (m PageMeta) title() string {
+	if m.Title != "" {
+		return m.Title
+	}
+	return defaultTitle
+}
+
+func (m PageMeta) description() string {
+	if m.Description != "" {
+		return m.Description
+	}
+	return defaultDescription
+}
+
+templ Base(meta PageMeta) {
 	<!DOCTYPE html>
 	<html lang="en" class="no-js">
 		<head>
@@ -10,8 +36,24 @@ templ Base() {
 			<meta http-equiv="x-ua-compatible" content="IE=Edge"/>
 			<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
 			<meta name="mobile-web-app-capable" content="yes"/>
-			<title>GoDaily, daily Go news straight to your inbox</title>
-			<meta name="description" content="A weekday digest of the best Go stories from across the community, summarised by Claude and delivered before standup."/>
+			<title>{ meta.title() }</title>
+			<meta name="description" content={ meta.description() }/>
+			if meta.CanonicalURL != "" {
+				<link rel="canonical" href={ meta.CanonicalURL }/>
+			}
+			<!-- Open Graph -->
+			<meta property="og:type" content="website"/>
+			<meta property="og:title" content={ meta.title() }/>
+			<meta property="og:description" content={ meta.description() }/>
+			if meta.CanonicalURL != "" {
+				<meta property="og:url" content={ meta.CanonicalURL }/>
+			}
+			<!-- Twitter -->
+			<meta name="twitter:card" content="summary"/>
+			<meta name="twitter:title" content={ meta.title() }/>
+			<meta name="twitter:description" content={ meta.description() }/>
+			<!-- Feeds -->
+			<link rel="alternate" type="application/rss+xml" title="GoDaily" href="/rss.xml"/>
 			<!-- Favicon -->
 			<!-- Scripts -->
 			<script defer src="/assets/js/app.js"></script>

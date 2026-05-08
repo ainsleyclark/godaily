@@ -1,0 +1,32 @@
+.privacy {
+	max-width: 720px;
+
+	&__content {
+		margin-top: 2rem;
+	}
+
+	&__heading {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: var(--text);
+		margin: 2rem 0 0.5rem;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	&__body {
+		font-size: 0.95rem;
+		color: var(--text-2);
+		line-height: 1.7;
+	}
+
+	&__link {
+		color: var(--accent);
+
+		&:hover {
+			color: var(--accent-dark);
+		}
+	}
+}

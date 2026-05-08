@@ -9,7 +9,11 @@ import (
 )
 
 templ Digest(issue news.Issue) {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		Title:        fmt.Sprintf("Issue #%d – %s | GoDaily", issue.ID, issue.Subject),
+		Description:  issue.Summary,
+		CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
+	}) {
 		@components.Header()
 		<div class="section">
 			<div class="section__label">{ fmt.Sprintf("Issue #%d", issue.ID) }</div>
@@ -19,6 +23,8 @@ templ Digest(issue news.Issue) {
 			}
 			@components.Sample(issue)
 		</div>
+		@components.Rule()
+		@components.SubscribeCTA()
 		@components.Footer()
 	}
 }

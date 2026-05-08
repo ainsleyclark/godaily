@@ -7,7 +7,9 @@ import (
 )
 
 templ ThankYou(issue news.Issue) {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		Title: "Subscribed | GoDaily",
+	}) {
 		@components.Header()
 		<section class="thank-you">
 			<div class="thank-you__content">

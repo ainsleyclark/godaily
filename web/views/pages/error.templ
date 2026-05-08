@@ -25,7 +25,9 @@ func errorDetails(status int) errorInfo {
 }
 
 templ Error(status int) {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		Title: errorDetails(status).title + " | GoDaily",
+	}) {
 		@components.Header()
 		<section class="error">
 			<div class="error__content">

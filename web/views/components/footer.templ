@@ -4,9 +4,17 @@ import "github.com/ainsleyclark/godaily/web/views/graphics"
 
 templ Footer() {
 	<footer class="footer">
-		<div class="footer__brand">
-			@graphics.GopherLogo(28)
-			<span>GoDaily</span>
+		<div class="footer__top">
+			<div class="footer__brand">
+				@graphics.GopherLogo(28)
+				<span>GoDaily</span>
+			</div>
+			<nav class="footer__nav" aria-label="Footer">
+				<a class="footer__link" href="/issues/">Archive</a>
+				<a class="footer__link" href="/rss.xml">RSS</a>
+				<a class="footer__link" href="https://github.com/ainsleyclark/godaily">GitHub</a>
+				<a class="footer__link" href="/privacy/">Privacy</a>
+			</nav>
 		</div>
 		<p class="footer__text">
 			Built with Go and Claude. The Go Gopher was designed by

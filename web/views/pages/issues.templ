@@ -9,7 +9,11 @@ import (
 )
 
 templ IssuesArchive(issues []news.Issue) {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		Title:        "All Issues | GoDaily",
+		Description:  "Browse every issue of GoDaily, the daily Go news digest.",
+		CanonicalURL: "https://godaily.dev/issues/",
+	}) {
 		@components.Header()
 		<section class="section issues-archive">
 			<div class="section__label">All issues</div>
@@ -37,6 +41,8 @@ templ IssuesArchive(issues []news.Issue) {
 				</div>
 			}
 		</section>
+		@components.Rule()
+		@components.SubscribeCTA()
 		@components.Footer()
 	}
 }

@@ -1,0 +1,70 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package pages
+
+import (
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
+
+templ Privacy() {
+	@layouts.Base(layouts.PageMeta{
+		Title:        "Privacy Policy | GoDaily",
+		Description:  "How GoDaily collects and uses your personal data.",
+		CanonicalURL: "https://godaily.dev/privacy/",
+	}) {
+		@components.Header()
+		<section class="section privacy">
+			<div class="section__label">Legal</div>
+			<h1 class="section__title">Privacy Policy</h1>
+			<p class="section__sub">Last updated: May 2026</p>
+			<div class="privacy__content">
+				<h2 class="privacy__heading">What we collect</h2>
+				<p class="privacy__body">
+					We collect your email address when you subscribe to GoDaily. No other personal data is collected.
+				</p>
+				<h2 class="privacy__heading">How we use it</h2>
+				<p class="privacy__body">
+					Your email address is used solely to deliver the GoDaily digest. We do not share your data with
+					third parties, sell mailing lists, or use it for advertising.
+				</p>
+				<h2 class="privacy__heading">Email delivery</h2>
+				<p class="privacy__body">
+					Digests are sent via <a class="privacy__link" href="https://resend.com">Resend</a>. Your address
+					is stored in our database and passed to Resend only at send time.
+				</p>
+				<h2 class="privacy__heading">Unsubscribing</h2>
+				<p class="privacy__body">
+					Every digest contains an unsubscribe link. Clicking it removes your address immediately and
+					permanently. You can also email <a class="privacy__link" href="mailto:hello@godaily.dev">hello@godaily.dev</a> to request removal.
+				</p>
+				<h2 class="privacy__heading">Cookies &amp; tracking</h2>
+				<p class="privacy__body">
+					GoDaily does not use cookies, tracking pixels, or analytics of any kind.
+				</p>
+				<h2 class="privacy__heading">Contact</h2>
+				<p class="privacy__body">
+					Questions? Email <a class="privacy__link" href="mailto:hello@godaily.dev">hello@godaily.dev</a>.
+				</p>
+			</div>
+		</section>
+		@components.Footer()
+	}
+}

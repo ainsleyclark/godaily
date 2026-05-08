@@ -17,49 +17,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package handlers
 
 import (
-	"encoding/json"
-	"errors"
-	"net/http"
-	"net/mail"
-
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/web/views/pages"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
-func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
+// Privacy handles the privacy policy page.
+func Privacy() webkit.Handler {
+	return func(c *webkit.Context) error {
+		return c.Render(pages.Privacy())
 	}
-
-	var body struct {
-		Email string `json:"email"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
-		api.Error(w, http.StatusBadRequest, "email is required")
-		return
-	}
-
-	if _, err := mail.ParseAddress(body.Email); err != nil {
-		api.Error(w, http.StatusBadRequest, "invalid email address")
-		return
-	}
-
-	if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
-		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
-			api.Error(w, http.StatusConflict, "already subscribed")
-		} else {
-			api.Error(w, http.StatusInternalServerError, err.Error())
-		}
-		return
-	}
-
-	api.OK(w)
 }
