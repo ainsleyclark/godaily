@@ -51,7 +51,7 @@ const options = {
 			loadPaths: ['./node_modules'],
 			logger: {
 				warn: (message, options) => {
-					if (options?.span?.url && options.span.url.includes('node_modules')) {
+					if (options?.span?.url && String(options.span.url).includes('node_modules')) {
 						return;
 					}
 					console.warn(message);

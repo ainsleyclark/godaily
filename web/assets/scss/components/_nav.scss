@@ -6,7 +6,25 @@
 	gap: 1.5rem;
 
 	@include mobile {
-		gap: 0.9rem;
+		// Full-width dropdown panel below the sticky header
+		position: absolute;
+		top: 64px; // matches header__inner height
+		left: 0;
+		right: 0;
+		background: var(--bg-header);
+		backdrop-filter: blur(12px);
+		border-bottom: 1px solid var(--border);
+		padding: 0.5rem 1rem;
+		z-index: 99;
+		// Hidden state
+		opacity: 0;
+		transform: translateY(-8px);
+		pointer-events: none;
+		visibility: hidden;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			visibility 0s linear 0.2s;
 	}
 
 	&__list {
@@ -15,7 +33,10 @@
 		gap: 1.5rem;
 
 		@include mobile {
-			gap: 0.9rem;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0;
+			width: 100%;
 		}
 	}
 
@@ -25,8 +46,36 @@
 		color: var(--text-2);
 		transition: color 0.2s;
 
+		@include mobile {
+			display: block;
+			width: 100%;
+			padding: 0.75rem 0;
+			font-size: 1rem;
+			border-bottom: 1px solid var(--border);
+		}
+
 		&:hover {
 			color: var(--accent);
 		}
+	}
+
+	&__list li:last-child &__link {
+		@include mobile {
+			border-bottom: none;
+		}
+	}
+}
+
+// Revealed state — driven by is-active on <header>
+.header.is-active .nav {
+	@include mobile {
+		opacity: 1;
+		transform: translateY(0);
+		pointer-events: auto;
+		visibility: visible;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			visibility 0s linear 0s;
 	}
 }

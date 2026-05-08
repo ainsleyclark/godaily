@@ -14,7 +14,7 @@ var defaultNavItems = []NavItem{
 }
 
 templ Nav() {
-	<nav class="nav" aria-label="Primary">
+	<nav id="primary-nav" class="nav" aria-label="Primary">
 		<ul class="nav__list">
 			for _, item := range defaultNavItems {
 				<li>

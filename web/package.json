@@ -18,6 +18,7 @@
 		"typescript": "^6.0.3"
 	},
 	"dependencies": {
+		"hamburgers": "^1.2.1",
 		"swiper": "^12.1.4"
 	}
 }

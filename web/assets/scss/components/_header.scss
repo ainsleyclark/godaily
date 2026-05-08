@@ -7,6 +7,7 @@
 	background: var(--bg-header);
 	backdrop-filter: blur(12px);
 	border-bottom: 1px solid var(--border);
+	overflow: visible; // prevent sticky container from clipping the mobile nav dropdown
 
 	&__inner {
 		max-width: 1200px;
@@ -29,5 +30,30 @@
 		font-weight: 700;
 		font-size: 1.2rem;
 		color: var(--text);
+	}
+
+	&__hamburger {
+		display: none;
+		background: transparent;
+		border: none;
+		padding: 10px;
+		cursor: pointer;
+
+		@include mobile {
+			display: flex;
+		}
+
+		// Match design system text color instead of hamburgers default #000
+		.hamburger-inner,
+		.hamburger-inner::before,
+		.hamburger-inner::after {
+			background-color: var(--text);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--accent);
+			outline-offset: 2px;
+			border-radius: 4px;
+		}
 	}
 }
