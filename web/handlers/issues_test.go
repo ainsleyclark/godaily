@@ -36,13 +36,12 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-func TestHome(t *testing.T) {
+func TestIssues(t *testing.T) {
 	t.Parallel()
 
 	log.SetOutput(io.Discard)
 
 	tt := map[string]struct {
-		url        string
 		mock       func(issues *mocknews.MockIssueRepository)
 		wantStatus int
 		wantHTML   string
@@ -50,7 +49,7 @@ func TestHome(t *testing.T) {
 		"Internal Error": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					Latest(gomock.Any(), 4).
+					List(gomock.Any()).
 					Return(nil, errors.New("internal error"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -58,29 +57,23 @@ func TestHome(t *testing.T) {
 		"OK No Issues": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					Latest(gomock.Any(), 4).
+					List(gomock.Any()).
 					Return([]news.Issue{}, nil)
 			},
 			wantStatus: http.StatusOK,
+			wantHTML:   "The complete archive",
 		},
-		"OK With Issue": {
+		"OK With Issues": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					Latest(gomock.Any(), 4).
-					Return([]news.Issue{{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"}}, nil)
+					List(gomock.Any()).
+					Return([]news.Issue{
+						{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"},
+						{Slug: "2026-04-25", Subject: "GoDaily - April 25, 2026"},
+					}, nil)
 			},
 			wantStatus: http.StatusOK,
 			wantHTML:   "GoDaily - April 28, 2026",
-		},
-		"OK Confirmed Flash": {
-			url: "/?confirmed=1",
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().
-					Latest(gomock.Any(), 4).
-					Return([]news.Issue{}, nil)
-			},
-			wantStatus: http.StatusOK,
-			wantHTML:   "You&#39;re confirmed!",
 		},
 	}
 
@@ -102,13 +95,9 @@ func TestHome(t *testing.T) {
 			}
 
 			kit := webkit.New()
-			kit.Get("/", Home(app))
+			kit.Get("/issues/", Issues(app))
 
-			url := "/"
-			if test.url != "" {
-				url = test.url
-			}
-			req := httptest.NewRequest(http.MethodGet, url, nil)
+			req := httptest.NewRequest(http.MethodGet, "/issues/", nil)
 			rec := httptest.NewRecorder()
 			kit.ServeHTTP(rec, req)
 

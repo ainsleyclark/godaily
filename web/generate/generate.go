@@ -34,8 +34,9 @@ import (
 
 // website holds all data required to generate the static site.
 type website struct {
-	Issues      []news.Issue
-	LatestIssue news.Issue
+	Issues       []news.Issue
+	LatestIssue  news.Issue
+	RecentIssues []news.Issue
 }
 
 // Site renders all sent issues and the homepage to outDir, generates
@@ -53,14 +54,14 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, ass
 
 	slog.InfoContext(ctx, "Generating static site", "issues", len(allIssues), "out", outDir)
 
-	latest, err := repo.Latest(ctx, 1)
+	recent, err := repo.Latest(ctx, 4)
 	if err != nil {
 		return errors.Wrap(err, "fetching latest issue")
 	}
 
-	w := website{Issues: allIssues}
-	if len(latest) > 0 {
-		w.LatestIssue = latest[0]
+	w := website{Issues: allIssues, RecentIssues: recent}
+	if len(recent) > 0 {
+		w.LatestIssue = recent[0]
 	}
 
 	if err := renderPages(ctx, repo, w, outDir); err != nil {

@@ -92,9 +92,9 @@ func TestDigest(t *testing.T) {
 			}
 
 			kit := webkit.New()
-			kit.Get("/digest/{slug}/", Digest(app))
+			kit.Get("/issues/{slug}/", Digest(app))
 
-			req := httptest.NewRequest(http.MethodGet, "/digest/issue-1/", nil)
+			req := httptest.NewRequest(http.MethodGet, "/issues/issue-1/", nil)
 			rec := httptest.NewRecorder()
 			kit.ServeHTTP(rec, req)
 

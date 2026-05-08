@@ -61,7 +61,7 @@ func TestRSS(t *testing.T) {
 			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`<title>GoDaily - April 28, 2026</title>`,
-				`https://godaily.dev/digest/2026-04-28/`,
+				`https://godaily.dev/issues/2026-04-28/`,
 				`A roundup of Go news.`,
 				`Tue, 28 Apr 2026`,
 			},

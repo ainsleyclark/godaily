@@ -66,7 +66,7 @@ func rss(w website, outDir string) error {
 	}
 
 	for _, issue := range w.Issues {
-		link := env.AppURL + "/digest/" + issue.Slug + "/"
+		link := env.AppURL + "/issues/" + issue.Slug + "/"
 		channel.Items = append(channel.Items, rssItem{
 			Title:       issue.Subject,
 			Link:        link,

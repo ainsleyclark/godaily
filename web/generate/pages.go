@@ -33,12 +33,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-// renderPages writes the homepage, thank-you page, and all individual digest
-// pages to outDir. It calls repo.Find for each issue to load its full item list.
+// renderPages writes the homepage, thank-you page, issues archive, and all
+// individual issue pages to outDir. It calls repo.Find for each issue to load its full item list.
 func renderPages(ctx context.Context, repo news.IssueRepository, w website, outDir string) error {
 	homeData := pages.HomeData{
-		LatestIssue: w.LatestIssue,
-		SampleIssue: w.LatestIssue,
+		LatestIssue:  w.LatestIssue,
+		SampleIssue:  w.LatestIssue,
+		RecentIssues: w.RecentIssues,
 	}
 	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
 		return errors.Wrap(err, "rendering homepage")
@@ -52,15 +53,19 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, outD
 		return errors.Wrap(err, "rendering unsubscribed page")
 	}
 
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "issues"), pages.IssuesArchive(w.Issues)); err != nil {
+		return errors.Wrap(err, "rendering issues archive page")
+	}
+
 	for _, issue := range w.Issues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {
 			return fmt.Errorf("fetching issue %d: %w", issue.ID, err)
 		}
-		if err := renderPageInDir(ctx, filepath.Join(outDir, "digest", issue.Slug), pages.Digest(full)); err != nil {
-			return fmt.Errorf("rendering digest %s: %w", issue.Slug, err)
+		if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", issue.Slug), pages.Digest(full)); err != nil {
+			return fmt.Errorf("rendering issue %s: %w", issue.Slug, err)
 		}
-		slog.InfoContext(ctx, "Rendered digest", "slug", issue.Slug)
+		slog.InfoContext(ctx, "Rendered issue", "slug", issue.Slug)
 	}
 
 	return nil
