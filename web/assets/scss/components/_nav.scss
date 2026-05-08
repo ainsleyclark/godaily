@@ -6,12 +6,15 @@
 	gap: 1.5rem;
 
 	@include mobile {
-		// Full-screen overlay below the sticky header
-		position: fixed;
-		top: 64px; // matches header__inner height
+		// Full-screen overlay below the sticky header.
+		// Must be position:absolute (not fixed) — backdrop-filter on the parent
+		// header creates a new containing block for fixed children, which breaks
+		// the positioning entirely.
+		position: absolute;
+		top: 64px; // matches header__inner height; places nav at header's bottom edge
 		left: 0;
 		right: 0;
-		bottom: 0; // fill remaining screen height
+		min-height: calc(100vh - 64px); // fill remaining viewport height
 		background: var(--bg); // fully opaque
 		padding: 1rem 1.5rem;
 		z-index: 99;
