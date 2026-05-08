@@ -92,7 +92,7 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "turso_test", cfg.TursoAuthToken)
 	})
 
-	t.Run("Missing API_SECRET returns error", func(t *testing.T) {
+	t.Run("Error", func(t *testing.T) {
 		t.Setenv("VERCEL", "1")
 		t.Setenv("RESEND_TOKEN", "re_test")
 		t.Setenv("ANTHROPIC_API_KEY", "sk-ant-test")
