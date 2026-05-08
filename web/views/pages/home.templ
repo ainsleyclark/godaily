@@ -8,9 +8,10 @@ import (
 
 // HomeData carries the dynamic content rendered on the marketing homepage.
 type HomeData struct {
-	LatestIssue news.Issue
-	SampleIssue news.Issue
-	Flash       string
+	LatestIssue  news.Issue
+	SampleIssue  news.Issue
+	RecentIssues []news.Issue
+	Flash        string
 }
 
 templ Home(data HomeData) {
@@ -21,6 +22,7 @@ templ Home(data HomeData) {
 		@components.Features()
 		@components.Sources()
 		@components.Latest(data.LatestIssue)
+		@components.Issues(data.RecentIssues)
 		@components.Rule()
 		@components.SampleSection(data.SampleIssue)
 		@components.Footer()
