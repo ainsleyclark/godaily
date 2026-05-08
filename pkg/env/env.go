@@ -21,6 +21,7 @@ package env
 
 import (
 	"context"
+	"log/slog"
 	"os"
 
 	"github.com/ainsleydev/webkit/pkg/env"
@@ -50,7 +51,7 @@ type Config struct {
 
 // New parses Config from the environment, overlaying values from a .env file
 // in the working directory when present.
-func New(_ context.Context) (Config, error) {
+func New(ctx context.Context) (Config, error) {
 	// Vercel injects VERCEL=1 in all environments (dev, preview, production).
 	// When present, env vars are provided by the platform, so we shouldn't
 	// load the env file.
@@ -65,6 +66,10 @@ func New(_ context.Context) (Config, error) {
 
 	if err := cenv.Parse(&cfg); err != nil {
 		return cfg, err
+	}
+
+	if cfg.IsProduction() && cfg.APISecret == "" {
+		slog.WarnContext(ctx, "API_SECRET is not set; protected endpoints will accept all requests")
 	}
 
 	return cfg, nil

@@ -20,6 +20,8 @@
 package env
 
 import (
+	"bytes"
+	"log/slog"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -46,6 +48,25 @@ func TestConfig_IsProduction(t *testing.T) {
 		t.Setenv("APP_ENV", "development")
 		assert.False(t, Config{}.IsProduction())
 	})
+}
+
+func TestNew_WarnsMissingAPISecret(t *testing.T) {
+	var buf bytes.Buffer
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	t.Cleanup(func() { slog.SetDefault(slog.Default()) })
+
+	t.Setenv("APP_ENV", "production")
+	t.Setenv("VERCEL", "1")
+	t.Setenv("RESEND_TOKEN", "re_test")
+	t.Setenv("ANTHROPIC_API_KEY", "sk-ant-test")
+	t.Setenv("EMAIL_SEND_ADDRESS", "test@example.com")
+	t.Setenv("TURSO_URL", "file:./test.db")
+	t.Setenv("TURSO_AUTH_TOKEN", "turso_test")
+	t.Setenv("API_SECRET", "")
+
+	_, err := New(t.Context())
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "API_SECRET is not set")
 }
 
 func TestNew(t *testing.T) {
