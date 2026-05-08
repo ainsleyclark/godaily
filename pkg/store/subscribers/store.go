@@ -113,6 +113,23 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 	return transformSubscriber(sub), nil
 }
 
+func (s Store) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
+	token, err := newToken()
+	if err != nil {
+		return news.Subscriber{}, err
+	}
+	sub, err := s.sqlc.SubscriberReactivate(ctx, sqlc.SubscriberReactivateParams{
+		UnsubscribeToken: token,
+		Email:            email,
+	})
+	if errors.Is(err, sql.ErrNoRows) {
+		return news.Subscriber{}, store.ErrNotFound
+	} else if err != nil {
+		return news.Subscriber{}, err
+	}
+	return transformSubscriber(sub), nil
+}
+
 func (s Store) Unsubscribe(ctx context.Context, token string) error {
 	return s.sqlc.SubscriberUnsubscribe(ctx, token)
 }

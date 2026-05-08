@@ -20,6 +20,13 @@ UPDATE subscribers
 SET unsubscribed_at = CURRENT_TIMESTAMP
 WHERE unsubscribe_token = ? AND unsubscribed_at IS NULL;
 
+-- name: SubscriberReactivate :one
+UPDATE subscribers
+SET unsubscribed_at = NULL,
+    unsubscribe_token = ?
+WHERE email = ? AND unsubscribed_at IS NOT NULL
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at;
+
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL

@@ -373,6 +373,31 @@ func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreatePara
 	return i, err
 }
 
+const subscriberReactivate = `-- name: SubscriberReactivate :one
+UPDATE subscribers
+SET unsubscribed_at = NULL,
+    unsubscribe_token = ?
+WHERE email = ? AND unsubscribed_at IS NOT NULL
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at`
+
+type SubscriberReactivateParams struct {
+	UnsubscribeToken string `json:"unsubscribe_token"`
+	Email            string `json:"email"`
+}
+
+func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReactivateParams) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberReactivate, arg.UnsubscribeToken, arg.Email)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.UnsubscribeToken,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const subscriberListActive = `-- name: SubscriberListActive :many
 SELECT id, email, unsubscribe_token, unsubscribed_at, created_at FROM subscribers
 WHERE unsubscribed_at IS NULL
