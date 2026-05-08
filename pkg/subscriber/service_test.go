@@ -23,6 +23,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -158,6 +159,55 @@ func TestService_Subscribe(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, sub, got)
+	})
+
+	t.Run("Reactivate After Unsubscribe", func(t *testing.T) {
+		t.Parallel()
+
+		now := time.Now()
+		unsubscribed := news.Subscriber{
+			ID:               1,
+			Email:            sub.Email,
+			UnsubscribeToken: "old-token",
+			UnsubscribedAt:   &now,
+		}
+		reactivated := news.Subscriber{
+			ID:               1,
+			Email:            sub.Email,
+			UnsubscribeToken: "new-token",
+		}
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(unsubscribed, nil)
+		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(reactivated, nil)
+		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
+
+		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+
+		require.NoError(t, err)
+		assert.Equal(t, reactivated, got)
+		assert.True(t, sender.called)
+		assert.Equal(t, "Welcome to GoDaily!", sender.req.Subject)
+	})
+
+	t.Run("Reactivate Error", func(t *testing.T) {
+		t.Parallel()
+
+		now := time.Now()
+		unsubscribed := news.Subscriber{
+			ID:             1,
+			Email:          sub.Email,
+			UnsubscribedAt: &now,
+		}
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(unsubscribed, nil)
+		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(news.Subscriber{}, errBoom)
+
+		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+
+		assert.ErrorIs(t, err, errBoom)
+		assert.False(t, sender.called)
 	})
 }
 

@@ -143,6 +143,33 @@ func TestSubscribers_Store(t *testing.T) {
 		}
 	})
 
+	t.Run("Reactivate", func(t *testing.T) {
+		t.Log("Happy path")
+		{
+			got, err := s.Reactivate(ctx, "hello@example.com")
+			require.NoError(t, err)
+			assert.Equal(t, created.ID, got.ID)
+			assert.Equal(t, "hello@example.com", got.Email)
+			assert.Nil(t, got.UnsubscribedAt)
+			assert.NotEmpty(t, got.UnsubscribeToken)
+			assert.NotEqual(t, created.UnsubscribeToken, got.UnsubscribeToken)
+		}
+
+		t.Log("Reappears in ListActive")
+		{
+			active, err := s.ListActive(ctx)
+			require.NoError(t, err)
+			require.Len(t, active, 1)
+			assert.Equal(t, created.ID, active[0].ID)
+		}
+
+		t.Log("Not found for non-existent or already-active email")
+		{
+			_, err := s.Reactivate(ctx, "missing@example.com")
+			assert.ErrorIs(t, err, store.ErrNotFound)
+		}
+	})
+
 	// MUST be last: closing the DB makes every subsequent query fail.
 	t.Run("Query Error On Closed DB", func(t *testing.T) {
 		require.NoError(t, db.Close())
@@ -169,6 +196,12 @@ func TestSubscribers_Store(t *testing.T) {
 		t.Log("Create")
 		{
 			_, err := s.Create(ctx, "x@example.com")
+			assert.Error(t, err)
+		}
+
+		t.Log("Reactivate")
+		{
+			_, err := s.Reactivate(ctx, "x@example.com")
 			assert.Error(t, err)
 		}
 

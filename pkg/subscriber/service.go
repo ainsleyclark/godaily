@@ -77,17 +77,27 @@ func New(repo news.SubscriberRepository, issues news.IssueRepository, sender ema
 }
 
 // Subscribe creates a new subscriber and sends a welcome email.
-// It returns ErrAlreadySubscribed if the email is already registered.
+// It returns ErrAlreadySubscribed if the email is already registered as active.
+// Previously unsubscribed addresses are reactivated with a fresh token.
 // Welcome email failures are logged but do not fail the subscription.
 func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscriber, error) {
-	if _, err := s.repo.FindByEmail(ctx, emailAddr); err == nil {
-		return news.Subscriber{}, ErrAlreadySubscribed
-	} else if !errors.Is(err, store.ErrNotFound) {
-		return news.Subscriber{}, err
-	}
+	var sub news.Subscriber
 
-	sub, err := s.repo.Create(ctx, emailAddr)
-	if err != nil {
+	existing, err := s.repo.FindByEmail(ctx, emailAddr)
+	switch {
+	case err == nil && existing.UnsubscribedAt == nil:
+		return news.Subscriber{}, ErrAlreadySubscribed
+	case err == nil:
+		sub, err = s.repo.Reactivate(ctx, emailAddr)
+		if err != nil {
+			return news.Subscriber{}, err
+		}
+	case errors.Is(err, store.ErrNotFound):
+		sub, err = s.repo.Create(ctx, emailAddr)
+		if err != nil {
+			return news.Subscriber{}, err
+		}
+	default:
 		return news.Subscriber{}, err
 	}
 

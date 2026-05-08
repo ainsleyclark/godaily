@@ -42,6 +42,7 @@ type SubscriberRepository interface {
 	FindByEmail(ctx context.Context, email string) (Subscriber, error)
 	FindByUnsubscribeToken(ctx context.Context, token string) (Subscriber, error)
 	Create(ctx context.Context, email string) (Subscriber, error)
+	Reactivate(ctx context.Context, email string) (Subscriber, error)
 	Unsubscribe(ctx context.Context, token string) error
 	ListActive(ctx context.Context) ([]Subscriber, error)
 }
