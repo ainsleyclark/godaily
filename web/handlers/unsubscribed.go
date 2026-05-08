@@ -17,29 +17,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package handlers
 
 import (
-	"net/http"
-
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/web/views/pages"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
-func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	token := r.URL.Query().Get("token")
-	if token == "" {
-		api.Error(w, http.StatusBadRequest, "missing token")
-		return
+// Unsubscribed handles the post-unsubscribe confirmation page.
+func Unsubscribed() webkit.Handler {
+	return func(c *webkit.Context) error {
+		return c.Render(pages.Unsubscribed())
 	}
-
-	if err := a.Subscribers.Unsubscribe(ctx, token); err != nil {
-		api.Error(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	http.Redirect(w, r, "/unsubscribed/", http.StatusFound)
 }

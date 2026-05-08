@@ -48,6 +48,10 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, outD
 		return errors.Wrap(err, "rendering thank-you page")
 	}
 
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "unsubscribed"), pages.Unsubscribed()); err != nil {
+		return errors.Wrap(err, "rendering unsubscribed page")
+	}
+
 	for _, issue := range w.Issues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {

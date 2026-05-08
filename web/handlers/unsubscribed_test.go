@@ -17,29 +17,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package handlers
 
 import (
 	"net/http"
+	"net/http/httptest"
+	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/stretchr/testify/assert"
 )
 
-// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
-func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
+func TestUnsubscribed(t *testing.T) {
+	t.Parallel()
 
-	token := r.URL.Query().Get("token")
-	if token == "" {
-		api.Error(w, http.StatusBadRequest, "missing token")
-		return
-	}
+	kit := webkit.New()
+	kit.Get("/unsubscribed/", Unsubscribed())
 
-	if err := a.Subscribers.Unsubscribe(ctx, token); err != nil {
-		api.Error(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+	req := httptest.NewRequest(http.MethodGet, "/unsubscribed/", nil)
+	rec := httptest.NewRecorder()
+	kit.ServeHTTP(rec, req)
 
-	http.Redirect(w, r, "/unsubscribed/", http.StatusFound)
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Contains(t, rec.Body.String(), "been unsubscribed")
 }

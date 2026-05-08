@@ -42,6 +42,7 @@ func TestHome(t *testing.T) {
 	log.SetOutput(io.Discard)
 
 	tt := map[string]struct {
+		url        string
 		mock       func(issues *mocknews.MockIssueRepository)
 		wantStatus int
 		wantHTML   string
@@ -71,6 +72,16 @@ func TestHome(t *testing.T) {
 			wantStatus: http.StatusOK,
 			wantHTML:   "GoDaily - April 28, 2026",
 		},
+		"OK Confirmed Flash": {
+			url: "/?confirmed=1",
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().
+					Latest(gomock.Any(), 1).
+					Return([]news.Issue{}, nil)
+			},
+			wantStatus: http.StatusOK,
+			wantHTML:   "You&#39;re confirmed!",
+		},
 	}
 
 	for name, test := range tt {
@@ -93,7 +104,11 @@ func TestHome(t *testing.T) {
 			kit := webkit.New()
 			kit.Get("/", Home(app))
 
-			req := httptest.NewRequest(http.MethodGet, "/", nil)
+			url := "/"
+			if test.url != "" {
+				url = test.url
+			}
+			req := httptest.NewRequest(http.MethodGet, url, nil)
 			rec := httptest.NewRecorder()
 			kit.ServeHTTP(rec, req)
 
