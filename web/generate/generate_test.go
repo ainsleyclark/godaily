@@ -53,7 +53,7 @@ func TestSite(t *testing.T) {
 		"Happy path no issues": {
 			mock: func(repo *mocknews.MockIssueRepository) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{}, nil)
 			},
 			wantFiles: []string{
 				"index.html",
@@ -61,12 +61,13 @@ func TestSite(t *testing.T) {
 				"rss.xml",
 				filepath.Join("thank-you", "index.html"),
 				filepath.Join("unsubscribed", "index.html"),
+				filepath.Join("issues", "index.html"),
 			},
 		},
 		"Happy path with issue": {
 			mock: func(repo *mocknews.MockIssueRepository) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{issue}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 			},
 			wantFiles: []string{
@@ -75,7 +76,8 @@ func TestSite(t *testing.T) {
 				"rss.xml",
 				filepath.Join("thank-you", "index.html"),
 				filepath.Join("unsubscribed", "index.html"),
-				filepath.Join("digest", issue.Slug, "index.html"),
+				filepath.Join("issues", "index.html"),
+				filepath.Join("issues", issue.Slug, "index.html"),
 			},
 		},
 		"List error": {
@@ -87,14 +89,14 @@ func TestSite(t *testing.T) {
 		"Latest error": {
 			mock: func(repo *mocknews.MockIssueRepository) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 1).Return(nil, errors.New("db error"))
+				repo.EXPECT().Latest(gomock.Any(), 4).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Find error": {
 			mock: func(repo *mocknews.MockIssueRepository) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{issue}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(news.Issue{}, errors.New("db error"))
 			},
 			wantErr: true,

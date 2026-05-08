@@ -1,0 +1,44 @@
+package components
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/ainsleyclark/godaily/pkg/news"
+)
+
+templ Issues(issues []news.Issue) {
+	<section id="issues" class="section issues">
+		<div class="section__label">Browse the archive</div>
+		<h2 class="section__title">Every issue, on demand</h2>
+		<p class="section__sub">
+			Catch up on any past digest — each one fully linked and readable.
+		</p>
+		if len(issues) == 0 {
+			<div class="issues__empty">
+				The first issue lands soon. Subscribe above to be first to read it.
+			</div>
+		} else {
+			@SwiperContainer("issues__swiper") {
+				for _, issue := range issues {
+					<a class="issues__card swiper-slide" href={ templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)) }>
+						<span class="issues__number">Issue #{ fmt.Sprintf("%d", issue.ID) }</span>
+						<span class="issues__date">{ FormatIssueDate(issue.SentAt) }</span>
+						<span class="issues__subject">{ issue.Subject }</span>
+						<span class="issues__meta">
+							<span>{ fmt.Sprintf("%d items", len(issue.Items)) }</span>
+							<span class="issues__arrow">→</span>
+						</span>
+					</a>
+				}
+			}
+			<div class="issues__footer">
+				<a class="issues__view-all" href="/issues/">View all issues →</a>
+			</div>
+		}
+	</section>
+}
+
+func FormatIssueDate(t time.Time) string {
+	return t.Format("Mon, 2 Jan 2006")
+}

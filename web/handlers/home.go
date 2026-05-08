@@ -33,14 +33,14 @@ func Home(a *godaily.App) webkit.Handler {
 	return func(c *webkit.Context) error {
 		ctx := c.Request.Context()
 
-		latest, err := a.Repository.Issues.Latest(ctx, 1)
+		recent, err := a.Repository.Issues.Latest(ctx, 4)
 		if err != nil {
 			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}
 
 		var issue news.Issue
-		if len(latest) > 0 {
-			issue = latest[0]
+		if len(recent) > 0 {
+			issue = recent[0]
 		}
 
 		var flash string
@@ -49,9 +49,10 @@ func Home(a *godaily.App) webkit.Handler {
 		}
 
 		return c.Render(pages.Home(pages.HomeData{
-			LatestIssue: issue,
-			SampleIssue: issue,
-			Flash:       flash,
+			LatestIssue:  issue,
+			SampleIssue:  issue,
+			RecentIssues: recent,
+			Flash:        flash,
 		}))
 	}
 }

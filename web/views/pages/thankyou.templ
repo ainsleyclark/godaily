@@ -17,7 +17,7 @@ templ ThankYou(issue news.Issue) {
 				if issue.Slug != "" {
 					<p class="thank-you__issue-text">
 						While you wait for the next GoDaily,
-						<a class="thank-you__link" href={ templ.SafeURL("/digest/" + issue.Slug + "/") }>check out the latest issue here</a>.
+						<a class="thank-you__link" href={ templ.SafeURL("/issues/" + issue.Slug + "/") }>check out the latest issue here</a>.
 					</p>
 				}
 			</div>

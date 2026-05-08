@@ -59,7 +59,7 @@ func TestSitemap(t *testing.T) {
 			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`https://godaily.dev/`,
-				`https://godaily.dev/digest/2026-04-28/`,
+				`https://godaily.dev/issues/2026-04-28/`,
 				`<lastmod>2026-04-28</lastmod>`,
 				`<priority>0.8</priority>`,
 			},
