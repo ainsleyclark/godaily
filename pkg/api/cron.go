@@ -21,28 +21,17 @@ package api
 
 import (
 	"net/http"
-
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/hook"
+	"strings"
 )
 
-// HandleCollect is the Vercel serverless function entry point for GET /api/collect.
-func HandleCollect(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	if !api.ValidateCron(r, a.Config.CronSecret) {
-		api.Error(w, http.StatusUnauthorized, "unauthorized")
-		return
+// ValidateCron checks that the request carries the expected CRON_SECRET in the
+// Authorization header (Bearer scheme), matching Vercel's cron authentication
+// convention. Returns true unconditionally when secret is empty so that local
+// development and CI can call the endpoint without credentials.
+func ValidateCron(r *http.Request, secret string) bool {
+	if secret == "" {
+		return true
 	}
-
-	if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
-		api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
-		return
-	}
-
-	hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
-
-	api.OK(w)
+	auth := r.Header.Get("Authorization")
+	return strings.TrimPrefix(auth, "Bearer ") == secret
 }
