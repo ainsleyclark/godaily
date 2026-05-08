@@ -20,6 +20,7 @@
 package env
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -59,6 +60,7 @@ func TestNew(t *testing.T) {
 		t.Setenv("EMAIL_SEND_ADDRESS", "vercel@example.com")
 		t.Setenv("TURSO_URL", "file:./vercel.db")
 		t.Setenv("TURSO_AUTH_TOKEN", "turso_vercel")
+		t.Setenv("API_SECRET", "secret_vercel")
 
 		cfg, err := New(t.Context())
 
@@ -76,6 +78,7 @@ func TestNew(t *testing.T) {
 		t.Setenv("EMAIL_SEND_ADDRESS", "test@example.com")
 		t.Setenv("TURSO_URL", "file:./test.db")
 		t.Setenv("TURSO_AUTH_TOKEN", "turso_test")
+		t.Setenv("API_SECRET", "secret_test")
 
 		cfg, err := New(t.Context())
 
@@ -89,24 +92,16 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "turso_test", cfg.TursoAuthToken)
 	})
 
-	t.Run("Empty", func(t *testing.T) {
-		t.Setenv("RESEND_TOKEN", "")
-		t.Setenv("ANTHROPIC_API_KEY", "")
-		t.Setenv("YOUTUBE_API_KEY", "")
-		t.Setenv("GITHUB_TOKEN", "")
-		t.Setenv("EMAIL_SEND_ADDRESS", "")
-		t.Setenv("TURSO_URL", "")
-		t.Setenv("TURSO_AUTH_TOKEN", "")
+	t.Run("Error", func(t *testing.T) {
+		t.Setenv("VERCEL", "1")
+		t.Setenv("RESEND_TOKEN", "re_test")
+		t.Setenv("ANTHROPIC_API_KEY", "sk-ant-test")
+		t.Setenv("EMAIL_SEND_ADDRESS", "test@example.com")
+		t.Setenv("TURSO_URL", "file:./test.db")
+		t.Setenv("TURSO_AUTH_TOKEN", "turso_test")
+		os.Unsetenv("API_SECRET")
 
-		cfg, err := New(t.Context())
-
-		require.NoError(t, err)
-		assert.Empty(t, cfg.ResendToken)
-		assert.Empty(t, cfg.AnthropicAPIKey)
-		assert.Empty(t, cfg.YouTubeAPIKey)
-		assert.Empty(t, cfg.GitHubToken)
-		assert.Empty(t, cfg.EmailSendAddress)
-		assert.Empty(t, cfg.TursoURL)
-		assert.Empty(t, cfg.TursoAuthToken)
+		_, err := New(t.Context())
+		require.Error(t, err)
 	})
 }

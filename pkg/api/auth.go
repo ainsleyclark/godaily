@@ -21,28 +21,17 @@ package api
 
 import (
 	"net/http"
-
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/hook"
+	"strings"
 )
 
-// HandleCollect is the Vercel serverless function entry point for GET /api/collect.
-func HandleCollect(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	if !api.Authenticated(r, a.Config.APISecret) {
-		api.Error(w, http.StatusUnauthorized, "unauthorized")
-		return
+// Authenticated checks that the request carries the expected secret in the
+// Authorization header (Bearer scheme). Returns true unconditionally when
+// secret is empty so that local development and CI work without credentials.
+func Authenticated(r *http.Request, secret string) bool {
+	if secret == "" {
+		return true
 	}
-
-	if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
-		api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
-		return
-	}
-
-	hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
-
-	api.OK(w)
+	auth := r.Header.Get("Authorization")
+	token, ok := strings.CutPrefix(auth, "Bearer ")
+	return ok && token == secret
 }

@@ -31,6 +31,12 @@ import (
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	a := api.GetApp(ctx)
+
+	if !api.Authenticated(r, a.Config.APISecret) {
+		api.Error(w, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
 	if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {

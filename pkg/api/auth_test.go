@@ -20,62 +20,66 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/env"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 )
 
-func TestHandleCollect(t *testing.T) {
+func TestAuthenticated(t *testing.T) {
+	t.Parallel()
+
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
-		secret     string
-		authHeader string
-		wantStatus int
+		secret string
+		header string
+		want   bool
 	}{
-		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, nil)
-			},
-			wantStatus: http.StatusOK,
+		"No secret configured allows any request": {
+			secret: "",
+			header: "",
+			want:   true,
 		},
-		"Collect Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
-			},
-			wantStatus: http.StatusInternalServerError,
+		"No secret configured allows request with header": {
+			secret: "",
+			header: "Bearer anything",
+			want:   true,
 		},
-		"Unauthorized": {
-			mock:       func(r *mockdigest.MockRunner) {},
-			secret:     "supersecret",
-			authHeader: "Bearer wrongtoken",
-			wantStatus: http.StatusUnauthorized,
+		"Correct bearer token": {
+			secret: "supersecret",
+			header: "Bearer supersecret",
+			want:   true,
+		},
+		"Wrong token": {
+			secret: "supersecret",
+			header: "Bearer wrongtoken",
+			want:   false,
+		},
+		"Missing header": {
+			secret: "supersecret",
+			header: "",
+			want:   false,
+		},
+		"Token without Bearer prefix": {
+			secret: "supersecret",
+			header: "supersecret",
+			want:   false,
+		},
+		"Empty token with secret set": {
+			secret: "supersecret",
+			header: "Bearer ",
+			want:   false,
 		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
-
-			api.App = &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}}
-
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
-			if test.authHeader != "" {
-				r.Header.Set("Authorization", test.authHeader)
+			t.Parallel()
+			r := httptest.NewRequest(http.MethodGet, "/", nil)
+			if test.header != "" {
+				r.Header.Set("Authorization", test.header)
 			}
-			HandleCollect(w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
+			assert.Equal(t, test.want, Authenticated(r, test.secret))
 		})
 	}
 }
