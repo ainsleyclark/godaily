@@ -19,6 +19,10 @@
 		padding: 2rem;
 		transition: transform 0.2s, box-shadow 0.2s;
 
+		@include mobile {
+			padding: 1.25rem;
+		}
+
 		&:hover {
 			transform: translateY(-3px);
 			box-shadow: var(--shadow-card);
