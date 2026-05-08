@@ -7,6 +7,7 @@
 	background: var(--bg-header);
 	backdrop-filter: blur(12px);
 	border-bottom: 1px solid var(--border);
+	overflow: visible; // prevent sticky container from clipping the mobile nav dropdown
 
 	&__inner {
 		max-width: 1200px;
@@ -29,5 +30,52 @@
 		font-weight: 700;
 		font-size: 1.2rem;
 		color: var(--text);
+	}
+
+	&__hamburger {
+		display: none;
+		background: transparent;
+		border: none;
+		padding: 8px;
+		cursor: pointer;
+
+		@include mobile {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		// Override hamburgers library defaults (40px wide, 4px tall, 15px padding)
+		.hamburger-box {
+			width: 22px;
+			height: 16px; // 3 × 2px bars + 2 × 5px gaps
+		}
+
+		.hamburger-inner,
+		.hamburger-inner::before,
+		.hamburger-inner::after {
+			width: 22px;
+			height: 2px;
+			border-radius: 2px;
+			background-color: var(--text);
+		}
+
+		.hamburger-inner {
+			margin-top: -1px; // half of 2px bar height
+		}
+
+		.hamburger-inner::before {
+			top: -7px; // -(5px gap + 2px bar)
+		}
+
+		.hamburger-inner::after {
+			bottom: -7px;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--accent);
+			outline-offset: 2px;
+			border-radius: 4px;
+		}
 	}
 }

@@ -6,7 +6,31 @@
 	gap: 1.5rem;
 
 	@include mobile {
-		gap: 0.9rem;
+		// Full-screen overlay below the sticky header.
+		// Must be position:absolute (not fixed) — backdrop-filter on the parent
+		// header creates a new containing block for fixed children.
+		position: absolute;
+		top: 64px; // matches header__inner height
+		left: 0;
+		right: 0;
+		min-height: calc(100vh - 64px);
+		background: var(--bg);
+		padding: 1rem 1.5rem;
+		z-index: 99;
+		overflow-y: auto;
+		// Override desktop flex alignment so items stack from the top, not center
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: flex-start;
+		// Hidden state
+		opacity: 0;
+		transform: translateY(-8px);
+		pointer-events: none;
+		visibility: hidden;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			visibility 0s linear 0.2s;
 	}
 
 	&__list {
@@ -15,7 +39,10 @@
 		gap: 1.5rem;
 
 		@include mobile {
-			gap: 0.9rem;
+			flex-direction: column;
+			align-items: stretch; // stretch li to full width so border-bottom spans container
+			gap: 0;
+			width: 100%;
 		}
 	}
 
@@ -25,8 +52,36 @@
 		color: var(--text-2);
 		transition: color 0.2s;
 
+		@include mobile {
+			display: block;
+			width: 100%;
+			padding: 0.75rem 0;
+			font-size: 1rem;
+			border-bottom: 1px solid var(--border);
+		}
+
 		&:hover {
 			color: var(--accent);
 		}
+	}
+
+	&__list li:last-child &__link {
+		@include mobile {
+			border-bottom: none;
+		}
+	}
+}
+
+// Revealed state — driven by is-active on <header>
+.header.is-active .nav {
+	@include mobile {
+		opacity: 1;
+		transform: translateY(0);
+		pointer-events: auto;
+		visibility: visible;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			visibility 0s linear 0s;
 	}
 }
