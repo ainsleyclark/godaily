@@ -24,14 +24,14 @@ import (
 	"strings"
 )
 
-// ValidateCron checks that the request carries the expected CRON_SECRET in the
-// Authorization header (Bearer scheme), matching Vercel's cron authentication
-// convention. Returns true unconditionally when secret is empty so that local
-// development and CI can call the endpoint without credentials.
-func ValidateCron(r *http.Request, secret string) bool {
+// Authenticated checks that the request carries the expected secret in the
+// Authorization header (Bearer scheme). Returns true unconditionally when
+// secret is empty so that local development and CI work without credentials.
+func Authenticated(r *http.Request, secret string) bool {
 	if secret == "" {
 		return true
 	}
 	auth := r.Header.Get("Authorization")
-	return strings.TrimPrefix(auth, "Bearer ") == secret
+	token, ok := strings.CutPrefix(auth, "Bearer ")
+	return ok && token == secret
 }

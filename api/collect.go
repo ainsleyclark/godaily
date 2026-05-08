@@ -32,7 +32,7 @@ func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	a := api.GetApp(ctx)
 
-	if !api.ValidateCron(r, a.Config.CronSecret) {
+	if !api.Authenticated(r, a.Config.CronSecret) {
 		api.Error(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
