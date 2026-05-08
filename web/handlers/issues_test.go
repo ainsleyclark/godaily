@@ -63,14 +63,31 @@ func TestIssues(t *testing.T) {
 			wantStatus: http.StatusOK,
 			wantHTML:   "The complete archive",
 		},
+		"Find Error": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().
+					List(gomock.Any()).
+					Return([]news.Issue{{ID: 1, Slug: "2026-04-28"}}, nil)
+				issues.EXPECT().
+					Find(gomock.Any(), int64(1)).
+					Return(news.Issue{}, errors.New("find error"))
+			},
+			wantStatus: http.StatusInternalServerError,
+		},
 		"OK With Issues": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
 					List(gomock.Any()).
 					Return([]news.Issue{
-						{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"},
-						{Slug: "2026-04-25", Subject: "GoDaily - April 25, 2026"},
+						{ID: 1, Slug: "2026-04-28"},
+						{ID: 2, Slug: "2026-04-25"},
 					}, nil)
+				issues.EXPECT().
+					Find(gomock.Any(), int64(1)).
+					Return(news.Issue{ID: 1, Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026", Items: []news.Item{{Title: "foo"}}}, nil)
+				issues.EXPECT().
+					Find(gomock.Any(), int64(2)).
+					Return(news.Issue{ID: 2, Slug: "2026-04-25", Subject: "GoDaily - April 25, 2026", Items: []news.Item{{Title: "bar"}}}, nil)
 			},
 			wantStatus: http.StatusOK,
 			wantHTML:   "GoDaily - April 28, 2026",

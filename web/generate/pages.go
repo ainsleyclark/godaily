@@ -53,19 +53,24 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, outD
 		return errors.Wrap(err, "rendering unsubscribed page")
 	}
 
-	if err := renderPageInDir(ctx, filepath.Join(outDir, "issues"), pages.IssuesArchive(w.Issues)); err != nil {
-		return errors.Wrap(err, "rendering issues archive page")
-	}
-
+	fullIssues := make([]news.Issue, 0, len(w.Issues))
 	for _, issue := range w.Issues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {
 			return fmt.Errorf("fetching issue %d: %w", issue.ID, err)
 		}
-		if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", issue.Slug), pages.Digest(full)); err != nil {
-			return fmt.Errorf("rendering issue %s: %w", issue.Slug, err)
+		fullIssues = append(fullIssues, full)
+	}
+
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "issues"), pages.IssuesArchive(fullIssues)); err != nil {
+		return errors.Wrap(err, "rendering issues archive page")
+	}
+
+	for _, full := range fullIssues {
+		if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", full.Slug), pages.Digest(full)); err != nil {
+			return fmt.Errorf("rendering issue %s: %w", full.Slug, err)
 		}
-		slog.InfoContext(ctx, "Rendered issue", "slug", issue.Slug)
+		slog.InfoContext(ctx, "Rendered issue", "slug", full.Slug)
 	}
 
 	return nil
