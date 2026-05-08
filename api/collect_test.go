@@ -36,6 +36,8 @@ import (
 func TestHandleCollect(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
+		secret     string
+		authHeader string
 		wantStatus int
 	}{
 		"OK": {
@@ -50,6 +52,12 @@ func TestHandleCollect(t *testing.T) {
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
+		"Unauthorized": {
+			mock:       func(r *mockdigest.MockRunner) {},
+			secret:     "supersecret",
+			authHeader: "Bearer wrongtoken",
+			wantStatus: http.StatusUnauthorized,
+		},
 	}
 
 	for name, test := range tt {
@@ -58,10 +66,13 @@ func TestHandleCollect(t *testing.T) {
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
-			api.App = &godaily.App{Runner: runner, Config: &env.Config{}}
+			api.App = &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/collect", nil)
+			if test.authHeader != "" {
+				r.Header.Set("Authorization", test.authHeader)
+			}
 			HandleCollect(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
