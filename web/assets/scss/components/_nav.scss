@@ -6,16 +6,16 @@
 	gap: 1.5rem;
 
 	@include mobile {
-		// Full-width dropdown panel below the sticky header
-		position: absolute;
+		// Full-screen overlay below the sticky header
+		position: fixed;
 		top: 64px; // matches header__inner height
 		left: 0;
 		right: 0;
-		background: var(--bg-header);
-		backdrop-filter: blur(12px);
-		border-bottom: 1px solid var(--border);
-		padding: 0.5rem 1rem;
+		bottom: 0; // fill remaining screen height
+		background: var(--bg); // fully opaque
+		padding: 1rem 1.5rem;
 		z-index: 99;
+		overflow-y: auto;
 		// Hidden state
 		opacity: 0;
 		transform: translateY(-8px);

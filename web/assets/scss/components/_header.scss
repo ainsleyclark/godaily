@@ -36,18 +36,40 @@
 		display: none;
 		background: transparent;
 		border: none;
-		padding: 10px;
+		padding: 8px;
 		cursor: pointer;
 
 		@include mobile {
 			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 
-		// Match design system text color instead of hamburgers default #000
+		// Override hamburgers library defaults (40px wide, 4px tall, 15px padding)
+		.hamburger-box {
+			width: 22px;
+			height: 16px; // 3 × 2px bars + 2 × 5px gaps
+		}
+
 		.hamburger-inner,
 		.hamburger-inner::before,
 		.hamburger-inner::after {
+			width: 22px;
+			height: 2px;
+			border-radius: 2px;
 			background-color: var(--text);
+		}
+
+		.hamburger-inner {
+			margin-top: -1px; // half of 2px bar height
+		}
+
+		.hamburger-inner::before {
+			top: -7px; // -(5px gap + 2px bar)
+		}
+
+		.hamburger-inner::after {
+			bottom: -7px;
 		}
 
 		&:focus-visible {
