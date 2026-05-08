@@ -27,6 +27,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/web/handlers"
+	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/env"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -48,7 +49,9 @@ func Start(a *godaily.App, port string) error {
 	kit.Get("/unsubscribed/", handlers.Unsubscribed())
 	kit.Get("/digest/{slug}/", handlers.Digest(a))
 	kit.Static("/assets/", "web/dist/") // From where main.go is
-	kit.NotFound(func(c *webkit.Context) error { return c.String(http.StatusNotFound, "Not Found") })
+	kit.NotFound(func(c *webkit.Context) error {
+		return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))
+	})
 
 	if env.IsDevelopment() {
 		// Register on the raw chi mux so SSE bypasses webkit's middleware chain
