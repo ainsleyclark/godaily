@@ -55,7 +55,13 @@ func TestSite(t *testing.T) {
 				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{}, nil)
 			},
-			wantFiles: []string{"index.html", "sitemap.xml", "rss.xml"},
+			wantFiles: []string{
+				"index.html",
+				"sitemap.xml",
+				"rss.xml",
+				filepath.Join("thank-you", "index.html"),
+				filepath.Join("unsubscribed", "index.html"),
+			},
 		},
 		"Happy path with issue": {
 			mock: func(repo *mocknews.MockIssueRepository) {
@@ -67,6 +73,8 @@ func TestSite(t *testing.T) {
 				"index.html",
 				"sitemap.xml",
 				"rss.xml",
+				filepath.Join("thank-you", "index.html"),
+				filepath.Join("unsubscribed", "index.html"),
 				filepath.Join("digest", issue.Slug, "index.html"),
 			},
 		},

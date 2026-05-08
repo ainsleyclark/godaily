@@ -35,16 +35,18 @@ import (
 
 func TestHandleUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
-		token      string
-		mock       func(s *mocksubscriber.MockSubscriber)
-		wantStatus int
+		token        string
+		mock         func(s *mocksubscriber.MockSubscriber)
+		wantStatus   int
+		wantLocation string
 	}{
 		"OK": {
 			token: "valid-token",
 			mock: func(s *mocksubscriber.MockSubscriber) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 			},
-			wantStatus: http.StatusFound,
+			wantStatus:   http.StatusFound,
+			wantLocation: "/unsubscribed/",
 		},
 		"Missing Token": {
 			token:      "",
@@ -78,6 +80,9 @@ func TestHandleUnsubscribe(t *testing.T) {
 			HandleUnsubscribe(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
+			if test.wantLocation != "" {
+				assert.Equal(t, test.wantLocation, w.Header().Get("Location"))
+			}
 		})
 	}
 }
