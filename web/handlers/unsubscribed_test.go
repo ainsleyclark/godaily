@@ -24,8 +24,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUnsubscribed(t *testing.T) {
