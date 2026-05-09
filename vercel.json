@@ -7,6 +7,16 @@
 	"outputDirectory": "out",
 	"trailingSlash": true,
 	"cleanUrls": true,
+	"crons": [
+		{ "path": "/api/collect/", "schedule": "0 1 * * 1-5" },
+		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
+	],
+	"functions": {
+		"api/**/*.go": {
+			"runtime": "@vercel/go@3.6.0",
+			"maxDuration": 300
+		}
+	},
 	"headers": [
 		{
 			"source": "/rss.xml",
@@ -17,15 +27,5 @@
 				}
 			]
 		}
-	],
-	"crons": [
-		{ "path": "/api/collect/", "schedule": "0 1 * * 1-5" },
-		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
-	],
-	"functions": {
-		"api/**/*.go": {
-			"runtime": "@vercel/go@3.6.0",
-			"maxDuration": 300
-		}
-	}
+	]
 }
