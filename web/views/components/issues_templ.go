@@ -36,7 +36,7 @@ func Issues(issues []news.Issue) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"issues\" class=\"section issues\"><div class=\"section__label\">Browse the archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest — each one fully linked and readable.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"issues\" class=\"section issues\"><div class=\"section__label\">Browse the archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest. Each one fully linked and readable.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -66,7 +66,7 @@ func Issues(issues []news.Issue) templ.Component {
 					var templ_7745c5c3_Var3 templ.SafeURL
 					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/issues.templ`, Line: 24, Col: 98}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/issues.templ`, Line: 24, Col: 98}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 					if templ_7745c5c3_Err != nil {
@@ -79,7 +79,7 @@ func Issues(issues []news.Issue) templ.Component {
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", issue.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/issues.templ`, Line: 25, Col: 71}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/issues.templ`, Line: 25, Col: 71}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -92,7 +92,7 @@ func Issues(issues []news.Issue) templ.Component {
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(FormatIssueDate(issue.SentAt))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/issues.templ`, Line: 26, Col: 64}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/issues.templ`, Line: 26, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
@@ -105,7 +105,7 @@ func Issues(issues []news.Issue) templ.Component {
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Subject)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/issues.templ`, Line: 27, Col: 51}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/issues.templ`, Line: 27, Col: 51}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -118,7 +118,7 @@ func Issues(issues []news.Issue) templ.Component {
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d items", len(issue.Items)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/issues.templ`, Line: 29, Col: 56}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/issues.templ`, Line: 29, Col: 56}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {

@@ -1,0 +1,31 @@
+@use '../abstracts/mixins' as *;
+
+.subscribe-cta {
+	&__inner {
+		max-width: 540px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	&__title {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		margin-bottom: 0.75rem;
+		color: var(--text);
+	}
+
+	&__lead {
+		font-size: 1rem;
+		color: var(--text-2);
+		margin-bottom: 1.5rem;
+	}
+
+	&__form {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+}

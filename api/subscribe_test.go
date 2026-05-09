@@ -63,6 +63,12 @@ func TestHandleSubscribe(t *testing.T) {
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
 			wantStatus: http.StatusBadRequest,
 		},
+		"Invalid Email": {
+			body:       `{"email":"notanemail"}`,
+			method:     http.MethodPost,
+			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			wantStatus: http.StatusBadRequest,
+		},
 		"Already Subscribed": {
 			body:   `{"email":"dupe@example.com"}`,
 			method: http.MethodPost,

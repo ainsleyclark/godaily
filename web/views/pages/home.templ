@@ -15,7 +15,9 @@ type HomeData struct {
 }
 
 templ Home(data HomeData) {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		CanonicalURL: "https://godaily.dev/",
+	}) {
 		@components.Header()
 		@components.Hero(data.Flash)
 		@components.Rule()

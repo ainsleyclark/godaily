@@ -25,7 +25,9 @@ import (
 )
 
 templ Unsubscribed() {
-	@layouts.Base() {
+	@layouts.Base(layouts.PageMeta{
+		Title: "Unsubscribed",
+	}) {
 		@components.Header()
 		<section class="thank-you">
 			<div class="thank-you__content">

@@ -49,7 +49,7 @@ import (
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
-func Unsubscribed() templ.Component {
+func Privacy() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -86,7 +86,7 @@ func Unsubscribed() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"thank-you\"><div class=\"thank-you__content\"><div class=\"thank-you__check\">✓</div><h1 class=\"thank-you__title\">You've been unsubscribed.</h1><p class=\"thank-you__lead\">Sorry to see you go! You won't receive any more digests.</p></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section privacy\"><div class=\"section__label\">Legal</div><h1 class=\"section__title\">Privacy Policy</h1><p class=\"section__sub\">Last updated: May 2026</p><div class=\"privacy__content\"><h2 class=\"privacy__heading\">What we collect</h2><p class=\"privacy__body\">We collect your email address when you subscribe to GoDaily. No other personal data is collected.</p><h2 class=\"privacy__heading\">How we use it</h2><p class=\"privacy__body\">Your email address is used solely to deliver the GoDaily digest. We do not share your data with third parties, sell mailing lists, or use it for advertising.</p><h2 class=\"privacy__heading\">Email delivery</h2><p class=\"privacy__body\">Digests are sent via <a class=\"privacy__link\" href=\"https://resend.com\">Resend</a>. Your address is stored in our database and passed to Resend only at send time.</p><h2 class=\"privacy__heading\">Unsubscribing</h2><p class=\"privacy__body\">Every digest contains an unsubscribe link. Clicking it removes your address immediately and permanently. You can also email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a> to request removal.</p><h2 class=\"privacy__heading\">Cookies &amp; tracking</h2><p class=\"privacy__body\">GoDaily does not use cookies, tracking pixels, or analytics of any kind.</p><h2 class=\"privacy__heading\">Contact</h2><p class=\"privacy__body\">Questions? Email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a>.</p></div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -97,7 +97,9 @@ func Unsubscribed() templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title: "Unsubscribed",
+			Title:        "Privacy Policy",
+			Description:  "How GoDaily collects and uses your personal data.",
+			CanonicalURL: "https://godaily.dev/privacy/",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

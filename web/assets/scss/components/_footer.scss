@@ -5,13 +5,28 @@
 	font-size: 0.83rem;
 	color: var(--text-3);
 
+	&__top {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		margin-bottom: 1rem;
+	}
+
 	&__brand {
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
 		color: var(--text);
 		font-weight: 700;
-		margin-bottom: 1rem;
+	}
+
+	&__nav {
+		display: flex;
+		gap: 1.25rem;
+		flex-wrap: wrap;
+		justify-content: center;
 	}
 
 	&__text {

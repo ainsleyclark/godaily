@@ -53,6 +53,10 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, outD
 		return errors.Wrap(err, "rendering unsubscribed page")
 	}
 
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "privacy"), pages.Privacy()); err != nil {
+		return errors.Wrap(err, "rendering privacy page")
+	}
+
 	fullIssues := make([]news.Issue, 0, len(w.Issues))
 	for _, issue := range w.Issues {
 		full, err := repo.Find(ctx, issue.ID)
