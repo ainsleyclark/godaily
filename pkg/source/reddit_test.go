@@ -53,6 +53,48 @@ const redditSelfPostResponse = `{
   }
 }`
 
+func TestRedditChild_ShouldInclude(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input redditChild
+		want  bool
+	}{
+		"Included": {
+			input: redditChild{Data: redditPost{Title: "New concurrency patterns in Go"}},
+			want:  true,
+		},
+		"Help in title": {
+			input: redditChild{Data: redditPost{Title: "Need help with goroutines"}},
+			want:  false,
+		},
+		"Feedback in title": {
+			input: redditChild{Data: redditPost{Title: "Feedback on my Go project"}},
+			want:  false,
+		},
+		"Feedback in body": {
+			input: redditChild{Data: redditPost{Title: "My new library", SelfText: "Please give me feedback on this."}},
+			want:  false,
+		},
+		"Feedback case insensitive title": {
+			input: redditChild{Data: redditPost{Title: "FEEDBACK wanted on my API design"}},
+			want:  false,
+		},
+		"Feedback case insensitive body": {
+			input: redditChild{Data: redditPost{Title: "Go microservices", SelfText: "Looking for FEEDBACK on the architecture."}},
+			want:  false,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := test.input.ShouldInclude()
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
 func TestReddit_Fetch(t *testing.T) {
 	t.Parallel()
 
