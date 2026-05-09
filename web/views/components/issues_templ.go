@@ -36,7 +36,7 @@ func Issues(issues []news.Issue) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"issues\" class=\"section issues\"><div class=\"section__label\">Browse the archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest — each one fully linked and readable.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"issues\" class=\"section issues\"><div class=\"section__label\">Browse the archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest. Each one fully linked and readable.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

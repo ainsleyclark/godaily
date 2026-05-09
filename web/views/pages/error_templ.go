@@ -22,7 +22,7 @@ type errorInfo struct {
 
 var errorMessages = map[int]errorInfo{
 	404: {"Route not found", "No handler is registered at this path. Head back to the homepage."},
-	500: {"Unexpected error", "We returned a non-nil error somewhere. We're on it — try again shortly."},
+	500: {"Unexpected error", "We returned a non-nil error somewhere. We're on it, try again shortly."},
 }
 
 func errorDetails(status int) errorInfo {

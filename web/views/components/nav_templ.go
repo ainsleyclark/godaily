@@ -15,11 +15,11 @@ type NavItem struct {
 
 var defaultNavItems = []NavItem{
 	{Label: "Subscribe", Href: "/#hero"},
-	{Label: "Features", Href: "#features"},
-	{Label: "Sources", Href: "#sources"},
-	{Label: "Latest", Href: "#latest"},
+	{Label: "Features", Href: "/#features"},
+	{Label: "Sources", Href: "/#sources"},
+	{Label: "Latest", Href: "/#latest"},
 	{Label: "Issues", Href: "/issues/"},
-	{Label: "Sample", Href: "#sample"},
+	{Label: "Sample", Href: "/#sample"},
 }
 
 func Nav() templ.Component {

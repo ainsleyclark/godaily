@@ -29,7 +29,7 @@ func Hero(flash string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"hero\" class=\"hero\"><div class=\"hero__content\"><div class=\"hero__badge\"><span class=\"hero__badge-dot\"></span> <span>Open source, built in Go</span></div><h1 class=\"hero__title\">Daily <span class=\"hero__title-accent\">Go</span> news,<br>straight to your inbox</h1><p class=\"hero__lead\">The best stories from the Go community, ranked and summarised — delivered before standup. Free, weekday mornings, no noise.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<section id=\"hero\" class=\"hero\"><div class=\"hero__content\"><div class=\"hero__badge\"><span class=\"hero__badge-dot\"></span> <span>Open source, built in Go</span></div><h1 class=\"hero__title\">Daily <span class=\"hero__title-accent\">Go</span> news,<br>straight to your inbox</h1><p class=\"hero__lead\">The best stories from the Go community, ranked and summarised, delivered before standup. Free, weekday mornings, no noise.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
