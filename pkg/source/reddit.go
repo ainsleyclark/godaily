@@ -74,13 +74,20 @@ func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
 	return ingest.TransformAll(ctx, listing.Data.Children), nil
 }
 
+// ShouldInclude reports whether the post should appear in the digest.
+// Posts whose title or body contains "help" or "feedback" are dropped.
+func (c redditChild) ShouldInclude() bool {
+	title := strings.ToLower(c.Data.Title)
+	body := strings.ToLower(c.Data.SelfText)
+	return !strings.Contains(title, "help") &&
+		!strings.Contains(title, "feedback") &&
+		!strings.Contains(body, "feedback")
+}
+
 // Transform maps a redditChild to a news.Item.
 //
 // Self-posts have a URL pointing back to reddit.com/r/… rather than an
 // external link. In that case we fall back to the full permalink.
-func (c redditChild) ShouldInclude() bool {
-	return !strings.Contains(strings.ToLower(c.Data.Title), "help")
-}
 
 // EnrichmentURL returns the external URL for crawler enrichment, or "" for
 // self-posts (which point back to reddit.com and have no useful meta tags).
