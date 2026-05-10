@@ -36,6 +36,10 @@ gen: # Runs all //go:generate
 	go generate ./...
 .PHONY: gen
 
+templ: # Runs templ generate
+	go tool templ generate ./...
+.PHONY: templ
+
 sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
 	sqlc generate
 .PHONY: sqlc
@@ -93,6 +97,7 @@ all: # Make format, lint and test
 	$(MAKE) lic
 	$(MAKE) format
 	$(MAKE) lint
+	$(MAKE) templ
 	$(MAKE) test-race
 	$(MAKE) vuln
 	$(MAKE) sec

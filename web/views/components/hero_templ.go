@@ -57,7 +57,7 @@ func Hero(flash string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"hero__sub\">Free forever. No spam. Unsubscribe any time.</p></div><div class=\"hero__visual\" aria-hidden=\"true\"><img class=\"hero__image\" src=\"/assets/images/hero-gopher.jpg\" alt=\"\"></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"hero__sub\">Free forever. No spam. Unsubscribe any time.</p></div><div class=\"hero__visual\" aria-hidden=\"true\"><img class=\"hero__image\" src=\"/assets/images/hero-gopher.png\" alt=\"\"></div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
