@@ -24,4 +24,5 @@ jobs:
           RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
+          API_SECRET: ${{ secrets.API_SECRET }}
         run: go run . migrate up
