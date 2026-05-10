@@ -12,7 +12,7 @@
 import * as esbuild from 'esbuild';
 import { copy } from 'esbuild-plugin-copy';
 import { sassPlugin } from 'esbuild-sass-plugin';
-// import copyAndConvertImages from './bin/images.mjs';
+import copyAndConvertImages from './bin/images.mjs';
 import { svgoPlugin } from './bin/svgo.mjs';
 
 const isProd = !process.argv.includes('--watch');
@@ -80,10 +80,6 @@ const options = {
 					from: ['./assets/images/**/*.svg'],
 					to: ['./images'],
 				},
-				{
-					from: ['./assets/images/**/*.jpg'],
-					to: ['./images'],
-				},
 			],
 		}),
 		svgoPlugin(),
@@ -95,9 +91,9 @@ const options = {
 (async () => {
 	// Check for watch flag in arguments
 	if (isProd) {
-		// if (!excludeImages) {
-		// 	await copyAndConvertImages('assets/images', 'dist/images');
-		// }
+		if (!excludeImages) {
+			await copyAndConvertImages('assets/images', 'dist/images');
+		}
 		await esbuild.build(options);
 	} else {
 		try {
