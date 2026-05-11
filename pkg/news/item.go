@@ -96,6 +96,20 @@ var SectionTags = []Tag{
 	TagTrending,
 }
 
+// NoLimit disables the per-section item cap when used in SectionLimits.
+const NoLimit = 0
+
+// SectionLimits caps the number of items shown per section in a digest.
+// Use NoLimit (0) for unlimited. Adjust these to tune digest density.
+var SectionLimits = map[Tag]int{
+	TagRelease:    5,
+	TagProposal:   NoLimit,
+	TagArticle:    8,
+	TagDiscussion: 8,
+	TagVideo:      10,
+	TagTrending:   5,
+}
+
 // Section returns the canonical section tag this tag renders under.
 // TagPodcast folds into TagVideo; the proposal-lifecycle tags fold into
 // TagProposal. Other tags return themselves.

@@ -133,6 +133,9 @@ func buildSections(sources []news.SourceItems) []emailSection {
 		sort.SliceStable(items, func(i, j int) bool {
 			return items[i].Score > items[j].Score
 		})
+		if limit := news.SectionLimits[tag]; limit > 0 && len(items) > limit {
+			items = items[:limit]
+		}
 		sec := emailSection{
 			Tag:    string(tag),
 			Title:  tag.Title(),

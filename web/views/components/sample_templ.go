@@ -200,6 +200,9 @@ func groupItemsBySection(items []news.Item) []sectionGroup {
 		sort.SliceStable(group, func(i, j int) bool {
 			return group[i].Score > group[j].Score
 		})
+		if limit := news.SectionLimits[tag]; limit > 0 && len(group) > limit {
+			group = group[:limit]
+		}
 		groups = append(groups, sectionGroup{tag: tag, items: group})
 	}
 	return groups
