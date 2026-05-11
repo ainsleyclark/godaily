@@ -47,7 +47,7 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, ass
 		return errors.Wrap(err, "creating output directory")
 	}
 
-	allIssues, err := repo.List(ctx)
+	allIssues, err := repo.List(ctx, news.ListOptions{})
 	if err != nil {
 		return errors.Wrap(err, "listing issues")
 	}

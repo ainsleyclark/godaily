@@ -23,6 +23,7 @@ import (
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -32,7 +33,7 @@ func Issues(a *godaily.App) webkit.Handler {
 	return func(c *webkit.Context) error {
 		ctx := c.Context()
 
-		issues, err := a.Repository.Issues.List(ctx)
+		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
 		if err != nil {
 			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}

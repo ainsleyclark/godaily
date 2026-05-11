@@ -1,0 +1,94 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+package api
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/news"
+)
+
+const (
+	defaultPage    int64 = 1
+	defaultPerPage int64 = 20
+	maxPerPage     int64 = 100
+)
+
+// paginatedResponse is the JSON envelope for paginated list endpoints.
+type paginatedResponse[T any] struct {
+	Data    []T   `json:"data"`
+	Page    int64 `json:"page"`
+	PerPage int64 `json:"per_page"`
+	Total   int64 `json:"total"`
+}
+
+// HandleIssues is the Vercel serverless function entry point for GET /api/issues.
+func HandleIssues(w http.ResponseWriter, r *http.Request) {
+	api.Limiter.Limit(handleIssues)(w, r)
+}
+
+func handleIssues(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	a := api.GetApp(ctx)
+
+	page := parseIntParam(r, "page", defaultPage)
+	perPage := parseIntParam(r, "per_page", defaultPerPage)
+
+	if page < 1 {
+		page = defaultPage
+	}
+	if perPage < 1 || perPage > maxPerPage {
+		perPage = defaultPerPage
+	}
+
+	total, err := a.Repository.Issues.Count(ctx)
+	if err != nil {
+		api.Error(w, http.StatusInternalServerError, "failed to count issues")
+		return
+	}
+
+	issues, err := a.Repository.Issues.List(ctx, news.ListOptions{Page: page, PerPage: perPage})
+	if err != nil {
+		api.Error(w, http.StatusInternalServerError, "failed to list issues")
+		return
+	}
+
+	api.JSON(w, http.StatusOK, paginatedResponse[news.Issue]{
+		Data:    issues,
+		Page:    page,
+		PerPage: perPage,
+		Total:   total,
+	})
+}
+
+func parseIntParam(r *http.Request, key string, fallback int64) int64 {
+	raw := r.URL.Query().Get(key)
+	if raw == "" {
+		return fallback
+	}
+	v, err := strconv.ParseInt(raw, 10, 64)
+	if err != nil {
+		return fallback
+	}
+	return v
+}
