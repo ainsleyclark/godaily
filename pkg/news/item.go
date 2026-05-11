@@ -96,6 +96,17 @@ var SectionTags = []Tag{
 	TagTrending,
 }
 
+// SectionLimits caps the number of items shown per section in a digest.
+// Zero means unlimited. Adjust these to tune digest density.
+var SectionLimits = map[Tag]int{
+	TagRelease:    5,
+	TagProposal:   4,
+	TagArticle:    8,
+	TagDiscussion: 5,
+	TagVideo:      4,
+	TagTrending:   5,
+}
+
 // Section returns the canonical section tag this tag renders under.
 // TagPodcast folds into TagVideo; the proposal-lifecycle tags fold into
 // TagProposal. Other tags return themselves.

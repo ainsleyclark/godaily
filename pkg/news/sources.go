@@ -237,20 +237,3 @@ var sourceShortLabels = map[Source]string{
 func (s Source) ShortLabel() string {
 	return sourceShortLabels[s]
 }
-
-var sourceItemLimits = map[Source]int{
-	SourceReddit:    5,
-	SourceAwesomeGo: 3,
-	SourceMedium:    3,
-	SourceYouTube:   0,
-	SourceGitHub:    0,
-}
-
-// ItemLimit returns the maximum number of items to display from this source.
-// Zero means no limit. Sources without an explicit entry default to 5.
-func (s Source) ItemLimit() int {
-	if limit, ok := sourceItemLimits[s]; ok {
-		return limit
-	}
-	return 5
-}
