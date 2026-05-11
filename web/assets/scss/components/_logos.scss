@@ -1,0 +1,40 @@
+@use '../abstracts/mixins' as *;
+
+@keyframes logo-ticker {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-50%); }
+}
+
+.logo-ticker {
+	overflow: hidden;
+	padding: 2.5rem 0;
+	mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+	-webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+.logo-ticker__track {
+	display: flex;
+	align-items: center;
+	gap: 4rem;
+	width: max-content;
+	animation: logo-ticker 30s linear infinite;
+
+	@media (prefers-reduced-motion: reduce) {
+		animation-play-state: paused;
+	}
+}
+
+.logo-ticker__img {
+	height: auto;
+	width: auto;
+	max-height: 36px;
+	max-width: 140px;
+	display: block;
+	flex-shrink: 0;
+	opacity: 0.75;
+	transition: opacity 0.2s ease;
+
+	&:hover {
+		opacity: 1;
+	}
+}
