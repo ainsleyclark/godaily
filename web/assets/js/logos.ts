@@ -6,8 +6,8 @@ export function initLogoTicker(): void {
 	new InfiniteMarquee({
 		element: el,
 		direction: 'left',
-		speed: 40000,
-		spaceBetween: '3.5rem',
+		speed: 50000,
+		spaceBetween: '4rem',
 		pauseOnHover: false,
 	});
 }
