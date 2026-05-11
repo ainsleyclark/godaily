@@ -22,7 +22,6 @@ package api
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
@@ -32,8 +31,8 @@ import (
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
 func HandleIssues(w http.ResponseWriter, r *http.Request) {
 	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		page := parseIntParam(r, "page", api.DefaultPage)
-		perPage := parseIntParam(r, "per_page", api.DefaultPerPage)
+		page := api.QueryInt(r, "page", api.DefaultPage)
+		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
 
 		if page < 1 {
 			page = api.DefaultPage
@@ -63,14 +62,3 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 	})(w, r)
 }
 
-func parseIntParam(r *http.Request, key string, fallback int64) int64 {
-	raw := r.URL.Query().Get(key)
-	if raw == "" {
-		return fallback
-	}
-	v, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil {
-		return fallback
-	}
-	return v
-}
