@@ -80,4 +80,46 @@ const (
 	TagVideo            Tag = "video"
 	TagPodcast          Tag = "podcast"
 	TagRelease          Tag = "release"
+	TagDiscussion       Tag = "discussion"
+	TagTrending         Tag = "trending"
 )
+
+// SectionTags lists the canonical section tags in display order. Each digest
+// section is keyed by one of these tags; other tags fold into one of them via
+// Tag.Section().
+var SectionTags = []Tag{
+	TagRelease,
+	TagProposal,
+	TagArticle,
+	TagDiscussion,
+	TagVideo,
+	TagTrending,
+}
+
+// Section returns the canonical section tag this tag renders under.
+// TagPodcast folds into TagVideo; the proposal-lifecycle tags fold into
+// TagProposal. Other tags return themselves.
+func (t Tag) Section() Tag {
+	switch t {
+	case TagPodcast:
+		return TagVideo
+	case TagProposalAccepted, TagProposalShipped:
+		return TagProposal
+	}
+	return t
+}
+
+var sectionTitles = map[Tag]string{
+	TagRelease:    "Releases",
+	TagProposal:   "Proposals",
+	TagArticle:    "Articles",
+	TagDiscussion: "Discussions",
+	TagVideo:      "Videos",
+	TagTrending:   "Trending",
+}
+
+// Title returns the display heading for a section tag. Defined for the six
+// canonical section tags; non-section tags resolve via Section() first.
+func (t Tag) Title() string {
+	return sectionTitles[t.Section()]
+}

@@ -103,7 +103,7 @@ func TestGitHubTrending_Fetch(t *testing.T) {
 				assert.Equal(t, &news.Author{Username: "gastownhall", ProfileURL: "https://github.com/gastownhall"}, first.Author)
 				assert.Equal(t, serverURL+"/gastownhall/beads", first.URL)
 				assert.Equal(t, "Beads - A memory upgrade for your coding agent", first.Snippet)
-				assert.Equal(t, news.TagArticle, first.Tag)
+				assert.Equal(t, news.TagTrending, first.Tag)
 				assert.Equal(t, expectedPublished, first.Published)
 				// 485 stars saturates the curve (sat=200) → engagement clamps to
 				// 1.0; default weight 1.0 → score 1.0.

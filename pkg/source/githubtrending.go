@@ -98,8 +98,8 @@ func (r trendingRepo) Transform() news.Item {
 			ProfileURL: "https://github.com/" + r.Author,
 		},
 		Snippet:   r.Description,
-		Tag:       news.TagArticle,
-		Score:     news.ScoreOf(news.SourceGitHubTrending, news.TagArticle, float64(r.StarsToday), true),
+		Tag:       news.TagTrending,
+		Score:     news.ScoreOf(news.SourceGitHubTrending, news.TagTrending, float64(r.StarsToday), true),
 		Published: r.Published,
 	}
 }

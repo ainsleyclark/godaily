@@ -1,14 +1,23 @@
 package components
 
-import "github.com/ainsleyclark/godaily/pkg/news"
+import (
+	"fmt"
 
-templ DigestSection(emoji string, title string, items []news.Item, ranked bool) {
-	<div class="email-preview__section-head">{ emoji + " " + title }</div>
-	for i, item := range items {
-		if ranked {
-			@DigestItem(item, i+1)
-		} else {
-			@DigestItem(item, 0)
+	"github.com/ainsleyclark/godaily/pkg/news"
+)
+
+// DigestSection renders a heading (accent bar + uppercase title + count) and
+// the section's items. The tag drives the per-section CSS class so the accent
+// colour can be themed without touching Go.
+templ DigestSection(tag news.Tag, items []news.Item) {
+	<section class={ "digest-section", "digest-section--" + string(tag) }>
+		<div class="digest-section__head">
+			<span class="digest-section__bar"></span>
+			<span class="digest-section__title">{ tag.Title() }</span>
+			<span class="digest-section__count">{ fmt.Sprintf("%d", len(items)) }</span>
+		</div>
+		for _, item := range items {
+			@DigestItem(item)
 		}
-	}
+	</section>
 }

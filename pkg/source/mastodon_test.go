@@ -75,9 +75,9 @@ func TestMastodon_Fetch(t *testing.T) {
 				assert.Equal(t, news.SourceMastodon, items[0].Source)
 				assert.Equal(t, "https://mastodon.world/@jobsfordevelopers/116481296525884754", items[0].URL)
 				assert.Equal(t, &news.Author{Name: "Jobs for Developers", Username: "jobsfordevelopers"}, items[0].Author)
-				assert.Equal(t, news.TagArticle, items[0].Tag)
+				assert.Equal(t, news.TagDiscussion, items[0].Tag)
 				assert.Equal(t,
-					news.ScoreOf(news.SourceMastodon, news.TagArticle, 5, true),
+					news.ScoreOf(news.SourceMastodon, news.TagDiscussion, 5, true),
 					items[0].Score)
 				assert.NotEmpty(t, items[0].Title)
 				// Second item carries an image attachment that becomes ImageURL.

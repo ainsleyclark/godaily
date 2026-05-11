@@ -109,8 +109,8 @@ func (t golangBridgeTopic) Transform() news.Item {
 		ImageURL:  img,
 		Author:    author,
 		Comments:  t.PostsCount,
-		Tag:       news.TagArticle,
-		Score:     news.ScoreOf(news.SourceGolangBridge, news.TagArticle, float64(t.Views), true),
+		Tag:       news.TagDiscussion,
+		Score:     news.ScoreOf(news.SourceGolangBridge, news.TagDiscussion, float64(t.Views), true),
 		Published: t.CreatedAt,
 	}
 }

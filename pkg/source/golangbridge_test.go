@@ -75,7 +75,7 @@ func TestGolangBridge_Fetch(t *testing.T) {
 					Title:     "An Unofficial Discourse User Reference Guide",
 					URL:       "https://forum.golangbridge.org/t/an-unofficial-discourse-user-reference-guide/9738",
 					Comments:  4,
-					Tag:       news.TagArticle,
+					Tag:       news.TagDiscussion,
 					Score:     1.0, // 13375 views saturates the curve; weight 1.0 * engagement 1.0
 					Published: time.Date(2018, time.July, 3, 7, 31, 23, 214000000, time.UTC),
 				}, items[0])

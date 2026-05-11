@@ -1,9 +1,25 @@
-{{ define "item-inner" }}
-<div style="font-size:14px;font-weight:600;margin-bottom:3px;line-height:1.4;">
-  <a href="{{ .URL }}" style="color:#1a7fa8;text-decoration:none;">{{ .Title }}</a>
-</div>
-{{ if .Meta }}<div style="font-size:11px;color:#6b9ab8;margin-bottom:4px;">{{ .Meta }}</div>{{ end }}
-{{ if .Snippet }}<div style="font-size:13px;color:#3a6880;line-height:1.55;margin:0;">{{ .Snippet }}</div>{{ end }}
+{{ define "item-row" }}
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;">
+  <tr>
+    <td width="44" valign="top" style="vertical-align:top;padding:0 12px 0 0;">
+      {{ if .MarkURL }}
+      <img src="{{ .MarkURL }}" alt="{{ .SourceNiceName }}" width="32" height="32" style="display:block;width:32px;height:32px;border-radius:6px;background:#eef5fb;">
+      {{ else }}
+      <div style="display:inline-block;min-width:32px;height:22px;padding:0 8px;border-radius:6px;background:#eef5fb;color:#0d2236;font-size:11px;font-weight:700;letter-spacing:0.04em;line-height:22px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">{{ .SourceLabel }}</div>
+      {{ end }}
+    </td>
+    <td valign="top" style="vertical-align:top;">
+      <div style="font-size:15px;font-weight:600;line-height:1.4;margin-bottom:4px;">
+        <a href="{{ .URL }}" style="color:#0d2236;text-decoration:none;">{{ .Title }}</a>
+      </div>
+      {{ if .Snippet }}<div style="font-size:13px;color:#3a6880;line-height:1.55;margin-bottom:6px;">{{ .Snippet }}</div>{{ end }}
+      {{ if .Meta }}<div style="font-size:11px;color:#6b9ab8;">{{ .Meta }}</div>{{ end }}
+    </td>
+    <td width="120" valign="top" align="right" style="vertical-align:top;padding-left:12px;">
+      <a href="{{ .URL }}" style="color:#1a7fa8;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;">Read on {{ .SourceNiceName }} &rarr;</a>
+    </td>
+  </tr>
+</table>
 {{ end }}
 {{ define "email-body" }}
 <!-- Header -->
@@ -19,23 +35,18 @@
 {{ range .Sections }}
 <tr>
   <td style="padding:0 32px 16px;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2aa8d8;padding-bottom:8px;margin:24px 0 0;border-bottom:1.5px solid #c8e9f6;">{{ .Emoji }}&nbsp;{{ .Title }}</div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin:24px 0 8px;">
+      <tr>
+        <td width="4" style="background:{{ .Accent }};width:4px;"></td>
+        <td style="padding:6px 12px;background:#f5fbff;">
+          <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:{{ .Accent }};">{{ .Title }}</span>
+          <span style="font-size:11px;font-weight:600;color:#6b9ab8;margin-left:8px;">{{ .Count }}</span>
+        </td>
+      </tr>
+    </table>
     {{ range .Items }}
     <div style="padding:14px 0;border-bottom:1px solid #d0e8f5;">
-      {{ if .Rank }}
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-        <tr>
-          <td width="32" valign="top" style="padding-right:10px;vertical-align:top;">
-            <div style="width:22px;height:22px;border-radius:50%;background:#c8e9f6;color:#1a7fa8;font-size:11px;font-weight:700;text-align:center;line-height:22px;margin-top:2px;">{{ .Rank }}</div>
-          </td>
-          <td valign="top" style="vertical-align:top;">
-            {{ template "item-inner" . }}
-          </td>
-        </tr>
-      </table>
-      {{ else }}
-      {{ template "item-inner" . }}
-      {{ end }}
+      {{ template "item-row" . }}
     </div>
     {{ end }}
   </td>
