@@ -44,41 +44,39 @@ type paginatedResponse[T any] struct {
 
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
 func HandleIssues(w http.ResponseWriter, r *http.Request) {
-	api.Limiter.Limit(handleIssues)(w, r)
-}
+	api.Handle(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		a := api.GetApp(ctx)
 
-func handleIssues(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
+		page := parseIntParam(r, "page", defaultPage)
+		perPage := parseIntParam(r, "per_page", defaultPerPage)
 
-	page := parseIntParam(r, "page", defaultPage)
-	perPage := parseIntParam(r, "per_page", defaultPerPage)
+		if page < 1 {
+			page = defaultPage
+		}
+		if perPage < 1 || perPage > maxPerPage {
+			perPage = defaultPerPage
+		}
 
-	if page < 1 {
-		page = defaultPage
-	}
-	if perPage < 1 || perPage > maxPerPage {
-		perPage = defaultPerPage
-	}
+		total, err := a.Repository.Issues.Count(ctx)
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to count issues")
+			return
+		}
 
-	total, err := a.Repository.Issues.Count(ctx)
-	if err != nil {
-		api.Error(w, http.StatusInternalServerError, "failed to count issues")
-		return
-	}
+		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{Page: page, PerPage: perPage})
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to list issues")
+			return
+		}
 
-	issues, err := a.Repository.Issues.List(ctx, news.ListOptions{Page: page, PerPage: perPage})
-	if err != nil {
-		api.Error(w, http.StatusInternalServerError, "failed to list issues")
-		return
-	}
-
-	api.JSON(w, http.StatusOK, paginatedResponse[news.Issue]{
-		Data:    issues,
-		Page:    page,
-		PerPage: perPage,
-		Total:   total,
-	})
+		api.JSON(w, http.StatusOK, paginatedResponse[news.Issue]{
+			Data:    issues,
+			Page:    page,
+			PerPage: perPage,
+			Total:   total,
+		})
+	})(w, r)
 }
 
 func parseIntParam(r *http.Request, key string, fallback int64) int64 {

@@ -28,9 +28,7 @@ import (
 
 // HandleHealthz is the Vercel serverless function entry point for GET /api/healthz.
 func HandleHealthz(w http.ResponseWriter, r *http.Request) {
-	api.Limiter.Limit(handleHealthz)(w, r)
-}
-
-func handleHealthz(w http.ResponseWriter, _ *http.Request) {
-	api.OK(w)
+	api.Handle(func(w http.ResponseWriter, _ *http.Request) {
+		api.OK(w)
+	})(w, r)
 }

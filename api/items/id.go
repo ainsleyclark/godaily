@@ -32,34 +32,32 @@ import (
 // Handler is the Vercel serverless function entry point for GET /api/items/{id}.
 // The id path segment is injected by Vercel as the "id" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Limiter.Limit(handleItemByID)(w, r)
-}
+	api.Handle(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		a := api.GetApp(ctx)
 
-func handleItemByID(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	raw := r.URL.Query().Get("id")
-	if raw == "" {
-		api.Error(w, http.StatusBadRequest, "id is required")
-		return
-	}
-
-	id, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil || id < 1 {
-		api.Error(w, http.StatusBadRequest, "id must be a positive integer")
-		return
-	}
-
-	item, err := a.Repository.Items.Find(ctx, id)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			api.Error(w, http.StatusNotFound, "item not found")
+		raw := r.URL.Query().Get("id")
+		if raw == "" {
+			api.Error(w, http.StatusBadRequest, "id is required")
 			return
 		}
-		api.Error(w, http.StatusInternalServerError, "failed to fetch item")
-		return
-	}
 
-	api.JSON(w, http.StatusOK, item)
+		id, err := strconv.ParseInt(raw, 10, 64)
+		if err != nil || id < 1 {
+			api.Error(w, http.StatusBadRequest, "id must be a positive integer")
+			return
+		}
+
+		item, err := a.Repository.Items.Find(ctx, id)
+		if err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				api.Error(w, http.StatusNotFound, "item not found")
+				return
+			}
+			api.Error(w, http.StatusInternalServerError, "failed to fetch item")
+			return
+		}
+
+		api.JSON(w, http.StatusOK, item)
+	})(w, r)
 }

@@ -28,6 +28,12 @@ import (
 	"golang.org/x/time/rate"
 )
 
+// Handle applies the standard API middleware chain to next.
+// All public API handlers must be wrapped with this function.
+func Handle(next http.HandlerFunc) http.HandlerFunc {
+	return Limiter.Limit(next)
+}
+
 // Limiter is the shared rate limiter for public API endpoints.
 // Allows 1 request per second with a burst of 10 per unique client IP.
 var Limiter = NewRateLimiter(1, 10)

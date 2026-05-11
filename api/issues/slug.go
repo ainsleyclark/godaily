@@ -31,28 +31,26 @@ import (
 // Handler is the Vercel serverless function entry point for GET /api/issues/{slug}.
 // The slug path segment is injected by Vercel as the "slug" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Limiter.Limit(handleIssueBySlug)(w, r)
-}
+	api.Handle(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		a := api.GetApp(ctx)
 
-func handleIssueBySlug(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	slug := r.URL.Query().Get("slug")
-	if slug == "" {
-		api.Error(w, http.StatusBadRequest, "slug is required")
-		return
-	}
-
-	issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			api.Error(w, http.StatusNotFound, "issue not found")
+		slug := r.URL.Query().Get("slug")
+		if slug == "" {
+			api.Error(w, http.StatusBadRequest, "slug is required")
 			return
 		}
-		api.Error(w, http.StatusInternalServerError, "failed to fetch issue")
-		return
-	}
 
-	api.JSON(w, http.StatusOK, issue)
+		issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
+		if err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				api.Error(w, http.StatusNotFound, "issue not found")
+				return
+			}
+			api.Error(w, http.StatusInternalServerError, "failed to fetch issue")
+			return
+		}
+
+		api.JSON(w, http.StatusOK, issue)
+	})(w, r)
 }
