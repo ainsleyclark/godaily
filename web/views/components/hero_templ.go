@@ -83,7 +83,7 @@ func Hero(flash string, subscriberCount int64) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><div class=\"hero__visual\" aria-hidden=\"true\"><img class=\"hero__image\" src=\"/assets/images/hero-gopher.png\" alt=\"\"></div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><div class=\"hero__visual\" aria-hidden=\"true\"><picture><source media=\"(max-width: 900px)\" srcset=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\"><img class=\"hero__image\" src=\"/assets/images/hero-gopher.png\" alt=\"\"></picture></div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
