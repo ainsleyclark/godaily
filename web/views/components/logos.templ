@@ -1,18 +1,29 @@
 package components
 
+type logoEntry struct {
+	src string
+	alt string
+}
+
+var logoItems = []logoEntry{
+	{"/assets/images/logos/go.svg", "Go"},
+	{"/assets/images/logos/github.svg", "GitHub"},
+	{"/assets/images/logos/jetbrains.svg", "JetBrains"},
+	{"/assets/images/logos/reddit.svg", "Reddit"},
+	{"/assets/images/logos/devto.svg", "DEV.to"},
+	{"/assets/images/logos/medium.svg", "Medium"},
+	{"/assets/images/logos/goland.svg", "GoLand"},
+	{"/assets/images/logos/youtube.svg", "YouTube"},
+	{"/assets/images/logos/ardanlabs_podcast.svg", "Ardan Labs Podcast"},
+	{"/assets/images/logos/mastodon.svg", "Mastodon"},
+	{"/assets/images/logos/golang-bridge.png", "Golang Bridge"},
+	{"/assets/images/logos/hacker-news.svg", "Hacker News"},
+}
+
 templ Logos() {
 	<div class="logo-ticker" aria-hidden="true">
-		<img class="logo-ticker__img" src="/assets/images/logos/go.svg" alt="Go"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/github.svg" alt="GitHub"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/jetbrains.svg" alt="JetBrains"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/reddit.svg" alt="Reddit"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/devto.svg" alt="DEV.to"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/medium.svg" alt="Medium"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/goland.svg" alt="GoLand"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/youtube.svg" alt="YouTube"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/ardanlabs_podcast.svg" alt="Ardan Labs Podcast"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/mastodon.svg" alt="Mastodon"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/golang-bridge.png" alt="Golang Bridge"/>
-		<img class="logo-ticker__img" src="/assets/images/logos/hacker-news.svg" alt="Hacker News"/>
+		for _, l := range logoItems {
+			<img class="logo-ticker__img" src={ l.src } alt={ l.alt }/>
+		}
 	</div>
 }

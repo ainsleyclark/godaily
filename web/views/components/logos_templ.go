@@ -8,6 +8,26 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+type logoEntry struct {
+	src string
+	alt string
+}
+
+var logoItems = []logoEntry{
+	{"/assets/images/logos/go.svg", "Go"},
+	{"/assets/images/logos/github.svg", "GitHub"},
+	{"/assets/images/logos/jetbrains.svg", "JetBrains"},
+	{"/assets/images/logos/reddit.svg", "Reddit"},
+	{"/assets/images/logos/devto.svg", "DEV.to"},
+	{"/assets/images/logos/medium.svg", "Medium"},
+	{"/assets/images/logos/goland.svg", "GoLand"},
+	{"/assets/images/logos/youtube.svg", "YouTube"},
+	{"/assets/images/logos/ardanlabs_podcast.svg", "Ardan Labs Podcast"},
+	{"/assets/images/logos/mastodon.svg", "Mastodon"},
+	{"/assets/images/logos/golang-bridge.png", "Golang Bridge"},
+	{"/assets/images/logos/hacker-news.svg", "Hacker News"},
+}
+
 func Logos() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -29,7 +49,43 @@ func Logos() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"logo-ticker\" aria-hidden=\"true\"><img class=\"logo-ticker__img\" src=\"/assets/images/logos/go.svg\" alt=\"Go\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/github.svg\" alt=\"GitHub\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/jetbrains.svg\" alt=\"JetBrains\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/reddit.svg\" alt=\"Reddit\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/devto.svg\" alt=\"DEV.to\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/medium.svg\" alt=\"Medium\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/goland.svg\" alt=\"GoLand\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/youtube.svg\" alt=\"YouTube\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/ardanlabs_podcast.svg\" alt=\"Ardan Labs Podcast\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/mastodon.svg\" alt=\"Mastodon\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/golang-bridge.png\" alt=\"Golang Bridge\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/hacker-news.svg\" alt=\"Hacker News\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"logo-ticker\" aria-hidden=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for _, l := range logoItems {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<img class=\"logo-ticker__img\" src=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(l.src)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/logos.templ`, Line: 26, Col: 44}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" alt=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(l.alt)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/logos.templ`, Line: 26, Col: 58}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
