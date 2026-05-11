@@ -3,8 +3,12 @@ package components
 templ Logos() {
 	<div class="logo-ticker" aria-hidden="true">
 		<div class="logo-ticker__track">
-			@logoSet()
-			@logoSet()
+			<div class="logo-ticker__set">
+				@logoSet()
+			</div>
+			<div class="logo-ticker__set">
+				@logoSet()
+			</div>
 		</div>
 	</div>
 }

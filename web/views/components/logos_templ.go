@@ -29,7 +29,7 @@ func Logos() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"logo-ticker\" aria-hidden=\"true\"><div class=\"logo-ticker__track\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"logo-ticker\" aria-hidden=\"true\"><div class=\"logo-ticker__track\"><div class=\"logo-ticker__set\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,11 +37,15 @@ func Logos() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"logo-ticker__set\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = logoSet().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -70,7 +74,7 @@ func logoSet() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<img class=\"logo-ticker__img\" src=\"/assets/images/logos/go.svg\" alt=\"Go\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/github.svg\" alt=\"GitHub\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/hacker-news.svg\" alt=\"Hacker News\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/reddit.svg\" alt=\"Reddit\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/devto.svg\" alt=\"DEV.to\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/medium.svg\" alt=\"Medium\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/youtube.svg\" alt=\"YouTube\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/jetbrains.svg\" alt=\"JetBrains\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/goland.svg\" alt=\"GoLand\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/ardanlabs_podcast.svg\" alt=\"Ardan Labs Podcast\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/mastodon.svg\" alt=\"Mastodon\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/golang-bridge.png\" alt=\"Golang Bridge\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<img class=\"logo-ticker__img\" src=\"/assets/images/logos/go.svg\" alt=\"Go\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/github.svg\" alt=\"GitHub\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/hacker-news.svg\" alt=\"Hacker News\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/reddit.svg\" alt=\"Reddit\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/devto.svg\" alt=\"DEV.to\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/medium.svg\" alt=\"Medium\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/youtube.svg\" alt=\"YouTube\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/jetbrains.svg\" alt=\"JetBrains\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/goland.svg\" alt=\"GoLand\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/ardanlabs_podcast.svg\" alt=\"Ardan Labs Podcast\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/mastodon.svg\" alt=\"Mastodon\"> <img class=\"logo-ticker__img\" src=\"/assets/images/logos/golang-bridge.png\" alt=\"Golang Bridge\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
