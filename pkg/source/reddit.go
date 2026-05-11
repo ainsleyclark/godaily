@@ -114,9 +114,9 @@ func (c redditChild) Transform() news.Item {
 			ProfileURL: "https://www.reddit.com/user/" + p.Author,
 		},
 		Snippet:   p.SelfText,
-		Tag:       news.TagArticle,
+		Tag:       news.TagDiscussion,
 		Comments:  p.NumComments,
-		Score:     news.ScoreOf(news.SourceReddit, news.TagArticle, float64(p.Score), true),
+		Score:     news.ScoreOf(news.SourceReddit, news.TagDiscussion, float64(p.Score), true),
 		Published: time.Unix(int64(p.CreatedUTC), 0).UTC(),
 	}
 }

@@ -94,7 +94,7 @@ func TestLobsters_Fetch(t *testing.T) {
 					URL:         serverURL,
 					OriginalURL: "https://lobste.rs/s/2lzsw6/swissing_table",
 					Author:      &news.Author{Username: "carlana", ProfileURL: "https://lobste.rs/u/carlana"},
-					Tag:         news.TagArticle,
+					Tag:         news.TagDiscussion,
 					Comments:    4,
 					Score:       0.9042486604437607, // log(35)/log(51); weight 1.0 * engagement
 					Published:   time.Date(2026, 4, 26, 14, 19, 13, 0, time.UTC),

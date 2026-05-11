@@ -140,7 +140,7 @@ func TestReddit_Fetch(t *testing.T) {
 					URL:       "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
 					Author:    &news.Author{Username: "AutoModerator", ProfileURL: "https://www.reddit.com/user/AutoModerator"},
 					Snippet:   "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
-					Tag:       news.TagArticle,
+					Tag:       news.TagDiscussion,
 					Comments:  0,
 					Score:     0.23804628387473528, // 2 score: log(3)/log(101); weight 1.0
 					Published: time.Date(2026, 4, 27, 19, 0, 54, 0, time.UTC),

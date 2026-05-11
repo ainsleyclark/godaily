@@ -31,6 +31,7 @@ type Item struct {
 	Score            sql.NullFloat64 `json:"score"`
 	Summary          sql.NullString  `json:"summary"`
 	Position         int64           `json:"position"`
+	Tag              string          `json:"tag"`
 }
 
 type Subscriber struct {

@@ -94,9 +94,9 @@ func (s mastodonStatus) Transform() news.Item {
 		},
 		Snippet:   s.Content,
 		ImageURL:  img,
-		Tag:       news.TagArticle,
+		Tag:       news.TagDiscussion,
 		Comments:  s.RepliesCount,
-		Score:     news.ScoreOf(news.SourceMastodon, news.TagArticle, float64(s.FavouritesCount), true),
+		Score:     news.ScoreOf(news.SourceMastodon, news.TagDiscussion, float64(s.FavouritesCount), true),
 		Published: s.CreatedAt,
 	}
 }

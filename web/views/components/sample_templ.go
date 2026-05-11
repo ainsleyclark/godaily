@@ -163,8 +163,8 @@ func sampleInner(issue news.Issue) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, group := range groupItemsBySource(issue.Items) {
-			templ_7745c5c3_Err = DigestSection(group.emoji, group.title, group.items, group.ranked).Render(ctx, templ_7745c5c3_Buffer)
+		for _, group := range groupItemsBySection(issue.Items) {
+			templ_7745c5c3_Err = DigestSection(group.tag, group.items).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -177,37 +177,30 @@ func sampleInner(issue news.Issue) templ.Component {
 	})
 }
 
-type sampleGroup struct {
-	emoji  string
-	title  string
-	items  []news.Item
-	ranked bool
+type sectionGroup struct {
+	tag   news.Tag
+	items []news.Item
 }
 
-func groupItemsBySource(items []news.Item) []sampleGroup {
-	bySource := map[news.Source][]news.Item{}
-	order := []news.Source{}
+// groupItemsBySection buckets items by their canonical section tag and emits
+// non-empty groups in news.SectionTags order. Items within a group are sorted
+// by score so the strongest signal across all sources lands at the top.
+func groupItemsBySection(items []news.Item) []sectionGroup {
+	bucket := map[news.Tag][]news.Item{}
 	for _, item := range items {
-		if _, seen := bySource[item.Source]; !seen {
-			order = append(order, item.Source)
-		}
-		bySource[item.Source] = append(bySource[item.Source], item)
+		section := item.Tag.Section()
+		bucket[section] = append(bucket[section], item)
 	}
-	sort.Slice(order, func(i, j int) bool {
-		return order[i].Priority() > order[j].Priority()
-	})
-	groups := make([]sampleGroup, 0, len(order))
-	for _, src := range order {
-		srcItems := bySource[src]
-		if limit := src.ItemLimit(); limit > 0 && len(srcItems) > limit {
-			srcItems = srcItems[:limit]
+	groups := make([]sectionGroup, 0, len(news.SectionTags))
+	for _, tag := range news.SectionTags {
+		group := bucket[tag]
+		if len(group) == 0 {
+			continue
 		}
-		groups = append(groups, sampleGroup{
-			emoji:  src.Emoji(),
-			title:  src.NiceName(),
-			items:  srcItems,
-			ranked: src.IsRanked(),
+		sort.SliceStable(group, func(i, j int) bool {
+			return group[i].Score > group[j].Score
 		})
+		groups = append(groups, sectionGroup{tag: tag, items: group})
 	}
 	return groups
 }

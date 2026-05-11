@@ -1,15 +1,15 @@
 version: "2"
 sql:
   - engine: "sqlite"
-    schema: "internal/db/migrations"
+    schema: "pkg/db/migrations"
     queries:
-      - "internal/store/issues/query.sql"
-      - "internal/store/items/query.sql"
-      - "internal/store/subscribers/query.sql"
+      - "pkg/store/issues/query.sql"
+      - "pkg/store/items/query.sql"
+      - "pkg/store/subscribers/query.sql"
     gen:
       go:
         package: "sqlc"
-        out: "internal/store/internal/sqlc"
+        out: "pkg/store/internal/sqlc"
         sql_package: "database/sql"
         emit_json_tags: true
         emit_interface: false

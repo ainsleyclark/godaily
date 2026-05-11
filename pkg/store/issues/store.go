@@ -171,6 +171,7 @@ func transformItem(i sqlc.Item) news.Item {
 	out := news.Item{
 		ID:      i.ID,
 		Source:  news.Source(i.Source),
+		Tag:     news.Tag(i.Tag),
 		Title:   i.Title,
 		URL:     i.Url,
 		Snippet: i.Summary.String,

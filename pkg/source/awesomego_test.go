@@ -79,7 +79,7 @@ func TestAwesomeGo_Fetch(t *testing.T) {
 					Title:     "Add lynxdb to databases (#6282)",
 					URL:       "https://github.com/avelino/awesome-go/commit/05a987517e34d76afbd22d3460f7c5359fbee3b1",
 					Author:    &news.Author{Name: "Evgenii Orlov"},
-					Tag:       news.TagArticle,
+					Tag:       news.TagTrending,
 					Score:     0.5, // weight 1.0 * constantNoSignal 0.5
 					Published: time.Date(2026, time.April, 27, 8, 30, 23, 0, time.UTC),
 				}, items[0])

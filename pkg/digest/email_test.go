@@ -21,6 +21,7 @@ package digest
 
 import (
 	htmltemplate "html/template"
+	"strings"
 	"testing"
 	texttemplate "text/template"
 	"time"
@@ -40,9 +41,11 @@ var sendDigestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)
 func sampleSections() []news.SourceItems {
 	return []news.SourceItems{
 		{
-			Source: news.SourceHN, // ranked source to exercise the rank badge path
+			Source: news.SourceHN,
 			Items: []news.Item{
 				{
+					Source:    news.SourceHN,
+					Tag:       news.TagDiscussion,
 					Title:     "hello",
 					URL:       "https://example.com",
 					Score:     42,
@@ -54,6 +57,8 @@ func sampleSections() []news.SourceItems {
 		{
 			Source: news.SourceDevTo,
 			Items: []news.Item{{
+				Source:    news.SourceDevTo,
+				Tag:       news.TagArticle,
 				Title:     "world",
 				URL:       "https://dev.to/world",
 				Author:    &news.Author{Name: "gopher"},
@@ -72,6 +77,57 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.Text, "hello")
 		assert.Contains(t, got.HTML, "42 pts")
 		assert.Contains(t, got.HTML, "7 comments")
+		// Each item should advertise its source via the "Read on" link and
+		// the inline mark image (HN has a mark file registered).
+		assert.Contains(t, got.HTML, "Read on Hacker News")
+		assert.Contains(t, got.HTML, "/assets/images/marks/hacker_news.svg")
+	})
+
+	t.Run("Groups By Section", func(t *testing.T) {
+		// Two sources, two different sections — HN under Discussions and
+		// Go Blog under Articles — must produce two section headings and
+		// the section title in the rendered output.
+		sources := []news.SourceItems{
+			{Source: news.SourceHN, Items: []news.Item{{
+				Source: news.SourceHN, Tag: news.TagDiscussion,
+				Title: "discuss-me", URL: "https://example.com/d",
+				Score: 12, Published: sendDigestDay.Add(time.Hour),
+			}}},
+			{Source: news.SourceGoBlog, Items: []news.Item{{
+				Source: news.SourceGoBlog, Tag: news.TagArticle,
+				Title: "article-me", URL: "https://go.dev/blog/a",
+				Score: 4, Published: sendDigestDay.Add(time.Hour),
+			}}},
+		}
+		got, err := renderDigest(sendDigestDay, sources, "")
+		require.NoError(t, err)
+		assert.Contains(t, got.HTML, "Discussions")
+		assert.Contains(t, got.HTML, "Articles")
+		assert.Contains(t, got.HTML, "discuss-me")
+		assert.Contains(t, got.HTML, "article-me")
+		// Order: Articles (3rd in SectionTags) must appear after... no:
+		// SectionTags = [Release, Proposal, Article, Discussion, Video, Trending],
+		// so Articles renders before Discussions.
+		idxArticles := strings.Index(got.HTML, "Articles")
+		idxDiscussions := strings.Index(got.HTML, "Discussions")
+		assert.Less(t, idxArticles, idxDiscussions, "Articles section should render before Discussions")
+	})
+
+	t.Run("Skips Empty Sections", func(t *testing.T) {
+		// Only a release item — no other section headings should appear.
+		sources := []news.SourceItems{
+			{Source: news.SourceGoRelease, Items: []news.Item{{
+				Source: news.SourceGoRelease, Tag: news.TagRelease,
+				Title: "Go 1.23 RC1", URL: "https://go.dev/x",
+				Score: 4, Published: sendDigestDay.Add(time.Hour),
+			}}},
+		}
+		got, err := renderDigest(sendDigestDay, sources, "")
+		require.NoError(t, err)
+		assert.Contains(t, got.HTML, "Releases")
+		assert.NotContains(t, got.HTML, "Discussions")
+		assert.NotContains(t, got.HTML, "Articles")
+		assert.NotContains(t, got.HTML, "Trending")
 	})
 
 	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl

@@ -190,6 +190,54 @@ func (s Source) IsRanked() bool {
 	return s == SourceHN || s == SourceLobsters || s == SourceReddit
 }
 
+var sourceMarkURLs = map[Source]string{
+	SourceArdanLabs:    "/assets/images/marks/ardanlabs_podcast.svg",
+	SourceDevTo:        "/assets/images/marks/dev_to.svg",
+	SourceGitHub:       "/assets/images/marks/github.svg",
+	SourceGoBlog:       "/assets/images/marks/go_blog.svg",
+	SourceGoPodcast:    "/assets/images/marks/go_podcast.png",
+	SourceGolangBridge: "/assets/images/marks/golangbridge.png",
+	SourceHN:           "/assets/images/marks/hacker_news.svg",
+	SourceJetBrains:    "/assets/images/marks/goland.svg",
+	SourceLobsters:     "/assets/images/marks/lobsters.png",
+	SourceMastodon:     "/assets/images/marks/mastodon.svg",
+	SourceMedium:       "/assets/images/marks/medium.svg",
+	SourceReddit:       "/assets/images/marks/reddit.svg",
+	SourceYouTube:      "/assets/images/marks/youtube.svg",
+}
+
+// MarkURL returns the public path of the source's mark/logo asset, or ""
+// when no mark file is registered (caller should fall back to ShortLabel).
+func (s Source) MarkURL() string {
+	return sourceMarkURLs[s]
+}
+
+var sourceShortLabels = map[Source]string{
+	SourceArdanLabs:      "AL",
+	SourceAwesomeGo:      "AG",
+	SourceDevTo:          "DEV",
+	SourceFallthrough:    "FT",
+	SourceGitHub:         "GH",
+	SourceGitHubTrending: "GH",
+	SourceGoBlog:         "go",
+	SourceGoPodcast:      "GP",
+	SourceGoRelease:      "go",
+	SourceGolangBridge:   "GB",
+	SourceHN:             "HN",
+	SourceJetBrains:      "JB",
+	SourceLobsters:       "LO",
+	SourceMastodon:       "M",
+	SourceMedium:         "M",
+	SourceReddit:         "r/",
+	SourceYouTube:        "YT",
+}
+
+// ShortLabel returns the 2–3 character chip rendered when a mark is absent,
+// and also used as the alt text alongside a mark.
+func (s Source) ShortLabel() string {
+	return sourceShortLabels[s]
+}
+
 var sourceItemLimits = map[Source]int{
 	SourceReddit:    5,
 	SourceAwesomeGo: 3,

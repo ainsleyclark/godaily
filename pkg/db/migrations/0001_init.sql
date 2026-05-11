@@ -15,6 +15,7 @@ CREATE TABLE items (
     source             TEXT NOT NULL,
     title              TEXT NOT NULL,
     url                TEXT NOT NULL,
+    tag                TEXT NOT NULL,
     author_name        TEXT,
     author_username    TEXT,
     author_avatar_url  TEXT,

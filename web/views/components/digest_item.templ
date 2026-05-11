@@ -2,30 +2,46 @@ package components
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-templ DigestItem(item news.Item, rank int) {
-	<div class="digest-item">
-		if rank > 0 {
-			<div class="digest-item__row">
-				<span class="digest-item__rank">{ fmt.Sprintf("%d", rank) }</span>
-				<div class="digest-item__content">
-					@digestItemInner(item)
-				</div>
-			</div>
-		} else {
-			@digestItemInner(item)
-		}
-	</div>
+// DigestItem renders a single news item row: source mark/chip on the left,
+// title + snippet + meta in the centre, "Read on … →" link on the right.
+templ DigestItem(item news.Item) {
+	<article class="digest-item">
+		<div class="digest-item__badge">
+			@SourceMark(item.Source)
+		</div>
+		<div class="digest-item__body">
+			<a class="digest-item__title" href={ templ.URL(item.URL) } target="_blank" rel="noopener noreferrer">{ item.Title }</a>
+			if item.Snippet != "" {
+				<p class="digest-item__summary">{ item.Snippet }</p>
+			}
+			if meta := digestItemMeta(item); meta != "" {
+				<div class="digest-item__meta">{ meta }</div>
+			}
+		</div>
+		<a class="digest-item__readon" href={ templ.URL(item.URL) } target="_blank" rel="noopener noreferrer">
+			Read on { item.Source.NiceName() }
+			<span aria-hidden="true">&nbsp;&rarr;</span>
+		</a>
+	</article>
 }
 
-templ digestItemInner(item news.Item) {
-	<div class="digest-item__title">
-		<a href={ templ.URL(item.URL) } target="_blank" rel="noopener noreferrer">{ item.Title }</a>
-	</div>
-	if item.Snippet != "" {
-		<div class="digest-item__summary">{ item.Snippet }</div>
+// digestItemMeta builds the small dim line under an item: author, score, and
+// comment count when present.
+func digestItemMeta(item news.Item) string {
+	parts := []string{}
+	if author := item.Author.String(); author != "" {
+		parts = append(parts, author)
 	}
+	if item.Score > 0 {
+		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
+	}
+	if item.Comments > 0 {
+		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
+	}
+	return strings.Join(parts, " · ")
 }

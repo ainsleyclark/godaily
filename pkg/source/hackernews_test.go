@@ -136,7 +136,7 @@ func TestHackerNews_Fetch(t *testing.T) {
 					URL:         serverURL,
 					OriginalURL: "https://news.ycombinator.com/item?id=47912690",
 					Author:      &news.Author{Username: "ichihiroy", ProfileURL: "https://news.ycombinator.com/user?id=ichihiroy"},
-					Tag:         news.TagArticle,
+					Tag:         news.TagDiscussion,
 					Comments:    0,
 					Score:       0.4230994425333170, // 3 points: log(4)/log(101); weight 1.2
 					Published:   time.Date(2026, time.April, 26, 18, 40, 36, 0, time.UTC),

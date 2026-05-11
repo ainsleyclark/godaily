@@ -1,0 +1,14 @@
+package components
+
+import "github.com/ainsleyclark/godaily/pkg/news"
+
+// SourceMark renders the per-item source badge: a small image when a mark
+// file is registered on the source, or a text chip otherwise. Mark/label
+// data is owned by pkg/news (Source.MarkURL / Source.ShortLabel).
+templ SourceMark(src news.Source) {
+	if file := src.MarkURL(); file != "" {
+		<img class="digest-item__mark" src={ file } alt={ src.ShortLabel() } width="20" height="20"/>
+	} else {
+		<span class="digest-item__chip">{ src.ShortLabel() }</span>
+	}
+}

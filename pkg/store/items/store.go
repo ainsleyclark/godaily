@@ -77,6 +77,7 @@ func (s Store) Create(ctx context.Context, issueID int64, position int, item new
 	created, err := s.sqlc.ItemCreate(ctx, sqlc.ItemCreateParams{
 		IssueID:          issueID,
 		Source:           item.Source.String(),
+		Tag:              string(item.Tag),
 		Title:            item.Title,
 		Url:              item.URL,
 		AuthorName:       name,
@@ -102,6 +103,7 @@ func transformItem(i sqlc.Item) news.Item {
 	out := news.Item{
 		ID:      i.ID,
 		Source:  news.Source(i.Source),
+		Tag:     news.Tag(i.Tag),
 		Title:   i.Title,
 		URL:     i.Url,
 		Snippet: i.Summary.String,

@@ -24,6 +24,7 @@ import (
 	"context"
 	"fmt"
 	htmltemplate "html/template"
+	"sort"
 	"strings"
 	texttemplate "text/template"
 	"time"
@@ -40,18 +41,35 @@ var (
 	textTmpl = texttemplate.Must(texttemplate.New("digest-text").Parse(templates.EmailLayoutText + templates.EmailText))
 )
 
+// Per-section accent colours used in the email HTML. Inline styles only —
+// most email clients strip <style> blocks, so colour is passed through the
+// template rather than driven from a CSS class.
+var sectionAccents = map[news.Tag]string{
+	news.TagRelease:    "#9333ea",
+	news.TagProposal:   "#6366f1",
+	news.TagArticle:    "#1a7fa8",
+	news.TagDiscussion: "#0d9488",
+	news.TagVideo:      "#ec4899",
+	news.TagTrending:   "#f59e0b",
+}
+
 type (
 	emailItem struct {
-		URL     string
-		Title   string
-		Snippet string
-		Meta    string
-		Rank    int
+		URL            string
+		Title          string
+		Snippet        string
+		Meta           string
+		Source         string
+		SourceNiceName string
+		SourceLabel    string
+		MarkURL        string
 	}
 	emailSection struct {
-		Emoji string
-		Title string
-		Items []emailItem
+		Tag    string // canonical section tag, e.g. "release"
+		Title  string // display heading, e.g. "Releases"
+		Accent string // hex colour for the section bar
+		Count  int
+		Items  []emailItem
 	}
 	digestData struct {
 		Date           time.Time
@@ -69,34 +87,7 @@ type (
 )
 
 func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL string) (renderedDigest, error) {
-	sections := make([]emailSection, 0, len(sources))
-	for _, si := range sources {
-		sec := emailSection{
-			Emoji: si.Source.Emoji(),
-			Title: si.Source.NiceName(),
-		}
-		for i, item := range si.Items {
-			rank := 0
-			if si.Source.IsRanked() {
-				rank = i + 1
-			}
-			parts := []string{item.Source.NiceName()}
-			if item.Score > 0 {
-				parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
-			}
-			if item.Comments > 0 {
-				parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
-			}
-			sec.Items = append(sec.Items, emailItem{
-				URL:     item.URL,
-				Title:   item.Title,
-				Snippet: item.Snippet,
-				Meta:    strings.Join(parts, " · "),
-				Rank:    rank,
-			})
-		}
-		sections = append(sections, sec)
-	}
+	sections := buildSections(sources)
 
 	data := digestData{Date: day, Sections: sections, UnsubscribeURL: unsubscribeURL}
 
@@ -115,6 +106,65 @@ func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL stri
 		HTML:    htmlBuf.String(),
 		Text:    textBuf.String(),
 	}, nil
+}
+
+// buildSections flattens the per-source items and re-groups them by section
+// tag (item.Tag.Section()). Sections are emitted in news.SectionTags order;
+// empty sections are skipped. Items within a section are sorted by score
+// descending so the strongest signal across all sources lands at the top.
+func buildSections(sources []news.SourceItems) []emailSection {
+	bucket := map[news.Tag][]news.Item{}
+	for _, si := range sources {
+		for _, item := range si.Items {
+			if item.Source == "" {
+				item.Source = si.Source
+			}
+			section := item.Tag.Section()
+			bucket[section] = append(bucket[section], item)
+		}
+	}
+
+	sections := make([]emailSection, 0, len(news.SectionTags))
+	for _, tag := range news.SectionTags {
+		items := bucket[tag]
+		if len(items) == 0 {
+			continue
+		}
+		sort.SliceStable(items, func(i, j int) bool {
+			return items[i].Score > items[j].Score
+		})
+		sec := emailSection{
+			Tag:    string(tag),
+			Title:  tag.Title(),
+			Accent: sectionAccents[tag],
+			Count:  len(items),
+		}
+		for _, item := range items {
+			sec.Items = append(sec.Items, toEmailItem(item))
+		}
+		sections = append(sections, sec)
+	}
+	return sections
+}
+
+func toEmailItem(item news.Item) emailItem {
+	parts := []string{item.Source.NiceName()}
+	if item.Score > 0 {
+		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
+	}
+	if item.Comments > 0 {
+		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
+	}
+	return emailItem{
+		URL:            item.URL,
+		Title:          item.Title,
+		Snippet:        item.Snippet,
+		Meta:           strings.Join(parts, " · "),
+		Source:         string(item.Source),
+		SourceNiceName: item.Source.NiceName(),
+		SourceLabel:    item.Source.ShortLabel(),
+		MarkURL:        item.Source.MarkURL(),
+	}
 }
 
 func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {

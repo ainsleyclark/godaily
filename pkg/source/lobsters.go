@@ -79,9 +79,9 @@ func (s lobstersStory) Transform() news.Item {
 			ProfileURL: "https://lobste.rs/u/" + s.SubmitterUser,
 		},
 		Snippet:   s.Description,
-		Tag:       news.TagArticle,
+		Tag:       news.TagDiscussion,
 		Comments:  s.CommentCount,
-		Score:     news.ScoreOf(news.SourceLobsters, news.TagArticle, float64(s.Score), true),
+		Score:     news.ScoreOf(news.SourceLobsters, news.TagDiscussion, float64(s.Score), true),
 		Published: published.UTC(),
 	}
 }
