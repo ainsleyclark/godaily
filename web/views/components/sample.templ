@@ -28,7 +28,6 @@ templ sampleInner(issue news.Issue) {
 		<div class="email-preview__header">
 			<div class="email-preview__logo-line">
 				@graphics.GopherLogo(24)
-				<strong>GoDaily</strong>
 			</div>
 			if !issue.SentAt.IsZero() {
 				<div class="email-preview__date">
@@ -72,10 +71,14 @@ func groupItemsBySource(items []news.Item) []sampleGroup {
 	})
 	groups := make([]sampleGroup, 0, len(order))
 	for _, src := range order {
+		srcItems := bySource[src]
+		if limit := src.ItemLimit(); limit > 0 && len(srcItems) > limit {
+			srcItems = srcItems[:limit]
+		}
 		groups = append(groups, sampleGroup{
 			emoji:  src.Emoji(),
 			title:  src.NiceName(),
-			items:  bySource[src],
+			items:  srcItems,
 			ranked: src.IsRanked(),
 		})
 	}

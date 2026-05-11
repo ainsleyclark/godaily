@@ -49,25 +49,6 @@
 		flex: 1;
 	}
 
-	&__meta {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 0.8rem;
-		color: var(--text-3);
-		margin-top: 0.5rem;
-	}
-
-	&__arrow {
-		color: var(--accent);
-		font-size: 1rem;
-		transition: transform 0.15s;
-
-		.issues__card:hover & {
-			transform: translateX(3px);
-		}
-	}
-
 	&__footer {
 		margin-top: 2rem;
 		text-align: center;

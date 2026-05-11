@@ -2,7 +2,6 @@ package components
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -26,21 +25,7 @@ templ digestItemInner(item news.Item) {
 	<div class="digest-item__title">
 		<a href={ templ.URL(item.URL) } target="_blank" rel="noopener noreferrer">{ item.Title }</a>
 	</div>
-	if meta := itemMeta(item); meta != "" {
-		<div class="digest-item__meta">{ meta }</div>
-	}
 	if item.Snippet != "" {
 		<div class="digest-item__summary">{ item.Snippet }</div>
 	}
-}
-
-func itemMeta(item news.Item) string {
-	parts := []string{item.Source.NiceName()}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
-	}
-	if item.Comments > 0 {
-		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
-	}
-	return strings.Join(parts, " · ")
 }

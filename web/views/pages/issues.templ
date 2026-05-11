@@ -30,12 +30,8 @@ templ IssuesArchive(issues []news.Issue) {
 					for _, issue := range issues {
 						<a class="issues__card" href={ templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)) }>
 							<span class="issues__number">Issue #{ fmt.Sprintf("%d", issue.ID) }</span>
-							<span class="issues__date">{ components.FormatIssueDate(issue.SentAt) }</span>
 							<span class="issues__subject">{ issue.Subject }</span>
-							<span class="issues__meta">
-								<span>{ fmt.Sprintf("%d items", len(issue.Items)) }</span>
-								<span class="issues__arrow">→</span>
-							</span>
+							<span class="issues__date">{ components.FormatIssueDate(issue.SentAt) }</span>
 						</a>
 					}
 				</div>
