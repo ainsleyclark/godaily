@@ -162,7 +162,7 @@ func (q *Queries) IssueUpdateStatus(ctx context.Context, arg IssueUpdateStatusPa
 }
 
 const itemByID = `-- name: ItemByID :one
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position FROM items WHERE id = ? LIMIT 1
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag FROM items WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
@@ -181,26 +181,28 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 		&i.Score,
 		&i.Summary,
 		&i.Position,
+		&i.Tag,
 	)
 	return i, err
 }
 
 const itemCreate = `-- name: ItemCreate :one
 INSERT INTO items (
-    issue_id, source, title, url,
+    issue_id, source, tag, title, url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position
 ) VALUES (
-    ?, ?, ?, ?,
+    ?, ?, ?, ?, ?,
     ?, ?, ?, ?,
     ?, ?, ?
 )
-RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position
+RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag
 `
 
 type ItemCreateParams struct {
 	IssueID          int64           `json:"issue_id"`
 	Source           string          `json:"source"`
+	Tag              string          `json:"tag"`
 	Title            string          `json:"title"`
 	Url              string          `json:"url"`
 	AuthorName       sql.NullString  `json:"author_name"`
@@ -216,6 +218,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 	row := q.db.QueryRowContext(ctx, itemCreate,
 		arg.IssueID,
 		arg.Source,
+		arg.Tag,
 		arg.Title,
 		arg.Url,
 		arg.AuthorName,
@@ -240,6 +243,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		&i.Score,
 		&i.Summary,
 		&i.Position,
+		&i.Tag,
 	)
 	return i, err
 }
@@ -254,7 +258,7 @@ func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID int64) error {
 }
 
 const itemListByIssue = `-- name: ItemListByIssue :many
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position FROM items
+SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag FROM items
 WHERE issue_id = ?
 ORDER BY position ASC
 `
@@ -281,6 +285,7 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, e
 			&i.Score,
 			&i.Summary,
 			&i.Position,
+			&i.Tag,
 		); err != nil {
 			return nil, err
 		}
@@ -346,6 +351,17 @@ func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeT
 	return i, err
 }
 
+const subscriberCountActive = `-- name: SubscriberCountActive :one
+SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL
+`
+
+func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, subscriberCountActive)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const subscriberCreate = `-- name: SubscriberCreate :one
 INSERT INTO subscribers (
     email, unsubscribe_token
@@ -362,31 +378,6 @@ type SubscriberCreateParams struct {
 
 func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreateParams) (Subscriber, error) {
 	row := q.db.QueryRowContext(ctx, subscriberCreate, arg.Email, arg.UnsubscribeToken)
-	var i Subscriber
-	err := row.Scan(
-		&i.ID,
-		&i.Email,
-		&i.UnsubscribeToken,
-		&i.UnsubscribedAt,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const subscriberReactivate = `-- name: SubscriberReactivate :one
-UPDATE subscribers
-SET unsubscribed_at = NULL,
-    unsubscribe_token = ?
-WHERE email = ? AND unsubscribed_at IS NOT NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at`
-
-type SubscriberReactivateParams struct {
-	UnsubscribeToken string `json:"unsubscribe_token"`
-	Email            string `json:"email"`
-}
-
-func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReactivateParams) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, subscriberReactivate, arg.UnsubscribeToken, arg.Email)
 	var i Subscriber
 	err := row.Scan(
 		&i.ID,
@@ -433,15 +424,30 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 	return items, nil
 }
 
-const subscriberCountActive = `-- name: SubscriberCountActive :one
-SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL
+const subscriberReactivate = `-- name: SubscriberReactivate :one
+UPDATE subscribers
+SET unsubscribed_at = NULL,
+    unsubscribe_token = ?
+WHERE email = ? AND unsubscribed_at IS NOT NULL
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at
 `
 
-func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, subscriberCountActive)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
+type SubscriberReactivateParams struct {
+	UnsubscribeToken string `json:"unsubscribe_token"`
+	Email            string `json:"email"`
+}
+
+func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReactivateParams) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberReactivate, arg.UnsubscribeToken, arg.Email)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.UnsubscribeToken,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const subscriberUnsubscribe = `-- name: SubscriberUnsubscribe :exec

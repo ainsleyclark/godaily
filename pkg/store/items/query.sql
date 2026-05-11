@@ -1,10 +1,10 @@
 -- name: ItemCreate :one
 INSERT INTO items (
-    issue_id, source, title, url,
+    issue_id, source, tag, title, url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position
 ) VALUES (
-    ?, ?, ?, ?,
+    ?, ?, ?, ?, ?,
     ?, ?, ?, ?,
     ?, ?, ?
 )
