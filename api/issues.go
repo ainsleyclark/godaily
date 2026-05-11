@@ -61,4 +61,3 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 		})
 	})(w, r)
 }
-

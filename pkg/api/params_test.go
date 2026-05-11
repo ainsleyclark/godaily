@@ -11,12 +11,11 @@
 // copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package api
 
@@ -36,13 +35,13 @@ func TestQueryInt(t *testing.T) {
 		fallback int64
 		want     int64
 	}{
-		"Present and valid":   {query: "?n=42", key: "n", fallback: 1, want: 42},
-		"Missing key":         {query: "", key: "n", fallback: 7, want: 7},
-		"Non-numeric value":   {query: "?n=abc", key: "n", fallback: 5, want: 5},
-		"Negative value":      {query: "?n=-3", key: "n", fallback: 1, want: -3},
-		"Zero value":          {query: "?n=0", key: "n", fallback: 1, want: 0},
-		"Empty string value":  {query: "?n=", key: "n", fallback: 9, want: 9},
-		"Different key":       {query: "?n=10", key: "m", fallback: 3, want: 3},
+		"Present and valid":  {query: "?n=42", key: "n", fallback: 1, want: 42},
+		"Missing key":        {query: "", key: "n", fallback: 7, want: 7},
+		"Non-numeric value":  {query: "?n=abc", key: "n", fallback: 5, want: 5},
+		"Negative value":     {query: "?n=-3", key: "n", fallback: 1, want: -3},
+		"Zero value":         {query: "?n=0", key: "n", fallback: 1, want: 0},
+		"Empty string value": {query: "?n=", key: "n", fallback: 9, want: 9},
+		"Different key":      {query: "?n=10", key: "m", fallback: 3, want: 3},
 	}
 
 	for name, test := range tt {
