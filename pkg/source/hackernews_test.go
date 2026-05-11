@@ -44,8 +44,8 @@ func TestHnWindow(t *testing.T) {
 	t.Run("Monday returns Saturday+Sunday window", func(t *testing.T) {
 		t.Parallel()
 		start, end := hnWindow(monday)
-		assert.Equal(t, time.Date(2026, time.May, 9, 0, 0, 0, 0, time.UTC), start)  // Saturday
-		assert.Equal(t, time.Date(2026, time.May, 11, 0, 0, 0, 0, time.UTC), end)   // Monday midnight
+		assert.Equal(t, time.Date(2026, time.May, 9, 0, 0, 0, 0, time.UTC), start) // Saturday
+		assert.Equal(t, time.Date(2026, time.May, 11, 0, 0, 0, 0, time.UTC), end)  // Monday midnight
 	})
 
 	t.Run("Non-Monday returns yesterday window", func(t *testing.T) {

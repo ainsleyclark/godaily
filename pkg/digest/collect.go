@@ -42,17 +42,6 @@ type CollectOptions struct {
 	Sources []news.Source
 }
 
-// collectWindow returns the date range to collect for a given time. On Monday
-// UTC the window covers Saturday and Sunday; on any other day it covers
-// yesterday only.
-func collectWindow(now time.Time) (start, end time.Time) {
-	today := now.UTC().Truncate(24 * time.Hour)
-	if now.UTC().Weekday() == time.Monday {
-		return today.AddDate(0, 0, -2), today
-	}
-	return today.AddDate(0, 0, -1), today
-}
-
 // Collect fetches Go news items from all registered sources within the current
 // collection window, scores and sorts them, renders the digest and (unless
 // DryRun) persists it as a draft issue in the database.
@@ -117,6 +106,17 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	}
 
 	return results, a.persistIssue(ctx, issue, results)
+}
+
+// collectWindow returns the date range to collect for a given time. On Monday
+// UTC the window covers Saturday and Sunday; on any other day it covers
+// yesterday only.
+func collectWindow(now time.Time) (start, end time.Time) {
+	today := now.UTC().Truncate(24 * time.Hour)
+	if now.UTC().Weekday() == time.Monday {
+		return today.AddDate(0, 0, -2), today
+	}
+	return today.AddDate(0, 0, -1), today
 }
 
 func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
