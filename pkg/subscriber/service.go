@@ -102,12 +102,16 @@ func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscrib
 		return news.Subscriber{}, err
 	}
 
+	if sub.UnsubscribeToken == "" {
+		return news.Subscriber{}, errors.New("subscriber created without unsubscribe token")
+	}
+	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+
 	var latestIssueURL, latestIssueTitle string
 	if latest, err := s.issues.Latest(ctx, 1); err == nil && len(latest) > 0 {
 		latestIssueURL = env.AppURL + "/digest/" + latest[0].Slug + "/"
 		latestIssueTitle = latest[0].Subject
 	}
-	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
 
 	if err = s.sendWelcome(ctx, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
 		slog.ErrorContext(ctx, "Failed to send welcome email", "email", sub.Email, "error", err)
@@ -144,5 +148,9 @@ func (s Service) sendWelcome(ctx context.Context, to, unsubURL, latestIssueURL, 
 		Subject: "Welcome to GoDaily!",
 		Html:    htmlBuf.String(),
 		Text:    textBuf.String(),
+		Headers: map[string]string{
+			"List-Unsubscribe":      "<" + unsubURL + ">",
+			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+		},
 	})
 }
