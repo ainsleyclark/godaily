@@ -42,7 +42,7 @@ type website struct {
 // Site renders all sent issues and the homepage to outDir, generates
 // sitemap.xml and rss.xml, copies static files from staticDir, then
 // copies compiled frontend assets from assetsDir into outDir/assets.
-func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, assetsDir string) error {
+func Site(ctx context.Context, repo news.IssueRepository, subscriberCount int64, outDir, staticDir, assetsDir string) error {
 	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return errors.Wrap(err, "creating output directory")
 	}
@@ -64,7 +64,7 @@ func Site(ctx context.Context, repo news.IssueRepository, outDir, staticDir, ass
 		w.LatestIssue = recent[0]
 	}
 
-	if err := renderPages(ctx, repo, w, outDir); err != nil {
+	if err := renderPages(ctx, repo, w, subscriberCount, outDir); err != nil {
 		return errors.Wrap(err, "rendering pages")
 	}
 

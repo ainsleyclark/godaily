@@ -31,3 +31,6 @@ RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at;
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL
 ORDER BY id ASC;
+
+-- name: SubscriberCountActive :one
+SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL;

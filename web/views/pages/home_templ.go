@@ -16,10 +16,11 @@ import (
 
 // HomeData carries the dynamic content rendered on the marketing homepage.
 type HomeData struct {
-	LatestIssue  news.Issue
-	SampleIssue  news.Issue
-	RecentIssues []news.Issue
-	Flash        string
+	LatestIssue     news.Issue
+	SampleIssue     news.Issue
+	RecentIssues    []news.Issue
+	Flash           string
+	SubscriberCount int64
 }
 
 func Home(data HomeData) templ.Component {
@@ -63,7 +64,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Hero(data.Flash).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Hero(data.Flash, data.SubscriberCount).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

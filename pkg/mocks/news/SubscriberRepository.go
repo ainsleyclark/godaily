@@ -41,6 +41,21 @@ func (m *MockSubscriberRepository) EXPECT() *MockSubscriberRepositoryMockRecorde
 	return m.recorder
 }
 
+// CountActive mocks base method.
+func (m *MockSubscriberRepository) CountActive(ctx context.Context) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountActive", ctx)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountActive indicates an expected call of CountActive.
+func (mr *MockSubscriberRepositoryMockRecorder) CountActive(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountActive", reflect.TypeOf((*MockSubscriberRepository)(nil).CountActive), ctx)
+}
+
 // Create mocks base method.
 func (m *MockSubscriberRepository) Create(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()

@@ -433,6 +433,17 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 	return items, nil
 }
 
+const subscriberCountActive = `-- name: SubscriberCountActive :one
+SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL
+`
+
+func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, subscriberCountActive)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const subscriberUnsubscribe = `-- name: SubscriberUnsubscribe :exec
 UPDATE subscribers
 SET unsubscribed_at = CURRENT_TIMESTAMP

@@ -8,10 +8,11 @@ import (
 
 // HomeData carries the dynamic content rendered on the marketing homepage.
 type HomeData struct {
-	LatestIssue  news.Issue
-	SampleIssue  news.Issue
-	RecentIssues []news.Issue
-	Flash        string
+	LatestIssue     news.Issue
+	SampleIssue     news.Issue
+	RecentIssues    []news.Issue
+	Flash           string
+	SubscriberCount int64
 }
 
 templ Home(data HomeData) {
@@ -19,7 +20,7 @@ templ Home(data HomeData) {
 		CanonicalURL: "https://godaily.dev/",
 	}) {
 		@components.Header()
-		@components.Hero(data.Flash)
+		@components.Hero(data.Flash, data.SubscriberCount)
 		@components.Rule()
 		@components.Features()
 		@components.Sources()

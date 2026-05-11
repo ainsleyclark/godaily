@@ -118,7 +118,7 @@ func TestSite(t *testing.T) {
 			// Write a sentinel asset file to verify copying.
 			require.NoError(t, os.WriteFile(filepath.Join(assetsDir, "app.css"), []byte("body{}"), 0o644))
 
-			err := generate.Site(t.Context(), repo, outDir, staticDir, assetsDir)
+			err := generate.Site(t.Context(), repo, 0, outDir, staticDir, assetsDir)
 			assert.Equal(t, test.wantErr, err != nil)
 
 			for _, f := range test.wantFiles {
