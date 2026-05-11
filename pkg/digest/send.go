@@ -75,6 +75,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	// Send personalized digests to active subscribers.
 	for _, sub := range subs {
+		if sub.UnsubscribeToken == "" {
+			slog.ErrorContext(ctx, "Skipping subscriber with missing unsubscribe token", "email", sub.Email)
+			continue
+		}
 		unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
 		subRendered, renderErr := renderDigest(digestOptions{Day: date, Sources: sections, UnsubscribeURL: unsubURL, CanonicalURL: canonicalURL})
 		if renderErr != nil {

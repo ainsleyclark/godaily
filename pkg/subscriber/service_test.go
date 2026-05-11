@@ -100,6 +100,20 @@ func TestService_Subscribe(t *testing.T) {
 		assert.False(t, sender.called)
 	})
 
+	t.Run("Missing Unsubscribe Token", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(news.Subscriber{Email: sub.Email}, nil)
+
+		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
+
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "unsubscribe token")
+		assert.False(t, sender.called)
+	})
+
 	t.Run("Create Error", func(t *testing.T) {
 		t.Parallel()
 
@@ -129,6 +143,8 @@ func TestService_Subscribe(t *testing.T) {
 		assert.Equal(t, "Welcome to GoDaily!", sender.req.Subject)
 		assert.Contains(t, sender.req.Html, issue.Slug)
 		assert.Contains(t, sender.req.Html, issue.Subject)
+		assert.Contains(t, sender.req.Headers["List-Unsubscribe"], sub.UnsubscribeToken)
+		assert.Equal(t, "List-Unsubscribe=One-Click", sender.req.Headers["List-Unsubscribe-Post"])
 	})
 
 	t.Run("OK Without Latest Issue", func(t *testing.T) {

@@ -183,4 +183,19 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		assert.Contains(t, m.req.Html, "hello")
 		assert.Contains(t, m.req.Text, "hello")
 	})
+
+	t.Run("Sets List-Unsubscribe Headers For Subscriber", func(t *testing.T) {
+		t.Parallel()
+
+		const unsubURL = "https://godaily.dev/api/unsubscribe?token=abc123"
+		subRendered, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sampleSections(), UnsubscribeURL: unsubURL})
+		require.NoError(t, err)
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+
+		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", subRendered))
+		assert.Equal(t, "<"+unsubURL+">", m.req.Headers["List-Unsubscribe"])
+		assert.Equal(t, "List-Unsubscribe=One-Click", m.req.Headers["List-Unsubscribe-Post"])
+	})
 }

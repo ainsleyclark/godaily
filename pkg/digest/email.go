@@ -85,9 +85,10 @@ type (
 	// both ship it via email and persist it to the issues table without
 	// re-rendering.
 	renderedDigest struct {
-		Subject string
-		HTML    string
-		Text    string
+		Subject        string
+		HTML           string
+		Text           string
+		UnsubscribeURL string
 	}
 
 	digestOptions struct {
@@ -125,9 +126,10 @@ func renderDigest(opts digestOptions) (renderedDigest, error) {
 	}
 
 	return renderedDigest{
-		Subject: subject,
-		HTML:    htmlBuf.String(),
-		Text:    textBuf.String(),
+		Subject:        subject,
+		HTML:           htmlBuf.String(),
+		Text:           textBuf.String(),
+		UnsubscribeURL: opts.UnsubscribeURL,
 	}, nil
 }
 
@@ -200,5 +202,9 @@ func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDiges
 		Subject: d.Subject,
 		Html:    d.HTML,
 		Text:    d.Text,
+		Headers: map[string]string{
+			"List-Unsubscribe":      "<" + d.UnsubscribeURL + ">",
+			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+		},
 	})
 }
