@@ -24,6 +24,7 @@ import (
 	"context"
 	"fmt"
 	htmltemplate "html/template"
+	"net/url"
 	"sort"
 	"strings"
 	texttemplate "text/template"
@@ -75,6 +76,10 @@ type (
 		Date           time.Time
 		Sections       []emailSection
 		UnsubscribeURL string
+		CanonicalURL   string
+		ShareLinkedIn  string
+		ShareBluesky   string
+		ShareTwitter   string
 	}
 	// renderedDigest carries the rendered email payload so the caller can
 	// both ship it via email and persist it to the issues table without
@@ -84,12 +89,30 @@ type (
 		HTML    string
 		Text    string
 	}
+
+	digestOptions struct {
+		Day            time.Time
+		Sources        []news.SourceItems
+		UnsubscribeURL string
+		CanonicalURL   string
+	}
 )
 
-func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL string) (renderedDigest, error) {
-	sections := buildSections(sources)
+func renderDigest(opts digestOptions) (renderedDigest, error) {
+	sections := buildSections(opts.Sources)
+	subject := "GoDaily - " + opts.Day.Format("January 2, 2006")
 
-	data := digestData{Date: day, Sections: sections, UnsubscribeURL: unsubscribeURL}
+	data := digestData{
+		Date:           opts.Day,
+		Sections:       sections,
+		UnsubscribeURL: opts.UnsubscribeURL,
+		CanonicalURL:   opts.CanonicalURL,
+	}
+	if opts.CanonicalURL != "" {
+		data.ShareLinkedIn = "https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(opts.CanonicalURL)
+		data.ShareBluesky = "https://bsky.app/intent/compose?text=" + url.QueryEscape(subject+" "+opts.CanonicalURL)
+		data.ShareTwitter = "https://twitter.com/intent/tweet?url=" + url.QueryEscape(opts.CanonicalURL) + "&text=" + url.QueryEscape(subject)
+	}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.ExecuteTemplate(&htmlBuf, "email-layout", data); err != nil {
@@ -102,7 +125,7 @@ func renderDigest(day time.Time, sources []news.SourceItems, unsubscribeURL stri
 	}
 
 	return renderedDigest{
-		Subject: "GoDaily - " + day.Format("January 2, 2006"),
+		Subject: subject,
 		HTML:    htmlBuf.String(),
 		Text:    textBuf.String(),
 	}, nil

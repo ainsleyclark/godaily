@@ -4,7 +4,7 @@ go 1.26.3
 
 require (
 	github.com/PuerkitoBio/goquery v1.12.0
-	github.com/a-h/templ v0.3.1001
+	github.com/a-h/templ v0.3.1020
 	github.com/ainsleydev/webkit v0.13.2
 	github.com/anthropics/anthropic-sdk-go v1.39.0
 	github.com/caarlos0/env/v11 v11.3.1

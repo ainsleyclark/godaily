@@ -59,8 +59,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		return errors.Wrap(err, "listing active subscribers")
 	}
 
+	canonicalURL := env.AppURL + "/issues/" + issue.Slug + "/"
+
 	// Render and send to admin (no unsubscribe link).
-	adminRendered, err := renderDigest(date, sections, "")
+	adminRendered, err := renderDigest(digestOptions{Day: date, Sources: sections, CanonicalURL: canonicalURL})
 	if err != nil {
 		return errors.Wrap(err, "rendering digest")
 	}
@@ -74,7 +76,7 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 	// Send personalized digests to active subscribers.
 	for _, sub := range subs {
 		unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
-		subRendered, renderErr := renderDigest(date, sections, unsubURL)
+		subRendered, renderErr := renderDigest(digestOptions{Day: date, Sources: sections, UnsubscribeURL: unsubURL, CanonicalURL: canonicalURL})
 		if renderErr != nil {
 			slog.ErrorContext(ctx, "Failed to render digest for subscriber", "email", sub.Email, "err", renderErr)
 			continue
