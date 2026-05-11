@@ -8,6 +8,6 @@ export function initLogoTicker(): void {
 		direction: 'left',
 		speed: 40000,
 		spaceBetween: '3.5rem',
-		pauseOnHover: true,
+		pauseOnHover: false,
 	});
 }
