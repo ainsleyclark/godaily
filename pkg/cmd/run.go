@@ -55,7 +55,12 @@ func runCmd(a *godaily.App) *cli.Command {
 			}
 
 			dryRun := cmd.Bool("dry-run")
-			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			now := time.Now().UTC()
+			today := now.Truncate(24 * time.Hour)
+			date := today.AddDate(0, 0, -1)
+			if now.Weekday() == time.Monday {
+				date = today.AddDate(0, 0, -2)
+			}
 
 			raw, err := a.Runner.Collect(ctx, digest.CollectOptions{
 				DryRun:  dryRun,
