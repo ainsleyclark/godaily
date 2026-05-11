@@ -23,38 +23,24 @@ import (
 	"net/http"
 	"strconv"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-const (
-	defaultPage    int64 = 1
-	defaultPerPage int64 = 20
-	maxPerPage     int64 = 100
-)
-
-// paginatedResponse is the JSON envelope for paginated list endpoints.
-type paginatedResponse[T any] struct {
-	Data    []T   `json:"data"`
-	Page    int64 `json:"page"`
-	PerPage int64 `json:"per_page"`
-	Total   int64 `json:"total"`
-}
-
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
 func HandleIssues(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		ctx := r.Context()
-		a := api.GetApp(ctx)
 
-		page := parseIntParam(r, "page", defaultPage)
-		perPage := parseIntParam(r, "per_page", defaultPerPage)
+		page := parseIntParam(r, "page", api.DefaultPage)
+		perPage := parseIntParam(r, "per_page", api.DefaultPerPage)
 
 		if page < 1 {
-			page = defaultPage
+			page = api.DefaultPage
 		}
-		if perPage < 1 || perPage > maxPerPage {
-			perPage = defaultPerPage
+		if perPage < 1 || perPage > api.MaxPerPage {
+			perPage = api.DefaultPerPage
 		}
 
 		total, err := a.Repository.Issues.Count(ctx)
@@ -69,7 +55,7 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		api.JSON(w, http.StatusOK, paginatedResponse[news.Issue]{
+		api.JSON(w, http.StatusOK, api.PaginatedResponse[news.Issue]{
 			Data:    issues,
 			Page:    page,
 			PerPage: perPage,

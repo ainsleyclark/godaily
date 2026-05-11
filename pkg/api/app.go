@@ -27,8 +27,13 @@ import (
 )
 
 // App is the singleton application instance shared across serverless function
-// invocations. Tests may overwrite this to inject mocks before calling a handler.
+// invocations. Tests may overwrite this via SetApp to inject mocks.
 var App *godaily.App
+
+// SetApp sets the singleton App, used in tests to inject a mock application.
+func SetApp(a *godaily.App) {
+	App = a
+}
 
 // GetApp returns the singleton App, bootstrapping it on first call.
 func GetApp(ctx context.Context) *godaily.App {

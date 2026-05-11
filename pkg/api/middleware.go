@@ -24,13 +24,20 @@ import (
 	"net/http"
 	"sync"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"golang.org/x/time/rate"
 )
 
-// Handle applies the standard API middleware chain to next.
-// All public API handlers must be wrapped with this function.
-func Handle(next http.HandlerFunc) http.HandlerFunc {
-	return Limiter.Limit(next)
+// AppHandler is an HTTP handler that receives the bootstrapped App alongside
+// the standard request/response pair.
+type AppHandler func(w http.ResponseWriter, r *http.Request, a *godaily.App)
+
+// Handle applies the standard API middleware chain to next, injecting the
+// bootstrapped App so handlers do not need to call GetApp themselves.
+func Handle(next AppHandler) http.HandlerFunc {
+	return Limiter.Limit(func(w http.ResponseWriter, r *http.Request) {
+		next(w, r, GetApp(r.Context()))
+	})
 }
 
 // Limiter is the shared rate limiter for public API endpoints.

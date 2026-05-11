@@ -68,7 +68,7 @@ func TestHandleUnsubscribe(t *testing.T) {
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			test.mock(svc)
 
-			api.App = &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			api.SetApp(&godaily.App{Subscribers: svc, Config: &env.Config{}})
 
 			url := "/api/unsubscribe"
 			if test.token != "" {

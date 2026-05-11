@@ -95,12 +95,12 @@ func TestHandleIssues(t *testing.T) {
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
-			api.App = &godaily.App{
+			api.SetApp(&godaily.App{
 				Config: &env.Config{},
 				Repository: &godaily.Repository{
 					Issues: issuesMock,
 				},
-			}
+			})
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/issues"+test.query, nil)

@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"strconv"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -31,9 +32,8 @@ import (
 // Handler is the Vercel serverless function entry point for GET /api/items/{id}.
 // The id path segment is injected by Vercel as the "id" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		ctx := r.Context()
-		a := api.GetApp(ctx)
 
 		raw := r.URL.Query().Get("id")
 		if raw == "" {

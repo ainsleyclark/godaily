@@ -78,12 +78,12 @@ func TestHandler(t *testing.T) {
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
-			api.App = &godaily.App{
+			api.SetApp(&godaily.App{
 				Config: &env.Config{},
 				Repository: &godaily.Repository{
 					Issues: issuesMock,
 				},
-			}
+			})
 
 			target := "/api/issues/"
 			if test.slug != "" {

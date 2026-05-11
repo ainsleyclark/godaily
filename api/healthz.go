@@ -22,12 +22,13 @@ package api
 import (
 	"net/http"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
 // HandleHealthz is the Vercel serverless function entry point for GET /api/healthz.
 func HandleHealthz(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, _ *http.Request) {
+	api.Handle(func(w http.ResponseWriter, _ *http.Request, _ *godaily.App) {
 		api.OK(w)
 	})(w, r)
 }

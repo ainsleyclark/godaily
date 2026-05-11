@@ -85,12 +85,12 @@ func TestHandler(t *testing.T) {
 			itemsMock := mocknews.NewMockItemRepository(ctrl)
 			test.mock(itemsMock)
 
-			api.App = &godaily.App{
+			api.SetApp(&godaily.App{
 				Config: &env.Config{},
 				Repository: &godaily.Repository{
 					Items: itemsMock,
 				},
-			}
+			})
 
 			target := "/api/items/"
 			w := httptest.NewRecorder()
