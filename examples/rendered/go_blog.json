@@ -1,5 +1,6 @@
 [
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Type Construction and Cycle Detection",
 		"url": "https://go.dev/blog/type-construction-and-cycle-detection",
@@ -14,6 +15,7 @@
 		"published": "2026-03-24T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "//go:fix inline and the source-level inliner",
 		"url": "https://go.dev/blog/inliner",
@@ -28,6 +30,7 @@
 		"published": "2026-03-10T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Allocating on the Stack",
 		"url": "https://go.dev/blog/allocation-optimizations",
@@ -42,6 +45,7 @@
 		"published": "2026-02-27T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Using go fix to modernize Go code",
 		"url": "https://go.dev/blog/gofix",
@@ -56,6 +60,7 @@
 		"published": "2026-02-17T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Go 1.26 is released",
 		"url": "https://go.dev/blog/go1.26",
@@ -70,6 +75,7 @@
 		"published": "2026-02-10T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Results from the 2025 Go Developer Survey",
 		"url": "https://go.dev/blog/survey2025",
@@ -84,6 +90,7 @@
 		"published": "2026-01-21T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Go’s Sweet 16",
 		"url": "https://go.dev/blog/16years",
@@ -98,6 +105,7 @@
 		"published": "2025-11-14T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "The Green Tea Garbage Collector",
 		"url": "https://go.dev/blog/greenteagc",
@@ -112,6 +120,7 @@
 		"published": "2025-10-29T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "Flight Recorder in Go 1.25",
 		"url": "https://go.dev/blog/flight-recorder",
@@ -126,6 +135,7 @@
 		"published": "2025-09-26T00:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_blog",
 		"title": "It's survey time! How has Go has been working out for you?",
 		"url": "https://go.dev/blog/survey2025-announce",

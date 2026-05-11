@@ -1,5 +1,36 @@
 [
 	{
+		"id": 0,
+		"source": "fallthrough",
+		"title": "Forging Ahead",
+		"url": "https://share.transistor.fm/s/4774655a",
+		"image_url": "https://img.transistorcdn.com/5BGebCjw3AV5nfguQ_bhIn_NA9neCOod57fB3FtE-NE/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS8wNzYw/NjIzMzZiYWEyZmYx/Y2Q2MGQyNGQ1OGVl/ZDJmNS5wbmc.jpg",
+		"author": {
+			"name": "Fallthrough Media"
+		},
+		"snippet": "Steve is back to talk JJ (Jujutsu version control) and the related product, ChangeSet, that he works on at East River Source Control. Kris and Steve trace why the GitHub monoculture is finally crackin",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-09T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "fallthrough",
+		"title": "Regression to the Mean",
+		"url": "https://share.transistor.fm/s/dc133519",
+		"image_url": "https://img.transistorcdn.com/tY44vxjnZq0RkWcuLBL1zynPLJTEG37rBjnVP6rYOIk/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9iMGQw/MjY3NGQyYzBhNjZj/MmFkNmFmY2I3NTJk/Y2E4Yy5wbmc.jpg",
+		"author": {
+			"name": "Fallthrough Media"
+		},
+		"snippet": "Kris and Ian dig into the slow collapse of GitHub, starting with Ghostty off the platform after years of reliability problems. From there they trace Gary Bernhardt's old observation that we took a dec",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-02T12:00:00Z"
+	},
+	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "No Country for Old Maintainers",
 		"url": "https://share.transistor.fm/s/fbb25d36",
@@ -14,6 +45,7 @@
 		"published": "2026-04-25T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Supply Chain Reaction",
 		"url": "https://share.transistor.fm/s/8f608deb",
@@ -28,6 +60,7 @@
 		"published": "2026-04-18T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Another Spectre In The Shell",
 		"url": "https://share.transistor.fm/s/0ecb8003",
@@ -42,6 +75,7 @@
 		"published": "2026-04-11T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Snake Oil Has an Expiration Date",
 		"url": "https://share.transistor.fm/s/a7ab1700",
@@ -56,6 +90,7 @@
 		"published": "2026-04-04T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Who's Afraid of Superintelligence?",
 		"url": "https://share.transistor.fm/s/a390524e",
@@ -70,6 +105,7 @@
 		"published": "2026-03-29T02:30:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Joy of Building",
 		"url": "https://share.transistor.fm/s/a7c92711",
@@ -84,6 +120,7 @@
 		"published": "2026-03-21T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Least Contentious Proposal in the History of Go",
 		"url": "https://share.transistor.fm/s/bfb13b7d",
@@ -98,6 +135,7 @@
 		"published": "2026-03-14T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Deprecate the Error Interface",
 		"url": "https://share.transistor.fm/s/ea90d95c",
@@ -112,6 +150,7 @@
 		"published": "2026-03-07T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Package Hell",
 		"url": "https://share.transistor.fm/s/39d183e4",
@@ -126,6 +165,7 @@
 		"published": "2026-02-28T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Is Go Simple Anymore?",
 		"url": "https://share.transistor.fm/s/427b2444",
@@ -140,6 +180,7 @@
 		"published": "2026-02-21T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Lava Layers",
 		"url": "https://share.transistor.fm/s/62eaa2c7",
@@ -154,6 +195,7 @@
 		"published": "2026-02-14T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Vibes-Based Legal System",
 		"url": "https://share.transistor.fm/s/09bec87f",
@@ -168,6 +210,7 @@
 		"published": "2026-02-07T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The AI Factory Floor",
 		"url": "https://share.transistor.fm/s/93e35fba",
@@ -182,6 +225,7 @@
 		"published": "2026-01-31T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Systems Thinking for Humans",
 		"url": "https://share.transistor.fm/s/e5be7f48",
@@ -196,6 +240,7 @@
 		"published": "2026-01-24T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "When Reality Drifts",
 		"url": "https://share.transistor.fm/s/1d3785fa",
@@ -210,6 +255,7 @@
 		"published": "2026-01-16T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "New Year, New Nuance",
 		"url": "https://share.transistor.fm/s/672492a2",
@@ -224,6 +270,7 @@
 		"published": "2026-01-10T02:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Stack Trace 2025",
 		"url": "https://share.transistor.fm/s/bf64cc67",
@@ -238,6 +285,7 @@
 		"published": "2025-12-31T21:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Worse Is Better",
 		"url": "https://share.transistor.fm/s/4da68fb6",
@@ -252,6 +300,7 @@
 		"published": "2025-12-25T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Why Is Tech So Mid?",
 		"url": "https://share.transistor.fm/s/ec5d1d77",
@@ -266,6 +315,7 @@
 		"published": "2025-12-20T02:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Project Management 2 Shell",
 		"url": "https://share.transistor.fm/s/61cc582d",
@@ -280,6 +330,7 @@
 		"published": "2025-12-12T23:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Ghostting Is Better Than Shelling",
 		"url": "https://share.transistor.fm/s/dbfcb53f",
@@ -294,6 +345,7 @@
 		"published": "2025-12-05T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Magic Numbers Take Down The Internet",
 		"url": "https://share.transistor.fm/s/050b7053",
@@ -308,6 +360,7 @@
 		"published": "2025-11-25T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The AI Marketing Problem",
 		"url": "https://share.transistor.fm/s/994e51d4",
@@ -322,6 +375,7 @@
 		"published": "2025-11-20T02:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Artisanal Software Engineering",
 		"url": "https://share.transistor.fm/s/7097fbe5",
@@ -336,6 +390,7 @@
 		"published": "2025-11-12T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Fault In Our Clouds",
 		"url": "https://share.transistor.fm/s/843a4ea1",
@@ -350,6 +405,7 @@
 		"published": "2025-11-04T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "JJ and How to Evolve an Open Source Ecosystem",
 		"url": "https://share.transistor.fm/s/656cc36f",
@@ -364,6 +420,7 @@
 		"published": "2025-10-28T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "DevOps: The Answer to Life, The Universe, and Everything",
 		"url": "https://share.transistor.fm/s/1ba0dda8",
@@ -378,6 +435,7 @@
 		"published": "2025-10-20T22:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Ghostty \u0026 The Shell",
 		"url": "https://share.transistor.fm/s/4013f483",
@@ -392,6 +450,7 @@
 		"published": "2025-10-13T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Failure of Open Source Leadership",
 		"url": "https://share.transistor.fm/s/cb05a4eb",
@@ -406,6 +465,7 @@
 		"published": "2025-10-07T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "PHP Was Never Dead",
 		"url": "https://share.transistor.fm/s/15a2cfd7",
@@ -420,6 +480,7 @@
 		"published": "2025-09-30T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Defer Life Considered Harmful",
 		"url": "https://share.transistor.fm/s/53cca82d",
@@ -434,6 +495,7 @@
 		"published": "2025-09-23T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Building For The Future",
 		"url": "https://share.transistor.fm/s/ca1583b3",
@@ -448,6 +510,7 @@
 		"published": "2025-09-15T22:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Bootstrapping A Podcast",
 		"url": "https://share.transistor.fm/s/0b29fe80",
@@ -462,6 +525,7 @@
 		"published": "2025-09-08T22:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "What It Takes To Be A Content Creator",
 		"url": "https://share.transistor.fm/s/842908aa",
@@ -476,6 +540,7 @@
 		"published": "2025-09-01T23:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "How To Have A Great Conference Experience",
 		"url": "https://share.transistor.fm/s/f8ff6626",
@@ -490,6 +555,7 @@
 		"published": "2025-08-25T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "What's New in Go 1.25?",
 		"url": "https://share.transistor.fm/s/4ce09c30",
@@ -504,6 +570,7 @@
 		"published": "2025-08-18T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Big Data Energy",
 		"url": "https://share.transistor.fm/s/fab35ca4",
@@ -518,6 +585,7 @@
 		"published": "2025-08-11T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Championing A Cause",
 		"url": "https://share.transistor.fm/s/2cde211d",
@@ -532,6 +600,7 @@
 		"published": "2025-08-04T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "AI Booster? AI Doomer? You're Wrong Either Way",
 		"url": "https://share.transistor.fm/s/1149f3ec",
@@ -546,6 +615,7 @@
 		"published": "2025-07-28T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Versioning: We Did It To Ourselves",
 		"url": "https://share.transistor.fm/s/93b5f25f",
@@ -560,6 +630,7 @@
 		"published": "2025-07-21T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "[Break] You're Now Less Wrong About REST",
 		"url": "https://share.transistor.fm/s/79f38241",
@@ -574,6 +645,7 @@
 		"published": "2025-07-15T21:10:21Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Why You're Wrong About REST",
 		"url": "https://share.transistor.fm/s/9af2fa10",
@@ -588,6 +660,7 @@
 		"published": "2025-07-14T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "What Even Is A [Programming|Natural] Language?",
 		"url": "https://share.transistor.fm/s/1847ad3e",
@@ -602,6 +675,7 @@
 		"published": "2025-07-07T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Language and Codes of Misconduct",
 		"url": "https://share.transistor.fm/s/03f8b7f1",
@@ -616,6 +690,7 @@
 		"published": "2025-07-07T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "SIMD \u0026 Go",
 		"url": "https://share.transistor.fm/s/3e674ae7",
@@ -630,6 +705,7 @@
 		"published": "2025-06-30T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Three Ps: Understanding Product, Project, and Program Management",
 		"url": "https://share.transistor.fm/s/fbd76108",
@@ -644,6 +720,7 @@
 		"published": "2025-06-23T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Go's Error Handling Is Handled",
 		"url": "https://share.transistor.fm/s/4aed7ba6",
@@ -658,6 +735,7 @@
 		"published": "2025-06-16T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "A Discourse On AI Discourse",
 		"url": "https://share.transistor.fm/s/455953b8",
@@ -672,6 +750,7 @@
 		"published": "2025-06-09T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Building An Open Source Maintenance Company",
 		"url": "https://share.transistor.fm/s/8b595743",
@@ -686,6 +765,7 @@
 		"published": "2025-06-02T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Event Driven Architectures",
 		"url": "https://share.transistor.fm/s/1693f1ca",
@@ -700,6 +780,7 @@
 		"published": "2025-05-26T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Blown Glass Half-Full of WebAssembly \u0026 SQLite",
 		"url": "https://share.transistor.fm/s/4afdd70f",
@@ -714,6 +795,7 @@
 		"published": "2025-05-19T14:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "A Phoenix's Path to Principal",
 		"url": "https://share.transistor.fm/s/6b3a9e9d",
@@ -728,6 +810,7 @@
 		"published": "2025-05-12T19:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Language of Data Visualization",
 		"url": "https://share.transistor.fm/s/87a51299",
@@ -742,6 +825,7 @@
 		"published": "2025-05-05T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Maintainers, Monetization, and Making The Time",
 		"url": "https://share.transistor.fm/s/423f241a",
@@ -756,6 +840,7 @@
 		"published": "2025-04-28T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "From TinyGo to Takeoff",
 		"url": "https://share.transistor.fm/s/7e5bc1c2",
@@ -770,6 +855,7 @@
 		"published": "2025-04-21T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Podcast Pipeline",
 		"url": "https://share.transistor.fm/s/2af82545",
@@ -784,6 +870,7 @@
 		"published": "2025-04-14T17:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "APIs: Design Imperfectly, Improve Relentlessly",
 		"url": "https://share.transistor.fm/s/956fde8a",
@@ -798,6 +885,7 @@
 		"published": "2025-04-07T16:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "What Even Is A Senior Software Engineer?",
 		"url": "https://share.transistor.fm/s/0de1216c",
@@ -812,6 +900,7 @@
 		"published": "2025-03-31T16:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Translating The Law for Software Engineers",
 		"url": "https://share.transistor.fm/s/ac38bbd7",
@@ -826,6 +915,7 @@
 		"published": "2025-03-24T16:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Choosing, Expanding, \u0026 Evolving Communities",
 		"url": "https://share.transistor.fm/s/812d194a",
@@ -840,6 +930,7 @@
 		"published": "2025-03-17T14:15:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "An Exploration of APIs, Versioning, \u0026 HTTP",
 		"url": "https://share.transistor.fm/s/8e38cd91",
@@ -854,6 +945,7 @@
 		"published": "2025-03-10T12:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Tools We Love",
 		"url": "https://share.transistor.fm/s/6bedb9f5",
@@ -868,6 +960,7 @@
 		"published": "2025-03-03T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Ghosttying Go",
 		"url": "https://share.transistor.fm/s/7d278697",
@@ -882,6 +975,7 @@
 		"published": "2025-02-24T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Patching Problems with Persnickety Proxies Purveyed by Paternalistic Princes",
 		"url": "https://share.transistor.fm/s/9d8e0fc8",
@@ -896,6 +990,7 @@
 		"published": "2025-02-17T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "What's New In Go 1.24?",
 		"url": "https://share.transistor.fm/s/73c5f267",
@@ -910,6 +1005,7 @@
 		"published": "2025-02-10T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Navigating A Career In Tech",
 		"url": "https://share.transistor.fm/s/0dc6f79e",
@@ -924,6 +1020,7 @@
 		"published": "2025-02-03T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "An Exploration of Complexity",
 		"url": "https://share.transistor.fm/s/c57ca733",
@@ -938,6 +1035,7 @@
 		"published": "2025-01-27T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Do We Think You Should Learn To Code?",
 		"url": "https://share.transistor.fm/s/89e87f1b",
@@ -952,6 +1050,7 @@
 		"published": "2025-01-20T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "The Gems \u0026 Warts of Go",
 		"url": "https://share.transistor.fm/s/9544da7e",
@@ -966,6 +1065,7 @@
 		"published": "2025-01-13T14:30:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "War Stories",
 		"url": "https://share.transistor.fm/s/e74ecbeb",
@@ -980,6 +1080,7 @@
 		"published": "2025-01-06T13:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "fallthrough",
 		"title": "Falling Through: A New Perspective",
 		"url": "https://share.transistor.fm/s/7e1a0723",

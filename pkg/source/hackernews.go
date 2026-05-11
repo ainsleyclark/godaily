@@ -23,6 +23,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ingest"
@@ -44,23 +45,37 @@ const hnBaseURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tag
 
 // NewHackerNews creates a Hacker News Algolia client.
 func NewHackerNews() *HackerNews {
-	return &HackerNews{
-		url: hnYesterdayURL(),
-	}
+	return &HackerNews{}
 }
 
-// hnYesterdayURL builds an Algolia URL that restricts results to yesterday UTC,
-// so collect always retrieves the correct day's items regardless of run time.
-// Uses strict inequalities: >start-1 and <end+1 to cover the full 24-hour window.
-func hnYesterdayURL() string {
-	day := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-	next := day.Add(24 * time.Hour)
-	return fmt.Sprintf("%s&numericFilters=created_at_i>%d,created_at_i<%d", hnBaseURL, day.Unix()-1, next.Unix())
+// hnWindow returns the collection window for a given time. On Monday UTC the
+// window covers Saturday and Sunday; on any other day it covers yesterday only.
+func hnWindow(now time.Time) (start, end time.Time) {
+	today := now.UTC().Truncate(24 * time.Hour)
+	if now.UTC().Weekday() == time.Monday {
+		return today.AddDate(0, 0, -2), today
+	}
+	return today.AddDate(0, 0, -1), today
+}
+
+// hnURL builds the Algolia search URL for the given window. It uses url.Values
+// so that the numericFilters value is correctly percent-encoded (> → %3E, < → %3C).
+func hnURL(start, end time.Time) string {
+	u, _ := url.Parse(hnBaseURL)
+	q := u.Query()
+	q.Set("numericFilters", fmt.Sprintf("created_at_i>%d,created_at_i<%d", start.Unix()-1, end.Unix()))
+	u.RawQuery = q.Encode()
+	return u.String()
 }
 
 // Fetch retrieves all news items from Hacker News via the Algolia search API.
 func (h HackerNews) Fetch(ctx context.Context) ([]news.Item, error) {
-	response, err := ingest.Fetch[hnResponse](ctx, h.url, "hacker news", json.Unmarshal)
+	u := h.url
+	if u == "" {
+		s, e := hnWindow(time.Now())
+		u = hnURL(s, e)
+	}
+	response, err := ingest.Fetch[hnResponse](ctx, u, "hacker news", json.Unmarshal)
 	if err != nil {
 		return nil, err
 	}

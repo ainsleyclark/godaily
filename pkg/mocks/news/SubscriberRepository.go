@@ -41,21 +41,6 @@ func (m *MockSubscriberRepository) EXPECT() *MockSubscriberRepositoryMockRecorde
 	return m.recorder
 }
 
-// Reactivate mocks base method.
-func (m *MockSubscriberRepository) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reactivate", ctx, email)
-	ret0, _ := ret[0].(news.Subscriber)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Reactivate indicates an expected call of Reactivate.
-func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
-}
-
 // Create mocks base method.
 func (m *MockSubscriberRepository) Create(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()
@@ -129,6 +114,21 @@ func (m *MockSubscriberRepository) ListActive(ctx context.Context) ([]news.Subsc
 func (mr *MockSubscriberRepositoryMockRecorder) ListActive(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActive", reflect.TypeOf((*MockSubscriberRepository)(nil).ListActive), ctx)
+}
+
+// Reactivate mocks base method.
+func (m *MockSubscriberRepository) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Reactivate", ctx, email)
+	ret0, _ := ret[0].(news.Subscriber)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Reactivate indicates an expected call of Reactivate.
+func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
 // Unsubscribe mocks base method.
