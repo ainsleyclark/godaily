@@ -83,16 +83,17 @@ func TestHandler(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
 			itemsMock := mocknews.NewMockItemRepository(ctrl)
 			test.mock(itemsMock)
 
-			api.SetApp(&godaily.App{
+			a := &godaily.App{
 				Config: &env.Config{},
 				Repository: &godaily.Repository{
 					Items: itemsMock,
 				},
-			})
+			}
 
 			target := "/api/items/"
 			w := httptest.NewRecorder()
@@ -104,6 +105,8 @@ func TestHandler(t *testing.T) {
 				q.Set("id", test.id)
 				r.URL.RawQuery = q.Encode()
 			}
+
+			r = r.WithContext(api.WithApp(r.Context(), a))
 
 			Handler(w, r)
 

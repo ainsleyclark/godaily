@@ -93,20 +93,22 @@ func TestHandleIssues(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
-			api.SetApp(&godaily.App{
+			a := &godaily.App{
 				Config: &env.Config{},
 				Repository: &godaily.Repository{
 					Issues: issuesMock,
 				},
-			})
+			}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/issues"+test.query, nil)
 			r.RemoteAddr = "1.2.3.4:1234"
+			r = r.WithContext(api.WithApp(r.Context(), a))
 
 			HandleIssues(w, r)
 

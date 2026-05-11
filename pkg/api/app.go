@@ -29,21 +29,32 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 )
 
+type appContextKey struct{}
+
 var (
 	app   *godaily.App
 	appMu sync.RWMutex
 )
 
-// SetApp sets the singleton App. Safe for concurrent use, allowing parallel tests
-// to inject mocks without data races.
+// WithApp stores a into ctx so that GetApp returns it without touching the global.
+// Use this in tests to inject a mock app per request.
+func WithApp(ctx context.Context, a *godaily.App) context.Context {
+	return context.WithValue(ctx, appContextKey{}, a)
+}
+
+// SetApp sets the singleton App used in production.
 func SetApp(a *godaily.App) {
 	appMu.Lock()
 	defer appMu.Unlock()
 	app = a
 }
 
-// GetApp returns the singleton App, bootstrapping it on first call.
+// GetApp returns the App stored in ctx (injected via WithApp), falling back to
+// the global singleton and bootstrapping it on first call if neither is set.
 func GetApp(ctx context.Context) *godaily.App {
+	if a, ok := ctx.Value(appContextKey{}).(*godaily.App); ok && a != nil {
+		return a
+	}
 	appMu.RLock()
 	a := app
 	appMu.RUnlock()
@@ -69,10 +80,19 @@ func GetApp(ctx context.Context) *godaily.App {
 type AppHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App)
 
 // Handle applies the standard API middleware chain to next, injecting the
-// request context and bootstrapped App.
+// request context and bootstrapped App. Rate limiting is skipped when the App
+// has been injected via WithApp (i.e. in tests).
 func Handle(next AppHandler) http.HandlerFunc {
-	return Limiter.Limit(func(w http.ResponseWriter, r *http.Request) {
+	inner := func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		next(ctx, w, r, GetApp(ctx))
-	})
+	}
+	limited := Limiter.Limit(inner)
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Context().Value(appContextKey{}) != nil {
+			inner(w, r)
+		} else {
+			limited(w, r)
+		}
+	}
 }
