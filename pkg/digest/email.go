@@ -41,25 +41,6 @@ var (
 	textTmpl = texttemplate.Must(texttemplate.New("digest-text").Parse(templates.EmailLayoutText + templates.EmailText))
 )
 
-// Mark file paths used in the email HTML. Sources without an entry render the
-// ShortLabel text chip instead. Kept private to the email render layer; the
-// site-side templ render has its own equivalent in marks.templ.
-var emailMarkURLs = map[news.Source]string{
-	news.SourceArdanLabs:    "/assets/images/marks/ardanlabs_podcast.svg",
-	news.SourceDevTo:        "/assets/images/marks/dev_to.svg",
-	news.SourceGitHub:       "/assets/images/marks/github.svg",
-	news.SourceGoBlog:       "/assets/images/marks/go_blog.svg",
-	news.SourceGoPodcast:    "/assets/images/marks/go_podcast.png",
-	news.SourceGolangBridge: "/assets/images/marks/golangbridge.png",
-	news.SourceHN:           "/assets/images/marks/hacker_news.svg",
-	news.SourceJetBrains:    "/assets/images/marks/goland.svg",
-	news.SourceLobsters:     "/assets/images/marks/lobsters.png",
-	news.SourceMastodon:     "/assets/images/marks/mastodon.svg",
-	news.SourceMedium:       "/assets/images/marks/medium.svg",
-	news.SourceReddit:       "/assets/images/marks/reddit.svg",
-	news.SourceYouTube:      "/assets/images/marks/youtube.svg",
-}
-
 // Per-section accent colours used in the email HTML. Inline styles only —
 // most email clients strip <style> blocks, so colour is passed through the
 // template rather than driven from a CSS class.
@@ -70,28 +51,6 @@ var sectionAccents = map[news.Tag]string{
 	news.TagDiscussion: "#0d9488",
 	news.TagVideo:      "#ec4899",
 	news.TagTrending:   "#f59e0b",
-}
-
-// Short text chips used as a fallback when a source has no mark image, and
-// also shown beside the mark as an accessible label.
-var emailShortLabels = map[news.Source]string{
-	news.SourceArdanLabs:      "AL",
-	news.SourceAwesomeGo:      "AG",
-	news.SourceDevTo:          "DEV",
-	news.SourceFallthrough:    "FT",
-	news.SourceGitHub:         "GH",
-	news.SourceGitHubTrending: "GH",
-	news.SourceGoBlog:         "go",
-	news.SourceGoPodcast:      "GP",
-	news.SourceGoRelease:      "go",
-	news.SourceGolangBridge:   "GB",
-	news.SourceHN:             "HN",
-	news.SourceJetBrains:      "JB",
-	news.SourceLobsters:       "LO",
-	news.SourceMastodon:       "M",
-	news.SourceMedium:         "M",
-	news.SourceReddit:         "r/",
-	news.SourceYouTube:        "YT",
 }
 
 type (
@@ -203,8 +162,8 @@ func toEmailItem(item news.Item) emailItem {
 		Meta:           strings.Join(parts, " · "),
 		Source:         string(item.Source),
 		SourceNiceName: item.Source.NiceName(),
-		SourceLabel:    emailShortLabels[item.Source],
-		MarkURL:        emailMarkURLs[item.Source],
+		SourceLabel:    item.Source.ShortLabel(),
+		MarkURL:        item.Source.MarkURL(),
 	}
 }
 

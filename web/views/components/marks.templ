@@ -2,53 +2,13 @@ package components
 
 import "github.com/ainsleyclark/godaily/pkg/news"
 
-// markFiles maps a news.Source to the public path of its mark/logo asset.
-// Sources without an entry render a text chip via shortLabels.
-var markFiles = map[news.Source]string{
-	news.SourceArdanLabs:    "/assets/images/marks/ardanlabs_podcast.svg",
-	news.SourceDevTo:        "/assets/images/marks/dev_to.svg",
-	news.SourceGitHub:       "/assets/images/marks/github.svg",
-	news.SourceGoBlog:       "/assets/images/marks/go_blog.svg",
-	news.SourceGoPodcast:    "/assets/images/marks/go_podcast.png",
-	news.SourceGolangBridge: "/assets/images/marks/golangbridge.png",
-	news.SourceHN:           "/assets/images/marks/hacker_news.svg",
-	news.SourceJetBrains:    "/assets/images/marks/goland.svg",
-	news.SourceLobsters:     "/assets/images/marks/lobsters.png",
-	news.SourceMastodon:     "/assets/images/marks/mastodon.svg",
-	news.SourceMedium:       "/assets/images/marks/medium.svg",
-	news.SourceReddit:       "/assets/images/marks/reddit.svg",
-	news.SourceYouTube:      "/assets/images/marks/youtube.svg",
-}
-
-// shortLabels are the 2–3 char text chips rendered when a source has no mark
-// file, and used as the alt text when a mark is present.
-var shortLabels = map[news.Source]string{
-	news.SourceArdanLabs:      "AL",
-	news.SourceAwesomeGo:      "AG",
-	news.SourceDevTo:          "DEV",
-	news.SourceFallthrough:    "FT",
-	news.SourceGitHub:         "GH",
-	news.SourceGitHubTrending: "GH",
-	news.SourceGoBlog:         "go",
-	news.SourceGoPodcast:      "GP",
-	news.SourceGoRelease:      "go",
-	news.SourceGolangBridge:   "GB",
-	news.SourceHN:             "HN",
-	news.SourceJetBrains:      "JB",
-	news.SourceLobsters:       "LO",
-	news.SourceMastodon:       "M",
-	news.SourceMedium:         "M",
-	news.SourceReddit:         "r/",
-	news.SourceYouTube:        "YT",
-}
-
 // SourceMark renders the per-item source badge: a small image when a mark
-// file exists, or a text chip otherwise. Falls back to the source's nice
-// name if no short label is registered.
+// file is registered on the source, or a text chip otherwise. Mark/label
+// data is owned by pkg/news (Source.MarkURL / Source.ShortLabel).
 templ SourceMark(src news.Source) {
-	if file, ok := markFiles[src]; ok {
-		<img class="digest-item__mark" src={ file } alt={ shortLabels[src] } width="20" height="20"/>
+	if file := src.MarkURL(); file != "" {
+		<img class="digest-item__mark" src={ file } alt={ src.ShortLabel() } width="20" height="20"/>
 	} else {
-		<span class="digest-item__chip">{ shortLabels[src] }</span>
+		<span class="digest-item__chip">{ src.ShortLabel() }</span>
 	}
 }

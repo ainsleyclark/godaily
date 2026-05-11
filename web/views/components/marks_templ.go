@@ -10,49 +10,9 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/ainsleyclark/godaily/pkg/news"
 
-// markFiles maps a news.Source to the public path of its mark/logo asset.
-// Sources without an entry render a text chip via shortLabels.
-var markFiles = map[news.Source]string{
-	news.SourceArdanLabs:    "/assets/images/marks/ardanlabs_podcast.svg",
-	news.SourceDevTo:        "/assets/images/marks/dev_to.svg",
-	news.SourceGitHub:       "/assets/images/marks/github.svg",
-	news.SourceGoBlog:       "/assets/images/marks/go_blog.svg",
-	news.SourceGoPodcast:    "/assets/images/marks/go_podcast.png",
-	news.SourceGolangBridge: "/assets/images/marks/golangbridge.png",
-	news.SourceHN:           "/assets/images/marks/hacker_news.svg",
-	news.SourceJetBrains:    "/assets/images/marks/goland.svg",
-	news.SourceLobsters:     "/assets/images/marks/lobsters.png",
-	news.SourceMastodon:     "/assets/images/marks/mastodon.svg",
-	news.SourceMedium:       "/assets/images/marks/medium.svg",
-	news.SourceReddit:       "/assets/images/marks/reddit.svg",
-	news.SourceYouTube:      "/assets/images/marks/youtube.svg",
-}
-
-// shortLabels are the 2–3 char text chips rendered when a source has no mark
-// file, and used as the alt text when a mark is present.
-var shortLabels = map[news.Source]string{
-	news.SourceArdanLabs:      "AL",
-	news.SourceAwesomeGo:      "AG",
-	news.SourceDevTo:          "DEV",
-	news.SourceFallthrough:    "FT",
-	news.SourceGitHub:         "GH",
-	news.SourceGitHubTrending: "GH",
-	news.SourceGoBlog:         "go",
-	news.SourceGoPodcast:      "GP",
-	news.SourceGoRelease:      "go",
-	news.SourceGolangBridge:   "GB",
-	news.SourceHN:             "HN",
-	news.SourceJetBrains:      "JB",
-	news.SourceLobsters:       "LO",
-	news.SourceMastodon:       "M",
-	news.SourceMedium:         "M",
-	news.SourceReddit:         "r/",
-	news.SourceYouTube:        "YT",
-}
-
 // SourceMark renders the per-item source badge: a small image when a mark
-// file exists, or a text chip otherwise. Falls back to the source's nice
-// name if no short label is registered.
+// file is registered on the source, or a text chip otherwise. Mark/label
+// data is owned by pkg/news (Source.MarkURL / Source.ShortLabel).
 func SourceMark(src news.Source) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -74,7 +34,7 @@ func SourceMark(src news.Source) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		if file, ok := markFiles[src]; ok {
+		if file := src.MarkURL(); file != "" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<img class=\"digest-item__mark\" src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -82,7 +42,7 @@ func SourceMark(src news.Source) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(file)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 50, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 10, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -93,9 +53,9 @@ func SourceMark(src news.Source) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(shortLabels[src])
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(src.ShortLabel())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 50, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 10, Col: 68}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -111,9 +71,9 @@ func SourceMark(src news.Source) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(shortLabels[src])
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(src.ShortLabel())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 52, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/marks.templ`, Line: 12, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
