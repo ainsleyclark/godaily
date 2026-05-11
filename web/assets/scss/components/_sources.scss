@@ -1,22 +1,29 @@
+@use '../abstracts/mixins' as *;
+
 .sources {
 	background: var(--bg-2);
 
 	&__grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-		gap: 1rem;
+		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+		gap: 0.75rem;
 		margin-top: 2.5rem;
+
+		@include mobile {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 0.625rem;
+		}
 	}
 
 	&__pill {
 		background: var(--bg-card);
 		border: 1px solid var(--border);
 		border-radius: 12px;
-		padding: 1.1rem 1.25rem;
+		padding: 0.875rem 1rem;
 		display: flex;
 		align-items: center;
-		gap: 12px;
-		font-size: 0.9rem;
+		gap: 10px;
+		font-size: 0.875rem;
 		font-weight: 600;
 		color: var(--text);
 		transition: transform 0.15s, box-shadow 0.15s;
@@ -27,10 +34,18 @@
 		}
 	}
 
+	&__mark {
+		width: 32px;
+		height: 32px;
+		flex-shrink: 0;
+		object-fit: contain;
+		border-radius: 6px;
+	}
+
 	&__icon {
 		width: 32px;
 		height: 32px;
-		border-radius: 8px;
+		border-radius: 7px;
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
@@ -39,5 +54,8 @@
 
 	&__name {
 		line-height: 1.2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 }
