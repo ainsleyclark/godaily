@@ -7,5 +7,3 @@
   - Discussions
   - Videos
   - Trending
-- Logo reel
-- 

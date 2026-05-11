@@ -80,6 +80,10 @@ const options = {
 					from: ['./assets/images/**/*.svg'],
 					to: ['./images'],
 				},
+				{
+					from: ['./assets/images/logos/*.png'],
+					to: ['./images/logos'],
+				},
 			],
 		}),
 		svgoPlugin(),

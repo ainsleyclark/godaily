@@ -1,0 +1,29 @@
+package components
+
+type logoEntry struct {
+	src string
+	alt string
+}
+
+var logoItems = []logoEntry{
+	{"/assets/images/logos/go.svg", "Go"},
+	{"/assets/images/logos/github.svg", "GitHub"},
+	{"/assets/images/logos/jetbrains.svg", "JetBrains"},
+	{"/assets/images/logos/reddit.svg", "Reddit"},
+	{"/assets/images/logos/devto.svg", "DEV.to"},
+	{"/assets/images/logos/medium.svg", "Medium"},
+	{"/assets/images/logos/goland.svg", "GoLand"},
+	{"/assets/images/logos/youtube.svg", "YouTube"},
+	{"/assets/images/logos/ardanlabs_podcast.svg", "Ardan Labs Podcast"},
+	{"/assets/images/logos/mastodon.svg", "Mastodon"},
+	{"/assets/images/logos/golang-bridge.png", "Golang Bridge"},
+	{"/assets/images/logos/hacker-news.svg", "Hacker News"},
+}
+
+templ Logos() {
+	<div class="logo-ticker" aria-hidden="true">
+		for _, l := range logoItems {
+			<img class="logo-ticker__img" src={ l.src } alt={ l.alt }/>
+		}
+	</div>
+}

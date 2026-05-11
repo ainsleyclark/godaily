@@ -1,0 +1,30 @@
+@use '../abstracts/mixins' as *;
+
+// Prevent inner strips from shrinking inside the flex row
+.horizontal-marquee-inner {
+	flex-shrink: 0;
+	width: max-content;
+	justify-content: flex-start;
+}
+
+.logo-ticker {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2.5rem 0;
+	mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+	-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+
+	&__img {
+		height: 34px;
+		width: auto;
+		display: block;
+		flex-shrink: 0;
+		opacity: 0.8;
+		transition: opacity 0.2s ease;
+		user-select: none;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
