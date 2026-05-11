@@ -191,12 +191,11 @@ func (s Source) IsRanked() bool {
 }
 
 var sourceItemLimits = map[Source]int{
-	SourceReddit:         5,
-	SourceAwesomeGo:      3,
-	SourceMedium:         3,
-	SourceYouTube:        0,
-	SourceGitHub:         0,
-	SourceGitHubTrending: 0,
+	SourceReddit:    5,
+	SourceAwesomeGo: 3,
+	SourceMedium:    3,
+	SourceYouTube:   0,
+	SourceGitHub:    0,
 }
 
 // ItemLimit returns the maximum number of items to display from this source.
