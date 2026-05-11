@@ -17,35 +17,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package api
 
 import (
-	"net/http"
+	"net/http/httptest"
+	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/stretchr/testify/assert"
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
+func TestQueryInt(t *testing.T) {
+	t.Parallel()
 
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
+	tt := map[string]struct {
+		query    string
+		key      string
+		fallback int64
+		want     int64
+	}{
+		"Present and valid":  {query: "?n=42", key: "n", fallback: 1, want: 42},
+		"Missing key":        {query: "", key: "n", fallback: 7, want: 7},
+		"Non-numeric value":  {query: "?n=abc", key: "n", fallback: 5, want: 5},
+		"Negative value":     {query: "?n=-3", key: "n", fallback: 1, want: -3},
+		"Zero value":         {query: "?n=0", key: "n", fallback: 1, want: 0},
+		"Empty string value": {query: "?n=", key: "n", fallback: 9, want: 9},
+		"Different key":      {query: "?n=10", key: "m", fallback: 3, want: 3},
+	}
 
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
-		}
-
-		return c.Render(pages.IssuesArchive(issues))
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			r := httptest.NewRequest("GET", "/"+test.query, nil)
+			got := QueryInt(r, test.key, test.fallback)
+			assert.Equal(t, test.want, got)
+		})
 	}
 }

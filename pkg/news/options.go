@@ -17,35 +17,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package news
 
-import (
-	"net/http"
+const defaultPerPage int64 = 20
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
-)
+// ListOptions controls filtering and pagination for List queries.
+// A zero value returns all results (no pagination).
+type ListOptions struct {
+	// Page is 1-based. Zero means no pagination.
+	Page int64
+	// PerPage is the number of items per page. Zero uses defaultPerPage.
+	PerPage int64
+}
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
-
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
-
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
-		}
-
-		return c.Render(pages.IssuesArchive(issues))
+// Limit returns the SQL LIMIT value for this page.
+// Returns a large sentinel (10000) when pagination is disabled.
+func (o ListOptions) Limit() int64 {
+	if o.Page == 0 {
+		return 10000
 	}
+	if o.PerPage <= 0 {
+		return defaultPerPage
+	}
+	return o.PerPage
+}
+
+// Offset returns the SQL OFFSET value for the current page.
+func (o ListOptions) Offset() int64 {
+	if o.Page <= 1 {
+		return 0
+	}
+	return (o.Page - 1) * o.Limit()
 }

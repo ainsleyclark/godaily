@@ -17,87 +17,98 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package handler
 
 import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSubscribe(t *testing.T) {
+func TestHandler(t *testing.T) {
+	t.Parallel()
+
 	tt := map[string]struct {
-		body       string
-		method     string
-		mock       func(s *mocksubscriber.MockSubscriber)
+		mock       func(items *mocknews.MockItemRepository)
+		id         string
 		wantStatus int
 	}{
 		"OK": {
-			body:   `{"email":"test@example.com"}`,
-			method: http.MethodPost,
-			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(news.Subscriber{}, nil)
+			mock: func(items *mocknews.MockItemRepository) {
+				items.EXPECT().Find(gomock.Any(), int64(42)).Return(news.Item{ID: 42}, nil)
 			},
+			id:         "42",
 			wantStatus: http.StatusOK,
 		},
-		"Wrong Method": {
-			body:       `{"email":"test@example.com"}`,
-			method:     http.MethodGet,
-			mock:       func(s *mocksubscriber.MockSubscriber) {},
-			wantStatus: http.StatusMethodNotAllowed,
+		"Not found": {
+			mock: func(items *mocknews.MockItemRepository) {
+				items.EXPECT().Find(gomock.Any(), int64(99)).Return(news.Item{}, store.ErrNotFound)
+			},
+			id:         "99",
+			wantStatus: http.StatusNotFound,
 		},
-		"Missing Email": {
-			body:       `{}`,
-			method:     http.MethodPost,
-			mock:       func(s *mocksubscriber.MockSubscriber) {},
+		"Missing id": {
+			mock:       func(items *mocknews.MockItemRepository) {},
+			id:         "",
 			wantStatus: http.StatusBadRequest,
 		},
-		"Invalid Email": {
-			body:       `{"email":"notanemail"}`,
-			method:     http.MethodPost,
-			mock:       func(s *mocksubscriber.MockSubscriber) {},
+		"Non-numeric id": {
+			mock:       func(items *mocknews.MockItemRepository) {},
+			id:         "abc",
 			wantStatus: http.StatusBadRequest,
 		},
-		"Already Subscribed": {
-			body:   `{"email":"dupe@example.com"}`,
-			method: http.MethodPost,
-			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(news.Subscriber{}, subscriber.ErrAlreadySubscribed)
-			},
-			wantStatus: http.StatusConflict,
+		"Zero id": {
+			mock:       func(items *mocknews.MockItemRepository) {},
+			id:         "0",
+			wantStatus: http.StatusBadRequest,
 		},
-		"Subscribe Error": {
-			body:   `{"email":"err@example.com"}`,
-			method: http.MethodPost,
-			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(news.Subscriber{}, errors.New("db error"))
+		"Store error": {
+			mock: func(items *mocknews.MockItemRepository) {
+				items.EXPECT().Find(gomock.Any(), int64(1)).Return(news.Item{}, errors.New("db error"))
 			},
+			id:         "1",
 			wantStatus: http.StatusInternalServerError,
 		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
-			svc := mocksubscriber.NewMockSubscriber(ctrl)
-			test.mock(svc)
+			itemsMock := mocknews.NewMockItemRepository(ctrl)
+			test.mock(itemsMock)
 
-			api.SetApp(&godaily.App{Subscribers: svc, Config: &env.Config{}})
+			a := &godaily.App{
+				Config: &env.Config{},
+				Repository: &godaily.Repository{
+					Items: itemsMock,
+				},
+			}
 
+			target := "/api/items/"
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(test.method, "/api/subscribe", strings.NewReader(test.body))
-			HandleSubscribe(w, r)
+			r := httptest.NewRequest(http.MethodGet, target, nil)
+			r.RemoteAddr = "1.2.3.4:1234"
+
+			if test.id != "" {
+				q := r.URL.Query()
+				q.Set("id", test.id)
+				r.URL.RawQuery = q.Encode()
+			}
+
+			r = r.WithContext(api.WithApp(r.Context(), a))
+
+			Handler(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

@@ -52,7 +52,7 @@ func TestSite(t *testing.T) {
 	}{
 		"Happy path no issues": {
 			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{}, nil)
 			},
 			wantFiles: []string{
@@ -66,7 +66,7 @@ func TestSite(t *testing.T) {
 		},
 		"Happy path with issue": {
 			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 			},
@@ -82,20 +82,20 @@ func TestSite(t *testing.T) {
 		},
 		"List error": {
 			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any()).Return(nil, errors.New("db error"))
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Latest error": {
 			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Find error": {
 			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any()).Return([]news.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(news.Issue{}, errors.New("db error"))
 			},

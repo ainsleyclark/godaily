@@ -49,7 +49,7 @@ func TestIssues(t *testing.T) {
 		"Internal Error": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					List(gomock.Any()).
+					List(gomock.Any(), gomock.Any()).
 					Return(nil, errors.New("internal error"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -57,7 +57,7 @@ func TestIssues(t *testing.T) {
 		"OK No Issues": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					List(gomock.Any()).
+					List(gomock.Any(), gomock.Any()).
 					Return([]news.Issue{}, nil)
 			},
 			wantStatus: http.StatusOK,
@@ -66,7 +66,7 @@ func TestIssues(t *testing.T) {
 		"Find Error": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					List(gomock.Any()).
+					List(gomock.Any(), gomock.Any()).
 					Return([]news.Issue{{ID: 1, Slug: "2026-04-28"}}, nil)
 				issues.EXPECT().
 					Find(gomock.Any(), int64(1)).
@@ -77,7 +77,7 @@ func TestIssues(t *testing.T) {
 		"OK With Issues": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().
-					List(gomock.Any()).
+					List(gomock.Any(), gomock.Any()).
 					Return([]news.Issue{
 						{ID: 1, Slug: "2026-04-28"},
 						{ID: 2, Slug: "2026-04-25"},

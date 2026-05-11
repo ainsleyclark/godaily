@@ -17,35 +17,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package api
 
-import (
-	"net/http"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+const (
+	// DefaultPage is the default page number for paginated responses.
+	DefaultPage int64 = 1
+	// DefaultPerPage is the default number of items per page.
+	DefaultPerPage int64 = 20
+	// MaxPerPage is the maximum number of items allowed per page.
+	MaxPerPage int64 = 100
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
-
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
-
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
-		}
-
-		return c.Render(pages.IssuesArchive(issues))
-	}
+// PaginatedResponse is the JSON envelope returned by paginated list endpoints.
+type PaginatedResponse[T any] struct {
+	Data    []T   `json:"data"`
+	Page    int64 `json:"page"`
+	PerPage int64 `json:"per_page"`
+	Total   int64 `json:"total"`
 }

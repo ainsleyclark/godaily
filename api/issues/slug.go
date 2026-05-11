@@ -17,35 +17,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package handler
 
 import (
+	"context"
+	"errors"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
+// Handler is the Vercel serverless function entry point for GET /api/issues/{slug}.
+// The slug path segment is injected by Vercel as the "slug" query parameter.
+func Handler(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		slug := r.URL.Query().Get("slug")
+		if slug == "" {
+			api.Error(w, http.StatusBadRequest, "slug is required")
+			return
+		}
 
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
+		issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
 		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
-
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+			if errors.Is(err, store.ErrNotFound) {
+				api.Error(w, http.StatusNotFound, "issue not found")
+				return
 			}
-			issues[i] = full
+			api.Error(w, http.StatusInternalServerError, "failed to fetch issue")
+			return
 		}
 
-		return c.Render(pages.IssuesArchive(issues))
-	}
+		api.JSON(w, http.StatusOK, issue)
+	})(w, r)
 }

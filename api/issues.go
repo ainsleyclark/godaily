@@ -17,35 +17,47 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package api
 
 import (
+	"context"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
+// HandleIssues is the Vercel serverless function entry point for GET /api/issues.
+func HandleIssues(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		page := api.QueryInt(r, "page", api.DefaultPage)
+		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
 
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
+		if page < 1 {
+			page = api.DefaultPage
+		}
+		if perPage < 1 || perPage > api.MaxPerPage {
+			perPage = api.DefaultPerPage
+		}
+
+		total, err := a.Repository.Issues.Count(ctx)
 		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+			api.Error(w, http.StatusInternalServerError, "failed to count issues")
+			return
 		}
 
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
+		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{Page: page, PerPage: perPage})
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to list issues")
+			return
 		}
 
-		return c.Render(pages.IssuesArchive(issues))
-	}
+		api.JSON(w, http.StatusOK, api.PaginatedResponse[news.Issue]{
+			Data:    issues,
+			Page:    page,
+			PerPage: perPage,
+			Total:   total,
+		})
+	})(w, r)
 }

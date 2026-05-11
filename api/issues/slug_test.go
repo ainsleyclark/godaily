@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package handler
 
 import (
 	"errors"
@@ -28,60 +28,84 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSend(t *testing.T) {
+func TestHandler(t *testing.T) {
+	t.Parallel()
+
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
-		secret     string
-		authHeader string
+		mock       func(issues *mocknews.MockIssueRepository)
+		slug       string
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(nil)
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(news.Issue{
+					ID:   1,
+					Slug: "2026-01-01",
+				}, nil)
 			},
+			slug:       "2026-01-01",
 			wantStatus: http.StatusOK,
 		},
-		"Send Digest Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
+		"Not found": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(news.Issue{}, store.ErrNotFound)
 			},
-			wantStatus: http.StatusInternalServerError,
+			slug:       "unknown",
+			wantStatus: http.StatusNotFound,
 		},
-		"Send Suggestion Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(errors.New("synth failed"))
+		"Missing slug": {
+			mock:       func(issues *mocknews.MockIssueRepository) {},
+			slug:       "",
+			wantStatus: http.StatusBadRequest,
+		},
+		"Store error": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(news.Issue{}, errors.New("db error"))
 			},
+			slug:       "2026-01-01",
 			wantStatus: http.StatusInternalServerError,
-		},
-		"Unauthorized": {
-			mock:       func(r *mockdigest.MockRunner) {},
-			secret:     "supersecret",
-			authHeader: "Bearer wrongtoken",
-			wantStatus: http.StatusUnauthorized,
 		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			test.mock(runner)
+			issuesMock := mocknews.NewMockIssueRepository(ctrl)
+			test.mock(issuesMock)
 
-			api.SetApp(&godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}})
+			a := &godaily.App{
+				Config: &env.Config{},
+				Repository: &godaily.Repository{
+					Issues: issuesMock,
+				},
+			}
+
+			target := "/api/issues/"
+			if test.slug != "" {
+				target += test.slug + "/"
+			}
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-			if test.authHeader != "" {
-				r.Header.Set("Authorization", test.authHeader)
+			r := httptest.NewRequest(http.MethodGet, target, nil)
+			r.RemoteAddr = "1.2.3.4:1234"
+
+			if test.slug != "" {
+				q := r.URL.Query()
+				q.Set("slug", test.slug)
+				r.URL.RawQuery = q.Encode()
 			}
-			HandleSend(w, r)
+
+			r = r.WithContext(api.WithApp(r.Context(), a))
+
+			Handler(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

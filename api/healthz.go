@@ -17,35 +17,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package api
 
 import (
+	"context"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
-
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
-
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
-		}
-
-		return c.Render(pages.IssuesArchive(issues))
-	}
+// HandleHealthz is the Vercel serverless function entry point for GET /api/healthz.
+func HandleHealthz(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(_ context.Context, w http.ResponseWriter, _ *http.Request, _ *godaily.App) {
+		api.OK(w)
+	})(w, r)
 }

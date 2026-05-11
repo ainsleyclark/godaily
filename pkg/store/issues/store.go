@@ -77,8 +77,8 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) 
 	return issueFromRows(i, items), nil
 }
 
-func (s Store) List(ctx context.Context) ([]news.Issue, error) {
-	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{Limit: 10000, Offset: 0})
+func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Issue, error) {
+	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{Limit: opts.Limit(), Offset: opts.Offset()})
 	if err != nil {
 		return nil, err
 	}

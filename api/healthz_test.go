@@ -17,35 +17,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package api
 
 import (
 	"net/http"
+	"net/http/httptest"
+	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/stretchr/testify/assert"
 )
 
-// Issues handles the GoDaily issues archive page.
-func Issues(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Context()
+func TestHandleHealthz(t *testing.T) {
+	t.Parallel()
 
-		issues, err := a.Repository.Issues.List(ctx, news.ListOptions{})
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodGet, "/api/healthz", nil)
+	r.RemoteAddr = "1.2.3.4:1234"
 
-		for i, issue := range issues {
-			full, err := a.Repository.Issues.Find(ctx, issue.ID)
-			if err != nil {
-				return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-			}
-			issues[i] = full
-		}
+	HandleHealthz(w, r)
 
-		return c.Render(pages.IssuesArchive(issues))
-	}
+	assert.Equal(t, http.StatusOK, w.Code)
 }
