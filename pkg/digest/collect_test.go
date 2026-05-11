@@ -33,10 +33,10 @@ import (
 )
 
 func TestAggregator_Collect(t *testing.T) {
-	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-	inWindow := yesterday.Add(time.Hour)
-	beforeWindow := yesterday.Add(-time.Hour)
-	afterWindow := yesterday.Add(25 * time.Hour)
+	day, next := collectWindow(time.Now())
+	inWindow := day.Add(time.Hour)
+	beforeWindow := day.Add(-time.Hour)
+	afterWindow := next.Add(time.Hour)
 
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
@@ -188,8 +188,8 @@ func TestAggregator_Collect(t *testing.T) {
 }
 
 func TestAggregator_Collect_RenderFallback(t *testing.T) {
-	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-	inWindow := yesterday.Add(time.Hour)
+	day, _ := collectWindow(time.Now())
+	inWindow := day.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
 		news.SourceDevTo: mockFetcher{
@@ -220,8 +220,8 @@ func TestAggregator_Collect_RenderFallback(t *testing.T) {
 }
 
 func TestAggregator_Collect_NoSynth(t *testing.T) {
-	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-	inWindow := yesterday.Add(time.Hour)
+	day, _ := collectWindow(time.Now())
+	inWindow := day.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
 		news.SourceDevTo: mockFetcher{
@@ -242,8 +242,8 @@ func TestAggregator_Collect_NoSynth(t *testing.T) {
 }
 
 func TestAggregator_Collect_Persistence(t *testing.T) {
-	yesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
-	inWindow := yesterday.Add(time.Hour)
+	day, _ := collectWindow(time.Now())
+	inWindow := day.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
 		news.SourceDevTo: mockFetcher{
@@ -282,7 +282,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, news.IssueStatusDraft, stored.Status)
 
@@ -315,7 +315,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		first, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		first, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
 		require.NoError(t, err)
 		require.NotZero(t, first.ID)
 
@@ -324,7 +324,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err = agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		second, err := issueRepo.FindBySlug(t.Context(), yesterday.Format("2006-01-02"))
+		second, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, first.ID, second.ID, "second collect must not create a duplicate issue")
 	})

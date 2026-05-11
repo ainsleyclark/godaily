@@ -22,6 +22,7 @@ package source
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"strings"
 	"testing"
@@ -31,6 +32,48 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestHnWindow(t *testing.T) {
+	t.Parallel()
+
+	// Monday 2026-05-11 01:00 UTC
+	monday := time.Date(2026, time.May, 11, 1, 0, 0, 0, time.UTC)
+	// Tuesday 2026-05-12 01:00 UTC
+	tuesday := time.Date(2026, time.May, 12, 1, 0, 0, 0, time.UTC)
+
+	t.Run("Monday returns Saturday+Sunday window", func(t *testing.T) {
+		t.Parallel()
+		start, end := hnWindow(monday)
+		assert.Equal(t, time.Date(2026, time.May, 9, 0, 0, 0, 0, time.UTC), start)  // Saturday
+		assert.Equal(t, time.Date(2026, time.May, 11, 0, 0, 0, 0, time.UTC), end)   // Monday midnight
+	})
+
+	t.Run("Non-Monday returns yesterday window", func(t *testing.T) {
+		t.Parallel()
+		start, end := hnWindow(tuesday)
+		assert.Equal(t, time.Date(2026, time.May, 11, 0, 0, 0, 0, time.UTC), start) // Monday midnight
+		assert.Equal(t, time.Date(2026, time.May, 12, 0, 0, 0, 0, time.UTC), end)   // Tuesday midnight
+	})
+}
+
+func TestHnURL(t *testing.T) {
+	t.Parallel()
+
+	start := time.Date(2026, time.May, 9, 0, 0, 0, 0, time.UTC)
+	end := time.Date(2026, time.May, 11, 0, 0, 0, 0, time.UTC)
+	raw := hnURL(start, end)
+
+	u, err := url.Parse(raw)
+	require.NoError(t, err)
+
+	// numericFilters value must be present and percent-encoded (no raw >, <, or ,).
+	filter := u.Query().Get("numericFilters")
+	assert.NotEmpty(t, filter)
+	assert.NotContains(t, u.RawQuery, ">", "raw > must be percent-encoded in query string")
+	assert.NotContains(t, u.RawQuery, "<", "raw < must be percent-encoded in query string")
+	assert.Contains(t, u.RawQuery, "%3E")
+	assert.Contains(t, u.RawQuery, "%3C")
+}
 
 // hnNoURLResponse is a hit where the url field is absent (Ask HN / self-post),
 // exercising the HN permalink fallback in transform().
