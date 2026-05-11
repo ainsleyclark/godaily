@@ -90,10 +90,18 @@ var FeaturedSources = []Source{
 	SourceLobsters,
 	SourceDevTo,
 	SourceGitHubTrending,
+	SourceGitHub,
 	SourceYouTube,
 	SourceGoBlog,
 	SourceGoRelease,
 	SourceJetBrains,
+	SourceMedium,
+	SourceGolangBridge,
+	SourceGoPodcast,
+	SourceArdanLabs,
+	SourceFallthrough,
+	SourceMastodon,
+	SourceAwesomeGo,
 }
 
 // String implements fmt.Stringer on source.

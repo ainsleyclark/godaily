@@ -18,12 +18,22 @@ templ Sources() {
 			<div class="sources__grid">
 				for _, src := range news.FeaturedSources {
 					<div class="sources__pill">
-						<div
-							class="sources__icon"
-							style={ "background:" + logos.Background(src) }
-						>
-							@logos.SourceLogo(src, 18)
-						</div>
+						if mark := src.MarkURL(); mark != "" {
+							<img
+								class="sources__mark"
+								src={ mark }
+								alt={ src.ShortLabel() }
+								width="32"
+								height="32"
+							/>
+						} else {
+							<div
+								class="sources__icon"
+								style={ "background:" + logos.Background(src) }
+							>
+								@logos.SourceLogo(src, 20)
+							</div>
+						}
 						<span class="sources__name">{ src.NiceName() }</span>
 					</div>
 				}
