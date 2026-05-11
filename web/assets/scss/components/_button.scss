@@ -13,14 +13,14 @@
 	transition: background 0.2s, transform 0.15s, box-shadow 0.2s, color 0.2s;
 
 	&--primary {
-		background: var(--accent);
+		background: var(--text);
 		color: var(--color-white);
-		box-shadow: var(--shadow-button-primary);
+		//box-shadow: var(--shadow-button-primary);
 
 		&:hover {
-			background: var(--accent-dark);
+			background: var(--text-2);
 			transform: translateY(-1px);
-			box-shadow: var(--shadow-button-primary-hover);
+			//box-shadow: var(--shadow-button-primary-hover);
 		}
 
 		&:disabled {
