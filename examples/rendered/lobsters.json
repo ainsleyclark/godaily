@@ -1,5 +1,156 @@
 [
 	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "let-go: Almost Clojure written in Go",
+		"url": "https://github.com/nooga/let-go",
+		"original_url": "https://lobste.rs/s/njobov/let_go_almost_clojure_written_go",
+		"image_url": "https://repository-images.githubusercontent.com/340518175/b16d0200-7540-11eb-9ca9-1b74271ac6f7",
+		"author": {
+			"username": "nooga",
+			"profile_url": "https://lobste.rs/u/nooga"
+		},
+		"snippet": "Almost Clojure written in Go. Contribute to nooga/let-go development by creating an account on GitHub.",
+		"tag": "article",
+		"comments": 1,
+		"score": 0.7619189031733016,
+		"published": "2026-05-10T20:07:57Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "btype: B-tree based collection types for Go",
+		"url": "https://github.com/tidwall/btype",
+		"original_url": "https://lobste.rs/s/0xe7hz/btype_b_tree_based_collection_types_for_go",
+		"image_url": "https://opengraph.githubassets.com/88372fc3c606401d89bd807f6faef7cee7cafb150d11f72c7a69bed7a562a8df/tidwall/btype",
+		"author": {
+			"username": "eatonphil",
+			"profile_url": "https://lobste.rs/u/eatonphil"
+		},
+		"snippet": "B-tree based collection types for Go. Contribute to tidwall/btype development by creating an account on GitHub.",
+		"tag": "article",
+		"comments": 1,
+		"score": 0.1762914343888821,
+		"published": "2026-05-10T15:20:12Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Yggdrasil Network as an Embedded Go Library",
+		"url": "https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h",
+		"original_url": "https://lobste.rs/s/sjbrlg/yggdrasil_network_as_embedded_go_library",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fvtamh51bx8mrtj6omy1g.jpg",
+		"author": {
+			"username": "asciimoth",
+			"profile_url": "https://lobste.rs/u/asciimoth"
+		},
+		"snippet": "Yggdrasil is an experimental overlay IPv6 mesh network. In short, it lets you build a \"network on top...",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5856274687844196,
+		"published": "2026-05-09T17:24:19Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Just Fucking Use Go",
+		"url": "https://blainsmith.com/articles/just-fucking-use-go/",
+		"original_url": "https://lobste.rs/s/znlkib/just_fucking_use_go",
+		"author": {
+			"username": "zarldev",
+			"profile_url": "https://lobste.rs/u/zarldev"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 280,
+		"score": 1,
+		"published": "2026-05-08T12:58:28Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Solod v0.1: Go ergonomics, practical stdlib, native C interop",
+		"url": "https://antonz.org/solod-v0-1/",
+		"original_url": "https://lobste.rs/s/otb6fk/solod_v0_1_go_ergonomics_practical_stdlib",
+		"image_url": "https://antonz.org/solod-v0-1/cover.png",
+		"author": {
+			"username": "mtlynch",
+			"profile_url": "https://lobste.rs/u/mtlynch"
+		},
+		"snippet": "A system-level language with Go syntax and zero runtime.",
+		"tag": "article",
+		"comments": 7,
+		"score": 0.7861595966087034,
+		"published": "2026-05-06T12:39:32Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Slices, Maps, and Channels",
+		"url": "https://internals-for-interns.com/posts/go-runtime-slices-maps-channels/",
+		"original_url": "https://lobste.rs/s/zgxivj/slices_maps_channels",
+		"image_url": "https://internals-for-interns.com/images/go-runtime-header.webp",
+		"author": {
+			"username": "ugur",
+			"profile_url": "https://lobste.rs/u/ugur"
+		},
+		"snippet": "So far in this series we’ve looked at the parts of the Go runtime that orchestrate execution — the memory allocator, the scheduler, the garbage collector, sysmon, the netpoller. Today we’re swit",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1762914343888821,
+		"published": "2026-05-06T08:26:36Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Go is FIPS 140-3 certified",
+		"url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5247",
+		"original_url": "https://lobste.rs/s/feqwqw/go_is_fips_140_3_certified",
+		"author": {
+			"username": "runxiyu",
+			"profile_url": "https://lobste.rs/u/runxiyu"
+		},
+		"snippet": "Welcome to the CMVP The Cryptographic Module Validation Program (CMVP) is a joint effort between the National Institute of Standards and Technology under the Department of Commerce and the Canadian Ce",
+		"tag": "article",
+		"comments": 18,
+		"score": 1,
+		"published": "2026-05-06T04:42:18Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Declarative git repo sync/migration tool and self hosted code search engine",
+		"url": "https://github.com/stepbrobd/miroir",
+		"original_url": "https://lobste.rs/s/zukup5/declarative_git_repo_sync_migration_tool",
+		"image_url": "https://opengraph.githubassets.com/7e38c6db0dca234cc532a025efff69bd6cfc77679ece524091270a04da27807e/stepbrobd/miroir",
+		"author": {
+			"username": "ysun",
+			"profile_url": "https://lobste.rs/u/ysun"
+		},
+		"snippet": "I've seen a few post on moving off of gh and now is probably a pretty good time (?) to show case this project I've been working on since last year ;)",
+		"tag": "article",
+		"comments": 1,
+		"score": 0.4093360343955374,
+		"published": "2026-04-29T13:56:38Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "HAL by any other name",
+		"url": "https://www.zarl.dev/posts/hal-by-any-other-name",
+		"original_url": "https://lobste.rs/s/omgaso/hal_by_any_other_name",
+		"author": {
+			"username": "zarldev",
+			"profile_url": "https://lobste.rs/u/zarldev"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.4093360343955374,
+		"published": "2026-04-28T11:21:35Z"
+	},
+	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Swissing a table",
 		"url": "https://philpearl.github.io/post/swissing_a_table/",
@@ -15,6 +166,7 @@
 		"published": "2026-04-26T14:19:13Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "How GitHub uses eBPF to improve deployment safety",
 		"url": "https://github.blog/engineering/infrastructure/how-github-uses-ebpf-to-improve-deployment-safety/",
@@ -27,10 +179,11 @@
 		"snippet": "Learn how Github uses eBPF to detect and prevent circular dependencies in its deployment tooling.",
 		"tag": "article",
 		"comments": 6,
-		"score": 0.7861595966087034,
+		"score": 0.797465225780268,
 		"published": "2026-04-18T09:17:46Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Many-Step Sequences in Go",
 		"url": "https://lesiw.dev/go/step/",
@@ -46,6 +199,7 @@
 		"published": "2026-04-16T12:48:35Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "How do Wake-On-Lan works?",
 		"url": "https://blog.xaner.dev/post/wake-on-lan/",
@@ -62,6 +216,7 @@
 		"published": "2026-04-15T17:18:59Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Porting Go's strings package to C",
 		"url": "https://antonz.org/porting-go-strings/",
@@ -78,6 +233,7 @@
 		"published": "2026-04-15T08:07:45Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "watgo - a WebAssembly Toolkit for Go",
 		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
@@ -93,6 +249,7 @@
 		"published": "2026-04-10T11:38:16Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "When the compiler lies: breaking memory safety in safe Go",
 		"url": "https://ciolek.dev/posts/when-the-compiler-lies",
@@ -108,6 +265,7 @@
 		"published": "2026-04-07T23:35:34Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Hazmat: OS-level containment for AI coding agents on macOS",
 		"url": "https://github.com/dredozubov/hazmat",
@@ -124,6 +282,7 @@
 		"published": "2026-04-07T16:23:42Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Stamp It! All Programs Must Report Their Version",
 		"url": "https://michael.stapelberg.ch/posts/2026-04-05-stamp-it-all-programs-must-report-their-version/",
@@ -140,6 +299,7 @@
 		"published": "2026-04-05T16:59:29Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Building slogbox",
 		"url": "https://alexrios.me/blog/slogbox-devlog/",
@@ -156,6 +316,7 @@
 		"published": "2026-04-05T12:58:46Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Lisette — Rust syntax, Go runtime",
 		"url": "https://lisette.run",
@@ -172,6 +333,7 @@
 		"published": "2026-04-03T12:17:43Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Making Services With Go Right Way",
 		"url": "https://snawoot.github.io/go_web_right_way.html",
@@ -187,11 +349,12 @@
 		"published": "2026-04-02T16:53:29Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "A game with programmable space combat written in Go",
 		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
 		"original_url": "https://lobste.rs/s/gtb0fc/game_with_programmable_space_combat",
-		"image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3024370/b17cabdf36aa10f92f15492462563c7a34425238/capsule_616x353.jpg?t=1766523735",
+		"image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3024370/b17cabdf36aa10f92f15492462563c7a34425238/capsule_616x353.jpg?t=1777715913",
 		"author": {
 			"username": "quasilyte",
 			"profile_url": "https://lobste.rs/u/quasilyte"
@@ -203,6 +366,7 @@
 		"published": "2026-04-01T17:49:53Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "Data Indexing in Golang",
 		"url": "https://hister.org/posts/data-indexing-in-golang",
@@ -218,6 +382,7 @@
 		"published": "2026-03-31T12:53:06Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "A fast, compact, immutable map from strings to uint64 values in Go",
 		"url": "https://github.com/lemire/constmap",
@@ -234,6 +399,7 @@
 		"published": "2026-03-30T14:32:20Z"
 	},
 	{
+		"id": 0,
 		"source": "lobsters",
 		"title": "I Made a Terminal Pager",
 		"url": "https://theleo.zone/posts/pager/",
@@ -247,145 +413,5 @@
 		"comments": 0,
 		"score": 0.4557067470936043,
 		"published": "2026-03-30T14:07:40Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Porting Go's io package to C",
-		"url": "https://antonz.org/porting-go-io/",
-		"original_url": "https://lobste.rs/s/36tumc/porting_go_s_io_package_c",
-		"image_url": "https://antonz.org/porting-go-io/cover.png",
-		"author": {
-			"username": "telemachus",
-			"profile_url": "https://lobste.rs/u/telemachus"
-		},
-		"snippet": "Interfaces, slices, multi-returns and alloca.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.5288743031666463,
-		"published": "2026-03-27T21:15:19Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "goada: Fast WHATWG spec compliant URL library written in Go",
-		"url": "https://github.com/ada-url/goada",
-		"original_url": "https://lobste.rs/s/77pwzi/goada_fast_whatwg_spec_compliant_url",
-		"image_url": "https://opengraph.githubassets.com/11ef4dc96c14be6f91cde5712bef7e16930388046cc7f56187b1af3634494f13/ada-url/goada",
-		"author": {
-			"username": "eatonphil",
-			"profile_url": "https://lobste.rs/u/eatonphil"
-		},
-		"snippet": "Fast WHATWG spec compliant URL library written in Go - ada-url/goada",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.27941531270472214,
-		"published": "2026-03-26T18:47:14Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Deploying Go Apps to Google Cloud Run",
-		"url": "https://www.josephspurrier.com/google-cloud-run-deployment",
-		"original_url": "https://lobste.rs/s/hjxi2b/deploying_go_apps_google_cloud_run",
-		"author": {
-			"username": "carlana",
-			"profile_url": "https://lobste.rs/u/carlana"
-		},
-		"snippet": "A few of my projects use the same Makefile and Dockerfile to handle deployment to Google Cloud Run.",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.4557067470936043,
-		"published": "2026-03-26T10:13:26Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Type Construction and Cycle Detection",
-		"url": "https://go.dev/blog/type-construction-and-cycle-detection",
-		"original_url": "https://lobste.rs/s/fqeydw/type_construction_cycle_detection",
-		"image_url": "https://go.dev/doc/gopher/runningsquare.jpg",
-		"author": {
-			"username": "binjip978",
-			"profile_url": "https://lobste.rs/u/binjip978"
-		},
-		"snippet": "Go 1.26 simplifies type construction and enhances cycle detection for certain kinds of recursive types.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.4557067470936043,
-		"published": "2026-03-25T03:54:35Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Structuring Go projects",
-		"url": "https://www.alexedwards.net/blog/11-tips-for-structuring-your-go-projects",
-		"original_url": "https://lobste.rs/s/ucympz/structuring_go_projects",
-		"author": {
-			"username": "runxiyu",
-			"profile_url": "https://lobste.rs/u/runxiyu"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.49491262604822334,
-		"published": "2026-03-24T20:14:51Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Go Naming Conventions: A Practical Guide",
-		"url": "https://www.alexedwards.net/blog/go-naming-conventions",
-		"original_url": "https://lobste.rs/s/xarlmy/go_naming_conventions_practical_guide",
-		"author": {
-			"username": "cgrinds",
-			"profile_url": "https://lobste.rs/u/cgrinds"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 24,
-		"score": 0.8564204378649686,
-		"published": "2026-03-24T17:08:32Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Using Go Dynamic and Static Shared libraries in C/C++ Programs",
-		"url": "https://xuri.me/2022/04/15/go-shared-libraries.html",
-		"original_url": "https://lobste.rs/s/fad6ua/using_go_dynamic_static_shared_libraries",
-		"image_url": "https://xuri.me/apps/icons/apple-touch-icon-180x180-precomposed.png",
-		"author": {
-			"username": "runxiyu",
-			"profile_url": "https://lobste.rs/u/runxiyu"
-		},
-		"snippet": "In this post, I build a shared library and dynamic library by a Go source code and use it for spreadsheet decryption. A Shared Object/Library is a binary file with a dynamic/static loading table for f",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.3525828687777642,
-		"published": "2026-03-21T16:46:30Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Solod: Go can be a better C",
-		"url": "https://antonz.org/solod/",
-		"original_url": "https://lobste.rs/s/uqeo3m/solod_go_can_be_better_c",
-		"image_url": "https://antonz.org/solod/cover.png",
-		"author": {
-			"username": "gcollazo",
-			"profile_url": "https://lobste.rs/u/gcollazo"
-		},
-		"snippet": "A subset of Go that transpiles to regular C, with zero runtime.",
-		"tag": "article",
-		"comments": 9,
-		"score": 0.925164668913849,
-		"published": "2026-03-21T15:16:27Z"
-	},
-	{
-		"source": "lobsters",
-		"title": "Adding Live Reload to a Static Site Generator Written in Go",
-		"url": "https://jon.chrt.dev/2026/03/20/adding-live-reload-to-a-static-site-generator-written-in-go.html",
-		"original_url": "https://lobste.rs/s/ldglpx/adding_live_reload_static_site_generator",
-		"author": {
-			"username": "bugsmith",
-			"profile_url": "https://lobste.rs/u/bugsmith"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 14,
-		"score": 0.7619189031733016,
-		"published": "2026-03-20T18:08:40Z"
 	}
 ]

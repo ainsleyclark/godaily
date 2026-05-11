@@ -1,57 +1,95 @@
 [
 	{
+		"id": 0,
 		"source": "github",
-		"title": "simd/archsimd: architecture-specific SIMD intrinsics under a GOEXPERIMENT",
-		"url": "https://github.com/golang/go/issues/73787",
-		"image_url": "https://opengraph.githubassets.com/a53f9ee126e48bbc108714a6fe373753f959108c6e8a0e52b2ca7cf99ca30bb8/golang/go/issues/73787",
+		"title": "sync/atomic: add Uint64Pair",
+		"url": "https://github.com/golang/go/issues/61236",
+		"image_url": "https://opengraph.githubassets.com/8ab2f89fed70647e636c99eab02a4d3d20b4951b9d61d574818f414b29f1d6d2/golang/go/issues/61236",
 		"author": {
-			"username": "cherrymui",
-			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
-			"profile_url": "https://github.com/cherrymui"
+			"username": "haraldrudell",
+			"avatar_url": "https://avatars.githubusercontent.com/u/926815?v=4",
+			"profile_url": "https://github.com/haraldrudell"
 		},
-		"snippet": "Update (02/11/2026): The AMD64 low-level SIMD package is now available in Go 1.26 under GOEXPERIMENT=simd . There were minor bug fixes since the RC2.",
+		"snippet": "I suggest CAS2 is implemented in the atomic package similar to atomic.align64, operational for hardware that supports it. possibly also: - atomic OR -",
 		"tag": "proposal_accepted",
-		"comments": 197,
-		"score": 1.8,
-		"published": "2025-05-19T20:43:15Z"
+		"comments": 41,
+		"score": 1.20816730878679,
+		"published": "2023-07-08T11:48:36Z"
 	},
 	{
+		"id": 0,
+		"source": "github",
+		"title": "net/http: add support for SETTINGS_ENABLE_CONNECT_PROTOCOL",
+		"url": "https://github.com/golang/go/issues/53208",
+		"image_url": "https://opengraph.githubassets.com/2e505f24d475dbf4c9d936e8769b037fc9269641733b7188aa288668d11fe189/golang/go/issues/53208",
+		"author": {
+			"username": "ethanpailes",
+			"avatar_url": "https://avatars.githubusercontent.com/u/4305381?v=4",
+			"profile_url": "https://github.com/ethanpailes"
+		},
+		"snippet": "Overview I propose extending the x/net/http2 and net/http packages to support the extended CONNECT protocol described in [RFC 8441](https://datatracke",
+		"tag": "proposal_accepted",
+		"comments": 36,
+		"score": 0.9,
+		"published": "2022-06-02T19:28:46Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "spec: type inferred composite literals",
+		"url": "https://github.com/golang/go/issues/12854",
+		"image_url": "https://opengraph.githubassets.com/209f2ac4d62d66abdb194ddbaa4e47e6e81580f10b373fbece97b07121c91fae/golang/go/issues/12854",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "Composite literals construct values for structs, arrays, slices, and maps. They consist of a type followed by a brace-bound list of elements. e.g., go",
+		"tag": "proposal_accepted",
+		"comments": 266,
+		"score": 1.8,
+		"published": "2015-10-06T21:26:59Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "database/sql/driver: allow driver to entirely override Scan",
+		"url": "https://github.com/golang/go/issues/67546",
+		"image_url": "https://opengraph.githubassets.com/343ff973ab94453a908fc104fcfa46dadce018c6a789308a1824d10944caddf5/golang/go/issues/67546",
+		"author": {
+			"username": "jackc",
+			"avatar_url": "https://avatars.githubusercontent.com/u/94130?v=4",
+			"profile_url": "https://github.com/jackc"
+		},
+		"snippet": "Targeting Go 1.27 — Proposal Details I am the creator of the https://github.com/jackc/pgx/ PostgreSQL driver. pgx implements a very flexible and convenient type system fo",
+		"tag": "proposal_accepted",
+		"comments": 80,
+		"score": 1.8,
+		"published": "2024-05-21T15:29:58Z"
+	},
+	{
+		"id": 0,
 		"source": "github",
 		"title": "spec: generic methods for Go",
 		"url": "https://github.com/golang/go/issues/77273",
-		"image_url": "https://opengraph.githubassets.com/4b2112aa033439ecc80b6ca1dcb67342933438e1b8e218a9e9703c97bc22c693/golang/go/issues/77273",
+		"image_url": "https://opengraph.githubassets.com/ef8d279a52bb9a464021937ffd060a76083053de872df6f08d3494942fc9e664/golang/go/issues/77273",
 		"author": {
 			"username": "griesemer",
 			"avatar_url": "https://avatars.githubusercontent.com/u/8528975?v=4",
 			"profile_url": "https://github.com/griesemer"
 		},
-		"snippet": "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
+		"snippet": "Targeting Go 1.27 — Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
 		"tag": "proposal_accepted",
-		"comments": 175,
+		"comments": 183,
 		"score": 1.8,
 		"published": "2026-01-22T23:13:22Z"
 	},
 	{
-		"source": "github",
-		"title": "runtime/pprof,runtime: new goroutine leak profile",
-		"url": "https://github.com/golang/go/issues/74609",
-		"image_url": "https://opengraph.githubassets.com/7fc2a11a5f1e07ee23dc83a386862f9fff6d1950acd8de629ae5e673a9e4ae5e/golang/go/issues/74609",
-		"author": {
-			"username": "VladSaioc",
-			"avatar_url": "https://avatars.githubusercontent.com/u/11602035?v=4",
-			"profile_url": "https://github.com/VladSaioc"
-		},
-		"snippet": "Targeting Go 1.27 — Proposal Details [Design document.](https://go.googlesource.com/proposal/+/master/design/74609-goroutine-leak-detection-gc.md) This proposal involves",
-		"tag": "proposal_accepted",
-		"comments": 29,
-		"score": 1.5570770066804551,
-		"published": "2025-07-14T14:34:00Z"
-	},
-	{
+		"id": 0,
 		"source": "github",
 		"title": "crypto/mldsa: new package",
 		"url": "https://github.com/golang/go/issues/77626",
-		"image_url": "https://opengraph.githubassets.com/0d81758ce7252aacaac9484e51eb5b9bd9b1fe57b118a6339a811fc1684f5048/golang/go/issues/77626",
+		"image_url": "https://opengraph.githubassets.com/ee8bf07d42b1c90e66a4092fbf3d5e6382fddb61f94f320d219a0d572320bed7/golang/go/issues/77626",
 		"author": {
 			"username": "FiloSottile",
 			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
@@ -59,11 +97,148 @@
 		},
 		"snippet": "Go 1.26 added an internal implementation of the ML-DSA post-quantum signature algorithm, specified in FIPS 204. I propose we expose a public crypto/ml",
 		"tag": "proposal_accepted",
-		"comments": 24,
-		"score": 1.1375967266684757,
+		"comments": 25,
+		"score": 1.2397524247804674,
 		"published": "2026-02-15T13:16:07Z"
 	},
 	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/x509,crypto/tls: add ML-DSA support",
+		"url": "https://github.com/golang/go/issues/78888",
+		"image_url": "https://opengraph.githubassets.com/0ddc8295893865905ca35b65fb6c0d1e7f0d98ba9de58eb9d4ccb04114b5831a/golang/go/issues/78888",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Proposal Details [The timeline of plausible CRQC has shifted](https://words.filippo.io/crqc-timeline/) which made my previous preference for a wait-an",
+		"tag": "proposal_accepted",
+		"comments": 5,
+		"score": 1.005895125737,
+		"published": "2026-04-21T15:38:31Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/tls: implement MLKEM1024 key exchange",
+		"url": "https://github.com/golang/go/issues/78543",
+		"image_url": "https://opengraph.githubassets.com/e4afb8743fc622c5322a9fb8d9196c368a8d1b0573af02f41e7855f8b36c5283/golang/go/issues/78543",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Proposal Details For Go 1.27, we should implement MLKEM1024 from draft-ietf-tls-mlkem-07. [It is the only key exchange in the CNSA 2.0 profile](https:",
+		"tag": "proposal_accepted",
+		"comments": 4,
+		"score": 0.9519737456999634,
+		"published": "2026-04-06T11:40:54Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/x509: add Certificate.RawSignatureAlgorithm",
+		"url": "https://github.com/golang/go/issues/76133",
+		"image_url": "https://opengraph.githubassets.com/9a90eac5210fef9ecb73392c7323cf9d95c7cfaf4f13b552d0de2bb49a67bd43/golang/go/issues/76133",
+		"author": {
+			"username": "cjpatton",
+			"avatar_url": "https://avatars.githubusercontent.com/u/3453007?v=4",
+			"profile_url": "https://github.com/cjpatton"
+		},
+		"snippet": "Proposal Details I'm working on an implementation of [Merkle Tree Certificates](https://datatracker.ietf.org/doc/draft-davidben-tls-merkle-tree-certs/",
+		"tag": "proposal_accepted",
+		"comments": 8,
+		"score": 0.9,
+		"published": "2025-10-31T16:20:56Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "simd/archsimd: architecture-specific SIMD intrinsics under a GOEXPERIMENT",
+		"url": "https://github.com/golang/go/issues/73787",
+		"image_url": "https://opengraph.githubassets.com/1d582a908f27a506e0290780d4fcb01c461842d30a8f953b715a1cc944f4f507/golang/go/issues/73787",
+		"author": {
+			"username": "cherrymui",
+			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
+			"profile_url": "https://github.com/cherrymui"
+		},
+		"snippet": "Update (02/11/2026): The AMD64 low-level SIMD package is now available in Go 1.26 under GOEXPERIMENT=simd . There were minor bug fixes since the RC2.",
+		"tag": "proposal_accepted",
+		"comments": 210,
+		"score": 1.8,
+		"published": "2025-05-19T20:43:15Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto: remove in Go 1.27 GODEBUGs introduced in Go 1.23 and earlier",
+		"url": "https://github.com/golang/go/issues/75316",
+		"image_url": "https://opengraph.githubassets.com/f3dcc5c41d8a3cd6256d96253bd139ff2e7d058842797432d452198b23275074/golang/go/issues/75316",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Targeting Go 1.27 — We have never decommissioned GODEBUGs before, so I am improvising the process a bit. The docs just say \u003e GODEBUG settings added for compatibility will",
+		"tag": "proposal_accepted",
+		"comments": 13,
+		"score": 0.9,
+		"published": "2025-09-08T12:23:56Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "go/types: add Info.ImplicitConversions mapping",
+		"url": "https://github.com/golang/go/issues/70638",
+		"image_url": "https://opengraph.githubassets.com/fb0dcb8221d4b1a70f220e4f3c3bbc1668ff0069c1d69a84f73b585b7f6974e9/golang/go/issues/70638",
+		"author": {
+			"username": "adonovan",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
+			"profile_url": "https://github.com/adonovan"
+		},
+		"snippet": "Background: One of the many tricky subtasks of the type checker is to compute the conversions implicitly applied to an expression that is used on the",
+		"tag": "proposal_accepted",
+		"comments": 23,
+		"score": 0.9,
+		"published": "2024-12-02T15:37:22Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "cmd/go: GOAMD64=local to compile for local machine",
+		"url": "https://github.com/golang/go/issues/60338",
+		"image_url": "https://opengraph.githubassets.com/8e4463f87d558a1c5ed9b55070a202763e9f5ef79e1be8fbd5bfd4b81f97e6d5/golang/go/issues/60338",
+		"author": {
+			"username": "Jorropo",
+			"avatar_url": "https://avatars.githubusercontent.com/u/24391983?v=4",
+			"profile_url": "https://github.com/Jorropo"
+		},
+		"snippet": "Rational: I am using go install to deploy code to a cluster since the go compiler compiles really fast and this save me from having to manage building",
+		"tag": "proposal_accepted",
+		"comments": 18,
+		"score": 1.269298327599951,
+		"published": "2023-05-22T09:53:18Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "cmd/go: add go doc -json ",
+		"url": "https://github.com/golang/go/issues/34293",
+		"image_url": "https://opengraph.githubassets.com/5e216e62ed65db0e5adada16b505b5e83f50d24f11cef1fd37d53471970088a3/golang/go/issues/34293",
+		"author": {
+			"username": "paulvollmer",
+			"avatar_url": "https://avatars.githubusercontent.com/u/235200?v=4",
+			"profile_url": "https://github.com/paulvollmer"
+		},
+		"snippet": "To build better language support for editors and ide's it could be helpful to have the docs as json. For example https://golang.org/pkg/strings.json t",
+		"tag": "proposal_accepted",
+		"comments": 20,
+		"score": 1.0541294438119553,
+		"published": "2019-09-14T01:04:02Z"
+	},
+	{
+		"id": 0,
 		"source": "github",
 		"title": "cmd/go: add support for dealing with flaky tests",
 		"url": "https://github.com/golang/go/issues/62244",
@@ -80,6 +255,7 @@
 		"published": "2023-08-23T16:12:44Z"
 	},
 	{
+		"id": 0,
 		"source": "github",
 		"title": "cmd/vet: check for missing Err calls for bufio.Scanner [done] and sql.Rows",
 		"url": "https://github.com/golang/go/issues/17747",
@@ -96,38 +272,7 @@
 		"published": "2016-11-02T18:17:19Z"
 	},
 	{
-		"source": "github",
-		"title": "spec: type inferred composite literals",
-		"url": "https://github.com/golang/go/issues/12854",
-		"image_url": "https://opengraph.githubassets.com/3fa8cdf909528167a1a42f92587ecd6b89ed2b39d4eaae0071c97f501b498537/golang/go/issues/12854",
-		"author": {
-			"username": "neild",
-			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
-			"profile_url": "https://github.com/neild"
-		},
-		"snippet": "Composite literals construct values for structs, arrays, slices, and maps. They consist of a type followed by a brace-bound list of elements. e.g., go",
-		"tag": "proposal_accepted",
-		"comments": 263,
-		"score": 1.8,
-		"published": "2015-10-06T21:26:59Z"
-	},
-	{
-		"source": "github",
-		"title": "go/types: add Info.ImplicitConversions mapping",
-		"url": "https://github.com/golang/go/issues/70638",
-		"image_url": "https://opengraph.githubassets.com/36760a3fb1b0becd744b83dc5207165bb2404fd01d08389e9f6c498ca5152990/golang/go/issues/70638",
-		"author": {
-			"username": "adonovan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
-			"profile_url": "https://github.com/adonovan"
-		},
-		"snippet": "Background: One of the many tricky subtasks of the type checker is to compute the conversions implicitly applied to an expression that is used on the",
-		"tag": "proposal_accepted",
-		"comments": 23,
-		"score": 0.9,
-		"published": "2024-12-02T15:37:22Z"
-	},
-	{
+		"id": 0,
 		"source": "github",
 		"title": "go/doc: reconsider comment rewrites of `''` to `”`",
 		"url": "https://github.com/golang/go/issues/54312",
@@ -144,9 +289,11 @@
 		"published": "2022-08-06T07:30:09Z"
 	},
 	{
+		"id": 0,
 		"source": "github",
 		"title": "x/net/http2/h2c: deprecate h2c package",
 		"url": "https://github.com/golang/go/issues/72039",
+		"image_url": "https://opengraph.githubassets.com/32aaa9255f7361f35f35bdf96f1d9d915a250c698e3d5e94d7ccee3fda97b057/golang/go/issues/72039",
 		"author": {
 			"username": "neild",
 			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
@@ -159,6 +306,7 @@
 		"published": "2025-02-28T21:31:30Z"
 	},
 	{
+		"id": 0,
 		"source": "github",
 		"title": "x/tools/go/analysis: add GoMod, ... fields to Module",
 		"url": "https://github.com/golang/go/issues/73878",
@@ -175,6 +323,7 @@
 		"published": "2025-05-27T08:38:09Z"
 	},
 	{
+		"id": 0,
 		"source": "github",
 		"title": "cmd/go: add per-test timeouts",
 		"url": "https://github.com/golang/go/issues/48157",
@@ -191,506 +340,11 @@
 		"published": "2021-09-02T17:10:20Z"
 	},
 	{
-		"source": "github",
-		"title": "crypto/tls: allow QUIC to configure net.Conn used on ClientHelloInfo",
-		"url": "https://github.com/golang/go/issues/77363",
-		"image_url": "https://opengraph.githubassets.com/6900c82b3eca25a7f7929ebb71ea1616f5cf1f50a7559d30e87b672ef8b303a2/golang/go/issues/77363",
-		"author": {
-			"username": "marten-seemann",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1478487?v=4",
-			"profile_url": "https://github.com/marten-seemann"
-		},
-		"snippet": "The crypto/tls package's GetCertificate and GetConfigForClient callbacks receive a tls.ClientHelloInfo with a Conn field (type net.Conn ). For QUIC, a",
-		"tag": "proposal_accepted",
-		"comments": 9,
-		"score": 0.9,
-		"published": "2026-01-28T23:48:37Z"
-	},
-	{
-		"source": "github",
-		"title": "net/http: add GODEBUG=http1debug",
-		"url": "https://github.com/golang/go/issues/18733",
-		"image_url": "https://opengraph.githubassets.com/9f30d7a97299cc9bd2a21267ebd8962f0aa0443c4695b6ef2a7da07562432b5c/golang/go/issues/18733",
-		"author": {
-			"username": "bradfitz",
-			"avatar_url": "https://avatars.githubusercontent.com/u/2621?v=4",
-			"profile_url": "https://github.com/bradfitz"
-		},
-		"snippet": "The GODEBUG knob for http2 debugging (e.g. GODEBUG=http2debug=2 ) has proven to be very useful and popular. Unfortunately it only works for HTTP/2. Th",
-		"tag": "proposal_accepted",
-		"comments": 29,
-		"score": 1.6771880492737306,
-		"published": "2017-01-20T21:41:54Z"
-	},
-	{
-		"source": "github",
-		"title": "cmd/go: promote -fullpath from test flag to build flag",
-		"url": "https://github.com/golang/go/issues/60451",
-		"image_url": "https://opengraph.githubassets.com/9cab34d9f5a2eadcc43170aa87a13fa6c48f36bcae33b31c6c305a3d87c5f3f7/golang/go/issues/60451",
-		"author": {
-			"username": "rogpeppe",
-			"avatar_url": "https://avatars.githubusercontent.com/u/66491?v=4",
-			"profile_url": "https://github.com/rogpeppe"
-		},
-		"snippet": "What version of Go are you using ( go version )? f90b4cd6554f4f2028",
-		"tag": "proposal_accepted",
-		"comments": 16,
-		"score": 0.9,
-		"published": "2023-05-26T10:52:46Z"
-	},
-	{
-		"source": "github",
-		"title": "crypto/tls: remove minimum version requirement for tls.Config used for QUIC",
-		"url": "https://github.com/golang/go/issues/77631",
-		"image_url": "https://opengraph.githubassets.com/b5ba0dd02d08a742bc8fd3f536ab317fbe677e86aba25effe5c0831db22ace33/golang/go/issues/77631",
-		"author": {
-			"username": "marten-seemann",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1478487?v=4",
-			"profile_url": "https://github.com/marten-seemann"
-		},
-		"snippet": "Proposal Details The crypto/tls package requires tls.Config.MinVersion \u003e= VersionTLS13 for QUIC connections to enforce RFC 9001's TLS 1.3 requirement.",
-		"tag": "proposal_accepted",
-		"comments": 7,
-		"score": 0.9,
-		"published": "2026-02-16T00:57:56Z"
-	},
-	{
-		"source": "github",
-		"title": "cmd/compile: create GOARCH=wasm32",
-		"url": "https://github.com/golang/go/issues/63131",
-		"image_url": "https://opengraph.githubassets.com/b11228d308332927b1296ac1180e85e5783e27f85c2003c01a2de4d99c1e1e58/golang/go/issues/63131",
-		"author": {
-			"username": "johanbrandhorst",
-			"avatar_url": "https://avatars.githubusercontent.com/u/6604151?v=4",
-			"profile_url": "https://github.com/johanbrandhorst"
-		},
-		"snippet": "Background The GOARCH=wasm architecture was first introduced alongside GOOS=js in 2019. The choice was made to use a 64 bit architecture because of We",
-		"tag": "proposal_accepted",
-		"comments": 77,
-		"score": 1.5254918906867776,
-		"published": "2023-09-20T20:51:29Z"
-	},
-	{
-		"source": "github",
-		"title": "cmd/go: build: add -static flag",
-		"url": "https://github.com/golang/go/issues/26492",
-		"image_url": "https://opengraph.githubassets.com/b56eb7f64d7e60df438e0f494f9938de458c19f7eed9abe2f006cfaa1774fbd1/golang/go/issues/26492",
-		"author": {
-			"username": "kolyshkin",
-			"avatar_url": "https://avatars.githubusercontent.com/u/4522509?v=4",
-			"profile_url": "https://github.com/kolyshkin"
-		},
-		"snippet": "This is a proposal to add -static flag to go build . Producing a static build with go already requires a non-trivial amount of flags passed to go buil",
-		"tag": "proposal_accepted",
-		"comments": 41,
-		"score": 1.8,
-		"published": "2018-07-19T23:58:53Z"
-	},
-	{
-		"source": "github",
-		"title": "doc/install: define minimum supported VCS versions",
-		"url": "https://github.com/golang/go/issues/26746",
-		"image_url": "https://opengraph.githubassets.com/1e9fed55a35ab134683f6eddc4ca6d3b56fd2dd65d11cd02ed3bff571240283c/golang/go/issues/26746",
-		"author": {
-			"username": "bcmills",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5200974?v=4",
-			"profile_url": "https://github.com/bcmills"
-		},
-		"snippet": "cmd/go shells out to version control binaries to implement go get . [doc/install](https://tip.golang.org/doc/install) currently declares minimum suppo",
-		"tag": "proposal_accepted",
-		"comments": 28,
-		"score": 0.9,
-		"published": "2018-08-01T14:56:32Z"
-	},
-	{
-		"source": "github",
-		"title": "x/crypto/ssh: add AuthCallback to ClientConfig",
-		"url": "https://github.com/golang/go/issues/76146",
-		"image_url": "https://opengraph.githubassets.com/8677dd2ae597575cf62d189b6e52976196baeb9e0c20514ff2bd0eeb3ec5b919/golang/go/issues/76146",
-		"author": {
-			"username": "drakkan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/553263?v=4",
-			"profile_url": "https://github.com/drakkan"
-		},
-		"snippet": "Proposal Details Background In the current x/crypto/ssh package, authentication methods are static: the client attempts none first and then iterates t",
-		"tag": "proposal_accepted",
-		"comments": 14,
-		"score": 0.9,
-		"published": "2025-11-02T17:49:16Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: database/sql/driver: allow driver to entirely override Scan",
-		"url": "https://github.com/golang/go/issues/67546",
-		"image_url": "https://opengraph.githubassets.com/ee2c16673956db8d4b48bce53979abba3e75de99313fb543aaba45cd89c29b4d/golang/go/issues/67546",
-		"author": {
-			"username": "jackc",
-			"avatar_url": "https://avatars.githubusercontent.com/u/94130?v=4",
-			"profile_url": "https://github.com/jackc"
-		},
-		"snippet": "Targeting Go 1.27 — Proposal Details I am the creator of the https://github.com/jackc/pgx/ PostgreSQL driver. pgx implements a very flexible and convenient type system fo",
-		"tag": "proposal",
-		"comments": 77,
-		"score": 1,
-		"published": "2024-05-21T15:29:58Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: x/tools/go/analysis/passes/modernize: vars for atomic, embedlit, errorsastype, plusbuild, stringscut, stditerators",
-		"url": "https://github.com/golang/go/issues/77986",
-		"image_url": "https://opengraph.githubassets.com/58c8e1a7421162715afb651af3861370b132d7cbba2ff6d484c9f24c837b2a46/golang/go/issues/77986",
-		"author": {
-			"username": "madelinekalil",
-			"avatar_url": "https://avatars.githubusercontent.com/u/26258798?v=4",
-			"profile_url": "https://github.com/madelinekalil"
-		},
-		"snippet": "Proposal Details This proposal is to add a new Analyzer, atomic, to the go/analysis API: https://github.com/golang/go/issues/77352 The atomic analyzer",
-		"tag": "proposal",
-		"comments": 9,
-		"score": 0.5,
-		"published": "2026-03-06T15:30:57Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: spec: (if cond then expr else expr) conditional expressions",
-		"url": "https://github.com/golang/go/issues/78940",
-		"image_url": "https://opengraph.githubassets.com/dde7294f3f5a0b5aa433dc80ffdb3c5ef06dc1520447436da001519f652e3478/golang/go/issues/78940",
-		"author": {
-			"username": "adonovan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
-			"profile_url": "https://github.com/adonovan"
-		},
-		"snippet": "Proposal Details (Split out from https://github.com/golang/go/issues/78865 issuecomment-4308283951 et seq.) C-style conditional expressions using x ?",
-		"tag": "proposal",
-		"comments": 25,
-		"score": 0.5,
-		"published": "2026-04-24T15:21:12Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: simd/archsimd: enable AMD64 architecture-specific SIMD by default",
-		"url": "https://github.com/golang/go/issues/78979",
-		"image_url": "https://opengraph.githubassets.com/fd10cc9d15c44a609e4a5f4da42d90ae4b2a3c72d7859950e055276c97f9e4c2/golang/go/issues/78979",
-		"author": {
-			"username": "cherrymui",
-			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
-			"profile_url": "https://github.com/cherrymui"
-		},
-		"snippet": "Proposal Details In Go 1.26, we introduced AMD64 architecture-specific SIMD intrinsics in the simd/archsimd package under GOEXPERIMENT=simd . Thanks t",
-		"tag": "proposal",
-		"comments": 2,
-		"score": 0.5288743031666463,
-		"published": "2026-04-27T19:29:32Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/x509: Add functions for working with TBS Certificates, Revocation Lists and Certificate Requests",
-		"url": "https://github.com/golang/go/issues/78978",
-		"image_url": "https://opengraph.githubassets.com/a013a629bf9f288c97e620dc5bad616cfe11a8ed1aa0f9c125cf89cccfc6477e/golang/go/issues/78978",
-		"author": {
-			"username": "mcpherrinm",
-			"avatar_url": "https://avatars.githubusercontent.com/u/47425?v=4",
-			"profile_url": "https://github.com/mcpherrinm"
-		},
-		"snippet": "Proposal Details Golang’s crypto/x509 library is widely used in the WebPKI. As a certificate authority, it would be helpful if there was support for",
-		"tag": "proposal",
-		"comments": 2,
-		"score": 0.5,
-		"published": "2026-04-27T18:07:30Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: net/http2: add SensitiveHeaders to HTTP/2 Transport",
-		"url": "https://github.com/golang/go/issues/78306",
-		"image_url": "https://opengraph.githubassets.com/0dfe7d62b5e319ec49db2ab76fd300fa7b024f97f2cf9f4f17974c4f4b181ef8/golang/go/issues/78306",
-		"author": {
-			"username": "AmritM18",
-			"avatar_url": "https://avatars.githubusercontent.com/u/41971314?v=4",
-			"profile_url": "https://github.com/AmritM18"
-		},
-		"snippet": "Proposal Details Go's HTTP/2 implementation indexes all headers in the HPACK dynamic table by default. This has two primary impacts: - Go lacks a mech",
-		"tag": "proposal",
-		"comments": 7,
-		"score": 0.5,
-		"published": "2026-03-23T23:06:06Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: x/net/http3: add experimental HTTP/3 implementation",
-		"url": "https://github.com/golang/go/issues/70914",
-		"image_url": "https://opengraph.githubassets.com/4e6ebac8743a6fcfd618b9ebb50dbaeb36c4f407fbc9dc9c2b123e253232f660/golang/go/issues/70914",
-		"author": {
-			"username": "neild",
-			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
-			"profile_url": "https://github.com/neild"
-		},
-		"snippet": "This is a proposal to add an HTTP/3 client and server implementation in x/net/http3. Similarly to the accepted form of 58547 (x/net/quic), this propos",
-		"tag": "proposal",
-		"comments": 69,
-		"score": 0.9898252520964467,
-		"published": "2024-12-18T23:45:24Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: cmd/{go,cgo,compile}: change interpretation of relative //line directives",
-		"url": "https://github.com/golang/go/issues/70478",
-		"image_url": "https://opengraph.githubassets.com/928d01301d75a338bb5cc04bbc382973a7ebb0ed2407a4849ae348cbda931e3c/golang/go/issues/70478",
-		"author": {
-			"username": "adonovan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
-			"profile_url": "https://github.com/adonovan"
-		},
-		"snippet": "Background : generated Go source files may contain //line directives that relate each line of Go source to the line of some other file from which it w",
-		"tag": "proposal",
-		"comments": 27,
-		"score": 0.5,
-		"published": "2024-11-20T22:45:52Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: slices: add SwapDelete",
-		"url": "https://github.com/golang/go/issues/78964",
-		"image_url": "https://opengraph.githubassets.com/f111669d2bf0d85e8cf49b40abccd9193b65652bc5af6feef91bd7dc3d81ab61/golang/go/issues/78964",
-		"author": {
-			"username": "icholy",
-			"avatar_url": "https://avatars.githubusercontent.com/u/943597?v=4",
-			"profile_url": "https://github.com/icholy"
-		},
-		"snippet": "Proposal Details A function that implements an O(1) delete from a slice as described in [SliceTricks](https://go.dev/wiki/SliceTricks delete-without-p",
-		"tag": "proposal",
-		"comments": 9,
-		"score": 0.5856274687844196,
-		"published": "2026-04-25T14:40:27Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: spec: short function literals",
-		"url": "https://github.com/golang/go/issues/21498",
-		"image_url": "https://opengraph.githubassets.com/3a62ef93db30553bbe77ec01932efca7c62abe3fb5921c41bd66df55fc3f5aad/golang/go/issues/21498",
-		"author": {
-			"username": "neild",
-			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
-			"profile_url": "https://github.com/neild"
-		},
-		"snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
-		"tag": "proposal",
-		"comments": 916,
-		"score": 1,
-		"published": "2017-08-17T18:29:52Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/x509: support SSL_CERT_FILE on darwin",
-		"url": "https://github.com/golang/go/issues/77865",
-		"image_url": "https://opengraph.githubassets.com/95d35645b584b17f80464e360ce3b836770d7562ea40ec7e33fda30b99e09a22/golang/go/issues/77865",
-		"author": {
-			"username": "rolandshoemaker",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5080674?v=4",
-			"profile_url": "https://github.com/rolandshoemaker"
-		},
-		"snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
-		"tag": "proposal",
-		"comments": 6,
-		"score": 0.5,
-		"published": "2026-02-28T01:00:58Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: go/types: an API for normalized interface terms",
-		"url": "https://github.com/golang/go/issues/61013",
-		"image_url": "https://opengraph.githubassets.com/2b6f0039b64dc4e5e98eda2d1baa1b82a3253fff2cf1c003aaa5dc2f254703bc/golang/go/issues/61013",
-		"author": {
-			"username": "findleyr",
-			"avatar_url": "https://avatars.githubusercontent.com/u/57144380?v=4",
-			"profile_url": "https://github.com/findleyr"
-		},
-		"snippet": "Targeting Go 1.28 — ~This is a placeholder for planning purposes, to be exchanged for a proper proposal at a future date.~ EDIT(2024-02-06): Please see the actual proposa",
-		"tag": "proposal",
-		"comments": 15,
-		"score": 0.5,
-		"published": "2023-06-26T21:07:51Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: spec: typed struct tags",
-		"url": "https://github.com/golang/go/issues/74472",
-		"image_url": "https://opengraph.githubassets.com/112a9613f77358ee9431bbf2505968d47a91c2b972992f75d500c164227457a0/golang/go/issues/74472",
-		"author": {
-			"username": "Merovius",
-			"avatar_url": "https://avatars.githubusercontent.com/u/720787?v=4",
-			"profile_url": "https://github.com/Merovius"
-		},
-		"snippet": "[Status: currently [on hold](https://github.com/golang/go/issues/74472 issuecomment-3494039191).] Proposal: Typed struct tags This is a fully fleshed",
-		"tag": "proposal",
-		"comments": 111,
-		"score": 1,
-		"published": "2025-07-04T06:41:50Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/x509,crypto/tls: add ML-DSA support",
-		"url": "https://github.com/golang/go/issues/78888",
-		"image_url": "https://opengraph.githubassets.com/e455fe270c043b1002d9e49b3aa0ac980f39f4d85aae6a46912753acf2d181b4/golang/go/issues/78888",
-		"author": {
-			"username": "FiloSottile",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
-			"profile_url": "https://github.com/FiloSottile"
-		},
-		"snippet": "Proposal Details [The timeline of plausible CRQC has shifted](https://words.filippo.io/crqc-timeline/) which made my previous preference for a wait-an",
-		"tag": "proposal",
-		"comments": 2,
-		"score": 0.5288743031666463,
-		"published": "2026-04-21T15:38:31Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: syscall: support process sandboxing using Landlock on Linux",
-		"url": "https://github.com/golang/go/issues/68595",
-		"image_url": "https://opengraph.githubassets.com/5821e6cad92147ef2bb36d5c03629690401880104fac6a3752c131f7e84d59c2/golang/go/issues/68595",
-		"author": {
-			"username": "edigaryev",
-			"avatar_url": "https://avatars.githubusercontent.com/u/85709?v=4",
-			"profile_url": "https://github.com/edigaryev"
-		},
-		"snippet": "Proposal Details This is a continuation of https://github.com/golang/go/issues/47049, which was retracted with the following comment: \u003eTreating this a",
-		"tag": "proposal",
-		"comments": 20,
-		"score": 0.5,
-		"published": "2024-07-25T20:15:26Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: runtime: support a percentage for GOMEMLIMIT",
-		"url": "https://github.com/golang/go/issues/78912",
-		"image_url": "https://opengraph.githubassets.com/4649a5959ad9dff14e606a134e6b08a4552cc664b33971559a47c0bab49d9181/golang/go/issues/78912",
-		"author": {
-			"username": "dsnet",
-			"avatar_url": "https://avatars.githubusercontent.com/u/6354026?v=4",
-			"profile_url": "https://github.com/dsnet"
-		},
-		"snippet": "Proposal Details We had a service that had GOMEMLIMIT set. Over the years, due to natural growth of users, we increased the size of the machine that t",
-		"tag": "proposal",
-		"comments": 3,
-		"score": 0.5,
-		"published": "2026-04-22T21:52:02Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: simd: architecture and vector-size agnostic SIMD intrinsics under a GOEXPERIMENT",
-		"url": "https://github.com/golang/go/issues/78902",
-		"image_url": "https://opengraph.githubassets.com/b04bf806b1c871666320305b48d267a6557e4926f2742ef9b33c1b7b7d059765/golang/go/issues/78902",
-		"author": {
-			"username": "dr2chase",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1928999?v=4",
-			"profile_url": "https://github.com/dr2chase"
-		},
-		"snippet": "Proposal Details This is the first version of the \"second level\" SIMD api described in 73787; the intent is to provide a portable interface to SIMD ve",
-		"tag": "proposal",
-		"comments": 5,
-		"score": 0.5588306254094444,
-		"published": "2026-04-22T14:48:59Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: cmd/go: support dependency cooldown in Go tooling",
-		"url": "https://github.com/golang/go/issues/76485",
-		"image_url": "https://opengraph.githubassets.com/c94c62b167bc0109f5195f249e6f97934043835b9ba8dc4ddd6b16d1bd36f055/golang/go/issues/76485",
-		"author": {
-			"username": "dbohdan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/3179832?v=4",
-			"profile_url": "https://github.com/dbohdan"
-		},
-		"snippet": "Proposal Details Background Supply chain attacks on open-source software dependencies have become a regular occurrence. Go already [takes measures](ht",
-		"tag": "proposal",
-		"comments": 31,
-		"score": 0.8892834749245435,
-		"published": "2025-11-27T06:21:59Z"
-	},
-	{
-		"source": "github",
-		"title": "runtime: make mutexActiveSpinSize configurable",
-		"url": "https://github.com/golang/go/issues/78886",
-		"image_url": "https://opengraph.githubassets.com/6fd1f2acde4f76cd4ff26402362a5ef5a6af0a6e4d7fb54b65e12b4242a1de9d/golang/go/issues/78886",
-		"author": {
-			"username": "weijinrongyuan",
-			"avatar_url": "https://avatars.githubusercontent.com/u/118582417?v=4",
-			"profile_url": "https://github.com/weijinrongyuan"
-		},
-		"snippet": "Proposal Details Currently, in src/runtime/lock_spinbit.go, the constant mutexActiveSpinSize is hardcoded to 30，My tests on ARM64 platform indicate",
-		"tag": "proposal",
-		"comments": 3,
-		"score": 0.5,
-		"published": "2026-04-21T13:41:30Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: review meeting minutes",
-		"url": "https://github.com/golang/go/issues/33502",
-		"image_url": "https://opengraph.githubassets.com/7d186f9d4593a9d3fc3a0c632cd88addebcdb954c852234ffae74fd771635765/golang/go/issues/33502",
-		"author": {
-			"username": "rsc",
-			"avatar_url": "https://avatars.githubusercontent.com/u/104030?v=4",
-			"profile_url": "https://github.com/rsc"
-		},
-		"snippet": "The [proposal review group meets regularly](https://go.googlesource.com/proposal/+/master/README.md proposal-review) (roughly weekly) to review pendin",
-		"tag": "proposal",
-		"comments": 303,
-		"score": 0.5,
-		"published": "2019-08-06T21:04:51Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/tls: implement MLKEM1024 key exchange",
-		"url": "https://github.com/golang/go/issues/78543",
-		"image_url": "https://opengraph.githubassets.com/6b2f55ee361fbaadea872b48b86e5700cdb36137c32120b10eeb8d8b849c9602/golang/go/issues/78543",
-		"author": {
-			"username": "FiloSottile",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
-			"profile_url": "https://github.com/FiloSottile"
-		},
-		"snippet": "Proposal Details For Go 1.27, we should implement MLKEM1024 from draft-ietf-tls-mlkem-07. [It is the only key exchange in the CNSA 2.0 profile](https:",
-		"tag": "proposal",
-		"comments": 2,
-		"score": 0.5,
-		"published": "2026-04-06T11:40:54Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/x509: add Certificate.RawSignatureAlgorithm",
-		"url": "https://github.com/golang/go/issues/76133",
-		"image_url": "https://opengraph.githubassets.com/fc0ad8255e95ae8b3563e9aa2e67babc5df903af7fb4ba615f614ddd7c1893d1/golang/go/issues/76133",
-		"author": {
-			"username": "cjpatton",
-			"avatar_url": "https://avatars.githubusercontent.com/u/3453007?v=4",
-			"profile_url": "https://github.com/cjpatton"
-		},
-		"snippet": "Proposal Details I'm working on an implementation of [Merkle Tree Certificates](https://datatracker.ietf.org/doc/draft-davidben-tls-merkle-tree-certs/",
-		"tag": "proposal",
-		"comments": 6,
-		"score": 0.5,
-		"published": "2025-10-31T16:20:56Z"
-	},
-	{
-		"source": "github",
-		"title": "proposal: crypto/x509: add support for Relative OIDs",
-		"url": "https://github.com/golang/go/issues/75260",
-		"image_url": "https://opengraph.githubassets.com/41e980fda1eaf703460fdc19ef222143f3de90869e7cb3968f02a1e235a7ad7f/golang/go/issues/75260",
-		"author": {
-			"username": "lukevalenta",
-			"avatar_url": "https://avatars.githubusercontent.com/u/4196524?v=4",
-			"profile_url": "https://github.com/lukevalenta"
-		},
-		"snippet": "Relative OID tag support is currently missing from the [encoding/asn1](https://pkg.go.dev/encoding/asn1) and [x/crypto/cryptobyte](https://pkg.go.dev/",
-		"tag": "proposal",
-		"comments": 12,
-		"score": 0.5,
-		"published": "2025-09-04T15:03:26Z"
-	},
-	{
+		"id": 0,
 		"source": "github",
 		"title": "proposal: net/http/httptest: synctest support",
 		"url": "https://github.com/golang/go/issues/76608",
-		"image_url": "https://opengraph.githubassets.com/e2c782e562edb9b8d3c5297cc1dc85eee28fc281e3f28db8c798f7a0b46cba6c/golang/go/issues/76608",
+		"image_url": "https://opengraph.githubassets.com/90001a3bd464f7ba324b0e0c4fddb8debdb4115d0322fb0dae8cf90df3ac7236/golang/go/issues/76608",
 		"author": {
 			"username": "rogpeppe",
 			"avatar_url": "https://avatars.githubusercontent.com/u/66491?v=4",
@@ -698,27 +352,607 @@
 		},
 		"snippet": "Proposal Details I use the httptest package a lot, and in particular NewServer rather than ResponseRecorder, because it picks up subtle real-world iss",
 		"tag": "proposal",
-		"comments": 13,
-		"score": 0.7488732345249669,
+		"comments": 36,
+		"score": 0.7619189031733016,
 		"published": "2025-11-27T22:10:15Z"
 	},
 	{
+		"id": 0,
 		"source": "github",
-		"title": "proposal:  text/template: add component, slot, and fill actions for named-prop  composition",
-		"url": "https://github.com/golang/go/issues/78857",
-		"image_url": "https://opengraph.githubassets.com/e6351d7aa5f1d91bb50ec6b4a61f96fbe612cc4504e7e16a7d514a7ad575c36e/golang/go/issues/78857",
+		"title": "proposal: encoding/json/v2: new API for encoding/json",
+		"url": "https://github.com/golang/go/issues/71497",
+		"image_url": "https://opengraph.githubassets.com/f28eeea6f99ad00262143e38c621e0f2f9bc637a9abb7cd991229d5418e81bcf/golang/go/issues/71497",
 		"author": {
-			"username": "esrid",
-			"avatar_url": "https://avatars.githubusercontent.com/u/132313796?v=4",
-			"profile_url": "https://github.com/esrid"
+			"username": "dsnet",
+			"avatar_url": "https://avatars.githubusercontent.com/u/6354026?v=4",
+			"profile_url": "https://github.com/dsnet"
 		},
-		"snippet": "Proposal Details Background ---------- {{template \"x\" .}} accepts a single data argument. Passing multiple named values to a reused template today req",
+		"snippet": "Proposal Details This is a formal proposal for the addition of \"encoding/json/v2\" and \"encoding/json/jsontext\" packages that has previously been discu",
+		"tag": "proposal",
+		"comments": 205,
+		"score": 1,
+		"published": "2025-01-31T07:31:53Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: math/rand/v2: add Rand.N",
+		"url": "https://github.com/golang/go/issues/77853",
+		"image_url": "https://opengraph.githubassets.com/76454a4a74589df29a436048b8c49882d906fc1b87293fd47b0329f9c59ba04b/golang/go/issues/77853",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "The math/rand/v2 package contains a useful generic N function: go // N returns a pseudo-random number in the half-open interval [0,n) from the default",
+		"tag": "proposal",
+		"comments": 3,
+		"score": 0.7743279387529456,
+		"published": "2026-02-27T17:56:23Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: composite type constraints",
+		"url": "https://github.com/golang/go/issues/78433",
+		"image_url": "https://opengraph.githubassets.com/b20267b15287f6551774ba47bc8763a2f0cbe086a06b1b7d6544b52923e2b251/golang/go/issues/78433",
+		"author": {
+			"username": "Splizard",
+			"avatar_url": "https://avatars.githubusercontent.com/u/2015791?v=4",
+			"profile_url": "https://github.com/Splizard"
+		},
+		"snippet": "It's not currently possible to write generic or reflection functions in Go that can be constrained to struct and array structures without explicitly l",
+		"tag": "proposal",
+		"comments": 17,
+		"score": 0.5,
+		"published": "2026-03-28T02:48:38Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: go/constant: add StringLen function",
+		"url": "https://github.com/golang/go/issues/79042",
+		"image_url": "https://opengraph.githubassets.com/4f1c2dfaf8e6170bae3b99fee670271385aa39ec9ecc16e2d1f2d054afcdce66/golang/go/issues/79042",
+		"author": {
+			"username": "griesemer",
+			"avatar_url": "https://avatars.githubusercontent.com/u/8528975?v=4",
+			"profile_url": "https://github.com/griesemer"
+		},
+		"snippet": "Targeting Go 1.27 — The proposal is to add the following function to the go/constant package: // StringLen returns the length of x if x is a [String]. // If x is [Unknown",
+		"tag": "proposal",
+		"comments": 15,
+		"score": 0.8082896158713685,
+		"published": "2026-04-29T21:48:36Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: crypto/x509: accept non-string pkix.Name attributes",
+		"url": "https://github.com/golang/go/issues/75260",
+		"image_url": "https://opengraph.githubassets.com/a42b2d2b43e6afbe5c2a46444eafba911e34f13713e80061674d0d04224df75f/golang/go/issues/75260",
+		"author": {
+			"username": "lukevalenta",
+			"avatar_url": "https://avatars.githubusercontent.com/u/4196524?v=4",
+			"profile_url": "https://github.com/lukevalenta"
+		},
+		"snippet": "Relative OID tag support is currently missing from the [encoding/asn1](https://pkg.go.dev/encoding/asn1) and [x/crypto/cryptobyte](https://pkg.go.dev/",
+		"tag": "proposal",
+		"comments": 16,
+		"score": 0.5,
+		"published": "2025-09-04T15:03:26Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: crypto/x509: support SSL_CERT_FILE/DIR on Darwin and Windows",
+		"url": "https://github.com/golang/go/issues/77865",
+		"image_url": "https://opengraph.githubassets.com/66ce0d8d8610087c7d9a3ba8e95b93d37af81a7cace4b233b115e358c4af65ef/golang/go/issues/77865",
+		"author": {
+			"username": "rolandshoemaker",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5080674?v=4",
+			"profile_url": "https://github.com/rolandshoemaker"
+		},
+		"snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
+		"tag": "proposal",
+		"comments": 17,
+		"score": 0.5,
+		"published": "2026-02-28T01:00:58Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: runtime: expose the `internal/runtime/sys.Prefetch` intrinsic",
+		"url": "https://github.com/golang/go/issues/68769",
+		"image_url": "https://opengraph.githubassets.com/eb5af691299986f38bfb731f0599f55dfb709dd4e142c7fe1f817201158ac047/golang/go/issues/68769",
+		"author": {
+			"username": "rip-create-your-account",
+			"avatar_url": "https://avatars.githubusercontent.com/u/59851993?v=4",
+			"profile_url": "https://github.com/rip-create-your-account"
+		},
+		"snippet": "Proposal Details I'm working on a concurrent hash map and with me having experience in using them in highly concurrent contexts with high throughput r",
+		"tag": "proposal",
+		"comments": 8,
+		"score": 0.5288743031666463,
+		"published": "2024-08-07T18:01:32Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: short function literals",
+		"url": "https://github.com/golang/go/issues/21498",
+		"image_url": "https://opengraph.githubassets.com/0fc4643623d508d12b66dd5bdc2c33a7a7c10adf92a24a7395757135d69000c6/golang/go/issues/21498",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
+		"tag": "proposal",
+		"comments": 965,
+		"score": 1,
+		"published": "2017-08-17T18:29:52Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: encoding: generic parse functions",
+		"url": "https://github.com/golang/go/issues/79317",
+		"image_url": "https://opengraph.githubassets.com/8556f1d9fe5b5a2103cea68f65d80963ee91b7aa1d4efb70b436dea8e89df89a/golang/go/issues/79317",
+		"author": {
+			"username": "zephyrtronium",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1428115?v=4",
+			"profile_url": "https://github.com/zephyrtronium"
+		},
+		"snippet": "Proposal Details Types that marshal and unmarshal, especially to text but also to binary, often have an associated Parse function which is a thin wrap",
+		"tag": "proposal",
+		"comments": 1,
+		"score": 0.5,
+		"published": "2026-05-10T20:14:28Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: crypto/tls: Profiles",
+		"url": "https://github.com/golang/go/issues/79043",
+		"image_url": "https://opengraph.githubassets.com/bcc350a8a93d96b466dffb2d0ea41d0afa3808cbf4231ef4b86770fe703b82d2/golang/go/issues/79043",
+		"author": {
+			"username": "thatnealpatel",
+			"avatar_url": "https://avatars.githubusercontent.com/u/35434379?v=4",
+			"profile_url": "https://github.com/thatnealpatel"
+		},
+		"snippet": "crypto/tls: Profiles tls.Config has a lot of knobs. Each allow for an extra dimension of configuration that places the burden of decision and maintena",
+		"tag": "proposal",
+		"comments": 8,
+		"score": 0.5,
+		"published": "2026-04-29T22:17:55Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: simd: architecture and vector-size agnostic SIMD intrinsics under a GOEXPERIMENT",
+		"url": "https://github.com/golang/go/issues/78902",
+		"image_url": "https://opengraph.githubassets.com/929edafccb7949ae8a93e4f9aa07f3c1fe02241659caf22b33523156a5933838/golang/go/issues/78902",
+		"author": {
+			"username": "dr2chase",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1928999?v=4",
+			"profile_url": "https://github.com/dr2chase"
+		},
+		"snippet": "Proposal Details This is the first version of the \"second level\" SIMD api described in 73787; the intent is to provide a portable interface to SIMD ve",
+		"tag": "proposal",
+		"comments": 18,
+		"score": 0.6098681622198213,
+		"published": "2026-04-22T14:48:59Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: simd/archsimd: enable AMD64 architecture-specific SIMD by default",
+		"url": "https://github.com/golang/go/issues/78979",
+		"image_url": "https://opengraph.githubassets.com/2e7bf3665486f3459e19b0430086f64fbc3ecd1eed323d7070c7386a16df9416/golang/go/issues/78979",
+		"author": {
+			"username": "cherrymui",
+			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
+			"profile_url": "https://github.com/cherrymui"
+		},
+		"snippet": "Proposal Details In Go 1.26, we introduced AMD64 architecture-specific SIMD intrinsics in the simd/archsimd package under GOEXPERIMENT=simd . Thanks t",
+		"tag": "proposal",
+		"comments": 28,
+		"score": 0.6319981814824864,
+		"published": "2026-04-27T19:29:32Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: go/types: add String methods to TypeParamList, TypeList, and Instance",
+		"url": "https://github.com/golang/go/issues/79287",
+		"image_url": "https://opengraph.githubassets.com/e0cf9d923a2acf662ef578467752dd6e026dca5badffcbe97507c88e831b63eb/golang/go/issues/79287",
+		"author": {
+			"username": "adonovan",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
+			"profile_url": "https://github.com/adonovan"
+		},
+		"snippet": "Targeting Go 1.27 — The types TypeParamList, TypeList, and Instance in go/types render as hex when passed to log.Println, which makes debugging inconvenient. We should ad",
+		"tag": "proposal",
+		"comments": 2,
+		"score": 0.5,
+		"published": "2026-05-08T19:18:42Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "testing/synctest: making synctest accessible to other testrunners",
+		"url": "https://github.com/golang/go/issues/79294",
+		"image_url": "https://opengraph.githubassets.com/1cc16bc6529101961e83550ce08bf6a24b67203a6a049f547244a78c6bd240bf/golang/go/issues/79294",
+		"author": {
+			"username": "onsi",
+			"avatar_url": "https://avatars.githubusercontent.com/u/558230?v=4",
+			"profile_url": "https://github.com/onsi"
+		},
+		"snippet": "Hey all - I write and maintain the [ginkgo](https://github.com/onsi/ginkgo) testing framework and am fielding inquiries about supporting synctest in G",
+		"tag": "proposal",
+		"comments": 3,
+		"score": 0.5,
+		"published": "2026-05-09T03:13:30Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: runtime/pprof: add a rss profile type",
+		"url": "https://github.com/golang/go/issues/79179",
+		"image_url": "https://opengraph.githubassets.com/c953d067d6b6907b3be9c76e0362239e11aaf4e44199c0e1e7c11d96dbc21e8a/golang/go/issues/79179",
+		"author": {
+			"username": "felixge",
+			"avatar_url": "https://avatars.githubusercontent.com/u/15000?v=4",
+			"profile_url": "https://github.com/felixge"
+		},
+		"snippet": "This is a proposal to introduce a new \"rss\" profile type to runtime/pprof to provide Go users with a holistic breakdown of their program's memory usag",
+		"tag": "proposal",
+		"comments": 3,
+		"score": 0.6712040604371055,
+		"published": "2026-05-04T05:46:44Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: testing/nettest: in-memory implementations of net package interfaces",
+		"url": "https://github.com/golang/go/issues/77362",
+		"image_url": "https://opengraph.githubassets.com/e2dba57429cb5b89821c8e3aa362adea16e4b1e8fad0d3399c17c856031e2ed2/golang/go/issues/77362",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "This is a proposal to add in-memory implementations of [ net.Listener ](https://pkg.go.dev/net Listener), [ net.Conn ](https://pkg.go.dev/net Conn), a",
+		"tag": "proposal",
+		"comments": 11,
+		"score": 0.994963503179957,
+		"published": "2026-01-28T22:24:32Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: cmd/go: add -buildversion build flag",
+		"url": "https://github.com/golang/go/issues/77020",
+		"image_url": "https://opengraph.githubassets.com/fad8369254fc0a2cdf35c79f4f646c3a1705f8bf2427506808e606de2b7d446b/golang/go/issues/77020",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Background I yearn for the day debug.BuildInfo.Main.Version is all a binary needs to know its own version. buildInfo, ok := debug.ReadBuildInfo() if !",
+		"tag": "proposal",
+		"comments": 25,
+		"score": 0.7861595966087034,
+		"published": "2025-12-28T10:39:25Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: allow explicit conversion from function to 1-method interface",
+		"url": "https://github.com/golang/go/issues/47487",
+		"image_url": "https://opengraph.githubassets.com/9764d68037d37ba20cf9144382ec85e5cfdaef03c1fdbd7799ff06fd1e68e799/golang/go/issues/47487",
+		"author": {
+			"username": "Merovius",
+			"avatar_url": "https://avatars.githubusercontent.com/u/720787?v=4",
+			"profile_url": "https://github.com/Merovius"
+		},
+		"snippet": "This is forked from 21670. I'd be fine having this closed as a duplicate, but some people suggested that it was different enough to warrant its own tr",
+		"tag": "proposal",
+		"comments": 149,
+		"score": 1,
+		"published": "2021-07-31T22:51:34Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: interface literals",
+		"url": "https://github.com/golang/go/issues/25860",
+		"image_url": "https://opengraph.githubassets.com/79a29e7c7624bde9e3ab53c45468576f6ce36a0e329a7d05bc1df2ed3397fc47/golang/go/issues/25860",
+		"author": {
+			"username": "smasher164",
+			"avatar_url": "https://avatars.githubusercontent.com/u/12636891?v=4",
+			"profile_url": "https://github.com/smasher164"
+		},
+		"snippet": "[Status: on [hold](https://github.com/golang/go/issues/25860 issuecomment-2702242461).] Filing this for completeness sake, since it was mentioned in h",
+		"tag": "proposal",
+		"comments": 83,
+		"score": 1,
+		"published": "2018-06-13T06:14:06Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: cmd/go,cmd/testmain: extract `_testmain.go` generator into a standalone tool",
+		"url": "https://github.com/golang/go/issues/79240",
+		"image_url": "https://opengraph.githubassets.com/d66a141afbb29e34f4a77583986b7862a0960251866373fc7cd7bfaf90ca3722/golang/go/issues/79240",
+		"author": {
+			"username": "podtserkovskiy",
+			"avatar_url": "https://avatars.githubusercontent.com/u/12721466?v=4",
+			"profile_url": "https://github.com/podtserkovskiy"
+		},
+		"snippet": "Problem go test command synthesises a _testmain.go file that wires the user's Test / Benchmark /etc functions into testing.MainStart . The generator l",
 		"tag": "proposal",
 		"comments": 5,
 		"score": 0.5,
-		"published": "2026-04-20T00:00:12Z"
+		"published": "2026-05-06T21:34:05Z"
 	},
 	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: (if cond then expr else expr) conditional expressions",
+		"url": "https://github.com/golang/go/issues/78940",
+		"image_url": "https://opengraph.githubassets.com/49b61a43d76a127ef3acf90ebc34800d0cdcd285b258988b20f3ad95f249ee4b/golang/go/issues/78940",
+		"author": {
+			"username": "adonovan",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
+			"profile_url": "https://github.com/adonovan"
+		},
+		"snippet": "Proposal Details (Split out from https://github.com/golang/go/issues/78865 issuecomment-4308283951 et seq.) C-style conditional expressions using x ?",
+		"tag": "proposal",
+		"comments": 55,
+		"score": 0.6319981814824864,
+		"published": "2026-04-24T15:21:12Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: x/net/http3: add experimental HTTP/3 implementation",
+		"url": "https://github.com/golang/go/issues/70914",
+		"image_url": "https://opengraph.githubassets.com/6d07a587b9df7240b4da725cd3aaf026d8f6d785825690bded10329456ecde5d/golang/go/issues/70914",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "This is a proposal to add an HTTP/3 client and server implementation in x/net/http3. Similarly to the accepted form of 58547 (x/net/quic), this propos",
+		"tag": "proposal",
+		"comments": 76,
+		"score": 0.9898252520964467,
+		"published": "2024-12-18T23:45:24Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: explicitly exclude error messages from the Go 1 compatibility promise",
+		"url": "https://github.com/golang/go/issues/78991",
+		"image_url": "https://opengraph.githubassets.com/855c99110f54449a1c50faa89d649e31298cbe1d5f2935fbd05fa2e292ad5639/golang/go/issues/78991",
+		"author": {
+			"username": "jub0bs",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52325150?v=4",
+			"profile_url": "https://github.com/jub0bs"
+		},
+		"snippet": "[The document that specifies the Go 1 compatibility promise](https://go.dev/doc/go1compat expectations) (\"go1compat\" for short) lists a number of excl",
+		"tag": "proposal",
+		"comments": 4,
+		"score": 0.8474954948259875,
+		"published": "2026-04-28T10:33:44Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "encoding/json/v2: remove recursive nature of `string` tag option",
+		"url": "https://github.com/golang/go/issues/79065",
+		"image_url": "https://opengraph.githubassets.com/78d7f0e66362e8aaff3238d8b2f7c574439b1d833b2f4f5f716fad9adc857e5c/golang/go/issues/79065",
+		"author": {
+			"username": "dsnet",
+			"avatar_url": "https://avatars.githubusercontent.com/u/6354026?v=4",
+			"profile_url": "https://github.com/dsnet"
+		},
+		"snippet": "Proposal Details The current prototype of json/v2 allows the string tag option to be recursive. For example: go json.Marshal(struct{ Foo []int json:\",",
+		"tag": "proposal",
+		"comments": 2,
+		"score": 0.5,
+		"published": "2026-04-30T21:06:02Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: cmd/go: add `-test` to `go doc`",
+		"url": "https://github.com/golang/go/issues/79204",
+		"image_url": "https://opengraph.githubassets.com/4074b87fa9447b7593f7497ed016f608b621951e3713d4ded60581dd6a87decc/golang/go/issues/79204",
+		"author": {
+			"username": "thatnealpatel",
+			"avatar_url": "https://avatars.githubusercontent.com/u/35434379?v=4",
+			"profile_url": "https://github.com/thatnealpatel"
+		},
+		"snippet": "Proposal Details In 17509, @rsc rejected this exact proposal: \u003e Godoc is about showing the exported API from \u003e a package. Test files are not part of t",
+		"tag": "proposal",
+		"comments": 6,
+		"score": 0.5,
+		"published": "2026-05-05T16:45:16Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: cmd/go: support `-modfile` for `go mod init`",
+		"url": "https://github.com/golang/go/issues/78503",
+		"image_url": "https://opengraph.githubassets.com/580b02a291daa30fbf40dc413d3188bb6a1c9603b43a6b4c1766409c44b39a8d/golang/go/issues/78503",
+		"author": {
+			"username": "dolmen",
+			"avatar_url": "https://avatars.githubusercontent.com/u/129536?v=4",
+			"profile_url": "https://github.com/dolmen"
+		},
+		"snippet": "Proposal Details Add _official_ support for go mod init -modfile= .mod . In fact, it already works with Go 1.26.1, but the flag isn't doc",
+		"tag": "proposal",
+		"comments": 4,
+		"score": 0.5,
+		"published": "2026-04-02T10:04:25Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "go/importer: documentation of lookup parameter of ForCompiler can be clarified",
+		"url": "https://github.com/golang/go/issues/79139",
+		"image_url": "https://opengraph.githubassets.com/6b363cbf4f56fd52679df61fbf3d9b3fcd1033e2b18024dcf846f9f33831fae6/golang/go/issues/79139",
+		"author": {
+			"username": "adonovan",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5658175?v=4",
+			"profile_url": "https://github.com/adonovan"
+		},
+		"snippet": "Targeting Go 1.27 — This CL https://go.dev/cl/184079 added Deprecated to ForCompiler, but Russ and I think this was a mistake: it seems to apply only to the behavior of a",
+		"tag": "proposal_shipped",
+		"comments": 6,
+		"score": 0.85,
+		"published": "2026-05-01T15:31:19Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto: single-shot signing interface",
+		"url": "https://github.com/golang/go/issues/63405",
+		"image_url": "https://opengraph.githubassets.com/e017c3dc208965ce4291f54a8373734a957a2699831e89ceb51d275238b0c033/golang/go/issues/63405",
+		"author": {
+			"username": "ueno",
+			"avatar_url": "https://avatars.githubusercontent.com/u/47549?v=4",
+			"profile_url": "https://github.com/ueno"
+		},
+		"snippet": "Abstract This proposal introduces a new interface for creating digital signatures in a single-shot manner, by combining message hashing and signing as",
+		"tag": "proposal_shipped",
+		"comments": 14,
+		"score": 0.85,
+		"published": "2023-10-06T01:47:19Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "runtime/pprof,runtime: new goroutine leak profile",
+		"url": "https://github.com/golang/go/issues/74609",
+		"image_url": "https://opengraph.githubassets.com/bc72b64465fbf91d2e7e07cf819c7945a91eb7c563a186fab72345a35931c0b7/golang/go/issues/74609",
+		"author": {
+			"username": "VladSaioc",
+			"avatar_url": "https://avatars.githubusercontent.com/u/11602035?v=4",
+			"profile_url": "https://github.com/VladSaioc"
+		},
+		"snippet": "Targeting Go 1.27 — Proposal Details [Design document.](https://go.googlesource.com/proposal/+/master/design/74609-goroutine-leak-detection-gc.md) This proposal involves",
+		"tag": "proposal_shipped",
+		"comments": 32,
+		"score": 1.4705727285315409,
+		"published": "2025-07-14T14:34:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "log/slog: export Source method in Record to support custom handler implementations",
+		"url": "https://github.com/golang/go/issues/70280",
+		"image_url": "https://opengraph.githubassets.com/d223c985047b6762e56d9a34bf82b38a1ff0e4f17cb347150e5b0bae4d9ae380/golang/go/issues/70280",
+		"author": {
+			"username": "nesty92",
+			"avatar_url": "https://avatars.githubusercontent.com/u/26422482?v=4",
+			"profile_url": "https://github.com/nesty92"
+		},
+		"snippet": "Go version go version go1.23.1 linux/amd64 Output of go env in your module/workspace: shell Not relevant What did you do? Implement a custom handler f",
+		"tag": "proposal_shipped",
+		"comments": 18,
+		"score": 0.85,
+		"published": "2024-11-11T08:56:23Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/tls: allow QUIC to configure net.Conn used on ClientHelloInfo",
+		"url": "https://github.com/golang/go/issues/77363",
+		"image_url": "https://opengraph.githubassets.com/b5d619d9454cc3693f0c887325be316f68953ee9ba85c5ce6700b3bf98375732/golang/go/issues/77363",
+		"author": {
+			"username": "marten-seemann",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1478487?v=4",
+			"profile_url": "https://github.com/marten-seemann"
+		},
+		"snippet": "The crypto/tls package's GetCertificate and GetConfigForClient callbacks receive a tls.ClientHelloInfo with a Conn field (type net.Conn ). For QUIC, a",
+		"tag": "proposal_shipped",
+		"comments": 9,
+		"score": 0.85,
+		"published": "2026-01-28T23:48:37Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "spec: direct reference to embedded fields in struct literals",
+		"url": "https://github.com/golang/go/issues/9859",
+		"image_url": "https://opengraph.githubassets.com/0e870f9ca7e61d920f35ac43dc48136c0f907d2427534aafb0d658ff9eef67ed/golang/go/issues/9859",
+		"author": {
+			"username": "adg",
+			"avatar_url": "https://avatars.githubusercontent.com/u/8446613?v=4",
+			"profile_url": "https://github.com/adg"
+		},
+		"snippet": "Targeting Go 1.27 — (Status: [referred](https://github.com/golang/go/issues/9859 issuecomment-2877895897) from LanguageChange to Proposal. --adonovan) Consider type E str",
+		"tag": "proposal_shipped",
+		"comments": 79,
+		"score": 1.7,
+		"published": "2015-02-12T23:21:33Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "cmd/go: delete bzr support",
+		"url": "https://github.com/golang/go/issues/78090",
+		"image_url": "https://opengraph.githubassets.com/f4d15f459702e2916cd24dcf4395bafc807dcdd86b2c37a82a530bf9645567ab/golang/go/issues/78090",
+		"author": {
+			"username": "rsc",
+			"avatar_url": "https://avatars.githubusercontent.com/u/104030?v=4",
+			"profile_url": "https://github.com/rsc"
+		},
+		"snippet": "Targeting Go 1.27 — Proposal Details I propose that we delete support for GNU Bazaar (bzr) from cmd/go, because Bazaar itself is no longer used, nor developed. GNU Bazaar",
+		"tag": "proposal_shipped",
+		"comments": 10,
+		"score": 1.2730844986924437,
+		"published": "2026-03-11T19:00:01Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "x/tools/go/analysis/passes/modernize: vars for atomic, embedlit, errorsastype, plusbuild, stringscut, stditerators",
+		"url": "https://github.com/golang/go/issues/77986",
+		"image_url": "https://opengraph.githubassets.com/f9f3efed76293c13871092b6d0a536432c5cdf77710a535fe0c5116b5aadecde/golang/go/issues/77986",
+		"author": {
+			"username": "madelinekalil",
+			"avatar_url": "https://avatars.githubusercontent.com/u/26258798?v=4",
+			"profile_url": "https://github.com/madelinekalil"
+		},
+		"snippet": "Proposal Details This proposal is to add a new Analyzer, atomic, to the go/analysis API: https://github.com/golang/go/issues/77352 The atomic analyzer",
+		"tag": "proposal_shipped",
+		"comments": 11,
+		"score": 0.85,
+		"published": "2026-03-06T15:30:57Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "cmd/gofmt: change -d to exit 1 if diffs exist",
+		"url": "https://github.com/golang/go/issues/46289",
+		"image_url": "https://opengraph.githubassets.com/7b4d61d804c965b5f3cb33c198fac7af080048ff0dd8716047d96795667f3ecf/golang/go/issues/46289",
+		"author": {
+			"username": "mvdan",
+			"avatar_url": "https://avatars.githubusercontent.com/u/3576549?v=4",
+			"profile_url": "https://github.com/mvdan"
+		},
+		"snippet": "Targeting Go 1.26 — First, I know that this has been asked many times before (https://github.com/golang/go/issues/24230 https://github.com/golang/go/issues/24427 https://",
+		"tag": "proposal_shipped",
+		"comments": 26,
+		"score": 1.3556908838264556,
+		"published": "2021-05-20T15:28:34Z"
+	},
+	{
+		"id": 0,
 		"source": "github",
 		"title": "all: end support for macOS 12 in Go 1.27",
 		"url": "https://github.com/golang/go/issues/75836",
@@ -733,149 +967,5 @@
 		"comments": 17,
 		"score": 0.85,
 		"published": "2025-10-09T20:36:46Z"
-	},
-	{
-		"source": "github",
-		"title": "uuid: add API to generate and parse UUID",
-		"url": "https://github.com/golang/go/issues/62026",
-		"image_url": "https://opengraph.githubassets.com/4e8ac7d12a256030c4e6c8406cbe8a3bb58f17494940ffd8250e96c76bb29231/golang/go/issues/62026",
-		"author": {
-			"username": "mzattahri",
-			"avatar_url": "https://avatars.githubusercontent.com/u/569071?v=4",
-			"profile_url": "https://github.com/mzattahri"
-		},
-		"snippet": "Targeting Go 1.27 — I would like to suggest the addition to the standard library of a package to generate and parse UUID identifiers, specifically versions 3, 4 and 5. Th",
-		"tag": "proposal_shipped",
-		"comments": 343,
-		"score": 1.7,
-		"published": "2023-08-14T19:57:51Z"
-	},
-	{
-		"source": "github",
-		"title": "cmd/vet: add check for using %q with non-{rune,byte} integer types",
-		"url": "https://github.com/golang/go/issues/72850",
-		"image_url": "https://opengraph.githubassets.com/fa38913f93f3d009801a0e1279803249c2fab2e81eabf4cc58a21d8351467361/golang/go/issues/72850",
-		"author": {
-			"username": "rittneje",
-			"avatar_url": "https://avatars.githubusercontent.com/u/28784688?v=4",
-			"profile_url": "https://github.com/rittneje"
-		},
-		"snippet": "Targeting Go 1.26 — Proposal Details 32479 added a go vet warning for string(i) , because it has the surprising behavior of returning the character with that integer code",
-		"tag": "proposal_shipped",
-		"comments": 16,
-		"score": 0.8990863153832986,
-		"published": "2025-03-13T18:00:32Z"
-	},
-	{
-		"source": "github",
-		"title": "cmd/vet: flag using %s:%d to construct network addresses",
-		"url": "https://github.com/golang/go/issues/28308",
-		"image_url": "https://opengraph.githubassets.com/2c188e81c029b606147841e9ebaf968a0e2075f998d2da9bb0e9ea3bfc1473ec/golang/go/issues/28308",
-		"author": {
-			"username": "stapelberg",
-			"avatar_url": "https://avatars.githubusercontent.com/u/55506?v=4",
-			"profile_url": "https://github.com/stapelberg"
-		},
-		"snippet": "Targeting Go 1.25 — I recently diagnosed a bug in someone’s Go program where a user reported that they couldn’t get the program to connect, and it turned out the issu",
-		"tag": "proposal_shipped",
-		"comments": 18,
-		"score": 1.1708772900704414,
-		"published": "2018-10-22T12:04:32Z"
-	},
-	{
-		"source": "github",
-		"title": "github: lock conversations on GitHub commits",
-		"url": "https://github.com/golang/go/issues/25450",
-		"image_url": "https://opengraph.githubassets.com/1083b0c11662e0dfe771966952b13747326145a159683e88add1163b739639b1/golang/go/issues/25450",
-		"author": {
-			"username": "davecheney",
-			"avatar_url": "https://avatars.githubusercontent.com/u/7171?v=4",
-			"profile_url": "https://github.com/davecheney"
-		},
-		"snippet": "Occasionally a GitHub user will post a comment on a commit. Frequently these are spam which leads to nuisance emails generated if you watch the repo.",
-		"tag": "proposal_shipped",
-		"comments": 7,
-		"score": 0.85,
-		"published": "2018-05-18T06:01:14Z"
-	},
-	{
-		"source": "github",
-		"title": "doc: clarify if simple helper methods on x/sys syscall data structures require a proposal",
-		"url": "https://github.com/golang/go/issues/77887",
-		"image_url": "https://opengraph.githubassets.com/f48173e0014f2f575c314c92f214bad5342794003049865c91bfd540ef38c0fc/golang/go/issues/77887",
-		"author": {
-			"username": "database64128",
-			"avatar_url": "https://avatars.githubusercontent.com/u/18757988?v=4",
-			"profile_url": "https://github.com/database64128"
-		},
-		"snippet": "During the review of my [CL 744880](https://go.dev/cl/744880), @alexbrainman requested that I remove all helper methods on the newly added structs. Th",
-		"tag": "proposal_shipped",
-		"comments": 21,
-		"score": 0.85,
-		"published": "2026-03-01T20:31:25Z"
-	},
-	{
-		"source": "github",
-		"title": "runtime/pprof,runtime: add new goroutine leak profile as a GOEXPERIMENT",
-		"url": "https://github.com/golang/go/issues/75280",
-		"image_url": "https://opengraph.githubassets.com/d9649509fdc4e1b2a17289d20deb8ceaeaea6dcaf27d7eeaec458fc08f564205/golang/go/issues/75280",
-		"author": {
-			"username": "mknyszek",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1248668?v=4",
-			"profile_url": "https://github.com/mknyszek"
-		},
-		"snippet": "Targeting Go 1.26 — This is a mini-proposal to land the work powering 74609 behind a new GOEXPERIMENT , goroutineleakprofile (edited after discussion below), so 1. The im",
-		"tag": "proposal_shipped",
-		"comments": 16,
-		"score": 0.8990863153832986,
-		"published": "2025-09-05T16:16:59Z"
-	},
-	{
-		"source": "github",
-		"title": "spec: add range over int, range over func",
-		"url": "https://github.com/golang/go/issues/61405",
-		"image_url": "https://opengraph.githubassets.com/93d377b4e173fdccecf3b65d051395c61860dd42bd9f5444cad00d96cb86d3e6/golang/go/issues/61405",
-		"author": {
-			"username": "rsc",
-			"avatar_url": "https://avatars.githubusercontent.com/u/104030?v=4",
-			"profile_url": "https://github.com/rsc"
-		},
-		"snippet": "Targeting Go 1.23 — Following discussion on 56413, I propose to add two new types that a [for-range statement](https://go.dev/ref/spec For_range) can range over: integers",
-		"tag": "proposal_shipped",
-		"comments": 417,
-		"score": 1.7,
-		"published": "2023-07-17T21:17:46Z"
-	},
-	{
-		"source": "github",
-		"title": "x/term: support pluggable history",
-		"url": "https://github.com/golang/go/issues/68780",
-		"image_url": "https://opengraph.githubassets.com/e5e54330bf8162758f7318d463829a47cd2a142f9b7bbd363d289586fc7af4fd/golang/go/issues/68780",
-		"author": {
-			"username": "ldemailly",
-			"avatar_url": "https://avatars.githubusercontent.com/u/3664595?v=4",
-			"profile_url": "https://github.com/ldemailly"
-		},
-		"snippet": "Proposal Details --- Accepted proposal: go // A History provides a (possibly bounded) queue of input lines read by [ReadLine]. type History interface",
-		"tag": "proposal_shipped",
-		"comments": 79,
-		"score": 0.85,
-		"published": "2024-08-08T00:35:25Z"
-	},
-	{
-		"source": "github",
-		"title": "spec: direct reference to embedded fields in struct literals",
-		"url": "https://github.com/golang/go/issues/9859",
-		"image_url": "https://opengraph.githubassets.com/6cde18c4ec04ef5251885b4c5324fd53013706669eac3c9dc7858103736ec44f/golang/go/issues/9859",
-		"author": {
-			"username": "adg",
-			"avatar_url": "https://avatars.githubusercontent.com/u/8446613?v=4",
-			"profile_url": "https://github.com/adg"
-		},
-		"snippet": "Targeting Go 1.27 — (Status: [referred](https://github.com/golang/go/issues/9859 issuecomment-2877895897) from LanguageChange to Proposal. --adonovan) Consider type E str",
-		"tag": "proposal_shipped",
-		"comments": 78,
-		"score": 1.7,
-		"published": "2015-02-12T23:21:33Z"
 	}
 ]

@@ -14,8 +14,8 @@
     <podcast:locked owner="dominicstpierre@gmail.com">no</podcast:locked>
     <podcast:person role="Host" href="https://dominicstpierre.com" img="https://img.transistorcdn.com/TODMykIxKjtV3O9TcRtfNUZbAbh5NY2yaueoFzRL4Sw/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9wZXJz/b24vZjIxMjQyNjAt/NDMwMy00ZWYzLWIz/MDQtMGU0ZTMxNjZl/ZGQ5LzE3MDcxNDYy/MzYtaW1hZ2UuanBn.jpg">Dominic St-Pierre</podcast:person>
     <language>en</language>
-    <pubDate>Thu, 23 Apr 2026 05:00:23 -0400</pubDate>
-    <lastBuildDate>Thu, 23 Apr 2026 05:01:50 -0400</lastBuildDate>
+    <pubDate>Thu, 07 May 2026 05:00:15 -0400</pubDate>
+    <lastBuildDate>Thu, 07 May 2026 05:01:55 -0400</lastBuildDate>
     <image>
       <url>https://img.transistorcdn.com/vqD1ynhLb4hGcRqQnolxGOKBy5D41EF8mOjt9PHyHTc/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9zaG93/LzI3MjkyLzE2NDE1/NjU2MDgtYXJ0d29y/ay5qcGc.jpg</url>
       <title>go podcast()</title>
@@ -36,6 +36,65 @@
     </itunes:owner>
     <itunes:complete>No</itunes:complete>
     <itunes:explicit>No</itunes:explicit>
+    <item>
+      <title>084: Databases, FTS, and local LLM</title>
+      <itunes:episode>84</itunes:episode>
+      <podcast:episode>84</podcast:episode>
+      <itunes:title>084: Databases, FTS, and local LLM</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">efc8ef5b-de95-4c51-95bd-3b8c602de85d</guid>
+      <link>https://share.transistor.fm/s/244e37b2</link>
+      <description>
+        <![CDATA[<p>This week we talk about databases, full-text search and local llm. All of this with the usual tangents and what not.</p>]]>
+      </description>
+      <content:encoded>
+        <![CDATA[<p>This week we talk about databases, full-text search and local llm. All of this with the usual tangents and what not.</p>]]>
+      </content:encoded>
+      <pubDate>Thu, 07 May 2026 05:00:00 -0400</pubDate>
+      <author>Dominic St-Pierre</author>
+      <enclosure url="https://media.transistor.fm/244e37b2/1a56c370.mp3" length="58723720" type="audio/mpeg"/>
+      <itunes:author>Dominic St-Pierre</itunes:author>
+      <itunes:duration>3668</itunes:duration>
+      <itunes:summary>
+        <![CDATA[<p>This week we talk about databases, full-text search and local llm. All of this with the usual tangents and what not.</p>]]>
+      </itunes:summary>
+      <itunes:keywords>go, golang, programming, code, developer</itunes:keywords>
+      <itunes:explicit>No</itunes:explicit>
+      <podcast:person role="Host" href="https://dominicstpierre.com" img="https://img.transistorcdn.com/TODMykIxKjtV3O9TcRtfNUZbAbh5NY2yaueoFzRL4Sw/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9wZXJz/b24vZjIxMjQyNjAt/NDMwMy00ZWYzLWIz/MDQtMGU0ZTMxNjZl/ZGQ5LzE3MDcxNDYy/MzYtaW1hZ2UuanBn.jpg">Dominic St-Pierre</podcast:person>
+      <podcast:person role="Host" href="https://mortenvistisen.com" img="https://img.transistorcdn.com/5L3lJPobAvk_-QLd55zPwOrIp49sfyzCQDV1ZD7ZdFs/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9hOTg0/MTAyMzEwYmI3YTY1/YWUwZWNhMTlkMDZj/NmYzMC5qcGVn.jpg">Morten Vistisen</podcast:person>
+    </item>
+    <item>
+      <title>083: Lisette, inspired by Rust, compiles to Go with Iván Ovejero</title>
+      <itunes:episode>83</itunes:episode>
+      <podcast:episode>83</podcast:episode>
+      <itunes:title>083: Lisette, inspired by Rust, compiles to Go with Iván Ovejero</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">b5c6d9bb-76a4-4c2e-ba35-8de9fba2fb13</guid>
+      <link>https://share.transistor.fm/s/2a201efb</link>
+      <description>
+        <![CDATA[<p>This week Iván Ovejero join me and we talk about Lisette, a nice programming language that's inspired by Rust and compiles to Go. Programming languages are the new JS framework these days it seems. I personally enjoy discovering new language, sometimes it clicks sometimes it don't. Go is a great language, but I'll admit that having a better type system, the exhaustive pattern match on enum, and a pipe operator to me feels like very nice to have / quality of life as Gophers. In any case, it's always great to talk to language creators, And who knows, maybe you'll want some excitement and try something new this week.</p><p>Links:</p><ul><li><a href="https://lisette.run">Lisette's website</a></li><li><a href="https://ivov.dev/">Ivan's website</a></li></ul>]]>
+      </description>
+      <content:encoded>
+        <![CDATA[<p>This week Iván Ovejero join me and we talk about Lisette, a nice programming language that's inspired by Rust and compiles to Go. Programming languages are the new JS framework these days it seems. I personally enjoy discovering new language, sometimes it clicks sometimes it don't. Go is a great language, but I'll admit that having a better type system, the exhaustive pattern match on enum, and a pipe operator to me feels like very nice to have / quality of life as Gophers. In any case, it's always great to talk to language creators, And who knows, maybe you'll want some excitement and try something new this week.</p><p>Links:</p><ul><li><a href="https://lisette.run">Lisette's website</a></li><li><a href="https://ivov.dev/">Ivan's website</a></li></ul>]]>
+      </content:encoded>
+      <pubDate>Thu, 30 Apr 2026 05:00:00 -0400</pubDate>
+      <author>Dominic St-Pierre</author>
+      <enclosure url="https://media.transistor.fm/2a201efb/e164f9cc.mp3" length="42123339" type="audio/mpeg"/>
+      <itunes:author>Dominic St-Pierre</itunes:author>
+      <itunes:duration>3508</itunes:duration>
+      <itunes:summary>
+        <![CDATA[<p>This week Iván Ovejero join me and we talk about Lisette, a nice programming language that's inspired by Rust and compiles to Go. Programming languages are the new JS framework these days it seems. I personally enjoy discovering new language, sometimes it clicks sometimes it don't. Go is a great language, but I'll admit that having a better type system, the exhaustive pattern match on enum, and a pipe operator to me feels like very nice to have / quality of life as Gophers. In any case, it's always great to talk to language creators, And who knows, maybe you'll want some excitement and try something new this week.</p><p>Links:</p><ul><li><a href="https://lisette.run">Lisette's website</a></li><li><a href="https://ivov.dev/">Ivan's website</a></li></ul>]]>
+      </itunes:summary>
+      <itunes:keywords>go, golang, programming, code, developer</itunes:keywords>
+      <itunes:explicit>No</itunes:explicit>
+      <podcast:person role="Host" href="https://dominicstpierre.com" img="https://img.transistorcdn.com/TODMykIxKjtV3O9TcRtfNUZbAbh5NY2yaueoFzRL4Sw/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9wZXJz/b24vZjIxMjQyNjAt/NDMwMy00ZWYzLWIz/MDQtMGU0ZTMxNjZl/ZGQ5LzE3MDcxNDYy/MzYtaW1hZ2UuanBn.jpg">Dominic St-Pierre</podcast:person>
+      <podcast:person role="Guest" href="https://ivov.dev" img="https://img.transistorcdn.com/vmf3hKR6sQtKodwsBBLfD4gIKFZOwBmtCTu1RLKyF5I/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS85N2Zl/Y2IwYzljZDc3MGEx/NmNkMTAyNDkzOWI1/OTRmMS5qcGVn.jpg">Iván Ovejero</podcast:person>
+      <podcast:transcript url="https://share.transistor.fm/s/2a201efb/transcription.vtt" type="text/vtt" rel="captions"/>
+      <podcast:transcript url="https://share.transistor.fm/s/2a201efb/transcription.srt" type="application/x-subrip" rel="captions"/>
+      <podcast:transcript url="https://share.transistor.fm/s/2a201efb/transcription.json" type="application/json" rel="captions"/>
+      <podcast:transcript url="https://share.transistor.fm/s/2a201efb/transcription.txt" type="text/plain"/>
+      <podcast:transcript url="https://share.transistor.fm/s/2a201efb/transcription" type="text/html"/>
+    </item>
     <item>
       <title>082: Streaming, product updates, and marketing</title>
       <itunes:episode>82</itunes:episode>

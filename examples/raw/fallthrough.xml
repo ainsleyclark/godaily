@@ -12,14 +12,14 @@
     <copyright>©2025 Skriptble Publishing, Inc.</copyright>
     <podcast:guid>841e017e-1448-533d-8e93-b2191d49252f</podcast:guid>
     <podcast:locked>yes</podcast:locked>
-    <podcast:person role="Host" href="https://skriptble.press" img="https://img.transistorcdn.com/iziGMONTP9sWxG_yEce3mlTSrzcG0iO-XNIQlrp2dso/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS83Y2U2/YjFmOWZiNzg2Yzhi/N2RlMzNlNTgxYTlm/ZjNmNi5KUEc.jpg">Kris Brandow</podcast:person>
     <podcast:person role="Host" href="https://fallthrough.transistor.fm/people/ian-wester-lopshire" img="https://img.transistorcdn.com/AF__aapuCW20p3F6jRxM38fyyj349kXno3rb5RucYbA/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9lMWNl/NjljNDNiNzY1MjQ5/NmM1ZTZlOWQzZmQw/ZTFkYS5qcGVn.jpg">Ian Wester-Lopshire</podcast:person>
     <podcast:person role="Host" href="https://fallthrough.transistor.fm/people/dylan-bourque" img="https://img.transistorcdn.com/Uq3yzo9aYVS0H02yDUOtdWwN9KQxg_GxvBtuXTXpZJA/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS82MGI3/ODRhMjMwN2U5MDI5/Mjg0MmE4MDkxZWU3/YzI0MS5qcGc.jpg">Dylan Bourque</podcast:person>
     <podcast:person role="Host" href="https://matthewsanabria.dev/" img="https://img.transistorcdn.com/lT23W3B6HSXOjGY4ESt6ZnyNv1qW6lScOiDUHbodOvM/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS82MWNh/ZmMwMDQ1NjA0MDg4/MTk0ZTdhMDk1ZDI2/MmM1ZC5qcGc.jpg">Matthew Sanabria</podcast:person>
+    <podcast:person role="Host" href="https://skriptble.press" img="https://img.transistorcdn.com/iziGMONTP9sWxG_yEce3mlTSrzcG0iO-XNIQlrp2dso/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS83Y2U2/YjFmOWZiNzg2Yzhi/N2RlMzNlNTgxYTlm/ZjNmNi5KUEc.jpg">Kris Brandow</podcast:person>
     <podcast:trailer pubdate="Tue, 03 Dec 2024 14:04:59 -0500" url="https://media.transistor.fm/0c27a226/552f8c82.mp3" length="7581389" type="audio/mpeg">Falling Through: The Trailer</podcast:trailer>
     <language>en</language>
-    <pubDate>Sat, 25 Apr 2026 08:00:31 -0400</pubDate>
-    <lastBuildDate>Sat, 25 Apr 2026 08:01:27 -0400</lastBuildDate>
+    <pubDate>Sat, 09 May 2026 08:00:11 -0400</pubDate>
+    <lastBuildDate>Sat, 09 May 2026 08:01:07 -0400</lastBuildDate>
     <link>https://fallthrough.fm</link>
     <image>
       <url>https://img.transistorcdn.com/gwMlOkahrgzYCfiPH-JiFUnb-wnQhFaispQf_aLTmdk/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS81ZWUw/NTFjMmEwMDYwMjdm/MDFjNGRmMThlMWUz/NjQxNC5wbmc.jpg</url>
@@ -39,6 +39,186 @@
     </itunes:owner>
     <itunes:complete>No</itunes:complete>
     <itunes:explicit>No</itunes:explicit>
+    <item>
+      <title>Forging Ahead</title>
+      <itunes:episode>70</itunes:episode>
+      <podcast:episode>70</podcast:episode>
+      <itunes:title>Forging Ahead</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">94fe7d0e-4e89-4516-b62b-4635f9fba10f</guid>
+      <link>https://share.transistor.fm/s/4774655a</link>
+      <description>
+        <![CDATA[<p>Steve is back to talk JJ (Jujutsu version control) and the related product, ChangeSet, that he works on at East River Source Control. Kris and Steve trace why the GitHub monoculture is finally cracking, what JJ does that Git can't, and Steve's hypothesis that AI agents are pushing companies toward monorepos. Then the pair discuss the Opus 4.7 regression debate, the shift from "always use the frontier model" to using LLMs as one tool among many, and a quick discussion of the Tim Cook to John Ternus handoff at Apple.</p><p>We've got supporter content, of course! This week that includes Steve's broader thesis that it's easier to scale a big tool down than scale a small one up, why GitHub's pull request model warped how people use Git, auto-rebase and conflicts as first-class citizens in JJ, AI subsidies, and a Bun being ported to Rust. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>Thanks for tuning in and happy listening!</p><p>Show Notes:</p><ul><li><a href="https://jj-vcs.dev">JJ</a></li></ul><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: Episode 70, New Branding, and Catching Up (00:01:14)</li><li>Chapter 2: What is JJ (Jujutsu) and Why It Exists (00:03:43)</li><li>Chapter 3: Change IDs, Tangled, and the Federated Forge Wave (00:08:59)</li><li>Chapter 4: Healthy Diversity After the GitHub Monoculture (00:14:33)</li><li>Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended] (00:18:03)</li><li>Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash (00:18:10)</li><li>Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo (00:26:06)</li><li>Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended] (00:32:14)</li><li>Chapter 9: Auto-Rebase and Conflicts as First-Class Citizens [Extended] (00:32:14)</li><li>Chapter 10: Getting Started with JJ: Tutorials and Workflows (00:32:29)</li><li>Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale (00:42:28)</li><li>Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner (00:50:01)</li><li>Chapter 13: AI Subsidies and the Scaling Wall [Extended] (00:54:55)</li><li>Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles (00:55:24)</li><li>Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines (01:04:49)</li><li>Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended] (01:15:48)</li><li>Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus (01:16:08)</li><li>Epilogue (01:24:55)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/steve-klabnik-c9c49aa9-971d-45b0-b99c-545560843156">Steve Klabnik</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li><li><a href="https://changelog.zulipchat.com/#narrow/channel/481259-fallthrough">Changelog Zulip</a></li><li><a href="https://gophers.slack.com/archives/C085RJ99RFT">Gophers Slack</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:14) - Chapter 1: Episode 70, New Branding, and Catching Up</li>
+<li>(03:43) - Chapter 2: What is JJ (Jujutsu) and Why It Exists</li>
+<li>(08:59) - Chapter 3: Change IDs, Tangled, and the Federated Forge Wave</li>
+<li>(14:33) - Chapter 4: Healthy Diversity After the GitHub Monoculture</li>
+<li>(18:03) - Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended]</li>
+<li>(18:10) - Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash</li>
+<li>(26:06) - Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo</li>
+<li>(32:14) - Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended]</li>
+<li>(32:29) - Chapter 10: Getting Started with JJ: Tutorials and Workflows</li>
+<li>(42:28) - Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale</li>
+<li>(50:01) - Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner</li>
+<li>(54:55) - Chapter 13: AI Subsidies and the Scaling Wall [Extended]</li>
+<li>(55:24) - Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles</li>
+<li>(01:04:49) - Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines</li>
+<li>(01:15:48) - Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended]</li>
+<li>(01:16:08) - Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus</li>
+<li>(01:24:55) - Epilogue</li>
+</ul>]]>
+      </description>
+      <content:encoded>
+        <![CDATA[<p>Steve is back to talk JJ (Jujutsu version control) and the related product, ChangeSet, that he works on at East River Source Control. Kris and Steve trace why the GitHub monoculture is finally cracking, what JJ does that Git can't, and Steve's hypothesis that AI agents are pushing companies toward monorepos. Then the pair discuss the Opus 4.7 regression debate, the shift from "always use the frontier model" to using LLMs as one tool among many, and a quick discussion of the Tim Cook to John Ternus handoff at Apple.</p><p>We've got supporter content, of course! This week that includes Steve's broader thesis that it's easier to scale a big tool down than scale a small one up, why GitHub's pull request model warped how people use Git, auto-rebase and conflicts as first-class citizens in JJ, AI subsidies, and a Bun being ported to Rust. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>Thanks for tuning in and happy listening!</p><p>Show Notes:</p><ul><li><a href="https://jj-vcs.dev">JJ</a></li></ul><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: Episode 70, New Branding, and Catching Up (00:01:14)</li><li>Chapter 2: What is JJ (Jujutsu) and Why It Exists (00:03:43)</li><li>Chapter 3: Change IDs, Tangled, and the Federated Forge Wave (00:08:59)</li><li>Chapter 4: Healthy Diversity After the GitHub Monoculture (00:14:33)</li><li>Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended] (00:18:03)</li><li>Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash (00:18:10)</li><li>Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo (00:26:06)</li><li>Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended] (00:32:14)</li><li>Chapter 9: Auto-Rebase and Conflicts as First-Class Citizens [Extended] (00:32:14)</li><li>Chapter 10: Getting Started with JJ: Tutorials and Workflows (00:32:29)</li><li>Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale (00:42:28)</li><li>Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner (00:50:01)</li><li>Chapter 13: AI Subsidies and the Scaling Wall [Extended] (00:54:55)</li><li>Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles (00:55:24)</li><li>Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines (01:04:49)</li><li>Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended] (01:15:48)</li><li>Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus (01:16:08)</li><li>Epilogue (01:24:55)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/steve-klabnik-c9c49aa9-971d-45b0-b99c-545560843156">Steve Klabnik</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li><li><a href="https://changelog.zulipchat.com/#narrow/channel/481259-fallthrough">Changelog Zulip</a></li><li><a href="https://gophers.slack.com/archives/C085RJ99RFT">Gophers Slack</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:14) - Chapter 1: Episode 70, New Branding, and Catching Up</li>
+<li>(03:43) - Chapter 2: What is JJ (Jujutsu) and Why It Exists</li>
+<li>(08:59) - Chapter 3: Change IDs, Tangled, and the Federated Forge Wave</li>
+<li>(14:33) - Chapter 4: Healthy Diversity After the GitHub Monoculture</li>
+<li>(18:03) - Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended]</li>
+<li>(18:10) - Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash</li>
+<li>(26:06) - Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo</li>
+<li>(32:14) - Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended]</li>
+<li>(32:29) - Chapter 10: Getting Started with JJ: Tutorials and Workflows</li>
+<li>(42:28) - Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale</li>
+<li>(50:01) - Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner</li>
+<li>(54:55) - Chapter 13: AI Subsidies and the Scaling Wall [Extended]</li>
+<li>(55:24) - Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles</li>
+<li>(01:04:49) - Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines</li>
+<li>(01:15:48) - Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended]</li>
+<li>(01:16:08) - Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus</li>
+<li>(01:24:55) - Epilogue</li>
+</ul>]]>
+      </content:encoded>
+      <pubDate>Sat, 09 May 2026 08:00:00 -0400</pubDate>
+      <author>Fallthrough Media</author>
+      <enclosure url="https://media.transistor.fm/4774655a/755655c2.mp3" length="87200086" type="audio/mpeg"/>
+      <itunes:author>Fallthrough Media</itunes:author>
+      <itunes:image href="https://img.transistorcdn.com/5BGebCjw3AV5nfguQ_bhIn_NA9neCOod57fB3FtE-NE/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS8wNzYw/NjIzMzZiYWEyZmYx/Y2Q2MGQyNGQ1OGVl/ZDJmNS5wbmc.jpg"/>
+      <itunes:duration>5208</itunes:duration>
+      <itunes:summary>
+        <![CDATA[<p>Steve is back to talk JJ (Jujutsu version control) and the related product, ChangeSet, that he works on at East River Source Control. Kris and Steve trace why the GitHub monoculture is finally cracking, what JJ does that Git can't, and Steve's hypothesis that AI agents are pushing companies toward monorepos. Then the pair discuss the Opus 4.7 regression debate, the shift from "always use the frontier model" to using LLMs as one tool among many, and a quick discussion of the Tim Cook to John Ternus handoff at Apple.</p><p>We've got supporter content, of course! This week that includes Steve's broader thesis that it's easier to scale a big tool down than scale a small one up, why GitHub's pull request model warped how people use Git, auto-rebase and conflicts as first-class citizens in JJ, AI subsidies, and a Bun being ported to Rust. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>Thanks for tuning in and happy listening!</p><p>Show Notes:</p><ul><li><a href="https://jj-vcs.dev">JJ</a></li></ul><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: Episode 70, New Branding, and Catching Up (00:01:14)</li><li>Chapter 2: What is JJ (Jujutsu) and Why It Exists (00:03:43)</li><li>Chapter 3: Change IDs, Tangled, and the Federated Forge Wave (00:08:59)</li><li>Chapter 4: Healthy Diversity After the GitHub Monoculture (00:14:33)</li><li>Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended] (00:18:03)</li><li>Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash (00:18:10)</li><li>Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo (00:26:06)</li><li>Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended] (00:32:14)</li><li>Chapter 9: Auto-Rebase and Conflicts as First-Class Citizens [Extended] (00:32:14)</li><li>Chapter 10: Getting Started with JJ: Tutorials and Workflows (00:32:29)</li><li>Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale (00:42:28)</li><li>Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner (00:50:01)</li><li>Chapter 13: AI Subsidies and the Scaling Wall [Extended] (00:54:55)</li><li>Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles (00:55:24)</li><li>Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines (01:04:49)</li><li>Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended] (01:15:48)</li><li>Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus (01:16:08)</li><li>Epilogue (01:24:55)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/steve-klabnik-c9c49aa9-971d-45b0-b99c-545560843156">Steve Klabnik</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li><li><a href="https://changelog.zulipchat.com/#narrow/channel/481259-fallthrough">Changelog Zulip</a></li><li><a href="https://gophers.slack.com/archives/C085RJ99RFT">Gophers Slack</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:14) - Chapter 1: Episode 70, New Branding, and Catching Up</li>
+<li>(03:43) - Chapter 2: What is JJ (Jujutsu) and Why It Exists</li>
+<li>(08:59) - Chapter 3: Change IDs, Tangled, and the Federated Forge Wave</li>
+<li>(14:33) - Chapter 4: Healthy Diversity After the GitHub Monoculture</li>
+<li>(18:03) - Chapter 5: Scaling Big Tools Down: Bazel, Buck, Kubernetes, Symfony [Extended]</li>
+<li>(18:10) - Chapter 6: JJ Is Simpler AND More Powerful: No Index, No Stash</li>
+<li>(26:06) - Chapter 7: The JJ Workflow: Snapshots, Watchman, and JJ Undo</li>
+<li>(32:14) - Chapter 8: GitHub Warped Git: Why Patches and Gerrit Are Better [Extended]</li>
+<li>(32:29) - Chapter 10: Getting Started with JJ: Tutorials and Workflows</li>
+<li>(42:28) - Chapter 11: East River Source Control and ChangeSet: A Forge for Mono-Repo Scale</li>
+<li>(50:01) - Chapter 12: Why AI Forces Companies into Monorepo Scaling Sooner</li>
+<li>(54:55) - Chapter 13: AI Subsidies and the Scaling Wall [Extended]</li>
+<li>(55:24) - Chapter 14: The Opus 4.7 Regression Debate, Goodhart's Law, and Custom Styles</li>
+<li>(01:04:49) - Chapter 15: LLMs as Tools, Not Solutions: Local Models, Gemini, and Custom Pipelines</li>
+<li>(01:15:48) - Chapter 16: Bun Rewriting in Rust: A Branch That Wasn't Supposed to Be News [Extended]</li>
+<li>(01:16:08) - Chapter 17: The Apple CEO Transition: Tim Cook to John Ternus</li>
+<li>(01:24:55) - Epilogue</li>
+</ul>]]>
+      </itunes:summary>
+      <itunes:keywords>Go, Golang, Programming, Technology, Software, Software Development, Software Engineering</itunes:keywords>
+      <itunes:explicit>No</itunes:explicit>
+      <podcast:person role="Host" href="https://skriptble.press" img="https://img.transistorcdn.com/iziGMONTP9sWxG_yEce3mlTSrzcG0iO-XNIQlrp2dso/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS83Y2U2/YjFmOWZiNzg2Yzhi/N2RlMzNlNTgxYTlm/ZjNmNi5KUEc.jpg">Kris Brandow</podcast:person>
+      <podcast:person role="Host" href="https://steveklabnik.com" img="https://img.transistorcdn.com/HAbLCB-e_baITKHhGhBOgm5TAFv-SOcOvMlfEnThuB4/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9iODQ2/OTU2OWUyYmY1ODg4/NDFkMmI2N2YzZTc5/Zjc1OS5qcGVn.jpg">Steve Klabnik</podcast:person>
+      <podcast:chapters url="https://share.transistor.fm/s/4774655a/chapters.json" type="application/json+chapters"/>
+      <podcast:socialInteract protocol="atproto" uri="at://did:plc:5us6v2xizw73xaafpqgf6orb/app.bsky.feed.post/3mlg72r4np42b"/>
+    </item>
+    <item>
+      <title>Regression to the Mean</title>
+      <itunes:episode>69</itunes:episode>
+      <podcast:episode>69</podcast:episode>
+      <itunes:title>Regression to the Mean</itunes:title>
+      <itunes:episodeType>full</itunes:episodeType>
+      <guid isPermaLink="false">232a1d53-1392-4be8-8935-8410ddefa991</guid>
+      <link>https://share.transistor.fm/s/dc133519</link>
+      <description>
+        <![CDATA[<p>Kris and Ian dig into the slow collapse of GitHub, starting with Ghostty off the platform after years of reliability problems. From there they trace Gary Bernhardt's old observation that we took a decentralized source control system and immediately put it behind a single point of failure, then widen the lens into AI as the engine of enshittification. The episode lands on a more optimistic note: maybe AI is also the tool that lets individuals rebuild the apps they used to have to buy.</p><p>We've got supporter content, of course! This week that includes Kris's "AI was trained on the median of human code" argument, the institutional-memory thesis for why AI can't just replace people, a tour of the local-AI hardware landscape with Zig and llama.cpp, Ian's relatable "what is Cursor? what is Warp?" rant, a policy pitch on share-flipper voting rules, and a deep dive on typography as an anti-AI signal. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>No episode of Break this week. We'll have more aftershow episodes soon! In the meantime, catch up on previous episodes at https://break.show.</p><p>Thanks for tuning in and happy listening!</p><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug (00:01:46)</li><li>Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow (00:08:04)</li><li>Chapter 3: Self-Hosting vs. The Cloud Tax (00:16:23)</li><li>Chapter 6: AI as the Engine of Enshittification (00:32:02)</li><li>Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain (00:37:10)</li><li>Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring (00:46:52)</li><li>Chapter 12: Fallthrough Rebrand and the Claude Design Experiment (00:54:16)</li><li>Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended] (01:04:33)</li><li>Chapter 14: Bleeps, Shorts, and Producing With AI (01:04:36)</li><li>Chapter 15: AI as the De-Enshittification Tool (01:08:08)</li><li>Epilogue (01:10:22)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/ian-wester-lopshire">Ian Wester-Lopshire</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:46) - Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug</li>
+<li>(08:04) - Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow</li>
+<li>(16:23) - Chapter 3: Self-Hosting vs. The Cloud Tax</li>
+<li>(32:02) - Chapter 4: AI Code Quality and the Mediocre Mean [Extended]</li>
+<li>(37:10) - Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain</li>
+<li>(46:52) - Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring</li>
+<li>(54:16) - Chapter 12: Fallthrough Rebrand and the Claude Design Experiment</li>
+<li>(01:04:33) - Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended]</li>
+<li>(01:04:36) - Chapter 14: Bleeps, Shorts, and Producing With AI</li>
+<li>(01:08:08) - Chapter 15: AI as the De-Enshittification Tool</li>
+<li>(01:10:22) - Epilogue</li>
+</ul>]]>
+      </description>
+      <content:encoded>
+        <![CDATA[<p>Kris and Ian dig into the slow collapse of GitHub, starting with Ghostty off the platform after years of reliability problems. From there they trace Gary Bernhardt's old observation that we took a decentralized source control system and immediately put it behind a single point of failure, then widen the lens into AI as the engine of enshittification. The episode lands on a more optimistic note: maybe AI is also the tool that lets individuals rebuild the apps they used to have to buy.</p><p>We've got supporter content, of course! This week that includes Kris's "AI was trained on the median of human code" argument, the institutional-memory thesis for why AI can't just replace people, a tour of the local-AI hardware landscape with Zig and llama.cpp, Ian's relatable "what is Cursor? what is Warp?" rant, a policy pitch on share-flipper voting rules, and a deep dive on typography as an anti-AI signal. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>No episode of Break this week. We'll have more aftershow episodes soon! In the meantime, catch up on previous episodes at https://break.show.</p><p>Thanks for tuning in and happy listening!</p><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug (00:01:46)</li><li>Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow (00:08:04)</li><li>Chapter 3: Self-Hosting vs. The Cloud Tax (00:16:23)</li><li>Chapter 6: AI as the Engine of Enshittification (00:32:02)</li><li>Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain (00:37:10)</li><li>Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring (00:46:52)</li><li>Chapter 12: Fallthrough Rebrand and the Claude Design Experiment (00:54:16)</li><li>Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended] (01:04:33)</li><li>Chapter 14: Bleeps, Shorts, and Producing With AI (01:04:36)</li><li>Chapter 15: AI as the De-Enshittification Tool (01:08:08)</li><li>Epilogue (01:10:22)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/ian-wester-lopshire">Ian Wester-Lopshire</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:46) - Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug</li>
+<li>(08:04) - Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow</li>
+<li>(16:23) - Chapter 3: Self-Hosting vs. The Cloud Tax</li>
+<li>(32:02) - Chapter 4: AI Code Quality and the Mediocre Mean [Extended]</li>
+<li>(37:10) - Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain</li>
+<li>(46:52) - Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring</li>
+<li>(54:16) - Chapter 12: Fallthrough Rebrand and the Claude Design Experiment</li>
+<li>(01:04:33) - Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended]</li>
+<li>(01:04:36) - Chapter 14: Bleeps, Shorts, and Producing With AI</li>
+<li>(01:08:08) - Chapter 15: AI as the De-Enshittification Tool</li>
+<li>(01:10:22) - Epilogue</li>
+</ul>]]>
+      </content:encoded>
+      <pubDate>Sat, 02 May 2026 08:00:00 -0400</pubDate>
+      <author>Fallthrough Media</author>
+      <enclosure url="https://media.transistor.fm/dc133519/1a5057a5.mp3" length="92415435" type="audio/mpeg"/>
+      <itunes:author>Fallthrough Media</itunes:author>
+      <itunes:image href="https://img.transistorcdn.com/tY44vxjnZq0RkWcuLBL1zynPLJTEG37rBjnVP6rYOIk/rs:fill:0:0:1/w:1400/h:1400/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9iMGQw/MjY3NGQyYzBhNjZj/MmFkNmFmY2I3NTJk/Y2E4Yy5wbmc.jpg"/>
+      <itunes:duration>4297</itunes:duration>
+      <itunes:summary>
+        <![CDATA[<p>Kris and Ian dig into the slow collapse of GitHub, starting with Ghostty off the platform after years of reliability problems. From there they trace Gary Bernhardt's old observation that we took a decentralized source control system and immediately put it behind a single point of failure, then widen the lens into AI as the engine of enshittification. The episode lands on a more optimistic note: maybe AI is also the tool that lets individuals rebuild the apps they used to have to buy.</p><p>We've got supporter content, of course! This week that includes Kris's "AI was trained on the median of human code" argument, the institutional-memory thesis for why AI can't just replace people, a tour of the local-AI hardware landscape with Zig and llama.cpp, Ian's relatable "what is Cursor? what is Warp?" rant, a policy pitch on share-flipper voting rules, and a deep dive on typography as an anti-AI signal. Not a supporter yet? Fix that today by heading over to https://fallthrough.fm/subscribe where you'll get not only extra content but also higher quality audio. Sign up today!</p><p>If you prefer to watch this episode, you can view it on YouTube.</p><p>No episode of Break this week. We'll have more aftershow episodes soon! In the meantime, catch up on previous episodes at https://break.show.</p><p>Thanks for tuning in and happy listening!</p><p><br></p><p>Table of Contents:</p><ul><li>Prologue (00:00:00)</li><li>Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug (00:01:46)</li><li>Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow (00:08:04)</li><li>Chapter 3: Self-Hosting vs. The Cloud Tax (00:16:23)</li><li>Chapter 6: AI as the Engine of Enshittification (00:32:02)</li><li>Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain (00:37:10)</li><li>Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring (00:46:52)</li><li>Chapter 12: Fallthrough Rebrand and the Claude Design Experiment (00:54:16)</li><li>Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended] (01:04:33)</li><li>Chapter 14: Bleeps, Shorts, and Producing With AI (01:04:36)</li><li>Chapter 15: AI as the De-Enshittification Tool (01:08:08)</li><li>Epilogue (01:10:22)</li></ul><p><br></p><p><strong>Hosts</strong>
+</p><ul>
+  <li><a href="https://fallthrough.transistor.fm/people/kris-brandow">Kris Brandow</a> - Host</li>
+  <li><a href="https://fallthrough.transistor.fm/people/ian-wester-lopshire">Ian Wester-Lopshire</a> - Host</li>
+</ul><br>Socials:<ul><li><a href="https://fallthrough.fm/">Website</a></li><li><a href="https://bsky.app/profile/fallthrough.fm">Bluesky</a></li><li><a href="https://www.threads.net/@fallthroughfm">Threads</a></li><li><a href="https://x.com/fallthroughfm">X/Twitter</a></li><li><a href="https://linkedin.com/company/fallthrough">LinkedIn</a></li><li><a href="https://www.instagram.com/fallthroughfm/">Instagram</a></li></ul>
+<ul><li>(00:00) - Prologue</li>
+<li>(01:46) - Chapter 1: GitHub Is Falling Over: Ghostty Leaves and the Merge Bug</li>
+<li>(08:04) - Chapter 2: Centralizing the Decentralized: Git, Forges, and the Linux Kernel Workflow</li>
+<li>(16:23) - Chapter 3: Self-Hosting vs. The Cloud Tax</li>
+<li>(32:02) - Chapter 4: AI Code Quality and the Mediocre Mean [Extended]</li>
+<li>(37:10) - Chapter 9: Epistemic Enshittification: Hedges, Hype, and Sci-Fi Brain</li>
+<li>(46:52) - Chapter 10: Self-Checkout, Junior Devs, and Broken Hiring</li>
+<li>(54:16) - Chapter 12: Fallthrough Rebrand and the Claude Design Experiment</li>
+<li>(01:04:33) - Chapter 13: Typography as Anti-AI Signal: Buying Real Typefaces [Extended]</li>
+<li>(01:04:36) - Chapter 14: Bleeps, Shorts, and Producing With AI</li>
+<li>(01:08:08) - Chapter 15: AI as the De-Enshittification Tool</li>
+<li>(01:10:22) - Epilogue</li>
+</ul>]]>
+      </itunes:summary>
+      <itunes:keywords>Go, Golang, Programming, Technology, Software, Software Development, Software Engineering</itunes:keywords>
+      <itunes:explicit>No</itunes:explicit>
+      <podcast:person role="Host" href="https://skriptble.press" img="https://img.transistorcdn.com/iziGMONTP9sWxG_yEce3mlTSrzcG0iO-XNIQlrp2dso/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS83Y2U2/YjFmOWZiNzg2Yzhi/N2RlMzNlNTgxYTlm/ZjNmNi5KUEc.jpg">Kris Brandow</podcast:person>
+      <podcast:person role="Host" href="https://fallthrough.transistor.fm/people/ian-wester-lopshire" img="https://img.transistorcdn.com/AF__aapuCW20p3F6jRxM38fyyj349kXno3rb5RucYbA/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS9lMWNl/NjljNDNiNzY1MjQ5/NmM1ZTZlOWQzZmQw/ZTFkYS5qcGVn.jpg">Ian Wester-Lopshire</podcast:person>
+      <podcast:chapters url="https://share.transistor.fm/s/dc133519/chapters.json" type="application/json+chapters"/>
+      <podcast:socialInteract protocol="atproto" uri="at://did:plc:5us6v2xizw73xaafpqgf6orb/app.bsky.feed.post/3mkultayrpx2e"/>
+    </item>
     <item>
       <title>No Country for Old Maintainers</title>
       <itunes:episode>68</itunes:episode>

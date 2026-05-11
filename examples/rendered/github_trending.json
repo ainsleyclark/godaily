@@ -2,25 +2,57 @@
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "masterking32/MasterDnsVPN",
-		"url": "https://github.com/masterking32/MasterDnsVPN",
-		"image_url": "https://opengraph.githubassets.com/cb2135e4b46c3df60275ee2d501342027521697c6372b83ad3e927519c7919e4/masterking32/MasterDnsVPN",
+		"title": "google/adk-go",
+		"url": "https://github.com/google/adk-go",
+		"image_url": "https://opengraph.githubassets.com/94f742bb2b014f445e955a713a58fdd8063eb52291be1a8638706dfbbf436dae/google/adk-go",
 		"author": {
-			"username": "masterking32",
-			"profile_url": "https://github.com/masterking32"
+			"username": "google",
+			"profile_url": "https://github.com/google"
 		},
-		"snippet": "Advanced DNS tunneling VPN for censorship bypass, optimized beyond DNSTT and SlipStream with low-overhead ARQ, resolver load balancing, high packet-loss stability and speed.",
+		"snippet": "An open-source, code-first Go toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.9358022433743544,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.6214684848679675,
+		"published": "2026-05-10T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "chenhg5/cc-connect",
+		"url": "https://github.com/chenhg5/cc-connect",
+		"image_url": "https://opengraph.githubassets.com/8e2ead5417d3f89f9872fce7d0b7d337714c335d91ab93410c4bcbc535d2c543/chenhg5/cc-connect",
+		"author": {
+			"username": "chenhg5",
+			"profile_url": "https://github.com/chenhg5"
+		},
+		"snippet": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.9497761659449963,
+		"published": "2026-05-10T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "QuantumNous/new-api",
+		"url": "https://github.com/QuantumNous/new-api",
+		"image_url": "https://opengraph.githubassets.com/9f702c073c412fae661dba879085958f98cdb485a33a8bb5634e7e096e08faf5/QuantumNous/new-api",
+		"author": {
+			"username": "QuantumNous",
+			"profile_url": "https://github.com/QuantumNous"
+		},
+		"snippet": "A unified AI model hub for aggregation \u0026 distribution. It supports cross-converting various LLMs into OpenAI-compatible, Claude-compatible, or Gemini-compatible formats. A centralized gateway for pers",
+		"tag": "article",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
 		"title": "Wei-Shaw/sub2api",
 		"url": "https://github.com/Wei-Shaw/sub2api",
-		"image_url": "https://opengraph.githubassets.com/08e70ea8b2b583b3e30bb8dbfb7f938c13f30afc551b86ba9b7abd3444155ac6/Wei-Shaw/sub2api",
+		"image_url": "https://opengraph.githubassets.com/824b1f8102cbead33f67da45766e3e3430b9968d1844d74150a4d11a0100c14c/Wei-Shaw/sub2api",
 		"author": {
 			"username": "Wei-Shaw",
 			"profile_url": "https://github.com/Wei-Shaw"
@@ -29,278 +61,150 @@
 		"tag": "article",
 		"comments": 0,
 		"score": 1,
-		"published": "2026-05-04T12:00:00Z"
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "Gentleman-Programming/engram",
-		"url": "https://github.com/Gentleman-Programming/engram",
-		"image_url": "https://opengraph.githubassets.com/02174c1fb7c3c2394f26b84dd96c01bdb332726b1b82156ac1730637af7d24d8/Gentleman-Programming/engram",
+		"title": "1Panel-dev/1Panel",
+		"url": "https://github.com/1Panel-dev/1Panel",
+		"image_url": "https://opengraph.githubassets.com/fe68a9e356430c6a835b6cc9387a54477a3c43a9c18343e6fc878667e6e8fee9/1Panel-dev/1Panel",
 		"author": {
-			"username": "Gentleman-Programming",
-			"profile_url": "https://github.com/Gentleman-Programming"
+			"username": "1Panel-dev",
+			"profile_url": "https://github.com/1Panel-dev"
 		},
-		"snippet": "Persistent memory system for AI coding agents. Agent-agnostic Go binary with SQLite + FTS5, MCP server, HTTP API, CLI, and TUI.",
+		"snippet": "🔥 1Panel is a modern, open-source VPS control panel — and the only one with native AI agent support. Run Ollama models, deploy OpenClaw agents, and manage your entire server stack from one clean ",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.7177906146760656,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.5992591196328295,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "syncthing/syncthing",
-		"url": "https://github.com/syncthing/syncthing",
-		"image_url": "https://opengraph.githubassets.com/5301d97bad3f985de05dc43b2201062af8034dccd8c713e45cd1ea671ff4af05/syncthing/syncthing",
+		"title": "sivchari/kumo",
+		"url": "https://github.com/sivchari/kumo",
+		"image_url": "https://opengraph.githubassets.com/d623110c773ce6f486fc9d7bf3faf34d8caf74d92baaa07fa31e974ca6f92ae4/sivchari/kumo",
 		"author": {
-			"username": "syncthing",
-			"profile_url": "https://github.com/syncthing"
+			"username": "sivchari",
+			"profile_url": "https://github.com/sivchari"
 		},
-		"snippet": "Open Source Continuous File Synchronization",
+		"snippet": "A lightweight AWS service emulator written in Go",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.7486448511604031,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.5992591196328295,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "gastownhall/gascity",
-		"url": "https://github.com/gastownhall/gascity",
-		"image_url": "https://opengraph.githubassets.com/751bb40c382c32d9369fca4710d23b0cc2035fe4af3d0fcc1610a8253fe49c86/gastownhall/gascity",
+		"title": "kubernetes/minikube",
+		"url": "https://github.com/kubernetes/minikube",
+		"image_url": "https://opengraph.githubassets.com/af12e6da40cb4add3dd46fffd34a321af3fc524ba0ee484cd248c22065d51676/kubernetes/minikube",
 		"author": {
-			"username": "gastownhall",
-			"profile_url": "https://github.com/gastownhall"
+			"username": "kubernetes",
+			"profile_url": "https://github.com/kubernetes"
 		},
-		"snippet": "Orchestration-builder SDK for multi-agent coding workflows",
+		"snippet": "Run Kubernetes locally",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.6143521058105431,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.3669240563744024,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "Gentleman-Programming/gentle-ai",
-		"url": "https://github.com/Gentleman-Programming/gentle-ai",
-		"image_url": "https://opengraph.githubassets.com/c253b561259cb9312e0f1a6748d7bc9faee821194ef6e7dff66699eb2213fb82/Gentleman-Programming/gentle-ai",
+		"title": "microsoft/waza",
+		"url": "https://github.com/microsoft/waza",
+		"image_url": "https://opengraph.githubassets.com/cc4ef5b1342e9b634a5d95906b7469c699435e15e1e75ffcd147ce0192c27558/microsoft/waza",
 		"author": {
-			"username": "Gentleman-Programming",
-			"profile_url": "https://github.com/Gentleman-Programming"
+			"username": "microsoft",
+			"profile_url": "https://github.com/microsoft"
 		},
-		"snippet": "Contribute to Gentleman-Programming/gentle-ai development by creating an account on GitHub.",
+		"snippet": "CLI / Framework for Agent Skills - create, test, measure and improve skill quality and effectiveness",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.6475183426219275,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.9435524437490476,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "gotenberg/gotenberg",
-		"url": "https://github.com/gotenberg/gotenberg",
-		"image_url": "https://opengraph.githubassets.com/94e7e757814e6473e4d2affcb266533a09871dcc75697a5999912e6ccd0536e2/gotenberg/gotenberg",
+		"title": "mayswind/ezbookkeeping",
+		"url": "https://github.com/mayswind/ezbookkeeping",
+		"image_url": "https://repository-images.githubusercontent.com/304836585/4dfe3852-066c-418b-875a-ff68f08d5312",
 		"author": {
-			"username": "gotenberg",
-			"profile_url": "https://github.com/gotenberg"
+			"username": "mayswind",
+			"profile_url": "https://github.com/mayswind"
 		},
-		"snippet": "A developer-friendly API for converting many document formats into PDF files, and more!",
+		"snippet": "A lightweight, self-hosted personal finance app with a user-friendly interface and powerful bookkeeping features.",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.5106344530534098,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.8239103593359427,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "oauth2-proxy/oauth2-proxy",
-		"url": "https://github.com/oauth2-proxy/oauth2-proxy",
-		"image_url": "https://repository-images.githubusercontent.com/105262714/eeb5b100-faff-11e9-9b0b-a97d43094103",
+		"title": "moonD4rk/HackBrowserData",
+		"url": "https://github.com/moonD4rk/HackBrowserData",
+		"image_url": "https://repository-images.githubusercontent.com/273132277/70c08f49-af9d-4c9a-b037-ee76f800374d",
 		"author": {
-			"username": "oauth2-proxy",
-			"profile_url": "https://github.com/oauth2-proxy"
+			"username": "moonD4rk",
+			"profile_url": "https://github.com/moonD4rk"
 		},
-		"snippet": "A reverse proxy that provides authentication with Google, Azure, OpenID Connect and many more identity providers.",
+		"snippet": "Extract and decrypt browser data, supporting multiple data types, runnable on various operating systems (macOS, Windows, Linux).",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.5740802179970582,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.8484916006794568,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "distribution/distribution",
-		"url": "https://github.com/distribution/distribution",
-		"image_url": "https://repository-images.githubusercontent.com/28366058/df2cdc80-ce8a-11eb-8481-e61ba6b8ac55",
+		"title": "xpzouying/xiaohongshu-mcp",
+		"url": "https://github.com/xpzouying/xiaohongshu-mcp",
+		"image_url": "https://opengraph.githubassets.com/a9b81161098c2665b9741e72838459a8fc65e5a526885e569d82bb6b89de2bdc/xpzouying/xiaohongshu-mcp",
 		"author": {
-			"username": "distribution",
-			"profile_url": "https://github.com/distribution"
+			"username": "xpzouying",
+			"profile_url": "https://github.com/xpzouying"
 		},
-		"snippet": "The toolkit to pack, ship, store, and deliver container content",
+		"snippet": "MCP for xiaohongshu.com",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.303478291430754,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.8664634468125141,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "pranshuparmar/witr",
-		"url": "https://github.com/pranshuparmar/witr",
-		"image_url": "https://opengraph.githubassets.com/b211b8cb2e5623923217ddfd0aafe79d293e2aef980a926eb37e77db7fc1552c/pranshuparmar/witr",
+		"title": "coder/coder",
+		"url": "https://github.com/coder/coder",
+		"image_url": "https://repository-images.githubusercontent.com/440752086/eb56ccad-14f2-4c61-a024-20d1e77296c1",
 		"author": {
-			"username": "pranshuparmar",
-			"profile_url": "https://github.com/pranshuparmar"
+			"username": "coder",
+			"profile_url": "https://github.com/coder"
 		},
-		"snippet": "Why is this running?",
+		"snippet": "Secure environments for developers and their agents",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.8930654621040577,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.4976250423777937,
+		"published": "2026-05-10T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "ethereum/go-ethereum",
-		"url": "https://github.com/ethereum/go-ethereum",
-		"image_url": "https://opengraph.githubassets.com/62525951d13388a581a4c817dcf89ea028b37f7bc4610b0895ea39fce210d95e/ethereum/go-ethereum",
+		"title": "XTLS/Xray-core",
+		"url": "https://github.com/XTLS/Xray-core",
+		"image_url": "https://opengraph.githubassets.com/602d31b368b03f28888d69192eee6d9477867aff9de6218dd2f6026b1aae5088/XTLS/Xray-core",
 		"author": {
-			"username": "ethereum",
-			"profile_url": "https://github.com/ethereum"
+			"username": "XTLS",
+			"profile_url": "https://github.com/XTLS"
 		},
-		"snippet": "Go implementation of the Ethereum protocol",
+		"snippet": "Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.303478291430754,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "open-telemetry/opentelemetry-collector-contrib",
-		"url": "https://github.com/open-telemetry/opentelemetry-collector-contrib",
-		"image_url": "https://opengraph.githubassets.com/0798965b596e3e2e74d1a9dd48c22b1c43489573afe39f7de21b6c437640f765/open-telemetry/opentelemetry-collector-contrib",
-		"author": {
-			"username": "open-telemetry",
-			"profile_url": "https://github.com/open-telemetry"
-		},
-		"snippet": "Contrib repository for the OpenTelemetry Collector",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.337857147626047,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "aws/aws-sdk-go-v2",
-		"url": "https://github.com/aws/aws-sdk-go-v2",
-		"image_url": "https://opengraph.githubassets.com/9689f493ebff8f13c1648682240a362295d38c3ef037a0ddc77a117c4c2d9f1b/aws/aws-sdk-go-v2",
-		"author": {
-			"username": "aws",
-			"profile_url": "https://github.com/aws"
-		},
-		"snippet": "AWS SDK for the Go programming language.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.1,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "googleapis/google-cloud-go",
-		"url": "https://github.com/googleapis/google-cloud-go",
-		"image_url": "https://opengraph.githubassets.com/8bbb2d1df5ecb73cf44102f182cd91c49d4aeb9a06db341bba00ef8213205135/googleapis/google-cloud-go",
-		"author": {
-			"username": "googleapis",
-			"profile_url": "https://github.com/googleapis"
-		},
-		"snippet": "Google Cloud Client Libraries for Go.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.13070098600339122,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "jackc/pgx",
-		"url": "https://github.com/jackc/pgx",
-		"image_url": "https://opengraph.githubassets.com/c48100bb6a2a8a707c1d4a6085cc8fb95ebc0c791482061dfde850f7edd22ea4/jackc/pgx",
-		"author": {
-			"username": "jackc",
-			"profile_url": "https://github.com/jackc"
-		},
-		"snippet": "PostgreSQL driver and toolkit for Go",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.3921029580101737,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "moby/moby",
-		"url": "https://github.com/moby/moby",
-		"image_url": "https://opengraph.githubassets.com/4d1560c114f49e2bdc5e3b5ccbe6192ba3b920ae3be6b07fee4401fa7d8e59a6/moby/moby",
-		"author": {
-			"username": "moby",
-			"profile_url": "https://github.com/moby"
-		},
-		"snippet": "The Moby Project - a collaborative project for the container ecosystem to assemble container-based systems",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.4836511198071519,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "go-vikunja/vikunja",
-		"url": "https://github.com/go-vikunja/vikunja",
-		"image_url": "https://opengraph.githubassets.com/7ba36c5c92aba8b17620d0956b6ecb13e4690430a62d885a97e0f1200097133b/go-vikunja/vikunja",
-		"author": {
-			"username": "go-vikunja",
-			"profile_url": "https://github.com/go-vikunja"
-		},
-		"snippet": "The to-do app to organize your life.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.46855813362943827,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "meshery/meshery",
-		"url": "https://github.com/meshery/meshery",
-		"image_url": "https://repository-images.githubusercontent.com/157554479/2c6279e8-716c-429e-ae08-cd4b1966df31",
-		"author": {
-			"username": "meshery",
-			"profile_url": "https://github.com/meshery"
-		},
-		"snippet": "Meshery, the cloud native manager",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.5342354236036424,
-		"published": "2026-05-04T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "kserve/kserve",
-		"url": "https://github.com/kserve/kserve",
-		"image_url": "https://opengraph.githubassets.com/c0046e2456c7e46a0e3922066196b64ff6b8c5a290600bdb8d400e34fc82a41b/kserve/kserve",
-		"author": {
-			"username": "kserve",
-			"profile_url": "https://github.com/kserve"
-		},
-		"snippet": "Standardized Distributed Generative and Predictive AI Inference Platform for Scalable, Multi-Framework Deployment on Kubernetes",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.2071561616226558,
-		"published": "2026-05-04T12:00:00Z"
+		"score": 0.7983901695267366,
+		"published": "2026-05-10T12:00:00Z"
 	}
 ]

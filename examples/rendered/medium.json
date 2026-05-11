@@ -1,142 +1,152 @@
 [
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "The One-Word Bug That Broke Our Worker for 6 Days",
-		"url": "https://medium.com/@tacherasasi/the-one-word-bug-that-broke-our-worker-for-6-days-9cadd534ee77?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*CtVFn53iNGx3lQ2MEe3JKw.png",
+		"title": "Building a Non-Blocking REST API in Go: Mastering Goroutines and Channels",
+		"url": "https://aliannuur.medium.com/building-a-non-blocking-rest-api-in-go-mastering-goroutines-and-channels-b23d0858596c?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:860/0*pq63v9mzwQ-MJ-Bz.png",
 		"author": {
-			"name": "Tachera Sasi"
+			"name": "Ali An Nuur"
 		},
-		"snippet": "For six days, our system was lying to us. Continue reading on Medium »",
+		"snippet": "Stop making your users wait. Learn how to handle time consuming background tasks elegantly using Go’s powerful concurrency model. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-28T09:53:16Z"
+		"published": "2026-05-11T03:03:21Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Stop Talking to Your AI and Start Giving It Hands: A Beginner’s Guide to MCP and Go",
-		"url": "https://medium.com/@asbrodova/stop-talking-to-your-ai-and-start-giving-it-hands-a-beginners-guide-to-mcp-and-go-40f696c01d13?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qFyDBjMsLgsjorA6AhCorA.png",
-		"author": {
-			"name": "Anna Sbrodova"
-		},
-		"snippet": "How to use Golang and the Model Context Protocol to automate your Google Cloud infrastructure. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-28T06:44:58Z"
-	},
-	{
-		"source": "medium",
-		"title": "Cold start mitigation strategies for Go services",
-		"url": "https://blog.devgenius.io/cold-start-mitigation-strategies-for-go-services-5adf84d4b6dd?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:1200/0*iqonU2Xm0zNFh07g",
-		"author": {
-			"name": "Yaninyz witty"
-		},
-		"snippet": "Lazy loading, warm pools and beyond: cold start mitigation in Go Continue reading on Dev Genius »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-04-28T05:01:30Z"
-	},
-	{
-		"source": "medium",
-		"title": "The Hidden Costs of JSON in APIs: Why I Finally Ditched It for Internal Services",
-		"url": "https://medium.com/@erwindev/the-hidden-costs-of-json-in-apis-why-i-finally-ditched-it-for-internal-services-a7e7c4ab2640?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*Z_0mETHvKDv1xO8wspzNmg.png",
+		"title": "Feature Toggles as a Deployment Strategy: Implementation Patterns",
+		"url": "https://medium.com/@erwindev/feature-toggles-as-a-deployment-strategy-implementation-patterns-dfc9b539b1e8?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*3Izlvl9qfzgDcmxX1bWsLg.png",
 		"author": {
 			"name": "Erwin Hermanto"
 		},
-		"snippet": "It was 2 AM on a Tuesday when our monitoring dashboard lit up like a Christmas tree. Response times had spiked to 800ms — triple our usual… Continue reading on Medium »",
+		"snippet": "There’s a specific kind of dread I remember from my early career. It was a Friday afternoon, around 4 PM, and I was SSHing directly into a… Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-28T02:11:01Z"
+		"published": "2026-05-11T02:01:00Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Directed Acyclic Graph, Golang and Scheduling: What I Learned Building a Concurrent Task Scheduler",
-		"url": "https://medium.com/@iserganoff/directed-acyclic-graph-golang-and-scheduling-what-i-learned-building-a-concurrent-task-scheduler-cf8ea18ecaaa?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*h4HkkqAbHuBpqzGJhjN7JA.png",
+		"title": "Go Middleware Pattern Done Right: HTTP Middleware That Composes",
+		"url": "https://medium.com/@feildrixliemdra/go-middleware-pattern-done-right-http-middleware-that-composes-55b1db1487b2?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*zzUFWlLfB0kKGI_HMKhWlA.png",
 		"author": {
-			"name": "Iserganoff"
+			"name": "Feildrix"
 		},
-		"snippet": "A story about Kahn’s algorithm, atomic counters, and the quiet elegance of letting goroutines self-schedule. Continue reading on Medium »",
+		"snippet": "Part of the Go Production Series — a collection of opinionated, battle-tested patterns for building Go services in the real world. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T22:06:46Z"
+		"published": "2026-05-11T00:01:01Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Go’s Interface System Is Different, and That Difference Is the Point",
-		"url": "https://medium.com/@shayanholakouee/gos-interface-system-is-different-and-that-difference-is-the-point-fc7fce12eb2e?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1000/1*bRpUYV5lNXR_0eviFeabZA.png",
+		"title": "How I Would Design an AI-Powered Mother’s Day Experience with Go",
+		"url": "https://medium.com/@cassius.paim/how-i-would-design-an-ai-powered-mothers-day-experience-with-go-073b2bc3af60?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*k6Qd1s2iTJ2XU7oUE7qjNA.png",
 		"author": {
-			"name": "Shayan Holakouee"
+			"name": "Cássius Paim"
 		},
-		"snippet": "Every language with interfaces or abstract types requires you to declare your intentions upfront. Continue reading on Medium »",
+		"snippet": "How I think about LLM product architecture, privacy, and reliability at seasonal scale Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T20:19:53Z"
+		"published": "2026-05-10T20:05:21Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Autonomous Agent Networking in Distributed AI: Bypassing NAT and Centralized Brokers",
-		"url": "https://medium.com/@philip_57064/autonomous-agent-networking-in-distributed-ai-bypassing-nat-and-centralized-brokers-1690ad783d5a?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*KP8stEfAyfc7CprdKW2cgg.jpeg",
+		"title": "Building a Mini Deployment Platform in Go",
+		"url": "https://medium.com/@daffamfzn/building-a-mini-deployment-platform-in-go-1df823cf33a5?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
 		"author": {
-			"name": "Philip Stayetski"
+			"name": "Daffa Muhammad Faizan"
 		},
-		"snippet": "The evolution of artificial intelligence is rapidly moving away from isolated conversational models toward decentralized, multi-agent… Continue reading on Medium »",
+		"snippet": "Got a new role. Engineering Platform team. Internal tooling, infrastructure automation, developer experience. Customers are engineers. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T19:58:56Z"
+		"published": "2026-05-10T17:54:32Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Should Assignment Be an Expression?",
-		"url": "https://blog.stackademic.com/should-assignment-be-an-expression-600ed1a4ba95?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*OHnnYNUPKhJbVIEcFXhrrQ.png",
+		"title": "Why Go Is Quietly Killing Traditional Tech Stacks",
+		"url": "https://codingplainenglish.medium.com/why-go-is-quietly-killing-traditional-tech-stacks-d5e27649345a?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1100/1*bH1EkcKLpojhKGlD-y9BYw.jpeg",
 		"author": {
-			"name": "Narmin Aliyeva"
+			"name": "Abhinav"
 		},
-		"snippet": "Expressions produce values—for example, 3 + 4 evaluates to 7. If assignment is an expression, then it also produces a value, enabling… Continue reading on Stackademic »",
+		"snippet": "For almost two decades, backend engineering followed a predictable formula. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T19:54:33Z"
+		"published": "2026-05-10T17:06:00Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "AI Didn’t Kill Engineering. It Moved Engineering Upstream.",
-		"url": "https://medium.com/@oleg.a.ivanchenko/ai-didnt-kill-engineering-it-moved-engineering-upstream-e422a56a30d3?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*qTk_dSXD284Fz-RmjKnrFQ.png",
+		"title": "Learn Go by building: zero to REST API with Gin",
+		"url": "https://medium.com/@darrylgate/learn-go-by-building-zero-to-rest-api-with-gin-8f5808e3c99b?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*_J2U_e6e87ysE03OetrwrA.png",
 		"author": {
-			"name": "Oleg Ivanchenko"
+			"name": "darryleffendi"
 		},
-		"snippet": "\u003e How I use Claude Code, Go, oCMS, and an LLM Wiki to turn AI from a code generator into an engineering amplifier. Continue reading on Medium »",
+		"snippet": "If you’ve been wanting to pick up Go, the fastest way to actually learn it is to build something small and finish it. Reading docs is fine… Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T19:42:28Z"
+		"published": "2026-05-10T17:04:51Z"
 	},
 	{
+		"id": 0,
 		"source": "medium",
-		"title": "Why do my value receivers have the same address?",
-		"url": "https://medium.com/@andreiboar/why-did-my-value-receivers-have-the-same-address-224b35b849ec?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*MRlX9aCNFzlsKliKvZ1nHQ.png",
+		"title": "Go From Zero: A Beginner’s Guide to Golang Fundamentals — Part A",
+		"url": "https://medium.com/@microclip.lakeesha/go-from-zero-a-beginners-guide-to-golang-fundamentals-part-a-04fe3fe245d6?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*iW6JSHIsXfHi1w7JPcUitg.png",
 		"author": {
-			"name": "Andrei Boar"
+			"name": "Lakeesha Ramanayake"
 		},
-		"snippet": "Intro Continue reading on Medium »",
+		"snippet": "Introduction Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-04-27T19:06:22Z"
+		"published": "2026-05-10T16:43:18Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Java 21’s Virtual Threads Just Outpaced Go With 200,000 Concurrent Tasks — Here’s How ",
+		"url": "https://medium.com/@monikasinghal713/java-21s-virtual-threads-just-outpaced-go-with-200-000-concurrent-tasks-here-s-how-99214c6a08d9?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*Kq74r_q7sqkpyQZm",
+		"author": {
+			"name": "Monika Singhal"
+		},
+		"snippet": "Okay, so I gotta be honest with you. For years, I’ve been that guy at the dev meetups, probably boring everyone’s ears off about how… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-10T16:40:33Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Golang CRUD — REST API",
+		"url": "https://medium.com/@ianakbar711/golang-crud-5d7ef8e18dcb?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
+		"author": {
+			"name": "Muhammad Raihan Akbar"
+		},
+		"snippet": "In this blog, I want to share my experience of creating a simple Go CRUD api with TDD approach. We will create a simple REST API to Create… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-10T16:21:15Z"
 	}
 ]

@@ -1,5 +1,20 @@
 [
 	{
+		"id": 0,
+		"source": "jetbrains",
+		"title": "Popular Go Web Frameworks: A Practical Guide for Developers",
+		"url": "https://blog.jetbrains.com/go/2026/04/28/popular-golang-web-frameworks/",
+		"author": {
+			"name": "Dominika Stankiewicz"
+		},
+		"snippet": "According to the 2025 Go Developer Survey, 46% of Go developers use the language to build websites and/or web services. It’s therefore unsurprising that the topic of web frameworks frequently pops u",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-28T10:04:24Z"
+	},
+	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Code like a PIRATE with Junie and GoLand",
 		"url": "https://blog.jetbrains.com/go/2026/04/02/code-like-a-pirate-with-junie-and-goland/",
@@ -13,6 +28,7 @@
 		"published": "2026-04-02T13:34:24Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "GoLand 2026.1 Is Released",
 		"url": "https://blog.jetbrains.com/go/2026/03/26/goland-2026-1-is-released/",
@@ -26,6 +42,7 @@
 		"published": "2026-03-26T12:11:42Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Best Practices for Secure Error Handling in Go",
 		"url": "https://blog.jetbrains.com/go/2026/03/02/secure-go-error-handling-best-practices/",
@@ -39,6 +56,7 @@
 		"published": "2026-03-02T10:31:07Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Write Modern Go Code With Junie and Claude Code",
 		"url": "https://blog.jetbrains.com/go/2026/02/20/write-modern-go-code-with-junie-and-claude-code/",
@@ -52,6 +70,7 @@
 		"published": "2026-02-20T13:29:52Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Moving Your Codebase to Go 1.26 With GoLand Syntax Updates",
 		"url": "https://blog.jetbrains.com/go/2026/02/13/moving-your-codebase-to-go-1-26-with-goland-syntax-updates/",
@@ -65,6 +84,7 @@
 		"published": "2026-02-13T12:33:36Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "[Livestream] Go 1.26 Release Party",
 		"url": "https://blog.jetbrains.com/go/2026/02/10/new-livestream-go-1-26-release-party/",
@@ -78,6 +98,7 @@
 		"published": "2026-02-10T13:12:58Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Dancing Backwards With Go",
 		"url": "https://blog.jetbrains.com/go/2026/01/12/dancing-backwards-with-go/",
@@ -91,6 +112,7 @@
 		"published": "2026-01-12T12:07:51Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "Preventing Resource Leaks in Go: How GoLand Helps You Write Safer Code",
 		"url": "https://blog.jetbrains.com/go/2025/12/09/preventing-resource-leaks-in-go-how-goland-helps-you-write-safer-code/",
@@ -104,6 +126,7 @@
 		"published": "2025-12-09T17:13:17Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "GoLand 2025.3 Is Out!",
 		"url": "https://blog.jetbrains.com/go/2025/12/08/goland-2025-3-is-out/",
@@ -117,6 +140,7 @@
 		"published": "2025-12-08T12:49:42Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "The Go Ecosystem in 2025: Key Trends in Frameworks, Tools, and Developer Practices",
 		"url": "https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/",
@@ -130,6 +154,7 @@
 		"published": "2025-11-10T09:24:35Z"
 	},
 	{
+		"id": 0,
 		"source": "jetbrains",
 		"title": "The “10x” Commandments of Highly Effective Go",
 		"url": "https://blog.jetbrains.com/go/2025/10/16/the-10x-commandments-of-highly-effective-go/",
@@ -141,18 +166,5 @@
 		"comments": 0,
 		"score": 0.5,
 		"published": "2025-10-16T11:13:18Z"
-	},
-	{
-		"source": "jetbrains",
-		"title": "8 Common DevOps Problems And How to Solve Them With GoLand",
-		"url": "https://blog.jetbrains.com/go/2025/09/17/8-common-devops-problems-and-how-to-solve-them-with-goland/",
-		"author": {
-			"name": "Olga Bedrina"
-		},
-		"snippet": "One of the most popular posts on the /devops subreddit says, “After 24 years in IT, I’m done. I don’t want to debug another YAML file. This is not how I foresee spending my life.” DevOps can b",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2025-09-17T18:15:54Z"
 	}
 ]

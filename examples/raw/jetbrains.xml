@@ -12,7 +12,7 @@
 	<atom:link href="https://blog.jetbrains.com/go/feed/" rel="self" type="application/rss+xml" />
 	<link>https://blog.jetbrains.com</link>
 	<description>Developer Tools for Professionals and Teams</description>
-	<lastBuildDate>Thu, 02 Apr 2026 13:43:46 +0000</lastBuildDate>
+	<lastBuildDate>Tue, 28 Apr 2026 10:07:47 +0000</lastBuildDate>
 	<language>en-US</language>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
@@ -28,6 +28,414 @@
 	<height>32</height>
 </image> 
 	<item>
+		<title>Popular Go Web Frameworks: A Practical Guide for Developers</title>
+		<link>https://blog.jetbrains.com/go/2026/04/28/popular-golang-web-frameworks/</link>
+		
+		<dc:creator><![CDATA[Dominika Stankiewicz]]></dc:creator>
+		<pubDate>Tue, 28 Apr 2026 10:04:24 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2026/04/GO-social-BlogFeatured-1280x720-1.png</featuredImage>		<category><![CDATA[goland]]></category>
+		<category><![CDATA[frameworks]]></category>
+		<category><![CDATA[web-development]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=go&#038;p=703714</guid>
+
+					<description><![CDATA[According to the 2025 Go Developer Survey, 46% of Go developers use the language to build websites and/or web services. It’s therefore unsurprising that the topic of web frameworks frequently pops up in conversation and is often the subject of healthy debate. The GoLand team enters the chat armed with data to answer the question: [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>According to the <a href="https://go.dev/blog/survey2025" target="_blank" rel="noopener">2025 Go Developer Survey</a>, 46% of Go developers use the language to build websites and/or web services. It’s therefore unsurprising that the topic of web frameworks frequently pops up in conversation and is often the subject of healthy debate.</p>
+
+
+
+<p>The GoLand team enters the chat armed with data to answer the question: What are the most popular web frameworks for Go developers and why?</p>
+
+
+
+<h2 class="wp-block-heading">Do I even need a framework?</h2>
+
+
+
+<p>Developers from environments that rely heavily on frameworks, such as JavaScript, will naturally seek out frameworks to simplify or reduce their workload. Meanwhile, hardcore Gophers will reject external libraries and frameworks altogether as superfluous dependencies that ultimately make their work harder. Both sides are right to some extent; using Go’s standard library exclusively comes with its own set of pros and cons.</p>
+
+
+
+<h3 class="wp-block-heading">Reasons to use <code>net/http</code></h3>
+
+
+
+<ul>
+<li><strong>Robustness</strong>: Go famously has a “batteries included” approach, and the <code>net/http</code> package is no exception. Go’s standard library provides a solid foundation for building web services; in particular, it already includes routing, middleware composition via handlers, and an HTTP server implementation.</li>
+
+
+
+<li><strong>Simplicity</strong>: The standard HTTP package has no extra frills or dependencies. This means developers often write more boilerplate, but it also provides clear and predictable building blocks that can be composed however a project requires.</li>
+
+
+
+<li><strong>No dependencies</strong>: Some developers prefer to exclusively use <code>net/http</code>, so as to avoid external dependencies. Third-party libraries are only good as long as they’re maintained, and they can always introduce security risks and maintenance overhead. Especially in larger commercial projects, these limitations are often unacceptable.</li>
+
+
+
+<li><strong>Full control</strong>: Developers who stick with <code>net/http</code> have full control over their code and don’t have to pay the “overhead tax” for features they don’t use that come with the libraries.</li>
+
+
+
+<li><strong>Maintenance and growth</strong>: Go is regularly maintained by the Google team, and new features are added consistently, such as <a href="https://go.dev/doc/go1.22#enhanced_routing_patterns" target="_blank" rel="noopener">enhanced routing patterns</a> in 1.22.</li>
+
+
+
+<li><strong>Standardization</strong>: Since every Go developer knows <code>net/http</code> (or so we hope), in commercial settings, this eliminates the need to learn new tools to become productive when a new developer is hired.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Reasons not to use <code>net/http</code></h3>
+
+
+
+<ul>
+<li><strong>Lack of built-in abstractions</strong>: It’s not that the standard library can’t handle complex scenarios; it’s that it can quickly turn into a nightmare for the engineer who has to provide instructions on how to handle them. Many developers turn to external libraries for the convenience they provide when it comes to routing or middleware management.</li>
+
+
+
+<li><strong>Productivity loss</strong>: As is often the case with Go, using standard solutions equals writing a lot of boilerplate code to stitch things together, which forces developers to work on mundane tasks, negatively affecting their productivity.</li>
+</ul>
+
+
+
+<p>Whether you are convinced by the arguments for or against, the truth remains that – according to JetBrains <a href="https://devecosystem-2025.jetbrains.com/" target="_blank" rel="noopener"><em>State of Developer Ecosystem Report 2025</em></a> – as much as 32% of Go developers use <code>net/http</code>, and its popularity remains largely unchanged.</p>
+
+
+
+<figure class="wp-block-image size-full"><a href="https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" fetchpriority="high" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/Go_2025_Frameworks-and-routers.webp" alt="" class="wp-image-703716"/></a></figure>
+
+
+
+<h2 class="wp-block-heading">Most popular Go web frameworks</h2>
+
+
+
+<p>Unlike a lot of other languages – as is the case with Ruby and Rails or Python with Django or Flask – there isn’t one dominant framework that every Go developer would recognize and use. While <code>stdlib</code> remains a popular choice, our data shows that it has a formidable opponent, used by almost half of Go developers – Gin.</p>
+
+
+
+<p>On top of that, in our analysis of <a href="https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/"><em>The Go Ecosystem in 2025</em></a>, we’ve identified the most widely used web frameworks to be Gin (48%), Gorilla (17%), Echo (16%), and Fiber (11%).</p>
+
+
+
+<p>Now, let’s look at how they stack up against each other and against <code>net/http</code> and see if there is a clear winner when it comes to web frameworks for Go (spoiler alert: There isn’t 😉).</p>
+
+
+
+<h3 class="wp-block-heading">Gin</h3>
+
+
+
+<p><a href="https://gin-gonic.com/en/" target="_blank" rel="noopener">Gin</a> is an HTTP web framework for building REST APIs, web applications, and microservices in Go. It offers middleware support, JSON validation, route grouping, error management, and built-in rendering. Gin is highly extensible and remains the top choice for Go developers as one of the fastest regularly maintained frameworks with a developer-friendly API. It has over 88,000 stars on <a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener">GitHub</a> and a sizable community around it, so you can expect to find a lot of examples and support from other developers when you run into trouble.</p>
+
+
+
+<p>You can create a router engine in Gin with (<code>gin.Default()</code>) or without (<code>gin.New()</code>) <a href="https://gin-gonic.com/en/docs/middleware/without-middleware/" target="_blank" rel="noopener">middleware attached</a>, depending on how much control you need. <code>gin.Default()</code> comes with logger and recovery middleware out of the box. Other middleware lives in the official <a href="https://github.com/gin-contrib" target="_blank" rel="noopener">gin-contrib</a> collection, where you can find a CORS mechanism, as well as authentication, session manager, <code>pprof</code>, and other tools.</p>
+
+
+
+<p>Gin’s creators boast that its “<a href="https://gin-gonic.com/en/docs/" target="_blank" rel="noopener">performance [is] up to 40 times faster than Martini</a>”, though in 2026, this probably doesn’t indicate much. Thankfully, they also run their own <a href="https://gin-gonic.com/en/docs/benchmarks/" target="_blank" rel="noopener">benchmarks</a>, allowing you to compare Gin’s performance against a number of more modern libraries as well. And while Gin is not <em>the</em> most performant in all scenarios (<a href="https://github.com/aerogo/aero" target="_blank" rel="noopener">Aero</a> actually takes that cake), the results are still very close to the top across the board. This is largely due to zero-allocation routing, which keeps the app memory usage stable even under high traffic.</p>
+
+
+
+<p>Gin is an opinionated framework, which means it follows its own approach. For example, it uses <code>gin.Context</code> instead of the standard <code>context.Context</code>. It is still built on top of <code>net/http</code>, but if your code depends heavily on Gin-specific features, moving to another framework later may require extra work.</p>
+
+
+
+<p>Pick Gin if you want a framework that:</p>
+
+
+
+<ul>
+<li>Is familiar to most developers and thus easier to adopt.</li>
+
+
+
+<li>Has community support and lots of learning resources, making onboarding and troubleshooting easier.</li>
+
+
+
+<li>Provides simple, widely adopted patterns for easier development.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Echo</h3>
+
+
+
+<p><a href="https://echo.labstack.com/" target="_blank" rel="noopener">Echo</a> is yet another high-performing and minimalist framework that has an HTTP router without dynamic memory allocation. It includes automatic TLS, support for HTTP/2, middleware, data binding and rendering, and various template engines. It’s also very extensible at various levels. It continues to grow in popularity, with 16% of Go developers declaring its use in 2025.</p>
+
+
+
+<p>Echo has a broad <a href="https://echo.labstack.com/docs/category/middleware" target="_blank" rel="noopener">catalog of official middleware</a> that you will also find in other frameworks, such as CORS, JWT, and key authentication tools, as well as a logger and rate limiter.</p>
+
+
+
+<p>Similarly to Gin, Echo is built on top of <code>net/http</code>, but it does deviate from it at times. For example, it uses <code>Echo.context</code> instead of <code>context.Context</code>. Also, Echo handlers use the signature <code>func(echo.Context)</code> error rather than <code>http.HandlerFunc</code>, but Echo provides adapters to integrate standard <code>net/http</code> handlers when needed.</p>
+
+
+
+<p>Choose Echo if you:</p>
+
+
+
+<ul>
+<li>Care about clean, centralized error handling and handlers that return errors.</li>
+
+
+
+<li>Need a more structured, “batteries-included” framework.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Chi</h3>
+
+
+
+<p><a href="https://go-chi.io/#/" target="_blank" rel="noopener">Chi</a> also claims to be a lightweight yet robust composable router for building Go HTTP services. Some would argue it’s not really a framework, but it&#8217;s still quite popular with Go developers, ranking as the fifth most popular alternative (used by 12% of developers in 2025).</p>
+
+
+
+<p>Chi’s authors claim it offers “<a href="https://pkg.go.dev/github.com/go-chi/chi#section-readme" target="_blank" rel="noopener">an elegant and comfortable design</a>” for large REST APIs, and the framework itself is deconstructed into smaller parts. You can use the standalone core router or extend it with subpackages for middleware, rendering, and/or <code>docgen</code>. Other key features include full compatibility with <code>net/http</code> and no external dependencies. Chi uses standard Go handler types and middleware shape.</p>
+
+
+
+<p>This means that Chi is compatible with all standard middleware, giving you more flexibility. Its <a href="https://datadoghq.dev/go-profiler-notes/profiling/thread-create-profiler.html" target="_blank" rel="noopener">optional middleware package</a> includes a suite of core <code>net/http</code> tools, and on top of that, there are also <a href="https://datadoghq.dev/go-profiler-notes/profiling/thread-create-profiler.html" target="_blank" rel="noopener">extra middleware and other packages</a>. Some noteworthy middleware options include: CORS, JWT auth, request logger, and rate limiter tools.</p>
+
+
+
+<p>You can check Chi’s benchmarks <a href="https://gist.github.com/pkieltyka/123032f12052520aaccab752bd3e78cc" target="_blank" rel="noopener">here</a>, though they are rather old.</p>
+
+
+
+<p>It’s worth considering Chi if:</p>
+
+
+
+<ul>
+<li>You want to stay close to the standard library: Some would argue there’s no point in even using Chi because you can achieve the same thing with <code>net/http</code>. If, however, you feel that a router would make your life easier, but you still want full compatibility with <code>stdlib</code>, Chi might be the choice for you.</li>
+
+
+
+<li>You want more of a router than a full framework.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Fiber</h3>
+
+
+
+<p>Finally, there’s <a href="https://gofiber.io/" target="_blank" rel="noopener">Fiber</a> – a framework that JavaScript developers in particular will be very fond of, as it’s inspired by <a href="https://expressjs.com/" target="_blank" rel="noopener">Express</a>. It boasts robust routing, the ability to serve static files, API-readiness, a rate limiter, flexible middleware support, low memory footprint, support for template engines and WebSocket, and – you guessed it! – great performance. The Fiber team provides its own benchmarks <a href="https://docs.gofiber.io/extra/benchmarks/" target="_blank" rel="noopener">here</a>. It’s the last framework that’s been adopted by over 10% of developers according to our survey.</p>
+
+
+
+<p>What differentiates Fiber from the other frameworks we’ve already discussed is that it’s built on a different HTTP engine – <code>fasthttp</code>. It can interoperate with <code>net/http</code>; however, the compatibility is provided through adapters and not through shared foundations. As Fiber’s architecture is fundamentally different from the standard library, choosing it locks you in more than other frameworks do, and migrating between Fiber and <code>net/http</code> frameworks typically requires more refactoring.</p>
+
+
+
+<p>Considering Fiber’s architecture, it’s no surprise that it offers the broadest <a href="https://datadoghq.dev/go-profiler-notes/profiling/thread-create-profiler.html" target="_blank" rel="noopener">built-in toolbox</a> of all the frameworks discussed. On top of that, it also has a whole host of third-party middleware maintained by the Fiber team or the community. Some of the most popular middleware options for Fiber are: a template engine, adaptor that converts <code>net/http</code> handlers to Fiber handlers and vice versa, Helmet integration, and key authentication tools.</p>
+
+
+
+<p>Fiber is especially good for:</p>
+
+
+
+<ul>
+<li>Developers with experience using Express.js: JavaScript developers who used Express before will feel right at home with Fiber because of the similarities.</li>
+
+
+
+<li>Projects where performance is <em>really</em> crucial, even at the expense of idiomatic Go.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">(Honorable mention) Gorilla</h3>
+
+
+
+<p>Strictly speaking, <a href="https://gorilla.github.io/" target="_blank" rel="noopener">Gorilla</a> is not a full-blown framework but rather a toolkit, and <code>Gorilla/mux</code> is just a router. But we include it on the list due to its enduring presence, with 17% of developers still using it in 2025. Even with a sharp decline in popularity compared to 2020, it’s still the third most popular choice (after Gin and <code>net/http</code>), despite the project no longer being actively maintained by the original team (the last update was in November 2023). While community forks continue development, most new projects today veer towards alternatives, such as Chi, or the improved routing features in Go’s standard library.</p>
+
+
+
+<h2 class="wp-block-heading">So how do they stack up?</h2>
+
+
+
+<figure class="wp-block-table is-style-stripes"><table><tbody><tr><td></td><td><strong><code>net/http</code></strong></td><td><strong>Gin</strong></td><td><strong>Echo</strong></td><td><strong>Chi</strong></td><td><strong>Fiber</strong></td></tr><tr><td><strong>HTTP engine</strong></td><td><code>stdlib</code></td><td><code>net/http</code></td><td><code>net/http</code></td><td><code>net/http</code></td><td><code>fasthttp</code></td></tr><tr><td><strong>Compatibility with <code>net/http</code></strong></td><td>Native</td><td>Partial&nbsp;</td><td>Partial</td><td>Full</td><td>Via an adapter</td></tr><tr><td><strong>Maintenance</strong></td><td>Core Go</td><td>Active</td><td>Active</td><td>Active</td><td>Active</td></tr><tr><td><strong>Performance</strong></td><td>High</td><td>Very high</td><td>High</td><td>High</td><td>Extremely high</td></tr><tr><td><strong>Learning curve</strong></td><td>Low</td><td>Low</td><td>Medium</td><td>Very low</td><td>Medium</td></tr><tr><td><strong>Standout features</strong></td><td>No dependencies; standardized solution</td><td>Wide adoption; robust community support</td><td>Clean error handling; “batteries-included” approach</td><td>Closeness to <code>stdlib</code>; minimalist features</td><td>Similarity to Express; extremely high performance</td></tr><tr><td><strong>Dependencies</strong></td><td>None</td><td>Moderate</td><td>Moderate</td><td>Very low</td><td>Significant</td></tr><tr><td><strong>Extensibility</strong></td><td>Very high</td><td>Moderate – sometimes requires adaptation</td><td>Moderate – requires wrapping</td><td>Very high</td><td>Low – mostly incompatible with standard middleware&nbsp;</td></tr><tr><td><strong>Ecosystem</strong></td><td>The largest and most mature; supported by Google</td><td>Very mature with the largest community and adoption after <code>net/http</code></td><td>Mature with a strong community and long-term maintenance</td><td>Mature with a sizeable community</td><td>Younger framework, with a community that’s still expanding</td></tr><tr><td><strong>Compatibility with <code>net/http</code></strong></td><td>Native</td><td>Opinionated, but built on <code>net/http</code></td><td>Built on top of <code>net/http</code></td><td>Designed around <code>net/http</code> – fully compatible</td><td>Not directly compatible, built on <code>fasthttp</code></td></tr></tbody></table></figure>
+
+
+
+<h3 class="wp-block-heading">Code samples</h3>
+
+
+
+<p>To show you how each framework handles API ergonomics, how verbose it is, and how it deviates from idiomatic Go, here’s a sample of the same API endpoint implemented in different frameworks.</p>
+
+
+
+<h4 class="wp-block-heading"><code>net/http</code></h4>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="golang" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// net/http
+http.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
+    json.NewEncoder(w).Encode(users)
+})</pre>
+
+
+
+<h4 class="wp-block-heading">Gin</h4>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="golang" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// Gin
+router.GET("/users", func(c *gin.Context) {
+    c.JSON(200, users)
+})</pre>
+
+
+
+<h4 class="wp-block-heading">Echo</h4>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="golang" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// Echo
+e.GET("/users", func(c echo.Context) error {
+    return c.JSON(200, users)
+})</pre>
+
+
+
+<h4 class="wp-block-heading">Chi</h4>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="golang" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// Chi
+r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
+    json.NewEncoder(w).Encode(users)
+})</pre>
+
+
+
+<h4 class="wp-block-heading">Fiber</h4>
+
+
+
+<pre class="EnlighterJSRAW" data-enlighter-language="golang" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// Fiber
+app.Get("/users", func(c *fiber.Ctx) error {
+    return c.JSON(users)
+})</pre>
+
+
+
+<h2 class="wp-block-heading">How can GoLand help web developers?</h2>
+
+
+
+<p>Using frameworks is not the only thing that can make your life easier; your IDE can help you stay productive as well, without locking you in. Here’s how using GoLand can help you as a web developer.</p>
+
+
+
+<ul>
+<li><a href="https://www.jetbrains.com/help/go/http-client-in-product-code-editor.html" target="_blank" rel="noopener"><strong>HTTP Client</strong></a>: With the HTTP Client plugin, you can create, edit, and execute HTTP requests directly in the GoLand code editor. This is especially useful when you are developing a RESTful web service or an application that interacts with one. This tool includes features like code highlighting, completion, folding, live templates, and language injections.</li>
+</ul>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/HTTP-client.gif" alt="" class="wp-image-703729"/></figure>
+
+
+
+<ul>
+<li><a href="https://www.jetbrains.com/help/go/endpoints-tool-window.html" target="_blank" rel="noopener"><strong>Endpoints tool</strong></a>: This window provides an aggregated view of client and server API used in your project for HTTP and WebSocket protocols. It can help you when you’re developing microservices, backend-frontend communication, and when you need to explore third-party APIs.</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">Frequently asked questions</h2>
+
+
+
+<h3 class="wp-block-heading">What is the difference between Go’s standard library and a web framework?</h3>
+
+
+
+<p>Like in any other language, libraries are there to provide solutions to common problems and free up your time to focus on important work. While Go’s standard library, and <code>net/http</code> in particular, contain everything you need to build a production-ready web server, the libraries described in this article will help you avoid a lot of boilerplate and simplify common tasks such as routing, middleware composition, and request binding.</p>
+
+
+
+<h3 class="wp-block-heading">Why doesn’t Go have a single dominant web framework?</h3>
+
+
+
+<p>In the Go ecosystem, frameworks are optional rather than foundational. Many production services are built directly on top of <code>net/http</code>, while others use lightweight routers or frameworks to simplify common tasks.</p>
+
+
+
+<p>Because the standard library is so robust, for many engineers, there isn’t really a good justification for using frameworks that require learning their syntax, create extra dependencies, and force regular updates. There isn’t a single dominant framework because none of them is superior to <code>stdlib</code>; they just offer different tradeoffs.</p>
+
+
+
+<h3 class="wp-block-heading">Are Go web frameworks necessary for production applications? Is <code>net/http</code> sufficient for building scalable APIs?</h3>
+
+
+
+<p>One of Go’s key differentiators is that, technically, you don’t need any external libraries for your application. Go’s standard library has everything you need, regardless of the scale of your project, and some hard-core Gophers stick to only that.</p>
+
+
+
+<p>This is not to say that libraries are bad or useless – if they make your life easier and you’re aware of the tradeoffs, there’s really no reason not to use them.</p>
+
+
+
+<h3 class="wp-block-heading">What should I consider when choosing between Gin, Echo, Fiber, and Chi? Is one of them better for APIs or microservices?</h3>
+
+
+
+<p>While most Go web frameworks support common features such as routing, middleware, and JSON handling, they differ in architecture, ecosystem compatibility, and how closely they follow <code>net/http</code>. When deciding on the right one for you, focus primarily on what your team and project need.</p>
+
+
+
+<ul>
+<li>If you’re looking for an established solution with a solid knowledge base that’s familiar to everyone, consider Gin.</li>
+
+
+
+<li>If you need a more structured framework with centralized error handling, go for Echo.</li>
+
+
+
+<li>If you’re after a lightweight router and need full compatibility with <code>net/http</code>, Chi is your best bet.</li>
+
+
+
+<li>If you’re familiar with Express.js or you need extreme performance, even at the cost of compatibility, think about Fiber.</li>
+</ul>
+
+
+
+<h3 class="wp-block-heading">Does using Fiber limit compatibility with the Go ecosystem?</h3>
+
+
+
+<p>To a certain extent – yes, at least more than the other frameworks mentioned in this article. Because Fiber was designed around <code>fasthttp</code>, it had to make architectural trade-offs.</p>
+
+
+
+<p>The biggest limitation is that you cannot use the vast library of generic Go middleware with Fiber out of the box. You therefore need to use middleware maintained by the Fiber team or employ an adapter (<code>adaptor.FromHTTP</code>), which introduces performance overhead and effectively defeats the reason to use Fiber in the first place.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
 		<title>Code like a PIRATE with Junie and GoLand</title>
 		<link>https://blog.jetbrains.com/go/2026/04/02/code-like-a-pirate-with-junie-and-goland/</link>
 		
@@ -86,7 +494,7 @@
 
 
 
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" fetchpriority="high" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_p_for_plan.png" alt="" class="wp-image-696222"/></figure>
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_p_for_plan.png" alt="" class="wp-image-696222"/></figure>
 
 
 
@@ -110,7 +518,7 @@
 
 
 
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_i_for_iterate.png" alt="" class="wp-image-696211"/></figure>
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_i_for_iterate.png" alt="" class="wp-image-696211"/></figure>
 
 
 
@@ -148,7 +556,7 @@
 
 
 
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_r_for_review.png" alt="" class="wp-image-696233"/></figure>
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_r_for_review.png" alt="" class="wp-image-696233"/></figure>
 
 
 
@@ -3798,414 +4206,6 @@ logger.Error(&quot;oh no&quot;, &quot;user&quot;, os.Getenv(&quot;USER&quot;))
 
 
 <p>Software takes more time to maintain than it does to write, so invest an extra 10% effort in refactoring, simplifying, and improving code while you still remember how it works. Making your programs better makes you a better programmer</p>
-]]></content:encoded>
-					
-		
-		
-			</item>
-		<item>
-		<title>8 Common DevOps Problems And How to Solve Them With GoLand</title>
-		<link>https://blog.jetbrains.com/go/2025/09/17/8-common-devops-problems-and-how-to-solve-them-with-goland/</link>
-		
-		<dc:creator><![CDATA[Olga Bedrina]]></dc:creator>
-		<pubDate>Wed, 17 Sep 2025 18:15:54 +0000</pubDate>
-		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2025/09/1280x720-Featured-Image.png</featuredImage>		<category><![CDATA[features]]></category>
-		<category><![CDATA[devops]]></category>
-		<category><![CDATA[goland]]></category>
-		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=go&#038;p=621615</guid>
-
-					<description><![CDATA[One of the most popular posts on the /devops subreddit says, “After 24 years in IT, I&#8217;m done. I don&#8217;t want to debug another YAML file. This is not how I foresee spending my life.” DevOps can be frustrating, and the 3,000+ people who upvoted that post clearly agree. It doesn&#8217;t have to be this [&#8230;]]]></description>
-										<content:encoded><![CDATA[
-<p>One of the most popular posts on the /devops subreddit <a href="https://www.reddit.com/r/devops/comments/1kqe912/after_24_years_in_it_im_done/" target="_blank" rel="noopener">says</a>, “After 24 years in IT, I&#8217;m done. I don&#8217;t want to debug another YAML file. This is not how I foresee spending my life.”</p>
-
-
-
-<p>DevOps can be frustrating, and the 3,000+ people who upvoted that post clearly agree. It doesn&#8217;t have to be this painful though. With the right tools and workflows, many of the struggles that DevOps engineers face daily can be simplified or even eliminated.</p>
-
-
-
-<p>Here are eight common DevOps problems and practical ways to solve them using <a href="https://www.jetbrains.com/go/devops" target="_blank" rel="noopener">GoLand</a>, the JetBrains IDE for development in Go and DevOps work.</p>
-
-
-
-<h2 class="wp-block-heading">Why GoLand for DevOps?</h2>
-
-
-
-<p>DevOps engineers traditionally have to manage a wide range of various tools, all with their own complex setups and features. Kubernetes, Terraform, Docker, Helm: no wonder articles like <em>73 Most Useful DevOps Tools in 2025</em> exist.</p>
-
-
-
-<p>According to <a href="https://www.jetbrains.com/lp/devecosystem-data-playground/" target="_blank" rel="noopener">the Developer Ecosystem: Data Playground</a>, Go has become the go-to language for DevOps work, with over 760,000 DevOps engineers using it as their primary programming language. This makes sense, since Kubernetes and most modern DevOps tools are built in Go. When you need custom scripts, CLIs, or extensions, Go is the natural choice.</p>
-
-
-
-<p>GoLand provides direct access to the terminal, Kubernetes, Docker, and HTTP Client. The goal is to help engineers debug, deploy, and manage infrastructure faster, with less chaos and more confidence.</p>
-
-
-
-<figure class="wp-block-gallery has-nested-images columns-default is-cropped wp-block-gallery-1 is-layout-flex wp-block-gallery-is-layout-flex">
-<figure class="wp-block-image size-large"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" data-id="623214" src="https://blog.jetbrains.com/wp-content/uploads/2025/09/non_blocking_welcome_screen_update-2.png" alt="" class="wp-image-623214"/></figure>
-</figure>
-
-
-
-<p>Now let&#8217;s look at the specific problems that make DevOps work frustrating and how to fix them.</p>
-
-
-
-<h2 class="wp-block-heading">Problem 1: Fixing broken Kubernetes deployments takes too many steps</h2>
-
-
-
-<p>Imagine deploying a new version of a service, but the container image itself is broken. The pod starts, it immediately fails, and you get errors in the logs.</p>
-
-
-
-<p>In a typical workflow, you’d switch between several tools:</p>
-
-
-
-<ul>
-<li>Check the logs with <code>kubectl logs</code></li>
-
-
-
-<li>Edit the deployment manifest in a text editor</li>
-
-
-
-<li>Reapply the manifest with <code>kubectl apply</code></li>
-
-
-
-<li>Check the pod status again in <code>kubectl get pods</code> to confirm everything is healthy</li>
-</ul>
-
-
-
-<p>This constant switching between terminal, editor, and Docker tooling slows down recovery and makes it harder to stay focused on solving the issue.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Fix issues in GoLand</h3>
-
-
-
-<p>GoLand streamlines this entire troubleshooting loop inside one workspace. For example, imagine deploying a Go backend service connected to a Postgres database, where the pod crashes immediately upon startup. In GoLand, the process is much simpler because you can:</p>
-
-
-
-<ul>
-<li>Open the logs directly in GoLand’s Kubernetes log viewer and spot the error – in this case, a misconfigured port number.</li>
-
-
-
-<li>Edit the deployment YAML in the IDE, with schema validation to avoid typos.</li>
-
-
-
-<li>Reapply the fixed manifest directly from the Kubernetes integration.</li>
-
-
-
-<li>Confirm the pod starts correctly by watching its status turn green in the resources view.</li>
-
-
-
-<li>Re-check the logs inline to verify that the application is now running and connected to Postgres without errors.</li>
-</ul>
-
-
-
-<p>With GoLand, you don’t have to jump between terminal, editor, and dashboards. Diagnosing, fixing, and redeploying all happen inside the IDE, helping you resolve issues quickly and keep services online.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/brokend-pods-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 2: Manual and error-prone Kubernetes secret management</h2>
-
-
-
-<p>Managing secrets in Kubernetes often requires a tedious workflow: run <code>kubectl</code> to fetch the secret, decode it with <code>base64</code>, make the necessary edits, re-encode it, and then apply it back. These steps are easy to mess up, especially when responding to incidents and emergencies.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Edit secrets directly in GoLand</h3>
-
-
-
-<p>GoLand&#8217;s bundled Kubernetes plugin lets you open secrets securely as plain text and edit them directly. No encoding steps, no command line switching: Simply open the secret, make your changes, and save them.</p>
-
-
-
-<p>And because this functionality is built and maintained by JetBrains, you can rely on the same level of security and quality as the rest of the IDE, without having to depend on unverified third-party plugins.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/new_secrets_export-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 3: Inefficient Kubernetes context and namespace switching</h2>
-
-
-
-<p>Most engineers juggle multiple clusters and namespaces every day. Some resort to external apps like Docker Desktop just to switch the active cluster. Others rely on the terminal, repeatedly running <code>kubectl config use-context</code> and <code>kubectl config set-context --namespace=…</code>.</p>
-
-
-
-<p>Both approaches are repetitive, slow you down, and one wrong command can easily put you in the wrong cluster – something no one wants to happen in production.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Switch contexts and namespaces in GoLand</h3>
-
-
-
-<p>GoLand&#8217;s Kubernetes UI makes context and namespace switching faster and safer. You can now switch between them directly from a dropdown in the IDE, with clear visual indicators showing the active cluster and namespace.</p>
-
-
-
-<p>This reduces the chance of accidentally applying changes to the wrong environment and eliminates repetitive terminal commands.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/multi_namespaces-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 4: Too much DevOps time is wasted on repetitive tasks</h2>
-
-
-
-<p>Many DevOps tasks can be quite repetitive: writing Terraform templates, piecing together long cloud CLI commands, parsing JSON files, or combing through endless pod logs.</p>
-
-
-
-<p>These tasks aren’t complex, but they are time-consuming, tedious, and take attention away from solving real problems.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Let AI Assistant handle the repetitive work</h3>
-
-
-
-<p><a href="https://plugins.jetbrains.com/plugin/22282-jetbrains-ai-assistant?utm_content=ai-button-link-click&amp;utm_medium=link&amp;utm_source=jetbrains.com" target="_blank" rel="noopener">AI Assistant</a>, which comes with GoLand (and other JetBrains IDEs) can help engineers offload mundane tasks so they can focus on what matters. Some use cases include:</p>
-
-
-
-<ul>
-<li>Generating infrastructure code such as Terraform snippets or YAML manifests instead of writing boilerplate by hand.</li>
-
-
-
-<li>Creating cloud CLI commands and scripts on demand, e.g. finding AWS autoscaling groups and ECS services across regions, scaling them up, and triggering new deployments with a single prompt.</li>
-
-
-
-<li>Analyzing logs automatically, highlighting suspicious entries, frequent errors, or summaries.</li>
-
-
-
-<li>Handling JSON parsing and data transformations automatically – tasks that would otherwise require writing ad-hoc scripts</li>
-</ul>
-
-
-
-<p>By delegating routine work to AI, engineers save time on the “boring stuff” and keep their focus on solving critical incidents, improving infrastructure, and shipping value to users.</p>
-
-
-
-<p>Unlike using external AI tools in a separate window, GoLand’s AI Assistant keeps everything in one place, helping you avoid context switching.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/tf_aia_final_2-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 5: Managing infrastructure as code across different tools</h2>
-
-
-
-<p>Working with infrastructure as code means bouncing between different formats and technologies constantly – Terraform for provisioning, Helm charts for packaging and templating, and Kubernetes YAML for deployment.</p>
-
-
-
-<p>While you can add plugins in other editors, support is often inconsistent. Autocompletion may work for one tool but not another, validation can be inconsistent, and switching between terminal and editor tabs quickly gets messy.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: First-class support for Terraform, Helm, and Kubernetes in GoLand</h3>
-
-
-
-<p>GoLand provides native, consistent support for the key technologies DevOps teams rely on:</p>
-
-
-
-<ul>
-<li>Terraform: advanced autocompletion, on-the-fly validation, and navigation between resources.</li>
-
-
-
-<li>Helm charts: templating support, syntax highlighting, and smart YAML editing inside templates.</li>
-
-
-
-<li>Kubernetes manifests: schema validation, quick fixes, and integration with the Kubernetes plugin for applying actions directly.</li>
-</ul>
-
-
-
-<p>Instead of piecing together several plugins, you get a single environment where IaC files, CLI workflows, and cluster operations all work together out of the box.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/problem5-final-1-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 6: Difficulty tracking logs across services during incidents</h2>
-
-
-
-<p>When something breaks in Kubernetes, logs are often the first place to look. Without centralized log aggregation, engineers use <code>kubectl logs</code> combined with <code>grep</code> or have to copy-paste outputs into a local editor.</p>
-
-
-
-<p>With multiple pods and a high log volume, it’s easy to miss critical lines, especially when you’re searching for patterns like status codes or error messages under time pressure.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Stream and filter logs directly in GoLand</h3>
-
-
-
-<p>The Kubernetes plugin that is bundled in GoLand provides a built-in log viewer that makes troubleshooting faster. With it, you can:</p>
-
-
-
-<ul>
-<li>Stream logs from pods directly in the IDE.</li>
-
-
-
-<li>Use search, filtering, and highlighting to quickly spot relevant entries.</li>
-
-
-
-<li>Parse structured logs (like JSON) and filter by fields: For example, surface only rows with <code>status</code> values greater than 500</li>
-</ul>
-
-
-
-<p>This is especially valuable for teams that don’t yet use centralized log collectors (like <a href="https://grafana.com/docs/loki/latest/get-started/overview/" target="_blank" rel="noopener">Loki</a> or <a href="https://www.elastic.co/kibana" target="_blank" rel="noopener">Kibana</a>).</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/logger_export-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Problem 7: Limited visibility of CI/CD pipeline configs</h2>
-
-
-
-<p>CI/CD pipelines get complicated quickly. Editing <code>.gitlab-ci.yml</code> or GitHub Actions workflows in plain text editors or web interfaces makes it easy to miss issues. Maybe a variable name has a typo, or indentation is wrong, and you only discover it after the pipeline fails, or a stage doesn’t exist, and you try to reference to it later.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: CI/CD pipeline editing with validation in GoLand</h3>
-
-
-
-<p>GoLand helps catch issues before they hit runners. When editing GitHub Actions or GitLab CI configs, you get:</p>
-
-
-
-<ul>
-<li>Autocompletion for jobs, stages, and variables.</li>
-
-
-
-<li>Inline documentation right in the editor.</li>
-
-
-
-<li>Schema validation highlighting mistakes as you type.</li>
-</ul>
-
-
-
-<p>Compared to terminal editing or web interfaces, GoLand provides immediate feedback, so you can spot mistakes before they waste a pipeline run.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/ci_pipeline_config_slow-1.mp4"></video></figure>
-
-
-
-<p>For TeamCity users, <a href="https://plugins.jetbrains.com/plugin/1820-teamcity" target="_blank" rel="noopener">the TeamCity plugin</a> lets you browse builds, check logs, and connect configs directly to the IDE.</p>
-
-
-
-<h2 class="wp-block-heading">Problem 8: Inconvenient tracking of multiple port forwards</h2>
-
-
-
-<p>Accessing internal services in Kubernetes usually means running <code>kubectl port-forward pod-name 8080:80</code> from the terminal. It works but ties up a terminal session and makes tracking active forwards difficult. It&#8217;s easy to forget stopping processes or mix up port numbers.</p>
-
-
-
-<h3 class="wp-block-heading">Solution: Port forwarding made easier in GoLand</h3>
-
-
-
-<p>GoLand&#8217;s Kubernetes integration handles port forwarding directly from the IDE. Right-click a pod or service to create a port-forward with a few clicks. Starting from GoLand 2025.3, it’ll also be possible to do it from the editor.</p>
-
-
-
-<p>Active forwards are shown in the IDE, so you always know which services are accessible and on which ports. As a result, your terminal stays available for other tasks.</p>
-
-
-
-<p>This makes common scenarios faster and easier to manage, such as testing service endpoints locally, validating patches, or investigating incidents without public exposure.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/09/port-forwarding-multiple-1.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">Conclusion</h2>
-
-
-
-<p>DevOps doesn&#8217;t have to feel like debugging YAML files forever. While toolchain complexity isn&#8217;t going away, having the right IDE can be a huge help when managing all the numerous tools that DevOps engineers have to handle daily.</p>
-
-
-
-<p>GoLand consolidates many common DevOps workflows into a single environment, reducing context switching and making infrastructure work more manageable. Think of it as a cockpit for your infrastructure: everything you need to see and control, without leaving your seat.</p>
-
-
-
-<p>Ready to spend less time juggling tools and more time solving actual problems? GoLand offers a 30-day free trial with full access to all DevOps features.</p>
-
-
-    <div class="buttons">
-        <div class="buttons__row">
-                                                <a href="https://www.jetbrains.com/go/download/" class="btn" target="_blank" rel="noopener">Download GoLand</a>
-                                                    </div>
-    </div>
-
-
-
-
 ]]></content:encoded>
 					
 		

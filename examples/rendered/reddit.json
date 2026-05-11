@@ -1,334 +1,311 @@
 [
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "I built fedit — a zero-dependency CLI tool for surgical file edits from the terminal (11 ops, 17 language mappers, single binary)",
-		"url": "https://www.reddit.com/r/golang/comments/1sxpukq/i_built_fedit_a_zerodependency_cli_tool_for/",
+		"title": "What do you think about Spec Driven Development?",
+		"url": "https://www.vitaliihonchar.com/insights/spec-driven-development",
+		"image_url": "https://external-preview.redd.it/LeFq7d_EmJA9x1ja6RyfzkArfyMKZW6FHP0mCHTxmK0.png?auto=webp\u0026s=7be654ab4d8e462e9fa8697b5f54a9de378754df",
 		"author": {
-			"username": "Character-Chicken522",
-			"profile_url": "https://www.reddit.com/user/Character-Chicken522"
+			"username": "Historical_Wing_9573",
+			"profile_url": "https://www.reddit.com/user/Historical_Wing_9573"
 		},
-		"snippet": "I needed a way to make precise, scriptable file edits without sed/awk regex headaches — especially when working with AI coding assistants that say \"insert this after line 47\" but the file has shifte",
-		"tag": "article",
-		"comments": 6,
-		"score": 0.38823676709842325,
-		"published": "2026-04-28T03:30:02Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Why is go pooling worse than not trying to optimize anything?",
-		"url": "https://www.reddit.com/r/golang/comments/1sxpjgu/why_is_go_pooling_worse_than_not_trying_to/",
-		"author": {
-			"username": "canadiancoding",
-			"profile_url": "https://www.reddit.com/user/canadiancoding"
-		},
-		"snippet": "I'm building a caching layer and wanted to test go's struct pooling to make sure I understood it before I used it, and see if it was worth messing around with. I setup a little test that just counts t",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.6262830509731585,
-		"published": "2026-04-28T03:15:36Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Sphire Foundry - I posted my CMS about a month ago, and since then I've added more features, and I just merged the first contributor PR. Come check it out !",
-		"url": "https://github.com/sphireinc/Foundry",
-		"image_url": "https://external-preview.redd.it/KRY9qHb_axlww9itga85k9mtsDQ2W-jRl4pvdqt07k0.png?auto=webp\u0026s=8f41aa842d7a6b9a177427b3c550768a10f997c7",
-		"author": {
-			"username": "SovereignZ3r0",
-			"profile_url": "https://www.reddit.com/user/SovereignZ3r0"
-		},
-		"snippet": "Slowly adding more and more features to this baby - have a few open issues, and just merged the first contributor PR (a syntax highlighting plugin - though typically plugins should be their own github",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.1,
-		"published": "2026-04-27T22:32:50Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Zero-config Go heap profiling",
-		"url": "https://coroot.com/blog/zero-config-go-heap-profiling/",
-		"image_url": "https://external-preview.redd.it/4l64GFfghifmYot9kg43cQE0s-qMlelSqjTddw8pY1Q.png?auto=webp\u0026s=b534ecb68432bcb684bb9b2cb5e165eca6c30063",
-		"author": {
-			"username": "NikolaySivko",
-			"profile_url": "https://www.reddit.com/user/NikolaySivko"
-		},
-		"snippet": "How we added continuous Go heap profiling to coroot-node-agent without requiring any code changes, pprof endpoints, or annotations, by reading runtime.mbuckets directly from process memory.",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.7369682696802135,
-		"published": "2026-04-27T19:26:59Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Small Projects",
-		"url": "https://www.reddit.com/r/golang/comments/1sxd6ei/small_projects/",
-		"author": {
-			"username": "AutoModerator",
-			"profile_url": "https://www.reddit.com/user/AutoModerator"
-		},
-		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.4216379923242304,
-		"published": "2026-04-27T19:00:54Z"
-	},
-	{
-		"source": "reddit",
-		"title": "two apps in one project , how can i structure it ?",
-		"url": "https://www.reddit.com/r/golang/comments/1sx8eb4/two_apps_in_one_project_how_can_i_structure_it/",
-		"author": {
-			"username": "Radonish",
-			"profile_url": "https://www.reddit.com/user/Radonish"
-		},
-		"snippet": "im making a 2d multiplayer ascii game from scratch in golang , i need to saperate the two apps ( server and client ) while also making them share some packages , how can i go about structuring that fi",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.38823676709842325,
-		"published": "2026-04-27T16:15:51Z"
-	},
-	{
-		"source": "reddit",
-		"title": "KEIBIDROP: P2P filesystem I've been building in go for the last year",
-		"url": "https://github.com/KeibiSoft/KeibiDrop",
-		"image_url": "https://external-preview.redd.it/dPO1rdVPcQIjDtaC-_nSO1s6eOYinb_Ulxl0jnuAaYg.png?auto=webp\u0026s=caf82181dbe27be98168c946045c4a659217808a",
-		"author": {
-			"username": "Secret-Employer282",
-			"profile_url": "https://www.reddit.com/user/Secret-Employer282"
-		},
-		"snippet": "Hi gophers, Over the last year I've been building (in my spare time) a cross platform FUSE filesystem that also has a GUI. (altough the GUI is [slint.dev](http://slint.dev) and bound with rust, the en",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.3003809664473759,
-		"published": "2026-04-27T16:09:01Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Building an Event Loop in Go from syscalls",
-		"url": "https://www.reddit.com/r/golang/comments/1sx5ezm/building_an_event_loop_in_go_from_syscalls/",
-		"author": {
-			"username": "Pop_the_glock_1",
-			"profile_url": "https://www.reddit.com/user/Pop_the_glock_1"
-		},
-		"snippet": "I wrote a blog post about making a TCP server in Go using raw syscalls and kqueue. It’s just a single goroutine doing non-blocking I/O, which is basically just a fancy way of saying I avoided the st",
-		"tag": "article",
-		"comments": 5,
-		"score": 0.7881887691669792,
-		"published": "2026-04-27T14:30:55Z"
-	},
-	{
-		"source": "reddit",
-		"title": "sqlc query date_part param type",
-		"url": "https://www.reddit.com/r/golang/comments/1sx523q/sqlc_query_date_part_param_type/",
-		"author": {
-			"username": "tyrrminal",
-			"profile_url": "https://www.reddit.com/user/tyrrminal"
-		},
-		"snippet": "I have a query that's designed to filter by year and group by month; within the query, it's doing: date_part('year', s.occurred_at) = $1 but when sqlc generates the go code for this, the signature is ",
+		"snippet": "I tried to build Go app with spec driven development and results were pretty good. What do you think about it? Did you try Spec driven development? I see a huge difference between vibe coding and spec",
 		"tag": "article",
 		"comments": 2,
-		"score": 0.1,
-		"published": "2026-04-27T14:18:18Z"
+		"score": 0.34873150258179014,
+		"published": "2026-05-11T05:00:53Z"
 	},
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "Gophercon 2026",
-		"url": "https://www.gophercon.com/",
-		"image_url": "https://external-preview.redd.it/JFZM64I2Dd_nhkMDYmOLk7p_NYBh3oF36Yhc03MDxyo.png?auto=webp\u0026s=66904628018d64d229e85881afa2ebc2235cecf7",
+		"title": "Is this the best ay to keep database code?",
+		"url": "https://www.reddit.com/r/golang/comments/1t9jfks/is_this_the_best_ay_to_keep_database_code/",
 		"author": {
-			"username": "cpustejovsky",
-			"profile_url": "https://www.reddit.com/user/cpustejovsky"
+			"username": "darkayngl",
+			"profile_url": "https://www.reddit.com/user/darkayngl"
 		},
-		"snippet": "Howdy! Who all is going to Gophercon 2026 in Seattle, WA this year?",
-		"tag": "article",
-		"comments": 4,
-		"score": 0.8295864392961818,
-		"published": "2026-04-27T00:09:56Z"
-	},
-	{
-		"source": "reddit",
-		"title": "A Guy opened an issue saying fast benchmarks were invisible in my viz tool - so I added log scale",
-		"url": "https://www.reddit.com/r/golang/comments/1swbc87/a_guy_opened_an_issue_saying_fast_benchmarks_were/",
-		"image_url": "https://external-preview.redd.it/fNQUIG1bxSEp7L4nuTEpjjI8I1NWtf1I4PtXGtDSj58.png?auto=webp\u0026s=354ed3344e514a033c260e280f53700e361fb13c",
-		"author": {
-			"username": "Extension_Layer1825",
-			"profile_url": "https://www.reddit.com/user/Extension_Layer1825"
-		},
-		"snippet": "Hi Gophers, A few months ago I posted about [Vizb](https://github.com/goptics/vizb), a CLI that turns `go test -bench` output into interactive HTML charts. It got some nice feedback, and people have b",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.23804628387473528,
-		"published": "2026-04-26T15:58:00Z"
-	},
-	{
-		"source": "reddit",
-		"title": "watgo - a WebAssembly Toolkit for Go",
-		"url": "https://eli.thegreenplace.net/2026/watgo-a-webassembly-toolkit-for-go/",
-		"author": {
-			"username": "self",
-			"profile_url": "https://www.reddit.com/user/self"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.7440731378420168,
-		"published": "2026-04-26T15:31:39Z"
-	},
-	{
-		"source": "reddit",
-		"title": "potential goroutine leak or nah",
-		"url": "https://www.reddit.com/r/golang/comments/1sw9hdo/potential_goroutine_leak_or_nah/",
-		"author": {
-			"username": "KaleidoscopePlusPlus",
-			"profile_url": "https://www.reddit.com/user/KaleidoscopePlusPlus"
-		},
-		"snippet": "I've got a pretty standard backend server going on, except i spawn a thread within main that never exits. The routine runs indefinitely on an interval delivered from a ticker. `ticker := time.NewTicke",
-		"tag": "article",
-		"comments": 17,
-		"score": 0.613898019286257,
-		"published": "2026-04-26T14:46:53Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Showcase: kLex (FROG) – A 'Governed' language with 30+ libs written in Go.",
-		"url": "https://github.com/kmcnally5/FROG",
-		"image_url": "https://external-preview.redd.it/zV3AYQYZ9cwq84Hz8RIoX6PJzpwW3BatUSVE1vIiDDE.png?auto=webp\u0026s=bd8af23cd6836095c0df76e2c7955d65ce621909",
-		"author": {
-			"username": "Ill-Plum-7348",
-			"profile_url": "https://www.reddit.com/user/Ill-Plum-7348"
-		},
-		"snippet": "**Meet kLex (nicknamed FROG): A functional, reactive, and strictly \"Governed\" language built in Go.** I wrote kLex/FROG almost entirely using AI - only breaking from this as required. I did this for m",
-		"tag": "article",
-		"comments": 5,
-		"score": 0.1,
-		"published": "2026-04-26T14:38:55Z"
-	},
-	{
-		"source": "reddit",
-		"title": "xytz - a beautiful TUI YouTube Downloader/Player",
-		"url": "https://www.reddit.com/r/golang/comments/1sw2w70/xytz_a_beautiful_tui_youtube_downloaderplayer/",
-		"image_url": "https://external-preview.redd.it/2MgRP5tx0OWQMvvGfwpfDd23K_g4Mvw2pZp2_h7GUa0.png?auto=webp\u0026s=d1462ac22b673e2e084d70c5ac3a8d3855ae94fc",
-		"author": {
-			"username": "Upbeat_Equivalent519",
-			"profile_url": "https://www.reddit.com/user/Upbeat_Equivalent519"
-		},
-		"snippet": "made with go and bubbletea https://github.com/xdagiz/xytz",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.6007619328947518,
-		"published": "2026-04-26T09:27:37Z"
-	},
-	{
-		"source": "reddit",
-		"title": "WhatsApp api",
-		"url": "https://www.reddit.com/r/golang/comments/1svs6tu/whatsapp_api/",
-		"image_url": "https://external-preview.redd.it/wBDTeTAJFIfyckGDocxz0fY2ODHwOzKIVKKvnG-vX_k.png?auto=webp\u0026s=83747421d44b4e49ebdbb04dfa7e38545aacf82c",
-		"author": {
-			"username": "WorkingInitiative909",
-			"profile_url": "https://www.reddit.com/user/WorkingInitiative909"
-		},
-		"snippet": "Are someone use this repo GOWA [https://github.com/aldinokemal/go-whatsapp-web-multidevice](https://github.com/aldinokemal/go-whatsapp-web-multidevice)",
-		"tag": "article",
-		"comments": 5,
-		"score": 0.6596842761989657,
-		"published": "2026-04-26T00:07:59Z"
-	},
-	{
-		"source": "reddit",
-		"title": "go-mirofish: built in-fast Go rewrite of MiroFish – local AI swarm predictor (198 rps on laptop)",
-		"url": "https://www.reddit.com/r/golang/comments/1svdj2t/gomirofish_built_infast_go_rewrite_of_mirofish/",
-		"author": {
-			"username": "Odd_Army_7385",
-			"profile_url": "https://www.reddit.com/user/Odd_Army_7385"
-		},
-		"snippet": "I built go-mirofish — a lightweight, local-first swarm intelligence engine written in Go. Upload any document (PR, earnings report, policy, news, story, etc.) → it builds a knowledge graph → spa",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.23804628387473528,
-		"published": "2026-04-25T14:22:10Z"
-	},
-	{
-		"source": "reddit",
-		"title": "Compile Go to Brainfuck!",
-		"url": "https://github.com/itchyny/go2bf",
-		"image_url": "https://external-preview.redd.it/TP9BnoPmFvCiUXnFSSdeXfXdnNBg9UYFzuOX9IRYAII.png?auto=webp\u0026s=d247bbcb9a16359d042f6c7634a73c9a83aafec0",
-		"author": {
-			"username": "itchyny",
-			"profile_url": "https://www.reddit.com/user/itchyny"
-		},
-		"snippet": "I wrote a compiler that compiles a subset of Go language to Brainfuck.",
+		"snippet": "Ok so I am just learning how to program and using Go as my language of choice, my question is I created a database and a table inside the db using some code. Now obviously, I am going to be playing ar",
 		"tag": "article",
 		"comments": 10,
-		"score": 0.8046533244696281,
-		"published": "2026-04-25T11:19:48Z"
+		"score": 0.3003809664473759,
+		"published": "2026-05-10T21:25:23Z"
 	},
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "How to stack widgets and shapes in Go and Gio",
-		"url": "https://www.reddit.com/r/golang/comments/1suvgap/how_to_stack_widgets_and_shapes_in_go_and_gio/",
+		"title": "Go is the language that finally made me stop over-engineering everything",
+		"url": "https://www.reddit.com/r/golang/comments/1t9fyfp/go_is_the_language_that_finally_made_me_stop/",
+		"author": {
+			"username": "notomarsol",
+			"profile_url": "https://www.reddit.com/user/notomarsol"
+		},
+		"snippet": "i spent most of my career in java and typescript where abstraction is basically a competitive sport. every problem gets an interface, a factory, a strategy pattern, maybe a decorator if you're feeling",
+		"tag": "article",
+		"comments": 38,
+		"score": 1,
+		"published": "2026-05-10T19:11:23Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Part1: Handling buttons' events in Gio with Go",
+		"url": "https://www.reddit.com/r/golang/comments/1t9cc5h/part1_handling_buttons_events_in_gio_with_go/",
 		"author": {
 			"username": "Warm_Low_4155",
 			"profile_url": "https://www.reddit.com/user/Warm_Low_4155"
 		},
-		"snippet": "This video introduces the Stack family, which allows us to position objects and shapes within the same space by layering them on top of one another so they overlap. In contrast, the Flex family—such",
+		"snippet": "In this short video, I introduce how to manage buttons' events work in Gio using Go. I built a simple UI with a button and a label, then I made the label react to different button states like hovering",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.4760925677494707,
-		"published": "2026-04-24T23:16:08Z"
+		"score": 0.23804628387473528,
+		"published": "2026-05-10T16:57:50Z"
 	},
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "AI-Rulez V4 Released",
-		"url": "https://www.reddit.com/r/golang/comments/1suhjab/airulez_v4_released/",
-		"image_url": "https://external-preview.redd.it/6SSWzelhR7s4IB5AJtrdEPWadyAPWHOtQgJBUowHzQ8.png?auto=webp\u0026s=9100d7bca675842790411be3eca6f82ee6d08231",
+		"title": "I created a tool to switch palettes on the fly on Linux. It's called gohan.",
+		"url": "https://codeberg.org/roro/gohan",
+		"image_url": "https://external-preview.redd.it/H6vBjsiT4uOxRIVojKy14zct2TgbLUnGk6PeiYlQXEc.png?auto=webp\u0026s=9d33def8beb765d139ca8da2bd1a4dfc98754c18",
 		"author": {
-			"username": "Goldziher",
-			"profile_url": "https://www.reddit.com/user/Goldziher"
+			"username": "roro_jpg",
+			"profile_url": "https://www.reddit.com/user/roro_jpg"
 		},
-		"snippet": "I released [ai-rulez v4](https://github.com/Goldziher/ai-rulez). Been using it constantly since I built it - and introduced it into several organizations, including https://github.com/kreuzberg-dev --",
+		"snippet": "Hello everyone. I created this tool to switch base16 palettes on Linux on the fly. I know it’s nothing fancy yet, but it might be useful to others here who tinker with Linux (and ricing). Go is such",
 		"tag": "article",
 		"comments": 0,
+		"score": 0.3003809664473759,
+		"published": "2026-05-10T16:48:38Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "I compiled a Go backend to WASM and shipped it to the browser. No server, SQLite runs in the tab",
+		"url": "https://localtrack.arthurcornil.com/",
+		"author": {
+			"username": "quirissum",
+			"profile_url": "https://www.reddit.com/user/quirissum"
+		},
+		"snippet": "I've been thinking about how most personal productivity tools are SaaS for business reasons, not technical ones. A time tracker has no reason to store your data on a remote server. So I built one wher",
+		"tag": "article",
+		"comments": 15,
+		"score": 0.8760445698180267,
+		"published": "2026-05-10T11:18:20Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Why I’m betting on Go for the future of AI Agents (and a new community for those doing the same)",
+		"url": "https://www.reddit.com/r/golang/comments/1t93pr0/why_im_betting_on_go_for_the_future_of_ai_agents/",
+		"author": {
+			"username": "Friendly_Meaning_388",
+			"profile_url": "https://www.reddit.com/user/Friendly_Meaning_388"
+		},
+		"snippet": "Hi Gophers, I’ve been a lead engineer for 10 years, mostly focused on the standard Go stack: microservices, K8s, and high-concurrency backends. Recently, I’ve been deep-diving into **Autonomous AI",
+		"tag": "article",
+		"comments": 10,
 		"score": 0.1,
-		"published": "2026-04-24T14:36:11Z"
+		"published": "2026-05-10T10:53:19Z"
 	},
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "Limen: a composable auth library for Go, inspired by better-auth",
-		"url": "https://www.reddit.com/r/golang/comments/1suh5zv/limen_a_composable_auth_library_for_go_inspired/",
+		"title": "An open source go IDE for Android",
+		"url": "https://www.reddit.com/r/golang/comments/1t8txy2/an_open_source_go_ide_for_android/",
+		"image_url": "https://external-preview.redd.it/WMBIAoyAIPArgZCJZimm4IJUqYpMm5tWUt2rb3PL6qk.png?auto=webp\u0026s=d41846a47d8121932e130e2181f7afc40d60d422",
 		"author": {
-			"username": "thecodearcher",
-			"profile_url": "https://www.reddit.com/user/thecodearcher"
+			"username": "NoBeginning2551",
+			"profile_url": "https://www.reddit.com/user/NoBeginning2551"
 		},
-		"snippet": "I got tired of glueing together `bcrypt` \\+ `golang-jwt` \\+ `oauth2` \\+ sessions every time I added auth to a Go service, so I built [Limen](https://github.com/thecodearcher/limen). Tagged v0.1.0 toda",
-		"tag": "article",
-		"comments": 11,
-		"score": 0.9934664678721489,
-		"published": "2026-04-24T14:22:06Z"
-	},
-	{
-		"source": "reddit",
-		"title": "I built an open-source Discord \u0026amp; Twitch bot in Go",
-		"url": "https://www.reddit.com/r/golang/comments/1su7j4k/i_built_an_opensource_discord_twitch_bot_in_go/",
-		"author": {
-			"username": "cfi_go",
-			"profile_url": "https://www.reddit.com/user/cfi_go"
-		},
-		"snippet": "Hi everyone, I wanted to share Senchabot, an open-source bot I've been working on since 2022 to bridge Twitch and Discord. GitHub repo link: [https://github.com/senchabot-opensource/monorepo](https://",
+		"snippet": "I created an open source Go IDE for Android with gopls LSP support, 245 themes, git and Github integration, AI completion, agentic coding panel for vibe coders, etc Note: This is not some vibe coded a",
 		"tag": "article",
 		"comments": 9,
-		"score": 0.1,
-		"published": "2026-04-24T06:18:30Z"
+		"score": 0.8871587529039013,
+		"published": "2026-05-10T02:09:19Z"
 	},
 	{
+		"id": 0,
 		"source": "reddit",
-		"title": "go-openngc: stdlib-only deep-sky catalog",
-		"url": "https://www.reddit.com/r/golang/comments/1stwsl9/goopenngc_stdlibonly_deepsky_catalog/",
+		"title": "Struggling with method design for a CLI. What is part of a client library? What is part of cobra?",
+		"url": "https://www.reddit.com/r/golang/comments/1t8rf2b/struggling_with_method_design_for_a_cli_what_is/",
 		"author": {
-			"username": "xenol",
-			"profile_url": "https://www.reddit.com/user/xenol"
+			"username": "James_Keenan",
+			"profile_url": "https://www.reddit.com/user/James_Keenan"
 		},
-		"snippet": "[go-openngc](https://github.com/xen0l/go-openngc) is a Go port of [PyOngc](https://github.com/mattiaverga/PyOngc) for querying the [OpenNGC](https://github.com/mattiaverga/OpenNGC) deep-sky catalog (~",
+		"snippet": "Say we have an internal platform with an exposed API. This is for creating testing environments, deploying new versions, etc. 1. I have a generic \\`makeRequest\\` method that's a wrapper around [httpCl",
+		"tag": "article",
+		"comments": 3,
+		"score": 0.38823676709842325,
+		"published": "2026-05-10T00:11:18Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "How I built the core loop of a browser multiplayer game",
+		"url": "https://packagemain.tech/p/how-i-built-the-core-loop-of-a-browser",
+		"image_url": "https://external-preview.redd.it/Gckkf3BAXtA6dgmIEDVTuFAaeBVCQTe-MclUU-tLvw0.jpeg?auto=webp\u0026s=95fafd77e253f7f4fe4401af3a2dffb7e7f12c73",
+		"author": {
+			"username": "der_gopher",
+			"profile_url": "https://www.reddit.com/user/der_gopher"
+		},
+		"snippet": "Why an async, queued action loop can still feel as immediate as a real-time game — and what it took to get there",
+		"tag": "article",
+		"comments": 1,
+		"score": 0.6007619328947518,
+		"published": "2026-05-09T12:53:34Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Does fasthttp still not allow streamed responses?",
+		"url": "https://www.reddit.com/r/golang/comments/1t80ff8/does_fasthttp_still_not_allow_streamed_responses/",
+		"author": {
+			"username": "Fluffy_Wafer_9212",
+			"profile_url": "https://www.reddit.com/user/Fluffy_Wafer_9212"
+		},
+		"snippet": "The last time I tested fasthttp (both the server and client), it always attempted to load the entire responses into the RAM even though there were properties like \\`SteamBody\\` and \\`StreamRequestBody",
+		"tag": "article",
+		"comments": 10,
+		"score": 0.6793959560724939,
+		"published": "2026-05-09T09:46:06Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Built a PostgreSQL WAL reader in Go using pglogrepl — walkthrough of how I did it",
+		"url": "https://www.reddit.com/r/golang/comments/1t800w8/built_a_postgresql_wal_reader_in_go_using/",
+		"image_url": "https://external-preview.redd.it/h5xVtoCsaLqtyx0UZ9fam1K_zskvoPe1ABtynDpSRXY.jpeg?auto=webp\u0026s=1c402ebb7e0119f9d805ed9cf80a18ce5863021d",
+		"author": {
+			"username": "VermicelliLittle6451",
+			"profile_url": "https://www.reddit.com/user/VermicelliLittle6451"
+		},
+		"snippet": "https://dev.to/mujib77/how-i-built-a-real-time-postgresql-wal-reader-in-go-4568",
+		"tag": "article",
+		"comments": 3,
+		"score": 0.45057144967106383,
+		"published": "2026-05-09T09:22:08Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Diagnostic logging in Go?",
+		"url": "https://www.reddit.com/r/golang/comments/1t7ylrn/diagnostic_logging_in_go/",
+		"author": {
+			"username": "gwynevans",
+			"profile_url": "https://www.reddit.com/user/gwynevans"
+		},
+		"snippet": "Just wondering what people do in the situation where there’s an aspect of the code that isn’t working in certain circumstances, so could benefit from debug logging, but enabling debug logging glob",
+		"tag": "article",
+		"comments": 39,
+		"score": 0.3003809664473759,
+		"published": "2026-05-09T08:00:48Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Effective Error Handling in Go: A Deep Dive into Error Wrapping",
+		"url": "https://dev.to/lovestaco/error-handling-in-go-stop-panicking-start-wrapping-351d",
+		"image_url": "https://external-preview.redd.it/Zk_h04PdFP38f5ej8pdq1e2oq0Eg_y6LUVsJh7Y45_U.jpeg?auto=webp\u0026s=91f2669caa9fc11cd3e60257408a098922ee03e0",
+		"author": {
+			"username": "athreyaaaa",
+			"profile_url": "https://www.reddit.com/user/athreyaaaa"
+		},
+		"snippet": "Hello, I'm Maneshwar. I'm building git-lrc, a Micro AI code reviewer that runs on every commit. It is...",
+		"tag": "article",
+		"comments": 16,
+		"score": 1,
+		"published": "2026-05-09T06:20:59Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Integrating syntax highlighting into bubble tea textarea with chroma",
+		"url": "https://www.reddit.com/r/golang/comments/1t7ryq0/integrating_syntax_highlighting_into_bubble_tea/",
+		"author": {
+			"username": "Goal-based76",
+			"profile_url": "https://www.reddit.com/user/Goal-based76"
+		},
+		"snippet": "hey guys, I've been working on a tui app using bubble tea and trying to add syntax highlighting to a textarea bubble. I've found the chroma lexer library which seems like it would do the job, but I'm ",
+		"tag": "article",
+		"comments": 2,
+		"score": 0.15019048322368794,
+		"published": "2026-05-09T02:17:37Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Walks the full cmd/compile pipeline in order: package names, data structures, and the SSA construction that drives inlining, escape analysis, bounds-check elimination, and register allocation, with flags to observe each phase directly.",
+		"url": "https://blog.gaborkoos.com/posts/2026-05-08-The-Go-Compiler-a-Deep-Dive-Into-How-Your-Code-Becomes-a-Binary/?utm_source=reddit\u0026amp;utm_medium=social\u0026amp;utm_campaign=go-compiler-deep-dive\u0026amp;utm_content=r_golang",
+		"image_url": "https://external-preview.redd.it/bXY9OVsCFC8N4L2_QsZCJGpAUbdiw4FgZgUFdNj0fiI.png?auto=webp\u0026s=600c443859bd4e8609bfa5721e1ffcf1551cb6fe",
+		"author": {
+			"username": "OtherwisePush6424",
+			"profile_url": "https://www.reddit.com/user/OtherwisePush6424"
+		},
+		"snippet": "This one took a while, it's probably the longest thing I've written on this blog. I wanted to do a proper end-to-end walkthrough of `cmd/compile`: real package names, real data structures, diagrams fo",
+		"tag": "article",
+		"comments": 3,
+		"score": 0.649112469029166,
+		"published": "2026-05-08T23:29:09Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "How we secure the Cilium Go supply chain: Why we still vendor everything in 2026",
+		"url": "https://cilium.io/blog/2026/05/06/securing-cicd-open-source-lessons-from-cilium/",
+		"image_url": "https://external-preview.redd.it/APALUHWwKAMNUFr6lt44FnR7N5GRT4O9Ga5t-4OekZQ.jpeg?auto=webp\u0026s=ad7662e6450404f1bb0f1423b4a9224227631ac6",
+		"author": {
+			"username": "xmull1gan",
+			"profile_url": "https://www.reddit.com/user/xmull1gan"
+		},
+		"snippet": "We’ve just published a detailed breakdown of how we harden our CI/CD. For r/golang, the most relevant parts are how we handle dependency management at scale: * Why we still vendor: We move the \"trus",
+		"tag": "article",
+		"comments": 7,
+		"score": 0.8476534883872682,
+		"published": "2026-05-08T20:56:40Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Nabat - A Go CLI framework with adaptive args, structured output, and built-in themes",
+		"url": "https://www.reddit.com/r/golang/comments/1t7i7kh/nabat_a_go_cli_framework_with_adaptive_args/",
+		"author": {
+			"username": "atkrad",
+			"profile_url": "https://www.reddit.com/user/atkrad"
+		},
+		"snippet": "I have been working on CLI tools in Go for a while, and I always felt that Cobra is great for routing and flags, but there is a lot of boilerplate every time you want to do something a bit more polish",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.4760925677494707,
-		"published": "2026-04-23T21:58:26Z"
+		"score": 0.3003809664473759,
+		"published": "2026-05-08T19:34:16Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Question about Python and Go serverless performance",
+		"url": "https://www.reddit.com/r/golang/comments/1t7g6xw/question_about_python_and_go_serverless/",
+		"author": {
+			"username": "GongtingLover",
+			"profile_url": "https://www.reddit.com/user/GongtingLover"
+		},
+		"snippet": "Hi everyone, At my last role, we used Python for most of our serverless applications. Lately, though, I've been reading up on Go and really seeing the potential benefits of using Go instead of Python ",
+		"tag": "article",
+		"comments": 31,
+		"score": 0.764088502509945,
+		"published": "2026-05-08T18:21:11Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "ncruces/wasm2go: A Wasm to Go translator",
+		"url": "https://github.com/ncruces/wasm2go",
+		"image_url": "https://external-preview.redd.it/WDeEZkwJ5yS5Og2w_WB4UeWlcDaISnzvIzBqaz310To.png?auto=webp\u0026s=bcbcdf9d15d91768cca12b95ccc0c04713098364",
+		"author": {
+			"username": "ncruces",
+			"profile_url": "https://www.reddit.com/user/ncruces"
+		},
+		"snippet": "Just released a new version of my Wasm to Go translator. Since I last posted it here [a couple of months ago](https://www.reddit.com/r/golang/comments/1rfou6m/a_wasm_to_go_translator/): - I moved my [",
+		"tag": "article",
+		"comments": 3,
+		"score": 0.757619990357176,
+		"published": "2026-05-08T16:18:41Z"
 	}
 ]

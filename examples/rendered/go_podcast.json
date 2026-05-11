@@ -1,5 +1,34 @@
 [
 	{
+		"id": 0,
+		"source": "go_podcast",
+		"title": "084: Databases, FTS, and local LLM",
+		"url": "https://share.transistor.fm/s/244e37b2",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week we talk about databases, full-text search and local llm. All of this with the usual tangents and what not.",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-07T09:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "go_podcast",
+		"title": "083: Lisette, inspired by Rust, compiles to Go with Iván Ovejero",
+		"url": "https://share.transistor.fm/s/2a201efb",
+		"author": {
+			"name": "Dominic St-Pierre"
+		},
+		"snippet": "This week Iván Ovejero join me and we talk about Lisette, a nice programming language that's inspired by Rust and compiles to Go. Programming languages are the new JS framework these days it seems. I",
+		"tag": "podcast",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-30T09:00:00Z"
+	},
+	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "082: Streaming, product updates, and marketing",
 		"url": "https://share.transistor.fm/s/e97475c0",
@@ -13,6 +42,7 @@
 		"published": "2026-04-23T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "081: Weird Redis bug and we talk text editors",
 		"url": "https://share.transistor.fm/s/1f5cb2ea",
@@ -26,6 +56,7 @@
 		"published": "2026-04-16T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "080: Ship it anyway: fighting the urge to refactor",
 		"url": "https://share.transistor.fm/s/59f12952",
@@ -39,6 +70,7 @@
 		"published": "2026-04-09T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "079: WireGuard and don't mix social engagement w/ product validation",
 		"url": "https://share.transistor.fm/s/2592f326",
@@ -52,6 +84,7 @@
 		"published": "2026-04-02T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "078: Uncloud, bridging the gap between Docker and Kubernetes",
 		"url": "https://share.transistor.fm/s/8bf31d9f",
@@ -65,6 +98,7 @@
 		"published": "2026-03-26T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "077: LLMs, with great power comes great responsibility",
 		"url": "https://share.transistor.fm/s/0b9352c3",
@@ -78,6 +112,7 @@
 		"published": "2026-03-19T09:14:25Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "076: From nginx to Caddy and we both had LLM quality issues/concerns",
 		"url": "https://share.transistor.fm/s/3e8e2a72",
@@ -91,6 +126,7 @@
 		"published": "2026-03-12T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "075: Fyne apps are easier to design and build with Andy Williams",
 		"url": "https://share.transistor.fm/s/04981647",
@@ -104,6 +140,7 @@
 		"published": "2026-03-05T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "074: Andurel got contributors and OSS licenses",
 		"url": "https://share.transistor.fm/s/6ff4fd4c",
@@ -117,6 +154,7 @@
 		"published": "2026-02-26T11:16:27Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "073: Heroku in maintenance mode and surfacing observability",
 		"url": "https://share.transistor.fm/s/445c1d3b",
@@ -130,6 +168,7 @@
 		"published": "2026-02-19T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "072: The tools we're using as Go SWE",
 		"url": "https://share.transistor.fm/s/af6c9349",
@@ -143,6 +182,7 @@
 		"published": "2026-02-12T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "071: February projects updates",
 		"url": "https://share.transistor.fm/s/120fe4c9",
@@ -156,6 +196,7 @@
 		"published": "2026-02-04T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "070: Morten, a new co-host; Discussing the current state of education and AI",
 		"url": "https://share.transistor.fm/s/679008fc",
@@ -169,6 +210,7 @@
 		"published": "2026-01-27T15:31:42Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "069: I'm having fun again! Un-archiving StaticBackend",
 		"url": "https://share.transistor.fm/s/cb288869",
@@ -182,6 +224,7 @@
 		"published": "2026-01-22T10:29:13Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "068: Revisiting Datastar with Delaney Gillilan",
 		"url": "https://share.transistor.fm/s/dc554734",
@@ -195,6 +238,7 @@
 		"published": "2025-11-21T09:51:13Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "067: LLM/AI as agents in your Go system with Markus Wüstenberg",
 		"url": "https://share.transistor.fm/s/342cb266",
@@ -208,6 +252,7 @@
 		"published": "2025-11-11T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "066: Xp, CI, CD with Jon Barber",
 		"url": "https://share.transistor.fm/s/15ad2092",
@@ -221,6 +266,7 @@
 		"published": "2025-11-04T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "065: We're in the 3rd age of SaaS",
 		"url": "https://share.transistor.fm/s/569d6825",
@@ -234,6 +280,7 @@
 		"published": "2025-10-29T12:57:51Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "064: Podman, the root-less alternative to Docker",
 		"url": "https://share.transistor.fm/s/6971e3c6",
@@ -247,6 +294,7 @@
 		"published": "2025-10-21T11:07:30Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "063: Common mistakes when testing with Jakub Jarosz",
 		"url": "https://share.transistor.fm/s/85436796",
@@ -260,6 +308,7 @@
 		"published": "2025-10-14T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "062: Your Go linters don't know how to fix your code",
 		"url": "https://share.transistor.fm/s/ebdd20e7",
@@ -273,6 +322,7 @@
 		"published": "2025-10-08T15:56:04Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "061: As a Gopher I'm excited about Gleam, maybe you'll too",
 		"url": "https://share.transistor.fm/s/db7ea269",
@@ -286,6 +336,7 @@
 		"published": "2025-09-30T15:17:28Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "060: 10x Developer, or 10x Distraction? A Reality Check on AI",
 		"url": "https://share.transistor.fm/s/bb039a66",
@@ -299,6 +350,7 @@
 		"published": "2025-09-23T14:59:16Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "059: Is Go over with John Arundel",
 		"url": "https://share.transistor.fm/s/4db7a19c",
@@ -312,6 +364,7 @@
 		"published": "2025-09-08T08:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "058: Starting in Go with Yann Bizeul",
 		"url": "https://share.transistor.fm/s/0710dad0",
@@ -325,6 +378,7 @@
 		"published": "2025-06-03T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "057: I unite with another technical professional, and we talk about being blind in tech (part 2)",
 		"url": "https://share.transistor.fm/s/9e429cfe",
@@ -338,6 +392,7 @@
 		"published": "2025-04-15T16:02:44Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "056: I unite with another technical professional, and we talk about being blind in tech",
 		"url": "https://share.transistor.fm/s/33b511a9",
@@ -351,6 +406,7 @@
 		"published": "2025-04-01T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "055: Zog, a Go validation pkg with Tristan Mayo",
 		"url": "https://share.transistor.fm/s/ac63ec43",
@@ -364,6 +420,7 @@
 		"published": "2025-03-18T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "054: Datastar with Delaney Gillilan",
 		"url": "https://share.transistor.fm/s/2fc25fd2",
@@ -377,6 +434,7 @@
 		"published": "2025-03-11T09:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "053: My exp w/ Gomponent in prod with Markus Wustenberg",
 		"url": "https://share.transistor.fm/s/af1e33f0",
@@ -390,6 +448,7 @@
 		"published": "2025-03-04T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "052: Gost, a Go headless browser with Peter Strøiman",
 		"url": "https://share.transistor.fm/s/1e2da00d",
@@ -403,6 +462,7 @@
 		"published": "2025-02-25T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "051: Event sourcing with Morgan Hallgren",
 		"url": "https://share.transistor.fm/s/8544eefe",
@@ -416,6 +476,7 @@
 		"published": "2025-02-18T10:00:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "050: Security, devops, testing in Go with Jakub Jarosz",
 		"url": "https://share.transistor.fm/s/ed7d0aa9",
@@ -429,6 +490,7 @@
 		"published": "2025-02-11T10:41:17Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "049: I hate e2e tests, but I love unit tests",
 		"url": "https://share.transistor.fm/s/7068f08a",
@@ -442,6 +504,7 @@
 		"published": "2025-02-03T14:06:22Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "048: Lea Anthony on Wails",
 		"url": "https://share.transistor.fm/s/853e16ae",
@@ -455,6 +518,7 @@
 		"published": "2024-11-27T14:28:30Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "047: Fyne toolkit with Andy Williams",
 		"url": "https://share.transistor.fm/s/921388d5",
@@ -468,6 +532,7 @@
 		"published": "2024-11-06T11:13:11Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "046: Let's talk about Rust with John Arundel",
 		"url": "https://share.transistor.fm/s/104628fe",
@@ -481,6 +546,7 @@
 		"published": "2024-10-29T08:50:40Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "045: Gomponent with Markus Wustenberg",
 		"url": "https://share.transistor.fm/s/c698778b",
@@ -494,6 +560,7 @@
 		"published": "2024-10-15T09:31:41Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "Toying with static analysis of HTML templates",
 		"url": "https://share.transistor.fm/s/75007bed",
@@ -507,6 +574,7 @@
 		"published": "2024-09-30T13:58:33Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "Adrian Hesketh and Joe Davidson on Templ",
 		"url": "https://share.transistor.fm/s/89ba833f",
@@ -520,6 +588,7 @@
 		"published": "2024-09-10T13:04:48Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "042: Gate keeping and teaching of programming with Ramesh Sringeri",
 		"url": "https://share.transistor.fm/s/79995145",
@@ -533,6 +602,7 @@
 		"published": "2024-07-03T13:28:02Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "041: Speaking at conferences with Matt Boyle",
 		"url": "https://share.transistor.fm/s/10f4ec8e",
@@ -546,6 +616,7 @@
 		"published": "2024-06-25T09:50:55Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "040: CLI in Go and other tech talks with Marian Montagnino",
 		"url": "https://share.transistor.fm/s/e0e308c7",
@@ -559,6 +630,7 @@
 		"published": "2024-06-18T12:28:32Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "039: Go is now more fun to build web apps",
 		"url": "https://share.transistor.fm/s/61233229",
@@ -572,6 +644,7 @@
 		"published": "2024-06-05T10:03:25Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "038: Finally, found a good use case for Go's plugin",
 		"url": "https://share.transistor.fm/s/442c0ca0",
@@ -585,6 +658,7 @@
 		"published": "2024-05-21T10:25:23Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "037: Is Go a good choice for your Startup?",
 		"url": "https://share.transistor.fm/s/4a320a58",
@@ -598,6 +672,7 @@
 		"published": "2024-05-09T11:14:38Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "036: Game UI in Go with EbitenUI maintainer Mark Carpenter",
 		"url": "https://share.transistor.fm/s/d9df98f4",
@@ -611,6 +686,7 @@
 		"published": "2024-05-02T13:16:58Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "035: Going deeper into Encore with its founder André Eriksson",
 		"url": "https://share.transistor.fm/s/be8117e2",
@@ -624,6 +700,7 @@
 		"published": "2024-04-16T09:52:14Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "034: Encore, domain design in Go with Bill Kennedy",
 		"url": "https://share.transistor.fm/s/d46fb2d2",
@@ -637,6 +714,7 @@
 		"published": "2024-04-10T10:33:17Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "033: Deployment orchestrator in Go, part of my upcoming SaaS",
 		"url": "https://share.transistor.fm/s/6ddc1514",
@@ -650,6 +728,7 @@
 		"published": "2024-04-02T12:38:00Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "032: Go cryptography with John Arundel",
 		"url": "https://share.transistor.fm/s/c9b680a6",
@@ -663,6 +742,7 @@
 		"published": "2024-03-19T10:27:37Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "031: Using shim on API to prevent breaking changes",
 		"url": "https://share.transistor.fm/s/5c0d745d",
@@ -676,6 +756,7 @@
 		"published": "2024-03-14T10:11:15Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "030: gRPC in Go with Chris Shepherd",
 		"url": "https://share.transistor.fm/s/86b8d65c",
@@ -689,6 +770,7 @@
 		"published": "2024-03-07T10:51:42Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "029: I've a confession to make, I've wrote 2 apps in Django",
 		"url": "https://share.transistor.fm/s/662d6d88",
@@ -702,6 +784,7 @@
 		"published": "2024-02-28T12:23:03Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "028: To TDD or not... or when",
 		"url": "https://share.transistor.fm/s/ae25d32a",
@@ -715,6 +798,7 @@
 		"published": "2024-02-16T12:03:29Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "027: Debugging in Go with Matt Boyle",
 		"url": "https://share.transistor.fm/s/a8221b52",
@@ -728,6 +812,7 @@
 		"published": "2024-02-05T11:03:13Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "026: We can do better with interviews and onboarding",
 		"url": "https://share.transistor.fm/s/2cd926fa",
@@ -741,6 +826,7 @@
 		"published": "2024-01-25T11:51:40Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "025: Iterators are coming to Go",
 		"url": "https://share.transistor.fm/s/048da65c",
@@ -754,6 +840,7 @@
 		"published": "2024-01-17T14:58:22Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "024: Do you understand this weird production behavior?",
 		"url": "https://share.transistor.fm/s/58525901",
@@ -767,6 +854,7 @@
 		"published": "2024-01-10T11:58:53Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "023: Reaction to reddit post on null pointer error in Go",
 		"url": "https://share.transistor.fm/s/2ad776aa",
@@ -780,6 +868,7 @@
 		"published": "2024-01-03T15:13:41Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "022: What to answer to \"Why Go?\"",
 		"url": "https://share.transistor.fm/s/ee34933f",
@@ -793,6 +882,7 @@
 		"published": "2023-12-19T12:17:08Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "021: Why I had to work 30h straight in 2002",
 		"url": "https://share.transistor.fm/s/46d37756",
@@ -806,6 +896,7 @@
 		"published": "2023-12-06T11:59:33Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "020: Discipline is required to build long-live software",
 		"url": "https://share.transistor.fm/s/fac9cd52",
@@ -819,6 +910,7 @@
 		"published": "2023-11-23T11:49:20Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "019: Dependencies maintenance in Go",
 		"url": "https://share.transistor.fm/s/2fefbddc",
@@ -832,6 +924,7 @@
 		"published": "2023-07-14T13:26:10Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "018: WebAssembly runner, a real-world use case",
 		"url": "https://share.transistor.fm/s/489aca45",
@@ -845,6 +938,7 @@
 		"published": "2023-06-30T14:11:45Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "Help your OSS with GitHub CLI, Codespaces and linters",
 		"url": "https://share.transistor.fm/s/7c77e66b",
@@ -858,6 +952,7 @@
 		"published": "2023-05-29T10:26:47Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "016: What I'd hope  WASM brought to web dev",
 		"url": "https://share.transistor.fm/s/cd5bda37",
@@ -871,6 +966,7 @@
 		"published": "2023-05-08T14:10:48Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "015: How do you put things in production?",
 		"url": "https://share.transistor.fm/s/fa4cdf80",
@@ -884,6 +980,7 @@
 		"published": "2023-03-27T10:48:42Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "014: We should contribute more to open source",
 		"url": "https://share.transistor.fm/s/e538aeed",
@@ -897,6 +994,7 @@
 		"published": "2022-12-23T12:35:15Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "013: Go's concurrency to the rescue",
 		"url": "https://share.transistor.fm/s/30bfa76a",
@@ -910,6 +1008,7 @@
 		"published": "2022-11-30T11:22:31Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "012: Concurrency isn't Go main selling point",
 		"url": "https://share.transistor.fm/s/625ba422",
@@ -923,6 +1022,7 @@
 		"published": "2022-11-16T11:39:26Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "011: Options where to deploy your Go servers",
 		"url": "https://share.transistor.fm/s/b5d8dd9b",
@@ -936,6 +1036,7 @@
 		"published": "2022-10-28T14:34:53Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "010: internal package gotchas",
 		"url": "https://share.transistor.fm/s/2fa5945e",
@@ -949,6 +1050,7 @@
 		"published": "2022-09-27T10:53:33Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "009: Set variables at build time with -LDFLAGS",
 		"url": "https://share.transistor.fm/s/45e4c4dc",
@@ -962,6 +1064,7 @@
 		"published": "2022-08-10T11:15:05Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "008: The day my Go service got csharpify",
 		"url": "https://share.transistor.fm/s/936615a9",
@@ -975,6 +1078,7 @@
 		"published": "2022-07-19T19:03:56Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "007: Is Go's database/sql verbosity that bad?",
 		"url": "https://share.transistor.fm/s/972f686c",
@@ -988,6 +1092,7 @@
 		"published": "2022-07-01T11:41:52Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "006: Build softwares that stand the test of time",
 		"url": "https://share.transistor.fm/s/bf3e35cd",
@@ -1001,6 +1106,7 @@
 		"published": "2022-04-25T15:41:14Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "005: Spring arriving, so is Go 1.18 and Generics",
 		"url": "https://share.transistor.fm/s/8f5ef1b4",
@@ -1014,6 +1120,7 @@
 		"published": "2022-03-04T11:06:46Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "004: Using interfaces for major refactor",
 		"url": "https://share.transistor.fm/s/3edb465f",
@@ -1027,6 +1134,7 @@
 		"published": "2022-02-17T15:31:54Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "003: Pointers or !Pointers, stack, and heap",
 		"url": "https://share.transistor.fm/s/32a63202",
@@ -1040,6 +1148,7 @@
 		"published": "2022-02-03T12:01:13Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "002: Project structure \u0026 package name",
 		"url": "https://share.transistor.fm/s/4d3d5f7f",
@@ -1053,6 +1162,7 @@
 		"published": "2022-01-20T12:30:17Z"
 	},
 	{
+		"id": 0,
 		"source": "go_podcast",
 		"title": "001: Error handling in Go",
 		"url": "https://share.transistor.fm/s/b7069162",

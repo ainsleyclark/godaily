@@ -1,17 +1,47 @@
 [
 	{
+		"id": 0,
 		"source": "mastodon",
-		"title": "Just wait until you see what I am doing with these Arduino UNO Q boards that jus",
-		"url": "https://social.tinygo.org/@deadprogram/116460128066397944",
-		"image_url": "https://files.mastodon.social/cache/media_attachments/files/116/460/128/925/140/481/original/47f50ebe66da59af.jpg",
+		"title": "Geez, it's still at the top of Lobsters https:// lobste",
+		"url": "https://fosstodon.org/@blainsmith/116550095353867628",
 		"author": {
-			"name": "deadprogram",
-			"username": "deadprogram"
+			"name": "B",
+			"username": "blainsmith"
 		},
-		"snippet": "Just wait until you see what I am doing with these Arduino UNO Q boards that just arrived... # tinygo # arduino # golang # yzma # kronk",
+		"snippet": "Geez, it's still at the top of Lobsters https:// lobste.rs/s/znlkib/just_fuckin g_use_go # GoLang",
+		"tag": "article",
+		"comments": 1,
+		"score": 0.5286339468194481,
+		"published": "2026-05-10T11:42:00Z"
+	},
+	{
+		"id": 0,
+		"source": "mastodon",
+		"title": "Hi, I'm Karl Ostendorf — software developer in Osnabrück, Germany, originally fr",
+		"url": "https://social.ostendorf.com/@karl/116545472200460490",
+		"author": {
+			"name": "Karl Ostendorf",
+			"username": "karl"
+		},
+		"snippet": "Hi, I'm Karl Ostendorf — software developer in Osnabrück, Germany, originally from Chicago via 20 years in the German countryside. Into # SelfHosting , # OpenSource tooling, European-hosted infrast",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.455340497393906,
-		"published": "2026-04-24T14:22:08Z"
+		"published": "2026-05-09T16:06:16Z"
+	},
+	{
+		"id": 0,
+		"source": "mastodon",
+		"title": "Except for the very, very explicit language in this article, this is exactly how",
+		"url": "https://mastodon.social/@preslavrachev/116543796436041706",
+		"author": {
+			"name": "Preslav Rachev",
+			"username": "preslavrachev"
+		},
+		"snippet": "Except for the very, very explicit language in this article, this is exactly how I feel about Go: https:// blainsmith.com/articles/just-f ucking-use-go/ Oh, and the added benefit is that AI agents usu",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.7563041955164012,
+		"published": "2026-05-09T09:00:06.377Z"
 	}
 ]
