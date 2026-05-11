@@ -66,13 +66,13 @@ func GetApp(ctx context.Context) *godaily.App {
 // AppHandler is an HTTP handler that receives the request context and the
 // bootstrapped App alongside the standard response/request pair, so handlers
 // do not need to call r.Context() or GetApp themselves.
-type AppHandler func(w http.ResponseWriter, r *http.Request, ctx context.Context, a *godaily.App)
+type AppHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App)
 
 // Handle applies the standard API middleware chain to next, injecting the
 // request context and bootstrapped App.
 func Handle(next AppHandler) http.HandlerFunc {
 	return Limiter.Limit(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		next(w, r, ctx, GetApp(ctx))
+		next(ctx, w, r, GetApp(ctx))
 	})
 }

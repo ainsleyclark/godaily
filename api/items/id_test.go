@@ -83,7 +83,6 @@ func TestHandler(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
 			ctrl := gomock.NewController(t)
 			itemsMock := mocknews.NewMockItemRepository(ctrl)
 			test.mock(itemsMock)
