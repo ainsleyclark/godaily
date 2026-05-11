@@ -17,8 +17,19 @@
 
           <!-- Footer -->
           <tr>
-            <td style="padding:20px 32px;border-top:1px solid #d0e8f5;text-align:center;font-size:12px;color:#6b9ab8;line-height:2;">
-              Sent by <strong style="color:#0d2236;">GoDaily</strong>{{ if .UnsubscribeURL }} &middot; <a href="{{ .UnsubscribeURL }}" style="color:#1a7fa8;text-decoration:none;">Unsubscribe</a>{{ end }}
+            <td style="padding:20px 32px;border-top:1px solid #d0e8f5;text-align:center;">
+              {{ if .CanonicalURL }}
+              <div style="margin-bottom:14px;">
+                <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;color:#6b9ab8;margin-bottom:8px;">Enjoying this issue? Share it &rarr;</div>
+                <a href="{{ .CanonicalURL }}" style="display:inline-block;margin:0 3px 4px;padding:5px 11px;background:#f5fbff;border:1px solid #d0e8f5;color:#0d2236;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;text-decoration:none;">View online</a>
+                <a href="{{ .ShareLinkedIn }}" style="display:inline-block;margin:0 3px 4px;padding:5px 11px;background:#f5fbff;border:1px solid #d0e8f5;color:#0d2236;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;text-decoration:none;">LinkedIn</a>
+                <a href="{{ .ShareBluesky }}" style="display:inline-block;margin:0 3px 4px;padding:5px 11px;background:#f5fbff;border:1px solid #d0e8f5;color:#0d2236;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;text-decoration:none;">Bluesky</a>
+                <a href="{{ .ShareTwitter }}" style="display:inline-block;margin:0 3px 4px;padding:5px 11px;background:#f5fbff;border:1px solid #d0e8f5;color:#0d2236;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;text-decoration:none;">X / Twitter</a>
+              </div>
+              {{ end }}
+              <div style="font-size:12px;color:#6b9ab8;line-height:2;">
+                Sent by <strong style="color:#0d2236;">GoDaily</strong>{{ if .UnsubscribeURL }} &middot; <a href="{{ .UnsubscribeURL }}" style="color:#1a7fa8;text-decoration:none;">Unsubscribe</a>{{ end }}
+              </div>
             </td>
           </tr>
 

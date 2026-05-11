@@ -1,6 +1,7 @@
 {{ define "email-layout-text" }}{{ block "email-body-text" . }}{{ end }}
 
 ---
-Sent by GoDaily{{ if .UnsubscribeURL }}
+{{ if .CanonicalURL }}View online: {{ .CanonicalURL }}
+{{ end }}Sent by GoDaily{{ if .UnsubscribeURL }}
 Unsubscribe: {{ .UnsubscribeURL }}{{ end }}
 {{ end }}

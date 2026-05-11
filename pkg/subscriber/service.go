@@ -58,6 +58,7 @@ type welcomeData struct {
 	LatestIssueURL   string
 	LatestIssueTitle string
 	UnsubscribeURL   string
+	CanonicalURL     string
 }
 
 // Service owns the full subscriber lifecycle.

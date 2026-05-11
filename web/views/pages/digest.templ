@@ -21,6 +21,7 @@ templ Digest(issue news.Issue) {
 			if issue.Summary != "" {
 				<p class="section__sub">{ issue.Summary }</p>
 			}
+			@components.ShareButtons(fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug), issue.Subject)
 			@components.Sample(issue)
 		</div>
 		@components.Rule()
