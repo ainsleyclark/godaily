@@ -134,6 +134,10 @@ func (s Store) Unsubscribe(ctx context.Context, token string) error {
 	return s.sqlc.SubscriberUnsubscribe(ctx, token)
 }
 
+func (s Store) CountActive(ctx context.Context) (int64, error) {
+	return s.sqlc.SubscriberCountActive(ctx)
+}
+
 func (s Store) ListActive(ctx context.Context) ([]news.Subscriber, error) {
 	rows, err := s.sqlc.SubscriberListActive(ctx)
 	if err != nil {

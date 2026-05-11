@@ -35,11 +35,12 @@ import (
 
 // renderPages writes the homepage, thank-you page, issues archive, and all
 // individual issue pages to outDir. It calls repo.Find for each issue to load its full item list.
-func renderPages(ctx context.Context, repo news.IssueRepository, w website, outDir string) error {
+func renderPages(ctx context.Context, repo news.IssueRepository, w website, subscriberCount int64, outDir string) error {
 	homeData := pages.HomeData{
-		LatestIssue:  w.LatestIssue,
-		SampleIssue:  w.LatestIssue,
-		RecentIssues: w.RecentIssues,
+		LatestIssue:     w.LatestIssue,
+		SampleIssue:     w.LatestIssue,
+		RecentIssues:    w.RecentIssues,
+		SubscriberCount: subscriberCount,
 	}
 	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
 		return errors.Wrap(err, "rendering homepage")

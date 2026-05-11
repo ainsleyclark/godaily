@@ -45,4 +45,5 @@ type SubscriberRepository interface {
 	Reactivate(ctx context.Context, email string) (Subscriber, error)
 	Unsubscribe(ctx context.Context, token string) error
 	ListActive(ctx context.Context) ([]Subscriber, error)
+	CountActive(ctx context.Context) (int64, error)
 }
