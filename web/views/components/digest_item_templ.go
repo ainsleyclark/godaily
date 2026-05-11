@@ -10,7 +10,6 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -48,7 +47,7 @@ func DigestItem(item news.Item, rank int) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", rank))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 14, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 13, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -108,7 +107,7 @@ func digestItemInner(item news.Item) templ.Component {
 		var templ_7745c5c3_Var4 templ.SafeURL
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.URL))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 27, Col: 31}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 26, Col: 31}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +120,7 @@ func digestItemInner(item news.Item) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(item.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 27, Col: 88}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 26, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -131,15 +130,15 @@ func digestItemInner(item news.Item) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if meta := itemMeta(item); meta != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"digest-item__meta\">")
+		if item.Snippet != "" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"digest-item__summary\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(meta)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(item.Snippet)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 30, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 29, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -150,38 +149,8 @@ func digestItemInner(item news.Item) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		if item.Snippet != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"digest-item__summary\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(item.Snippet)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 33, Col: 50}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
 		return nil
 	})
-}
-
-func itemMeta(item news.Item) string {
-	parts := []string{item.Source.NiceName()}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
-	}
-	if item.Comments > 0 {
-		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
-	}
-	return strings.Join(parts, " · ")
 }
 
 var _ = templruntime.GeneratedTemplate

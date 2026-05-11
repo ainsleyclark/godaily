@@ -120,6 +120,12 @@ func TestSubscribers_Store(t *testing.T) {
 		assert.Equal(t, created.ID, got[0].ID)
 	})
 
+	t.Run("CountActive", func(t *testing.T) {
+		count, err := s.CountActive(ctx)
+		require.NoError(t, err)
+		assert.Equal(t, int64(1), count)
+	})
+
 	t.Run("Unsubscribe", func(t *testing.T) {
 		t.Log("Happy path")
 		{
@@ -213,6 +219,12 @@ func TestSubscribers_Store(t *testing.T) {
 		t.Log("ListActive")
 		{
 			_, err := s.ListActive(ctx)
+			assert.Error(t, err)
+		}
+
+		t.Log("CountActive")
+		{
+			_, err := s.CountActive(ctx)
 			assert.Error(t, err)
 		}
 	})

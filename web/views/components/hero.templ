@@ -1,6 +1,8 @@
 package components
 
-templ Hero(flash string) {
+import "fmt"
+
+templ Hero(flash string, subscriberCount int64) {
 	<section id="hero" class="hero">
 		<div class="hero__content">
 			<div class="hero__badge">
@@ -31,7 +33,11 @@ templ Hero(flash string) {
 				</form>
 				<p class="hero__hint" data-subscribe-hint hidden></p>
 			}
-			<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
+			if subscriberCount > 50 {
+				<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } subscribers. Free forever. No spam. Unsubscribe any time.</p>
+			} else {
+				<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
+			}
 		</div>
 		<div class="hero__visual" aria-hidden="true">
 			<img class="hero__image" src="/assets/images/hero-gopher.png" alt=""/>

@@ -11,12 +11,11 @@
 // copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package news
 
@@ -33,10 +32,10 @@ func TestListOptions_Limit(t *testing.T) {
 		input ListOptions
 		want  int64
 	}{
-		"Zero value returns all":      {input: ListOptions{}, want: 10000},
-		"Page zero returns all":       {input: ListOptions{Page: 0, PerPage: 50}, want: 10000},
-		"Explicit per page":           {input: ListOptions{Page: 1, PerPage: 50}, want: 50},
-		"Zero per page uses default":  {input: ListOptions{Page: 1, PerPage: 0}, want: defaultPerPage},
+		"Zero value returns all":     {input: ListOptions{}, want: 10000},
+		"Page zero returns all":      {input: ListOptions{Page: 0, PerPage: 50}, want: 10000},
+		"Explicit per page":          {input: ListOptions{Page: 1, PerPage: 50}, want: 50},
+		"Zero per page uses default": {input: ListOptions{Page: 1, PerPage: 0}, want: defaultPerPage},
 		"Negative per page defaults": {input: ListOptions{Page: 1, PerPage: -1}, want: defaultPerPage},
 	}
 
