@@ -20,46 +20,47 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/mail"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.
 func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
-
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var body struct {
-		Email string `json:"email"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
-		api.Error(w, http.StatusBadRequest, "email is required")
-		return
-	}
-
-	if _, err := mail.ParseAddress(body.Email); err != nil {
-		api.Error(w, http.StatusBadRequest, "invalid email address")
-		return
-	}
-
-	if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
-		if errors.Is(err, subscriber.ErrAlreadySubscribed) {
-			api.Error(w, http.StatusConflict, "already subscribed")
-		} else {
-			api.Error(w, http.StatusInternalServerError, err.Error())
+	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
 		}
-		return
-	}
 
-	api.OK(w)
+		var body struct {
+			Email string `json:"email"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
+			api.Error(w, http.StatusBadRequest, "email is required")
+			return
+		}
+
+		if _, err := mail.ParseAddress(body.Email); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid email address")
+			return
+		}
+
+		if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
+			if errors.Is(err, subscriber.ErrAlreadySubscribed) {
+				api.Error(w, http.StatusConflict, "already subscribed")
+				return
+			}
+			api.Error(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		api.OK(w)
+	})(w, r)
 }

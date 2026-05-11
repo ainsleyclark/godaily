@@ -20,37 +20,33 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"time"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	a := api.GetApp(ctx)
+	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
-	if !api.Authenticated(r, a.Config.APISecret) {
-		api.Error(w, http.StatusUnauthorized, "unauthorized")
-		return
-	}
+		if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
+			api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
+			return
+		}
 
-	yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+		if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
+			api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
+			return
+		}
 
-	if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
-		api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
-		return
-	}
+		hook.Deploy(ctx, a.Config.VercelDeployHookURL)
+		hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
 
-	if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
-		api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
-		return
-	}
-
-	hook.Deploy(ctx, a.Config.VercelDeployHookURL)
-	hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
-
-	api.OK(w)
+		api.OK(w)
+	})(w, r)
 }

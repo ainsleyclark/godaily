@@ -24,15 +24,16 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHandleHealthz(t *testing.T) {
-	t.Parallel()
-
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/healthz", nil)
-	r.RemoteAddr = "1.2.3.4:1234"
+	r = r.WithContext(api.WithApp(r.Context(), &godaily.App{Config: &env.Config{}}))
 
 	HandleHealthz(w, r)
 

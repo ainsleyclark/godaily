@@ -35,8 +35,6 @@ import (
 )
 
 func TestHandleIssues(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		mock       func(issues *mocknews.MockIssueRepository)
 		query      string
@@ -93,7 +91,6 @@ func TestHandleIssues(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
 			ctrl := gomock.NewController(t)
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
@@ -104,11 +101,11 @@ func TestHandleIssues(t *testing.T) {
 					Issues: issuesMock,
 				},
 			}
+			api.SetApp(a)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/issues"+test.query, nil)
 			r.RemoteAddr = "1.2.3.4:1234"
-			r = r.WithContext(api.WithApp(r.Context(), a))
 
 			HandleIssues(w, r)
 

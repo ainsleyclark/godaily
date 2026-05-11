@@ -36,8 +36,6 @@ import (
 )
 
 func TestHandler(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		mock       func(issues *mocknews.MockIssueRepository)
 		slug       string
@@ -76,7 +74,6 @@ func TestHandler(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
 			ctrl := gomock.NewController(t)
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
@@ -87,6 +84,7 @@ func TestHandler(t *testing.T) {
 					Issues: issuesMock,
 				},
 			}
+			api.SetApp(a)
 
 			target := "/api/issues/"
 			if test.slug != "" {
@@ -102,8 +100,6 @@ func TestHandler(t *testing.T) {
 				q.Set("slug", test.slug)
 				r.URL.RawQuery = q.Encode()
 			}
-
-			r = r.WithContext(api.WithApp(r.Context(), a))
 
 			Handler(w, r)
 

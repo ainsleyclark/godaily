@@ -30,7 +30,7 @@ import (
 
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
 func HandleIssues(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		page := api.QueryInt(r, "page", api.DefaultPage)
 		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
 

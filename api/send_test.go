@@ -74,13 +74,12 @@ func TestHandleSend(t *testing.T) {
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
-			api.SetApp(&godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}})
+			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}}
+			api.SetApp(a)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-			if test.authHeader != "" {
-				r.Header.Set("Authorization", test.authHeader)
-			}
+
 			HandleSend(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)

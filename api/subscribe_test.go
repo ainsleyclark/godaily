@@ -93,10 +93,12 @@ func TestHandleSubscribe(t *testing.T) {
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			test.mock(svc)
 
-			api.SetApp(&godaily.App{Subscribers: svc, Config: &env.Config{}})
+			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			api.SetApp(a)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(test.method, "/api/subscribe", strings.NewReader(test.body))
+
 			HandleSubscribe(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)

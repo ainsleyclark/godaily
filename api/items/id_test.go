@@ -36,8 +36,6 @@ import (
 )
 
 func TestHandler(t *testing.T) {
-	t.Parallel()
-
 	tt := map[string]struct {
 		mock       func(items *mocknews.MockItemRepository)
 		id         string
@@ -83,7 +81,6 @@ func TestHandler(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			t.Parallel()
 			ctrl := gomock.NewController(t)
 			itemsMock := mocknews.NewMockItemRepository(ctrl)
 			test.mock(itemsMock)
@@ -94,6 +91,7 @@ func TestHandler(t *testing.T) {
 					Items: itemsMock,
 				},
 			}
+			api.SetApp(a)
 
 			target := "/api/items/"
 			w := httptest.NewRecorder()
@@ -105,8 +103,6 @@ func TestHandler(t *testing.T) {
 				q.Set("id", test.id)
 				r.URL.RawQuery = q.Encode()
 			}
-
-			r = r.WithContext(api.WithApp(r.Context(), a))
 
 			Handler(w, r)
 

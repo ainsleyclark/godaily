@@ -78,6 +78,18 @@ func GetApp(ctx context.Context) *godaily.App {
 // do not need to call r.Context() or GetApp themselves.
 type AppHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App)
 
+// HandleAuth is like Handle but rejects requests that fail authentication
+// against the App's configured API secret.
+func HandleAuth(next AppHandler) http.HandlerFunc {
+	return Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		if !Authenticated(r, a.Config.APISecret) {
+			Error(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		next(ctx, w, r, a)
+	})
+}
+
 // Handle applies the standard API middleware chain to next, injecting the
 // request context and bootstrapped App. Rate limiting is skipped when the App
 // has been injected via WithApp (i.e. in tests).
