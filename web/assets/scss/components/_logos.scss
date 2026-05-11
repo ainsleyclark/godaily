@@ -1,46 +1,25 @@
 @use '../abstracts/mixins' as *;
 
-@keyframes logo-ticker {
-	from { transform: translateX(0); }
-	to   { transform: translateX(-50%); }
+// Prevent inner strips from shrinking inside the flex row
+.horizontal-marquee-inner {
+	flex-shrink: 0;
+	width: max-content;
+	justify-content: flex-start;
 }
 
 .logo-ticker {
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 2.5rem 2rem;
-	overflow: hidden;
-	mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-	-webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-
-	&__track {
-		display: flex;
-		align-items: center;
-		width: max-content;
-		will-change: transform;
-		animation: logo-ticker 30s linear infinite;
-
-		@media (prefers-reduced-motion: reduce) {
-			animation-play-state: paused;
-		}
-	}
-
-	&__set {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-shrink: 0;
-		gap: 4rem;
-		padding-right: 4rem;
-	}
+	padding: 2.5rem 0;
+	mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+	-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 
 	&__img {
-		height: auto;
+		height: 34px;
 		width: auto;
-		max-height: 36px;
 		display: block;
 		flex-shrink: 0;
-		opacity: 0.75;
+		opacity: 0.7;
 		transition: opacity 0.2s ease;
 
 		&:hover {

@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"hamburgers": "^1.2.1",
-		"swiper": "^12.1.4"
+		"swiper": "^12.1.4",
+		"vanilla-infinite-marquee": "^1.0.15"
 	}
 }
