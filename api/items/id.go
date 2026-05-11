@@ -20,6 +20,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strconv"
@@ -32,9 +33,7 @@ import (
 // Handler is the Vercel serverless function entry point for GET /api/items/{id}.
 // The id path segment is injected by Vercel as the "id" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		ctx := r.Context()
-
+	api.Handle(func(w http.ResponseWriter, r *http.Request, ctx context.Context, a *godaily.App) {
 		raw := r.URL.Query().Get("id")
 		if raw == "" {
 			api.Error(w, http.StatusBadRequest, "id is required")

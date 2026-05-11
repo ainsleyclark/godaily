@@ -36,6 +36,8 @@ import (
 )
 
 func TestHandler(t *testing.T) {
+	t.Parallel()
+
 	tt := map[string]struct {
 		mock       func(issues *mocknews.MockIssueRepository)
 		slug       string
@@ -74,6 +76,7 @@ func TestHandler(t *testing.T) {
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 			ctrl := gomock.NewController(t)
 			issuesMock := mocknews.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)

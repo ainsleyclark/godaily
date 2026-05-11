@@ -20,6 +20,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -31,9 +32,7 @@ import (
 // Handler is the Vercel serverless function entry point for GET /api/issues/{slug}.
 // The slug path segment is injected by Vercel as the "slug" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		ctx := r.Context()
-
+	api.Handle(func(w http.ResponseWriter, r *http.Request, ctx context.Context, a *godaily.App) {
 		slug := r.URL.Query().Get("slug")
 		if slug == "" {
 			api.Error(w, http.StatusBadRequest, "slug is required")

@@ -20,6 +20,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
@@ -30,9 +31,7 @@ import (
 
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
 func HandleIssues(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		ctx := r.Context()
-
+	api.Handle(func(w http.ResponseWriter, r *http.Request, ctx context.Context, a *godaily.App) {
 		page := parseIntParam(r, "page", api.DefaultPage)
 		perPage := parseIntParam(r, "per_page", api.DefaultPerPage)
 
