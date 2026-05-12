@@ -80,7 +80,7 @@ func TestRenderDigest(t *testing.T) {
 		// Each item should advertise its source via the "Read on" link and
 		// the inline mark image (HN has a mark file registered).
 		assert.Contains(t, got.HTML, "Read on Hacker News")
-		assert.Contains(t, got.HTML, "/assets/images/marks/hacker_news.svg")
+		assert.Contains(t, got.HTML, "https://godaily.dev/assets/images/marks/hacker_news.svg")
 	})
 
 	t.Run("Groups By Section", func(t *testing.T) {

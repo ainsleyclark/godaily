@@ -33,6 +33,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/email"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
@@ -183,6 +184,10 @@ func toEmailItem(item news.Item) emailItem {
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
 	}
+	markURL := item.Source.MarkURL()
+	if markURL != "" {
+		markURL = env.AppURL + markURL
+	}
 	return emailItem{
 		URL:            item.URL,
 		Title:          item.Title,
@@ -191,7 +196,7 @@ func toEmailItem(item news.Item) emailItem {
 		Source:         string(item.Source),
 		SourceNiceName: item.Source.NiceName(),
 		SourceLabel:    item.Source.ShortLabel(),
-		MarkURL:        item.Source.MarkURL(),
+		MarkURL:        markURL,
 	}
 }
 
