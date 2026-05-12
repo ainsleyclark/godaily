@@ -41,3 +41,45 @@ test('invalid email is rejected without navigating away', async ({ page }) => {
   // Browser's native email validation blocks the submit event — page stays put
   await expect(page).toHaveURL('/');
 });
+
+test('unsubscribe link lands on unsubscribed page', async ({ page }) => {
+  const email = `unsub-${Date.now()}@example.com`;
+
+  await page.goto('/');
+  const form = page.locator('[data-subscribe]').first();
+  await form.locator('input[type="email"]').fill(email);
+  await form.locator('button[type="submit"]').click();
+  await expect(page).toHaveURL('/thank-you/');
+
+  const res = await page.request.get('/api/e2e/emails');
+  const emails = await res.json();
+  const raw: string = emails[emails.length - 1].headers['List-Unsubscribe'].replace(/[<>]/g, '');
+  const token = new URL(raw).searchParams.get('token');
+
+  await page.goto(`/api/unsubscribe?token=${token}`);
+  await expect(page).toHaveURL('/unsubscribed/');
+});
+
+test('re-subscribe after unsubscribe redirects to thank-you', async ({ page }) => {
+  const email = `resub-${Date.now()}@example.com`;
+
+  // Subscribe then unsubscribe
+  await page.goto('/');
+  await page.locator('[data-subscribe]').first().locator('input[type="email"]').fill(email);
+  await page.locator('[data-subscribe]').first().locator('button[type="submit"]').click();
+  await expect(page).toHaveURL('/thank-you/');
+
+  const res = await page.request.get('/api/e2e/emails');
+  const emails = await res.json();
+  const raw: string = emails[emails.length - 1].headers['List-Unsubscribe'].replace(/[<>]/g, '');
+  const token = new URL(raw).searchParams.get('token');
+
+  await page.goto(`/api/unsubscribe?token=${token}`);
+  await expect(page).toHaveURL('/unsubscribed/');
+
+  // Re-subscribe
+  await page.goto('/');
+  await page.locator('[data-subscribe]').first().locator('input[type="email"]').fill(email);
+  await page.locator('[data-subscribe]').first().locator('button[type="submit"]').click();
+  await expect(page).toHaveURL('/thank-you/');
+});

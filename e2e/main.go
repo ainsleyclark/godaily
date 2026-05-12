@@ -23,6 +23,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net"
 	"net/http"
@@ -105,13 +106,15 @@ func main() {
 	store := cache.NewInMemory(24 * time.Hour)
 	cached := issues.NewCaching(issueStore, store)
 
+	spy := &spyEmail{}
+
 	app := &godaily.App{
 		Config:      &env.Config{},
 		DB:          conn,
 		Repository:  &godaily.Repository{Issues: cached, Items: items.New(conn), Subscribers: subsStore},
 		Runner:      stubRunner{},
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cached, &spyEmail{}),
+		Subscribers: subscriber.New(subsStore, cached, spy),
 	}
 
 	webH := webserver.Handler(app)
@@ -122,6 +125,14 @@ func main() {
 	apiMux.HandleFunc("GET /api/collect", apihandlers.HandleCollect)
 	apiMux.HandleFunc("GET /api/send", apihandlers.HandleSend)
 	apiMux.HandleFunc("GET /api/healthz", apihandlers.HandleHealthz)
+	// Debug endpoint — exposes captured emails so Playwright tests can read
+	// the unsubscribe token without needing a real email provider.
+	apiMux.HandleFunc("GET /api/e2e/emails", func(w http.ResponseWriter, r *http.Request) {
+		spy.mu.Lock()
+		defer spy.mu.Unlock()
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(spy.sent)
+	})
 
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
