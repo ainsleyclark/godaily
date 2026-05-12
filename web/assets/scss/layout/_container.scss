@@ -1,0 +1,15 @@
+@use '../abstracts/mixins' as *;
+
+.container {
+	max-width: var(--container-max-width);
+	margin: 0 auto;
+	padding: 0 2rem;
+
+	@include mobile {
+		padding: 0 var(--section-padding-x);
+	}
+
+	&--small {
+		max-width: 780px;
+	}
+}

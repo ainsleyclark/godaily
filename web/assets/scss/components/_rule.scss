@@ -1,14 +1,6 @@
 @use '../abstracts/mixins' as *;
 
 .rule {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 0 2rem;
-
-	@include mobile {
-		padding: 0 1rem;
-	}
-
 	&::after {
 		content: '';
 		display: block;

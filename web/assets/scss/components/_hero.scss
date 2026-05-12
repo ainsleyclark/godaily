@@ -1,18 +1,22 @@
 @use '../abstracts/mixins' as *;
 
 .hero {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 5rem 2rem 4rem;
-	display: grid;
-	grid-template-columns: 1fr 420px;
-	gap: 3rem;
-	align-items: center;
+	padding: 5rem 0 4rem;
 
 	@include mobile {
-		grid-template-columns: 1fr;
-		padding: 3rem 1rem 0;
-		gap: 2rem;
+		padding: 3rem 0 0;
+	}
+
+	> .container {
+		display: grid;
+		grid-template-columns: 1fr 420px;
+		gap: 3rem;
+		align-items: center;
+
+		@include mobile {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
 	}
 
 	&__badge {

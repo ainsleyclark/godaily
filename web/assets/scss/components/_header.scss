@@ -10,17 +10,10 @@
 	overflow: visible; // prevent sticky container from clipping the mobile nav dropdown
 
 	&__inner {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 2rem;
 		height: 64px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-
-		@include mobile {
-			padding: 0 1rem;
-		}
 	}
 
 	&__logo {

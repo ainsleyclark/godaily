@@ -1,3 +1,5 @@
+@use '../abstracts/mixins' as *;
+
 .digest-section {
 	--section-accent: var(--accent);
 
@@ -42,6 +44,10 @@
 	align-items: flex-start;
 	padding: 0.9rem 0.85rem;
 	border-bottom: 1px solid var(--border);
+
+	@include mobile {
+		flex-wrap: wrap;
+	}
 
 	&:last-of-type {
 		border-bottom: none;
@@ -111,6 +117,12 @@
 		color: var(--accent-dark);
 		white-space: nowrap;
 		padding-top: 2px;
+
+		@include mobile {
+			flex-basis: 100%;
+			padding-top: 0.5rem;
+			padding-left: calc(36px + 0.85rem);
+		}
 
 		&:hover {
 			text-decoration: underline;

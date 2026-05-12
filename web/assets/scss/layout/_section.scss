@@ -1,12 +1,10 @@
 @use '../abstracts/mixins' as *;
 
 .section {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 4rem 2rem;
+	padding: 4rem 0;
 
 	@include mobile {
-		padding: 2rem var(--section-padding-x);
+		padding: 2rem 0;
 	}
 
 	&__label {
@@ -31,7 +29,10 @@
 		font-size: 1rem;
 		color: var(--text-2);
 		margin-bottom: 2.5rem;
-		max-width: 600px;
 		line-height: 1.6;
+
+		@include desktop {
+			max-width: 45ch;
+		}
 	}
 }
