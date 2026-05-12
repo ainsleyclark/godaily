@@ -2,209 +2,321 @@
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "google/adk-go",
-		"url": "https://github.com/google/adk-go",
-		"image_url": "https://opengraph.githubassets.com/94f742bb2b014f445e955a713a58fdd8063eb52291be1a8638706dfbbf436dae/google/adk-go",
+		"title": "apernet/hysteria",
+		"url": "https://github.com/apernet/hysteria",
+		"image_url": "https://opengraph.githubassets.com/562a0ae11e5c546af87e7249303312bd00847b44a451465082f4fb238dd58ea6/apernet/hysteria",
 		"author": {
-			"username": "google",
-			"profile_url": "https://github.com/google"
+			"username": "apernet",
+			"profile_url": "https://github.com/apernet"
 		},
-		"snippet": "An open-source, code-first Go toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.",
-		"tag": "article",
+		"snippet": "Hysteria is a powerful, lightning fast and censorship resistant proxy.",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.6214684848679675,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 0.8914041151072508,
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "chenhg5/cc-connect",
-		"url": "https://github.com/chenhg5/cc-connect",
-		"image_url": "https://opengraph.githubassets.com/8e2ead5417d3f89f9872fce7d0b7d337714c335d91ab93410c4bcbc535d2c543/chenhg5/cc-connect",
+		"title": "MHSanaei/3x-ui",
+		"url": "https://github.com/MHSanaei/3x-ui",
+		"image_url": "https://opengraph.githubassets.com/f2988309c807c2d939f6def850d7d7d3f18e6ca0df2a25bef33ddb49e69dd9dc/MHSanaei/3x-ui",
 		"author": {
-			"username": "chenhg5",
-			"profile_url": "https://github.com/chenhg5"
+			"username": "MHSanaei",
+			"profile_url": "https://github.com/MHSanaei"
 		},
-		"snippet": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from",
-		"tag": "article",
+		"snippet": "Xray panel supporting multi-protocol multi-user expire day \u0026 traffic \u0026 IP limit (Vmess, Vless, Trojan, ShadowSocks, Wireguard, Hysteria, Tunnel, Mixed, HTTP, Tun)",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.9497761659449963,
-		"published": "2026-05-10T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "QuantumNous/new-api",
-		"url": "https://github.com/QuantumNous/new-api",
-		"image_url": "https://opengraph.githubassets.com/9f702c073c412fae661dba879085958f98cdb485a33a8bb5634e7e096e08faf5/QuantumNous/new-api",
-		"author": {
-			"username": "QuantumNous",
-			"profile_url": "https://github.com/QuantumNous"
-		},
-		"snippet": "A unified AI model hub for aggregation \u0026 distribution. It supports cross-converting various LLMs into OpenAI-compatible, Claude-compatible, or Gemini-compatible formats. A centralized gateway for pers",
-		"tag": "article",
-		"comments": 0,
-		"score": 1,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 0.9627855766206123,
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
 		"title": "Wei-Shaw/sub2api",
 		"url": "https://github.com/Wei-Shaw/sub2api",
-		"image_url": "https://opengraph.githubassets.com/824b1f8102cbead33f67da45766e3e3430b9968d1844d74150a4d11a0100c14c/Wei-Shaw/sub2api",
+		"image_url": "https://opengraph.githubassets.com/7f7b4a323d763f709531bf4d7326ea01afbde2fa17d69681b62f99eb85ae1249/Wei-Shaw/sub2api",
 		"author": {
 			"username": "Wei-Shaw",
 			"profile_url": "https://github.com/Wei-Shaw"
 		},
 		"snippet": "Sub2API-CRS2 一站式开源中转服务，让 Claude、Openai 、Gemini、Antigravity订阅统一接入，支持拼车共享，更高效分摊成本，原生工具无缝使用。",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 1,
-		"published": "2026-05-10T12:00:00Z"
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "1Panel-dev/1Panel",
-		"url": "https://github.com/1Panel-dev/1Panel",
-		"image_url": "https://opengraph.githubassets.com/fe68a9e356430c6a835b6cc9387a54477a3c43a9c18343e6fc878667e6e8fee9/1Panel-dev/1Panel",
+		"title": "go-acme/lego",
+		"url": "https://github.com/go-acme/lego",
+		"image_url": "https://repository-images.githubusercontent.com/37038121/20536212-4b75-48c7-8122-b80afcd6e25f",
 		"author": {
-			"username": "1Panel-dev",
-			"profile_url": "https://github.com/1Panel-dev"
+			"username": "go-acme",
+			"profile_url": "https://github.com/go-acme"
 		},
-		"snippet": "🔥 1Panel is a modern, open-source VPS control panel — and the only one with native AI agent support. Run Ollama models, deploy OpenClaw agents, and manage your entire server stack from one clean ",
-		"tag": "article",
+		"snippet": "Let's Encrypt/ACME client and library written in Go",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.5992591196328295,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 0.4836511198071519,
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "sivchari/kumo",
-		"url": "https://github.com/sivchari/kumo",
-		"image_url": "https://opengraph.githubassets.com/d623110c773ce6f486fc9d7bf3faf34d8caf74d92baaa07fa31e974ca6f92ae4/sivchari/kumo",
+		"title": "QuantumNous/new-api",
+		"url": "https://github.com/QuantumNous/new-api",
+		"image_url": "https://opengraph.githubassets.com/173e8ce9408378c14952da9a02e5a0426526391af398b0d6b675b471f1055275/QuantumNous/new-api",
 		"author": {
-			"username": "sivchari",
-			"profile_url": "https://github.com/sivchari"
+			"username": "QuantumNous",
+			"profile_url": "https://github.com/QuantumNous"
 		},
-		"snippet": "A lightweight AWS service emulator written in Go",
-		"tag": "article",
+		"snippet": "A unified AI model hub for aggregation \u0026 distribution. It supports cross-converting various LLMs into OpenAI-compatible, Claude-compatible, or Gemini-compatible formats. A centralized gateway for pers",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.5992591196328295,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 1,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "BenedictKing/ccx",
+		"url": "https://github.com/BenedictKing/ccx",
+		"image_url": "https://opengraph.githubassets.com/9229337a73828883c0d78b54363e186f7148c8b3a94f4a388df22a52dd99ebd8/BenedictKing/ccx",
+		"author": {
+			"username": "BenedictKing",
+			"profile_url": "https://github.com/BenedictKing"
+		},
+		"snippet": "Claude / Codex / Gemini API Proxy - CCX",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.8947122993348348,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "containerd/containerd",
+		"url": "https://github.com/containerd/containerd",
+		"image_url": "https://opengraph.githubassets.com/a458c7304cec41c6f34c2bd741d47d6d7228dc7080fb33a926ce53a953c8d77b/containerd/containerd",
+		"author": {
+			"username": "containerd",
+			"profile_url": "https://github.com/containerd"
+		},
+		"snippet": "An open and reliable container runtime",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.4521511235672025,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "chenhg5/cc-connect",
+		"url": "https://github.com/chenhg5/cc-connect",
+		"image_url": "https://opengraph.githubassets.com/1ce3cf0d72933dbdf56b234c01257ae7dd9749bbc08553f2944107fd244b12e9/chenhg5/cc-connect",
+		"author": {
+			"username": "chenhg5",
+			"profile_url": "https://github.com/chenhg5"
+		},
+		"snippet": "Bridge local AI coding agents (Claude Code, Cursor, Gemini CLI, Codex) to messaging platforms (Feishu/Lark, DingTalk, Slack, Telegram, Discord, LINE, WeChat Work). Chat with your AI dev assistant from",
+		"tag": "trending",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "open-telemetry/opentelemetry-collector",
+		"url": "https://github.com/open-telemetry/opentelemetry-collector",
+		"image_url": "https://opengraph.githubassets.com/50ba7e7a09df7f34eab16646e5daec791a445d5f85df66207ddf66a04b59b839/open-telemetry/opentelemetry-collector",
+		"author": {
+			"username": "open-telemetry",
+			"profile_url": "https://github.com/open-telemetry"
+		},
+		"snippet": "OpenTelemetry Collector",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.2071561616226558,
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
 		"title": "kubernetes/minikube",
 		"url": "https://github.com/kubernetes/minikube",
-		"image_url": "https://opengraph.githubassets.com/af12e6da40cb4add3dd46fffd34a321af3fc524ba0ee484cd248c22065d51676/kubernetes/minikube",
+		"image_url": "https://opengraph.githubassets.com/d82107871695e84543949c7db761193e89ac9794a16f146ea8cb276898371a96/kubernetes/minikube",
 		"author": {
 			"username": "kubernetes",
 			"profile_url": "https://github.com/kubernetes"
 		},
 		"snippet": "Run Kubernetes locally",
-		"tag": "article",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.337857147626047,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "stretchr/testify",
+		"url": "https://github.com/stretchr/testify",
+		"image_url": "https://opengraph.githubassets.com/64afa0097d2102d196d392d901ec8ae0697d31089c8a78634396c198e03d8d14/stretchr/testify",
+		"author": {
+			"username": "stretchr",
+			"profile_url": "https://github.com/stretchr"
+		},
+		"snippet": "A toolkit with common assertions and mocks that plays nicely with the standard library",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.2071561616226558,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "chaos-mesh/chaos-mesh",
+		"url": "https://github.com/chaos-mesh/chaos-mesh",
+		"image_url": "https://repository-images.githubusercontent.com/206213815/71637e67-12be-4d78-8739-b6b576fedc4b",
+		"author": {
+			"username": "chaos-mesh",
+			"profile_url": "https://github.com/chaos-mesh"
+		},
+		"snippet": "A Chaos Engineering Platform for Kubernetes.",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.41431232324531164,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "NVIDIA/gpu-operator",
+		"url": "https://github.com/NVIDIA/gpu-operator",
+		"image_url": "https://opengraph.githubassets.com/652fb4d90531caf15de8a5d6f87b78ef9e31ca185a9e28b0753fa86a0e3188f2/NVIDIA/gpu-operator",
+		"author": {
+			"username": "NVIDIA",
+			"profile_url": "https://github.com/NVIDIA"
+		},
+		"snippet": "NVIDIA GPU Operator creates, configures, and manages GPUs in Kubernetes",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.26140197200678245,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "envoyproxy/gateway",
+		"url": "https://github.com/envoyproxy/gateway",
+		"image_url": "https://opengraph.githubassets.com/e549860beca469b7a6098ac4d5e18f0a7242bedb69f877e1c00d3e212e8e4ac3/envoyproxy/gateway",
+		"author": {
+			"username": "envoyproxy",
+			"profile_url": "https://github.com/envoyproxy"
+		},
+		"snippet": "Manages Envoy Proxy as a Standalone or Kubernetes-based Application Gateway",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.337857147626047,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "go-playground/validator",
+		"url": "https://github.com/go-playground/validator",
+		"image_url": "https://opengraph.githubassets.com/e5b5a9a581df4f2ed20490fc3ffca52b6c3a792597028de7b4f4f68509e00321/go-playground/validator",
+		"author": {
+			"username": "go-playground",
+			"profile_url": "https://github.com/go-playground"
+		},
+		"snippet": "💯Go Struct and Field validation, including Cross Field, Cross Struct, Map, Slice and Array diving",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.26140197200678245,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "kubescape/kubescape",
+		"url": "https://github.com/kubescape/kubescape",
+		"image_url": "https://repository-images.githubusercontent.com/395283401/8b597a65-306c-496e-bc3e-9a7c1e21620f",
+		"author": {
+			"username": "kubescape",
+			"profile_url": "https://github.com/kubescape"
+		},
+		"snippet": "Kubescape is an open-source Kubernetes security platform for your IDE, CI/CD pipelines, and clusters. It includes risk analysis, security, compliance, and misconfiguration scanning, saving Kubernetes ",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.3921029580101737,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "bytebase/bytebase",
+		"url": "https://github.com/bytebase/bytebase",
+		"image_url": "https://repository-images.githubusercontent.com/333303663/42b00317-daff-4771-91e6-8ae248ca990a",
+		"author": {
+			"username": "bytebase",
+			"profile_url": "https://github.com/bytebase"
+		},
+		"snippet": "World's most advanced database DevSecOps solution for Developer, Security, DBA and Platform Engineering teams. The GitHub/GitLab for database DevSecOps.",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.5106344530534098,
+		"published": "2026-05-11T12:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "github_trending",
+		"title": "etcd-io/etcd",
+		"url": "https://github.com/etcd-io/etcd",
+		"image_url": "https://opengraph.githubassets.com/292e503de32cfaf42746984df7adc1d904f32cab709553f243707d209186b3e3/etcd-io/etcd",
+		"author": {
+			"username": "etcd-io",
+			"profile_url": "https://github.com/etcd-io"
+		},
+		"snippet": "Distributed reliable key-value store for the most critical data of a distributed system",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.3669240563744024,
-		"published": "2026-05-10T12:00:00Z"
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "microsoft/waza",
-		"url": "https://github.com/microsoft/waza",
-		"image_url": "https://opengraph.githubassets.com/cc4ef5b1342e9b634a5d95906b7469c699435e15e1e75ffcd147ce0192c27558/microsoft/waza",
+		"title": "GoogleCloudPlatform/microservices-demo",
+		"url": "https://github.com/GoogleCloudPlatform/microservices-demo",
+		"image_url": "https://opengraph.githubassets.com/740fe5fbc3669704ba1f7e2c1aaf15459b828f6efe7eaa9a31ea37b264bd1cfa/GoogleCloudPlatform/microservices-demo",
 		"author": {
-			"username": "microsoft",
-			"profile_url": "https://github.com/microsoft"
+			"username": "GoogleCloudPlatform",
+			"profile_url": "https://github.com/GoogleCloudPlatform"
 		},
-		"snippet": "CLI / Framework for Agent Skills - create, test, measure and improve skill quality and effectiveness",
-		"tag": "article",
+		"snippet": "Sample cloud-first application with 10 microservices showcasing Kubernetes, Istio, and gRPC.",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.9435524437490476,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 0.26140197200678245,
+		"published": "2026-05-11T12:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "github_trending",
-		"title": "mayswind/ezbookkeeping",
-		"url": "https://github.com/mayswind/ezbookkeeping",
-		"image_url": "https://repository-images.githubusercontent.com/304836585/4dfe3852-066c-418b-875a-ff68f08d5312",
+		"title": "kserve/kserve",
+		"url": "https://github.com/kserve/kserve",
+		"image_url": "https://opengraph.githubassets.com/71c3489ae6d5c959485f5cbdf8cc52a50581777b574cea8ce0a7ac3fdbda9abf/kserve/kserve",
 		"author": {
-			"username": "mayswind",
-			"profile_url": "https://github.com/mayswind"
+			"username": "kserve",
+			"profile_url": "https://github.com/kserve"
 		},
-		"snippet": "A lightweight, self-hosted personal finance app with a user-friendly interface and powerful bookkeeping features.",
-		"tag": "article",
+		"snippet": "Standardized Distributed Generative and Predictive AI Inference Platform for Scalable, Multi-Framework Deployment on Kubernetes",
+		"tag": "trending",
 		"comments": 0,
-		"score": 0.8239103593359427,
-		"published": "2026-05-10T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "moonD4rk/HackBrowserData",
-		"url": "https://github.com/moonD4rk/HackBrowserData",
-		"image_url": "https://repository-images.githubusercontent.com/273132277/70c08f49-af9d-4c9a-b037-ee76f800374d",
-		"author": {
-			"username": "moonD4rk",
-			"profile_url": "https://github.com/moonD4rk"
-		},
-		"snippet": "Extract and decrypt browser data, supporting multiple data types, runnable on various operating systems (macOS, Windows, Linux).",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.8484916006794568,
-		"published": "2026-05-10T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "xpzouying/xiaohongshu-mcp",
-		"url": "https://github.com/xpzouying/xiaohongshu-mcp",
-		"image_url": "https://opengraph.githubassets.com/a9b81161098c2665b9741e72838459a8fc65e5a526885e569d82bb6b89de2bdc/xpzouying/xiaohongshu-mcp",
-		"author": {
-			"username": "xpzouying",
-			"profile_url": "https://github.com/xpzouying"
-		},
-		"snippet": "MCP for xiaohongshu.com",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.8664634468125141,
-		"published": "2026-05-10T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "coder/coder",
-		"url": "https://github.com/coder/coder",
-		"image_url": "https://repository-images.githubusercontent.com/440752086/eb56ccad-14f2-4c61-a024-20d1e77296c1",
-		"author": {
-			"username": "coder",
-			"profile_url": "https://github.com/coder"
-		},
-		"snippet": "Secure environments for developers and their agents",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.4976250423777937,
-		"published": "2026-05-10T12:00:00Z"
-	},
-	{
-		"id": 0,
-		"source": "github_trending",
-		"title": "XTLS/Xray-core",
-		"url": "https://github.com/XTLS/Xray-core",
-		"image_url": "https://opengraph.githubassets.com/602d31b368b03f28888d69192eee6d9477867aff9de6218dd2f6026b1aae5088/XTLS/Xray-core",
-		"author": {
-			"username": "XTLS",
-			"profile_url": "https://github.com/XTLS"
-		},
-		"snippet": "Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.7983901695267366,
-		"published": "2026-05-10T12:00:00Z"
+		"score": 0.26140197200678245,
+		"published": "2026-05-11T12:00:00Z"
 	}
 ]

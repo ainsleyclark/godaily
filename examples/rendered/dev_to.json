@@ -74,6 +74,24 @@
 	{
 		"id": 0,
 		"source": "dev_to",
+		"title": "Build a Medical Chart Coding Pipeline with Daimon, Claude, and Neo4j",
+		"url": "https://dev.to/sonicboom15/build-a-medical-chart-coding-pipeline-with-daimon-claude-and-neo4j-51ba",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fq4h52rkt9akzijs63wde.png",
+		"author": {
+			"name": "Rishi Kumar",
+			"username": "sonicboom15",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3927417%2F6d8d7b92-1f1f-4802-89d7-37b3251c6288.png",
+			"profile_url": "https://dev.to/sonicboom15"
+		},
+		"snippet": "Adding an LLM to your application usually means writing the same infrastructure over and over: define...",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T14:42:30Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
 		"title": "Kafka with Go Part 1 — Understanding Async Systems, Distributed Architecture, and Your First Kafka Publisher/Subscriber",
 		"url": "https://dev.to/sadhakbj/kafka-with-go-part-1-understanding-async-systems-distributed-architecture-and-your-first-kafka-2al4",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3imez662t2k3m6is9z3l.png",
@@ -128,6 +146,42 @@
 	{
 		"id": 0,
 		"source": "dev_to",
+		"title": "It's Never Too Late to Start",
+		"url": "https://dev.to/jeff_ronnie_de6871efb7dcb/its-never-too-late-to-start-3iin",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F03albdcytrd2r9j62gnu.png",
+		"author": {
+			"name": "Jeff Ronnie",
+			"username": "jeff_ronnie_de6871efb7dcb",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3817661%2Fc4545b2a-284a-43f2-9d33-5e8098a9f4e2.jpg",
+			"profile_url": "https://dev.to/jeff_ronnie_de6871efb7dcb"
+		},
+		"snippet": "There’s a common myth that if you didn’t start coding at age twelve, you’ve already missed the boat....",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T12:03:26Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "When \"It Works on My Machine\" Stops Being Good Enough",
+		"url": "https://dev.to/blakcodes/when-it-works-on-my-machine-stops-being-good-enough-49bi",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fna1ikd06b8a9zth0hlds.png",
+		"author": {
+			"name": "Walter Hrad",
+			"username": "blakcodes",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3842736%2F943c54b1-f289-441f-b6aa-b1d1feb9f3f8.jpg",
+			"profile_url": "https://dev.to/blakcodes"
+		},
+		"snippet": "There is a version of learning to code where the goal is just to make the thing run. You write it,...",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T12:16:43Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
 		"title": "Spring Load Limits API for Trucking Compliance",
 		"url": "https://dev.to/road511/spring-load-limits-api-for-trucking-compliance-j40",
 		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fj0jyn1tgoqgrg4l5wwad.png",
@@ -146,20 +200,20 @@
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "It's Never Too Late to Start",
-		"url": "https://dev.to/jeff_ronnie_de6871efb7dcb/its-never-too-late-to-start-3iin",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F03albdcytrd2r9j62gnu.png",
+		"title": "Como implementar No-Ops para Blindar Microsserviços em Go",
+		"url": "https://dev.to/ortizdavid/como-implementar-no-ops-para-blindar-microsservicos-em-go-12kd",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzwoo1frlk0ctpl6ikh11.png",
 		"author": {
-			"name": "Jeff Ronnie",
-			"username": "jeff_ronnie_de6871efb7dcb",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3817661%2Fc4545b2a-284a-43f2-9d33-5e8098a9f4e2.jpg",
-			"profile_url": "https://dev.to/jeff_ronnie_de6871efb7dcb"
+			"name": "Ortiz de Arcanjo António David",
+			"username": "ortizdavid",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F651046%2F503848e3-cf33-4502-a605-6853ab536783.jpg",
+			"profile_url": "https://dev.to/ortizdavid"
 		},
-		"snippet": "There’s a common myth that if you didn’t start coding at age twelve, you’ve already missed the boat....",
+		"snippet": "Muitas aplicações morrem (panic) porque um serviço de telemetria ou um broker de mensagens ficou...",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-12T12:03:26Z"
+		"published": "2026-05-12T13:52:29Z"
 	},
 	{
 		"id": 0,
@@ -182,20 +236,20 @@
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "Monitoring and Alerting for Video Platform Infrastructure with Go",
-		"url": "https://dev.to/ahmet_gedik778845/monitoring-and-alerting-for-video-platform-infrastructure-with-go-290",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3f66nzvzuus9srzbic1f.png",
+		"title": "BRAND IDENTITY DESIGN SERVICE",
+		"url": "https://dev.to/geniuscreators/brand-identity-design-service-17b5",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fxr4niix668s1qzx1zk7b.jpg",
 		"author": {
-			"name": "ahmet gedik",
-			"username": "ahmet_gedik778845",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3801199%2Fcae54b2b-1a40-47e7-aefb-84cc64c80750.png",
-			"profile_url": "https://dev.to/ahmet_gedik778845"
+			"name": "Genius Creators",
+			"username": "geniuscreators",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3724623%2F265ddcda-98ab-4ae8-a783-c7c5194b0cd9.jpg",
+			"profile_url": "https://dev.to/geniuscreators"
 		},
-		"snippet": "Build a lightweight Go monitoring system with health checks, uptime tracking, and Prometheus metrics",
+		"snippet": "BRAND IDENTITY DESIGN...",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-11T14:00:01Z"
+		"published": "2026-05-12T13:53:48Z"
 	},
 	{
 		"id": 0,

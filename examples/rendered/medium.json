@@ -2,151 +2,148 @@
 	{
 		"id": 0,
 		"source": "medium",
-		"title": "Building a Non-Blocking REST API in Go: Mastering Goroutines and Channels",
-		"url": "https://aliannuur.medium.com/building-a-non-blocking-rest-api-in-go-mastering-goroutines-and-channels-b23d0858596c?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:860/0*pq63v9mzwQ-MJ-Bz.png",
+		"title": "Goroutines Deep Dive: Types, Concurrency, and Synchronization in Go",
+		"url": "https://medium.com/@sanyam19106/goroutines-deep-dive-types-concurrency-and-synchronization-in-go-6432ab30b93c?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
 		"author": {
-			"name": "Ali An Nuur"
+			"name": "Sanyam"
 		},
-		"snippet": "Stop making your users wait. Learn how to handle time consuming background tasks elegantly using Go’s powerful concurrency model. Continue reading on Medium »",
+		"snippet": "A complete guide to understanding how Go handles concurrent execution — from the basics of go keyword to advanced synchronization patterns. Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-05-11T03:03:21Z"
+		"published": "2026-05-12T13:15:24Z"
 	},
 	{
 		"id": 0,
 		"source": "medium",
-		"title": "Feature Toggles as a Deployment Strategy: Implementation Patterns",
-		"url": "https://medium.com/@erwindev/feature-toggles-as-a-deployment-strategy-implementation-patterns-dfc9b539b1e8?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*3Izlvl9qfzgDcmxX1bWsLg.png",
+		"title": "Golang - GORM İç Yapısı ve Custom CTE (Common Table Expression) Sorgusu Yazmak",
+		"url": "https://mstryoda.medium.com/golang-gorm-i%CC%87%C3%A7-yap%C4%B1s%C4%B1-ve-custom-cte-common-table-expression-sorgusu-yazmak-67fb6726d9ba?source=rss------golang-5",
+		"author": {
+			"name": "Emre Savcı"
+		},
+		"snippet": "Herkese selamlar 👋 Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T13:02:03Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Loom/poly and Lucy: Building a Local Golang AI Engine That Runs BitNet, Qwen, SmolLM, and More",
+		"url": "https://medium.com/@planetbridging/loom-poly-and-lucy-building-a-local-golang-ai-engine-that-runs-bitnet-qwen-smollm-and-more-e58cd6dc1088?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
+		"author": {
+			"name": "Planetbridging"
+		},
+		"snippet": "I’ve been working on Loom, a local AI runtime written primarily in Go. The goal is simple but ambitious: make AI models run locally… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T12:19:00Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Go — Struct (Indonesia)",
+		"url": "https://medium.com/@wing.cronus/go-struct-0a893f938497?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:902/1*eziIsJ_KfS2n5KOLgP2bzw.png",
+		"author": {
+			"name": "Arif Dwi Prasetya"
+		},
+		"snippet": "Hari ke 28 mencoba konsisten menulis, hari ini kita akan membahas struct di Go lang, lets go langsung saja Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T10:52:38Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "I Gave My AI Agent a Brain — Here’s What Broke (and What I Learned)",
+		"url": "https://towardsdev.com/i-gave-my-ai-agent-a-brain-heres-what-broke-and-what-i-learned-468b94aeb8f7?source=rss------golang-5",
+		"author": {
+			"name": "Bayu Setiawan"
+		},
+		"snippet": "How I went from a simple ‘.md‘ file to a full hybrid memory system, without spending extra money. Continue reading on Towards Dev »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T10:05:35Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "API authentication patterns for internal microservices",
+		"url": "https://blog.devgenius.io/api-authentication-patterns-for-internal-microservices-d9ab23012935?source=rss------golang-5",
+		"author": {
+			"name": "Yaninyz witty"
+		},
+		"snippet": "Practical API authentication patterns for distributed Go services Continue reading on Dev Genius »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T08:17:03Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "A Java Veteran’s Go Revelation: How Simplicity Became My Hardcore Power ",
+		"url": "https://medium.com/@anshusinghal703/a-java-veterans-go-revelation-how-simplicity-became-my-hardcore-power-dda3e2659393?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*MvRYWZO_kbRik1DT",
+		"author": {
+			"name": "Anshu Singhal"
+		},
+		"snippet": "Man, for what felt like ages, my whole world pretty much revolved around Java. It was, no kidding, a super solid and crazy powerful place… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T07:16:53Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Why I Didn’t Use Redis for My Background Workers",
+		"url": "https://medium.com/@abhi267266/why-i-didnt-use-redis-for-my-background-workers-328b9f1d144d?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:800/1*L9qb_xN2aT9_BINpo5tnag.gif",
+		"author": {
+			"name": "Abhishek Pathak"
+		},
+		"snippet": "When I started building my Reddit Lead Finder, the first thing everyone told me was: “Just use Redis.” Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T07:05:52Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "Merge Sort: El Algoritmo de Divide y Vencerás en Golang",
+		"url": "https://medium.com/@jcmexdev/merge-sort-el-algoritmo-de-divide-y-vencer%C3%A1s-en-golang-ac01e17d3a25?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*6ZpJo0fF2JGHEFd_yd4Frw.jpeg",
+		"author": {
+			"name": "Juan Carlos García Esquivel"
+		},
+		"snippet": "Merge Sort es un algoritmo de ordenamiento basado en el paradigma Divide y Vencerás. Divide recursivamente el arreglo en mitades hasta… Continue reading on Medium »",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.25,
+		"published": "2026-05-12T04:54:44Z"
+	},
+	{
+		"id": 0,
+		"source": "medium",
+		"title": "API Versioning via Content Negotiation: Why I Stopped Putting Versions in My URLs",
+		"url": "https://medium.com/@erwindev/api-versioning-via-content-negotiation-why-i-stopped-putting-versions-in-my-urls-54fbd4a8df39?source=rss------golang-5",
+		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*XxqnIpUjAX702uRLsEXHrg.png",
 		"author": {
 			"name": "Erwin Hermanto"
 		},
-		"snippet": "There’s a specific kind of dread I remember from my early career. It was a Friday afternoon, around 4 PM, and I was SSHing directly into a… Continue reading on Medium »",
+		"snippet": "There’s a specific kind of embarrassment that only engineers know. It’s the moment you look at a URL in production — something like… Continue reading on Medium »",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.25,
-		"published": "2026-05-11T02:01:00Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Go Middleware Pattern Done Right: HTTP Middleware That Composes",
-		"url": "https://medium.com/@feildrixliemdra/go-middleware-pattern-done-right-http-middleware-that-composes-55b1db1487b2?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1024/1*zzUFWlLfB0kKGI_HMKhWlA.png",
-		"author": {
-			"name": "Feildrix"
-		},
-		"snippet": "Part of the Go Production Series — a collection of opinionated, battle-tested patterns for building Go services in the real world. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-11T00:01:01Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "How I Would Design an AI-Powered Mother’s Day Experience with Go",
-		"url": "https://medium.com/@cassius.paim/how-i-would-design-an-ai-powered-mothers-day-experience-with-go-073b2bc3af60?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*k6Qd1s2iTJ2XU7oUE7qjNA.png",
-		"author": {
-			"name": "Cássius Paim"
-		},
-		"snippet": "How I think about LLM product architecture, privacy, and reliability at seasonal scale Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T20:05:21Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Building a Mini Deployment Platform in Go",
-		"url": "https://medium.com/@daffamfzn/building-a-mini-deployment-platform-in-go-1df823cf33a5?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
-		"author": {
-			"name": "Daffa Muhammad Faizan"
-		},
-		"snippet": "Got a new role. Engineering Platform team. Internal tooling, infrastructure automation, developer experience. Customers are engineers. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T17:54:32Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Why Go Is Quietly Killing Traditional Tech Stacks",
-		"url": "https://codingplainenglish.medium.com/why-go-is-quietly-killing-traditional-tech-stacks-d5e27649345a?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1100/1*bH1EkcKLpojhKGlD-y9BYw.jpeg",
-		"author": {
-			"name": "Abhinav"
-		},
-		"snippet": "For almost two decades, backend engineering followed a predictable formula. Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T17:06:00Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Learn Go by building: zero to REST API with Gin",
-		"url": "https://medium.com/@darrylgate/learn-go-by-building-zero-to-rest-api-with-gin-8f5808e3c99b?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*_J2U_e6e87ysE03OetrwrA.png",
-		"author": {
-			"name": "darryleffendi"
-		},
-		"snippet": "If you’ve been wanting to pick up Go, the fastest way to actually learn it is to build something small and finish it. Reading docs is fine… Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T17:04:51Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Go From Zero: A Beginner’s Guide to Golang Fundamentals — Part A",
-		"url": "https://medium.com/@microclip.lakeesha/go-from-zero-a-beginners-guide-to-golang-fundamentals-part-a-04fe3fe245d6?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/resize:fit:1200/1*iW6JSHIsXfHi1w7JPcUitg.png",
-		"author": {
-			"name": "Lakeesha Ramanayake"
-		},
-		"snippet": "Introduction Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T16:43:18Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Java 21’s Virtual Threads Just Outpaced Go With 200,000 Concurrent Tasks — Here’s How ",
-		"url": "https://medium.com/@monikasinghal713/java-21s-virtual-threads-just-outpaced-go-with-200-000-concurrent-tasks-here-s-how-99214c6a08d9?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/resize:fit:576/0*Kq74r_q7sqkpyQZm",
-		"author": {
-			"name": "Monika Singhal"
-		},
-		"snippet": "Okay, so I gotta be honest with you. For years, I’ve been that guy at the dev meetups, probably boring everyone’s ears off about how… Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T16:40:33Z"
-	},
-	{
-		"id": 0,
-		"source": "medium",
-		"title": "Golang CRUD — REST API",
-		"url": "https://medium.com/@ianakbar711/golang-crud-5d7ef8e18dcb?source=rss------golang-5",
-		"image_url": "https://miro.medium.com/v2/da:true/bc1f8416df0cad099e43cda2872716e5864f18a73bda2a7547ea082aca9b5632",
-		"author": {
-			"name": "Muhammad Raihan Akbar"
-		},
-		"snippet": "In this blog, I want to share my experience of creating a simple Go CRUD api with TDD approach. We will create a simple REST API to Create… Continue reading on Medium »",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.25,
-		"published": "2026-05-10T16:21:15Z"
+		"published": "2026-05-12T01:56:00Z"
 	}
 ]

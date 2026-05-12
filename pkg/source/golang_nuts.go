@@ -86,15 +86,15 @@ func (e golangNutsEntry) link() string {
 
 type (
 	golangNutsFeed struct {
-		XMLName xml.Name           `xml:"http://www.w3.org/2005/Atom feed"`
-		Entries []golangNutsEntry  `xml:"http://www.w3.org/2005/Atom entry"`
+		XMLName xml.Name          `xml:"http://www.w3.org/2005/Atom feed"`
+		Entries []golangNutsEntry `xml:"http://www.w3.org/2005/Atom entry"`
 	}
 	golangNutsEntry struct {
-		Title   string            `xml:"http://www.w3.org/2005/Atom title"`
-		Links   []golangNutsLink  `xml:"http://www.w3.org/2005/Atom link"`
-		Author  golangNutsAuthor  `xml:"http://www.w3.org/2005/Atom author"`
-		Updated string            `xml:"http://www.w3.org/2005/Atom updated"`
-		Content string            `xml:"http://www.w3.org/2005/Atom content"`
+		Title   string           `xml:"http://www.w3.org/2005/Atom title"`
+		Links   []golangNutsLink `xml:"http://www.w3.org/2005/Atom link"`
+		Author  golangNutsAuthor `xml:"http://www.w3.org/2005/Atom author"`
+		Updated string           `xml:"http://www.w3.org/2005/Atom updated"`
+		Content string           `xml:"http://www.w3.org/2005/Atom content"`
 	}
 	golangNutsLink struct {
 		Href string `xml:"href,attr"`

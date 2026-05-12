@@ -5,16 +5,59 @@
 	},
 	"exhaustiveNbHits": true,
 	"exhaustiveTypo": true,
-	"hits": [],
+	"hits": [
+		{
+			"_highlightResult": {
+				"author": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "Imustaskforhelp"
+				},
+				"story_text": {
+					"fullyHighlighted": false,
+					"matchLevel": "full",
+					"matchedWords": [
+						"golang"
+					],
+					"value": "Hello dear reader, this is a long message but I hope that you can bear with me as I must ask for your help as I need it :-D<p>What are the best international colleges that I should apply to? Does anyone have any suggestions?<p>A bit about me:-<p>I am 17 &amp; I am a member of the LiteLLM security working group. (This also means that I am able to work with and learn from the best people including security researchers and even some people from OpenAI and others as such being part of the working group and can contact them and am very lucky to be in this place!)<p>My github profile: https://github.com/SerJaimeLannister<p>I have written around 200k+ words (definitely more by now) on hackernews<p>my blogs: https://smileplease.mataroa.blog/<p>My academics are mostly within the 90%+ percentile, not too bad but I must admit not too great either, they are just decent<p>Now I have to admit that right now, I was preparing for JEE and other things so I wish to admit one thing, I am probably using AI as a crutch and I wish to go into college to get 4 years worth of time to actually learn languages in ease and get an even more in-depth<p>I am from India &amp; I love terminals, devops on servers , containers &amp; sandboxing. I <i>love</i> <em>golang</em>.<p>Now much of my projects are non-profit, I don't wish to make profit for them as is and are just more so to prove my curiosity and just something that I find interesting.<p>Hn-words: See how many words you have written in Hacker News comments @ https://news.ycombinator.com/item?id=46829029 which had reached the front page of hackernews<p>htmlpipe which archives archive.is pages to archive.org and has some more use cases.<p>https://Fossbox.cloud: created a cuckoo.org alternative ie. a multi person pomodoro timer.<p>https://Mirror.forum : created a way for people to upload multiple discord/fluxer communities etc. : [Video](https://www.youtube.com/watch?v=xrMog4B-Z9s)<p>appseed: https://www.youtube.com/watch?v=grsDSiPORgQ<p>use.expert (this is just a domain but I wish to open a consultancy/vps provider company with this domain and do something nice with this domain :-D)<p>I have created nanotimestamps which allowed the ability to store data in a chain within transactions themselves without any gas fees because it chains data between the addresses itself by creating vanity addresses.<p>I am also a bit interested in yzipper, this was shown to me and my response @ https://news.ycombinator.com/item?id=48032312 but I liked the idea so much that I have bought the domain yzipper.com and its so inspiring seeing what people are making within this space too.<p>Oh and I actually also host my own mail server at a 7$/yr vps at k4qr.com :-D (just to see how to do it!)<p>TLDR: with all of this in mind, which colleges should I apply to internationally which can take a look at the portfolio I have and perhaps give interviews/further tests. I just wish to talk about these things and how these work and the architectural decisions and everything!! I can't say I can talk about the code in-depth but I do think that I know just a bit about it :-D"
+				},
+				"title": {
+					"matchLevel": "none",
+					"matchedWords": [],
+					"value": "Ask HN: I am 17 years old, which college should I apply if I have some projects?"
+				}
+			},
+			"_tags": [
+				"story",
+				"author_Imustaskforhelp",
+				"story_48097377",
+				"ask_hn"
+			],
+			"author": "Imustaskforhelp",
+			"children": [
+				48098089,
+				48097450
+			],
+			"created_at": "2026-05-11T16:44:04Z",
+			"created_at_i": 1778517844,
+			"num_comments": 3,
+			"objectID": "48097377",
+			"points": 3,
+			"story_id": 48097377,
+			"story_text": "Hello dear reader, this is a long message but I hope that you can bear with me as I must ask for your help as I need it :-D<p>What are the best international colleges that I should apply to? Does anyone have any suggestions?<p>A bit about me:-<p>I am 17 &amp; I am a member of the LiteLLM security working group. (This also means that I am able to work with and learn from the best people including security researchers and even some people from OpenAI and others as such being part of the working group and can contact them and am very lucky to be in this place!)<p>My github profile: https:&#x2F;&#x2F;github.com&#x2F;SerJaimeLannister<p>I have written around 200k+ words (definitely more by now) on hackernews<p>my blogs: https:&#x2F;&#x2F;smileplease.mataroa.blog&#x2F;<p>My academics are mostly within the 90%+ percentile, not too bad but I must admit not too great either, they are just decent<p>Now I have to admit that right now, I was preparing for JEE and other things so I wish to admit one thing, I am probably using AI as a crutch and I wish to go into college to get 4 years worth of time to actually learn languages in ease and get an even more in-depth<p>I am from India &amp; I love terminals, devops on servers , containers &amp; sandboxing. I <i>love</i> golang.<p>Now much of my projects are non-profit, I don&#x27;t wish to make profit for them as is and are just more so to prove my curiosity and just something that I find interesting.<p>Hn-words: See how many words you have written in Hacker News comments @ https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=46829029 which had reached the front page of hackernews<p>htmlpipe which archives archive.is pages to archive.org and has some more use cases.<p>https:&#x2F;&#x2F;Fossbox.cloud: created a cuckoo.org alternative ie. a multi person pomodoro timer.<p>https:&#x2F;&#x2F;Mirror.forum : created a way for people to upload multiple discord&#x2F;fluxer communities etc. : [Video](https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=xrMog4B-Z9s)<p>appseed: https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=grsDSiPORgQ<p>use.expert (this is just a domain but I wish to open a consultancy&#x2F;vps provider company with this domain and do something nice with this domain :-D)<p>I have created nanotimestamps which allowed the ability to store data in a chain within transactions themselves without any gas fees because it chains data between the addresses itself by creating vanity addresses.<p>I am also a bit interested in yzipper, this was shown to me and my response @ https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48032312 but I liked the idea so much that I have bought the domain yzipper.com and its so inspiring seeing what people are making within this space too.<p>Oh and I actually also host my own mail server at a 7$&#x2F;yr vps at k4qr.com :-D (just to see how to do it!)<p>TLDR: with all of this in mind, which colleges should I apply to internationally which can take a look at the portfolio I have and perhaps give interviews&#x2F;further tests. I just wish to talk about these things and how these work and the architectural decisions and everything!! I can&#x27;t say I can talk about the code in-depth but I do think that I know just a bit about it :-D",
+			"title": "Ask HN: I am 17 years old, which college should I apply if I have some projects?",
+			"updated_at": "2026-05-11T19:42:44Z"
+		}
+	],
 	"hitsPerPage": 50,
-	"nbHits": 0,
-	"nbPages": 0,
+	"nbHits": 1,
+	"nbPages": 1,
 	"page": 0,
-	"params": "query=golang&hitsPerPage=50&numericFilters=created_at_i%3E1778284799%2Ccreated_at_i%3C1778457600&tags=story&advancedSyntax=true&analyticsTags=backend",
+	"params": "query=golang&hitsPerPage=50&numericFilters=created_at_i%3E1778457599%2Ccreated_at_i%3C1778544000&tags=story&advancedSyntax=true&analyticsTags=backend",
 	"processingTimeMS": 3,
 	"processingTimingsMS": {
 		"_request": {
-			"roundTrip": 21
+			"roundTrip": 14
 		},
 		"fetch": {
 			"query": 1,
@@ -23,5 +66,5 @@
 		"total": 3
 	},
 	"query": "golang",
-	"serverTimeMS": 3
+	"serverTimeMS": 4
 }

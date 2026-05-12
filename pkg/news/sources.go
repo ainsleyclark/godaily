@@ -158,7 +158,7 @@ var sourceNiceNames = map[Source]string{
 	SourceMastodon:       "Mastodon",
 	SourceAwesomeGo:      "Awesome Go",
 	SourceJetBrains:      "JetBrains GoLand",
-	SourceGolangNuts:     "golang-nuts",
+	SourceGolangNuts:     "Golang Nuts",
 }
 
 // NiceName returns a formatted string of the source.

@@ -12,7 +12,7 @@
 	<atom:link href="https://blog.jetbrains.com/go/feed/" rel="self" type="application/rss+xml" />
 	<link>https://blog.jetbrains.com</link>
 	<description>Developer Tools for Professionals and Teams</description>
-	<lastBuildDate>Tue, 28 Apr 2026 10:07:47 +0000</lastBuildDate>
+	<lastBuildDate>Mon, 11 May 2026 09:26:40 +0000</lastBuildDate>
 	<language>en-US</language>
 	<sy:updatePeriod>
 	hourly	</sy:updatePeriod>
@@ -28,6 +28,354 @@
 	<height>32</height>
 </image> 
 	<item>
+		<title>The GoLand 2026.2 Early Access Program Has Started</title>
+		<link>https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/</link>
+					<comments>https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/#respond</comments>
+		
+		<dc:creator><![CDATA[Artem Pronichev]]></dc:creator>
+		<pubDate>Mon, 11 May 2026 09:26:36 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2026/05/GO-social-BlogFeatured-1280x720-1.png</featuredImage>		<category><![CDATA[goland]]></category>
+		<category><![CDATA[2026-2]]></category>
+		<category><![CDATA[eap]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=go&#038;p=706355</guid>
+
+					<description><![CDATA[The Early Access Program (EAP) for GoLand 2026.2 is now open. It’s a great opportunity to try upcoming features for free and help shape the product. EAP builds give you early access to what we’re working on, so you can test new functionality in your real workflows and share feedback with the GoLand team. Your [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>The Early Access Program (EAP) for GoLand 2026.2 is now open. It’s a great opportunity to try upcoming features for free and help shape the product.</p>
+
+
+
+<p>EAP builds give you early access to what we’re working on, so you can test new functionality in your real workflows and share feedback with the GoLand team. Your input directly influences what makes it into the final release.</p>
+
+
+
+<p>If you are new to the EAP, here is how it works:</p>
+
+
+
+<ul>
+<li>The EAP allows you to try new features before the final release.</li>
+
+
+
+<li>New EAP builds are released regularly during the cycle.
+<ul>
+<li>Builds are still in development and may be unstable.</li>
+
+
+
+<li>Builds are free for the whole EAP cycle until Beta.</li>
+</ul>
+</li>
+
+
+
+<li>Your feedback helps us improve the product.</li>
+
+
+
+<li>During the EAP, we will also share a survey. Participating gives you a chance to receive a free GoLand subscription or an Amazon Gift Card.</li>
+</ul>
+
+
+
+<p>In this release cycle, we’re focusing on performance insights, memory optimization, and smoother project onboarding. The goal is simple. You should be able to understand your Go program’s behavior and optimize its performance without leaving the IDE.</p>
+
+
+
+<p>You can download the first EAP build from the Toolbox App, from our website, or by updating from inside the IDE.</p>
+
+
+
+<p><a href="https://www.jetbrains.com/go/nextversion/" target="_blank" rel="noopener">Download GoLand 2026.2 EAP</a></p>
+
+
+
+<h2 class="wp-block-heading"><strong>Disclaimer</strong></h2>
+
+
+
+<p>We continue to work on performance tooling, analysis accuracy, and workflow improvements throughout the EAP cycle.</p>
+
+
+
+<p>You can explore the full list of tasks and features we are currently working on in <a href="https://youtrack.jetbrains.com/agiles/153-7441/current" target="_blank" rel="noopener">our roadmap</a>.</p>
+
+
+
+<p>This roadmap reflects our current priorities. Plans can change as we collect feedback and validate ideas during the EAP.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>What we’re planning for GoLand 2026.2</strong></h2>
+
+
+
+<p>This EAP cycle introduces a new set of tools for performance analysis and several improvements to everyday workflows.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Get insight into performance without leaving the IDE</strong></h2>
+
+
+
+<h3 class="wp-block-heading"><strong>Evaluate your program from the </strong><strong><em>Go Performance Optimization</em></strong><strong> tool window</strong></h3>
+
+
+
+<p>You can now access all performance tools in one place. The new <em>Go Performance Optimization</em> tool window brings together profiling, escape analysis, and struct optimization.</p>
+
+
+
+<p>You no longer need to switch between different tools or workflows. You can analyze CPU usage, memory behavior, and allocation patterns from a single UI.</p>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" fetchpriority="high" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/2026-05-11_10-15-34-1.png" alt="" class="wp-image-706529" /></figure>
+
+
+
+<h3 class="wp-block-heading"><strong>Profile any Go application with </strong><strong>pprof</strong></h3>
+
+
+
+<p>You can now run profiling for both tests and regular run configurations.</p>
+
+
+
+<p>The profiler is based on pprof and integrates directly into the IDE. It helps you answer key questions about your program:</p>
+
+
+
+<ul>
+<li>Where does the program spend CPU time?</li>
+
+
+
+<li>How much memory does it allocate and retain?</li>
+
+
+
+<li>Which parts of the code create excessive allocations?</li>
+
+
+
+<li>What goroutines are running and where are they blocked?</li>
+</ul>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/image-8.png" alt="" class="wp-image-706379" /></figure>
+
+
+
+<p>A variety of profiling types are included:</p>
+
+
+
+<ul>
+<li>The <em>CPU </em>profiler shows where your program spends CPU time during active execution. It samples running goroutines and helps you find CPU-intensive code paths.</li>
+
+
+
+<li>The <em>Heap </em>and <em>Allocs </em>profilers track memory usage and allocation patterns. Both collect the same allocation data but use different default views. The <em>Heap </em>profile shows memory that is currently in use, while the <em>Allocs </em>profile shows total memory allocated over time, including memory that has already been freed.</li>
+
+
+
+<li>The <em>Goroutine </em>profiler shows all current goroutines and their stack traces. It helps you understand what goroutines are doing and identify issues such as leaks or deadlocks.</li>
+
+
+
+<li>The <em>Block </em>profiler shows where goroutines are blocked by synchronization operations, such as channel operations or locks. It helps you find delays caused by code that is waiting instead of being executed.</li>
+
+
+
+<li>The <em>Mutex </em>profiler shows lock contention between goroutines. It helps you identify where goroutines block each other when accessing shared data.</li>
+</ul>
+
+
+
+<p>There are a few ways to start profiling:</p>
+
+
+
+<ul>
+<li>From the run configuration selector on the toolbar. <img decoding="async" class="wp-image-706491" style="width: 800px; width:100% !important; height:auto !important; max-width:100% !important;" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/2026-05-11_10-19-47.png" alt=""></li>
+
+
+
+<li>From the gutter next to the <code>main</code> function or a test.<img decoding="async" loading="lazy" class="wp-image-706480" style="width: 800px; width:100% !important; height:auto !important; max-width:100% !important;" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/2026-05-11_10-21-17.png" alt=""></li>
+
+
+
+<li>From the <em>Go Performance Optimization</em> tool window.<img decoding="async" loading="lazy" class="wp-image-706469" style="width: 800px; width:100% !important; height:auto !important; max-width:100% !important;" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/2026-05-11_10-22-12.png" alt=""></li>
+
+
+
+<li>From the <em>Run </em>tool window by using <em>Rerun with Profiler.</em><img decoding="async" loading="lazy" class="wp-image-706422" style="width: 800px; width:100% !important; height:auto !important; max-width:100% !important;" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/image-9.png" alt=""></li>
+</ul>
+
+
+
+<h3 class="wp-block-heading"><strong>Detect unnecessary heap allocations with escape analysis</strong></h3>
+
+
+
+<p>Escape analysis helps you understand when values move from the stack to the heap.</p>
+
+
+
+<p>A stack allocation is fast and short-lived. A heap allocation is slower and requires garbage collection. When values escape to the heap unnecessarily, they increase memory usage and reduce performance.</p>
+
+
+
+<p>GoLand highlights these cases directly in the editor. You can see:</p>
+
+
+
+<ul>
+<li>Which variables escape.</li>
+
+
+
+<li>Why they escape.</li>
+
+
+
+<li>How the data flows through your code.</li>
+</ul>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/image-10.png" alt="" class="wp-image-706433" /></figure>
+
+
+
+<h3 class="wp-block-heading"><strong>Optimize struct layouts for better memory usage</strong></h3>
+
+
+
+<p>GoLand now helps you improve the layout of your structs, allowing you to conserve memory.</p>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/image-11.png" alt="" class="wp-image-706444" /></figure>
+
+
+
+<p>In Go, field order affects memory alignment. Poor alignment introduces padding and increases the size of a struct.</p>
+
+
+
+<p>For example:</p>
+
+
+
+<pre class="EnlighterJSRAW">type Inefficient struct {
+&nbsp;&nbsp;&nbsp;&nbsp;A byte&nbsp; // 1 byte
+&nbsp;&nbsp;&nbsp;&nbsp;B int32 // 4 bytes
+&nbsp;&nbsp;&nbsp;&nbsp;C byte&nbsp; // 1 byte
+}</pre>
+
+
+
+<p>The struct is laid out in memory as follows. Field A occupies 1 byte. The next 3 bytes are padding to align field B to a 4-byte boundary. Field B then occupies 4 bytes, while field C occupies 1 byte. After that, another 3 bytes of padding are added so that the total struct size matches the largest alignment requirement. As a result, the struct takes 12 bytes in total, even though the fields themselves require only 6 bytes.</p>
+
+
+
+<p>The optimal layout of fields in the struct goes as follows:</p>
+
+
+
+<pre class="EnlighterJSRAW">type Efficient struct {
+&nbsp;&nbsp;&nbsp;&nbsp;B int32 // 4 bytes
+&nbsp;&nbsp;&nbsp;&nbsp;A byte&nbsp; // 1 byte
+&nbsp;&nbsp;&nbsp;&nbsp;C byte&nbsp; // 1 byte
+}</pre>
+
+
+
+<p>GoLand detects suboptimal layouts and suggests a quick-fix. This helps you reduce the memory footprint without changing program behavior.</p>
+
+
+
+<h3 class="wp-block-heading"><strong>See CPU and memory usage in real time</strong></h3>
+
+
+
+<p>You can now monitor CPU and memory usage while your program runs.</p>
+
+
+
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/05/image-12.png" alt="" class="wp-image-706457" /></figure>
+
+
+
+<p>Live charts are available in:</p>
+
+
+
+<ul>
+<li>The <em>Run</em> tool window.</li>
+
+
+
+<li>The <em>Go Performance Optimization</em> tool window.</li>
+</ul>
+
+
+
+<p>This gives you immediate feedback. You can see how changes in code affect resource usage without running a full profiling session.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Start projects faster with automatic run/debug configurations</strong></h2>
+
+
+
+<p>GoLand can now detect main packages in your project and create run/debug configurations automatically.</p>
+
+
+
+<p>When you open a project, the IDE:</p>
+
+
+
+<ul>
+<li>Scans for executable entry points.</li>
+
+
+
+<li>Creates run configurations, reducing manual setup.</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading"><strong>Share your feedback</strong></h2>
+
+
+
+<p>Your feedback shapes GoLand.</p>
+
+
+
+<p>Try the new features in your projects and tell us what works and what doesn’t. Report issues and vote for features in <a href="https://youtrack.jetbrains.com/agiles/153-7441/current" target="_blank" rel="noopener">our issue tracker</a>.</p>
+
+
+
+<p>Happy coding,</p>
+
+
+
+<p>The GoLand team</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
 		<title>Popular Go Web Frameworks: A Practical Guide for Developers</title>
 		<link>https://blog.jetbrains.com/go/2026/04/28/popular-golang-web-frameworks/</link>
 		
@@ -104,7 +452,7 @@
 
 
 
-<figure class="wp-block-image size-full"><a href="https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" fetchpriority="high" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/Go_2025_Frameworks-and-routers.webp" alt="" class="wp-image-703716"/></a></figure>
+<figure class="wp-block-image size-full"><a href="https://blog.jetbrains.com/go/2025/11/10/go-language-trends-ecosystem-2025/"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/Go_2025_Frameworks-and-routers.webp" alt="" class="wp-image-703716"/></a></figure>
 
 
 
@@ -349,7 +697,7 @@ app.Get("/users", func(c *fiber.Ctx) error {
 
 
 
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/HTTP-client.gif" alt="" class="wp-image-703729"/></figure>
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/HTTP-client.gif" alt="" class="wp-image-703729"/></figure>
 
 
 
@@ -494,7 +842,7 @@ app.Get("/users", func(c *fiber.Ctx) error {
 
 
 
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_p_for_plan.png" alt="" class="wp-image-696222"/></figure>
+<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2026/04/john_arundel_p_for_plan.png" alt="" class="wp-image-696222"/></figure>
 
 
 
@@ -3848,368 +4196,5 @@ for {
                         <url>https://blog.jetbrains.com/es/go/2025/11/10/go-language-trends-ecosystem-2025/</url>
                     </language>
                 	</item>
-		<item>
-		<title>The “10x” Commandments of Highly Effective Go</title>
-		<link>https://blog.jetbrains.com/go/2025/10/16/the-10x-commandments-of-highly-effective-go/</link>
-		
-		<dc:creator><![CDATA[Anna Protsenko]]></dc:creator>
-		<pubDate>Thu, 16 Oct 2025 11:13:18 +0000</pubDate>
-		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2025/10/Blog-Featured-1280x720-1-5.png</featuredImage>		<category><![CDATA[goland]]></category>
-		<category><![CDATA[golang]]></category>
-		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=go&#038;p=648341</guid>
-
-					<description><![CDATA[This is a guest post from John Arundel of Bitfield Consulting, a Go trainer and writer who runs a free newsletter for Go learners. His most recent book is The Deeper Love of Go. Ever wondered if there&#8217;s a software engineer, somewhere, who actually knows what they&#8217;re doing? Well, I finally found the one serene, [&#8230;]]]></description>
-										<content:encoded><![CDATA[
-<p><em>This is a guest post from John Arundel of Bitfield Consulting, a Go trainer and writer who runs a </em><a href="https://bitfieldconsulting.com/subscribe" target="_blank" rel="noopener"><em>free newsletter for Go learners</em></a><em>. His most recent book is </em><a href="https://bitfieldconsulting.com/books/deeper" target="_blank" rel="noopener"><em>The Deeper Love of Go</em></a>.</p>
-
-
-
-<p>Ever wondered if there&#8217;s a software engineer, somewhere, who actually knows what they&#8217;re doing? Well, I finally found the one serene, omnicompetent guru who writes perfect code. I can&#8217;t disclose the location of her mountain hermitage, but I <em>can</em> share her ten mantras of Go excellence. Let&#8217;s meditate on them together.</p>
-
-
-
-<h2 class="wp-block-heading">1. Write packages, not programs</h2>
-
-
-
-<p>The <a href="https://pkg.go.dev/std" target="_blank" rel="noopener">standard library</a> is great, but the <a href="https://pkg.go.dev/" target="_blank" rel="noopener">universal library</a> of free, open-source software is Go&#8217;s biggest asset. Return the favour by writing not just programs, but <a href="https://bitfieldconsulting.com/posts/packages" target="_blank" rel="noopener">packages</a> that others can use too.</p>
-
-
-
-<p>Your <code>main</code> function&#8217;s only job should be parsing flags and arguments, and handling errors and cleanup, while your imported “domain” package does the real work.<br>Flexible packages return data instead of printing, and return errors rather than calling <code>panic</code> or <code>os.Exit</code>. Keep your <a href="https://go.dev/doc/modules/layout" target="_blank" rel="noopener">module structure</a> simple: ideally, one package.</p>
-
-
-
-<p><strong>Tip:</strong> Use <em>Structure view</em> (Cmd-F12) for a high-level picture of your module.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/01_write_packages_not_programs.png" alt="" class="wp-image-648404"/></figure>
-
-
-
-<h2 class="wp-block-heading">2. Test everything</h2>
-
-
-
-<p>Writing tests helps you <a href="https://en.wikipedia.org/wiki/Eating_your_own_dog_food" target="_blank" rel="noopener">dogfood</a> your packages: awkward names and inconvenient APIs are obvious when you use them yourself.</p>
-
-
-
-<p><a href="https://bitfieldconsulting.com/posts/test-names" target="_blank" rel="noopener">Test names should be sentences</a>. Focus tests on small units of user-visible behaviour. Add <a href="https://en.wikipedia.org/wiki/Integration_testing" target="_blank" rel="noopener">integration tests</a> for end-to-end checks. Test binaries with <a href="https://bitfieldconsulting.com/posts/test-scripts" target="_blank" rel="noopener"><code>testscript</code></a>.</p>
-
-
-
-<p><strong>Tip:</strong> Use GoLand&#8217;s “generate tests” feature to add tests for existing code. <em>Run with coverage</em> can identify untested code. Use the debugger to analyse test failures.</p>
-
-
-
-<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2025/10/02_test_everything.mp4"></video></figure>
-
-
-
-<h2 class="wp-block-heading">3. Write code for reading</h2>
-
-
-
-<p>Ask a co-worker to read your code line by line and tell you what it does. Their stumbles will show you where your speed-bumps are: flatten them out and reduce <a href="https://medium.com/@egonelbre/psychology-of-code-readability-d23b1ff1258a" target="_blank" rel="noopener">cognitive load</a> by refactoring. Read other people&#8217;s code and notice where <em>you</em> stumble—why?</p>
-
-
-
-<p>Use <a href="https://go.dev/talks/2014/names.slide#1" target="_blank" rel="noopener">consistent naming</a> to maximise <a href="https://jarosz.dev/code/do-not-overload-your-brain-go-function-tips/" target="_blank" rel="noopener">glanceability</a>: <code>err</code> for errors, <code>data</code> for arbitrary <code>[]byte</code>s, <code>buf</code> for buffers, <code>file</code> for <code>*os.File</code> pointers, <code>path</code> for pathnames, <code>i</code> for index values, <code>req</code> for requests, <code>resp</code> for responses, <code>ctx</code> for contexts, and so on.</p>
-
-
-
-<p>Good names make code read naturally. <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c&amp;t=1099s" target="_blank" rel="noopener">Design the architecture, name the components, document the details</a>. Simplify wordy functions by moving low-level “paperwork” into smaller functions with informative names (<code>createRequest</code>, <code>parseResponse</code>).</p>
-
-
-
-<p><strong>Tip:</strong> In GoLand, use the <em>Extract method</em> refactoring to shorten long functions. Use <em>Rename</em> to rename an identifier everywhere.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/03_write_code_for_reading.png" alt="" class="wp-image-651140"/></figure>
-
-
-
-<h2 class="wp-block-heading">4. Be safe by default</h2>
-
-
-
-<p>Use “always valid values” in your programs, and design types so that users can&#8217;t accidentally create values that won&#8217;t work. <a href="https://go-proverbs.github.io/" target="_blank" rel="noopener">Make the zero value useful</a> for literals, or write a validating constructor that guarantees a valid, usable object with default settings. Add configuration using <em>WithX </em>methods:</p>
-
-
-
-<pre class="EnlighterJSRAW">widget := NewWidget().WithTimeout(time.Second)</pre>
-
-
-
-<p>Use named <a href="https://go.dev/blog/constants" target="_blank" rel="noopener">constants</a> instead of magic values. <a href="https://pkg.go.dev/net/http#pkg-constants" target="_blank" rel="noopener"><code>http.StatusOK</code></a> is self-explanatory; <code>200</code> isn&#8217;t. Define your own constants so IDEs like GoLand can auto-complete them, preventing typos. Use <code><a href="https://bitfieldconsulting.com/posts/iota" target="_blank" rel="noopener">iota</a></code> to auto-assign arbitrary values:</p>
-
-
-
-<pre class="EnlighterJSRAW">const (
-    Planet = iota // 0
-    Star          // 1
-    Comet         // 2
-    // ...
-)</pre>
-
-
-
-<p>Prevent security holes by using <a href="https://pkg.go.dev/os#Root" target="_blank" rel="noopener"><code>os.Root</code></a> instead of <code>os.Open</code>, eliminating <a href="https://go.dev/blog/osroot" target="_blank" rel="noopener">path traversal attacks</a>:</p>
-
-
-
-<pre class="EnlighterJSRAW">root, err := os.OpenRoot(&quot;/var/www/assets&quot;)
-if err != nil {
-    return err
-}
-defer root.Close()
-file, err := root.Open(&quot;../../../etc/passwd&quot;)
-// Error: &#039;openat ../../../etc/passwd: path escapes from parent&#039;</pre>
-
-
-
-<p>Don&#8217;t require your program to run as <code>root</code> or in <a href="https://en.wikipedia.org/wiki/Setuid" target="_blank" rel="noopener">setuid</a> mode; let users configure the minimal permissions and capabilities they need.</p>
-
-
-
-<p><strong>Tip:</strong> Use Goland&#8217;s <em>Generate constructor</em> and <em>Generate getter and setter</em> functions to help you create always valid struct types.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/04_be_safe_by_default.png" alt="" class="wp-image-648500"/></figure>
-
-
-
-<h2 class="wp-block-heading">5. Wrap errors, don&#8217;t flatten</h2>
-
-
-
-<p>Don&#8217;t type-assert errors or <a href="https://bitfieldconsulting.com/posts/comparing-errors" target="_blank" rel="noopener">compare error values directly</a> with <code>==</code>, define named “sentinel” values that users can match errors against:</p>
-
-
-
-<pre class="EnlighterJSRAW">var ErrOutOfCheese = errors.New(&quot;++?????++ Out of Cheese Error. Redo From Start.&quot;)</pre>
-
-
-
-<p>Don&#8217;t inspect the string values of errors to find out what they are; this is fragile. Instead, use <a href="https://pkg.go.dev/errors#Is" target="_blank" rel="noopener">errors.Is</a>:</p>
-
-
-
-<pre class="EnlighterJSRAW">if errors.Is(err, ErrOutOfCheese) {</pre>
-
-
-
-<p>To add run-time information or context to an error, don&#8217;t flatten it into a string. Use the <code>%w</code> verb with <code>fmt.Errorf</code> to create a <a href="https://bitfieldconsulting.com/posts/wrapping-errors" target="_blank" rel="noopener"><em>wrapped</em></a> error:</p>
-
-
-
-<pre class="EnlighterJSRAW">return fmt.Errorf(&quot;GNU Terry Pratchett: %w&quot;, ErrOutOfCheese)</pre>
-
-
-
-<p>This way, <code>errors.Is</code> can still match the wrapped error against your sentinel value, even though it contains extra information.</p>
-
-
-
-<p><strong>Tip</strong>: GoLand will warn you against comparing or type-asserting error values.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/05_handle_errors_dont_flatten.png" alt="" class="wp-image-648511"/></figure>
-
-
-
-<h2 class="wp-block-heading">6. Avoid mutable global state</h2>
-
-
-
-<p>Package-level variables can cause <a href="https://go.dev/doc/articles/race_detector" target="_blank" rel="noopener">data races</a>: reading a variable from one goroutine while writing it from another can crash your program. Instead, use a <code>sync.Mutex</code> to prevent concurrent access, or allow access to the data only in a single “guard” goroutine that takes read or write requests via a channel.</p>
-
-
-
-<p>Don&#8217;t use global objects like <a href="https://pkg.go.dev/net/http#DefaultServeMux" target="_blank" rel="noopener"><code>http.DefaultServeMux</code></a> or <a href="https://pkg.go.dev/net/http#DefaultClient" target="_blank" rel="noopener"><code>DefaultClient</code></a>;&nbsp; packages you import might invisibly change these objects, maliciously or otherwise. Instead, create a new instance with <a href="https://pkg.go.dev/net/http#NewServeMux" target="_blank" rel="noopener"><code>http.NewServeMux</code></a> (for example) and configure it how you want.</p>
-
-
-
-<p><strong>Tip:</strong> Use GoLand&#8217;s <em>Run/Debug Configurations</em> settings to enable the Go race detector for testing concurrent code.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/06_avoid_mutable_global_state.png" alt="" class="wp-image-648522"/></figure>
-
-
-
-<h2 class="wp-block-heading">7. Use (structured) concurrency sparingly</h2>
-
-
-
-<p>Concurrent programming is a minefield: it&#8217;s easy to trigger crashes or race conditions. Don&#8217;t introduce concurrency to a program unless it&#8217;s unavoidable. When you do use <a href="https://bitfieldconsulting.com/posts/goroutines" target="_blank" rel="noopener">goroutines</a> and channels, keep them strictly confined: once they escape the scope where they&#8217;re created, it&#8217;s hard to follow the flow of control. “Global” goroutines, like global variables, can lead to hard-to-find bugs.</p>
-
-
-
-<p>Make sure any goroutines you create will terminate before the enclosing function exits, using a <a href="https://go.dev/blog/context" target="_blank" rel="noopener">context</a> or <a href="https://pkg.go.dev/sync#WaitGroup" target="_blank" rel="noopener">waitgroup</a>:</p>
-
-
-
-<pre class="EnlighterJSRAW">var wg sync.WaitGroup
-wg.Go(task1)
-wg.Go(task2)
-wg.Wait()</pre>
-
-
-
-<p>The <code>Wait</code> call ensures that both tasks have completed before we move on, making control flow easy to understand, and preventing resource leaks.</p>
-
-
-
-<p>Use <a href="https://pkg.go.dev/golang.org/x/sync/errgroup" target="_blank" rel="noopener">errgroups</a> to catch the first error from a number of parallel tasks, and <a href="https://go.dev/play/p/2YOGE29kYsE" target="_blank" rel="noopener">terminate</a> all the others:</p>
-
-
-
-<pre class="EnlighterJSRAW">var eg errgroup.Group
-eg.Go(task1)
-eg.Go(task2)
-err := eg.Wait()
-if err != nil {
-	fmt.Printf(&quot;error %v: all other tasks cancelled&quot;, err)
-} else {
-	fmt.Println(&quot;all tasks completed successfully&quot;)
-}</pre>
-
-
-
-<p>When you take a <a href="https://go.dev/ref/spec#ChannelType" target="_blank" rel="noopener">channel</a> as the parameter to a function, take either its send or receive aspect, but not both. This prevents a common kind of deadlock where the function tries to send and receive on the same channel concurrently.</p>
-
-
-
-<pre class="EnlighterJSRAW">func produce(ch chan&lt;- Event) {
-	// can send on `ch` but not receive
-}
-
-func consume(ch &lt;-chan Event) {
-	// can receive on `ch` but not send
-}</pre>
-
-
-
-<p><strong>Tip:</strong> Use GoLand&#8217;s profiler and debugger to analyse the behaviour of your goroutines, eliminate leaks, and solve deadlocks.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/07_use_structured_concurrency_sparingly.png" alt="" class="wp-image-648533"/></figure>
-
-
-
-<h2 class="wp-block-heading">8. Decouple code from environment</h2>
-
-
-
-<p>Don&#8217;t depend on OS or environment-specific details. Don&#8217;t use <a href="https://pkg.go.dev/os#Getenv" target="_blank" rel="noopener"><code>os.Getenv</code></a> or <a href="https://pkg.go.dev/os#Args" target="_blank" rel="noopener"><code>os.Args</code></a> deep in your package: only <code>main</code> should access environment variables or command-line arguments. Instead of taking choices away from users of your package, let them configure it however they want.</p>
-
-
-
-<p>Single binaries are easier for users to install, update, and manage; don&#8217;t distribute config files. If necessary, create your config file at run time using defaults.</p>
-
-
-
-<p>Use <a href="https://pkg.go.dev/embed" target="_blank" rel="noopener"><code>go:embed</code></a> to bundle static data, such as images or certificates, into your binary:</p>
-
-
-
-<pre class="EnlighterJSRAW">import _ &quot;embed&quot;
-
-//go:embed hello.txt
-var s string
-
-fmt.Println(s) // `s` now has the contents of &#039;hello.txt&#039;</pre>
-
-
-
-<p>Use <a href="https://pkg.go.dev/github.com/adrg/xdg" target="_blank" rel="noopener"><code>xdg</code></a> instead of hard-coding paths. Don&#8217;t assume <code>$HOME</code> exists. Don&#8217;t assume any disk storage exists, or is writable.</p>
-
-
-
-<p>Go is popular in constrained environments, so be frugal with memory. Don&#8217;t read all your data at once; handle one chunk at a time, re-using the same buffer. This will keep your memory footprint small and reduce <a href="https://go.dev/doc/gc-guide" target="_blank" rel="noopener">garbage collection</a> cycles.</p>
-
-
-
-<p><strong>Tip:</strong> Use GoLand&#8217;s profiler to optimise your memory usage and eliminate leaks.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/08_decouple_code_from_environment.png" alt="" class="wp-image-648546"/></figure>
-
-
-
-<h2 class="wp-block-heading">9. Design for errors</h2>
-
-
-
-<p>Always check errors, and handle them if possible, retrying where appropriate. Report run-time errors to the user and exit gracefully, reserving <code>panic</code> for <a href="https://www.alexedwards.net/blog/when-is-it-ok-to-panic-in-go" target="_blank" rel="noopener">internal program errors</a>. Don&#8217;t ignore errors using <code>_</code>: this leads to obscure bugs.</p>
-
-
-
-<p>Show usage hints for incorrect arguments, don&#8217;t crash. Rather than prompting users interactively, let them customise behaviour with flags or config.</p>
-
-
-
-<p><strong>Tip:</strong> GoLand will warn you about unchecked or ignored errors, and offer to generate the handling code for you.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/09_design_for_errors.png" alt="" class="wp-image-648557"/></figure>
-
-
-
-<h2 class="wp-block-heading">10. Log only actionable information</h2>
-
-
-
-<p><a href="https://en.wikipedia.org/wiki/Logorrhea_(psychology)" target="_blank" rel="noopener">Logorrhea</a> is irritating, so don&#8217;t spam the user with trivia. If you log at all, log only actionable errors that someone needs to fix. Don&#8217;t use fancy loggers, just print to the console, and let users redirect that output where they need it. Never log <a href="https://pkg.go.dev/log/slog#example-LogValuer-Secret" target="_blank" rel="noopener">secrets</a> or personal data.</p>
-
-
-
-<p>Use <a href="https://pkg.go.dev/log/slog" target="_blank" rel="noopener"><code>slog</code></a> to generate machine-readable JSON:</p>
-
-
-
-<pre class="EnlighterJSRAW">logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-logger.Error(&quot;oh no&quot;, &quot;user&quot;, os.Getenv(&quot;USER&quot;))
-// Output:
-// {&quot;time&quot;:&quot;...&quot;,&quot;level&quot;:&quot;ERROR&quot;,&quot;msg&quot;:&quot;oh no&quot;,
-// &quot;user&quot;:&quot;bitfield&quot;}</pre>
-
-
-
-<p>Logging is not for request-scoped troubleshooting: use <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener">tracing</a> instead. Don&#8217;t log performance data or statistics: that&#8217;s what <a href="https://opentelemetry.io/docs/concepts/signals/metrics/" target="_blank" rel="noopener">metrics</a> are for.</p>
-
-
-
-<p><strong>Tip:</strong> Instead of logging, use GoLand&#8217;s debugger with <a href="https://www.jetbrains.com/help/go/using-breakpoints.html" target="_blank" rel="noopener">non-suspending logging breakpoints</a> to gather troubleshooting information.</p>
-
-
-
-<figure class="wp-block-image size-full"><img style="width:100% !important; height:auto !important; max-width:100% !important;" decoding="async" loading="lazy" src="https://blog.jetbrains.com/wp-content/uploads/2025/10/10_log_only_actionable_information.gif" alt="" class="wp-image-651099"/></figure>
-
-
-
-<h2 class="wp-block-heading">Guru meditation</h2>
-
-
-
-<p>My mountain-dwelling guru also says, “Make it work first, then make it right. Draft a quick <a href="https://wiki.c2.com/?WalkingSkeleton" target="_blank" rel="noopener">walking skeleton</a>, using <a href="https://bitfieldconsulting.com/posts/tdd-shameless-green" target="_blank" rel="noopener">shameless green</a>, and try it out on real users. Solve their problems first, and only then focus on code quality.”</p>
-
-
-
-<p>Software takes more time to maintain than it does to write, so invest an extra 10% effort in refactoring, simplifying, and improving code while you still remember how it works. Making your programs better makes you a better programmer</p>
-]]></content:encoded>
-					
-		
-		
-			</item>
 	</channel>
 </rss>
