@@ -45,7 +45,33 @@ func SubscribeCTA() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"subscribe-cta__inner\"><h2 class=\"subscribe-cta__title\">Get the digest in your inbox</h2><p class=\"subscribe-cta__lead\">The best Go stories from across the community, ranked and delivered weekday mornings. Free, no spam.</p><form class=\"subscribe-cta__form\" data-subscribe><input class=\"hero__input\" type=\"email\" name=\"email\" placeholder=\"you@example.com\" autocomplete=\"email\" aria-label=\"Email address\" required> <button class=\"button button--primary\" type=\"submit\">Subscribe</button></form><p class=\"hero__hint\" data-subscribe-hint hidden></p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"subscribe-cta__inner\"><h2 class=\"subscribe-cta__title\">Get the digest in your inbox</h2><p class=\"subscribe-cta__lead\">The best Go stories from across the community, ranked and delivered weekday mornings. Free, no spam.</p><form class=\"subscribe-cta__form\" data-subscribe><input class=\"hero__input\" type=\"email\" name=\"email\" placeholder=\"you@example.com\" autocomplete=\"email\" aria-label=\"Email address\" required>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Subscribe")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = Button(ButtonProps{Type: "submit"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</form><p class=\"hero__hint\" data-subscribe-hint hidden></p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -55,7 +81,7 @@ func SubscribeCTA() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

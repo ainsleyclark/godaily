@@ -17,30 +17,30 @@ func twitterShareURL(canonicalURL, title string) templ.SafeURL {
 templ ShareButtons(canonicalURL string, title string) {
 	<div class="share-buttons">
 		<span class="share-buttons__label">Share</span>
-		<button type="button" class="share-buttons__btn" data-share-copy={ canonicalURL } aria-label="Copy link">
+		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Attrs: templ.Attributes{"data-share-copy": canonicalURL, "aria-label": "Copy link"}}) {
 			<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<path d="M6.5 9.5a3.536 3.536 0 0 0 5 0l2-2a3.536 3.536 0 0 0-5-5L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 				<path d="M9.5 6.5a3.536 3.536 0 0 0-5 0l-2 2a3.536 3.536 0 0 0 5 5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 			</svg>
 			<span data-share-copy-label>Copy link</span>
-		</button>
-		<a class="share-buttons__btn" href={ linkedInShareURL(canonicalURL) } target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+		}
+		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: linkedInShareURL(canonicalURL), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on LinkedIn"}}) {
 			<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<path d="M13.5 1h-11C1.67 1 1 1.67 1 2.5v11c0 .83.67 1.5 1.5 1.5h11c.83 0 1.5-.67 1.5-1.5v-11C15 1.67 14.33 1 13.5 1zM5.5 12.5h-2v-6h2v6zM4.5 5.75a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zM12.5 12.5h-2V9.75c0-.69-.56-1.25-1.25-1.25S8 9.06 8 9.75v2.75H6v-6h2v.84A2.73 2.73 0 0 1 9.75 7c1.52 0 2.75 1.23 2.75 2.75v2.75z"></path>
 			</svg>
 			<span>LinkedIn</span>
-		</a>
-		<a class="share-buttons__btn" href={ blueskyShareURL(canonicalURL, title) } target="_blank" rel="noopener noreferrer" aria-label="Share on Bluesky">
+		}
+		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: blueskyShareURL(canonicalURL, title), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on Bluesky"}}) {
 			<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<path d="M8 3.5C6.5 2 3.5 1 2 2.5 .5 4 1 6.5 3 7.5c1 .5 2 .5 2 .5S4.5 9 4 10c-.5 1 .5 2 1.5 1.5.5-.25.75-.5 2.5-.5s2 .25 2.5.5C11.5 12 12.5 11 12 10c-.5-1-1-2-1-2s1 0 2-.5c2-1 2.5-3.5 1-5C12.5 1 9.5 2 8 3.5z"></path>
 			</svg>
 			<span>Bluesky</span>
-		</a>
-		<a class="share-buttons__btn" href={ twitterShareURL(canonicalURL, title) } target="_blank" rel="noopener noreferrer" aria-label="Share on X / Twitter">
+		}
+		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: twitterShareURL(canonicalURL, title), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on X / Twitter"}}) {
 			<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<path d="M12.6 1h2.4L9.7 6.8 16 15h-4.3l-3.8-5-4.4 5H1l5.7-6.5L0 1h4.4l3.5 4.6L12.6 1zm-.8 12.6h1.3L4.3 2.4H2.9l8.9 11.2z"></path>
 			</svg>
 			<span>X / Twitter</span>
-		</a>
+		}
 	</div>
 }

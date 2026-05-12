@@ -18,7 +18,9 @@ templ SubscribeCTA() {
 						aria-label="Email address"
 						required
 					/>
-					<button class="button button--primary" type="submit">Subscribe</button>
+					@Button(ButtonProps{Type: "submit"}) {
+						Subscribe
+					}
 				</form>
 				<p class="hero__hint" data-subscribe-hint hidden></p>
 			</div>

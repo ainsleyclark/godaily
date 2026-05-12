@@ -29,7 +29,9 @@ templ Hero(flash string, subscriberCount int64) {
 							aria-label="Email address"
 							required
 						/>
-						<button class="button button--primary" type="submit">Get the digest</button>
+						@Button(ButtonProps{Type: "submit"}) {
+							Get the digest
+						}
 					</form>
 					<p class="hero__hint" data-subscribe-hint hidden></p>
 				}
