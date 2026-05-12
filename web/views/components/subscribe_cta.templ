@@ -1,7 +1,11 @@
 package components
 
-templ SubscribeCTA() {
-	<section class="section subscribe-cta">
+type SubscribeCTAProps struct {
+	FlushTop bool
+}
+
+templ SubscribeCTA(props SubscribeCTAProps) {
+	<section class={ "section", "subscribe-cta", templ.KV("section--flush-top", props.FlushTop) }>
 		@Container(false) {
 			<div class="subscribe-cta__inner">
 				<h2 class="subscribe-cta__title">Get the digest in your inbox</h2>

@@ -40,7 +40,7 @@ templ IssuesArchive(issues []news.Issue) {
 			}
 		</section>
 		@components.Rule()
-		@components.SubscribeCTA()
+		@components.SubscribeCTA(components.SubscribeCTAProps{})
 		@components.Footer()
 	}
 }
