@@ -4,7 +4,7 @@
 		"source": "github",
 		"title": "sync/atomic: add Uint64Pair",
 		"url": "https://github.com/golang/go/issues/61236",
-		"image_url": "https://opengraph.githubassets.com/8ab2f89fed70647e636c99eab02a4d3d20b4951b9d61d574818f414b29f1d6d2/golang/go/issues/61236",
+		"image_url": "https://opengraph.githubassets.com/37cad5cbb697dcad99d5579a6454943ca492462c54ebedb61c5090e63d8afb3a/golang/go/issues/61236",
 		"author": {
 			"username": "haraldrudell",
 			"avatar_url": "https://avatars.githubusercontent.com/u/926815?v=4",
@@ -15,6 +15,74 @@
 		"comments": 41,
 		"score": 1.20816730878679,
 		"published": "2023-07-08T11:48:36Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/mldsa: new package",
+		"url": "https://github.com/golang/go/issues/77626",
+		"image_url": "https://opengraph.githubassets.com/b0e478bce0b61071f3e8b7116af3dc987a14f5bc5fc9135742de70556061d334/golang/go/issues/77626",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Go 1.26 added an internal implementation of the ML-DSA post-quantum signature algorithm, specified in FIPS 204. I propose we expose a public crypto/ml",
+		"tag": "proposal_accepted",
+		"comments": 27,
+		"score": 1.2397524247804674,
+		"published": "2026-02-15T13:16:07Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "simd/archsimd: architecture-specific SIMD intrinsics under a GOEXPERIMENT",
+		"url": "https://github.com/golang/go/issues/73787",
+		"image_url": "https://opengraph.githubassets.com/8aef0264eb4696c5028d50fbe95be96f19914de90c1a22af99d70c3b209dd836/golang/go/issues/73787",
+		"author": {
+			"username": "cherrymui",
+			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
+			"profile_url": "https://github.com/cherrymui"
+		},
+		"snippet": "Update (02/11/2026): The AMD64 low-level SIMD package is now available in Go 1.26 under GOEXPERIMENT=simd . There were minor bug fixes since the RC2.",
+		"tag": "proposal_accepted",
+		"comments": 211,
+		"score": 1.8,
+		"published": "2025-05-19T20:43:15Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "crypto/x509,crypto/tls: add ML-DSA support",
+		"url": "https://github.com/golang/go/issues/78888",
+		"image_url": "https://opengraph.githubassets.com/1da6551a2d31da7cd863d129af2fbc4d5fe1dded96b5dbe07e7cf1c8cbd979c1/golang/go/issues/78888",
+		"author": {
+			"username": "FiloSottile",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
+			"profile_url": "https://github.com/FiloSottile"
+		},
+		"snippet": "Proposal Details [The timeline of plausible CRQC has shifted](https://words.filippo.io/crqc-timeline/) which made my previous preference for a wait-an",
+		"tag": "proposal_accepted",
+		"comments": 7,
+		"score": 1.0541294438119553,
+		"published": "2026-04-21T15:38:31Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "spec: generic methods for Go",
+		"url": "https://github.com/golang/go/issues/77273",
+		"image_url": "https://opengraph.githubassets.com/49b7f877ccfe62e62239debd29aa12f54f15d587400bd29e2c8070279291d33e/golang/go/issues/77273",
+		"author": {
+			"username": "griesemer",
+			"avatar_url": "https://avatars.githubusercontent.com/u/8528975?v=4",
+			"profile_url": "https://github.com/griesemer"
+		},
+		"snippet": "Targeting Go 1.27 — Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
+		"tag": "proposal_accepted",
+		"comments": 184,
+		"score": 1.8,
+		"published": "2026-01-22T23:13:22Z"
 	},
 	{
 		"id": 0,
@@ -70,57 +138,6 @@
 	{
 		"id": 0,
 		"source": "github",
-		"title": "spec: generic methods for Go",
-		"url": "https://github.com/golang/go/issues/77273",
-		"image_url": "https://opengraph.githubassets.com/ef8d279a52bb9a464021937ffd060a76083053de872df6f08d3494942fc9e664/golang/go/issues/77273",
-		"author": {
-			"username": "griesemer",
-			"avatar_url": "https://avatars.githubusercontent.com/u/8528975?v=4",
-			"profile_url": "https://github.com/griesemer"
-		},
-		"snippet": "Targeting Go 1.27 — Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
-		"tag": "proposal_accepted",
-		"comments": 183,
-		"score": 1.8,
-		"published": "2026-01-22T23:13:22Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "crypto/mldsa: new package",
-		"url": "https://github.com/golang/go/issues/77626",
-		"image_url": "https://opengraph.githubassets.com/ee8bf07d42b1c90e66a4092fbf3d5e6382fddb61f94f320d219a0d572320bed7/golang/go/issues/77626",
-		"author": {
-			"username": "FiloSottile",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
-			"profile_url": "https://github.com/FiloSottile"
-		},
-		"snippet": "Go 1.26 added an internal implementation of the ML-DSA post-quantum signature algorithm, specified in FIPS 204. I propose we expose a public crypto/ml",
-		"tag": "proposal_accepted",
-		"comments": 25,
-		"score": 1.2397524247804674,
-		"published": "2026-02-15T13:16:07Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "crypto/x509,crypto/tls: add ML-DSA support",
-		"url": "https://github.com/golang/go/issues/78888",
-		"image_url": "https://opengraph.githubassets.com/0ddc8295893865905ca35b65fb6c0d1e7f0d98ba9de58eb9d4ccb04114b5831a/golang/go/issues/78888",
-		"author": {
-			"username": "FiloSottile",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1225294?v=4",
-			"profile_url": "https://github.com/FiloSottile"
-		},
-		"snippet": "Proposal Details [The timeline of plausible CRQC has shifted](https://words.filippo.io/crqc-timeline/) which made my previous preference for a wait-an",
-		"tag": "proposal_accepted",
-		"comments": 5,
-		"score": 1.005895125737,
-		"published": "2026-04-21T15:38:31Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
 		"title": "crypto/tls: implement MLKEM1024 key exchange",
 		"url": "https://github.com/golang/go/issues/78543",
 		"image_url": "https://opengraph.githubassets.com/e4afb8743fc622c5322a9fb8d9196c368a8d1b0573af02f41e7855f8b36c5283/golang/go/issues/78543",
@@ -151,23 +168,6 @@
 		"comments": 8,
 		"score": 0.9,
 		"published": "2025-10-31T16:20:56Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "simd/archsimd: architecture-specific SIMD intrinsics under a GOEXPERIMENT",
-		"url": "https://github.com/golang/go/issues/73787",
-		"image_url": "https://opengraph.githubassets.com/1d582a908f27a506e0290780d4fcb01c461842d30a8f953b715a1cc944f4f507/golang/go/issues/73787",
-		"author": {
-			"username": "cherrymui",
-			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
-			"profile_url": "https://github.com/cherrymui"
-		},
-		"snippet": "Update (02/11/2026): The AMD64 low-level SIMD package is now available in Go 1.26 under GOEXPERIMENT=simd . There were minor bug fixes since the RC2.",
-		"tag": "proposal_accepted",
-		"comments": 210,
-		"score": 1.8,
-		"published": "2025-05-19T20:43:15Z"
 	},
 	{
 		"id": 0,
@@ -342,6 +342,23 @@
 	{
 		"id": 0,
 		"source": "github",
+		"title": "proposal: crypto/x509: support SSL_CERT_FILE/DIR on Darwin and Windows",
+		"url": "https://github.com/golang/go/issues/77865",
+		"image_url": "https://opengraph.githubassets.com/170f5df265ecbed6bede643eaeaa39b65710c03c094a08088093237f8e7b37f2/golang/go/issues/77865",
+		"author": {
+			"username": "rolandshoemaker",
+			"avatar_url": "https://avatars.githubusercontent.com/u/5080674?v=4",
+			"profile_url": "https://github.com/rolandshoemaker"
+		},
+		"snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
+		"tag": "proposal",
+		"comments": 18,
+		"score": 0.5,
+		"published": "2026-02-28T01:00:58Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
 		"title": "proposal: net/http/httptest: synctest support",
 		"url": "https://github.com/golang/go/issues/76608",
 		"image_url": "https://opengraph.githubassets.com/90001a3bd464f7ba324b0e0c4fddb8debdb4115d0322fb0dae8cf90df3ac7236/golang/go/issues/76608",
@@ -444,19 +461,70 @@
 	{
 		"id": 0,
 		"source": "github",
-		"title": "proposal: crypto/x509: support SSL_CERT_FILE/DIR on Darwin and Windows",
-		"url": "https://github.com/golang/go/issues/77865",
-		"image_url": "https://opengraph.githubassets.com/66ce0d8d8610087c7d9a3ba8e95b93d37af81a7cace4b233b115e358c4af65ef/golang/go/issues/77865",
+		"title": "proposal: simd/archsimd: enable AMD64 architecture-specific SIMD by default",
+		"url": "https://github.com/golang/go/issues/78979",
+		"image_url": "https://opengraph.githubassets.com/e3a1aad3e8e51483e3baabba2ccd1ab45dc3e89ec73abd1f3101479461eb331f/golang/go/issues/78979",
 		"author": {
-			"username": "rolandshoemaker",
-			"avatar_url": "https://avatars.githubusercontent.com/u/5080674?v=4",
-			"profile_url": "https://github.com/rolandshoemaker"
+			"username": "cherrymui",
+			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
+			"profile_url": "https://github.com/cherrymui"
 		},
-		"snippet": "On darwin systems we use the platform certificate verifier, instead of the native Go one, by default. The only time we don't do this is if GODEBUG=x50",
+		"snippet": "Proposal Details In Go 1.26, we introduced AMD64 architecture-specific SIMD intrinsics in the simd/archsimd package under GOEXPERIMENT=simd . Thanks t",
 		"tag": "proposal",
-		"comments": 17,
+		"comments": 34,
+		"score": 0.6712040604371055,
+		"published": "2026-04-27T19:29:32Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: maps: invert function",
+		"url": "https://github.com/golang/go/issues/79351",
+		"image_url": "https://opengraph.githubassets.com/c629ffd8b6dd264447a4896e49b898538ce4e8b3c6781a814088fb68ba975761/golang/go/issues/79351",
+		"author": {
+			"username": "MovieStoreGuy",
+			"avatar_url": "https://avatars.githubusercontent.com/u/30928402?v=4",
+			"profile_url": "https://github.com/MovieStoreGuy"
+		},
+		"snippet": "Proposal Details The goal of this proposal is to add a new method to the Maps package that would enable user a consistent method on inverting a map. T",
+		"tag": "proposal",
+		"comments": 3,
 		"score": 0.5,
-		"published": "2026-02-28T01:00:58Z"
+		"published": "2026-05-12T01:06:22Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: spec: short function literals",
+		"url": "https://github.com/golang/go/issues/21498",
+		"image_url": "https://opengraph.githubassets.com/ca0f7a2c6472076fc3860e731cec8c17b0e9fb875e0cde172cbaf9322daa5614/golang/go/issues/21498",
+		"author": {
+			"username": "neild",
+			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
+			"profile_url": "https://github.com/neild"
+		},
+		"snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
+		"tag": "proposal",
+		"comments": 968,
+		"score": 1,
+		"published": "2017-08-17T18:29:52Z"
+	},
+	{
+		"id": 0,
+		"source": "github",
+		"title": "proposal: encoding: generic parse functions",
+		"url": "https://github.com/golang/go/issues/79317",
+		"image_url": "https://opengraph.githubassets.com/34bbd43d88fdbeddcf674e31dcec743bb5833d28468d03f90cd23f743b8966a2/golang/go/issues/79317",
+		"author": {
+			"username": "zephyrtronium",
+			"avatar_url": "https://avatars.githubusercontent.com/u/1428115?v=4",
+			"profile_url": "https://github.com/zephyrtronium"
+		},
+		"snippet": "Proposal Details Types that marshal and unmarshal, especially to text but also to binary, often have an associated Parse function which is a thin wrap",
+		"tag": "proposal",
+		"comments": 2,
+		"score": 0.5,
+		"published": "2026-05-10T20:14:28Z"
 	},
 	{
 		"id": 0,
@@ -474,40 +542,6 @@
 		"comments": 8,
 		"score": 0.5288743031666463,
 		"published": "2024-08-07T18:01:32Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "proposal: spec: short function literals",
-		"url": "https://github.com/golang/go/issues/21498",
-		"image_url": "https://opengraph.githubassets.com/0fc4643623d508d12b66dd5bdc2c33a7a7c10adf92a24a7395757135d69000c6/golang/go/issues/21498",
-		"author": {
-			"username": "neild",
-			"avatar_url": "https://avatars.githubusercontent.com/u/52544?v=4",
-			"profile_url": "https://github.com/neild"
-		},
-		"snippet": "[edit: As of today, end of May 2025, this proposal has received ~1000 comments. Please read the [summary](https://github.com/golang/go/issues/21498 is",
-		"tag": "proposal",
-		"comments": 965,
-		"score": 1,
-		"published": "2017-08-17T18:29:52Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "proposal: encoding: generic parse functions",
-		"url": "https://github.com/golang/go/issues/79317",
-		"image_url": "https://opengraph.githubassets.com/8556f1d9fe5b5a2103cea68f65d80963ee91b7aa1d4efb70b436dea8e89df89a/golang/go/issues/79317",
-		"author": {
-			"username": "zephyrtronium",
-			"avatar_url": "https://avatars.githubusercontent.com/u/1428115?v=4",
-			"profile_url": "https://github.com/zephyrtronium"
-		},
-		"snippet": "Proposal Details Types that marshal and unmarshal, especially to text but also to binary, often have an associated Parse function which is a thin wrap",
-		"tag": "proposal",
-		"comments": 1,
-		"score": 0.5,
-		"published": "2026-05-10T20:14:28Z"
 	},
 	{
 		"id": 0,
@@ -542,23 +576,6 @@
 		"comments": 18,
 		"score": 0.6098681622198213,
 		"published": "2026-04-22T14:48:59Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
-		"title": "proposal: simd/archsimd: enable AMD64 architecture-specific SIMD by default",
-		"url": "https://github.com/golang/go/issues/78979",
-		"image_url": "https://opengraph.githubassets.com/2e7bf3665486f3459e19b0430086f64fbc3ecd1eed323d7070c7386a16df9416/golang/go/issues/78979",
-		"author": {
-			"username": "cherrymui",
-			"avatar_url": "https://avatars.githubusercontent.com/u/14119929?v=4",
-			"profile_url": "https://github.com/cherrymui"
-		},
-		"snippet": "Proposal Details In Go 1.26, we introduced AMD64 architecture-specific SIMD intrinsics in the simd/archsimd package under GOEXPERIMENT=simd . Thanks t",
-		"tag": "proposal",
-		"comments": 28,
-		"score": 0.6319981814824864,
-		"published": "2026-04-27T19:29:32Z"
 	},
 	{
 		"id": 0,
@@ -608,7 +625,7 @@
 		"snippet": "This is a proposal to introduce a new \"rss\" profile type to runtime/pprof to provide Go users with a holistic breakdown of their program's memory usag",
 		"tag": "proposal",
 		"comments": 3,
-		"score": 0.6712040604371055,
+		"score": 0.6887513471002596,
 		"published": "2026-05-04T05:46:44Z"
 	},
 	{
@@ -784,23 +801,6 @@
 	{
 		"id": 0,
 		"source": "github",
-		"title": "proposal: cmd/go: support `-modfile` for `go mod init`",
-		"url": "https://github.com/golang/go/issues/78503",
-		"image_url": "https://opengraph.githubassets.com/580b02a291daa30fbf40dc413d3188bb6a1c9603b43a6b4c1766409c44b39a8d/golang/go/issues/78503",
-		"author": {
-			"username": "dolmen",
-			"avatar_url": "https://avatars.githubusercontent.com/u/129536?v=4",
-			"profile_url": "https://github.com/dolmen"
-		},
-		"snippet": "Proposal Details Add _official_ support for go mod init -modfile= .mod . In fact, it already works with Go 1.26.1, but the flag isn't doc",
-		"tag": "proposal",
-		"comments": 4,
-		"score": 0.5,
-		"published": "2026-04-02T10:04:25Z"
-	},
-	{
-		"id": 0,
-		"source": "github",
 		"title": "go/importer: documentation of lookup parameter of ForCompiler can be clarified",
 		"url": "https://github.com/golang/go/issues/79139",
 		"image_url": "https://opengraph.githubassets.com/6b363cbf4f56fd52679df61fbf3d9b3fcd1033e2b18024dcf846f9f33831fae6/golang/go/issues/79139",
@@ -956,7 +956,7 @@
 		"source": "github",
 		"title": "all: end support for macOS 12 in Go 1.27",
 		"url": "https://github.com/golang/go/issues/75836",
-		"image_url": "https://opengraph.githubassets.com/9dd227d5de896a8743606391c76cb06bfb7308a8c04ec65ed711e17543a5a84d/golang/go/issues/75836",
+		"image_url": "https://opengraph.githubassets.com/d2e39ac581b05e5492b3e423fabd624701a27fdd1a4a3d3aa43b35e880f5f37e/golang/go",
 		"author": {
 			"username": "prattmic",
 			"avatar_url": "https://avatars.githubusercontent.com/u/1293187?v=4",

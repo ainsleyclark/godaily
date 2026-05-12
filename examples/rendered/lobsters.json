@@ -2,6 +2,40 @@
 	{
 		"id": 0,
 		"source": "lobsters",
+		"title": "Fuzzing fork of go toolchain",
+		"url": "https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./",
+		"original_url": "https://lobste.rs/s/z4nd1a/fuzzing_fork_go_toolchain",
+		"image_url": "https://blog.trailofbits.com/img/tob.png",
+		"author": {
+			"username": "bazzargh",
+			"profile_url": "https://lobste.rs/u/bazzargh"
+		},
+		"snippet": "We built gosentry, a fuzzing-oriented fork of the Go toolchain that keeps the standard fuzzing workflow while using a stronger stack underneath.",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.4557067470936043,
+		"published": "2026-05-12T11:27:38Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
+		"title": "Popular Go library fsnotify raises supply chain alarms after maintainer access changes",
+		"url": "https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns",
+		"original_url": "https://lobste.rs/s/7rpqbo/popular_go_library_fsnotify_raises",
+		"image_url": "https://cdn.sanity.io/images/cgdhsj6q/production/aeb2feec6f6d4f566d08a195188f2442c369a048-1254x1254.png?w=1000\u0026q=95\u0026fit=max\u0026auto=format",
+		"author": {
+			"username": "knedl",
+			"profile_url": "https://lobste.rs/u/knedl"
+		},
+		"snippet": "A dispute over fsnotify maintainer access set off supply chain alarms around one of Go’s most widely used filesystem libraries.",
+		"tag": "discussion",
+		"comments": 6,
+		"score": 0.7205846872952778,
+		"published": "2026-05-12T03:49:30Z"
+	},
+	{
+		"id": 0,
+		"source": "lobsters",
 		"title": "let-go: Almost Clojure written in Go",
 		"url": "https://github.com/nooga/let-go",
 		"original_url": "https://lobste.rs/s/njobov/let_go_almost_clojure_written_go",
@@ -11,9 +45,9 @@
 			"profile_url": "https://lobste.rs/u/nooga"
 		},
 		"snippet": "Almost Clojure written in Go. Contribute to nooga/let-go development by creating an account on GitHub.",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.7619189031733016,
+		"tag": "discussion",
+		"comments": 4,
+		"score": 1,
 		"published": "2026-05-10T20:07:57Z"
 	},
 	{
@@ -22,15 +56,15 @@
 		"title": "btype: B-tree based collection types for Go",
 		"url": "https://github.com/tidwall/btype",
 		"original_url": "https://lobste.rs/s/0xe7hz/btype_b_tree_based_collection_types_for_go",
-		"image_url": "https://opengraph.githubassets.com/88372fc3c606401d89bd807f6faef7cee7cafb150d11f72c7a69bed7a562a8df/tidwall/btype",
+		"image_url": "https://opengraph.githubassets.com/e631e05048e6141e646427e6c87403ca8fcc0c8843db99dd3cac7d4f0bd370b2/tidwall/btype",
 		"author": {
 			"username": "eatonphil",
 			"profile_url": "https://lobste.rs/u/eatonphil"
 		},
 		"snippet": "B-tree based collection types for Go. Contribute to tidwall/btype development by creating an account on GitHub.",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.1762914343888821,
+		"tag": "discussion",
+		"comments": 6,
+		"score": 0.4093360343955374,
 		"published": "2026-05-10T15:20:12Z"
 	},
 	{
@@ -45,9 +79,9 @@
 			"profile_url": "https://lobste.rs/u/asciimoth"
 		},
 		"snippet": "Yggdrasil is an experimental overlay IPv6 mesh network. In short, it lets you build a \"network on top...",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
-		"score": 0.5856274687844196,
+		"score": 0.6098681622198213,
 		"published": "2026-05-09T17:24:19Z"
 	},
 	{
@@ -61,8 +95,8 @@
 			"profile_url": "https://lobste.rs/u/zarldev"
 		},
 		"snippet": "",
-		"tag": "article",
-		"comments": 280,
+		"tag": "discussion",
+		"comments": 301,
 		"score": 1,
 		"published": "2026-05-08T12:58:28Z"
 	},
@@ -78,9 +112,9 @@
 			"profile_url": "https://lobste.rs/u/mtlynch"
 		},
 		"snippet": "A system-level language with Go syntax and zero runtime.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 7,
-		"score": 0.7861595966087034,
+		"score": 0.797465225780268,
 		"published": "2026-05-06T12:39:32Z"
 	},
 	{
@@ -95,7 +129,7 @@
 			"profile_url": "https://lobste.rs/u/ugur"
 		},
 		"snippet": "So far in this series we’ve looked at the parts of the Go runtime that orchestrate execution — the memory allocator, the scheduler, the garbage collector, sysmon, the netpoller. Today we’re swit",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.1762914343888821,
 		"published": "2026-05-06T08:26:36Z"
@@ -111,7 +145,7 @@
 			"profile_url": "https://lobste.rs/u/runxiyu"
 		},
 		"snippet": "Welcome to the CMVP The Cryptographic Module Validation Program (CMVP) is a joint effort between the National Institute of Standards and Technology under the Department of Commerce and the Canadian Ce",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 18,
 		"score": 1,
 		"published": "2026-05-06T04:42:18Z"
@@ -122,13 +156,13 @@
 		"title": "Declarative git repo sync/migration tool and self hosted code search engine",
 		"url": "https://github.com/stepbrobd/miroir",
 		"original_url": "https://lobste.rs/s/zukup5/declarative_git_repo_sync_migration_tool",
-		"image_url": "https://opengraph.githubassets.com/7e38c6db0dca234cc532a025efff69bd6cfc77679ece524091270a04da27807e/stepbrobd/miroir",
+		"image_url": "https://opengraph.githubassets.com/21d7d2de4dbf87ba3399777702725814dcd599acddd72098792d088609bc64b6/stepbrobd/miroir",
 		"author": {
 			"username": "ysun",
 			"profile_url": "https://lobste.rs/u/ysun"
 		},
 		"snippet": "I've seen a few post on moving off of gh and now is probably a pretty good time (?) to show case this project I've been working on since last year ;)",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
 		"score": 0.4093360343955374,
 		"published": "2026-04-29T13:56:38Z"
@@ -144,7 +178,7 @@
 			"profile_url": "https://lobste.rs/u/zarldev"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.4093360343955374,
 		"published": "2026-04-28T11:21:35Z"
@@ -160,7 +194,7 @@
 			"profile_url": "https://lobste.rs/u/carlana"
 		},
 		"snippet": "Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 4,
 		"score": 0.9114134941872086,
 		"published": "2026-04-26T14:19:13Z"
@@ -177,7 +211,7 @@
 			"profile_url": "https://lobste.rs/u/eduard"
 		},
 		"snippet": "Learn how Github uses eBPF to detect and prevent circular dependencies in its deployment tooling.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 6,
 		"score": 0.797465225780268,
 		"published": "2026-04-18T09:17:46Z"
@@ -193,7 +227,7 @@
 			"profile_url": "https://lobste.rs/u/iv"
 		},
 		"snippet": "Breaking up programs with lots of linear steps.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 4,
 		"score": 0.797465225780268,
 		"published": "2026-04-16T12:48:35Z"
@@ -210,7 +244,7 @@
 			"profile_url": "https://lobste.rs/u/pondidum"
 		},
 		"snippet": "A look on how Wake-On-Lan work and how to create your own Golang packet",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
 		"score": 0.5288743031666463,
 		"published": "2026-04-15T17:18:59Z"
@@ -227,7 +261,7 @@
 			"profile_url": "https://lobste.rs/u/abhin4v"
 		},
 		"snippet": "With allocators, benchmarks, and some optimizations.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.4557067470936043,
 		"published": "2026-04-15T08:07:45Z"
@@ -243,7 +277,7 @@
 			"profile_url": "https://lobste.rs/u/cgrinds"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.7619189031733016,
 		"published": "2026-04-10T11:38:16Z"
@@ -259,7 +293,7 @@
 			"profile_url": "https://lobste.rs/u/samuelkarp"
 		},
 		"snippet": "Cloud security, Go internals, and systems engineering: bugs, edge cases, and things that weren’t supposed to happen.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 2,
 		"score": 0.8814571719444105,
 		"published": "2026-04-07T23:35:34Z"
@@ -276,7 +310,7 @@
 			"profile_url": "https://lobste.rs/u/dredozubov"
 		},
 		"snippet": "Blog post with the full write-up and threat model: https://codeofchange.io/how-i-made-dangerously-skip-permissions-safe-in-claude-code/",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.4093360343955374,
 		"published": "2026-04-07T16:23:42Z"
@@ -293,7 +327,7 @@
 			"profile_url": "https://lobste.rs/u/stapelberg"
 		},
 		"snippet": "Recently, during a production incident response, I guessed the root cause of an outage correctly within less than an hour (cool!) and submitted a fix just to rule it out, only to then spend many hours",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 40,
 		"score": 1,
 		"published": "2026-04-05T16:59:29Z"
@@ -310,7 +344,7 @@
 			"profile_url": "https://lobste.rs/u/carlana"
 		},
 		"snippet": "A design journal for slogbox, a zero-dependency slog.Handler that keeps recent logs in a ring buffer",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.4557067470936043,
 		"published": "2026-04-05T12:58:46Z"
@@ -327,7 +361,7 @@
 			"profile_url": "https://lobste.rs/u/telemachus"
 		},
 		"snippet": "Little language inspired by Rust that compiles to Go.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 40,
 		"score": 1,
 		"published": "2026-04-03T12:17:43Z"
@@ -343,7 +377,7 @@
 			"profile_url": "https://lobste.rs/u/lr0"
 		},
 		"snippet": "Website",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.49491262604822334,
 		"published": "2026-04-02T16:53:29Z"
@@ -354,15 +388,15 @@
 		"title": "A game with programmable space combat written in Go",
 		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
 		"original_url": "https://lobste.rs/s/gtb0fc/game_with_programmable_space_combat",
-		"image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3024370/b17cabdf36aa10f92f15492462563c7a34425238/capsule_616x353.jpg?t=1777715913",
+		"image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3024370/b17cabdf36aa10f92f15492462563c7a34425238/capsule_616x353.jpg?t=1777715913",
 		"author": {
 			"username": "quasilyte",
 			"profile_url": "https://lobste.rs/u/quasilyte"
 		},
 		"snippet": "Lead a paramilitary force against a growing space Cult threat. Program your units, build a fleet, trade, research, and engage in deep tactical combat in this RPG-strategy hybrid.",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 18,
-		"score": 0.8186720687910748,
+		"score": 0.8286472601695658,
 		"published": "2026-04-01T17:49:53Z"
 	},
 	{
@@ -376,42 +410,9 @@
 			"profile_url": "https://lobste.rs/u/kvch"
 		},
 		"snippet": "A practical guide to fast, content-based document retrieval in Go using Bleve. From simple indexing to custom query languages and performance fine-tuning",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 5,
 		"score": 0.6887513471002596,
 		"published": "2026-03-31T12:53:06Z"
-	},
-	{
-		"id": 0,
-		"source": "lobsters",
-		"title": "A fast, compact, immutable map from strings to uint64 values in Go",
-		"url": "https://github.com/lemire/constmap",
-		"original_url": "https://lobste.rs/s/h1hr9m/fast_compact_immutable_map_from_strings",
-		"image_url": "https://repository-images.githubusercontent.com/1195465008/f6357c87-c603-449a-917c-f90f913e516e",
-		"author": {
-			"username": "eatonphil",
-			"profile_url": "https://lobste.rs/u/eatonphil"
-		},
-		"snippet": "Contribute to lemire/constmap development by creating an account on GitHub.",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.6712040604371055,
-		"published": "2026-03-30T14:32:20Z"
-	},
-	{
-		"id": 0,
-		"source": "lobsters",
-		"title": "I Made a Terminal Pager",
-		"url": "https://theleo.zone/posts/pager/",
-		"original_url": "https://lobste.rs/s/y5hfo9/i_made_terminal_pager",
-		"author": {
-			"username": "robinovitch61",
-			"profile_url": "https://lobste.rs/u/robinovitch61"
-		},
-		"snippet": "A writeup on implementing my own terminal viewport component in Go, which is used in my Terminal pager robinovitch61/lore and in my Kubernetes log viewer terminal application robinovitch61/kl.",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.4557067470936043,
-		"published": "2026-03-30T14:07:40Z"
 	}
 ]

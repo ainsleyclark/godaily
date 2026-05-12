@@ -1,1 +1,17 @@
-null
+[
+	{
+		"id": 0,
+		"source": "hacker_news",
+		"title": "Ask HN: I am 17 years old, which college should I apply if I have some projects?",
+		"url": "https://news.ycombinator.com/item?id=48097377",
+		"author": {
+			"username": "Imustaskforhelp",
+			"profile_url": "https://news.ycombinator.com/user?id=Imustaskforhelp"
+		},
+		"snippet": "Hello dear reader, this is a long message but I hope that you can bear with me as I must ask for your help as I need it :-D What are the best international colleges that I should apply to? Does anyone",
+		"tag": "discussion",
+		"comments": 3,
+		"score": 0.423099442533317,
+		"published": "2026-05-11T16:44:04Z"
+	}
+]
