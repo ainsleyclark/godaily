@@ -66,8 +66,24 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Run e2e tests
-        run: go test ./e2e/... -v -timeout 60s
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Playwright dependencies
+        run: pnpm install
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+        working-directory: e2e
+
+      - name: Run e2e tests (Playwright)
+        run: pnpm exec playwright test
+        working-directory: e2e
 
   govulncheck:
     runs-on: ubuntu-latest

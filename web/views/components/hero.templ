@@ -32,8 +32,8 @@ templ Hero(flash string, subscriberCount int64) {
 						@Button(ButtonProps{Type: "submit"}) {
 							Get the digest
 						}
+						<p class="hero__hint" data-subscribe-hint hidden></p>
 					</form>
-					<p class="hero__hint" data-subscribe-hint hidden></p>
 				}
 				if subscriberCount > 50 {
 					<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } subscribers. Free forever. No spam. Unsubscribe any time.</p>
