@@ -6,8 +6,8 @@ require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/a-h/templ v0.3.1020
 	github.com/ainsleydev/webkit v0.13.2
-	github.com/anthropics/anthropic-sdk-go v1.39.0
-	github.com/caarlos0/env/v11 v11.3.1
+	github.com/anthropics/anthropic-sdk-go v1.42.0
+	github.com/caarlos0/env/v11 v11.4.1
 	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.27.1
@@ -16,7 +16,8 @@ require (
 	github.com/tursodatabase/libsql-client-go v0.0.0-20251219100830-236aa1ff8acc
 	github.com/urfave/cli/v3 v3.8.0
 	go.uber.org/mock v0.6.0
-	modernc.org/sqlite v1.50.0
+	golang.org/x/time v0.15.0
+	modernc.org/sqlite v1.50.1
 )
 
 require (
@@ -72,6 +73,7 @@ require (
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect
+	github.com/standard-webhooks/standard-webhooks/libraries v0.0.0-20260508151727-1282bb917829 // indirect
 	github.com/tdewolff/minify/v2 v2.24.8 // indirect
 	github.com/tdewolff/parse/v2 v2.8.5 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
@@ -88,12 +90,11 @@ require (
 	golang.org/x/sys v0.43.0 // indirect
 	golang.org/x/telemetry v0.0.0-20260421165255-392afab6f40e // indirect
 	golang.org/x/text v0.36.0 // indirect
-	golang.org/x/time v0.15.0 // indirect
 	golang.org/x/tools v0.44.0 // indirect
 	golang.org/x/vuln v1.3.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.72.1 // indirect
+	modernc.org/libc v1.72.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
