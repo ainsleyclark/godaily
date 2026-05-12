@@ -29,6 +29,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/web/og"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
@@ -36,6 +37,11 @@ import (
 // renderPages writes the homepage, thank-you page, issues archive, and all
 // individual issue pages to outDir. It calls repo.Find for each issue to load its full item list.
 func renderPages(ctx context.Context, repo news.IssueRepository, w website, subscriberCount int64, outDir string) error {
+	gen, err := og.New()
+	if err != nil {
+		return errors.Wrap(err, "creating OG image generator")
+	}
+
 	homeData := pages.HomeData{
 		LatestIssue:     w.LatestIssue,
 		SampleIssue:     w.LatestIssue,
@@ -44,6 +50,9 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, subs
 	}
 	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
 		return errors.Wrap(err, "rendering homepage")
+	}
+	if err := writeOGImage(outDir, "home.png", func() ([]byte, error) { return gen.Home() }); err != nil {
+		return errors.Wrap(err, "generating home OG image")
 	}
 
 	if err := renderPageInDir(ctx, filepath.Join(outDir, "thank-you"), pages.ThankYou(w.LatestIssue)); err != nil {
@@ -75,10 +84,29 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, subs
 		if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", full.Slug), pages.Digest(full)); err != nil {
 			return fmt.Errorf("rendering issue %s: %w", full.Slug, err)
 		}
+		issueCopy := full
+		if err := writeOGImage(outDir, filepath.Join("issues", full.Slug+".png"), func() ([]byte, error) {
+			return gen.Issue(issueCopy)
+		}); err != nil {
+			return fmt.Errorf("generating OG image for issue %s: %w", full.Slug, err)
+		}
 		slog.InfoContext(ctx, "Rendered issue", "slug", full.Slug)
 	}
 
 	return nil
+}
+
+// writeOGImage generates a PNG via fn and writes it to outDir/og/name.
+func writeOGImage(outDir, name string, fn func() ([]byte, error)) error {
+	png, err := fn()
+	if err != nil {
+		return errors.Wrap(err, "generating image")
+	}
+	dest := filepath.Join(outDir, "og", name)
+	if err := os.MkdirAll(filepath.Dir(dest), 0o750); err != nil {
+		return errors.Wrap(err, "creating OG directory")
+	}
+	return errors.Wrap(os.WriteFile(dest, png, 0o600), "writing OG image")
 }
 
 func renderPageInDir(ctx context.Context, dir string, component templ.Component) error {

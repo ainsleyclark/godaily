@@ -5,6 +5,7 @@ import "github.com/ainsleydev/webkit/pkg/env"
 const (
 	defaultTitle       = "GoDaily – Daily Go news straight to your inbox"
 	defaultDescription = "A weekday digest of the best Go stories from across the community, ranked and delivered before standup."
+	defaultOGImage     = "https://godaily.dev/og/home.png"
 )
 
 // PageMeta holds the SEO and social-sharing metadata rendered in <head>.
@@ -12,6 +13,7 @@ type PageMeta struct {
 	Title        string // falls back to defaultTitle when empty
 	Description  string // falls back to defaultDescription when empty
 	CanonicalURL string // full URL; omitted when empty
+	OGImage      string // absolute URL to a 1200×630 OG image; falls back to defaultOGImage when empty
 }
 
 func (m PageMeta) title() string {
@@ -26,6 +28,13 @@ func (m PageMeta) description() string {
 		return m.Description
 	}
 	return defaultDescription
+}
+
+func (m PageMeta) ogImage() string {
+	if m.OGImage != "" {
+		return m.OGImage
+	}
+	return defaultOGImage
 }
 
 templ Base(meta PageMeta) {
@@ -48,10 +57,14 @@ templ Base(meta PageMeta) {
 			if meta.CanonicalURL != "" {
 				<meta property="og:url" content={ meta.CanonicalURL }/>
 			}
+			<meta property="og:image" content={ meta.ogImage() }/>
+			<meta property="og:image:width" content="1200"/>
+			<meta property="og:image:height" content="630"/>
 			<!-- Twitter -->
-			<meta name="twitter:card" content="summary"/>
+			<meta name="twitter:card" content="summary_large_image"/>
 			<meta name="twitter:title" content={ meta.title() }/>
 			<meta name="twitter:description" content={ meta.description() }/>
+			<meta name="twitter:image" content={ meta.ogImage() }/>
 			<!-- Feeds -->
 			<link rel="alternate" type="application/rss+xml" title="GoDaily" href="/rss.xml"/>
 			<!-- Favicon -->

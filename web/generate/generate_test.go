@@ -78,6 +78,8 @@ func TestSite(t *testing.T) {
 				filepath.Join("unsubscribed", "index.html"),
 				filepath.Join("issues", "index.html"),
 				filepath.Join("issues", issue.Slug, "index.html"),
+				filepath.Join("og", "home.png"),
+				filepath.Join("og", "issues", issue.Slug+".png"),
 			},
 		},
 		"List error": {
