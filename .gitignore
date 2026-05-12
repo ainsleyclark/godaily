@@ -33,6 +33,7 @@ go.work.sum
 
 # Binaries
 godaily
+e2e/server
 
 # Database & Cache
 *.db

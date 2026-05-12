@@ -8,10 +8,10 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: 'go run .',
+    command: process.env.CI ? './server' : 'go run .',
     url: 'http://localhost:4000/api/healthz',
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: 60_000,
     stdout: 'pipe',
     stderr: 'pipe',
   },

@@ -81,6 +81,9 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
         working-directory: e2e
 
+      - name: Build e2e server
+        run: go build -o e2e/server ./e2e
+
       - name: Run e2e tests (Playwright)
         run: pnpm exec playwright test
         working-directory: e2e
