@@ -120,7 +120,7 @@
 	&__gopher-wrap {
 		position: relative;
 		width: 460px;
-		height: 460px;
+		aspect-ratio: 1;
 		display: grid;
 		place-items: center;
 
@@ -145,7 +145,6 @@
 
 		@include mobile {
 			width: 260px;
-			height: 260px;
 		}
 	}
 
