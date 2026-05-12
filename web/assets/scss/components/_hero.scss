@@ -6,7 +6,8 @@
 	overflow: hidden;
 
 	@include mobile {
-		padding: 3rem 0 0;
+		padding: 3rem 0 2rem;
+		background: radial-gradient(ellipse 130% 45% at 50% 20%, rgba(42, 168, 216, 0.13) 0%, transparent 70%);
 	}
 
 	&::before {
@@ -19,6 +20,10 @@
 		background-size: 60px 60px;
 		mask-image: radial-gradient(ellipse 65% 80% at 75% 50%, #000 0%, transparent 80%);
 		pointer-events: none;
+
+		@include mobile {
+			mask-image: radial-gradient(ellipse 100% 55% at 50% 20%, #000 0%, transparent 75%);
+		}
 	}
 
 	> .container {
@@ -99,8 +104,7 @@
 		align-items: center;
 
 		@include mobile {
-			justify-content: center;
-			margin-top: 0.5rem;
+			display: none;
 		}
 	}
 
@@ -143,9 +147,6 @@
 			pointer-events: none;
 		}
 
-		@include mobile {
-			width: 260px;
-		}
 	}
 
 	&__ring {
