@@ -1,0 +1,14 @@
+.tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 0.35rem 0.7rem;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	//background: var(--bg-card);
+	color: var(--text-2);
+	font-family: var(--font);
+	font-size: 0.8rem;
+	line-height: 1;
+	font-weight: 500;
+}

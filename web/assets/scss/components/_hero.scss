@@ -20,25 +20,7 @@
 	}
 
 	&__badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		background: var(--accent-light);
-		color: var(--accent-dark);
-		padding: 5px 12px;
-		border-radius: 100px;
-		font-size: 0.8rem;
-		font-weight: 600;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
 		margin-bottom: 1.5rem;
-	}
-
-	&__badge-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: var(--accent);
 	}
 
 	&__title {
