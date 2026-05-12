@@ -2,109 +2,217 @@
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "Migrating Hyperledger Fabric Chaincode to Fabric-X: A Working Proof-of-Concept",
-		"url": "https://dev.to/aaradhychinche/from-chaincode-to-views-migrating-a-hyperledger-fabric-asset-transfer-to-fabric-x-204l",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fp64vllv2zoid1nidv1ol.png",
+		"title": "My Agent Has Been Running for 60 Days. It Has Never Had the Same IP Twice.",
+		"url": "https://dev.to/artem_a/my-agent-has-been-running-for-60-days-it-has-never-had-the-same-ip-twice-5fga",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fs4navgfv1lzg6etgnqrw.png",
 		"author": {
-			"name": "Aaradhy Chinche",
-			"username": "aaradhychinche",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3922784%2F5f685c4e-4607-4356-afe5-a2e09f4a3468.png",
-			"profile_url": "https://dev.to/aaradhychinche"
+			"name": "Artemii Amelin ",
+			"username": "artem_a",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3893832%2F0e0d375d-e701-4dc8-9fb6-4c8f53e30992.png",
+			"profile_url": "https://dev.to/artem_a"
 		},
-		"snippet": "A working PoC, what changes in the programming model, and what I learned getting public review from...",
+		"snippet": "The agent runs on a spot instance. Spot instances get reclaimed. When that happens, a new one spins...",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.227670248696953,
-		"published": "2026-05-10T04:30:05Z"
+		"score": 0.3608488067145301,
+		"published": "2026-05-11T19:38:25Z"
 	},
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "go:embed in a CLI: Schemas, Controls, Templates, and Pack Registries",
-		"url": "https://dev.to/bala_paranj_059d338e44e7e/goembed-in-a-cli-schemas-controls-templates-and-pack-registries-4402",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fo4xg86zqze4u38xcu6zc.png",
+		"title": "gogpu/ui v0.1.21: Enterprise Render Pipeline — Layer Tree, Damage Tracking, 0% GPU Idle",
+		"url": "https://dev.to/kolkov/gogpuui-v0121-enterprise-render-pipeline-layer-tree-damage-tracking-0-gpu-idle-5adm",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F753d3wbwiflrovdv4ija.png",
+		"author": {
+			"name": "Andrey Kolkov",
+			"username": "kolkov",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F277150%2Fdc37d68a-1fc4-4584-a7a6-0e640febd7a8.jpeg",
+			"profile_url": "https://dev.to/kolkov"
+		},
+		"snippet": "How we brought Flutter/Chrome-class rendering to Go: Layer Tree compositor, multi-rect damage, per-boundary GPU textures, and persistent tree allocation — all in pure Go, zero CGO.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T10:23:08Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "validatorgo v1.0.0 is here 🎉 — the validator.js you've been missing in Go",
+		"url": "https://dev.to/gbubemi_attah_8220489db16/validatorgo-v100-is-here-the-validatorjs-youve-been-missing-in-go-55bo",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fmafdzyr2ck95uuo5lt0u.png",
+		"author": {
+			"name": "Gbubemi Attah",
+			"username": "gbubemi_attah_8220489db16",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2207238%2F9dce56a7-9b20-42bc-9fb7-84c5632c94a1.png",
+			"profile_url": "https://dev.to/gbubemi_attah_8220489db16"
+		},
+		"snippet": "I started this library as an internal dependency for something else I was building (a Gin middleware...",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T11:57:43Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "9 Go Performance Patterns That Don't Need a Profiler to Find",
+		"url": "https://dev.to/bala_paranj_059d338e44e7e/9-go-performance-patterns-that-dont-need-a-profiler-to-find-iid",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fm5ghpacz8qtwa9hozjqw.png",
 		"author": {
 			"name": "Bala Paranj",
 			"username": "bala_paranj_059d338e44e7e",
 			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3862804%2F7ea6c560-63cb-4daf-a713-450532280b0a.jpg",
 			"profile_url": "https://dev.to/bala_paranj_059d338e44e7e"
 		},
-		"snippet": "How embedding JSON schemas, YAML controls, Go templates, and a pack registry index into the binary...",
+		"snippet": "Pre-allocated slices, bitmask operations, index-based iteration, strings.Builder with Grow,...",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-10T13:59:23Z"
+		"published": "2026-05-12T11:26:16Z"
 	},
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "Moving 1,100 Paying Customers Between Stripe Accounts in a 3-Hour Window",
-		"url": "https://dev.to/vatsalpatel/moving-1100-paying-customers-between-stripe-accounts-in-a-3-hour-window-19c4",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fyrkdzueiix9jre77d9o5.png",
+		"title": "Kafka with Go Part 1 — Understanding Async Systems, Distributed Architecture, and Your First Kafka Publisher/Subscriber",
+		"url": "https://dev.to/sadhakbj/kafka-with-go-part-1-understanding-async-systems-distributed-architecture-and-your-first-kafka-2al4",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3imez662t2k3m6is9z3l.png",
 		"author": {
-			"name": "Vatsal Patel",
-			"username": "vatsalpatel",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3919872%2F8efb104c-e14a-4bcd-a9a9-123eee3d59a2.jpeg",
-			"profile_url": "https://dev.to/vatsalpatel"
+			"name": "Bijaya Prasad Kuikel",
+			"username": "sadhakbj",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F108109%2F299b31a4-1339-499c-9bc8-78caf61a88d2.jpeg",
+			"profile_url": "https://dev.to/sadhakbj"
 		},
-		"snippet": "In a single 3-hour window at midnight US time, we moved 2,500 US customers from our Australian Stripe...",
+		"snippet": "Learn Kafka with Go from absolute scratch. Understand async systems, queues, event-driven architecture, microservices communication, and build your first Kafka producer and consumer using Go.",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-10T17:10:26Z"
+		"published": "2026-05-12T00:37:25Z"
 	},
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "¿Por qué Go mató a la herencia?",
-		"url": "https://dev.to/jcmexdev/por-que-go-mato-a-la-herencia-23ab",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fvh8chx18nncm5bmoe41f.png",
+		"title": "Lean, Fast, Simple — npm-free GAS Deployment on GitHub Actions with glasp",
+		"url": "https://dev.to/takihito/lean-fast-simple-npm-free-gas-deployment-on-github-actions-with-glasp-3eaj",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fnds06o5om9nisk045vle.png",
 		"author": {
-			"name": "Juan Carlos Garcia Esquivel",
-			"username": "jcmexdev",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F452639%2Ffb4d2ab8-9b7c-48d8-9e3d-f6c1282dbbf5.jpg",
-			"profile_url": "https://dev.to/jcmexdev"
+			"name": "akihito",
+			"username": "takihito",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3893314%2F933f98f6-93d3-4689-ac15-7d726c90af6c.png",
+			"profile_url": "https://dev.to/takihito"
 		},
-		"snippet": "La decisión de los creadores de Go de eliminar la herencia de clases no fue un capricho académico....",
+		"snippet": "In the last article, I introduced glasp, a Go-based CLI tool for Google Apps Script (GAS) that...",
 		"tag": "article",
 		"comments": 0,
-		"score": 0.227670248696953,
-		"published": "2026-05-10T05:32:53Z"
+		"score": 0.1,
+		"published": "2026-05-12T08:56:00Z"
 	},
 	{
 		"id": 0,
 		"source": "dev_to",
-		"title": "Test coverage and what it can tell us",
-		"url": "https://dev.to/gouranga-das-khulna/test-coverage-and-what-it-can-tell-us-4olm",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F7g2lsgrm13y864kecmn1.webp",
+		"title": "MPP TestKit - Go SDK",
+		"url": "https://dev.to/mpptestkit/mpp-testkit-go-sdk-2ni7",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fb0n99g0euczrnchwm20m.jpg",
 		"author": {
-			"name": "Gouranga Das Samrat",
-			"username": "gouranga-das-khulna",
-			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F2193879%2F834a1499-2027-4355-87be-bb678e90ae5c.jpg",
-			"profile_url": "https://dev.to/gouranga-das-khulna"
+			"name": "MPP TestKit",
+			"username": "mpptestkit",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3915864%2F1e59c307-27a8-4d27-8ff9-099aa86a79e9.png",
+			"profile_url": "https://dev.to/mpptestkit"
 		},
-		"snippet": "When we write production-grade code, we want confidence that it behaves as expected. One of the main...",
+		"snippet": "The Go MPP SDK handles the full Solana HTTP 402 payment flow with zero external dependencies. Pure...",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-10T13:00:00Z"
+		"published": "2026-05-12T09:25:35Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "Spring Load Limits API for Trucking Compliance",
+		"url": "https://dev.to/road511/spring-load-limits-api-for-trucking-compliance-j40",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fj0jyn1tgoqgrg4l5wwad.png",
+		"author": {
+			"name": "Roman Kotenko",
+			"username": "road511",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3869750%2F0aff7c69-b543-4a64-a0a2-32b0207973a3.png",
+			"profile_url": "https://dev.to/road511"
+		},
+		"snippet": "Every spring, northern states and provinces impose weight restrictions on roads as frost leaves the...",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T10:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "It's Never Too Late to Start",
+		"url": "https://dev.to/jeff_ronnie_de6871efb7dcb/its-never-too-late-to-start-3iin",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F03albdcytrd2r9j62gnu.png",
+		"author": {
+			"name": "Jeff Ronnie",
+			"username": "jeff_ronnie_de6871efb7dcb",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3817661%2Fc4545b2a-284a-43f2-9d33-5e8098a9f4e2.jpg",
+			"profile_url": "https://dev.to/jeff_ronnie_de6871efb7dcb"
+		},
+		"snippet": "There’s a common myth that if you didn’t start coding at age twelve, you’ve already missed the boat....",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-12T12:03:26Z"
 	},
 	{
 		"id": 0,
 		"source": "dev_to",
 		"title": "Monitoring and Alerting for Video Platform Infrastructure with Go",
-		"url": "https://dev.to/ahmet_gedik778845/monitoring-and-alerting-for-video-platform-infrastructure-with-go-58k1",
-		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fae9lkrfwsdxboxcbi42u.png",
+		"url": "https://dev.to/ahmet_gedik778845/monitoring-and-alerting-for-video-platform-infrastructure-with-go-4h7f",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F7puh22p9q75i4m8i34ni.png",
 		"author": {
 			"name": "ahmet gedik",
 			"username": "ahmet_gedik778845",
 			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3801199%2Fcae54b2b-1a40-47e7-aefb-84cc64c80750.png",
 			"profile_url": "https://dev.to/ahmet_gedik778845"
 		},
-		"snippet": "Build a Go monitoring service with health checks, Prometheus metrics, timezone-aware uptime polling,",
+		"snippet": "Build a lightweight infrastructure monitoring system in Go with health checks, uptime tracking, and",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.1,
-		"published": "2026-05-10T23:00:01Z"
+		"published": "2026-05-11T22:00:01Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "Monitoring and Alerting for Video Platform Infrastructure with Go",
+		"url": "https://dev.to/ahmet_gedik778845/monitoring-and-alerting-for-video-platform-infrastructure-with-go-290",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F3f66nzvzuus9srzbic1f.png",
+		"author": {
+			"name": "ahmet gedik",
+			"username": "ahmet_gedik778845",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3801199%2Fcae54b2b-1a40-47e7-aefb-84cc64c80750.png",
+			"profile_url": "https://dev.to/ahmet_gedik778845"
+		},
+		"snippet": "Build a lightweight Go monitoring system with health checks, uptime tracking, and Prometheus metrics",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-11T14:00:01Z"
+	},
+	{
+		"id": 0,
+		"source": "dev_to",
+		"title": "Rust vs Go vs Zig in 2026: A Complete Comparison for Systems Programming",
+		"url": "https://dev.to/_6638a39c349d7e9c85ee20/rust-vs-go-vs-zig-in-2026-a-complete-comparison-for-systems-programming-4h16",
+		"image_url": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F6jesdzmeh7fcnoajzyau.png",
+		"author": {
+			"name": "丁久",
+			"username": "_6638a39c349d7e9c85ee20",
+			"avatar_url": "https://media2.dev.to/dynamic/image/width=640,height=640,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F3919125%2F3e3556a1-d332-4fdf-af2f-f9c73f94408d.png",
+			"profile_url": "https://dev.to/_6638a39c349d7e9c85ee20"
+		},
+		"snippet": "Head-to-head comparison of Rust, Go, and Zig for systems programming in 2026 — performance, safety, ecosystem, learning curve, and when to choose each.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-11T15:26:07Z"
 	}
 ]

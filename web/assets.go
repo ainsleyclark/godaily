@@ -17,26 +17,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package pages
+package web
 
-import (
-	"github.com/ainsleyclark/godaily/web/views/components"
-	"github.com/ainsleyclark/godaily/web/views/layouts"
-)
+import "embed"
 
-templ Unsubscribed() {
-	@layouts.Base(layouts.PageMeta{
-		Title:   "Unsubscribed",
-		OGImage: "https://godaily.dev/og/home.png",
-	}) {
-		@components.Header()
-		<section class="thank-you">
-			<div class="thank-you__content">
-				<div class="thank-you__check">✓</div>
-				<h1 class="thank-you__title">You've been unsubscribed.</h1>
-				<p class="thank-you__lead">Sorry to see you go! You won't receive any more digests.</p>
-			</div>
-		</section>
-		@components.Footer()
-	}
-}
+// Assets holds embedded fonts and images used by sub-packages such as web/og.
+//
+//go:embed assets/fonts/*.ttf assets/images/og-home.png assets/images/og-issue.png
+var Assets embed.FS

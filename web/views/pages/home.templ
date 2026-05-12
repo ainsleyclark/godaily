@@ -18,6 +18,7 @@ type HomeData struct {
 templ Home(data HomeData) {
 	@layouts.Base(layouts.PageMeta{
 		CanonicalURL: "https://godaily.dev/",
+		OGImage:      "https://godaily.dev/og/home.png",
 	}) {
 		@components.Header()
 		@components.Hero(data.Flash, data.SubscriberCount)

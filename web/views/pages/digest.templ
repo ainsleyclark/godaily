@@ -13,6 +13,7 @@ templ Digest(issue news.Issue) {
 		Title:        fmt.Sprintf("Issue #%d – %s", issue.ID, issue.Subject),
 		Description:  issue.Summary,
 		CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
+		OGImage:      fmt.Sprintf("https://godaily.dev/og/issues/%s.png", issue.Slug),
 	}) {
 		@components.Header()
 		<div class="section">

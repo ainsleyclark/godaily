@@ -100,6 +100,7 @@ func Privacy() templ.Component {
 			Title:        "Privacy Policy",
 			Description:  "How GoDaily collects and uses your personal data.",
 			CanonicalURL: "https://godaily.dev/privacy/",
+			OGImage:      "https://godaily.dev/og/home.png",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

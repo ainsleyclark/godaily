@@ -12,6 +12,7 @@ type PageMeta struct {
 	Title        string // falls back to defaultTitle when empty
 	Description  string // falls back to defaultDescription when empty
 	CanonicalURL string // full URL; omitted when empty
+	OGImage      string // absolute URL to a 1200×630 OG image; omitted when empty
 }
 
 func (m PageMeta) title() string {
@@ -48,10 +49,22 @@ templ Base(meta PageMeta) {
 			if meta.CanonicalURL != "" {
 				<meta property="og:url" content={ meta.CanonicalURL }/>
 			}
+			if meta.OGImage != "" {
+				<meta property="og:image" content={ meta.OGImage }/>
+				<meta property="og:image:width" content="1200"/>
+				<meta property="og:image:height" content="630"/>
+			}
 			<!-- Twitter -->
-			<meta name="twitter:card" content="summary"/>
+			if meta.OGImage != "" {
+				<meta name="twitter:card" content="summary_large_image"/>
+			} else {
+				<meta name="twitter:card" content="summary"/>
+			}
 			<meta name="twitter:title" content={ meta.title() }/>
 			<meta name="twitter:description" content={ meta.description() }/>
+			if meta.OGImage != "" {
+				<meta name="twitter:image" content={ meta.OGImage }/>
+			}
 			<!-- Feeds -->
 			<link rel="alternate" type="application/rss+xml" title="GoDaily" href="/rss.xml"/>
 			<!-- Favicon -->

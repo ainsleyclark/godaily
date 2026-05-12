@@ -8,7 +8,8 @@ import (
 
 templ ThankYou(issue news.Issue) {
 	@layouts.Base(layouts.PageMeta{
-		Title: "Subscribed",
+		Title:   "Subscribed",
+		OGImage: "https://godaily.dev/og/home.png",
 	}) {
 		@components.Header()
 		<section class="thank-you">
