@@ -43,6 +43,10 @@ e2e/server
 dist/
 node_modules/
 
+# Playwright
+e2e/test-results/
+e2e/playwright-report/
+
 # Live-reload artefacts
 tmp/
 build-errors.log
