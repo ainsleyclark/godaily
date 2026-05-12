@@ -7,7 +7,7 @@ templ Hero(flash string, subscriberCount int64) {
 		@Container(false) {
 			<div class="hero__content">
 				<div class="hero__badge">
-					@Tag("Delivered every weekday")
+					@Tag("Delivered every weekday", TagProps{})
 				</div>
 				<h1 class="hero__title">
 					Daily <span class="hero__title-accent">Go</span> news,<br/>
@@ -40,10 +40,19 @@ templ Hero(flash string, subscriberCount int64) {
 				}
 			</div>
 			<div class="hero__visual" aria-hidden="true">
-				<picture>
-					<source media="(max-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
-					<img class="hero__image" src="/assets/images/hero-gopher.png" alt=""/>
-				</picture>
+				<div class="hero__gopher-wrap">
+					<div class="hero__ring"></div>
+					<div class="hero__chip hero__chip--top">
+						@Tag("go1.24 released", TagProps{Dot: true, Shadow: true})
+					</div>
+					<div class="hero__chip hero__chip--bottom">
+						@Tag("5 min read", TagProps{Dot: true, Shadow: true})
+					</div>
+					<picture>
+						<source media="(max-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
+						<img class="hero__image" src="/assets/images/hero-gopher.png" alt=""/>
+					</picture>
+				</div>
 			</div>
 		}
 	</section>

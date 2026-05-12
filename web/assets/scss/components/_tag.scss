@@ -1,14 +1,30 @@
 .tag {
 	display: inline-flex;
 	align-items: center;
-	gap: 5px;
+	gap: 6px;
 	padding: 0.35rem 0.7rem;
 	border-radius: 8px;
 	border: 1px solid var(--border);
-	//background: var(--bg-card);
+	background: var(--bg-card);
 	color: var(--text-2);
-	font-family: var(--font);
+	font-family: var(--mono);
 	font-size: 0.8rem;
 	line-height: 1;
 	font-weight: 500;
+	white-space: nowrap;
+
+	&--shadow {
+		padding: 8px 12px;
+		border-radius: 10px;
+		box-shadow: 0 8px 20px rgba(13, 34, 54, 0.08);
+		color: var(--text);
+	}
+
+	&__dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 2px;
+		background: var(--accent);
+		flex-shrink: 0;
+	}
 }
