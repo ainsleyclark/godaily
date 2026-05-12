@@ -19,7 +19,7 @@
 
 // Package og generates 1200×630 Open Graph images for GoDaily pages.
 // Home returns a fully static pre-designed PNG.
-// Issue composites dynamic text (kicker, headline, article list) onto a
+// Issue composites dynamic text (issue number, date, article list) onto a
 // pre-designed template PNG, producing a unique card per digest.
 package og
 
@@ -28,7 +28,6 @@ import (
 	"fmt"
 	"image/color"
 	"image/png"
-	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 	webpkg "github.com/ainsleyclark/godaily/web"
@@ -44,30 +43,26 @@ const (
 
 	padL = 64 * scale // left-column text padding
 
-	// Vertical positions of each content band.
-	kickerY    = 138 * scale
-	headlineY  = 196 * scale
-	articleY   = 285 * scale
 	articleRow = 36 * scale // line pitch for article list rows
 
-	// Max wrap width for the headline.
-	wrapW = 556 * scale
+	// Empirical @2x pixel bounds of the template's text area (below wordmark, above footer).
+	zoneTopPx    = 180.0
+	zoneBottomPx = 1055.0
 )
 
 // colour palette matching the design tokens.
 var (
-	colAccent     = color.NRGBA{R: 42, G: 168, B: 216, A: 255}  // #2aa8d8
-	colAccentDark = color.NRGBA{R: 26, G: 127, B: 168, A: 255}  // #1a7fa8
-	colText       = color.NRGBA{R: 13, G: 34, B: 54, A: 255}    // #0d2236
-	colText3      = color.NRGBA{R: 122, G: 150, B: 170, A: 255} // #7a96aa
+	colAccent = color.NRGBA{R: 42, G: 168, B: 216, A: 255}  // #2aa8d8
+	colText   = color.NRGBA{R: 13, G: 34, B: 54, A: 255}    // #0d2236
+	colText3  = color.NRGBA{R: 122, G: 150, B: 170, A: 255} // #7a96aa
 )
 
 // Generator renders Open Graph images for GoDaily pages.
 type Generator struct {
-	sansExtraBold *truetype.Font
-	sansRegular   *truetype.Font
-	monoMedium    *truetype.Font
-	issueTPL      []byte // raw bytes of the issue template PNG
+	sansBlack   *truetype.Font
+	sansRegular *truetype.Font
+	monoMedium  *truetype.Font
+	issueTPL    []byte // raw bytes of the issue template PNG
 }
 
 // New loads the embedded fonts and issue template, ready to generate images.
@@ -75,8 +70,8 @@ func New() (*Generator, error) {
 	g := &Generator{}
 
 	var err error
-	if g.sansExtraBold, err = loadFont("assets/fonts/DMSans-ExtraBold.ttf"); err != nil {
-		return nil, errors.Wrap(err, "loading DMSans-ExtraBold")
+	if g.sansBlack, err = loadFont("assets/fonts/DMSans_36pt-Black.ttf"); err != nil {
+		return nil, errors.Wrap(err, "loading DMSans_36pt-Black")
 	}
 	if g.sansRegular, err = loadFont("assets/fonts/DMSans-Regular.ttf"); err != nil {
 		return nil, errors.Wrap(err, "loading DMSans-Regular")
@@ -100,7 +95,8 @@ func (g *Generator) Home() ([]byte, error) {
 }
 
 // Issue renders a 1200×630 (@2x) OG card for the given digest by compositing
-// the kicker, headline, and top article titles onto the issue template PNG.
+// the headline and top article titles onto the issue template PNG. The content
+// block is vertically centred in the template's text area.
 func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
 	base, err := png.Decode(bytes.NewReader(g.issueTPL))
 	if err != nil {
@@ -109,31 +105,60 @@ func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
 
 	dc := gg.NewContextForImage(base)
 
-	// Kicker: WEEKDAY · DATE (no issue number).
+	// Headline: "#Issue N" on line 1, ordinal date on line 2 (when available).
+	line1 := fmt.Sprintf("- Issue %d", issue.ID)
+	var line2 string
 	if !issue.SentAt.IsZero() {
-		g.setFont(dc, g.monoMedium, 14*scale)
-		dc.SetColor(colAccentDark)
-		dc.DrawString(
-			issue.SentAt.Format("Monday")+"  ·  "+issue.SentAt.Format("January 2, 2006"),
-			padL, kickerY,
-		)
+		d := issue.SentAt.Day()
+		line2 = fmt.Sprintf("%d%s %s", d, ordinalSuffix(d), issue.SentAt.Format("January 2006"))
 	}
 
-	// Headline — when the subject follows "GoDaily <dash> DATE" format, the date
-	// is already in the kicker so we show only "GoDaily". Otherwise wrap the full subject.
-	g.setFont(dc, g.sansExtraBold, 50*scale)
+	// Measure one line height for layout maths.
+	g.setFont(dc, g.sansBlack, 50*scale)
+	_, lineH := dc.MeasureString(line1)
+
+	const linePitch = 1.15 // inter-line spacing multiplier
+
+	// Headline block height covers either 1 or 2 lines.
+	headlineBlockH := lineH
+	if line2 != "" {
+		headlineBlockH = lineH * (1 + linePitch)
+	}
+
+	// Article list dimensions.
+	const listGap = 42 * scale
+	itemCount := min(3, len(issue.Items))
+	hasMore := len(issue.Items) > itemCount
+	totalRows := itemCount
+	if hasMore {
+		totalRows++
+	}
+	listH := float64(totalRows) * float64(articleRow)
+
+	// Total block height (visual top of headline → visual bottom of last row).
+	blockH := headlineBlockH + listGap + listH
+
+	// Vertically centre block in the template's text area.
+	// Visual block top ≈ headlineBaseline − lineH×0.75 (ascent of line 1).
+	// Centre = visual top + blockH/2  →  headlineBaseline = centre + 0.75·lineH − blockH/2
+	const centerY = (zoneTopPx + zoneBottomPx) / 2.0
+	headlineBaseline := centerY + lineH*0.75 - blockH/2.0
+
+	// Draw headline lines.
 	dc.SetColor(colText)
-	subject := truncate(issue.Subject, 75)
-	if strings.HasPrefix(subject, "GoDaily ") {
-		dc.DrawString("GoDaily", padL, headlineY)
-	} else {
-		dc.DrawStringWrapped(subject, padL, headlineY, 0, 0, wrapW, 1.1, gg.AlignLeft)
+	dc.DrawString(line1, padL, headlineBaseline)
+	if line2 != "" {
+		dc.DrawString(line2, padL, headlineBaseline+lineH*linePitch)
 	}
 
-	// Article list: up to 3 items, then a "+N more" line.
-	y := float64(articleY)
-	maxItems := min(3, len(issue.Items))
-	for i := range maxItems {
+	// Article list starts below the last headline line's descender.
+	lastHeadlineBaseline := headlineBaseline
+	if line2 != "" {
+		lastHeadlineBaseline = headlineBaseline + lineH*linePitch
+	}
+	y := lastHeadlineBaseline + lineH*0.25 + listGap
+
+	for i := range itemCount {
 		num := fmt.Sprintf("%02d", i+1)
 		title := truncate(issue.Items[i].Title, 58)
 
@@ -147,7 +172,7 @@ func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
 		y += float64(articleRow)
 	}
 
-	if remaining := len(issue.Items) - maxItems; remaining > 0 {
+	if remaining := len(issue.Items) - itemCount; remaining > 0 {
 		g.setFont(dc, g.sansRegular, 17*scale)
 		dc.SetColor(colText3)
 		dc.DrawString(fmt.Sprintf("+%d more in this issue…", remaining), padL, y)
@@ -158,6 +183,22 @@ func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
 		return nil, errors.Wrap(err, "encoding PNG")
 	}
 	return buf.Bytes(), nil
+}
+
+// ordinalSuffix returns "st", "nd", "rd", or "th" for the given day number.
+func ordinalSuffix(n int) string {
+	switch {
+	case n%100 >= 11 && n%100 <= 13:
+		return "th"
+	case n%10 == 1:
+		return "st"
+	case n%10 == 2:
+		return "nd"
+	case n%10 == 3:
+		return "rd"
+	default:
+		return "th"
+	}
 }
 
 // setFont applies the truetype font at the given point size.
