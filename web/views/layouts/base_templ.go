@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import "github.com/ainsleydev/webkit/pkg/env"
 
 const (
-	defaultTitle       = "GoDaily – Daily Go news straight to your inbox"
+	defaultTitle       = "Daily Go news straight to your inbox before standup"
 	defaultDescription = "A weekday digest of the best Go stories from across the community, ranked and delivered before standup."
 	defaultOGImage     = "https://godaily.dev/og/home.png"
 )
@@ -73,7 +73,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(meta.title())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 48, Col: 24}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 48, Col: 24}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.description())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 49, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 49, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -104,7 +104,7 @@ func Base(meta PageMeta) templ.Component {
 			var templ_7745c5c3_Var4 templ.SafeURL
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(meta.CanonicalURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 51, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 51, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.title())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 55, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 55, Col: 51}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -135,7 +135,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.description())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 56, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 56, Col: 63}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -153,7 +153,7 @@ func Base(meta PageMeta) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.CanonicalURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 58, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 58, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -171,7 +171,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogImage())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 60, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 60, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -184,7 +184,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.title())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 65, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 65, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -197,7 +197,7 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.description())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 66, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 66, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -210,13 +210,13 @@ func Base(meta PageMeta) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(meta.ogImage())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/layouts/base.templ`, Line: 67, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layouts/base.templ`, Line: 67, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><!-- Feeds --><link rel=\"alternate\" type=\"application/rss+xml\" title=\"GoDaily\" href=\"/rss.xml\"><!-- Favicon --><!-- Scripts --><script defer src=\"/assets/js/app.js\"></script><script defer src=\"https://unpkg.com/htmx.org@2.0.1\"></script><!-- Fonts --><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap\"><!-- Styles --><link rel=\"stylesheet\" href=\"/assets/css/app.css\"><!-- Preload --></head><body><!-- Content --><main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><!-- Feeds --><link rel=\"alternate\" type=\"application/rss+xml\" title=\"GoDaily\" href=\"/rss.xml\"><!-- Favicon --><link rel=\"icon\" type=\"image/png\" href=\"/assets/favicon/favicon-96x96.png\" sizes=\"96x96\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/favicon/favicon.svg\"><link rel=\"shortcut icon\" href=\"/assets/favicon/favicon.ico\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/assets/favicon/apple-touch-icon.png\"><link rel=\"manifest\" href=\"/assets/favicon/site.webmanifest\"><!-- Scripts --><script defer src=\"/assets/js/app.js\"></script><script defer src=\"https://unpkg.com/htmx.org@2.0.1\"></script><!-- Fonts --><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap\"><!-- Styles --><link rel=\"stylesheet\" href=\"/assets/css/app.css\"><!-- Preload --></head><body><!-- Content --><main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

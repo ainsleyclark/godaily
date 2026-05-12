@@ -31,14 +31,14 @@ func GopherLogo(size int) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<svg width=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<img src=\"/assets/favicon/favicon.png\" width=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%d", size))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 7, Col: 33}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/graphics/gopher.templ`, Line: 6, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -51,13 +51,13 @@ func GopherLogo(size int) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%d", size))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 8, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/graphics/gopher.templ`, Line: 6, Col: 106}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" viewBox=\"0 0 60 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"16\" cy=\"19\" r=\"9\" fill=\"#8DCFE8\"></circle> <ellipse cx=\"16\" cy=\"21\" rx=\"5.5\" ry=\"5\" fill=\"#C48A5E\"></ellipse> <circle cx=\"44\" cy=\"19\" r=\"9\" fill=\"#8DCFE8\"></circle> <ellipse cx=\"44\" cy=\"21\" rx=\"5.5\" ry=\"5\" fill=\"#C48A5E\"></ellipse> <ellipse cx=\"30\" cy=\"36\" rx=\"23\" ry=\"21\" fill=\"#8DCFE8\"></ellipse> <ellipse cx=\"30\" cy=\"42\" rx=\"13\" ry=\"9\" fill=\"#CCE8F5\"></ellipse> <circle cx=\"21\" cy=\"31\" r=\"8\" fill=\"white\"></circle> <circle cx=\"39\" cy=\"31\" r=\"8\" fill=\"white\"></circle> <circle cx=\"22.5\" cy=\"31.5\" r=\"5\" fill=\"#0d2236\"></circle> <circle cx=\"40.5\" cy=\"31.5\" r=\"5\" fill=\"#0d2236\"></circle> <circle cx=\"24\" cy=\"29.5\" r=\"1.8\" fill=\"white\"></circle> <circle cx=\"42\" cy=\"29.5\" r=\"1.8\" fill=\"white\"></circle> <ellipse cx=\"30\" cy=\"42\" rx=\"8\" ry=\"5.5\" fill=\"#D4A07A\"></ellipse> <ellipse cx=\"30\" cy=\"39\" rx=\"3\" ry=\"2\" fill=\"#1a1a2e\"></ellipse> <rect x=\"26.5\" y=\"44\" width=\"3.5\" height=\"4.5\" rx=\"1\" fill=\"white\"></rect> <rect x=\"30.5\" y=\"44\" width=\"3.5\" height=\"4.5\" rx=\"1\" fill=\"white\"></rect></svg>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" alt=\"GoDaily\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

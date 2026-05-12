@@ -3,7 +3,7 @@ package layouts
 import "github.com/ainsleydev/webkit/pkg/env"
 
 const (
-	defaultTitle       = "GoDaily – Daily Go news straight to your inbox"
+	defaultTitle       = "Daily Go news straight to your inbox before standup"
 	defaultDescription = "A weekday digest of the best Go stories from across the community, ranked and delivered before standup."
 	defaultOGImage     = "https://godaily.dev/og/home.png"
 )
@@ -68,6 +68,11 @@ templ Base(meta PageMeta) {
 			<!-- Feeds -->
 			<link rel="alternate" type="application/rss+xml" title="GoDaily" href="/rss.xml"/>
 			<!-- Favicon -->
+			<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96"/>
+			<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg"/>
+			<link rel="shortcut icon" href="/assets/favicon/favicon.ico"/>
+			<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png"/>
+			<link rel="manifest" href="/assets/favicon/site.webmanifest"/>
 			<!-- Scripts -->
 			<script defer src="/assets/js/app.js"></script>
 			<script defer src="https://unpkg.com/htmx.org@2.0.1"></script>
