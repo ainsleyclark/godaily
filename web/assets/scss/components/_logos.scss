@@ -11,6 +11,10 @@
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 2.5rem 0;
+
+	@include mobile {
+		padding: 1.5rem 0;
+	}
 	mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 	-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 
