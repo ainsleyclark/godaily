@@ -47,7 +47,7 @@ const (
 	// Vertical positions of each content band.
 	kickerY    = 138 * scale
 	headlineY  = 196 * scale
-	articleY   = 340 * scale
+	articleY   = 285 * scale
 	articleRow = 36 * scale // line pitch for article list rows
 
 	// Max wrap width for the headline.
@@ -119,11 +119,16 @@ func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
 		)
 	}
 
-	// Headline — break at " – " so "GoDaily – May 11, 2026" spans two lines.
+	// Headline — when the subject follows "GoDaily <dash> DATE" format, the date
+	// is already in the kicker so we show only "GoDaily". Otherwise wrap the full subject.
 	g.setFont(dc, g.sansExtraBold, 50*scale)
 	dc.SetColor(colText)
-	subject := strings.Replace(truncate(issue.Subject, 75), " – ", "\n", 1)
-	dc.DrawStringWrapped(subject, padL, headlineY, 0, 0, wrapW, 1.1, gg.AlignLeft)
+	subject := truncate(issue.Subject, 75)
+	if strings.HasPrefix(subject, "GoDaily ") {
+		dc.DrawString("GoDaily", padL, headlineY)
+	} else {
+		dc.DrawStringWrapped(subject, padL, headlineY, 0, 0, wrapW, 1.1, gg.AlignLeft)
+	}
 
 	// Article list: up to 3 items, then a "+N more" line.
 	y := float64(articleY)
