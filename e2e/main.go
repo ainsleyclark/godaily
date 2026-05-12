@@ -143,12 +143,12 @@ func main() {
 		}
 	})
 
-	ln, err := net.Listen("tcp", ":4000")
+	ln, err := net.Listen("tcp", ":4000") // #nosec G102 -- e2e server must accept connections from Playwright
 	if err != nil {
 		log.Fatalf("listen :4000: %v", err)
 	}
 
-	srv := &http.Server{Handler: combined}
+	srv := &http.Server{Handler: combined, ReadHeaderTimeout: 5 * time.Second}
 	go func() {
 		if err := srv.Serve(ln); err != nil && err != http.ErrServerClosed {
 			log.Printf("server: %v", err)

@@ -73,6 +73,10 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Build web assets
+        run: pnpm install && pnpm run build
+        working-directory: web
+
       - name: Install Playwright dependencies
         run: pnpm install
         working-directory: e2e
