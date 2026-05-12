@@ -1,0 +1,7 @@
+package components
+
+templ Container(small bool) {
+	<div class={ "container", templ.KV("container--small", small) }>
+		{ children... }
+	</div>
+}

@@ -10,7 +10,7 @@
 	overflow: visible; // prevent sticky container from clipping the mobile nav dropdown
 
 	&__inner {
-		max-width: 1200px;
+		max-width: var(--container-max-width);
 		margin: 0 auto;
 		padding: 0 2rem;
 		height: 64px;

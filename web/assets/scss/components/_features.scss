@@ -7,6 +7,10 @@
 		letter-spacing: -0.025em;
 		margin-bottom: 1rem;
 		color: var(--text);
+
+		@include mobile {
+			br { display: none; }
+		}
 	}
 
 	&__swiper {

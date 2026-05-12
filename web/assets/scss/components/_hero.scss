@@ -1,7 +1,7 @@
 @use '../abstracts/mixins' as *;
 
 .hero {
-	max-width: 1200px;
+	max-width: var(--container-max-width);
 	margin: 0 auto;
 	padding: 5rem 2rem 4rem;
 	display: grid;

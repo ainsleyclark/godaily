@@ -1,7 +1,7 @@
 @use '../abstracts/mixins' as *;
 
 .error {
-	max-width: 1200px;
+	max-width: var(--container-max-width);
 	margin: 0 auto;
 	padding: 6rem 2rem 5rem;
 	display: flex;

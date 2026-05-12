@@ -2,6 +2,11 @@
 
 .sources {
 	background: var(--bg-2);
+	padding: 4rem 0;
+
+	@include mobile {
+		padding: 2rem 0;
+	}
 
 	&__grid {
 		display: grid;

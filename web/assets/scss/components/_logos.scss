@@ -8,7 +8,7 @@
 }
 
 .logo-ticker {
-	max-width: 1200px;
+	max-width: var(--container-max-width);
 	margin: 0 auto;
 	padding: 2.5rem 0;
 
