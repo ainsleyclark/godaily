@@ -8,12 +8,13 @@
 }
 
 .logo-ticker {
-	max-width: var(--container-max-width);
-	margin: 0 auto;
-	padding: 2.5rem 0;
+	padding-top: 2.5rem;
+	padding-bottom: 2.5rem;
+	overflow: hidden;
 
 	@include mobile {
-		padding: 1.5rem 0;
+		padding-top: 1.5rem;
+		padding-bottom: 1.5rem;
 	}
 	mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 	-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);

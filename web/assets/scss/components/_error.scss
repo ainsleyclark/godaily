@@ -1,14 +1,12 @@
 @use '../abstracts/mixins' as *;
 
 .error {
-	max-width: var(--container-max-width);
-	margin: 0 auto;
-	padding: 6rem 2rem 5rem;
+	padding: 6rem 0 5rem;
 	display: flex;
 	justify-content: center;
 
 	@include mobile {
-		padding: 4rem 1rem 3rem;
+		padding: 4rem 0 3rem;
 	}
 
 	&__content {
