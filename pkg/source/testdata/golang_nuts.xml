@@ -1,27 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <id>tag:google.com,2005:googlegroups/golang-nuts</id>
-  <title>golang-nuts</title>
-  <link href="https://groups.google.com/group/golang-nuts" rel="alternate" type="text/html"/>
-  <updated>2026-05-12T10:00:00Z</updated>
-  <entry>
-    <id>tag:google.com,2005:googlegroups/golang-nuts/AbCdEfGhIj</id>
-    <title>[golang-nuts] How to efficiently process large slices without allocation?</title>
-    <link href="https://groups.google.com/d/msgid/golang-nuts/CABcDeFgHiJkLmN%40mail.gmail.com" rel="alternate" type="text/html"/>
-    <author>
-      <name>Jane Developer</name>
-    </author>
-    <updated>2026-05-12T08:30:00Z</updated>
-    <content type="html">I have been working on a hot path that processes millions of items per second. The current approach allocates a new slice for each batch. Has anyone found a good pattern using sync.Pool or similar?</content>
-  </entry>
-  <entry>
-    <id>tag:google.com,2005:googlegroups/golang-nuts/KlMnOpQrSt</id>
-    <title>[golang-nuts] Re: Proposal: add slices.Flatten to the standard library</title>
-    <link href="https://groups.google.com/d/msgid/golang-nuts/CAKlMnOpQrStUvWx%40mail.gmail.com" rel="alternate" type="text/html"/>
-    <author>
-      <name>Go Contributor</name>
-    </author>
-    <updated>2026-05-11T14:15:00Z</updated>
-    <content type="html">I agree with the proposal. Adding slices.Flatten would be consistent with the existing slices package design and would cover a common use case without requiring external dependencies.</content>
-  </entry>
-</feed>
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>golang-nuts</title>
+    <link>http://www.mail-archive.com/golang-nuts@googlegroups.com</link>
+    <description>golang-nuts @ googlegroups</description>
+    <item>
+      <title>[go-nuts] How to efficiently process large slices without allocation?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12345.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/12&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jane Developer%22&quot;&gt;Jane Developer&lt;/a&gt;</description>
+      <pubDate>Tue, 12 May 2026 08:30:00 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12345.html</guid>
+    </item>
+    <item>
+      <title>[go-nuts] Re: Proposal: add slices.Flatten to the standard library</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12346.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/11&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Go Contributor%22&quot;&gt;Go Contributor&lt;/a&gt;</description>
+      <pubDate>Mon, 11 May 2026 14:15:00 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12346.html</guid>
+    </item>
+  </channel>
+</rss>

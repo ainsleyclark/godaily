@@ -30,7 +30,8 @@ import (
 )
 
 // GolangNuts defines the type that implements news.Fetcher for the
-// golang-nuts Google Groups mailing list Atom feed.
+// golang-nuts mailing list via mail-archive.com RSS 2.0 feed.
+// The legacy Google Groups Atom endpoint (/forum/feed/…) returns 404.
 type GolangNuts struct {
 	url string
 }
@@ -41,66 +42,75 @@ func init() {
 	news.Register(news.SourceGolangNuts, NewGolangNuts())
 }
 
-const golangNutsURL = "https://groups.google.com/forum/feed/golang-nuts/msgs/atom.xml?num=25"
+const golangNutsURL = "https://www.mail-archive.com/golang-nuts@googlegroups.com/maillist.xml"
 
-// NewGolangNuts creates a golang-nuts Google Groups client.
+// NewGolangNuts creates a golang-nuts mail-archive.com RSS client.
 func NewGolangNuts() *GolangNuts {
 	return &GolangNuts{url: golangNutsURL}
 }
 
-// Fetch retrieves the latest threads from the golang-nuts mailing list Atom feed.
+// Fetch retrieves the latest threads from the golang-nuts mailing list RSS feed.
 func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
-	feed, err := ingest.Fetch[golangNutsFeed](ctx, g.url, "golang-nuts", xml.Unmarshal)
+	feed, err := ingest.Fetch[golangNutsRSS](ctx, g.url, "golang-nuts", xml.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(ctx, feed.Entries), nil
+	return ingest.TransformAll(ctx, feed.Channel.Items), nil
 }
 
-func (e golangNutsEntry) ShouldInclude() bool   { return true }
-func (e golangNutsEntry) EnrichmentURL() string { return "" }
+func (e golangNutsItem) ShouldInclude() bool   { return true }
+func (e golangNutsItem) EnrichmentURL() string { return "" }
 
-func (e golangNutsEntry) Transform() news.Item {
-	published, _ := time.Parse(time.RFC3339, e.Updated)
+func (e golangNutsItem) Transform() news.Item {
+	published, _ := time.Parse(time.RFC1123, e.PubDate)
 	return news.Item{
 		Source:    news.SourceGolangNuts,
-		Title:     strings.TrimPrefix(e.Title, "[golang-nuts] "),
-		URL:       e.link(),
-		Author:    &news.Author{Name: e.Author.Name},
-		Snippet:   e.Content,
+		Title:     e.title(),
+		URL:       e.Link,
+		Author:    &news.Author{Name: e.author()},
 		Tag:       news.TagDiscussion,
 		Score:     news.ScoreOf(news.SourceGolangNuts, news.TagDiscussion, 0, false),
 		Published: published.UTC(),
 	}
 }
 
-// link returns the href of the first alternate or untyped link in the entry.
-func (e golangNutsEntry) link() string {
-	for _, l := range e.Links {
-		if l.Rel == "alternate" || l.Rel == "" {
-			return l.Href
+// title strips the mailing-list tag prefixes from the subject line.
+func (e golangNutsItem) title() string {
+	for _, prefix := range []string{"Re: [go-nuts] ", "[go-nuts] "} {
+		if strings.HasPrefix(e.Title, prefix) {
+			return e.Title[len(prefix):]
 		}
 	}
-	return ""
+	return e.Title
+}
+
+// author extracts the author name from the description HTML produced by
+// mail-archive.com: <font ...>date</font> -- <a href="...">Author</a>
+func (e golangNutsItem) author() string {
+	s := e.Description
+	end := strings.LastIndex(s, "</a>")
+	if end == -1 {
+		return ""
+	}
+	start := strings.LastIndex(s[:end], ">")
+	if start == -1 {
+		return ""
+	}
+	return strings.TrimSpace(s[start+1 : end])
 }
 
 type (
-	golangNutsFeed struct {
-		XMLName xml.Name          `xml:"http://www.w3.org/2005/Atom feed"`
-		Entries []golangNutsEntry `xml:"http://www.w3.org/2005/Atom entry"`
+	golangNutsRSS struct {
+		XMLName xml.Name          `xml:"rss"`
+		Channel golangNutsChannel `xml:"channel"`
 	}
-	golangNutsEntry struct {
-		Title   string           `xml:"http://www.w3.org/2005/Atom title"`
-		Links   []golangNutsLink `xml:"http://www.w3.org/2005/Atom link"`
-		Author  golangNutsAuthor `xml:"http://www.w3.org/2005/Atom author"`
-		Updated string           `xml:"http://www.w3.org/2005/Atom updated"`
-		Content string           `xml:"http://www.w3.org/2005/Atom content"`
+	golangNutsChannel struct {
+		Items []golangNutsItem `xml:"item"`
 	}
-	golangNutsLink struct {
-		Href string `xml:"href,attr"`
-		Rel  string `xml:"rel,attr"`
-	}
-	golangNutsAuthor struct {
-		Name string `xml:"http://www.w3.org/2005/Atom name"`
+	golangNutsItem struct {
+		Title       string `xml:"title"`
+		Link        string `xml:"link"`
+		Description string `xml:"description"`
+		PubDate     string `xml:"pubDate"`
 	}
 )

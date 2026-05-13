@@ -67,9 +67,8 @@ func TestGolangNuts_Fetch(t *testing.T) {
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGolangNuts,
 					Title:     "How to efficiently process large slices without allocation?",
-					URL:       "https://groups.google.com/d/msgid/golang-nuts/CABcDeFgHiJkLmN%40mail.gmail.com",
+					URL:       "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12345.html",
 					Author:    &news.Author{Name: "Jane Developer"},
-					Snippet:   "I have been working on a hot path that processes millions of items per second. The current approach allocates a new slice for each batch. Has anyone found a good pattern using sync.Pool or similar?",
 					Tag:       news.TagDiscussion,
 					Score:     news.ScoreOf(news.SourceGolangNuts, news.TagDiscussion, 0, false),
 					Published: time.Date(2026, time.May, 12, 8, 30, 0, 0, time.UTC),
@@ -78,16 +77,17 @@ func TestGolangNuts_Fetch(t *testing.T) {
 		},
 		"Missing title prefix": {
 			stub: func() http.HandlerFunc {
-				const body = `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <entry>
-    <title>No prefix title</title>
-    <link href="https://groups.google.com/d/msgid/golang-nuts/abc" rel="alternate"/>
-    <author><name>Someone</name></author>
-    <updated>2026-01-01T00:00:00Z</updated>
-    <content type="html">Body text.</content>
-  </entry>
-</feed>`
+				const body = `<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <item>
+      <title>No prefix title</title>
+      <link>https://www.mail-archive.com/golang-nuts@googlegroups.com/msg99999.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Someone&lt;/a&gt;</description>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>`
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
 					_, _ = w.Write([]byte(body))
