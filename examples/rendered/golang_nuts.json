@@ -1,0 +1,1402 @@
+[
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[security] Go 1.26.3 and Go 1.25.10 are released",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55976.html",
+		"author": {
+			"name": "announce"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-07T16:32:42Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: [Q] \"//go:fix inline\" and how to deal with imports in writing custom analyzers?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55975.html",
+		"author": {
+			"name": "'Alan Donovan' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-06T15:27:41Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: [ANN] mvm - a fast interpreter and virtual machine for Go",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55974.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-06T14:24:03Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Random bool",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55973.html",
+		"author": {
+			"name": "Randall O'Reilly"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-06T10:12:44Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Random bool",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55972.html",
+		"author": {
+			"name": "M"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-06T03:06:09Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Bad File Descriptor?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55971.html",
+		"author": {
+			"name": "'Brian Candler' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-05T07:28:48Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Random bool",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55970.html",
+		"author": {
+			"name": "Jason Gade"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-05T00:35:57Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Bad File Descriptor?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55969.html",
+		"author": {
+			"name": "Asher Samuel"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-04T23:21:20Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[security] Go 1.26.3 and Go 1.25.10 pre-announcement",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55968.html",
+		"author": {
+			"name": "announce"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-04T21:01:32Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[ANN] mvm - a fast interpreter and virtual machine for Go",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55967.html",
+		"author": {
+			"name": "'mve...@free.fr' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-04T09:09:08Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55966.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-03T18:31:37Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55965.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-03T17:44:58Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55964.html",
+		"author": {
+			"name": "Phillip Hagger"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-02T22:26:38Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55963.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-01T10:28:39Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55962.html",
+		"author": {
+			"name": "'Muhammad Naufal Al Fattah' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-30T16:48:35Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "re JIT frame pre-proposal at golang-dev",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55961.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-30T00:02:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Godex: AI assistance in the terminal",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55960.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-29T23:56:30Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Limen: composable authentication for Go",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55959.html",
+		"author": {
+			"name": "Brian Iyoha"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-27T15:55:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "New syntax for import scopes.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55958.html",
+		"author": {
+			"name": "Stephen Illingworth"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-27T08:02:01Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "New syntax for import scopes.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55957.html",
+		"author": {
+			"name": "Jan Mercl"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-27T07:34:32Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "New syntax for import scopes.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55956.html",
+		"author": {
+			"name": "Mike Schinkel"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-27T00:14:38Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Either `go doc` confusion or `go mod tidy` confusion",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55955.html",
+		"author": {
+			"name": "Kevin Chowski"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-25T19:34:40Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "New syntax for import scopes.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55954.html",
+		"author": {
+			"name": "Denis Cheremisov"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-25T12:15:32Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: module that imports module error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55953.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-24T21:33:15Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "LLM development toolkit.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55952.html",
+		"author": {
+			"name": "alex-coder"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-24T12:15:16Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "TypeScript and Go...",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55951.html",
+		"author": {
+			"name": "Jake Bailey"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-24T03:06:17Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Either `go doc` confusion or `go mod tidy` confusion",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55950.html",
+		"author": {
+			"name": "Nick White"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T21:28:42Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "TypeScript and Go...",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55949.html",
+		"author": {
+			"name": "温博格"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T20:14:30Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Either `go doc` confusion or `go mod tidy` confusion",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55948.html",
+		"author": {
+			"name": "Kevin Chowski"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T20:08:11Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "TypeScript and Go...",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55947.html",
+		"author": {
+			"name": "Mandolyte"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-22T19:42:43Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: [ANN] cli v0.6.0 — a small command-line library shaped like net/http",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55946.html",
+		"author": {
+			"name": "'Mohamed Zane Attahri' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-21T00:48:43Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: [ANN] cli v0.6.0 — a small command-line library shaped like net/http",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55945.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-20T23:31:39Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[ANN] cli v0.6.0 — a small command-line library shaped like net/http",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55944.html",
+		"author": {
+			"name": "'MZA' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-20T22:48:58Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: module that imports module error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55943.html",
+		"author": {
+			"name": "Jason Phillips"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-19T04:34:14Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: module that imports module error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55942.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-18T13:40:27Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: module that imports module error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55941.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T13:59:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "module that imports module error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55940.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-17T13:57:23Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55939.html",
+		"author": {
+			"name": "tapi...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-16T19:52:23Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55938.html",
+		"author": {
+			"name": "tapi...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-16T19:51:18Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Iterators and performance",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55937.html",
+		"author": {
+			"name": "tapi...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-16T08:26:22Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Iterators and performance",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55936.html",
+		"author": {
+			"name": "Pierre Durand"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-15T19:51:04Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55935.html",
+		"author": {
+			"name": "Jan Mercl"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-13T08:53:08Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55934.html",
+		"author": {
+			"name": "'Axel Wagner' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-13T06:41:06Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55933.html",
+		"author": {
+			"name": "Jan Mercl"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-13T06:40:00Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55932.html",
+		"author": {
+			"name": "'Axel Wagner' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-13T06:28:47Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55931.html",
+		"author": {
+			"name": "Jan Mercl"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-12T20:26:53Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55930.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-12T16:22:07Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55929.html",
+		"author": {
+			"name": "Konstantin Kulikov"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-12T16:02:36Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "dot import blocks names in another file!",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55928.html",
+		"author": {
+			"name": "'simon place' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-12T15:33:57Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Remove dead code easily",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55927.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-11T22:02:01Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Remove dead code easily",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55926.html",
+		"author": {
+			"name": "Navjot Sharma"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-11T20:48:07Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55925.html",
+		"author": {
+			"name": "Ian Lance Taylor"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T22:50:27Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55924.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T18:52:54Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: govulncheck: How to disable checks for specific vulnerabilities?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55923.html",
+		"author": {
+			"name": "bakari jofrey"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T11:27:57Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: govulncheck: How to disable checks for specific vulnerabilities?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55922.html",
+		"author": {
+			"name": "Marcello H"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T08:04:56Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55921.html",
+		"author": {
+			"name": "Greg T"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T07:54:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55920.html",
+		"author": {
+			"name": "Greg T"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T07:51:35Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55919.html",
+		"author": {
+			"name": "Grégoire Truhé"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-09T05:05:28Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55918.html",
+		"author": {
+			"name": "Ian Lance Taylor"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-08T22:28:20Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55917.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-08T20:34:11Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "govulncheck: How to disable checks for specific vulnerabilities?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55916.html",
+		"author": {
+			"name": "twp...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-07T23:04:42Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[security] Go 1.26.2 and Go 1.25.9 are released",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55915.html",
+		"author": {
+			"name": "announce"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-07T22:07:04Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[ANN] naga v0.17.0 — Pure Go DXIL generator (DirectX 12 shader bytecode)",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55914.html",
+		"author": {
+			"name": "a.ko...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-06T05:57:31Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Context cancellation and returned error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55913.html",
+		"author": {
+			"name": "'Axel Wagner' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-05T05:23:42Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "x/text dead?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55912.html",
+		"author": {
+			"name": "Patrick"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-04T22:22:18Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Context cancellation and returned error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55911.html",
+		"author": {
+			"name": "Pierre Durand"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-04T21:19:24Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Context cancellation and returned error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55910.html",
+		"author": {
+			"name": "'Axel Wagner' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-04T04:16:49Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Context cancellation and returned error",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55909.html",
+		"author": {
+			"name": "Pierre Durand"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-03T17:43:36Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "performance analysis program interface(or skills in the era) for pprof",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55908.html",
+		"author": {
+			"name": "'Qingwei Li' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-03T03:05:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[Q] \"//go:fix inline\" and how to deal with imports in writing custom analyzers?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55907.html",
+		"author": {
+			"name": "'TheDiveO' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-02T08:24:29Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[ANN] nowandlater - fast natural language date and time parsing - no regex",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55906.html",
+		"author": {
+			"name": "Nick Galbreath"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-02T02:05:32Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Synchronized workflows for WASM WebWorkers",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55905.html",
+		"author": {
+			"name": "Tobias Cudnik"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-01T09:41:05Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[security] Go 1.26.2 and Go 1.25.9 pre-announcement",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55904.html",
+		"author": {
+			"name": "announce"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-30T16:40:24Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "[ANN] wprana",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55903.html",
+		"author": {
+			"name": "Luis Furquim"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T22:44:00Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Question about Example code.",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55902.html",
+		"author": {
+			"name": "Travis Keep"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T20:49:58Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55901.html",
+		"author": {
+			"name": "Nuno Cruces"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T09:52:46Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55900.html",
+		"author": {
+			"name": "Nuno Cruces"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T00:34:55Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55899.html",
+		"author": {
+			"name": "Andy Balholm"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T00:23:44Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55898.html",
+		"author": {
+			"name": "Nuno Cruces"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-29T00:11:39Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "How to implement the Outbox pattern in Go and Postgres",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55897.html",
+		"author": {
+			"name": "Alex Pliutau"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-28T13:30:35Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "v2 of the YottaDB Go wrapper",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55896.html",
+		"author": {
+			"name": "Berwyn Hoyt"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-28T09:01:53Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55895.html",
+		"author": {
+			"name": "Andy Balholm"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T23:48:28Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55894.html",
+		"author": {
+			"name": "Nuno Cruces"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T23:33:46Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Test7800: Atari 7800 emulator written in Go",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55893.html",
+		"author": {
+			"name": "Stephen Illingworth"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T22:40:46Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55892.html",
+		"author": {
+			"name": "Andy Balholm"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T16:17:07Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: wasm2go: a Wasm to Go translator",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55891.html",
+		"author": {
+			"name": "'Dario Castañé' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T15:18:47Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Dynamic composition of interfaces at runtime?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55890.html",
+		"author": {
+			"name": "cpu...@gmail.com"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T07:42:45Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "On herding CATSS: how to quickly port anything to Go",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55889.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-27T00:05:01Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: Ways to debug holding locks bug in runtime",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55888.html",
+		"author": {
+			"name": "'Qingwei Li' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-26T07:37:27Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: 35+ Agent Skills for Golang",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55887.html",
+		"author": {
+			"name": "Samuel Berthe"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-25T15:51:15Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: VsCode syntax highlighting for tmpl files",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55886.html",
+		"author": {
+			"name": "NIKI CHUM"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-25T15:13:02Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Re: 35+ Agent Skills for Golang",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55885.html",
+		"author": {
+			"name": "Jason E. Aten"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-24T22:04:14Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "35+ Agent Skills for Golang",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55884.html",
+		"author": {
+			"name": "Samuel Berthe"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-23T21:41:34Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Best way to pass a string to a C function",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55883.html",
+		"author": {
+			"name": "David Butler (Cro)"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-23T12:34:02Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "chrome-mco - Give agents access to your browser",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55882.html",
+		"author": {
+			"name": "Cheikh Seck"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-22T09:34:03Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Best way to pass a string to a C function",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55881.html",
+		"author": {
+			"name": "Ian Lance Taylor"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-22T09:08:14Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Best way to pass a string to a C function",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55880.html",
+		"author": {
+			"name": "David Butler (Cro)"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-22T08:44:24Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Ways to debug holding locks bug in runtime",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55879.html",
+		"author": {
+			"name": "'Qingwei Li' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-21T13:33:01Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "YogaDB: an interesting B-tree variant, 2x faster than LSM trees at writes",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55878.html",
+		"author": {
+			"name": "Vasiliy Tolstov"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-17T15:01:11Z"
+	},
+	{
+		"id": 0,
+		"source": "golang_nuts",
+		"title": "Basic Go binaries for MSDOS?",
+		"url": "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55877.html",
+		"author": {
+			"name": "'Brian Candler' via golang-nuts"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-17T12:18:26Z"
+	}
+]
