@@ -101,7 +101,7 @@ func (e golangNutsItem) author() string {
 
 type (
 	golangNutsRSS struct {
-		XMLName xml.Name         `xml:"rss"`
+		XMLName xml.Name          `xml:"rss"`
 		Channel golangNutsChannel `xml:"channel"`
 	}
 	golangNutsChannel struct {
