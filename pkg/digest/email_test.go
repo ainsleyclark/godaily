@@ -75,7 +75,7 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.Subject, "April 26, 2026")
 		assert.Contains(t, got.HTML, "hello")
 		assert.Contains(t, got.Text, "hello")
-		assert.Contains(t, got.HTML, "42 pts")
+		assert.NotContains(t, got.HTML, "42 pts")
 		assert.Contains(t, got.HTML, "7 comments")
 		// Each item should advertise its source via the "Read on" link and
 		// the inline mark image (HN has a mark file registered).

@@ -38,5 +38,9 @@
 		@include desktop {
 			max-width: 45ch;
 		}
+
+		@include mobile {
+			margin-bottom: 1.5rem;
+		}
 	}
 }

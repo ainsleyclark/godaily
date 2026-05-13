@@ -18,10 +18,6 @@ func blueskyShareURL(canonicalURL, title string) templ.SafeURL {
 	return templ.SafeURL("https://bsky.app/intent/compose?text=" + url.QueryEscape(title+" "+canonicalURL))
 }
 
-func twitterShareURL(canonicalURL, title string) templ.SafeURL {
-	return templ.SafeURL("https://twitter.com/intent/tweet?url=" + url.QueryEscape(canonicalURL) + "&text=" + url.QueryEscape(title))
-}
-
 func ShareButtons(canonicalURL string, title string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -113,29 +109,7 @@ func ShareButtons(canonicalURL string, title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var5 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-			if !templ_7745c5c3_IsBuffer {
-				defer func() {
-					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err == nil {
-						templ_7745c5c3_Err = templ_7745c5c3_BufErr
-					}
-				}()
-			}
-			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M12.6 1h2.4L9.7 6.8 16 15h-4.3l-3.8-5-4.4 5H1l5.7-6.5L0 1h4.4l3.5 4.6L12.6 1zm-.8 12.6h1.3L4.3 2.4H2.9l8.9 11.2z\"></path></svg> <span>X / Twitter</span>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			return nil
-		})
-		templ_7745c5c3_Err = Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: twitterShareURL(canonicalURL, title), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on X / Twitter"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -224,17 +224,27 @@ func Base(meta PageMeta) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</main><!-- Google Transition Fix --><script> </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</main><!-- Google Transition Fix --><script> </script><!-- Analytics -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if env.IsDevelopment() {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<script>\n\t\t\t\t\tnew EventSource(\"/internal/reload/\").onmessage = () => location.reload();\n\t\t\t\t\tnew EventSource(\"http://localhost:3002/esbuild\").addEventListener(\"change\", () => location.reload());\n\t\t\t\t</script>")
+		if env.IsProduction() {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<!-- Privacy-friendly analytics by Plausible --> <script async src=\"https://plausible.io/js/pa-A4u9lL473mlCDtQti63u-.js\"></script> <script>\n                  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};\n                  plausible.init()\n                </script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<!-- Live Reload -->")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if env.IsDevelopment() {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<script>\n\t\t\t\t\tnew EventSource(\"/internal/reload/\").onmessage = () => location.reload();\n\t\t\t\t\tnew EventSource(\"http://localhost:3002/esbuild\").addEventListener(\"change\", () => location.reload());\n\t\t\t\t</script>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

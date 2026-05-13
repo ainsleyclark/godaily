@@ -80,6 +80,7 @@ func (s Store) Create(ctx context.Context, issueID int64, position int, item new
 		Tag:              string(item.Tag),
 		Title:            item.Title,
 		Url:              item.URL,
+		OriginalUrl:      nullString(item.OriginalURL),
 		AuthorName:       name,
 		AuthorUsername:   username,
 		AuthorAvatarUrl:  avatar,
@@ -101,13 +102,14 @@ func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 
 func transformItem(i sqlc.Item) news.Item {
 	out := news.Item{
-		ID:      i.ID,
-		Source:  news.Source(i.Source),
-		Tag:     news.Tag(i.Tag),
-		Title:   i.Title,
-		URL:     i.Url,
-		Snippet: i.Summary.String,
-		Score:   i.Score.Float64,
+		ID:          i.ID,
+		Source:      news.Source(i.Source),
+		Tag:         news.Tag(i.Tag),
+		Title:       i.Title,
+		URL:         i.Url,
+		OriginalURL: i.OriginalUrl.String,
+		Snippet:     i.Summary.String,
+		Score:       i.Score.Float64,
 	}
 	if a := authorFromRow(i); a != nil {
 		out.Author = a

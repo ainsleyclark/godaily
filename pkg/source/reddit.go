@@ -84,11 +84,6 @@ func (c redditChild) ShouldInclude() bool {
 		!strings.Contains(body, "feedback")
 }
 
-// Transform maps a redditChild to a news.Item.
-//
-// Self-posts have a URL pointing back to reddit.com/r/… rather than an
-// external link. In that case we fall back to the full permalink.
-
 // EnrichmentURL returns the external URL for crawler enrichment, or "" for
 // self-posts (which point back to reddit.com and have no useful meta tags).
 func (c redditChild) EnrichmentURL() string {
@@ -98,17 +93,27 @@ func (c redditChild) EnrichmentURL() string {
 	return c.Data.URL
 }
 
+// Transform maps a redditChild to a news.Item.
+//
+// For link posts the external URL is the click target (URL) and the Reddit
+// thread is stored as OriginalURL so "Read on Reddit" navigates to Reddit.
+// Self-posts point directly at the Reddit thread with no OriginalURL.
 func (c redditChild) Transform() news.Item {
 	p := c.Data
+	permalink := "https://www.reddit.com" + p.Permalink
 	u := p.URL
+	var originalURL string
 	if strings.Contains(u, "reddit.com/r/") {
-		u = "https://www.reddit.com" + p.Permalink
+		u = permalink
+	} else {
+		originalURL = permalink
 	}
 	return news.Item{
-		Source:   news.SourceReddit,
-		Title:    p.Title,
-		URL:      u,
-		ImageURL: redditImage(p),
+		Source:      news.SourceReddit,
+		Title:       p.Title,
+		URL:         u,
+		OriginalURL: originalURL,
+		ImageURL:    redditImage(p),
 		Author: &news.Author{
 			Username:   p.Author,
 			ProfileURL: "https://www.reddit.com/user/" + p.Author,

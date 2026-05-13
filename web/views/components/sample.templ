@@ -3,6 +3,7 @@ package components
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
@@ -29,9 +30,9 @@ templ sampleInner(issue news.Issue) {
 			<div class="email-preview__logo-line">
 				@graphics.GopherLogo(24)
 			</div>
-			if !issue.SentAt.IsZero() {
+			if d := issueDate(issue); !d.IsZero() {
 				<div class="email-preview__date">
-					{ formatDigestDate(issue.SentAt) } &middot; { fmt.Sprintf("Issue #%d", issue.ID) }
+					{ formatDigestDate(d) } &middot; { fmt.Sprintf("Issue #%d", issue.ID) }
 				</div>
 			}
 			if issue.Subject != "" {
@@ -86,4 +87,18 @@ func formatDigestDate(t time.Time) string {
 		return ""
 	}
 	return t.Format("Monday, January 2, 2006")
+}
+
+// issueDate extracts the issue date from the Subject field, falling back to
+// SentAt. The subject is formatted as "GoDaily - January 2, 2006", so we
+// strip the prefix and parse the remainder.
+func issueDate(issue news.Issue) time.Time {
+	for _, prefix := range []string{"GoDaily - ", "GoDaily – "} {
+		if after, ok := strings.CutPrefix(issue.Subject, prefix); ok {
+			if t, err := time.Parse("January 2, 2006", after); err == nil {
+				return t
+			}
+		}
+	}
+	return issue.SentAt
 }

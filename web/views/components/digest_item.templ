@@ -23,22 +23,28 @@ templ DigestItem(item news.Item) {
 				<div class="digest-item__meta">{ meta }</div>
 			}
 		</div>
-		<a class="digest-item__readon" href={ templ.URL(item.URL) } target="_blank" rel="noopener noreferrer">
+		<a class="digest-item__readon" href={ templ.URL(digestItemReadOnURL(item)) } target="_blank" rel="noopener noreferrer">
 			Read on { item.Source.NiceName() }
 			<span aria-hidden="true">&nbsp;&rarr;</span>
 		</a>
 	</article>
 }
 
-// digestItemMeta builds the small dim line under an item: author, score, and
+// digestItemReadOnURL returns the platform listing URL when available (e.g. HN
+// comments page, Reddit thread), falling back to the content URL.
+func digestItemReadOnURL(item news.Item) string {
+	if item.OriginalURL != "" {
+		return item.OriginalURL
+	}
+	return item.URL
+}
+
+// digestItemMeta builds the small dim line under an item: author and
 // comment count when present.
 func digestItemMeta(item news.Item) string {
 	parts := []string{}
 	if author := item.Author.String(); author != "" {
 		parts = append(parts, author)
-	}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
 	}
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
