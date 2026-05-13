@@ -219,7 +219,7 @@ func TestAggregator_Collect_RenderFallback(t *testing.T) {
 	})
 }
 
-func TestAggregator_Collect_NoSynth(t *testing.T) {
+func TestAggregator_Collect_Synthesiser(t *testing.T) {
 	day, _ := collectWindow(time.Now())
 	inWindow := day.Add(time.Hour)
 
@@ -237,7 +237,66 @@ func TestAggregator_Collect_NoSynth(t *testing.T) {
 
 		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
-		assert.False(t, sg.called, "synth must not be called during Collect")
+		assert.False(t, sg.called, "suggester must not be called during Collect")
+	})
+
+	t.Run("DryRun Does Not Call Synthesiser", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "t", Intro: "i"}}
+		agg := Aggregator{synthesiser: syn}
+
+		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+		assert.False(t, syn.called, "synthesiser must not be called during a dry run")
+	})
+
+	t.Run("Synthesiser Populates Subject And Summary On Persist", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "Go 1.24 lands", Intro: "Goroutines got faster."}}
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{synthesiser: syn, issues: issueRepo, items: itemRepo}
+
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+
+		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.True(t, syn.called)
+		assert.Equal(t, "Go 1.24 lands", stored.Subject)
+		assert.Equal(t, "Goroutines got faster.", stored.Summary)
+	})
+
+	t.Run("Synthesiser Error Falls Back To Static Subject", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		syn := &mockSynthesiser{err: errors.New("boom")}
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{synthesiser: syn, issues: issueRepo, items: itemRepo}
+
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+
+		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.Equal(t, "GoDaily - "+day.Format("January 2, 2006"), stored.Subject)
+		assert.Empty(t, stored.Summary)
+	})
+
+	t.Run("Nil Synthesiser Falls Back To Static Subject", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{synthesiser: nil, issues: issueRepo, items: itemRepo}
+
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+
+		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		require.NoError(t, err)
+		assert.Equal(t, "GoDaily - "+day.Format("January 2, 2006"), stored.Subject)
+		assert.Empty(t, stored.Summary)
 	})
 }
 

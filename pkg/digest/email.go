@@ -76,6 +76,7 @@ type (
 	}
 	digestData struct {
 		Date           time.Time
+		Intro          string
 		Sections       []emailSection
 		UnsubscribeURL string
 		CanonicalURL   string
@@ -95,6 +96,8 @@ type (
 
 	digestOptions struct {
 		Day            time.Time
+		Subject        string // AI-generated title; falls back to static date format when empty
+		Intro          string // AI-generated intro paragraph; omitted from email when empty
 		Sources        []news.SourceItems
 		UnsubscribeURL string
 		CanonicalURL   string
@@ -103,10 +106,15 @@ type (
 
 func renderDigest(opts digestOptions) (renderedDigest, error) {
 	sections := buildSections(opts.Sources)
-	subject := "GoDaily - " + opts.Day.Format("January 2, 2006")
+
+	subject := opts.Subject
+	if subject == "" {
+		subject = "GoDaily - " + opts.Day.Format("January 2, 2006")
+	}
 
 	data := digestData{
 		Date:           opts.Day,
+		Intro:          opts.Intro,
 		Sections:       sections,
 		UnsubscribeURL: opts.UnsubscribeURL,
 		CanonicalURL:   opts.CanonicalURL,

@@ -1,5 +1,7 @@
 {{ define "email-body-text" }}GoDaily - {{.Date.Format "January 2, 2006"}}
-
+{{if .Intro}}
+{{.Intro}}
+{{end}}
 {{range .Sections}}{{.Title}} ({{.Count}})
 ---
 {{range .Items}}[{{.SourceLabel}}] {{.Title}}

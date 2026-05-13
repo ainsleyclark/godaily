@@ -92,15 +92,17 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 		return results, nil
 	}
 
-	rendered, err := renderDigest(digestOptions{Day: day, Sources: results})
-	if err != nil {
-		slog.ErrorContext(ctx, "failed to render digest", "err", err)
+	if _, err := renderDigest(digestOptions{Day: day, Sources: results}); err != nil {
+		slog.ErrorContext(ctx, "Failed to render digest", "err", err)
 		return results, nil
 	}
 
+	subject, summary := a.synthesiseDigestMeta(ctx, day, results)
+
 	issue := news.Issue{
 		Slug:    day.Format("2006-01-02"),
-		Subject: rendered.Subject,
+		Subject: subject,
+		Summary: summary,
 		Status:  news.IssueStatusDraft,
 		SentAt:  time.Now().UTC(),
 	}
@@ -148,4 +150,20 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 	slog.InfoContext(ctx, "Persisted issue", "slug", issue.Slug)
 
 	return nil
+}
+
+// synthesiseDigestMeta calls the synthesiser to generate the email subject title
+// and intro paragraph. On failure it logs a warning and returns static fallbacks
+// so a missing API key never blocks delivery.
+func (a Aggregator) synthesiseDigestMeta(ctx context.Context, day time.Time, sections []news.SourceItems) (subject, summary string) {
+	subject = "GoDaily - " + day.Format("January 2, 2006")
+	if a.synthesiser == nil {
+		return subject, ""
+	}
+	meta, err := a.synthesiser.Synthesise(ctx, day, sections)
+	if err != nil {
+		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
+		return subject, ""
+	}
+	return meta.Title, meta.Intro
 }

@@ -45,7 +45,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		date := day("2026-04-26")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
 			Slug:    "2026-04-26",
-			Subject: "GoDaily - 2026-04-26",
+			Subject: "Go 1.24 lands — goroutines got faster",
 			Status:  news.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
@@ -57,7 +57,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		assert.True(t, m.called)
-		assert.Contains(t, m.req.Subject, "April 26, 2026")
+		assert.Equal(t, "Go 1.24 lands — goroutines got faster", m.req.Subject)
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)

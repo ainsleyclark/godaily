@@ -69,6 +69,17 @@ func (m *mockSuggester) Suggest(_ context.Context, _ time.Time, _ []news.SourceI
 	return m.resp, m.err
 }
 
+type mockSynthesiser struct {
+	called bool
+	resp   synth.DigestMeta
+	err    error
+}
+
+func (m *mockSynthesiser) Synthesise(_ context.Context, _ time.Time, _ []news.SourceItems) (synth.DigestMeta, error) {
+	m.called = true
+	return m.resp, m.err
+}
+
 // allRegistered returns a registry populated with mock fetchers for
 // every source in news.Sources.
 func allRegistered() map[news.Source]news.Fetcher {
