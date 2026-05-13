@@ -109,7 +109,7 @@ func main() {
 	spy := &spyEmail{}
 
 	app := &godaily.App{
-		Config:      &env.Config{},
+		Config:      &env.Config{APISecret: "e2e-test-secret"},
 		DB:          conn,
 		Repository:  &godaily.Repository{Issues: cached, Items: items.New(conn), Subscribers: subsStore},
 		Runner:      stubRunner{},

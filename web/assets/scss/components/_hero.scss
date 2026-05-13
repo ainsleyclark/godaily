@@ -93,6 +93,15 @@
 		}
 	}
 
+	&__hint {
+		width: 100%;
+		font-size: 0.85rem;
+
+		&--error {
+			color: var(--color-error);
+		}
+	}
+
 	&__sub {
 		font-size: 0.82rem;
 		color: var(--text-3);
