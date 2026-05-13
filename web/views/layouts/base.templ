@@ -1,6 +1,9 @@
 package layouts
 
-import "github.com/ainsleydev/webkit/pkg/env"
+import (
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleydev/webkit/pkg/env"
+)
 
 const (
 	defaultTitle       = "Daily Go news straight to your inbox before standup"
@@ -89,6 +92,7 @@ templ Base(meta PageMeta) {
 			<main>
 				{ children... }
 			</main>
+			@components.Footer()
 			<!-- Google Transition Fix -->
 			<script> </script>
 			<!-- Analytics -->
