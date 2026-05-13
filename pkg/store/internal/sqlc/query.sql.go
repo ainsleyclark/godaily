@@ -162,7 +162,7 @@ func (q *Queries) IssueUpdateStatus(ctx context.Context, arg IssueUpdateStatusPa
 }
 
 const itemByID = `-- name: ItemByID :one
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag FROM items WHERE id = ? LIMIT 1
+SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url FROM items WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
@@ -174,6 +174,7 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 		&i.Source,
 		&i.Title,
 		&i.Url,
+		&i.Tag,
 		&i.AuthorName,
 		&i.AuthorUsername,
 		&i.AuthorAvatarUrl,
@@ -181,22 +182,22 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 		&i.Score,
 		&i.Summary,
 		&i.Position,
-		&i.Tag,
+		&i.OriginalUrl,
 	)
 	return i, err
 }
 
 const itemCreate = `-- name: ItemCreate :one
 INSERT INTO items (
-    issue_id, source, tag, title, url,
+    issue_id, source, tag, title, url, original_url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position
 ) VALUES (
-    ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?,
     ?, ?, ?
 )
-RETURNING id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag
+RETURNING id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url
 `
 
 type ItemCreateParams struct {
@@ -205,6 +206,7 @@ type ItemCreateParams struct {
 	Tag              string          `json:"tag"`
 	Title            string          `json:"title"`
 	Url              string          `json:"url"`
+	OriginalUrl      sql.NullString  `json:"original_url"`
 	AuthorName       sql.NullString  `json:"author_name"`
 	AuthorUsername   sql.NullString  `json:"author_username"`
 	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
@@ -221,6 +223,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		arg.Tag,
 		arg.Title,
 		arg.Url,
+		arg.OriginalUrl,
 		arg.AuthorName,
 		arg.AuthorUsername,
 		arg.AuthorAvatarUrl,
@@ -236,6 +239,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		&i.Source,
 		&i.Title,
 		&i.Url,
+		&i.Tag,
 		&i.AuthorName,
 		&i.AuthorUsername,
 		&i.AuthorAvatarUrl,
@@ -243,7 +247,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		&i.Score,
 		&i.Summary,
 		&i.Position,
-		&i.Tag,
+		&i.OriginalUrl,
 	)
 	return i, err
 }
@@ -258,7 +262,7 @@ func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID int64) error {
 }
 
 const itemListByIssue = `-- name: ItemListByIssue :many
-SELECT id, issue_id, source, title, url, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, tag FROM items
+SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url FROM items
 WHERE issue_id = ?
 ORDER BY position ASC
 `
@@ -278,6 +282,7 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, e
 			&i.Source,
 			&i.Title,
 			&i.Url,
+			&i.Tag,
 			&i.AuthorName,
 			&i.AuthorUsername,
 			&i.AuthorAvatarUrl,
@@ -285,7 +290,7 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, e
 			&i.Score,
 			&i.Summary,
 			&i.Position,
-			&i.Tag,
+			&i.OriginalUrl,
 		); err != nil {
 			return nil, err
 		}

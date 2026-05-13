@@ -58,6 +58,7 @@ var sectionAccents = map[news.Tag]string{
 type (
 	emailItem struct {
 		URL            string
+		ReadOnURL      string
 		Title          string
 		Snippet        string
 		Meta           string
@@ -178,9 +179,6 @@ func buildSections(sources []news.SourceItems) []emailSection {
 
 func toEmailItem(item news.Item) emailItem {
 	parts := []string{item.Source.NiceName()}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
-	}
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
 	}
@@ -188,8 +186,13 @@ func toEmailItem(item news.Item) emailItem {
 	if markURL != "" {
 		markURL = env.AppURL + markURL
 	}
+	readOnURL := item.URL
+	if item.OriginalURL != "" {
+		readOnURL = item.OriginalURL
+	}
 	return emailItem{
 		URL:            item.URL,
+		ReadOnURL:      readOnURL,
 		Title:          item.Title,
 		Snippet:        item.Snippet,
 		Meta:           strings.Join(parts, " · "),

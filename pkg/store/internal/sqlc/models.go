@@ -24,6 +24,7 @@ type Item struct {
 	Source           string          `json:"source"`
 	Title            string          `json:"title"`
 	Url              string          `json:"url"`
+	Tag              string          `json:"tag"`
 	AuthorName       sql.NullString  `json:"author_name"`
 	AuthorUsername   sql.NullString  `json:"author_username"`
 	AuthorAvatarUrl  sql.NullString  `json:"author_avatar_url"`
@@ -31,7 +32,7 @@ type Item struct {
 	Score            sql.NullFloat64 `json:"score"`
 	Summary          sql.NullString  `json:"summary"`
 	Position         int64           `json:"position"`
-	Tag              string          `json:"tag"`
+	OriginalUrl      sql.NullString  `json:"original_url"`
 }
 
 type Subscriber struct {

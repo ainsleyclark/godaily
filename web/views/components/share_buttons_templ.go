@@ -59,7 +59,7 @@ func ShareButtons(canonicalURL string, title string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M6.5 9.5a3.536 3.536 0 0 0 5 0l2-2a3.536 3.536 0 0 0-5-5L7.5 3.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> <path d=\"M9.5 6.5a3.536 3.536 0 0 0-5 0l-2 2a3.536 3.536 0 0 0 5 5l1-1\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg> <span data-share-copy-label>Copy link</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M6.5 9.5a3.536 3.536 0 0 0 5 0l2-2a3.536 3.536 0 0 0-5-5L7.5 3.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path> <path d=\"M9.5 6.5a3.536 3.536 0 0 0-5 0l-2 2a3.536 3.536 0 0 0 5 5l1-1\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg> <span data-share-copy-label>Copy</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -125,13 +125,13 @@ func ShareButtons(canonicalURL string, title string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M12.6 1h2.4L9.7 6.8 16 15h-4.3l-3.8-5-4.4 5H1l5.7-6.5L0 1h4.4l3.5 4.6L12.6 1zm-.8 12.6h1.3L4.3 2.4H2.9l8.9 11.2z\"></path></svg> <span>X / Twitter</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M12.6 1h2.4L9.7 6.8 16 15h-4.3l-3.8-5-4.4 5H1l5.7-6.5L0 1h4.4l3.5 4.6L12.6 1zm-.8 12.6h1.3L4.3 2.4H2.9l8.9 11.2z\"></path></svg> <span>Twitter</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: twitterShareURL(canonicalURL, title), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on X / Twitter"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Href: twitterShareURL(canonicalURL, title), Attrs: templ.Attributes{"target": "_blank", "rel": "noopener noreferrer", "aria-label": "Share on X"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
