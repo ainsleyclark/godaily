@@ -91,6 +91,16 @@ templ Base(meta PageMeta) {
 			</main>
 			<!-- Google Transition Fix -->
 			<script> </script>
+			<!-- Analytics -->
+			if env.IsProduction() {
+				<!-- Privacy-friendly analytics by Plausible -->
+                <script async src="https://plausible.io/js/pa-A4u9lL473mlCDtQti63u-.js"></script>
+                <script>
+                  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+                  plausible.init()
+                </script>
+			}
+			<!-- Live Reload -->
 			if env.IsDevelopment() {
 				<script>
 					new EventSource("/internal/reload/").onmessage = () => location.reload();
