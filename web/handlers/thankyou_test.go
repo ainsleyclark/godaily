@@ -20,57 +20,29 @@
 package handlers
 
 import (
-	"errors"
-	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 func TestThankYou(t *testing.T) {
 	t.Parallel()
 
-	log.SetOutput(io.Discard)
-
 	tt := map[string]struct {
-		mock       func(issues *mocknews.MockIssueRepository)
-		wantStatus int
-		wantHTML   string
+		query    string
+		wantHTML string
 	}{
-		"Internal Error": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().
-					Latest(gomock.Any(), 1).
-					Return(nil, errors.New("internal error"))
-			},
-			wantStatus: http.StatusInternalServerError,
+		"Without email": {
+			query:    "",
+			wantHTML: "Check your email",
 		},
-		"OK No Issues": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().
-					Latest(gomock.Any(), 1).
-					Return([]news.Issue{}, nil)
-			},
-			wantStatus: http.StatusOK,
-			wantHTML:   "Thanks for subscribing!",
-		},
-		"OK With Issue": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().
-					Latest(gomock.Any(), 1).
-					Return([]news.Issue{{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"}}, nil)
-			},
-			wantStatus: http.StatusOK,
-			wantHTML:   "2026-04-28",
+		"With email": {
+			query:    "?email=hello%40example.com",
+			wantHTML: "hello@example.com",
 		},
 	}
 
@@ -78,30 +50,15 @@ func TestThankYou(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			ctrl := gomock.NewController(t)
-			mockIssues := mocknews.NewMockIssueRepository(ctrl)
-
-			if test.mock != nil {
-				test.mock(mockIssues)
-			}
-
-			app := &godaily.App{
-				Repository: &godaily.Repository{
-					Issues: mockIssues,
-				},
-			}
-
 			kit := webkit.New()
-			kit.Get("/thank-you/", ThankYou(app))
+			kit.Get("/thank-you/", ThankYou())
 
-			req := httptest.NewRequest(http.MethodGet, "/thank-you/", nil)
+			req := httptest.NewRequest(http.MethodGet, "/thank-you/"+test.query, nil)
 			rec := httptest.NewRecorder()
 			kit.ServeHTTP(rec, req)
 
-			assert.Equal(t, test.wantStatus, rec.Code)
-			if test.wantHTML != "" {
-				assert.Contains(t, rec.Body.String(), test.wantHTML)
-			}
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Contains(t, rec.Body.String(), test.wantHTML)
 		})
 	}
 }

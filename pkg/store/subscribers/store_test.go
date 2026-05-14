@@ -39,13 +39,15 @@ func TestSubscribers_Store(t *testing.T) {
 	var created news.Subscriber
 
 	t.Run("Create", func(t *testing.T) {
-		t.Log("Normalises email and generates token")
+		t.Log("Normalises email and generates tokens")
 		{
 			got, err := s.Create(ctx, "  Hello@Example.COM  ")
 			require.NoError(t, err)
 			assert.NotZero(t, got.ID)
 			assert.Equal(t, "hello@example.com", got.Email)
 			assert.NotEmpty(t, got.UnsubscribeToken)
+			assert.NotEmpty(t, got.ConfirmToken)
+			assert.Nil(t, got.ConfirmedAt)
 			assert.Nil(t, got.UnsubscribedAt)
 			assert.False(t, got.CreatedAt.IsZero())
 			created = got
@@ -114,10 +116,40 @@ func TestSubscribers_Store(t *testing.T) {
 	})
 
 	t.Run("ListActive", func(t *testing.T) {
-		got, err := s.ListActive(ctx)
-		require.NoError(t, err)
-		require.Len(t, got, 1)
-		assert.Equal(t, created.ID, got[0].ID)
+		t.Log("Excludes unconfirmed subscriber")
+		{
+			got, err := s.ListActive(ctx)
+			require.NoError(t, err)
+			assert.Empty(t, got)
+		}
+	})
+
+	t.Run("Confirm", func(t *testing.T) {
+		t.Log("Happy path sets confirmed_at and clears confirm_token")
+		{
+			got, err := s.Confirm(ctx, created.ConfirmToken)
+			require.NoError(t, err)
+			assert.Equal(t, created.ID, got.ID)
+			assert.NotNil(t, got.ConfirmedAt)
+			assert.Empty(t, got.ConfirmToken)
+			created = got
+		}
+
+		t.Log("Invalid or already-used token returns not found")
+		{
+			_, err := s.Confirm(ctx, "bad-token")
+			assert.ErrorIs(t, err, store.ErrNotFound)
+		}
+	})
+
+	t.Run("ListActive After Confirm", func(t *testing.T) {
+		t.Log("Returns confirmed subscriber")
+		{
+			got, err := s.ListActive(ctx)
+			require.NoError(t, err)
+			require.Len(t, got, 1)
+			assert.Equal(t, created.ID, got[0].ID)
+		}
 	})
 
 	t.Run("CountActive", func(t *testing.T) {
@@ -150,23 +182,25 @@ func TestSubscribers_Store(t *testing.T) {
 	})
 
 	t.Run("Reactivate", func(t *testing.T) {
-		t.Log("Happy path")
+		t.Log("Happy path resets confirmed_at and sets new confirm_token")
 		{
 			got, err := s.Reactivate(ctx, "hello@example.com")
 			require.NoError(t, err)
 			assert.Equal(t, created.ID, got.ID)
 			assert.Equal(t, "hello@example.com", got.Email)
 			assert.Nil(t, got.UnsubscribedAt)
+			assert.Nil(t, got.ConfirmedAt)
 			assert.NotEmpty(t, got.UnsubscribeToken)
+			assert.NotEmpty(t, got.ConfirmToken)
 			assert.NotEqual(t, created.UnsubscribeToken, got.UnsubscribeToken)
+			created = got
 		}
 
-		t.Log("Reappears in ListActive")
+		t.Log("Not in ListActive until confirmed again")
 		{
 			active, err := s.ListActive(ctx)
 			require.NoError(t, err)
-			require.Len(t, active, 1)
-			assert.Equal(t, created.ID, active[0].ID)
+			assert.Empty(t, active)
 		}
 
 		t.Log("Not found for non-existent or already-active email")
@@ -208,6 +242,12 @@ func TestSubscribers_Store(t *testing.T) {
 		t.Log("Reactivate")
 		{
 			_, err := s.Reactivate(ctx, "x@example.com")
+			assert.Error(t, err)
+		}
+
+		t.Log("Confirm")
+		{
+			_, err := s.Confirm(ctx, "tok")
 			assert.Error(t, err)
 		}
 

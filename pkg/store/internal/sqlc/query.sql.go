@@ -306,7 +306,7 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, e
 }
 
 const subscriberByEmail = `-- name: SubscriberByEmail :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at FROM subscribers WHERE email = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE email = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscriber, error) {
@@ -318,12 +318,14 @@ func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscrib
 		&i.UnsubscribeToken,
 		&i.UnsubscribedAt,
 		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
 	)
 	return i, err
 }
 
 const subscriberByID = `-- name: SubscriberByID :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at FROM subscribers WHERE id = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, error) {
@@ -335,12 +337,14 @@ func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, err
 		&i.UnsubscribeToken,
 		&i.UnsubscribedAt,
 		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
 	)
 	return i, err
 }
 
 const subscriberByUnsubscribeToken = `-- name: SubscriberByUnsubscribeToken :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeToken string) (Subscriber, error) {
@@ -352,6 +356,50 @@ func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeT
 		&i.UnsubscribeToken,
 		&i.UnsubscribedAt,
 		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
+	)
+	return i, err
+}
+
+const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE confirm_token = ? LIMIT 1
+`
+
+func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken string) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberByConfirmToken, confirmToken)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.UnsubscribeToken,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
+	)
+	return i, err
+}
+
+const subscriberConfirm = `-- name: SubscriberConfirm :one
+UPDATE subscribers
+SET confirmed_at = CURRENT_TIMESTAMP,
+    confirm_token = NULL
+WHERE confirm_token = ? AND confirmed_at IS NULL
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
+`
+
+func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken string) (Subscriber, error) {
+	row := q.db.QueryRowContext(ctx, subscriberConfirm, confirmToken)
+	var i Subscriber
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.UnsubscribeToken,
+		&i.UnsubscribedAt,
+		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
 	)
 	return i, err
 }
@@ -369,20 +417,21 @@ func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
 
 const subscriberCreate = `-- name: SubscriberCreate :one
 INSERT INTO subscribers (
-    email, unsubscribe_token
+    email, unsubscribe_token, confirm_token
 ) VALUES (
-    ?, ?
+    ?, ?, ?
 )
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
 `
 
 type SubscriberCreateParams struct {
-	Email            string `json:"email"`
-	UnsubscribeToken string `json:"unsubscribe_token"`
+	Email            string         `json:"email"`
+	UnsubscribeToken string         `json:"unsubscribe_token"`
+	ConfirmToken     sql.NullString `json:"confirm_token"`
 }
 
 func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreateParams) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, subscriberCreate, arg.Email, arg.UnsubscribeToken)
+	row := q.db.QueryRowContext(ctx, subscriberCreate, arg.Email, arg.UnsubscribeToken, arg.ConfirmToken)
 	var i Subscriber
 	err := row.Scan(
 		&i.ID,
@@ -390,13 +439,16 @@ func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreatePara
 		&i.UnsubscribeToken,
 		&i.UnsubscribedAt,
 		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
 	)
 	return i, err
 }
 
 const subscriberListActive = `-- name: SubscriberListActive :many
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at FROM subscribers
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers
 WHERE unsubscribed_at IS NULL
+  AND confirmed_at IS NOT NULL
 ORDER BY id ASC
 `
 
@@ -415,6 +467,8 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 			&i.UnsubscribeToken,
 			&i.UnsubscribedAt,
 			&i.CreatedAt,
+			&i.ConfirmToken,
+			&i.ConfirmedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -432,18 +486,21 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 const subscriberReactivate = `-- name: SubscriberReactivate :one
 UPDATE subscribers
 SET unsubscribed_at = NULL,
+    confirmed_at = NULL,
+    confirm_token = ?,
     unsubscribe_token = ?
 WHERE email = ? AND unsubscribed_at IS NOT NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
 `
 
 type SubscriberReactivateParams struct {
-	UnsubscribeToken string `json:"unsubscribe_token"`
-	Email            string `json:"email"`
+	ConfirmToken     sql.NullString `json:"confirm_token"`
+	UnsubscribeToken string         `json:"unsubscribe_token"`
+	Email            string         `json:"email"`
 }
 
 func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReactivateParams) (Subscriber, error) {
-	row := q.db.QueryRowContext(ctx, subscriberReactivate, arg.UnsubscribeToken, arg.Email)
+	row := q.db.QueryRowContext(ctx, subscriberReactivate, arg.ConfirmToken, arg.UnsubscribeToken, arg.Email)
 	var i Subscriber
 	err := row.Scan(
 		&i.ID,
@@ -451,6 +508,8 @@ func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReacti
 		&i.UnsubscribeToken,
 		&i.UnsubscribedAt,
 		&i.CreatedAt,
+		&i.ConfirmToken,
+		&i.ConfirmedAt,
 	)
 	return i, err
 }

@@ -102,9 +102,15 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 		return news.Subscriber{}, err
 	}
 
+	confirm, err := newToken()
+	if err != nil {
+		return news.Subscriber{}, err
+	}
+
 	sub, err := s.sqlc.SubscriberCreate(ctx, sqlc.SubscriberCreateParams{
 		Email:            email,
 		UnsubscribeToken: unsubscribe,
+		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
 	})
 	if err != nil {
 		return news.Subscriber{}, err
@@ -114,14 +120,29 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 }
 
 func (s Store) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
-	token, err := newToken()
+	unsubscribe, err := newToken()
+	if err != nil {
+		return news.Subscriber{}, err
+	}
+	confirm, err := newToken()
 	if err != nil {
 		return news.Subscriber{}, err
 	}
 	sub, err := s.sqlc.SubscriberReactivate(ctx, sqlc.SubscriberReactivateParams{
-		UnsubscribeToken: token,
+		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
+		UnsubscribeToken: unsubscribe,
 		Email:            email,
 	})
+	if errors.Is(err, sql.ErrNoRows) {
+		return news.Subscriber{}, store.ErrNotFound
+	} else if err != nil {
+		return news.Subscriber{}, err
+	}
+	return transformSubscriber(sub), nil
+}
+
+func (s Store) Confirm(ctx context.Context, token string) (news.Subscriber, error) {
+	sub, err := s.sqlc.SubscriberConfirm(ctx, token)
 	if errors.Is(err, sql.ErrNoRows) {
 		return news.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
@@ -156,6 +177,8 @@ func transformSubscriber(s sqlc.Subscriber) news.Subscriber {
 		ID:               s.ID,
 		Email:            s.Email,
 		UnsubscribeToken: s.UnsubscribeToken,
+		ConfirmToken:     s.ConfirmToken.String,
+		ConfirmedAt:      s.ConfirmedAt,
 		UnsubscribedAt:   s.UnsubscribedAt,
 		CreatedAt:        s.CreatedAt,
 	}

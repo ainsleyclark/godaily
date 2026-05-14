@@ -55,7 +55,8 @@ func newKit(a *godaily.App) *webkit.Kit {
 	kit.Plug(kitmiddleware.URL)
 
 	kit.Get("/", handlers.Home(a))
-	kit.Get("/thank-you/", handlers.ThankYou(a))
+	kit.Get("/thank-you/", handlers.ThankYou())
+	kit.Get("/confirmed/", handlers.Confirmed(a))
 	kit.Get("/unsubscribed/", handlers.Unsubscribed())
 	kit.Get("/privacy/", handlers.Privacy())
 	kit.Get("/issues/", handlers.Issues(a))

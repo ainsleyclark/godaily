@@ -69,11 +69,7 @@ func TestService_Subscribe(t *testing.T) {
 		ID:               1,
 		Email:            "user@example.com",
 		UnsubscribeToken: "tok123",
-	}
-	issue := news.Issue{
-		ID:      1,
-		Slug:    "2026-04-28",
-		Subject: "GoDaily - April 28, 2026",
+		ConfirmToken:     "confirm-tok",
 	}
 
 	t.Run("Already Subscribed", func(t *testing.T) {
@@ -100,7 +96,7 @@ func TestService_Subscribe(t *testing.T) {
 		assert.False(t, sender.called)
 	})
 
-	t.Run("Missing Unsubscribe Token", func(t *testing.T) {
+	t.Run("Missing Confirm Token", func(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
@@ -110,7 +106,7 @@ func TestService_Subscribe(t *testing.T) {
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "unsubscribe token")
+		assert.Contains(t, err.Error(), "confirmation token")
 		assert.False(t, sender.called)
 	})
 
@@ -127,49 +123,30 @@ func TestService_Subscribe(t *testing.T) {
 		assert.False(t, sender.called)
 	})
 
-	t.Run("OK With Latest Issue", func(t *testing.T) {
+	t.Run("OK Sends Confirmation Email", func(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
-		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.NoError(t, err)
 		assert.Equal(t, sub, got)
 		assert.True(t, sender.called)
-		assert.Equal(t, "Welcome to GoDaily!", sender.req.Subject)
-		assert.Contains(t, sender.req.Html, issue.Slug)
-		assert.Contains(t, sender.req.Html, issue.Subject)
-		assert.Contains(t, sender.req.Headers["List-Unsubscribe"], sub.UnsubscribeToken)
-		assert.Equal(t, "List-Unsubscribe=One-Click", sender.req.Headers["List-Unsubscribe-Post"])
+		assert.Equal(t, "Confirm your GoDaily subscription", sender.req.Subject)
+		assert.Contains(t, sender.req.Html, sub.ConfirmToken)
+		assert.Empty(t, sender.req.Headers)
 	})
 
-	t.Run("OK Without Latest Issue", func(t *testing.T) {
-		t.Parallel()
-
-		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
-		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
-		issues.EXPECT().Latest(gomock.Any(), 1).Return(nil, errBoom)
-
-		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
-
-		require.NoError(t, err)
-		assert.Equal(t, sub, got)
-		assert.True(t, sender.called)
-	})
-
-	t.Run("Welcome Email Failure Is Non Fatal", func(t *testing.T) {
+	t.Run("Confirmation Email Failure Is Non Fatal", func(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
 		sender.err = errBoom
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(news.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
-		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -191,19 +168,19 @@ func TestService_Subscribe(t *testing.T) {
 			ID:               1,
 			Email:            sub.Email,
 			UnsubscribeToken: "new-token",
+			ConfirmToken:     "new-confirm-tok",
 		}
 
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(unsubscribed, nil)
 		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(reactivated, nil)
-		issues.EXPECT().Latest(gomock.Any(), 1).Return([]news.Issue{issue}, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
 		require.NoError(t, err)
 		assert.Equal(t, reactivated, got)
 		assert.True(t, sender.called)
-		assert.Equal(t, "Welcome to GoDaily!", sender.req.Subject)
+		assert.Equal(t, "Confirm your GoDaily subscription", sender.req.Subject)
 	})
 
 	t.Run("Reactivate Error", func(t *testing.T) {
@@ -224,6 +201,40 @@ func TestService_Subscribe(t *testing.T) {
 
 		assert.ErrorIs(t, err, errBoom)
 		assert.False(t, sender.called)
+	})
+}
+
+func TestService_Confirm(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().Confirm(gomock.Any(), "confirm-tok").Return(news.Subscriber{}, nil)
+
+		err := New(repo, issues, sender).Confirm(t.Context(), "confirm-tok")
+		require.NoError(t, err)
+	})
+
+	t.Run("Invalid Token", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().Confirm(gomock.Any(), "bad-tok").Return(news.Subscriber{}, store.ErrNotFound)
+
+		err := New(repo, issues, sender).Confirm(t.Context(), "bad-tok")
+		assert.ErrorIs(t, err, store.ErrNotFound)
+	})
+
+	t.Run("Error", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().Confirm(gomock.Any(), "tok").Return(news.Subscriber{}, errBoom)
+
+		err := New(repo, issues, sender).Confirm(t.Context(), "tok")
+		assert.ErrorIs(t, err, errBoom)
 	})
 }
 

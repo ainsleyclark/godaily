@@ -20,29 +20,14 @@
 package handlers
 
 import (
-	"net/http"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // ThankYou handles the post-subscription confirmation page.
-func ThankYou(a *godaily.App) webkit.Handler {
+func ThankYou() webkit.Handler {
 	return func(c *webkit.Context) error {
-		ctx := c.Request.Context()
-
-		latest, err := a.Repository.Issues.Latest(ctx, 1)
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
-
-		var issue news.Issue
-		if len(latest) > 0 {
-			issue = latest[0]
-		}
-
-		return c.Render(pages.ThankYou(issue))
+		email := c.Request.URL.Query().Get("email")
+		return c.Render(pages.ThankYou(email))
 	}
 }

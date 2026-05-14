@@ -17,30 +17,36 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package templates
+package api
 
-import _ "embed"
+import (
+	"context"
+	"errors"
+	"net/http"
 
-//go:embed email_layout.html
-var EmailLayout string
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/store"
+)
 
-//go:embed email_layout.txt
-var EmailLayoutText string
+// HandleConfirm is the Vercel serverless function entry point for GET /api/confirm.
+func HandleConfirm(w http.ResponseWriter, r *http.Request) {
+	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		token := r.URL.Query().Get("token")
+		if token == "" {
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}
 
-//go:embed email.html
-var EmailHTML string
+		if err := a.Subscribers.Confirm(ctx, token); err != nil {
+			if errors.Is(err, store.ErrNotFound) {
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			}
+			api.Error(w, http.StatusInternalServerError, err.Error())
+			return
+		}
 
-//go:embed email.txt
-var EmailText string
-
-//go:embed confirm.html
-var ConfirmHTML string
-
-//go:embed confirm.txt
-var ConfirmText string
-
-//go:embed suggest.html
-var SuggestHTML string
-
-//go:embed suggest.txt
-var SuggestText string
+		http.Redirect(w, r, "/confirmed/", http.StatusFound)
+	})(w, r)
+}
