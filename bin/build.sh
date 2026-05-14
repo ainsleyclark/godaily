@@ -22,6 +22,6 @@ pnpm run build
 
 log "Generating static site"
 cd ../
-go run main.go generate
+APP_ENV=production go run main.go generate
 
 log "Done — output in out/"

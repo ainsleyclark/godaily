@@ -23,6 +23,10 @@ jobs:
           B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
           B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
         run: |
+          if ! command -v turso &> /dev/null; then
+            echo "Error: turso CLI not found on PATH" >&2
+            exit 1
+          fi
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
           turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"

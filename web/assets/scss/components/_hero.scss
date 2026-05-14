@@ -34,6 +34,11 @@
 		gap: 3rem;
 		align-items: center;
 
+		@include tablet {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
 		@include mobile {
 			grid-template-columns: 1fr;
 			gap: 2rem;
@@ -112,6 +117,10 @@
 		justify-content: flex-end;
 		align-items: center;
 
+		@include tablet {
+			display: none;
+		}
+
 		@include mobile {
 			display: none;
 		}
@@ -179,6 +188,10 @@
 		&--bottom {
 			bottom: 18%;
 			right: -4%;
+		}
+
+		@include tablet {
+			display: none;
 		}
 
 		@include mobile {
