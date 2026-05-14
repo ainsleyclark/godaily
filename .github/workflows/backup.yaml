@@ -34,7 +34,7 @@ jobs:
               exit 1
             fi
           done
-          turso config set token "TURSO_API_TOKEN"
+          turso config set token "$TURSO_API_TOKEN"
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
           turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
