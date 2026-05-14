@@ -34,18 +34,18 @@ const AppURL = "https://godaily.dev"
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {
-	AppEnv                         env.Environment `env:"APP_ENV"`
-	ResendToken                    string          `env:"RESEND_TOKEN,required"`
-	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required"`
-	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY"`
-	GitHubToken                    string          `env:"GITHUB_TOKEN"`
-	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required"`
-	TursoURL                       string          `env:"TURSO_URL,required"`
-	TursoAuthToken                 string          `env:"TURSO_AUTH_TOKEN,required"`
-	APISecret                      string          `env:"API_SECRET,required"`
-	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL"`
-	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL"`
-	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL"`
+	AppEnv                         env.Environment `env:"APP_ENV,unset"`
+	ResendToken                    string          `env:"RESEND_TOKEN,required,unset"`
+	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required,unset"`
+	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,unset"`
+	GitHubToken                    string          `env:"GITHUB_TOKEN,unset"`
+	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required,unset"`
+	TursoURL                       string          `env:"TURSO_URL,required,unset"`
+	TursoAuthToken                 string          `env:"TURSO_AUTH_TOKEN,required,unset"`
+	APISecret                      string          `env:"API_SECRET,required,unset"`
+	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL,unset"`
+	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL,unset"`
+	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL,unset"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file
