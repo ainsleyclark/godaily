@@ -13,10 +13,8 @@
         <a href="{{ .URL }}" style="color:#0d2236;text-decoration:none;">{{ .Title }}</a>
       </div>
       {{ if .Snippet }}<div style="font-size:13px;color:#3a6880;line-height:1.55;margin-bottom:6px;">{{ .Snippet }}</div>{{ end }}
-      {{ if .Meta }}<div style="font-size:11px;color:#6b9ab8;">{{ .Meta }}</div>{{ end }}
-    </td>
-    <td width="120" valign="top" align="right" style="vertical-align:top;padding-left:12px;">
-      <a href="{{ .ReadOnURL }}" style="color:#1a7fa8;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;">Read on {{ .SourceNiceName }} &rarr;</a>
+      {{ if .Meta }}<div style="font-size:11px;color:#6b9ab8;margin-bottom:6px;">{{ .Meta }}</div>{{ end }}
+      <a href="{{ .ReadOnURL }}" style="color:#1a7fa8;text-decoration:none;font-size:12px;font-weight:600;">Read on {{ .SourceNiceName }} &rarr;</a>
     </td>
   </tr>
 </table>
@@ -45,9 +43,9 @@
         </td>
       </tr>
     </table>
-    {{ range .Items }}
-    <div style="padding:14px 0;border-bottom:1px solid #d0e8f5;">
-      {{ template "item-row" . }}
+    {{ range $i, $item := .Items }}
+    <div style="padding:14px 0;{{ if $i }}border-top:1px solid #d0e8f5;{{ end }}">
+      {{ template "item-row" $item }}
     </div>
     {{ end }}
   </td>
