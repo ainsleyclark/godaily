@@ -17,6 +17,10 @@
 		--swiper-columns: repeat(auto-fit, minmax(260px, 1fr));
 		--swiper-gap: 1.5rem;
 
+		@include tablet {
+			--swiper-columns: repeat(2, 1fr);
+		}
+
 		@include mobile {
 			min-height: 220px;
 		}

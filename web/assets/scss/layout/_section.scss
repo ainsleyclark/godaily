@@ -3,6 +3,10 @@
 .section {
 	padding: 4rem 0;
 
+	@include tablet {
+		padding: 3rem 0;
+	}
+
 	@include mobile {
 		padding: 2rem 0;
 	}
