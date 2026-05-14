@@ -34,7 +34,7 @@ const AppURL = "https://godaily.dev"
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {
-	AppEnv                         env.Environment `env:"APP_ENV,unset"`
+	AppEnv                         env.Environment `env:"APP_ENV"`
 	ResendToken                    string          `env:"RESEND_TOKEN,required,unset"`
 	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required,unset"`
 	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,unset"`
