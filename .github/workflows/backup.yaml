@@ -9,24 +9,18 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Install Turso CLI
+        run: curl -sSfL https://get.tur.so/install.sh | bash
 
-      - uses: actions/setup-go@v6
-        with:
-          go-version-file: go.mod
-          cache: true
-
-      - name: Export and upload database backup
+      - name: Dump database and upload to Backblaze B2
         env:
-          APP_ENV: production
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
-          EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
-          TURSO_URL: ${{ secrets.TURSO_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-          API_SECRET: ${{ secrets.API_SECRET }}
-          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
-          B2_APP_KEY: ${{ secrets.B2_APP_KEY }}
+          TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
+          TURSO_DB_NAME: ${{ secrets.TURSO_DB_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
           B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
           B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
-        run: go run main.go backup
+        run: |
+          FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
+          turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
+          aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"

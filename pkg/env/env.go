@@ -46,10 +46,6 @@ type Config struct {
 	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL"`
 	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL"`
 	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL"`
-	B2KeyID                        string          `env:"B2_KEY_ID"`
-	B2AppKey                       string          `env:"B2_APP_KEY"`
-	B2BucketName                   string          `env:"B2_BUCKET_NAME"`
-	B2Endpoint                     string          `env:"B2_ENDPOINT"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file

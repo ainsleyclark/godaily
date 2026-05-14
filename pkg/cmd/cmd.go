@@ -52,7 +52,6 @@ func Run() {
 			migrateCmd(app),
 			fetchCmd(app),
 			generateCmd(app),
-			backupCmd(app),
 		},
 	}
 
