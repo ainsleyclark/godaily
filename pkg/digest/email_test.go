@@ -105,12 +105,11 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.HTML, "Articles")
 		assert.Contains(t, got.HTML, "discuss-me")
 		assert.Contains(t, got.HTML, "article-me")
-		// Order: Articles (3rd in SectionTags) must appear after... no:
-		// SectionTags = [Release, Proposal, Article, Discussion, Video, Trending],
-		// so Articles renders before Discussions.
+		// Order: SectionTags = [Release, Proposal, Discussion, Article, Video, Trending],
+		// so Discussions renders before Articles.
 		idxArticles := strings.Index(got.HTML, "Articles")
 		idxDiscussions := strings.Index(got.HTML, "Discussions")
-		assert.Less(t, idxArticles, idxDiscussions, "Articles section should render before Discussions")
+		assert.Less(t, idxDiscussions, idxArticles, "Discussions section should render before Articles")
 	})
 
 	t.Run("Skips Empty Sections", func(t *testing.T) {
