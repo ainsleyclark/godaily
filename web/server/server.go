@@ -26,6 +26,7 @@ import (
 	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/apimux"
 	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/env"
@@ -55,7 +56,8 @@ func newKit(a *godaily.App) *webkit.Kit {
 	kit.Plug(kitmiddleware.URL)
 
 	kit.Get("/", handlers.Home(a))
-	kit.Get("/thank-you/", handlers.ThankYou(a))
+	kit.Get("/thank-you/", handlers.ThankYou())
+	kit.Get("/confirmed/", handlers.Confirmed(a))
 	kit.Get("/unsubscribed/", handlers.Unsubscribed())
 	kit.Get("/privacy/", handlers.Privacy())
 	kit.Get("/issues/", handlers.Issues(a))
@@ -64,6 +66,9 @@ func newKit(a *godaily.App) *webkit.Kit {
 	kit.NotFound(func(c *webkit.Context) error {
 		return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))
 	})
+
+	// Mount API routes on the raw chi mux so they bypass webkit's middleware chain.
+	kit.Mux().Mount("/api", http.StripPrefix("/api", apimux.Handler(a)))
 
 	if env.IsDevelopment() {
 		// Register on the raw chi mux so SSE bypasses webkit's middleware chain

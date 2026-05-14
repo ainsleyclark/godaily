@@ -43,7 +43,7 @@ async function handleSubmit(event: Event): Promise<void> {
 		});
 
 		if (res.ok) {
-			window.location.href = '/thank-you/';
+			window.location.href = '/thank-you/?email=' + encodeURIComponent(value);
 		} else if (res.status === 409) {
 			resetButton(button, hint, originalText, "You're already subscribed.");
 			input.disabled = false;

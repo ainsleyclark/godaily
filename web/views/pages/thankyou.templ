@@ -1,28 +1,26 @@
 package pages
 
 import (
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/web/views/components"
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
-templ ThankYou(issue news.Issue) {
+templ ThankYou(email string) {
 	@layouts.Base(layouts.PageMeta{
-		Title: "Subscribed",
+		Title: "Check your email",
 	}) {
 		@components.Header()
 		<section class="thank-you">
 			@components.Container(false) {
 				<div class="thank-you__content">
 					<div class="thank-you__check">✓</div>
-					<h1 class="thank-you__title">Thanks for subscribing!</h1>
-					<p class="thank-you__lead">Your first digest arrives weekday mornings.</p>
-					if issue.Slug != "" {
-						<p class="thank-you__issue-text">
-							While you wait for the next GoDaily,
-							<a class="thank-you__link" href={ templ.SafeURL("/issues/" + issue.Slug + "/") }>check out the latest issue here</a>.
-						</p>
+					<h1 class="thank-you__title">Check your email</h1>
+					if email != "" {
+						<p class="thank-you__lead">We've sent a confirmation link to <strong>{ email }</strong>. Click the link in the email to confirm your subscription to GoDaily.</p>
+					} else {
+						<p class="thank-you__lead">We've sent you a confirmation link. Click the link in the email to confirm your subscription to GoDaily.</p>
 					}
+					<p class="thank-you__lead">If you don't see it, check your spam folder.</p>
 				</div>
 			}
 		</section>

@@ -1,0 +1,6 @@
+{{ define "email-body-text" }}Confirm your GoDaily subscription
+
+Click the link below to confirm your subscription to GoDaily. If you didn't request this, you can safely ignore this email.
+
+{{ .ConfirmURL }}
+{{ end }}

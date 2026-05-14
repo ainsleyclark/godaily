@@ -17,30 +17,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package templates
+package handlers
 
-import _ "embed"
+import (
+	"net/http"
 
-//go:embed email_layout.html
-var EmailLayout string
+	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/web/views/pages"
+	"github.com/ainsleydev/webkit/pkg/webkit"
+)
 
-//go:embed email_layout.txt
-var EmailLayoutText string
+// Confirmed handles the post-confirmation page shown after a subscriber
+// clicks the confirmation link in their email.
+func Confirmed(a *godaily.App) webkit.Handler {
+	return func(c *webkit.Context) error {
+		ctx := c.Request.Context()
 
-//go:embed email.html
-var EmailHTML string
+		latest, err := a.Repository.Issues.Latest(ctx, 1)
+		if err != nil {
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+		}
 
-//go:embed email.txt
-var EmailText string
+		var issue news.Issue
+		if len(latest) > 0 {
+			issue = latest[0]
+		}
 
-//go:embed confirm.html
-var ConfirmHTML string
-
-//go:embed confirm.txt
-var ConfirmText string
-
-//go:embed suggest.html
-var SuggestHTML string
-
-//go:embed suggest.txt
-var SuggestText string
+		return c.Render(pages.Confirmed(issue))
+	}
+}

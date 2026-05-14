@@ -36,9 +36,11 @@ type Item struct {
 }
 
 type Subscriber struct {
-	ID               int64      `json:"id"`
-	Email            string     `json:"email"`
-	UnsubscribeToken string     `json:"unsubscribe_token"`
-	UnsubscribedAt   *time.Time `json:"unsubscribed_at"`
-	CreatedAt        time.Time  `json:"created_at"`
+	ID               int64          `json:"id"`
+	Email            string         `json:"email"`
+	UnsubscribeToken string         `json:"unsubscribe_token"`
+	UnsubscribedAt   *time.Time     `json:"unsubscribed_at"`
+	CreatedAt        time.Time      `json:"created_at"`
+	ConfirmToken     sql.NullString `json:"confirm_token"`
+	ConfirmedAt      *time.Time     `json:"confirmed_at"`
 }

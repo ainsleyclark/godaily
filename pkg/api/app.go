@@ -21,8 +21,9 @@ package api
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"sync"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
@@ -68,7 +69,8 @@ func GetApp(ctx context.Context) *godaily.App {
 	var err error
 	app, _, err = godaily.Bootstrap(ctx)
 	if err != nil {
-		log.Fatalf("bootstrapping app: %v", err)
+		slog.ErrorContext(ctx, "bootstrapping app", "error", err)
+		os.Exit(0)
 	}
 	return app
 }

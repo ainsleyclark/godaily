@@ -18,7 +18,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Package subscriber owns the subscription lifecycle: creating subscribers,
-// sending welcome emails, and processing unsubscribes.
+// sending confirmation emails, and processing unsubscribes.
 package subscriber
 
 import (
@@ -42,6 +42,7 @@ import (
 // Subscriber defines the subscription lifecycle methods used by HTTP handlers.
 type Subscriber interface {
 	Subscribe(ctx context.Context, email string) (news.Subscriber, error)
+	Confirm(ctx context.Context, token string) error
 	Unsubscribe(ctx context.Context, token string) error
 }
 
@@ -50,15 +51,14 @@ type Subscriber interface {
 var ErrAlreadySubscribed = errors.New("already subscribed")
 
 var (
-	htmlTmpl = htmltemplate.Must(htmltemplate.New("welcome-html").Parse(templates.EmailLayout + templates.WelcomeHTML))
-	textTmpl = texttemplate.Must(texttemplate.New("welcome-text").Parse(templates.EmailLayoutText + templates.WelcomeText))
+	htmlTmpl = htmltemplate.Must(htmltemplate.New("confirm-html").Parse(templates.EmailLayout + templates.ConfirmHTML))
+	textTmpl = texttemplate.Must(texttemplate.New("confirm-text").Parse(templates.EmailLayoutText + templates.ConfirmText))
 )
 
-type welcomeData struct {
-	LatestIssueURL   string
-	LatestIssueTitle string
-	UnsubscribeURL   string
-	CanonicalURL     string
+type confirmData struct {
+	ConfirmURL     string
+	UnsubscribeURL string
+	CanonicalURL   string
 }
 
 // Service owns the full subscriber lifecycle.
@@ -77,10 +77,10 @@ func New(repo news.SubscriberRepository, issues news.IssueRepository, sender ema
 	}
 }
 
-// Subscribe creates a new subscriber and sends a welcome email.
+// Subscribe creates a new subscriber and sends a confirmation email.
 // It returns ErrAlreadySubscribed if the email is already registered as active.
 // Previously unsubscribed addresses are reactivated with a fresh token.
-// Welcome email failures are logged but do not fail the subscription.
+// Confirmation email failures are logged but do not fail the subscription.
 func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscriber, error) {
 	var sub news.Subscriber
 
@@ -102,22 +102,24 @@ func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscrib
 		return news.Subscriber{}, err
 	}
 
-	if sub.UnsubscribeToken == "" {
-		return news.Subscriber{}, errors.New("subscriber created without unsubscribe token")
+	if sub.ConfirmToken == "" {
+		return news.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
-	unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
+	unsubscribeURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
 
-	var latestIssueURL, latestIssueTitle string
-	if latest, err := s.issues.Latest(ctx, 1); err == nil && len(latest) > 0 {
-		latestIssueURL = env.AppURL + "/digest/" + latest[0].Slug + "/"
-		latestIssueTitle = latest[0].Subject
-	}
-
-	if err = s.sendWelcome(ctx, sub.Email, unsubURL, latestIssueURL, latestIssueTitle); err != nil {
-		slog.ErrorContext(ctx, "Failed to send welcome email", "email", sub.Email, "error", err)
+	if err = s.sendConfirmation(ctx, sub.Email, confirmURL, unsubscribeURL); err != nil {
+		slog.ErrorContext(ctx, "Failed to send confirmation email", "email", sub.Email, "error", err)
 	}
 
 	return sub, nil
+}
+
+// Confirm verifies a subscriber's email address using their confirmation token.
+// Returns store.ErrNotFound if the token is invalid or already used.
+func (s Service) Confirm(ctx context.Context, token string) error {
+	_, err := s.repo.Confirm(ctx, token)
+	return err
 }
 
 // Unsubscribe marks a subscriber as unsubscribed using their token.
@@ -125,31 +127,30 @@ func (s Service) Unsubscribe(ctx context.Context, token string) error {
 	return s.repo.Unsubscribe(ctx, token)
 }
 
-func (s Service) sendWelcome(ctx context.Context, to, unsubURL, latestIssueURL, latestIssueTitle string) error {
-	data := welcomeData{
-		LatestIssueURL:   latestIssueURL,
-		LatestIssueTitle: latestIssueTitle,
-		UnsubscribeURL:   unsubURL,
+func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscribeURL string) error {
+	data := confirmData{
+		ConfirmURL:     confirmURL,
+		UnsubscribeURL: unsubscribeURL,
 	}
 
 	var htmlBuf bytes.Buffer
 	if err := htmlTmpl.ExecuteTemplate(&htmlBuf, "email-layout", data); err != nil {
-		return fmt.Errorf("rendering welcome html: %w", err)
+		return fmt.Errorf("rendering confirmation html: %w", err)
 	}
 
 	var textBuf bytes.Buffer
 	if err := textTmpl.ExecuteTemplate(&textBuf, "email-layout-text", data); err != nil {
-		return fmt.Errorf("rendering welcome text: %w", err)
+		return fmt.Errorf("rendering confirmation text: %w", err)
 	}
 
 	return s.email.Send(ctx, email.SendEmailRequest{
 		From:    "GoDaily <noreply@godaily.dev>",
 		To:      []string{to},
-		Subject: "Welcome to GoDaily!",
+		Subject: "Confirm your GoDaily subscription",
 		Html:    htmlBuf.String(),
 		Text:    textBuf.String(),
 		Headers: map[string]string{
-			"List-Unsubscribe":      "<" + unsubURL + ">",
+			"List-Unsubscribe":      "<" + unsubscribeURL + ">",
 			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
 		},
 	})

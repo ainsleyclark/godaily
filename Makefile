@@ -16,6 +16,16 @@ serve: # Start live-reload dev environment with Vercel API support. Visit http:/
 	vercel dev
 .PHONY: serve
 
+serve-local: # Start live-reload dev without Vercel proxy — all routes including /api/* work on :3000
+	@[ -f .env ] || { echo "No .env found – run 'vercel env pull .env' first"; exit 1; }
+	@mkdir -p tmp
+	@(test -d web/node_modules || (cd web && pnpm install))
+	APP_ENV=development PORT=3000 web/node_modules/.bin/concurrently -k -n templ,air,esbuild -c blue,green,magenta \
+		'go tool templ generate --watch --path=./web' \
+		'go tool air -c .air.toml' \
+		'pnpm --dir web dev'
+.PHONY: serve-local
+
 serve-prod: # Start the HTTP web server without live-reload
 	go run main.go serve
 .PHONY: serve-prod
@@ -53,6 +63,10 @@ migrate-down: # Roll back the most recent database migration against TURSO_URL
 .PHONY: migrate-down
 
 excluded := grep -v gen | grep -v res
+
+e2e: # Run Playwright E2E tests
+	cd e2e && npx playwright test
+.PHONY: e2e
 
 test: # Test uses race and coverage
 	go clean -testcache && go test $$(go list ./... | $(excluded)) -coverprofile=coverage.out -covermode=atomic

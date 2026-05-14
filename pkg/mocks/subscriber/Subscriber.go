@@ -41,6 +41,20 @@ func (m *MockSubscriber) EXPECT() *MockSubscriberMockRecorder {
 	return m.recorder
 }
 
+// Confirm mocks base method.
+func (m *MockSubscriber) Confirm(ctx context.Context, token string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Confirm", ctx, token)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Confirm indicates an expected call of Confirm.
+func (mr *MockSubscriberMockRecorder) Confirm(ctx, token any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Confirm", reflect.TypeOf((*MockSubscriber)(nil).Confirm), ctx, token)
+}
+
 // Subscribe mocks base method.
 func (m *MockSubscriber) Subscribe(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()

@@ -55,8 +55,12 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, subs
 		return errors.Wrap(err, "generating home OG image")
 	}
 
-	if err := renderPageInDir(ctx, filepath.Join(outDir, "thank-you"), pages.ThankYou(w.LatestIssue)); err != nil {
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "thank-you"), pages.ThankYou("")); err != nil {
 		return errors.Wrap(err, "rendering thank-you page")
+	}
+
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "confirmed"), pages.Confirmed(w.LatestIssue)); err != nil {
+		return errors.Wrap(err, "rendering confirmed page")
 	}
 
 	if err := renderPageInDir(ctx, filepath.Join(outDir, "unsubscribed"), pages.Unsubscribed()); err != nil {

@@ -1,0 +1,19 @@
+{{ define "email-body" }}
+<!-- Header -->
+<tr>
+  <td style="padding:28px 32px 24px;border-bottom:1px solid #d0e8f5;">
+    <div style="font-size:15px;font-weight:700;color:#0d2236;margin-bottom:6px;">🐿️ GoDaily</div>
+    <div style="font-size:16px;font-weight:600;color:#0d2236;">Confirm your subscription</div>
+  </td>
+</tr>
+
+<!-- Content -->
+<tr>
+  <td style="padding:28px 32px;">
+    <p style="font-size:15px;color:#0d2236;line-height:1.6;margin:0 0 20px;">Click below to confirm your subscription to <strong>GoDaily</strong>. If you didn't request this, you can safely ignore this email.</p>
+    <a href="{{ .ConfirmURL }}" style="display:inline-block;font-size:14px;font-weight:600;color:#ffffff;background:#2aa8d8;padding:12px 24px;border-radius:8px;text-decoration:none;">Confirm subscription</a>
+    <p style="font-size:13px;color:#3a6880;line-height:1.6;margin:24px 0 0;">If the button doesn't work, copy and paste this link into your browser:</p>
+    <p style="font-size:13px;color:#2aa8d8;word-break:break-all;margin:4px 0 0;">{{ .ConfirmURL }}</p>
+  </td>
+</tr>
+{{ end }}
