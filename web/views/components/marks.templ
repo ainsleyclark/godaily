@@ -7,7 +7,7 @@ import "github.com/ainsleyclark/godaily/pkg/news"
 // data is owned by pkg/news (Source.MarkURL / Source.ShortLabel).
 templ SourceMark(src news.Source) {
 	if file := src.MarkURL(); file != "" {
-		<img class="digest-item__mark" src={ file } alt={ src.ShortLabel() } width="20" height="20"/>
+		@Picture(file, src.ShortLabel(), "digest-item__mark", templ.Attributes{"width": "20", "height": "20"})
 	} else {
 		<span class="digest-item__chip">{ src.ShortLabel() }</span>
 	}
