@@ -101,6 +101,9 @@ const options = {
 		}
 	} else {
 		try {
+			if (!excludeImages) {
+				await copyAndConvertImages('assets/images', 'dist/images');
+			}
 			const ctx = await esbuild.context(options);
 			await ctx.watch();
 			await ctx.serve({
