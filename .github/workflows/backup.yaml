@@ -16,7 +16,7 @@ jobs:
 
       - name: Dump database and upload to Backblaze B2
         env:
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          TURSO_API_TOKEN: ${{ secrets.TURSO_CI_TOKEN }}
           TURSO_DB_NAME: ${{ secrets.TURSO_DB_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
@@ -28,12 +28,34 @@ jobs:
             echo "Error: turso CLI not found on PATH" >&2
             exit 1
           fi
-          for var in TURSO_AUTH_TOKEN TURSO_DB_NAME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY B2_BUCKET_NAME B2_ENDPOINT; do
+          for var in TURSO_API_TOKEN TURSO_DB_NAME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY B2_BUCKET_NAME B2_ENDPOINT; do
             if [[ -z "${!var}" ]]; then
               echo "Error: $var is not set" >&2
               exit 1
             fi
           done
+          turso config set token "$TURSO_API_TOKEN"
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
           turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
+
+      - name: Delete backups older than 42 days
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
+          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+          B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
+        run: |
+          set -euo pipefail
+          CUTOFF=$(date -d "42 days ago" +%Y-%m-%d)
+          aws s3 ls "s3://$B2_BUCKET_NAME/" --endpoint-url "$B2_ENDPOINT" \
+            | awk '{print $4}' \
+            | grep -E '^godaily-backup-[0-9]{4}-[0-9]{2}-[0-9]{2}\.sql\.gz$' \
+            | while read -r key; do
+                file_date="${key#godaily-backup-}"
+                file_date="${file_date%.sql.gz}"
+                if [[ "$file_date" < "$CUTOFF" ]]; then
+                  echo "Deleting old backup: $key"
+                  aws s3 rm "s3://$B2_BUCKET_NAME/$key" --endpoint-url "$B2_ENDPOINT"
+                fi
+              done
