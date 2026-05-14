@@ -81,6 +81,7 @@ func (c redditChild) ShouldInclude() bool {
 	body := strings.ToLower(c.Data.SelfText)
 	return !strings.Contains(title, "help") &&
 		!strings.Contains(title, "feedback") &&
+		!strings.Contains(title, "learning") &&
 		!strings.Contains(body, "feedback")
 }
 

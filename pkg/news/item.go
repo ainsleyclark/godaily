@@ -90,8 +90,8 @@ const (
 var SectionTags = []Tag{
 	TagRelease,
 	TagProposal,
-	TagArticle,
 	TagDiscussion,
+	TagArticle,
 	TagVideo,
 	TagTrending,
 }
@@ -104,7 +104,7 @@ const NoLimit = 0
 var SectionLimits = map[Tag]int{
 	TagRelease:    5,
 	TagProposal:   NoLimit,
-	TagArticle:    8,
+	TagArticle:    5,
 	TagDiscussion: 8,
 	TagVideo:      10,
 	TagTrending:   5,

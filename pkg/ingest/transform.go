@@ -91,13 +91,17 @@ func truncate(s string, max int) string {
 	return s
 }
 
-var htmlTagRe = regexp.MustCompile(`<[^>]*>`)
+var (
+	htmlTagRe  = regexp.MustCompile(`<[^>]*>`)
+	mdNoiseRe  = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
+)
 
-// sanitise produces a clean, single-line snippet: strips HTML tags, unescapes
-// entities, and collapses runs of whitespace (including newlines) into a
-// single space.
+// sanitise produces a clean, single-line snippet: strips HTML tags, markdown
+// syntax (code fences, inline code, emphasis markers), unescapes HTML entities,
+// and collapses runs of whitespace into a single space.
 func sanitise(s string) string {
 	s = htmlTagRe.ReplaceAllString(s, " ")
+	s = mdNoiseRe.ReplaceAllString(s, " ")
 	s = html.UnescapeString(s)
 	return strings.Join(strings.Fields(s), " ")
 }
