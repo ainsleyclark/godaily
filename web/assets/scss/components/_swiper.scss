@@ -4,6 +4,7 @@
 	margin-top: 2.5rem;
 
 	@include mobile {
+		margin-top: 1rem;
 		overflow: hidden;
 		margin-left: calc(-1 * var(--section-padding-x));
 		margin-right: calc(-1 * var(--section-padding-x));

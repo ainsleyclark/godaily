@@ -1,16 +1,11 @@
 @use '../abstracts/mixins' as *;
 
 .email-preview {
-	max-width: 680px;
-	margin: 0 auto;
+	width: 100%;
 	border-radius: 20px;
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-email);
 	overflow: hidden;
-
-	&--wide {
-		max-width: 100%;
-	}
 
 	&__topbar {
 		display: flex;
@@ -90,6 +85,7 @@
 	&__footer {
 		margin-top: 1.5rem;
 		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
 		font-size: 0.75rem;
 		color: var(--text-3);
 		text-align: center;

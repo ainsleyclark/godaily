@@ -2,6 +2,20 @@
 	{
 		"id": 0,
 		"source": "jetbrains",
+		"title": "The GoLand 2026.2 Early Access Program Has Started",
+		"url": "https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/",
+		"author": {
+			"name": "Artem Pronichev"
+		},
+		"snippet": "The Early Access Program (EAP) for GoLand 2026.2 is now open. It’s a great opportunity to try upcoming features for free and help shape the product. EAP builds give you early access to what we’re ",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-11T09:26:36Z"
+	},
+	{
+		"id": 0,
+		"source": "jetbrains",
 		"title": "Popular Go Web Frameworks: A Practical Guide for Developers",
 		"url": "https://blog.jetbrains.com/go/2026/04/28/popular-golang-web-frameworks/",
 		"author": {
@@ -152,19 +166,5 @@
 		"comments": 0,
 		"score": 0.5,
 		"published": "2025-11-10T09:24:35Z"
-	},
-	{
-		"id": 0,
-		"source": "jetbrains",
-		"title": "The “10x” Commandments of Highly Effective Go",
-		"url": "https://blog.jetbrains.com/go/2025/10/16/the-10x-commandments-of-highly-effective-go/",
-		"author": {
-			"name": "Anna Protsenko"
-		},
-		"snippet": "This is a guest post from John Arundel of Bitfield Consulting, a Go trainer and writer who runs a free newsletter for Go learners. His most recent book is The Deeper Love of Go. Ever wondered if there",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2025-10-16T11:13:18Z"
 	}
 ]

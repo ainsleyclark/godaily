@@ -119,9 +119,9 @@ func DigestItem(item news.Item) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 templ.SafeURL
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(item.URL))
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(digestItemReadOnURL(item)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 26, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/digest_item.templ`, Line: 26, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -148,15 +148,21 @@ func DigestItem(item news.Item) templ.Component {
 	})
 }
 
-// digestItemMeta builds the small dim line under an item: author, score, and
+// digestItemReadOnURL returns the platform listing URL when available (e.g. HN
+// comments page, Reddit thread), falling back to the content URL.
+func digestItemReadOnURL(item news.Item) string {
+	if item.OriginalURL != "" {
+		return item.OriginalURL
+	}
+	return item.URL
+}
+
+// digestItemMeta builds the small dim line under an item: author and
 // comment count when present.
 func digestItemMeta(item news.Item) string {
 	parts := []string{}
 	if author := item.Author.String(); author != "" {
 		parts = append(parts, author)
-	}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
 	}
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))

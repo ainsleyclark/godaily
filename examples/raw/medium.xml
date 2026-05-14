@@ -9,144 +9,145 @@
             <link>https://medium.com/tag/golang/latest?source=rss------golang-5</link>
         </image>
         <generator>Medium</generator>
-        <lastBuildDate>Mon, 11 May 2026 05:28:15 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 12 May 2026 15:02:30 GMT</lastBuildDate>
         <atom:link href="https://medium.com/feed/tag/golang" rel="self" type="application/rss+xml"/>
         <webMaster><![CDATA[yourfriends@medium.com]]></webMaster>
         <atom:link href="http://medium.superfeedr.com" rel="hub"/>
         <item>
-            <title><![CDATA[Building a Non-Blocking REST API in Go: Mastering Goroutines and Channels]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://aliannuur.medium.com/building-a-non-blocking-rest-api-in-go-mastering-goroutines-and-channels-b23d0858596c?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/860/0*pq63v9mzwQ-MJ-Bz.png" width="860"></a></p><p class="medium-feed-snippet">Stop making your users wait. Learn how to handle time consuming background tasks elegantly using Go&#x2019;s powerful concurrency model.</p><p class="medium-feed-link"><a href="https://aliannuur.medium.com/building-a-non-blocking-rest-api-in-go-mastering-goroutines-and-channels-b23d0858596c?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://aliannuur.medium.com/building-a-non-blocking-rest-api-in-go-mastering-goroutines-and-channels-b23d0858596c?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/b23d0858596c</guid>
+            <title><![CDATA[Goroutines Deep Dive: Types, Concurrency, and Synchronization in Go]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-snippet">A complete guide to understanding how Go handles concurrent execution &#x2014; from the basics of go keyword to advanced synchronization patterns.</p><p class="medium-feed-link"><a href="https://medium.com/@sanyam19106/goroutines-deep-dive-types-concurrency-and-synchronization-in-go-6432ab30b93c?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@sanyam19106/goroutines-deep-dive-types-concurrency-and-synchronization-in-go-6432ab30b93c?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/6432ab30b93c</guid>
+            <category><![CDATA[go]]></category>
             <category><![CDATA[concurrency]]></category>
+            <category><![CDATA[gmp]]></category>
             <category><![CDATA[golang]]></category>
-            <category><![CDATA[rest-api]]></category>
-            <category><![CDATA[software-development]]></category>
-            <dc:creator><![CDATA[Ali An Nuur]]></dc:creator>
-            <pubDate>Mon, 11 May 2026 03:03:21 GMT</pubDate>
-            <atom:updated>2026-05-11T03:03:21.466Z</atom:updated>
+            <category><![CDATA[goroutines]]></category>
+            <dc:creator><![CDATA[Sanyam]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 13:15:24 GMT</pubDate>
+            <atom:updated>2026-05-12T13:15:24.641Z</atom:updated>
         </item>
         <item>
-            <title><![CDATA[Feature Toggles as a Deployment Strategy: Implementation Patterns]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@erwindev/feature-toggles-as-a-deployment-strategy-implementation-patterns-dfc9b539b1e8?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1024/1*3Izlvl9qfzgDcmxX1bWsLg.png" width="1024"></a></p><p class="medium-feed-snippet">There&#x2019;s a specific kind of dread I remember from my early career. It was a Friday afternoon, around 4 PM, and I was SSHing directly into a&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@erwindev/feature-toggles-as-a-deployment-strategy-implementation-patterns-dfc9b539b1e8?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@erwindev/feature-toggles-as-a-deployment-strategy-implementation-patterns-dfc9b539b1e8?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/dfc9b539b1e8</guid>
-            <category><![CDATA[backend-development]]></category>
-            <category><![CDATA[strategy-deployment]]></category>
-            <category><![CDATA[feature-flags]]></category>
-            <category><![CDATA[golang]]></category>
+            <title><![CDATA[Golang - GORM İç Yapısı ve Custom CTE (Common Table Expression) Sorgusu Yazmak]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://mstryoda.medium.com/golang-gorm-i%CC%87%C3%A7-yap%C4%B1s%C4%B1-ve-custom-cte-common-table-expression-sorgusu-yazmak-67fb6726d9ba?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/640/0*Uhg5kXYcdPrfqY-9" width="640"></a></p><p class="medium-feed-snippet">Herkese selamlar &#x1F44B;</p><p class="medium-feed-link"><a href="https://mstryoda.medium.com/golang-gorm-i%CC%87%C3%A7-yap%C4%B1s%C4%B1-ve-custom-cte-common-table-expression-sorgusu-yazmak-67fb6726d9ba?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://mstryoda.medium.com/golang-gorm-i%CC%87%C3%A7-yap%C4%B1s%C4%B1-ve-custom-cte-common-table-expression-sorgusu-yazmak-67fb6726d9ba?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/67fb6726d9ba</guid>
             <category><![CDATA[software-development]]></category>
-            <dc:creator><![CDATA[Erwin Hermanto]]></dc:creator>
-            <pubDate>Mon, 11 May 2026 02:01:00 GMT</pubDate>
-            <atom:updated>2026-05-11T02:01:00.771Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Go Middleware Pattern Done Right: HTTP Middleware That Composes]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@feildrixliemdra/go-middleware-pattern-done-right-http-middleware-that-composes-55b1db1487b2?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1024/1*zzUFWlLfB0kKGI_HMKhWlA.png" width="1024"></a></p><p class="medium-feed-snippet">Part of the Go Production Series &#x2014; a collection of opinionated, battle-tested patterns for building Go services in the real world.</p><p class="medium-feed-link"><a href="https://medium.com/@feildrixliemdra/go-middleware-pattern-done-right-http-middleware-that-composes-55b1db1487b2?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@feildrixliemdra/go-middleware-pattern-done-right-http-middleware-that-composes-55b1db1487b2?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/55b1db1487b2</guid>
             <category><![CDATA[golang]]></category>
-            <category><![CDATA[software-development]]></category>
-            <category><![CDATA[software-engineering]]></category>
             <category><![CDATA[programming]]></category>
-            <category><![CDATA[backend-development]]></category>
-            <dc:creator><![CDATA[Feildrix]]></dc:creator>
-            <pubDate>Mon, 11 May 2026 00:01:01 GMT</pubDate>
-            <atom:updated>2026-05-11T00:01:01.013Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[How I Would Design an AI-Powered Mother’s Day Experience with Go]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@cassius.paim/how-i-would-design-an-ai-powered-mothers-day-experience-with-go-073b2bc3af60?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1672/1*k6Qd1s2iTJ2XU7oUE7qjNA.png" width="1672"></a></p><p class="medium-feed-snippet">How I think about LLM product architecture, privacy, and reliability at seasonal scale</p><p class="medium-feed-link"><a href="https://medium.com/@cassius.paim/how-i-would-design-an-ai-powered-mothers-day-experience-with-go-073b2bc3af60?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@cassius.paim/how-i-would-design-an-ai-powered-mothers-day-experience-with-go-073b2bc3af60?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/073b2bc3af60</guid>
-            <category><![CDATA[software-architecture]]></category>
-            <category><![CDATA[llm-architecture]]></category>
-            <category><![CDATA[artificial-intelligence]]></category>
-            <category><![CDATA[golang]]></category>
-            <category><![CDATA[system-design-concepts]]></category>
-            <dc:creator><![CDATA[Cássius Paim]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 20:05:21 GMT</pubDate>
-            <atom:updated>2026-05-10T20:05:21.767Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Building a Mini Deployment Platform in Go]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-snippet">Got a new role. Engineering Platform team. Internal tooling, infrastructure automation, developer experience. Customers are engineers.</p><p class="medium-feed-link"><a href="https://medium.com/@daffamfzn/building-a-mini-deployment-platform-in-go-1df823cf33a5?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@daffamfzn/building-a-mini-deployment-platform-in-go-1df823cf33a5?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/1df823cf33a5</guid>
-            <category><![CDATA[software-engineering]]></category>
-            <category><![CDATA[platform-engineering]]></category>
-            <category><![CDATA[technology]]></category>
-            <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Daffa Muhammad Faizan]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 17:54:32 GMT</pubDate>
-            <atom:updated>2026-05-10T17:54:32.309Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Why Go Is Quietly Killing Traditional Tech Stacks]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://codingplainenglish.medium.com/why-go-is-quietly-killing-traditional-tech-stacks-d5e27649345a?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1100/1*bH1EkcKLpojhKGlD-y9BYw.jpeg" width="1100"></a></p><p class="medium-feed-snippet">For almost two decades, backend engineering followed a predictable formula.</p><p class="medium-feed-link"><a href="https://codingplainenglish.medium.com/why-go-is-quietly-killing-traditional-tech-stacks-d5e27649345a?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://codingplainenglish.medium.com/why-go-is-quietly-killing-traditional-tech-stacks-d5e27649345a?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/d5e27649345a</guid>
-            <category><![CDATA[software-development]]></category>
-            <category><![CDATA[technology]]></category>
-            <category><![CDATA[programming]]></category>
-            <category><![CDATA[software-engineering]]></category>
-            <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Abhinav]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 17:06:00 GMT</pubDate>
-            <atom:updated>2026-05-10T17:06:00.593Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Learn Go by building: zero to REST API with Gin]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@darrylgate/learn-go-by-building-zero-to-rest-api-with-gin-8f5808e3c99b?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1536/1*_J2U_e6e87ysE03OetrwrA.png" width="1536"></a></p><p class="medium-feed-snippet">If you&#x2019;ve been wanting to pick up Go, the fastest way to actually learn it is to build something small and finish it. Reading docs is fine&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@darrylgate/learn-go-by-building-zero-to-rest-api-with-gin-8f5808e3c99b?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@darrylgate/learn-go-by-building-zero-to-rest-api-with-gin-8f5808e3c99b?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/8f5808e3c99b</guid>
-            <category><![CDATA[backend]]></category>
-            <category><![CDATA[golang]]></category>
-            <category><![CDATA[software-development]]></category>
-            <category><![CDATA[rest-api]]></category>
-            <category><![CDATA[gin]]></category>
-            <dc:creator><![CDATA[darryleffendi]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 17:04:51 GMT</pubDate>
-            <atom:updated>2026-05-11T03:01:16.197Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Go From Zero: A Beginner’s Guide to Golang Fundamentals — Part A]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@microclip.lakeesha/go-from-zero-a-beginners-guide-to-golang-fundamentals-part-a-04fe3fe245d6?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1200/1*iW6JSHIsXfHi1w7JPcUitg.png" width="1200"></a></p><p class="medium-feed-snippet">Introduction</p><p class="medium-feed-link"><a href="https://medium.com/@microclip.lakeesha/go-from-zero-a-beginners-guide-to-golang-fundamentals-part-a-04fe3fe245d6?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@microclip.lakeesha/go-from-zero-a-beginners-guide-to-golang-fundamentals-part-a-04fe3fe245d6?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/04fe3fe245d6</guid>
             <category><![CDATA[coding]]></category>
+            <category><![CDATA[software-engineering]]></category>
+            <dc:creator><![CDATA[Emre Savcı]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 13:02:03 GMT</pubDate>
+            <atom:updated>2026-05-12T13:02:03.117Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Loom/poly and Lucy: Building a Local Golang AI Engine That Runs BitNet, Qwen, SmolLM, and More]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-snippet">I&#x2019;ve been working on Loom, a local AI runtime written primarily in Go. The goal is simple but ambitious: make AI models run locally&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@planetbridging/loom-poly-and-lucy-building-a-local-golang-ai-engine-that-runs-bitnet-qwen-smollm-and-more-e58cd6dc1088?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@planetbridging/loom-poly-and-lucy-building-a-local-golang-ai-engine-that-runs-bitnet-qwen-smollm-and-more-e58cd6dc1088?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/e58cd6dc1088</guid>
+            <category><![CDATA[llm]]></category>
+            <category><![CDATA[localai]]></category>
+            <category><![CDATA[bitnet]]></category>
+            <category><![CDATA[ai]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Planetbridging]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 12:19:00 GMT</pubDate>
+            <atom:updated>2026-05-12T12:19:00.547Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Go — Struct (Indonesia)]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@wing.cronus/go-struct-0a893f938497?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/902/1*eziIsJ_KfS2n5KOLgP2bzw.png" width="902"></a></p><p class="medium-feed-snippet">Hari ke 28 mencoba konsisten menulis, hari ini kita akan membahas struct di Go lang, lets go langsung saja</p><p class="medium-feed-link"><a href="https://medium.com/@wing.cronus/go-struct-0a893f938497?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@wing.cronus/go-struct-0a893f938497?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/0a893f938497</guid>
+            <category><![CDATA[basics]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[class]]></category>
+            <dc:creator><![CDATA[Arif Dwi Prasetya]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 10:52:38 GMT</pubDate>
+            <atom:updated>2026-05-12T10:53:24.170Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[I Gave My AI Agent a Brain — Here’s What Broke (and What I Learned)]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://towardsdev.com/i-gave-my-ai-agent-a-brain-heres-what-broke-and-what-i-learned-468b94aeb8f7?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1360/1*fA4grdI0j3wVtuBvHW_dsQ.png" width="1360"></a></p><p class="medium-feed-snippet">How I went from a simple &#x2018;.md&#x2018; file to a full hybrid memory system, without spending extra money.</p><p class="medium-feed-link"><a href="https://towardsdev.com/i-gave-my-ai-agent-a-brain-heres-what-broke-and-what-i-learned-468b94aeb8f7?source=rss------golang-5">Continue reading on Towards Dev »</a></p></div>]]></description>
+            <link>https://towardsdev.com/i-gave-my-ai-agent-a-brain-heres-what-broke-and-what-i-learned-468b94aeb8f7?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/468b94aeb8f7</guid>
+            <category><![CDATA[tech]]></category>
+            <category><![CDATA[claude]]></category>
+            <category><![CDATA[data]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[ai-agent]]></category>
+            <dc:creator><![CDATA[Bayu Setiawan]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 10:05:35 GMT</pubDate>
+            <atom:updated>2026-05-12T14:24:27.430Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[API authentication patterns for internal microservices]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://blog.devgenius.io/api-authentication-patterns-for-internal-microservices-d9ab23012935?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/2600/0*rUqtx4bJxrJRflce" width="3500"></a></p><p class="medium-feed-snippet">Practical API authentication patterns for distributed Go services</p><p class="medium-feed-link"><a href="https://blog.devgenius.io/api-authentication-patterns-for-internal-microservices-d9ab23012935?source=rss------golang-5">Continue reading on Dev Genius »</a></p></div>]]></description>
+            <link>https://blog.devgenius.io/api-authentication-patterns-for-internal-microservices-d9ab23012935?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/d9ab23012935</guid>
+            <category><![CDATA[golang]]></category>
             <category><![CDATA[programming]]></category>
-            <category><![CDATA[golang-tutorial]]></category>
+            <category><![CDATA[software-development]]></category>
+            <category><![CDATA[writing]]></category>
+            <category><![CDATA[coding]]></category>
+            <dc:creator><![CDATA[Yaninyz witty]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 08:17:03 GMT</pubDate>
+            <atom:updated>2026-05-12T11:57:17.486Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[A Java Veteran’s Go Revelation: How Simplicity Became My Hardcore Power ]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@anshusinghal703/a-java-veterans-go-revelation-how-simplicity-became-my-hardcore-power-dda3e2659393?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/0*MvRYWZO_kbRik1DT" width="600"></a></p><p class="medium-feed-snippet">Man, for what felt like ages, my whole world pretty much revolved around Java. It was, no kidding, a super solid and crazy powerful place&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@anshusinghal703/a-java-veterans-go-revelation-how-simplicity-became-my-hardcore-power-dda3e2659393?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@anshusinghal703/a-java-veterans-go-revelation-how-simplicity-became-my-hardcore-power-dda3e2659393?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/dda3e2659393</guid>
             <category><![CDATA[go-programming]]></category>
-            <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Lakeesha Ramanayake]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 16:43:18 GMT</pubDate>
-            <atom:updated>2026-05-10T16:43:18.786Z</atom:updated>
-        </item>
-        <item>
-            <title><![CDATA[Java 21’s Virtual Threads Just Outpaced Go With 200,000 Concurrent Tasks — Here’s How ]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@monikasinghal713/java-21s-virtual-threads-just-outpaced-go-with-200-000-concurrent-tasks-here-s-how-99214c6a08d9?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/600/0*Kq74r_q7sqkpyQZm" width="600"></a></p><p class="medium-feed-snippet">Okay, so I gotta be honest with you. For years, I&#x2019;ve been that guy at the dev meetups, probably boring everyone&#x2019;s ears off about how&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@monikasinghal713/java-21s-virtual-threads-just-outpaced-go-with-200-000-concurrent-tasks-here-s-how-99214c6a08d9?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@monikasinghal713/java-21s-virtual-threads-just-outpaced-go-with-200-000-concurrent-tasks-here-s-how-99214c6a08d9?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/99214c6a08d9</guid>
-            <category><![CDATA[javascript]]></category>
+            <category><![CDATA[development]]></category>
             <category><![CDATA[software-development]]></category>
-            <category><![CDATA[medium]]></category>
-            <category><![CDATA[coding]]></category>
+            <category><![CDATA[microservices]]></category>
             <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Monika Singhal]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 16:40:33 GMT</pubDate>
-            <atom:updated>2026-05-10T16:40:33.358Z</atom:updated>
+            <dc:creator><![CDATA[Anshu Singhal]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 07:16:53 GMT</pubDate>
+            <atom:updated>2026-05-12T07:16:53.697Z</atom:updated>
         </item>
         <item>
-            <title><![CDATA[Golang CRUD — REST API]]></title>
-            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-snippet">In this blog, I want to share my experience of creating a simple Go CRUD api with TDD approach. We will create a simple REST API to Create&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@ianakbar711/golang-crud-5d7ef8e18dcb?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
-            <link>https://medium.com/@ianakbar711/golang-crud-5d7ef8e18dcb?source=rss------golang-5</link>
-            <guid isPermaLink="false">https://medium.com/p/5d7ef8e18dcb</guid>
-            <category><![CDATA[crud]]></category>
+            <title><![CDATA[Why I Didn’t Use Redis for My Background Workers]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@abhi267266/why-i-didnt-use-redis-for-my-background-workers-328b9f1d144d?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/800/1*L9qb_xN2aT9_BINpo5tnag.gif" width="800"></a></p><p class="medium-feed-snippet">When I started building my Reddit Lead Finder, the first thing everyone told me was: &#x201C;Just use Redis.&#x201D;</p><p class="medium-feed-link"><a href="https://medium.com/@abhi267266/why-i-didnt-use-redis-for-my-background-workers-328b9f1d144d?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@abhi267266/why-i-didnt-use-redis-for-my-background-workers-328b9f1d144d?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/328b9f1d144d</guid>
+            <category><![CDATA[postgresql]]></category>
+            <category><![CDATA[startup]]></category>
             <category><![CDATA[golang]]></category>
-            <dc:creator><![CDATA[Muhammad Raihan Akbar]]></dc:creator>
-            <pubDate>Sun, 10 May 2026 16:21:15 GMT</pubDate>
-            <atom:updated>2026-05-10T16:25:04.982Z</atom:updated>
+            <category><![CDATA[backend-development]]></category>
+            <category><![CDATA[redis]]></category>
+            <dc:creator><![CDATA[Abhishek Pathak]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 07:05:52 GMT</pubDate>
+            <atom:updated>2026-05-12T07:06:02.067Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[Merge Sort: El Algoritmo de Divide y Vencerás en Golang]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@jcmexdev/merge-sort-el-algoritmo-de-divide-y-vencer%C3%A1s-en-golang-ac01e17d3a25?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1024/1*6ZpJo0fF2JGHEFd_yd4Frw.jpeg" width="1024"></a></p><p class="medium-feed-snippet">Merge Sort es un algoritmo de ordenamiento basado en el paradigma Divide y Vencer&#xE1;s. Divide recursivamente el arreglo en mitades hasta&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@jcmexdev/merge-sort-el-algoritmo-de-divide-y-vencer%C3%A1s-en-golang-ac01e17d3a25?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@jcmexdev/merge-sort-el-algoritmo-de-divide-y-vencer%C3%A1s-en-golang-ac01e17d3a25?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/ac01e17d3a25</guid>
+            <category><![CDATA[algorithms]]></category>
+            <category><![CDATA[spanish]]></category>
+            <category><![CDATA[golang]]></category>
+            <dc:creator><![CDATA[Juan Carlos García Esquivel]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 04:54:44 GMT</pubDate>
+            <atom:updated>2026-05-12T04:54:44.568Z</atom:updated>
+        </item>
+        <item>
+            <title><![CDATA[API Versioning via Content Negotiation: Why I Stopped Putting Versions in My URLs]]></title>
+            <description><![CDATA[<div class="medium-feed-item"><p class="medium-feed-image"><a href="https://medium.com/@erwindev/api-versioning-via-content-negotiation-why-i-stopped-putting-versions-in-my-urls-54fbd4a8df39?source=rss------golang-5"><img src="https://cdn-images-1.medium.com/max/1024/1*XxqnIpUjAX702uRLsEXHrg.png" width="1024"></a></p><p class="medium-feed-snippet">There&#x2019;s a specific kind of embarrassment that only engineers know. It&#x2019;s the moment you look at a URL in production &#x2014; something like&#x2026;</p><p class="medium-feed-link"><a href="https://medium.com/@erwindev/api-versioning-via-content-negotiation-why-i-stopped-putting-versions-in-my-urls-54fbd4a8df39?source=rss------golang-5">Continue reading on Medium »</a></p></div>]]></description>
+            <link>https://medium.com/@erwindev/api-versioning-via-content-negotiation-why-i-stopped-putting-versions-in-my-urls-54fbd4a8df39?source=rss------golang-5</link>
+            <guid isPermaLink="false">https://medium.com/p/54fbd4a8df39</guid>
+            <category><![CDATA[software-engineering]]></category>
+            <category><![CDATA[microservices]]></category>
+            <category><![CDATA[golang]]></category>
+            <category><![CDATA[backend-development]]></category>
+            <category><![CDATA[api-development]]></category>
+            <dc:creator><![CDATA[Erwin Hermanto]]></dc:creator>
+            <pubDate>Tue, 12 May 2026 01:56:00 GMT</pubDate>
+            <atom:updated>2026-05-12T01:56:00.671Z</atom:updated>
         </item>
     </channel>
 </rss>

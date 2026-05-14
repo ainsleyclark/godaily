@@ -17,22 +17,24 @@ func featureCards() []featureCard {
 
 templ Features() {
 	<section id="features" class="section features">
-		<div class="section__label">Why GoDaily</div>
-		<h2 class="section__title features__title">
-			Everything a Go developer needs,<br/>before 9am
-		</h2>
-		<p class="section__sub">
-			One short read covers what the Go community shipped, debated, and starred overnight.
-		</p>
-		@SwiperContainer("features__swiper") {
-			for _, card := range featureCards() {
-				<div class="features__card swiper-slide">
-					<div class="features__icon">
-						@card.Icon
+		@Container(false) {
+			<div class="section__label">Why GoDaily</div>
+			<h2 class="section__title features__title">
+				Everything a Go developer needs,<br/>before 9am
+			</h2>
+			<p class="section__sub">
+				One short read covers what the Go community shipped, debated, and starred overnight.
+			</p>
+			@SwiperContainer("features__swiper") {
+				for _, card := range featureCards() {
+					<div class="features__card swiper-slide">
+						<div class="features__icon">
+							@card.Icon
+						</div>
+						<h3 class="features__heading">{ card.Title }</h3>
+						<p class="features__body">{ card.Body }</p>
 					</div>
-					<h3 class="features__heading">{ card.Title }</h3>
-					<p class="features__body">{ card.Body }</p>
-				</div>
+				}
 			}
 		}
 	</section>

@@ -1,5 +1,2009 @@
 [
 	{
+		"id": "116561780997932372",
+		"created_at": "2026-05-12T13:13:47.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://fosstodon.org/users/snonux/statuses/116561780882188030",
+		"url": "https://fosstodon.org/@snonux/116561780882188030",
+		"replies_count": 0,
+		"reblogs_count": 1,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>After 2 years (on- and off part-time work) I've released <a href=\"https://fosstodon.org/tags/ior\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ior</span></a> v1.0.0! A (mainly I/O) syscall tracer with live flamegraph TUI! <a href=\"https://foo.zone/gemfeed/2026-05-08-unveiling-ior-ng-part-1.html\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">foo.zone/gemfeed/2026-05-08-un</span><span class=\"invisible\">veiling-ior-ng-part-1.html</span></a> <a href=\"https://fosstodon.org/tags/bpf\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>bpf</span></a> <a href=\"https://fosstodon.org/tags/ebpf\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ebpf</span></a> <a href=\"https://fosstodon.org/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://fosstodon.org/tags/syscall\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>syscall</span></a> <a href=\"https://fosstodon.org/tags/tracing\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>tracing</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "109406439065641149",
+			"username": "snonux",
+			"acct": "snonux@fosstodon.org",
+			"display_name": "Paul Buetow",
+			"locked": false,
+			"bot": false,
+			"discoverable": false,
+			"indexable": false,
+			"group": false,
+			"created_at": "2022-11-25T00:00:00.000Z",
+			"note": "<p>I solve problems with computers, which wouldn't exist without them!</p>",
+			"url": "https://fosstodon.org/@snonux",
+			"uri": "https://fosstodon.org/users/snonux",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/109/406/439/065/641/149/original/b0461f920ed2d48e.jpg",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/109/406/439/065/641/149/original/b0461f920ed2d48e.jpg",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/109/406/439/065/641/149/original/a1d2897dd2cbcce3.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/406/439/065/641/149/original/a1d2897dd2cbcce3.png",
+			"header_description": "",
+			"followers_count": 199,
+			"following_count": 68,
+			"statuses_count": 1468,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Web",
+					"value": "<a href=\"https://foo.zone\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">foo.zone</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "Codeberg",
+					"value": "<a href=\"https://codeberg.org/snonux\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">codeberg.org/snonux</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "Microblog (may be temporally offline)",
+					"value": "<a href=\"https://snonux.foo\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">snonux.foo</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				}
+			]
+		},
+		"media_attachments": [
+			{
+				"id": "116561780951218202",
+				"type": "image",
+				"url": "https://files.mastodon.social/cache/media_attachments/files/116/561/780/951/218/202/original/65aa4b904a60ff7c.png",
+				"preview_url": "https://files.mastodon.social/cache/media_attachments/files/116/561/780/951/218/202/small/65aa4b904a60ff7c.png",
+				"remote_url": "https://cdn.fosstodon.org/media_attachments/files/116/561/779/515/162/083/original/3f558e13a905dde7.png",
+				"preview_remote_url": null,
+				"text_url": null,
+				"meta": {
+					"original": {
+						"width": 1600,
+						"height": 900,
+						"size": "1600x900",
+						"aspect": 1.7777777777777777
+					},
+					"small": {
+						"width": 640,
+						"height": 360,
+						"size": "640x360",
+						"aspect": 1.7777777777777777
+					}
+				},
+				"description": null,
+				"blurhash": "UF8|VNxtN@o|0vR*xGaM#JjIWEah%ZofR*kV"
+			}
+		],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "ior",
+				"url": "https://mastodon.social/tags/ior"
+			},
+			{
+				"name": "bpf",
+				"url": "https://mastodon.social/tags/bpf"
+			},
+			{
+				"name": "ebpf",
+				"url": "https://mastodon.social/tags/ebpf"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "syscall",
+				"url": "https://mastodon.social/tags/syscall"
+			},
+			{
+				"name": "tracing",
+				"url": "https://mastodon.social/tags/tracing"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": null,
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116561452098440955",
+		"created_at": "2026-05-12T11:50:09.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ja",
+		"uri": "https://goark.fedicity.net/users/goark/statuses/116561452066694364",
+		"url": "https://goark.fedicity.net/@goark/116561452066694364",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v0.12.7 · goark/toolbox<br><a href=\"https://github.com/goark/toolbox/releases/tag/v0.12.7\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/toolbox/relea</span><span class=\"invisible\">ses/tag/v0.12.7</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111530040895444639",
+			"username": "goark",
+			"acct": "goark@goark.fedicity.net",
+			"display_name": "Goark",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-03T00:00:00.000Z",
+			"note": "<p>Playing with Go language</p>",
+			"url": "https://goark.fedicity.net/@goark",
+			"uri": "https://goark.fedicity.net/users/goark",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_description": "",
+			"followers_count": 12,
+			"following_count": 1,
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Bot Owner",
+					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:05.410+00:00"
+				},
+				{
+					"name": "GitHub",
+					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:06.237+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/goark/toolbox/releases/tag/v0.12.7",
+			"title": "Release v0.12.7 · goark/toolbox",
+			"description": "What's Changed\n\nAdd Copilot instructions and reorganize GitHub workflows by @spiegel-im-spiegel in #55\nIntegrate webinfo metadata and image APIs by @spiegel-im-spiegel in #56\n\nFull Changelog: v0.12...",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/575/922/original/ca96954fe9c9b7b1.png",
+			"image_description": "What's Changed\n\nAdd Copilot instructions and reorganize GitHub workflows by @spiegel-im-spiegel in #55\nIntegrate webinfo metadata and image APIs by @spiegel-im-spiegel in #56\n\nFull Changelog: v0.12...",
+			"embed_url": "",
+			"blurhash": "UTRy$,xvIUt7-TxuRiofNeWVj[WB~VRixufQ",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116561451903349564",
+		"created_at": "2026-05-12T11:50:07.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ja",
+		"uri": "https://goark.fedicity.net/users/goark/statuses/116561451873415710",
+		"url": "https://goark.fedicity.net/@goark/116561451873415710",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v0.2.0 · goark/webinfo<br><a href=\"https://github.com/goark/webinfo/releases/tag/v0.2.0\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/webinfo/relea</span><span class=\"invisible\">ses/tag/v0.2.0</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111530040895444639",
+			"username": "goark",
+			"acct": "goark@goark.fedicity.net",
+			"display_name": "Goark",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-03T00:00:00.000Z",
+			"note": "<p>Playing with Go language</p>",
+			"url": "https://goark.fedicity.net/@goark",
+			"uri": "https://goark.fedicity.net/users/goark",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_description": "",
+			"followers_count": 12,
+			"following_count": 1,
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Bot Owner",
+					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:05.410+00:00"
+				},
+				{
+					"name": "GitHub",
+					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:06.237+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/goark/webinfo/releases/tag/v0.2.0",
+			"title": "Release v0.2.0 · goark/webinfo",
+			"description": "What's Changed\n\nfeat: add ImageBytes API for in-memory image download by @spiegel-im-spiegel in #7\n\nFull Changelog: v0.1.1...v0.2.0",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/575/873/original/7c9c96e9437f4c1d.png",
+			"image_description": "What's Changed\n\nfeat: add ImageBytes API for in-memory image download by @spiegel-im-spiegel in #7\n\nFull Changelog: v0.1.1...v0.2.0",
+			"embed_url": "",
+			"blurhash": "UTRy$,xvIUt7-TxuRiofNeWVoLWB~VRixufQ",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116561363506387906",
+		"created_at": "2026-05-12T11:27:38.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": null,
+		"uri": "https://robot.villas/users/lobsters/posts/22192243",
+		"url": "https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./",
+		"replies_count": 0,
+		"reblogs_count": 2,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>Fuzzing fork of go toolchain</p><p><a href=\"https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./\" rel=\"nofollow noopener\" target=\"_blank\">https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./</a></p><p><a href=\"https://robot.villas/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a> <a href=\"https://robot.villas/tags/programming\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Programming</span></a> <a href=\"https://robot.villas/tags/opensource\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>OpenSource</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "116121069090769607",
+			"username": "lobsters",
+			"acct": "lobsters@robot.villas",
+			"display_name": "Lobsters",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": false,
+			"group": false,
+			"created_at": "2026-02-23T00:00:00.000Z",
+			"note": "<p>Stories from Lobsters <a href=\"https://robot.villas/@lobsters\" rel=\"nofollow noopener\" target=\"_blank\">See old posts.</a></p><p>I am a bot that mirrors an RSS feed. Source: <a href=\"https://lobste.rs/rss\" rel=\"nofollow noopener\" target=\"_blank\">https://lobste.rs/rss</a></p>",
+			"url": "https://robot.villas/@lobsters",
+			"uri": "https://robot.villas/users/lobsters",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/116/121/069/090/769/607/original/bcec3e4cabba3124.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/116/121/069/090/769/607/original/bcec3e4cabba3124.png",
+			"avatar_description": "",
+			"header": "https://mastodon.social/headers/original/missing.png",
+			"header_static": "https://mastodon.social/headers/original/missing.png",
+			"header_description": "",
+			"followers_count": 10,
+			"following_count": 2,
+			"statuses_count": 2214,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "programming",
+				"url": "https://mastodon.social/tags/programming"
+			},
+			{
+				"name": "opensource",
+				"url": "https://mastodon.social/tags/opensource"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./",
+			"title": "Go fuzzing was missing half the toolkit. We forked the toolchain to fix it.",
+			"description": "We built gosentry, a fuzzing-oriented fork of the Go toolchain that keeps the standard fuzzing workflow while using a stronger stack underneath.",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "The Trail of Bits Blog",
+			"provider_url": "",
+			"html": "",
+			"width": 400,
+			"height": 240,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/574/542/original/2d5976d70bc5093e.png",
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": "U57nRS9F%M-;D$?cIU%M_34TD%j[D%D%D%j[",
+			"published_at": "2026-05-12T11:00:00.000Z",
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116560090338184206",
+		"created_at": "2026-05-12T06:03:51.581Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://mastodon.social/users/mhneifer/statuses/116560090338184206",
+		"url": "https://mastodon.social/@mhneifer/116560090338184206",
+		"replies_count": 1,
+		"reblogs_count": 3,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>&quot;For the last decade, fast-to-ship beat fast-to-run. Not anymore. [...] AI got good at the hard languages.&quot; by Noah Mitchem </p><p><a href=\"https://medium.com/@NMitchem/if-ai-writes-your-code-why-use-python-bf8c4ba1a055\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">medium.com/@NMitchem/if-ai-wri</span><span class=\"invisible\">tes-your-code-why-use-python-bf8c4ba1a055</span></a></p><p><a href=\"https://mastodon.social/tags/python\" class=\"mention hashtag\" rel=\"tag\">#<span>python</span></a> <a href=\"https://mastodon.social/tags/rustlang\" class=\"mention hashtag\" rel=\"tag\">#<span>rustlang</span></a> <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/artificialintelligence\" class=\"mention hashtag\" rel=\"tag\">#<span>artificialintelligence</span></a> <a href=\"https://mastodon.social/tags/codingagents\" class=\"mention hashtag\" rel=\"tag\">#<span>codingagents</span></a></p>",
+		"reblog": null,
+		"application": {
+			"name": "Web",
+			"website": null
+		},
+		"account": {
+			"id": "107194871972276261",
+			"username": "mhneifer",
+			"acct": "mhneifer",
+			"display_name": "M. H. Neifer",
+			"locked": false,
+			"bot": false,
+			"discoverable": true,
+			"indexable": true,
+			"group": false,
+			"created_at": "2021-10-31T00:00:00.000Z",
+			"note": "<p>A curious guy. Un chico curioso. 一个好奇的男人</p>",
+			"url": "https://mastodon.social/@mhneifer",
+			"uri": "https://mastodon.social/users/mhneifer",
+			"avatar": "https://files.mastodon.social/accounts/avatars/107/194/871/972/276/261/original/7022cab8d71da065.jpg",
+			"avatar_static": "https://files.mastodon.social/accounts/avatars/107/194/871/972/276/261/original/7022cab8d71da065.jpg",
+			"avatar_description": "",
+			"header": "https://mastodon.social/headers/original/missing.png",
+			"header_static": "https://mastodon.social/headers/original/missing.png",
+			"header_description": "",
+			"followers_count": 22,
+			"following_count": 94,
+			"statuses_count": 424,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"noindex": false,
+			"feature_approval": {
+				"automatic": [
+					"public"
+				],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"roles": [],
+			"fields": [
+				{
+					"name": "Profiles",
+					"value": "<a href=\"https://howlingmad.vivaldi.net/profiles/\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">howlingmad.vivaldi.net/profile</span><span class=\"invisible\">s/</span></a>",
+					"verified_at": "2025-10-24T07:32:54.606+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "python",
+				"url": "https://mastodon.social/tags/python"
+			},
+			{
+				"name": "rustlang",
+				"url": "https://mastodon.social/tags/rustlang"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "artificialintelligence",
+				"url": "https://mastodon.social/tags/artificialintelligence"
+			},
+			{
+				"name": "codingagents",
+				"url": "https://mastodon.social/tags/codingagents"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://medium.com/@NMitchem/if-ai-writes-your-code-why-use-python-bf8c4ba1a055",
+			"title": "If AI Writes Your Code, Why Use Python?",
+			"description": "For the last decade, fast-to-ship beat fast-to-run. Not anymore.",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "Medium",
+			"provider_url": "",
+			"html": "",
+			"width": 642,
+			"height": 358,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/039/042/original/12dbc4b392cc2ecc.png",
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": "UKRfd*t7~qt7?bfQIUj[jafQayayxtayofof",
+			"published_at": "2026-04-28T12:31:02.245Z",
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116559564512826470",
+		"created_at": "2026-05-12T03:50:07.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ja",
+		"uri": "https://goark.fedicity.net/users/goark/statuses/116559564444207102",
+		"url": "https://goark.fedicity.net/@goark/116559564444207102",
+		"replies_count": 1,
+		"reblogs_count": 1,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v0.17.1 · goark/pa-api<br><a href=\"https://github.com/goark/pa-api/releases/tag/v0.17.1\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/pa-api/releas</span><span class=\"invisible\">es/tag/v0.17.1</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111530040895444639",
+			"username": "goark",
+			"acct": "goark@goark.fedicity.net",
+			"display_name": "Goark",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-03T00:00:00.000Z",
+			"note": "<p>Playing with Go language</p>",
+			"url": "https://goark.fedicity.net/@goark",
+			"uri": "https://goark.fedicity.net/users/goark",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_description": "",
+			"followers_count": 12,
+			"following_count": 1,
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Bot Owner",
+					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:05.410+00:00"
+				},
+				{
+					"name": "GitHub",
+					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:06.237+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/goark/pa-api/releases/tag/v0.17.1",
+			"title": "Release v0.17.1 · goark/pa-api",
+			"description": "What's Changed\n\nAdd govulncheck task and align Go 1.25.10 baseline by @spiegel-im-spiegel in #53\nRemove unused entity fields by @Oakes6 in #52\n\nFull Changelog: v0.17.0...v0.17.1",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/527/773/original/a7979dcbe1f63772.png",
+			"image_description": "What's Changed\n\nAdd govulncheck task and align Go 1.25.10 baseline by @spiegel-im-spiegel in #53\nRemove unused entity fields by @Oakes6 in #52\n\nFull Changelog: v0.17.0...v0.17.1",
+			"embed_url": "",
+			"blurhash": "UTRy$,xuITt7-UxuRjofJBWVj[WB~VNFxufQ",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116559371703699134",
+		"created_at": "2026-05-12T03:01:05.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ja",
+		"uri": "https://goark.fedicity.net/users/goark/statuses/116559371665513134",
+		"url": "https://goark.fedicity.net/@goark/116559371665513134",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> ＞ Release v2.16.0-c9b458fa-nightly · goreleaser/goreleaser<br><a href=\"https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-c9b458fa-nightly\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goreleaser/goreleas</span><span class=\"invisible\">er/releases/tag/v2.16.0-c9b458fa-nightly</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111530040895444639",
+			"username": "goark",
+			"acct": "goark@goark.fedicity.net",
+			"display_name": "Goark",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-03T00:00:00.000Z",
+			"note": "<p>Playing with Go language</p>",
+			"url": "https://goark.fedicity.net/@goark",
+			"uri": "https://goark.fedicity.net/users/goark",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_description": "",
+			"followers_count": 12,
+			"following_count": 1,
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Bot Owner",
+					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:05.410+00:00"
+				},
+				{
+					"name": "GitHub",
+					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:06.237+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-c9b458fa-nightly",
+			"title": "Release v2.16.0-c9b458fa-nightly · goreleaser/goreleaser",
+			"description": "Changelog\nNew Features\n\nbb532b6: feat(archive): xz format (#6520)\n9500ead: feat(builders): add node sea support (#6579)\nf72cf9d: feat: go1.26.3\n\nBug fixes\n\nbb9062f: fix(cask): emit generate_complet...",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/524/651/original/ae05716287a371e8.png",
+			"image_description": "Changelog\nNew Features\n\nbb532b6: feat(archive): xz format (#6520)\n9500ead: feat(builders): add node sea support (#6579)\nf72cf9d: feat: go1.26.3\n\nBug fixes\n\nbb9062f: fix(cask): emit generate_complet...",
+			"embed_url": "",
+			"blurhash": "UMR{*~j?E1%MRjxuWBxtxuj[t7ay~pRjxtRj",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116559319193305623",
+		"created_at": "2026-05-12T02:47:44.840Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ko",
+		"uri": "https://mastodon.social/ap/users/116413458230921993/statuses/116559319193305623",
+		"url": "https://mastodon.social/@rad1092/116559319193305623",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": "2026-05-12T05:48:29.005Z",
+		"content": "<p>Released gh-dep-risk v0.2.0: an AI-assisted GitHub CLI extension for on-demand dependency PR risk summaries.</p><p>Dependency Review API first, static local fallback second. New fallback coverage: Python, Poetry, uv.lock, Go modules, Yarn Berry, Bun text bun.lock. No server, resolver, or registry lookup.</p><p>Install: gh extension install rad1092/gh-dep-risk<br /><a href=\"https://github.com/rad1092/gh-dependency-risk\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/rad1092/gh-dependen</span><span class=\"invisible\">cy-risk</span></a></p><p><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/GitHubCLI\" class=\"mention hashtag\" rel=\"tag\">#<span>GitHubCLI</span></a> <a href=\"https://mastodon.social/tags/OpenSource\" class=\"mention hashtag\" rel=\"tag\">#<span>OpenSource</span></a> <a href=\"https://mastodon.social/tags/DevTools\" class=\"mention hashtag\" rel=\"tag\">#<span>DevTools</span></a></p>",
+		"reblog": null,
+		"application": {
+			"name": "gh-dep-risk launch ",
+			"website": "https://github.com/rad1092/gh-dep-risk "
+		},
+		"account": {
+			"id": "116413458230921993",
+			"username": "rad1092",
+			"acct": "rad1092",
+			"display_name": "",
+			"locked": false,
+			"bot": false,
+			"discoverable": true,
+			"indexable": true,
+			"group": false,
+			"created_at": "2026-04-16T00:00:00.000Z",
+			"note": "",
+			"url": "https://mastodon.social/@rad1092",
+			"uri": "https://mastodon.social/ap/users/116413458230921993",
+			"avatar": "https://mastodon.social/avatars/original/missing.png",
+			"avatar_static": "https://mastodon.social/avatars/original/missing.png",
+			"avatar_description": "",
+			"header": "https://mastodon.social/headers/original/missing.png",
+			"header_static": "https://mastodon.social/headers/original/missing.png",
+			"header_description": "",
+			"followers_count": 1,
+			"following_count": 0,
+			"statuses_count": 3,
+			"last_status_at": "2026-05-12",
+			"hide_collections": null,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"noindex": false,
+			"feature_approval": {
+				"automatic": [
+					"public"
+				],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"roles": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "GitHubCLI",
+				"url": "https://mastodon.social/tags/GitHubCLI"
+			},
+			{
+				"name": "opensource",
+				"url": "https://mastodon.social/tags/opensource"
+			},
+			{
+				"name": "devtools",
+				"url": "https://mastodon.social/tags/devtools"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/rad1092/gh-dependency-risk",
+			"title": "GitHub - rad1092/gh-dependency-risk: GitHub CLI extension for on-demand PR dependency risk review with Dependency Review API first and static local fallback",
+			"description": "GitHub CLI extension for on-demand PR dependency risk review with Dependency Review API first and static local fallback - rad1092/gh-dependency-risk",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/523/796/original/30168df593c99b1c.png",
+			"image_description": "GitHub CLI extension for on-demand PR dependency risk review with Dependency Review API first and static local fallback - rad1092/gh-dependency-risk",
+			"embed_url": "",
+			"blurhash": "UORpLInnoxxu=_n,bFj[EOofoMWC~CR%s;oe",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116558603394372115",
+		"created_at": "2026-05-11T23:45:38.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://mastodon.raddemo.host/users/admin/statuses/116558603116717827",
+		"url": "https://mastodon.raddemo.host/@admin/116558603116717827",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>🛠️ How to Install and Configure <a href=\"https://mastodon.raddemo.host/tags/ListMonk\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ListMonk</span></a> on <a href=\"https://mastodon.raddemo.host/tags/Ubuntu\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Ubuntu</span></a> <a href=\"https://mastodon.raddemo.host/tags/VPS\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>VPS</span></a> </p><p>Here is a step-by-step guide to install and configure ListMonk (a high-performance, self-hosted <a href=\"https://mastodon.raddemo.host/tags/newsletter\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>newsletter</span></a> and mailing list manager) on an Ubuntu VPS.<br>✅ What is ListMonk?<br>ListMonk is a fast, open-source newsletter and mailing list manager built with Go and PostgreSQL. It supports <a href=\"https://mastodon.raddemo.host/tags/email\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>email</span></a> templating, subscriber ...<br>Continued 👉 <a href=\"https://blog.radwebhosting.com/install-and-configure-listmonk-on-ubuntu-vps/?utm_source=mastodon&amp;utm_medium=social&amp;utm_campaign=mastodon.raddemo.host\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blog.radwebhosting.com/install</span><span class=\"invisible\">-and-configure-listmonk-on-ubuntu-vps/?utm_source=mastodon&amp;utm_medium=social&amp;utm_campaign=mastodon.raddemo.host</span></a> <a href=\"https://mastodon.raddemo.host/tags/opensource\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>opensource</span></a> <a href=\"https://mastodon.raddemo.host/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://mastodon.raddemo.host/tags/selfhosting\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>selfhosting</span></a> <a href=\"https://mastodon.raddemo.host/tags/mailserver\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>mailserver</span></a> <a href=\"https://mastodon.raddemo.host/tags/letsencrypt\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>letsencrypt</span></a> <a href=\"https://mastodon.raddemo.host/tags/selfhosted\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>selfhosted</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "109884956499296457",
+			"username": "admin",
+			"acct": "admin@mastodon.raddemo.host",
+			"display_name": "mastodon.raddemo.host",
+			"locked": false,
+			"bot": false,
+			"discoverable": true,
+			"indexable": false,
+			"group": false,
+			"created_at": "2022-11-25T00:00:00.000Z",
+			"note": "<p>Mastodon Server Administration: <a href=\"https://radvps.com\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">radvps.com</span><span class=\"invisible\"></span></a></p><p><a href=\"https://mastodon.raddemo.host/tags/fedi22\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>fedi22</span></a></p>",
+			"url": "https://mastodon.raddemo.host/@admin",
+			"uri": "https://mastodon.raddemo.host/users/admin",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/109/884/956/499/296/457/original/8f9110209f8e1aa9.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/109/884/956/499/296/457/original/8f9110209f8e1aa9.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/109/884/956/499/296/457/original/d3c910416169bf5d.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/884/956/499/296/457/original/d3c910416169bf5d.png",
+			"header_description": "",
+			"followers_count": 51,
+			"following_count": 79,
+			"statuses_count": 3612,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Rad Demo",
+					"value": "<a href=\"https://www.raddemo.host\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">raddemo.host</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				}
+			]
+		},
+		"media_attachments": [
+			{
+				"id": "116558603206889047",
+				"type": "image",
+				"url": "https://files.mastodon.social/cache/media_attachments/files/116/558/603/206/889/047/original/7d074e485593e345.png",
+				"preview_url": "https://files.mastodon.social/cache/media_attachments/files/116/558/603/206/889/047/small/7d074e485593e345.png",
+				"remote_url": "https://mastodon.raddemo.host/system/media_attachments/files/116/558/603/047/892/500/original/154e6579e607b219.png",
+				"preview_remote_url": null,
+				"text_url": null,
+				"meta": {
+					"original": {
+						"width": 1200,
+						"height": 628,
+						"size": "1200x628",
+						"aspect": 1.910828025477707
+					},
+					"small": {
+						"width": 663,
+						"height": 347,
+						"size": "663x347",
+						"aspect": 1.9106628242074928
+					}
+				},
+				"description": null,
+				"blurhash": "UhDI1Er*jExmj_R-bFt5M^%1oJM{M}s;oeRk"
+			}
+		],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "listmonk",
+				"url": "https://mastodon.social/tags/listmonk"
+			},
+			{
+				"name": "ubuntu",
+				"url": "https://mastodon.social/tags/ubuntu"
+			},
+			{
+				"name": "vps",
+				"url": "https://mastodon.social/tags/vps"
+			},
+			{
+				"name": "newsletter",
+				"url": "https://mastodon.social/tags/newsletter"
+			},
+			{
+				"name": "email",
+				"url": "https://mastodon.social/tags/email"
+			},
+			{
+				"name": "opensource",
+				"url": "https://mastodon.social/tags/opensource"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "selfhosting",
+				"url": "https://mastodon.social/tags/selfhosting"
+			},
+			{
+				"name": "mailserver",
+				"url": "https://mastodon.social/tags/mailserver"
+			},
+			{
+				"name": "letsencrypt",
+				"url": "https://mastodon.social/tags/letsencrypt"
+			},
+			{
+				"name": "selfhosted",
+				"url": "https://mastodon.social/tags/selfhosted"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": null,
+		"poll": null,
+		"quote_approval": {
+			"automatic": [],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116557956104513889",
+		"created_at": "2026-05-11T21:01:05.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ja",
+		"uri": "https://goark.fedicity.net/users/goark/statuses/116557956066338331",
+		"url": "https://goark.fedicity.net/@goark/116557956066338331",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> ＞ Release gopls/v0.22.0-pre.3: gopls: update go.mod for v0.22.0-pre.3 · golang/tools<br><a href=\"https://github.com/golang/tools/releases/tag/gopls%2Fv0.22.0-pre.3\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/golang/tools/releas</span><span class=\"invisible\">es/tag/gopls%2Fv0.22.0-pre.3</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111530040895444639",
+			"username": "goark",
+			"acct": "goark@goark.fedicity.net",
+			"display_name": "Goark",
+			"locked": false,
+			"bot": true,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-03T00:00:00.000Z",
+			"note": "<p>Playing with Go language</p>",
+			"url": "https://goark.fedicity.net/@goark",
+			"uri": "https://goark.fedicity.net/users/goark",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
+			"header_description": "",
+			"followers_count": 12,
+			"following_count": 1,
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
+			"hide_collections": true,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Bot Owner",
+					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:05.410+00:00"
+				},
+				{
+					"name": "GitHub",
+					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-10T01:09:06.237+00:00"
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://github.com/golang/tools/releases/tag/gopls%2Fv0.22.0-pre.3",
+			"title": "Release gopls/v0.22.0-pre.3: gopls: update go.mod for v0.22.0-pre.3 · golang/tools",
+			"description": "This is an automated CL which updates the go.mod and go.sum.\nFor golang/go#79000\nChange-Id: I8e42683501594b697ee53e9a4f717f12b969c322\nReviewed-on: https://go-review.googlesource.com/c/tools/+/77676...",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "GitHub",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/501/980/original/cfa0db6e2b06864b.png",
+			"image_description": "This is an automated CL which updates the go.mod and go.sum.\nFor golang/go#79000\nChange-Id: I8e42683501594b697ee53e9a4f717f12b969c322\nReviewed-on: https://go-review.googlesource.com/c/tools/+/77676...",
+			"embed_url": "",
+			"blurhash": "UOSF|kWCay%M?GWBWBt69bayoLj[~Vt6ofWB",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116557738303757515",
+		"created_at": "2026-05-11T20:05:41.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://mastodon.world/users/jobsfordevelopers/statuses/116557738253929471",
+		"url": "https://mastodon.world/@jobsfordevelopers/116557738253929471",
+		"replies_count": 0,
+		"reblogs_count": 2,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>ClickHouse is hiring Senior Site Reliability Engineer- Remote</p><p>🔧 <a href=\"https://mastodon.world/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://mastodon.world/tags/python\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>python</span></a> <a href=\"https://mastodon.world/tags/ansible\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ansible</span></a> <a href=\"https://mastodon.world/tags/aws\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>aws</span></a> <a href=\"https://mastodon.world/tags/azure\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>azure</span></a> <a href=\"https://mastodon.world/tags/docker\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>docker</span></a> <a href=\"https://mastodon.world/tags/gcp\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>gcp</span></a> <a href=\"https://mastodon.world/tags/kubernetes\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>kubernetes</span></a> <a href=\"https://mastodon.world/tags/sql\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>sql</span></a> <a href=\"https://mastodon.world/tags/terraform\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>terraform</span></a> <a href=\"https://mastodon.world/tags/seniorengineer\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>seniorengineer</span></a><br>🌎 Remote; United States<br>⏰ Full-time<br>🏢 ClickHouse</p><p>Job details <a href=\"https://jobsfordevelopers.com/jobs/senior-site-reliability-engineer-remote-at-clickhouse-com-mar-12-2026-89998e?utm_source=mastodon.world&amp;utm_medium=social&amp;utm_campaign=posting\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">jobsfordevelopers.com/jobs/sen</span><span class=\"invisible\">ior-site-reliability-engineer-remote-at-clickhouse-com-mar-12-2026-89998e?utm_source=mastodon.world&amp;utm_medium=social&amp;utm_campaign=posting</span></a><br><a href=\"https://mastodon.world/tags/jobalert\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>jobalert</span></a> <a href=\"https://mastodon.world/tags/jobsearch\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>jobsearch</span></a> <a href=\"https://mastodon.world/tags/hiring\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>hiring</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "109551083434478864",
+			"username": "jobsfordevelopers",
+			"acct": "jobsfordevelopers@mastodon.world",
+			"display_name": "Jobs for Developers",
+			"locked": false,
+			"bot": true,
+			"discoverable": true,
+			"indexable": false,
+			"group": false,
+			"created_at": "2022-12-19T00:00:00.000Z",
+			"note": "<p>Jobs for software engineers is a job board for developers around the globe. Tooting new job opportunities daily.</p>",
+			"url": "https://mastodon.world/@jobsfordevelopers",
+			"uri": "https://mastodon.world/users/jobsfordevelopers",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/109/551/083/434/478/864/original/79da63dfea760dfe.jpg",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/109/551/083/434/478/864/original/79da63dfea760dfe.jpg",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/109/551/083/434/478/864/original/a6ed6dfe699570e4.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/551/083/434/478/864/original/a6ed6dfe699570e4.png",
+			"header_description": "",
+			"followers_count": 2169,
+			"following_count": 1,
+			"statuses_count": 6069,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Website",
+					"value": "<a href=\"https://jobsfordevelopers.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">jobsfordevelopers.com</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-12T10:09:10.299+00:00"
+				},
+				{
+					"name": "Created by",
+					"value": "<span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.world/@janlavicka\" class=\"u-url mention\" rel=\"nofollow noopener\" target=\"_blank\">@<span>janlavicka</span></a></span>",
+					"verified_at": null
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "python",
+				"url": "https://mastodon.social/tags/python"
+			},
+			{
+				"name": "ansible",
+				"url": "https://mastodon.social/tags/ansible"
+			},
+			{
+				"name": "aws",
+				"url": "https://mastodon.social/tags/aws"
+			},
+			{
+				"name": "azure",
+				"url": "https://mastodon.social/tags/azure"
+			},
+			{
+				"name": "docker",
+				"url": "https://mastodon.social/tags/docker"
+			},
+			{
+				"name": "gcp",
+				"url": "https://mastodon.social/tags/gcp"
+			},
+			{
+				"name": "kubernetes",
+				"url": "https://mastodon.social/tags/kubernetes"
+			},
+			{
+				"name": "sql",
+				"url": "https://mastodon.social/tags/sql"
+			},
+			{
+				"name": "terraform",
+				"url": "https://mastodon.social/tags/terraform"
+			},
+			{
+				"name": "seniorengineer",
+				"url": "https://mastodon.social/tags/seniorengineer"
+			},
+			{
+				"name": "jobalert",
+				"url": "https://mastodon.social/tags/jobalert"
+			},
+			{
+				"name": "jobsearch",
+				"url": "https://mastodon.social/tags/jobsearch"
+			},
+			{
+				"name": "hiring",
+				"url": "https://mastodon.social/tags/hiring"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://jobsfordevelopers.com/jobs/senior-site-reliability-engineer-remote-at-clickhouse-com-mar-12-2026-89998e?utm_source=mastodon.world&utm_medium=social&utm_campaign=posting",
+			"title": "Senior Site Reliability Engineer- Remote at ClickHouse",
+			"description": "ClickHouse is hiring Senior Site Reliability Engineer- Remote",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "",
+			"provider_url": "",
+			"html": "",
+			"width": 640,
+			"height": 360,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/497/396/original/676c18ce6578c408.png",
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": "UER{+0IUxu-;xvRjj[t7~qxuM{ayt8WBRjWB",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116557645051561393",
+		"created_at": "2026-05-11T19:41:58.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://mastodon.sayzard.org/ap/users/115823033418578765/statuses/116557645008128548",
+		"url": "https://mastodon.sayzard.org/@sayzard/116557645008128548",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>Welcome to go-acme/Lego v5</p><p>go-acme/lego v5가 출시되어 완전히 재설계된 CLI와 강력한 신규 기능들을 제공한다. 주요 변경점으로는 인증서 발급과 갱신을 통합한 단일 명령어 'lego run', .lego.yml 구성 파일 지원, 계정·인증서·아카이브 관리용 서브커맨드 추가, 새로운 dns-persist-01 챌린지 지원, 인증서 갱신 자동화 간소화, 라이프사이클 훅, IPv6 전용 지원, JSON 형식의 구조화된 로깅, 24개의 신규 DNS 공급자 추가 등이 있다. v4에서 v5로 마이그레이션 시 CLI와 저장소 구조 변경에 주의해야 한다.</p><p><a href=\"https://ldez.github.io/blog/2026/05/11/lego-v5/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">ldez.github.io/blog/2026/05/11</span><span class=\"invisible\">/lego-v5/</span></a></p><p><a href=\"https://mastodon.sayzard.org/tags/acme\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>acme</span></a> <a href=\"https://mastodon.sayzard.org/tags/certificate\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>certificate</span></a> <a href=\"https://mastodon.sayzard.org/tags/cli\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>cli</span></a> <a href=\"https://mastodon.sayzard.org/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://mastodon.sayzard.org/tags/automation\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>automation</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "115823075815387747",
+			"username": "sayzard",
+			"acct": "sayzard@mastodon.sayzard.org",
+			"display_name": "sayzard",
+			"locked": false,
+			"bot": false,
+			"discoverable": false,
+			"indexable": true,
+			"group": false,
+			"created_at": "2026-01-02T00:00:00.000Z",
+			"note": "",
+			"url": "https://mastodon.sayzard.org/@sayzard",
+			"uri": "https://mastodon.sayzard.org/ap/users/115823033418578765",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/115/823/075/815/387/747/original/bea27fbb1b568ee1.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/115/823/075/815/387/747/original/bea27fbb1b568ee1.png",
+			"avatar_description": "",
+			"header": "https://mastodon.social/headers/original/missing.png",
+			"header_static": "https://mastodon.social/headers/original/missing.png",
+			"header_description": "",
+			"followers_count": 43,
+			"following_count": 1,
+			"statuses_count": 14777,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "acme",
+				"url": "https://mastodon.social/tags/acme"
+			},
+			{
+				"name": "certificate",
+				"url": "https://mastodon.social/tags/certificate"
+			},
+			{
+				"name": "cli",
+				"url": "https://mastodon.social/tags/cli"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "automation",
+				"url": "https://mastodon.social/tags/automation"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://ldez.github.io/blog/2026/05/11/lego-v5/",
+			"title": "Welcome to go-acme/lego v5",
+			"description": "I am thrilled to announce go-acme/lego v5!\nThis is a major release that brings a completely redesigned CLI, and powerful new features.",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "The Best Code is No Code At All",
+			"provider_url": "",
+			"html": "",
+			"width": 0,
+			"height": 0,
+			"image": null,
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": null,
+			"published_at": "2026-05-11T00:06:13.000Z",
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116555991360405877",
+		"created_at": "2026-05-11T12:41:25.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://fosstodon.org/users/blainsmith/statuses/116555991300797772",
+		"url": "https://fosstodon.org/@blainsmith/116555991300797772",
+		"replies_count": 0,
+		"reblogs_count": 1,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>I have a much better autocert.HostPolicy for <a href=\"https://fosstodon.org/tags/Henhouse\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Henhouse</span></a> coming in. We'll be able to check the DNS records of the custom domain to ensure it's resolving to the correct IP before signaling to Caddy to provision a cert from Let's Encrypt.</p><p><a href=\"https://fosstodon.org/tags/Henhouse\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Henhouse</span></a> <a href=\"https://fosstodon.org/tags/TLS\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>TLS</span></a> <a href=\"https://fosstodon.org/tags/StaticHosting\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>StaticHosting</span></a> <a href=\"https://fosstodon.org/tags/Caddy\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Caddy</span></a> <a href=\"https://fosstodon.org/tags/LetsEncrypt\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>LetsEncrypt</span></a> <a href=\"https://fosstodon.org/tags/GoLang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "108198471570044426",
+			"username": "blainsmith",
+			"acct": "blainsmith@fosstodon.org",
+			"display_name": "B",
+			"locked": true,
+			"bot": false,
+			"discoverable": true,
+			"indexable": true,
+			"group": false,
+			"created_at": "2022-04-26T00:00:00.000Z",
+			"note": "<p>Founding Member <span class=\"h-card\" translate=\"no\"><a href=\"https://social.coop/@limeleaf\" class=\"u-url mention\" rel=\"nofollow noopener\" target=\"_blank\">@<span>limeleaf</span></a></span> | Currently building <a href=\"https://henhouse.coop\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">henhouse.coop</span><span class=\"invisible\"></span></a> | Go, Hare, Networking, Linux</p><p>Decentralize and self host as much as you can.</p><p>Guidelines for Human Rights Protocol and Architecture Considerations: <a href=\"https://www.rfc-editor.org/rfc/rfc9620\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">rfc-editor.org/rfc/rfc9620</span><span class=\"invisible\"></span></a></p><p>Croker's Rules please: <a href=\"https://lr0.org/blog/p/crocker/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">lr0.org/blog/p/crocker/</span><span class=\"invisible\"></span></a></p><p><a href=\"https://fosstodon.org/tags/Autistic\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Autistic</span></a> father to an <a href=\"https://fosstodon.org/tags/AuDHD\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>AuDHD</span></a> kiddo.</p><p>\"Be excellent to each other.\" - Bill S. Preston, Esq.</p>",
+			"url": "https://fosstodon.org/@blainsmith",
+			"uri": "https://fosstodon.org/users/blainsmith",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/108/198/471/570/044/426/original/2a8cae834ed6d1ac.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/108/198/471/570/044/426/original/2a8cae834ed6d1ac.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/108/198/471/570/044/426/original/e22c02053cbb6732.jpg",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/108/198/471/570/044/426/original/e22c02053cbb6732.jpg",
+			"header_description": "",
+			"followers_count": 853,
+			"following_count": 851,
+			"statuses_count": 245,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Blog",
+					"value": "<a href=\"https://blainsmith.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">blainsmith.com</span><span class=\"invisible\"></span></a>",
+					"verified_at": "2026-05-12T04:21:24.197+00:00"
+				},
+				{
+					"name": "Co-op",
+					"value": "<a href=\"https://limeleaf.coop\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">limeleaf.coop</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "Hare by Example",
+					"value": "<a href=\"https://harebyexample.org\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">harebyexample.org</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "Signal",
+					"value": "rblgk.13",
+					"verified_at": null
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "henhouse",
+				"url": "https://mastodon.social/tags/henhouse"
+			},
+			{
+				"name": "tls",
+				"url": "https://mastodon.social/tags/tls"
+			},
+			{
+				"name": "statichosting",
+				"url": "https://mastodon.social/tags/statichosting"
+			},
+			{
+				"name": "caddy",
+				"url": "https://mastodon.social/tags/caddy"
+			},
+			{
+				"name": "letsencrypt",
+				"url": "https://mastodon.social/tags/letsencrypt"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": null,
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116555562225125926",
+		"created_at": "2026-05-11T10:52:17.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ru",
+		"uri": "https://zhub.link/users/habr/statuses/116555562188631371",
+		"url": "https://zhub.link/@habr/116555562188631371",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>От LLM к агенту: Как заставить Go приложение думать и действовать</p><p>Всё началось с доклада про AI-агентов. Заинтересовало настолько, что решил написать своего на Go. Было сложно, но получилось! Делюсь опытом: LangChainGo, инструменты, цепочки, MCP и интеграция с GigaChat.</p><p><a href=\"https://habr.com/ru/articles/1033718/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">habr.com/ru/articles/1033718/</span><span class=\"invisible\"></span></a></p><p><a href=\"https://zhub.link/tags/go\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>go</span></a> <a href=\"https://zhub.link/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://zhub.link/tags/ai\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ai</span></a> <a href=\"https://zhub.link/tags/%D0%B8%D1%81%D1%81%D0%BA%D1%83%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B8%D0%BD%D1%82%D0%B5%D0%BB%D0%BB%D0%B5%D0%BA%D1%82\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>исскуственный_интеллект</span></a> <a href=\"https://zhub.link/tags/gigachat\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>gigachat</span></a> <a href=\"https://zhub.link/tags/langchain\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>langchain</span></a> <a href=\"https://zhub.link/tags/%D0%B3%D0%BE%D0%BB%D0%B0%D0%BD%D0%B3\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>голанг</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "110832264884168220",
+			"username": "habr",
+			"acct": "habr@zhub.link",
+			"display_name": "Habr",
+			"locked": false,
+			"bot": true,
+			"discoverable": true,
+			"indexable": false,
+			"group": false,
+			"created_at": "2023-08-04T00:00:00.000Z",
+			"note": "",
+			"url": "https://zhub.link/@habr",
+			"uri": "https://zhub.link/users/habr",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/110/832/264/884/168/220/original/ec66c1d92715b3c6.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/110/832/264/884/168/220/original/ec66c1d92715b3c6.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/110/832/264/884/168/220/original/0c35e4147d94f767.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/110/832/264/884/168/220/original/0c35e4147d94f767.png",
+			"header_description": "",
+			"followers_count": 1433,
+			"following_count": 0,
+			"statuses_count": 61133,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "голанг",
+				"url": "https://mastodon.social/tags/%D0%B3%D0%BE%D0%BB%D0%B0%D0%BD%D0%B3"
+			},
+			{
+				"name": "langchain",
+				"url": "https://mastodon.social/tags/langchain"
+			},
+			{
+				"name": "gigachat",
+				"url": "https://mastodon.social/tags/gigachat"
+			},
+			{
+				"name": "исскуственный_интеллект",
+				"url": "https://mastodon.social/tags/%D0%B8%D1%81%D1%81%D0%BA%D1%83%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9_%D0%B8%D0%BD%D1%82%D0%B5%D0%BB%D0%BB%D0%B5%D0%BA%D1%82"
+			},
+			{
+				"name": "ai",
+				"url": "https://mastodon.social/tags/ai"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "go",
+				"url": "https://mastodon.social/tags/go"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://habr.com/ru/articles/1033718/",
+			"title": "От LLM к агенту: Как заставить Go приложение думать и действовать",
+			"description": "От автора: Эта статья родилась из желания разобраться в том, что осталось за кадром отличного доклада. 1. Введение 1.1. История создания проекта Всё началось с доклада Антона Юрченко «Улучшаем...",
+			"language": "ru",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "Хабр",
+			"provider_url": "",
+			"html": "",
+			"width": 662,
+			"height": 348,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/434/340/original/77d01c986c72e5c8.png",
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": "UQ8=Z%tlVrj[ofa}ofaxHqROtlayofaej[kC",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116555495320862885",
+		"created_at": "2026-05-11T10:35:16.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://techhub.social/users/goland/statuses/116555495293034321",
+		"url": "https://techhub.social/@goland/116555495293034321",
+		"replies_count": 1,
+		"reblogs_count": 1,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>The GoLand 2026.2 Early Access Program Has Started<br><a href=\"https://techhub.social/tags/GoLang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a> <a href=\"https://techhub.social/tags/Goland\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Goland</span></a> #20262 <a href=\"https://techhub.social/tags/Eap\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Eap</span></a></p><p><a href=\"https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blog.jetbrains.com/go/2026/05/</span><span class=\"invisible\">11/the-goland-2026-2-early-access-program-has-started/</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "111523947396891806",
+			"username": "goland",
+			"acct": "goland@techhub.social",
+			"display_name": "GoLand Blog",
+			"locked": false,
+			"bot": true,
+			"discoverable": true,
+			"indexable": true,
+			"group": false,
+			"created_at": "2023-12-04T00:00:00.000Z",
+			"note": "<p>Regular updates from <a href=\"https://techhub.social/tags/goland\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>goland</span></a> blog.</p><p>The complete IDE crafted for Gophers. GoLand and the GoLand logo are registered trademarks of JetBrains s.r.o. The developers of this unofficial non-profit bot are not affiliated with the company.</p><p>Account created by <span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.social/@tikhonov_a\" class=\"u-url mention\" rel=\"nofollow noopener\" target=\"_blank\">@<span>tikhonov_a</span></a></span></p>",
+			"url": "https://techhub.social/@goland",
+			"uri": "https://techhub.social/users/goland",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/523/947/396/891/806/original/0081180c6b472a5c.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/523/947/396/891/806/original/0081180c6b472a5c.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/111/523/947/396/891/806/original/0639e85d6e7d0e26.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/523/947/396/891/806/original/0639e85d6e7d0e26.png",
+			"header_description": "",
+			"followers_count": 28,
+			"following_count": 6,
+			"statuses_count": 21,
+			"last_status_at": "2026-05-11",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": [
+				{
+					"name": "Website",
+					"value": "<a href=\"https://www.jetbrains.com/go/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">jetbrains.com/go/</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "RSS Feed",
+					"value": "<a href=\"https://blog.jetbrains.com/category/goland/feed/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blog.jetbrains.com/category/go</span><span class=\"invisible\">land/feed/</span></a>",
+					"verified_at": null
+				},
+				{
+					"name": "Bot Author",
+					"value": "<a href=\"https://mastodon.social/@tikhonov_a\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">mastodon.social/@tikhonov_a</span><span class=\"invisible\"></span></a>",
+					"verified_at": null
+				}
+			]
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "goland",
+				"url": "https://mastodon.social/tags/goland"
+			},
+			{
+				"name": "eap",
+				"url": "https://mastodon.social/tags/eap"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/",
+			"title": "The GoLand 2026.2 Early Access Program Has Started | The GoLand Blog",
+			"description": "The Early Access Program (EAP) for GoLand 2026.2 is now open. It’s a great opportunity to try upcoming features for free and help shape the product. EAP builds give you early access to what we’re w",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "The JetBrains Blog",
+			"provider_url": "",
+			"html": "",
+			"width": 640,
+			"height": 360,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/432/597/original/c66dcf02ff7d2657.png",
+			"image_description": "EAP",
+			"embed_url": "",
+			"blurhash": "Ud8;NfMtXKnnVpo{npf#X1n:WTawWBa$WTfS",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116554838855341057",
+		"created_at": "2026-05-11T07:48:20.311Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "en",
+		"uri": "https://mastodon.social/users/alimiracle/statuses/116554838855341057",
+		"url": "https://mastodon.social/@alimiracle/116554838855341057",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 2,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>🎉 Happy to announce the official release of Anzu Proxy v1.0.0!</p><p>After a very long development journey, Anzu Proxy is finally here: an all-in-one proxy server combining SOCKS5, HTTP/HTTPS (with HTTP/2 + optional caching), and Telegram MTProto with Fake-TLS for DPI resistance.</p><p>Available on Snap Store for amd64, arm64, and arm7.</p><p>Install:<br />sudo snap install anzu-proxy</p><p>Source Code:<br /><a href=\"https://codeberg.org/alimiracle/anzu-proxy\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">codeberg.org/alimiracle/anzu-p</span><span class=\"invisible\">roxy</span></a></p><p><a href=\"https://mastodon.social/tags/OpenSource\" class=\"mention hashtag\" rel=\"tag\">#<span>OpenSource</span></a><br /><a href=\"https://mastodon.social/tags/Linux\" class=\"mention hashtag\" rel=\"tag\">#<span>Linux</span></a><br /><a href=\"https://mastodon.social/tags/Proxy\" class=\"mention hashtag\" rel=\"tag\">#<span>Proxy</span></a><br /><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a></p>",
+		"reblog": null,
+		"application": {
+			"name": "Web",
+			"website": null
+		},
+		"account": {
+			"id": "112366007247439529",
+			"username": "alimiracle",
+			"acct": "alimiracle",
+			"display_name": "ali miracle",
+			"locked": false,
+			"bot": false,
+			"discoverable": true,
+			"indexable": true,
+			"group": false,
+			"created_at": "2024-05-01T00:00:00.000Z",
+			"note": "<p>Programmer, systems administrator, free software activist and poet</p>",
+			"url": "https://mastodon.social/@alimiracle",
+			"uri": "https://mastodon.social/users/alimiracle",
+			"avatar": "https://files.mastodon.social/accounts/avatars/112/366/007/247/439/529/original/a5fe06113643570d.jpg",
+			"avatar_static": "https://files.mastodon.social/accounts/avatars/112/366/007/247/439/529/original/a5fe06113643570d.jpg",
+			"avatar_description": "",
+			"header": "https://mastodon.social/headers/original/missing.png",
+			"header_static": "https://mastodon.social/headers/original/missing.png",
+			"header_description": "",
+			"followers_count": 27,
+			"following_count": 17,
+			"statuses_count": 29,
+			"last_status_at": "2026-05-11",
+			"hide_collections": null,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"noindex": false,
+			"feature_approval": {
+				"automatic": [
+					"public"
+				],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"roles": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "opensource",
+				"url": "https://mastodon.social/tags/opensource"
+			},
+			{
+				"name": "linux",
+				"url": "https://mastodon.social/tags/linux"
+			},
+			{
+				"name": "proxy",
+				"url": "https://mastodon.social/tags/proxy"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://codeberg.org/alimiracle/anzu-proxy",
+			"title": "anzu-proxy",
+			"description": "A complete multi-protocol proxy server implementation in Go supporting both SOCKS5 and HTTP/HTTPS protocols with flexible authentication options for single-user and multi-user modes.\n",
+			"language": "en",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "Codeberg.org",
+			"provider_url": "",
+			"html": "",
+			"width": 678,
+			"height": 339,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/149/964/720/original/2dbd1965e236d4ea.png",
+			"image_description": "Summary card of repository alimiracle/anzu-proxy, described as: A complete multi-protocol proxy server implementation in Go supporting both SOCKS5 and HTTP/HTTPS protocols with flexible authentication options for single-user and multi-user modes.\n",
+			"embed_url": "",
+			"blurhash": "UhQ,RNb[eoxu={k8aiodEhV_f#a#~VVtg2jF",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
+		"id": "116554421907467081",
+		"created_at": "2026-05-11T06:02:17.000Z",
+		"in_reply_to_id": null,
+		"in_reply_to_account_id": null,
+		"sensitive": false,
+		"spoiler_text": "",
+		"visibility": "public",
+		"language": "ru",
+		"uri": "https://zhub.link/users/habr/statuses/116554421869820496",
+		"url": "https://zhub.link/@habr/116554421869820496",
+		"replies_count": 0,
+		"reblogs_count": 0,
+		"favourites_count": 0,
+		"quotes_count": 0,
+		"edited_at": null,
+		"content": "<p>Code Review Horror Stories. Часть 2: API, ошибки и graceful shutdown</p><p>Продолжение разбора реального кода с собеседования. В первой части разобрали 8 проблем concurrency и memory: race conditions, утечки горутин, проигнорированный mutex, TOCTOU. Это была первая половина из 21 бага в одном сервисе на 150 строк. Сегодня — вторая часть. Тут нет страшных race conditions, но есть то, что выдаёт уровень разработчика на собесе: отношение к ошибкам, валидация, API design, graceful shutdown, observability . Эти баги не упадут “вдруг” в продакшене — они будут тихо пилить вам костыль за костылём, пока кто-то не сядет переписывать. Актуально для Go 1.26. Напомню итог первой части: из 8 багов про concurrency на интервью нашёл 7, пропустил только TOCTOU race. В этой части из 13 багов пропустил два : package applike с func main() (то, что код не компилируется — банально не посмотрел на объявление пакета) и отсутствие slog (просто не зацепился за log.Println , а зря). Остальные 11 — поймал. Расскажу, какими паттернами в чтении кода я их вылавливал.</p><p><a href=\"https://habr.com/ru/articles/1033634/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">habr.com/ru/articles/1033634/</span><span class=\"invisible\"></span></a></p><p><a href=\"https://zhub.link/tags/go\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>go</span></a> <a href=\"https://zhub.link/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://zhub.link/tags/code_review\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>code_review</span></a> <a href=\"https://zhub.link/tags/%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B2%D1%8C%D1%8E\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>интервью</span></a> <a href=\"https://zhub.link/tags/%D0%B1%D0%B0%D0%B3%D0%B8\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>баги</span></a> <a href=\"https://zhub.link/tags/api\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>api</span></a> <a href=\"https://zhub.link/tags/graceful_shutdown\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>graceful_shutdown</span></a> <a href=\"https://zhub.link/tags/concurrency\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>concurrency</span></a> <a href=\"https://zhub.link/tags/go_126\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>go_126</span></a></p>",
+		"reblog": null,
+		"account": {
+			"id": "110832264884168220",
+			"username": "habr",
+			"acct": "habr@zhub.link",
+			"display_name": "Habr",
+			"locked": false,
+			"bot": true,
+			"discoverable": true,
+			"indexable": false,
+			"group": false,
+			"created_at": "2023-08-04T00:00:00.000Z",
+			"note": "",
+			"url": "https://zhub.link/@habr",
+			"uri": "https://zhub.link/users/habr",
+			"avatar": "https://files.mastodon.social/cache/accounts/avatars/110/832/264/884/168/220/original/ec66c1d92715b3c6.png",
+			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/110/832/264/884/168/220/original/ec66c1d92715b3c6.png",
+			"avatar_description": "",
+			"header": "https://files.mastodon.social/cache/accounts/headers/110/832/264/884/168/220/original/0c35e4147d94f767.png",
+			"header_static": "https://files.mastodon.social/cache/accounts/headers/110/832/264/884/168/220/original/0c35e4147d94f767.png",
+			"header_description": "",
+			"followers_count": 1433,
+			"following_count": 0,
+			"statuses_count": 61133,
+			"last_status_at": "2026-05-12",
+			"hide_collections": false,
+			"show_media": true,
+			"show_media_replies": true,
+			"show_featured": true,
+			"feature_approval": {
+				"automatic": [],
+				"manual": [],
+				"current_user": "denied"
+			},
+			"emojis": [],
+			"fields": []
+		},
+		"media_attachments": [],
+		"mentions": [],
+		"tags": [
+			{
+				"name": "go_126",
+				"url": "https://mastodon.social/tags/go_126"
+			},
+			{
+				"name": "concurrency",
+				"url": "https://mastodon.social/tags/concurrency"
+			},
+			{
+				"name": "graceful_shutdown",
+				"url": "https://mastodon.social/tags/graceful_shutdown"
+			},
+			{
+				"name": "API",
+				"url": "https://mastodon.social/tags/API"
+			},
+			{
+				"name": "баги",
+				"url": "https://mastodon.social/tags/%D0%B1%D0%B0%D0%B3%D0%B8"
+			},
+			{
+				"name": "интервью",
+				"url": "https://mastodon.social/tags/%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B2%D1%8C%D1%8E"
+			},
+			{
+				"name": "code_review",
+				"url": "https://mastodon.social/tags/code_review"
+			},
+			{
+				"name": "golang",
+				"url": "https://mastodon.social/tags/golang"
+			},
+			{
+				"name": "go",
+				"url": "https://mastodon.social/tags/go"
+			}
+		],
+		"emojis": [],
+		"tagged_collections": [],
+		"quote": null,
+		"card": {
+			"url": "https://habr.com/ru/articles/1033634/",
+			"title": "Code Review Horror Stories. Часть 2: API, ошибки и graceful shutdown",
+			"description": "Продолжение разбора реального кода с собеседования. В первой части разобрали 8 проблем concurrency и memory: race conditions, утечки горутин, проигнорированный mutex, TOCTOU. Это была первая половина...",
+			"language": "ru",
+			"type": "link",
+			"author_name": "",
+			"author_url": "",
+			"provider_name": "Хабр",
+			"provider_url": "",
+			"html": "",
+			"width": 662,
+			"height": 348,
+			"image": "https://files.mastodon.social/cache/preview_cards/images/192/404/744/original/1dd924d0a726b17e.png",
+			"image_description": "",
+			"embed_url": "",
+			"blurhash": "UP8#?7tmVrj[ozayofazHqROtlayj@a}ofax",
+			"published_at": null,
+			"authors": []
+		},
+		"poll": null,
+		"quote_approval": {
+			"automatic": [
+				"public"
+			],
+			"manual": [],
+			"current_user": "denied"
+		}
+	},
+	{
 		"id": "116553964851786308",
 		"created_at": "2026-05-11T04:06:03.000Z",
 		"in_reply_to_id": null,
@@ -11,7 +2015,7 @@
 		"uri": "https://mastodon.world/users/jobsfordevelopers/statuses/116553964785054489",
 		"url": "https://mastodon.world/@jobsfordevelopers/116553964785054489",
 		"replies_count": 0,
-		"reblogs_count": 2,
+		"reblogs_count": 13,
 		"favourites_count": 0,
 		"quotes_count": 0,
 		"edited_at": null,
@@ -39,8 +2043,8 @@
 			"header_description": "",
 			"followers_count": 2169,
 			"following_count": 1,
-			"statuses_count": 6061,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 6069,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -55,7 +2059,7 @@
 				{
 					"name": "Website",
 					"value": "<a href=\"https://jobsfordevelopers.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">jobsfordevelopers.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-11T00:19:50.215+00:00"
+					"verified_at": "2026-05-12T10:09:10.299+00:00"
 				},
 				{
 					"name": "Created by",
@@ -188,8 +2192,8 @@
 			"header_description": "",
 			"followers_count": 10,
 			"following_count": 2,
-			"statuses_count": 2167,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 2214,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -288,8 +2292,8 @@
 			"header_description": "",
 			"followers_count": 12,
 			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -366,7 +2370,7 @@
 		"url": "https://fosstodon.org/@SocketSecurity/116553640172045675",
 		"replies_count": 0,
 		"reblogs_count": 1,
-		"favourites_count": 0,
+		"favourites_count": 2,
 		"quotes_count": 0,
 		"edited_at": null,
 		"content": "<p>A maintainer access dispute in fsnotify, a Go library used by 321k projects for cross-platform file notifications, raised supply chain concerns this week after contributors were removed from the GitHub org and a deleted X post fueled takeover speculation.</p><p><a href=\"https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">socket.dev/blog/fsnotify-maint</span><span class=\"invisible\">ainer-dispute-sparks-supply-chain-concerns</span></a> <a href=\"https://fosstodon.org/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a></p>",
@@ -391,10 +2395,10 @@
 			"header": "https://files.mastodon.social/cache/accounts/headers/109/367/719/126/219/960/original/b64dc4870f19b5e0.jpeg",
 			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/367/719/126/219/960/original/b64dc4870f19b5e0.jpeg",
 			"header_description": "",
-			"followers_count": 327,
+			"followers_count": 328,
 			"following_count": 53,
-			"statuses_count": 943,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 950,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -470,9 +2474,9 @@
 		"language": "en",
 		"uri": "https://scalie.zone/users/aks/statuses/116552827881771900",
 		"url": "https://scalie.zone/@aks/116552827881771900",
-		"replies_count": 1,
-		"reblogs_count": 5,
-		"favourites_count": 2,
+		"replies_count": 2,
+		"reblogs_count": 12,
+		"favourites_count": 6,
 		"quotes_count": 0,
 		"edited_at": "2026-05-10T23:19:38.000Z",
 		"content": "<p>I just spent this weekend writing my own little pastebin clone, called Vivipara.<br>I also have bunch of thoughts about various programming languages. Read about it all in this one blogpost! (<a href=\"https://akselmo.dev/posts/vivipara-and-languages/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">akselmo.dev/posts/vivipara-and</span><span class=\"invisible\">-languages/</span></a>)</p><p><a href=\"https://scalie.zone/tags/Golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Golang</span></a> <a href=\"https://scalie.zone/tags/Go\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Go</span></a> <a href=\"https://scalie.zone/tags/Webdev\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Webdev</span></a></p>",
@@ -497,10 +2501,10 @@
 			"header": "https://files.mastodon.social/cache/accounts/headers/111/721/864/834/460/752/original/893a40c07db2f134.png",
 			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/721/864/834/460/752/original/893a40c07db2f134.png",
 			"header_description": "",
-			"followers_count": 1365,
-			"following_count": 478,
-			"statuses_count": 944,
-			"last_status_at": "2026-05-10",
+			"followers_count": 1371,
+			"following_count": 480,
+			"statuses_count": 934,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -551,22 +2555,22 @@
 				{
 					"name": "Blog",
 					"value": "<a href=\"https://akselmo.dev/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">akselmo.dev/</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T00:52:19.521+00:00"
+					"verified_at": "2026-05-12T10:29:25.860+00:00"
 				},
 				{
 					"name": "Codeberg",
 					"value": "<a href=\"https://codeberg.org/akselmo\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">codeberg.org/akselmo</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T00:52:19.740+00:00"
+					"verified_at": "2026-05-12T10:29:26.146+00:00"
 				},
 				{
 					"name": "Itch.io",
 					"value": "<a href=\"https://akselmo.itch.io\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">akselmo.itch.io</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T00:52:20.012+00:00"
+					"verified_at": "2026-05-12T10:29:26.604+00:00"
 				},
 				{
 					"name": "Keyoxide",
 					"value": "<a href=\"https://keyoxide.org/6CF8BBBD93FD0A4A748495A12D8ADFDD01E76FAC\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">keyoxide.org/6CF8BBBD93FD0A4A7</span><span class=\"invisible\">48495A12D8ADFDD01E76FAC</span></a>",
-					"verified_at": "2026-05-10T00:52:20.210+00:00"
+					"verified_at": "2026-05-12T10:29:27.009+00:00"
 				},
 				{
 					"name": "Waifu",
@@ -586,7 +2590,7 @@
 				{
 					"name": "Contact",
 					"value": "<a href=\"https://contact.akselmo.dev/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">contact.akselmo.dev/</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T00:52:20.306+00:00"
+					"verified_at": "2026-05-12T10:29:27.140+00:00"
 				},
 				{
 					"name": "Sourcehut",
@@ -656,10 +2660,10 @@
 						"header": "https://files.mastodon.social/cache/accounts/headers/111/721/864/834/460/752/original/893a40c07db2f134.png",
 						"header_static": "https://files.mastodon.social/cache/accounts/headers/111/721/864/834/460/752/original/893a40c07db2f134.png",
 						"header_description": "",
-						"followers_count": 1365,
-						"following_count": 478,
-						"statuses_count": 944,
-						"last_status_at": "2026-05-10",
+						"followers_count": 1371,
+						"following_count": 480,
+						"statuses_count": 934,
+						"last_status_at": "2026-05-12",
 						"hide_collections": false,
 						"show_media": true,
 						"show_media_replies": true,
@@ -710,22 +2714,22 @@
 							{
 								"name": "Blog",
 								"value": "<a href=\"https://akselmo.dev/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">akselmo.dev/</span><span class=\"invisible\"></span></a>",
-								"verified_at": "2026-05-10T00:52:19.521+00:00"
+								"verified_at": "2026-05-12T10:29:25.860+00:00"
 							},
 							{
 								"name": "Codeberg",
 								"value": "<a href=\"https://codeberg.org/akselmo\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">codeberg.org/akselmo</span><span class=\"invisible\"></span></a>",
-								"verified_at": "2026-05-10T00:52:19.740+00:00"
+								"verified_at": "2026-05-12T10:29:26.146+00:00"
 							},
 							{
 								"name": "Itch.io",
 								"value": "<a href=\"https://akselmo.itch.io\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">akselmo.itch.io</span><span class=\"invisible\"></span></a>",
-								"verified_at": "2026-05-10T00:52:20.012+00:00"
+								"verified_at": "2026-05-12T10:29:26.604+00:00"
 							},
 							{
 								"name": "Keyoxide",
 								"value": "<a href=\"https://keyoxide.org/6CF8BBBD93FD0A4A748495A12D8ADFDD01E76FAC\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">keyoxide.org/6CF8BBBD93FD0A4A7</span><span class=\"invisible\">48495A12D8ADFDD01E76FAC</span></a>",
-								"verified_at": "2026-05-10T00:52:20.210+00:00"
+								"verified_at": "2026-05-12T10:29:27.009+00:00"
 							},
 							{
 								"name": "Waifu",
@@ -745,7 +2749,7 @@
 							{
 								"name": "Contact",
 								"value": "<a href=\"https://contact.akselmo.dev/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">contact.akselmo.dev/</span><span class=\"invisible\"></span></a>",
-								"verified_at": "2026-05-10T00:52:20.306+00:00"
+								"verified_at": "2026-05-12T10:29:27.140+00:00"
 							},
 							{
 								"name": "Sourcehut",
@@ -806,8 +2810,8 @@
 			"header_description": "",
 			"followers_count": 212,
 			"following_count": 44,
-			"statuses_count": 85,
-			"last_status_at": "2026-05-10",
+			"statuses_count": 88,
+			"last_status_at": "2026-05-11",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -968,7 +2972,7 @@
 			"indexable": true,
 			"group": false,
 			"created_at": "2026-03-16T00:00:00.000Z",
-			"note": "<p>tech: <a href=\"https://mastodon.social/tags/opensource\" class=\"mention hashtag\" rel=\"tag\">#<span>opensource</span></a>, <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a>, <a href=\"https://mastodon.social/tags/linux\" class=\"mention hashtag\" rel=\"tag\">#<span>linux</span></a>, <a href=\"https://mastodon.social/tags/web\" class=\"mention hashtag\" rel=\"tag\">#<span>web</span></a>, <a href=\"https://mastodon.social/tags/infosec\" class=\"mention hashtag\" rel=\"tag\">#<span>infosec</span></a>, <a href=\"https://mastodon.social/tags/ceph\" class=\"mention hashtag\" rel=\"tag\">#<span>ceph</span></a>, and <a href=\"https://mastodon.social/tags/virtualization\" class=\"mention hashtag\" rel=\"tag\">#<span>virtualization</span></a><br />non-tech: <a href=\"https://mastodon.social/tags/retrogaming\" class=\"mention hashtag\" rel=\"tag\">#<span>retrogaming</span></a>, <a href=\"https://mastodon.social/tags/deutsch\" class=\"mention hashtag\" rel=\"tag\">#<span>deutsch</span></a><br />loc: <a href=\"https://mastodon.social/tags/minnesota\" class=\"mention hashtag\" rel=\"tag\">#<span>minnesota</span></a></p>",
+			"note": "<p>tech: <a href=\"https://mastodon.social/tags/opensource\" class=\"mention hashtag\" rel=\"tag\">#<span>opensource</span></a>, <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a>, <a href=\"https://mastodon.social/tags/linux\" class=\"mention hashtag\" rel=\"tag\">#<span>linux</span></a>, <a href=\"https://mastodon.social/tags/web\" class=\"mention hashtag\" rel=\"tag\">#<span>web</span></a>, <a href=\"https://mastodon.social/tags/infosec\" class=\"mention hashtag\" rel=\"tag\">#<span>infosec</span></a>, <a href=\"https://mastodon.social/tags/ceph\" class=\"mention hashtag\" rel=\"tag\">#<span>ceph</span></a>, <a href=\"https://mastodon.social/tags/privacy\" class=\"mention hashtag\" rel=\"tag\">#<span>privacy</span></a>, and <a href=\"https://mastodon.social/tags/virtualization\" class=\"mention hashtag\" rel=\"tag\">#<span>virtualization</span></a><br />non-tech: <a href=\"https://mastodon.social/tags/retrogaming\" class=\"mention hashtag\" rel=\"tag\">#<span>retrogaming</span></a>, <a href=\"https://mastodon.social/tags/deutsch\" class=\"mention hashtag\" rel=\"tag\">#<span>deutsch</span></a></p>",
 			"url": "https://mastodon.social/@nwcs",
 			"uri": "https://mastodon.social/ap/users/116240782458720726",
 			"avatar": "https://files.mastodon.social/accounts/avatars/116/240/782/458/720/726/original/a521fb67b04258fb.png",
@@ -977,9 +2981,9 @@
 			"header": "https://files.mastodon.social/accounts/headers/116/240/782/458/720/726/original/602505e6096daa7d.png",
 			"header_static": "https://files.mastodon.social/accounts/headers/116/240/782/458/720/726/original/602505e6096daa7d.png",
 			"header_description": "Stabby playing with the platform",
-			"followers_count": 24,
+			"followers_count": 25,
 			"following_count": 42,
-			"statuses_count": 101,
+			"statuses_count": 21,
 			"last_status_at": "2026-05-11",
 			"hide_collections": null,
 			"show_media": true,
@@ -1098,8 +3102,8 @@
 			"header_description": "",
 			"followers_count": 10,
 			"following_count": 2,
-			"statuses_count": 2167,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 2214,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1198,8 +3202,8 @@
 			"header_description": "",
 			"followers_count": 407,
 			"following_count": 17,
-			"statuses_count": 1026,
-			"last_status_at": "2026-05-10",
+			"statuses_count": 1027,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1415,7 +3419,7 @@
 			"html": "",
 			"width": 662,
 			"height": 348,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/164/424/038/original/a7842e8cad5e25c3.png",
+			"image": "https://files.mastodon.social/cache/preview_cards/images/164/424/038/original/8b16f9586c941c60.png",
 			"image_description": "",
 			"embed_url": "",
 			"blurhash": "UER{#?IU-;_3~qayRjj[-;%MM{IUt7WBxut7",
@@ -1469,10 +3473,10 @@
 			"header": "https://mastodon.social/headers/original/missing.png",
 			"header_static": "https://mastodon.social/headers/original/missing.png",
 			"header_description": "",
-			"followers_count": 41,
+			"followers_count": 43,
 			"following_count": 1,
-			"statuses_count": 14201,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 14777,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1579,10 +3583,10 @@
 			"header": "https://mastodon.social/headers/original/missing.png",
 			"header_static": "https://mastodon.social/headers/original/missing.png",
 			"header_description": "",
-			"followers_count": 41,
+			"followers_count": 43,
 			"following_count": 1,
-			"statuses_count": 14201,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 14777,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1691,8 +3695,8 @@
 			"header_description": "",
 			"followers_count": 2169,
 			"following_count": 1,
-			"statuses_count": 6061,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 6069,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1707,7 +3711,7 @@
 				{
 					"name": "Website",
 					"value": "<a href=\"https://jobsfordevelopers.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">jobsfordevelopers.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-11T00:19:50.215+00:00"
+					"verified_at": "2026-05-12T10:09:10.299+00:00"
 				},
 				{
 					"name": "Created by",
@@ -1846,10 +3850,10 @@
 			"header": "https://files.mastodon.social/cache/accounts/headers/108/198/471/570/044/426/original/e22c02053cbb6732.jpg",
 			"header_static": "https://files.mastodon.social/cache/accounts/headers/108/198/471/570/044/426/original/e22c02053cbb6732.jpg",
 			"header_description": "",
-			"followers_count": 848,
-			"following_count": 848,
-			"statuses_count": 248,
-			"last_status_at": "2026-05-10",
+			"followers_count": 853,
+			"following_count": 851,
+			"statuses_count": 245,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -1864,7 +3868,7 @@
 				{
 					"name": "Blog",
 					"value": "<a href=\"https://blainsmith.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">blainsmith.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T17:27:49.432+00:00"
+					"verified_at": "2026-05-12T04:21:24.197+00:00"
 				},
 				{
 					"name": "Co-op",
@@ -1963,8 +3967,8 @@
 			"header_description": "",
 			"followers_count": 2,
 			"following_count": 0,
-			"statuses_count": 47,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 100,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2055,8 +4059,8 @@
 			"header_description": "",
 			"followers_count": 12,
 			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 311,
+			"last_status_at": "2026-05-12",
 			"hide_collections": true,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2160,8 +4164,8 @@
 			"header_description": "",
 			"followers_count": 649,
 			"following_count": 1530,
-			"statuses_count": 3802,
-			"last_status_at": "2026-05-10",
+			"statuses_count": 3811,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2445,10 +4449,10 @@
 			"header": "https://mastodon.social/headers/original/missing.png",
 			"header_static": "https://mastodon.social/headers/original/missing.png",
 			"header_description": "",
-			"followers_count": 41,
+			"followers_count": 43,
 			"following_count": 1,
-			"statuses_count": 14201,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 14777,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2557,8 +4561,8 @@
 			"header_description": "",
 			"followers_count": 2169,
 			"following_count": 1,
-			"statuses_count": 6061,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 6069,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2573,7 +4577,7 @@
 				{
 					"name": "Website",
 					"value": "<a href=\"https://jobsfordevelopers.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">jobsfordevelopers.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-11T00:19:50.215+00:00"
+					"verified_at": "2026-05-12T10:09:10.299+00:00"
 				},
 				{
 					"name": "Created by",
@@ -2721,7 +4725,7 @@
 			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/370/997/192/790/929/original/be70da4b44526601.png",
 			"header_description": "",
 			"followers_count": 1102,
-			"following_count": 4633,
+			"following_count": 4635,
 			"statuses_count": 1395,
 			"last_status_at": "2026-05-10",
 			"hide_collections": true,
@@ -2920,10 +4924,10 @@
 			"header": "https://mastodon.social/headers/original/missing.png",
 			"header_static": "https://mastodon.social/headers/original/missing.png",
 			"header_description": "",
-			"followers_count": 41,
+			"followers_count": 43,
 			"following_count": 1,
-			"statuses_count": 14201,
-			"last_status_at": "2026-05-11",
+			"statuses_count": 14777,
+			"last_status_at": "2026-05-12",
 			"hide_collections": false,
 			"show_media": true,
 			"show_media_replies": true,
@@ -2988,1982 +4992,6 @@
 					"account": null
 				}
 			]
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116545793173232544",
-		"created_at": "2026-05-09T17:24:19.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": null,
-		"uri": "https://robot.villas/users/lobsters/posts/22189662",
-		"url": "https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h",
-		"replies_count": 0,
-		"reblogs_count": 2,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Yggdrasil Network as an Embedded Go Library</p><p><a href=\"https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h\" rel=\"nofollow noopener\" target=\"_blank\">https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h</a></p><p><a href=\"https://robot.villas/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a> <a href=\"https://robot.villas/tags/networking\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Networking</span></a> <a href=\"https://robot.villas/tags/opensource\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>OpenSource</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "116121069090769607",
-			"username": "lobsters",
-			"acct": "lobsters@robot.villas",
-			"display_name": "Lobsters",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": false,
-			"group": false,
-			"created_at": "2026-02-23T00:00:00.000Z",
-			"note": "<p>Stories from Lobsters <a href=\"https://robot.villas/@lobsters\" rel=\"nofollow noopener\" target=\"_blank\">See old posts.</a></p><p>I am a bot that mirrors an RSS feed. Source: <a href=\"https://lobste.rs/rss\" rel=\"nofollow noopener\" target=\"_blank\">https://lobste.rs/rss</a></p>",
-			"url": "https://robot.villas/@lobsters",
-			"uri": "https://robot.villas/users/lobsters",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/116/121/069/090/769/607/original/bcec3e4cabba3124.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/116/121/069/090/769/607/original/bcec3e4cabba3124.png",
-			"avatar_description": "",
-			"header": "https://mastodon.social/headers/original/missing.png",
-			"header_static": "https://mastodon.social/headers/original/missing.png",
-			"header_description": "",
-			"followers_count": 10,
-			"following_count": 2,
-			"statuses_count": 2167,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": []
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			},
-			{
-				"name": "networking",
-				"url": "https://mastodon.social/tags/networking"
-			},
-			{
-				"name": "opensource",
-				"url": "https://mastodon.social/tags/opensource"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h",
-			"title": "Yggdrasil Network as an Embedded GO Library",
-			"description": "Yggdrasil is an experimental overlay IPv6 mesh network. In short, it lets you build a \"network on top...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "DEV Community",
-			"provider_url": "",
-			"html": "",
-			"width": 664,
-			"height": 347,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/273/668/original/2b3a312e4b18a8ee.webp",
-			"image_description": "",
-			"embed_url": "",
-			"blurhash": "U43I;akCD4V@xvj[M{aenijtWqayR*ayofj[",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116545615496718921",
-		"created_at": "2026-05-09T16:42:43.030Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.social/users/weaselshit/statuses/116545615496718921",
-		"url": "https://mastodon.social/@weaselshit/116545615496718921",
-		"replies_count": 1,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>As an excercise, made <a href=\"https://mastodon.social/tags/opencode\" class=\"mention hashtag\" rel=\"tag\">#<span>opencode</span></a> slop together a basic <a href=\"https://mastodon.social/tags/SvelteKit\" class=\"mention hashtag\" rel=\"tag\">#<span>SvelteKit</span></a> frontend (and <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> middleware) for miniflux.</p><p>Lost interest as soon as it got to somewhat usable state. Wondering if it&#39;s a me problem.</p><p>Annoyed that I haven&#39;t learnt anything through this experience. Delighted by how base scaffolding kinda just appeared. </p><p>Terrified by a thought that eventually we (the people) will start talking to each other the way we have to talk to LLMs.</p><p>At least I gave it a cool name, huh?</p>",
-		"reblog": null,
-		"application": {
-			"name": "Web",
-			"website": null
-		},
-		"account": {
-			"id": "109514895249569157",
-			"username": "weaselshit",
-			"acct": "weaselshit",
-			"display_name": "Freddie Weaselshit",
-			"locked": false,
-			"bot": false,
-			"discoverable": true,
-			"indexable": true,
-			"group": false,
-			"created_at": "2022-12-15T00:00:00.000Z",
-			"note": "<p>I name things and invalidate caches. Also talk to rubber ducks. I choose not to quit Vim.</p><p>A linux geek for almost 30 years now. Self-hosting enthusiast. All things federated.</p><p>At some point a chef. Getting back into tech again.</p><p>Not good at this whole &quot;social&quot; thing. Lazy poster, too.</p><p>Nerd power! Geek pride. 🖖</p>",
-			"url": "https://mastodon.social/@weaselshit",
-			"uri": "https://mastodon.social/users/weaselshit",
-			"avatar": "https://files.mastodon.social/accounts/avatars/109/514/895/249/569/157/original/7be6c66e1a687de6.jpg",
-			"avatar_static": "https://files.mastodon.social/accounts/avatars/109/514/895/249/569/157/original/7be6c66e1a687de6.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/accounts/headers/109/514/895/249/569/157/original/338edc47161a2404.jpg",
-			"header_static": "https://files.mastodon.social/accounts/headers/109/514/895/249/569/157/original/338edc47161a2404.jpg",
-			"header_description": "",
-			"followers_count": 4,
-			"following_count": 49,
-			"statuses_count": 39,
-			"last_status_at": "2026-05-09",
-			"hide_collections": null,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": false,
-			"noindex": false,
-			"feature_approval": {
-				"automatic": [
-					"public"
-				],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"roles": [],
-			"fields": [
-				{
-					"name": "Location",
-					"value": "Bangkok, Thailand",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "opencode",
-				"url": "https://mastodon.social/tags/opencode"
-			},
-			{
-				"name": "sveltekit",
-				"url": "https://mastodon.social/tags/sveltekit"
-			},
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116545472209363626",
-		"created_at": "2026-05-09T16:06:16.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://social.ostendorf.com/ap/users/116541101362935908/statuses/116545472200460490",
-		"url": "https://social.ostendorf.com/@karl/116545472200460490",
-		"replies_count": 0,
-		"reblogs_count": 3,
-		"favourites_count": 3,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Hi, I'm Karl Ostendorf — software developer in Osnabrück, Germany, originally from Chicago via 20 years in the German countryside.</p><p>Into <a href=\"https://social.ostendorf.com/tags/SelfHosting\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>SelfHosting</span></a>, <a href=\"https://social.ostendorf.com/tags/OpenSource\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>OpenSource</span></a> tooling, European-hosted infrastructure, and building things that stay understandable over time.</p><p>Currently tinkering with <a href=\"https://social.ostendorf.com/tags/Golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Golang</span></a>, <a href=\"https://social.ostendorf.com/tags/TypeScript\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>TypeScript</span></a>, <a href=\"https://social.ostendorf.com/tags/RSS\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>RSS</span></a>, and Jellyfin/ffmpeg.</p><p>Day job: software engineer at a hyperscaler. Before that: 10 years freelance — an experience I'd wish on every dev.</p><p><a href=\"https://social.ostendorf.com/tags/introduction\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>introduction</span></a> 👋</p>",
-		"reblog": null,
-		"account": {
-			"id": "116544171048337331",
-			"username": "karl",
-			"acct": "karl@ostendorf.com",
-			"display_name": "Karl Ostendorf",
-			"locked": false,
-			"bot": false,
-			"discoverable": true,
-			"indexable": true,
-			"group": false,
-			"created_at": "2026-05-08T00:00:00.000Z",
-			"note": "<p>Software engineer in Osnabrück, Germany. By day I work at a cloud computing provider; before that, a decade of freelancing across the US and Germany.</p><p><a href=\"https://social.ostendorf.com/tags/ClassicLiberal\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ClassicLiberal</span></a> <a href=\"https://social.ostendorf.com/tags/FreeMarkets\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>FreeMarkets</span></a> <a href=\"https://social.ostendorf.com/tags/Eigenverantwortung\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Eigenverantwortung</span></a> Digital <a href=\"https://social.ostendorf.com/tags/Sovereignty\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Sovereignty</span></a></p>",
-			"url": "https://social.ostendorf.com/@karl",
-			"uri": "https://social.ostendorf.com/ap/users/116541101362935908",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/116/544/171/048/337/331/original/8ef62aa2b55aa73b.jpg",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/116/544/171/048/337/331/original/8ef62aa2b55aa73b.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/116/544/171/048/337/331/original/5803e71e9c166330.jpg",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/116/544/171/048/337/331/original/5803e71e9c166330.jpg",
-			"header_description": "",
-			"followers_count": 8,
-			"following_count": 42,
-			"statuses_count": 7,
-			"last_status_at": "2026-05-10",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Website",
-					"value": "<a href=\"https://ostendorf.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">ostendorf.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T21:51:39.091+00:00"
-				},
-				{
-					"name": "Location",
-					"value": "Osnabrück, Germany",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "selfhosting",
-				"url": "https://mastodon.social/tags/selfhosting"
-			},
-			{
-				"name": "opensource",
-				"url": "https://mastodon.social/tags/opensource"
-			},
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			},
-			{
-				"name": "typescript",
-				"url": "https://mastodon.social/tags/typescript"
-			},
-			{
-				"name": "rss",
-				"url": "https://mastodon.social/tags/rss"
-			},
-			{
-				"name": "introduction",
-				"url": "https://mastodon.social/tags/introduction"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116545468357308827",
-		"created_at": "2026-05-09T16:05:17.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.world/users/jobsfordevelopers/statuses/116545468335072904",
-		"url": "https://mastodon.world/@jobsfordevelopers/116545468335072904",
-		"replies_count": 0,
-		"reblogs_count": 15,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Blockchain.com is hiring Infrastructure Security Engineer</p><p>🔧 <a href=\"https://mastodon.world/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> <a href=\"https://mastodon.world/tags/python\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>python</span></a> <a href=\"https://mastodon.world/tags/android\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>android</span></a> <a href=\"https://mastodon.world/tags/ios\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>ios</span></a> <a href=\"https://mastodon.world/tags/aws\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>aws</span></a> <a href=\"https://mastodon.world/tags/cicd\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>cicd</span></a> <a href=\"https://mastodon.world/tags/gcp\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>gcp</span></a> <a href=\"https://mastodon.world/tags/terraform\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>terraform</span></a> <a href=\"https://mastodon.world/tags/securityengineer\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>securityengineer</span></a><br>🌎 London, United Kingdom<br>⏰ Full-time<br>🏢 Blockchain.com</p><p>Job details <a href=\"https://jobsfordevelopers.com/jobs/infrastructure-security-engineer-at-blockchain-com-apr-8-2026-53f64d?utm_source=mastodon.world&amp;utm_medium=social&amp;utm_campaign=posting\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">jobsfordevelopers.com/jobs/inf</span><span class=\"invisible\">rastructure-security-engineer-at-blockchain-com-apr-8-2026-53f64d?utm_source=mastodon.world&amp;utm_medium=social&amp;utm_campaign=posting</span></a><br><a href=\"https://mastodon.world/tags/jobalert\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>jobalert</span></a> <a href=\"https://mastodon.world/tags/jobsearch\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>jobsearch</span></a> <a href=\"https://mastodon.world/tags/hiring\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>hiring</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "109551083434478864",
-			"username": "jobsfordevelopers",
-			"acct": "jobsfordevelopers@mastodon.world",
-			"display_name": "Jobs for Developers",
-			"locked": false,
-			"bot": true,
-			"discoverable": true,
-			"indexable": false,
-			"group": false,
-			"created_at": "2022-12-19T00:00:00.000Z",
-			"note": "<p>Jobs for software engineers is a job board for developers around the globe. Tooting new job opportunities daily.</p>",
-			"url": "https://mastodon.world/@jobsfordevelopers",
-			"uri": "https://mastodon.world/users/jobsfordevelopers",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/109/551/083/434/478/864/original/79da63dfea760dfe.jpg",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/109/551/083/434/478/864/original/79da63dfea760dfe.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/109/551/083/434/478/864/original/a6ed6dfe699570e4.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/109/551/083/434/478/864/original/a6ed6dfe699570e4.png",
-			"header_description": "",
-			"followers_count": 2169,
-			"following_count": 1,
-			"statuses_count": 6061,
-			"last_status_at": "2026-05-11",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Website",
-					"value": "<a href=\"https://jobsfordevelopers.com\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">jobsfordevelopers.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-11T00:19:50.215+00:00"
-				},
-				{
-					"name": "Created by",
-					"value": "<span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.world/@janlavicka\" class=\"u-url mention\" rel=\"nofollow noopener\" target=\"_blank\">@<span>janlavicka</span></a></span>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			},
-			{
-				"name": "python",
-				"url": "https://mastodon.social/tags/python"
-			},
-			{
-				"name": "android",
-				"url": "https://mastodon.social/tags/android"
-			},
-			{
-				"name": "iOS",
-				"url": "https://mastodon.social/tags/iOS"
-			},
-			{
-				"name": "aws",
-				"url": "https://mastodon.social/tags/aws"
-			},
-			{
-				"name": "cicd",
-				"url": "https://mastodon.social/tags/cicd"
-			},
-			{
-				"name": "gcp",
-				"url": "https://mastodon.social/tags/gcp"
-			},
-			{
-				"name": "terraform",
-				"url": "https://mastodon.social/tags/terraform"
-			},
-			{
-				"name": "securityengineer",
-				"url": "https://mastodon.social/tags/securityengineer"
-			},
-			{
-				"name": "jobalert",
-				"url": "https://mastodon.social/tags/jobalert"
-			},
-			{
-				"name": "jobsearch",
-				"url": "https://mastodon.social/tags/jobsearch"
-			},
-			{
-				"name": "hiring",
-				"url": "https://mastodon.social/tags/hiring"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://jobsfordevelopers.com/jobs/infrastructure-security-engineer-at-blockchain-com-apr-8-2026-53f64d?utm_source=mastodon.world&utm_medium=social&utm_campaign=posting",
-			"title": "Infrastructure Security Engineer at Blockchain.com",
-			"description": "Blockchain.com is hiring Infrastructure Security Engineer",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "",
-			"provider_url": "",
-			"html": "",
-			"width": 640,
-			"height": 360,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/267/090/original/4a81b03db04f74b7.png",
-			"image_description": "",
-			"embed_url": "",
-			"blurhash": "UBR{.9M|?b-=xuRjayj[~qoI9FjY-;M{Rjt8",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116545408726674121",
-		"created_at": "2026-05-09T15:50:07.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116545408674912919",
-		"url": "https://goark.fedicity.net/@goark/116545408674912919",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v0.5.3 · goark/fetch<br><a href=\"https://github.com/goark/fetch/releases/tag/v0.5.3\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/fetch/release</span><span class=\"invisible\">s/tag/v0.5.3</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/goark/fetch/releases/tag/v0.5.3",
-			"title": "Release v0.5.3 · goark/fetch",
-			"description": "What's Changed\n\nrefactor: use local body variables in response handling by @spiegel-im-spiegel in #14\ndocs: improve API comments and update copyright years by @spiegel-im-spiegel in #15\n\nFull Chang...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/265/950/original/634677c07fd97b0b.png",
-			"image_description": "What's Changed\n\nrefactor: use local body variables in response handling by @spiegel-im-spiegel in #14\ndocs: improve API comments and update copyright years by @spiegel-im-spiegel in #15\n\nFull Chang...",
-			"embed_url": "",
-			"blurhash": "UTRy$,xvIUt7-TxuRiofNeWVoLWB~VRixufQ",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116544465174427520",
-		"created_at": "2026-05-09T11:50:10.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116544465143172124",
-		"url": "https://goark.fedicity.net/@goark/116544465143172124",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v0.5.2 · goark/fetch<br><a href=\"https://github.com/goark/fetch/releases/tag/v0.5.2\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/fetch/release</span><span class=\"invisible\">s/tag/v0.5.2</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/goark/fetch/releases/tag/v0.5.2",
-			"title": "Release v0.5.2 · goark/fetch",
-			"description": "What's Changed\n\nchore: refresh docs and workflows by @spiegel-im-spiegel in #11\nfix: harden request error handling by @spiegel-im-spiegel in #12\ntest: remove network dependencies and extend coverag...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/246/683/original/c49b4fe6b703506b.png",
-			"image_description": "What's Changed\n\nchore: refresh docs and workflows by @spiegel-im-spiegel in #11\nfix: harden request error handling by @spiegel-im-spiegel in #12\ntest: remove network dependencies and extend coverag...",
-			"embed_url": "",
-			"blurhash": "UUR:NXxvIUt7-TxuRiofJBWBj[ay~VRjxuay",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116544465011726363",
-		"created_at": "2026-05-09T11:50:07.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116544464977681942",
-		"url": "https://goark.fedicity.net/@goark/116544464977681942",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release zapobject/v0.1.5 · goark/errs<br><a href=\"https://github.com/goark/errs/releases/tag/zapobject%2Fv0.1.5\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/errs/releases</span><span class=\"invisible\">/tag/zapobject%2Fv0.1.5</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/goark/errs/releases/tag/zapobject%2Fv0.1.5",
-			"title": "Release zapobject/v0.1.5 · goark/errs",
-			"description": "What's Changed\n\nPrefer auto-generated release notes in release process by @spiegel-im-spiegel in #37\nUpdate goark/errs dependency to version 1.3.4 by @spiegel-im-spiegel in #38\n\nFull Changelog: v1....",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/246/684/original/cc4477849cf382cc.png",
-			"image_description": "What's Changed\n\nPrefer auto-generated release notes in release process by @spiegel-im-spiegel in #37\nUpdate goark/errs dependency to version 1.3.4 by @spiegel-im-spiegel in #38\n\nFull Changelog: v1....",
-			"embed_url": "",
-			"blurhash": "UVR:NX%MM_xu$$t8M{ofIqRjofay~VRjxbWB",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116543982187810567",
-		"created_at": "2026-05-09T09:47:20.714Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.social/users/golangch/statuses/116543982187810567",
-		"url": "https://mastodon.social/@golangch/116543982187810567",
-		"replies_count": 1,
-		"reblogs_count": 1,
-		"favourites_count": 1,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>A nice article about &quot;The M:N Concurrent Model — A Complete Guide. From First Principles to Production Schedulers&quot;<br /><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> and others...</p><p><a href=\"https://0xkiire.com/mn-concurrency-model/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">0xkiire.com/mn-concurrency-mod</span><span class=\"invisible\">el/</span></a></p>",
-		"reblog": null,
-		"application": {
-			"name": "Typefully",
-			"website": "https://typefully.com"
-		},
-		"account": {
-			"id": "109245066852118033",
-			"username": "golangch",
-			"acct": "golangch",
-			"display_name": "Golang News and Libraries",
-			"locked": false,
-			"bot": false,
-			"discoverable": false,
-			"indexable": false,
-			"group": false,
-			"created_at": "2022-10-28T00:00:00.000Z",
-			"note": "<p>For now I re-post my tweets from <a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a> <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/gopher\" class=\"mention hashtag\" rel=\"tag\">#<span>gopher</span></a> account with over 30k followers</p><p><a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a></p>",
-			"url": "https://mastodon.social/@golangch",
-			"uri": "https://mastodon.social/users/golangch",
-			"avatar": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_static": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_static": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_description": "",
-			"followers_count": 339,
-			"following_count": 1,
-			"statuses_count": 1335,
-			"last_status_at": "2026-05-09",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"noindex": false,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"roles": [],
-			"fields": [
-				{
-					"name": "Twitter",
-					"value": "<a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Page",
-					"value": "<a href=\"https://golang.ch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golang.ch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Jobs",
-					"value": "<a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Fullstack Developer",
-					"value": "<a href=\"https://altafino.com\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">altafino.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [
-			{
-				"id": "116543982133700660",
-				"type": "image",
-				"url": "https://files.mastodon.social/media_attachments/files/116/543/982/133/700/660/original/8731da3fc59abfe4.png",
-				"preview_url": "https://files.mastodon.social/media_attachments/files/116/543/982/133/700/660/small/8731da3fc59abfe4.png",
-				"remote_url": null,
-				"preview_remote_url": null,
-				"text_url": null,
-				"meta": {
-					"original": {
-						"width": 542,
-						"height": 705,
-						"size": "542x705",
-						"aspect": 0.7687943262411348
-					},
-					"small": {
-						"width": 421,
-						"height": 547,
-						"size": "421x547",
-						"aspect": 0.7696526508226691
-					}
-				},
-				"description": null,
-				"blurhash": "U23]Ar%iMaob-:s.M{WB-:t7M{ay-:t7M{a#"
-			}
-		],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116543974937939452",
-		"created_at": "2026-05-09T09:45:30.089Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.social/users/golangch/statuses/116543974937939452",
-		"url": "https://mastodon.social/@golangch/116543974937939452",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>A real-time PostgreSQL WAL reader built in Go. Captures every INSERT, UPDATE, and DELETE from your Postgres database as it happens<br /><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a></p><p><a href=\"https://github.com/mujib77/pgstream\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/mujib77/pgstream</span><span class=\"invisible\"></span></a></p>",
-		"reblog": null,
-		"application": {
-			"name": "Typefully",
-			"website": "https://typefully.com"
-		},
-		"account": {
-			"id": "109245066852118033",
-			"username": "golangch",
-			"acct": "golangch",
-			"display_name": "Golang News and Libraries",
-			"locked": false,
-			"bot": false,
-			"discoverable": false,
-			"indexable": false,
-			"group": false,
-			"created_at": "2022-10-28T00:00:00.000Z",
-			"note": "<p>For now I re-post my tweets from <a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a> <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/gopher\" class=\"mention hashtag\" rel=\"tag\">#<span>gopher</span></a> account with over 30k followers</p><p><a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a></p>",
-			"url": "https://mastodon.social/@golangch",
-			"uri": "https://mastodon.social/users/golangch",
-			"avatar": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_static": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_static": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_description": "",
-			"followers_count": 339,
-			"following_count": 1,
-			"statuses_count": 1335,
-			"last_status_at": "2026-05-09",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"noindex": false,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"roles": [],
-			"fields": [
-				{
-					"name": "Twitter",
-					"value": "<a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Page",
-					"value": "<a href=\"https://golang.ch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golang.ch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Jobs",
-					"value": "<a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Fullstack Developer",
-					"value": "<a href=\"https://altafino.com\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">altafino.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116543843067772180",
-		"created_at": "2026-05-09T09:11:57.908Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.social/users/golangch/statuses/116543843067772180",
-		"url": "https://mastodon.social/@golangch/116543843067772180",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Moving step by step from a simple hash table to a “swiss table” — the design behind Go’s new map implementation<br /><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a></p><p><a href=\"https://philpearl.github.io/post/swissing_a_table/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">philpearl.github.io/post/swiss</span><span class=\"invisible\">ing_a_table/</span></a></p>",
-		"reblog": null,
-		"application": {
-			"name": "Typefully",
-			"website": "https://typefully.com"
-		},
-		"account": {
-			"id": "109245066852118033",
-			"username": "golangch",
-			"acct": "golangch",
-			"display_name": "Golang News and Libraries",
-			"locked": false,
-			"bot": false,
-			"discoverable": false,
-			"indexable": false,
-			"group": false,
-			"created_at": "2022-10-28T00:00:00.000Z",
-			"note": "<p>For now I re-post my tweets from <a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a> <a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/gopher\" class=\"mention hashtag\" rel=\"tag\">#<span>gopher</span></a> account with over 30k followers</p><p><a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a></p>",
-			"url": "https://mastodon.social/@golangch",
-			"uri": "https://mastodon.social/users/golangch",
-			"avatar": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_static": "https://files.mastodon.social/accounts/avatars/109/245/066/852/118/033/original/91459b997bfc649a.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_static": "https://files.mastodon.social/accounts/headers/109/245/066/852/118/033/original/ef960a8162800cb5.jpeg",
-			"header_description": "",
-			"followers_count": 339,
-			"following_count": 1,
-			"statuses_count": 1335,
-			"last_status_at": "2026-05-09",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"noindex": false,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"roles": [],
-			"fields": [
-				{
-					"name": "Twitter",
-					"value": "<a href=\"https://twitter.com/golangch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">twitter.com/golangch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Page",
-					"value": "<a href=\"https://golang.ch\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golang.ch</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Golang Jobs",
-					"value": "<a href=\"https://golangjob.xyz\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">golangjob.xyz</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "Fullstack Developer",
-					"value": "<a href=\"https://altafino.com\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">altafino.com</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [
-			{
-				"id": "116543843032818760",
-				"type": "image",
-				"url": "https://files.mastodon.social/media_attachments/files/116/543/843/032/818/760/original/e004e8be6d88b466.png",
-				"preview_url": "https://files.mastodon.social/media_attachments/files/116/543/843/032/818/760/small/e004e8be6d88b466.png",
-				"remote_url": null,
-				"preview_remote_url": null,
-				"text_url": null,
-				"meta": {
-					"original": {
-						"width": 807,
-						"height": 516,
-						"size": "807x516",
-						"aspect": 1.563953488372093
-					},
-					"small": {
-						"width": 600,
-						"height": 384,
-						"size": "600x384",
-						"aspect": 1.5625
-					}
-				},
-				"description": null,
-				"blurhash": "U3S6Pl_39F?b~qxu-;%MayWBxut7~qof%Mxu"
-			}
-		],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116543796436041706",
-		"created_at": "2026-05-09T09:00:06.377Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.social/users/preslavrachev/statuses/116543796436041706",
-		"url": "https://mastodon.social/@preslavrachev/116543796436041706",
-		"replies_count": 0,
-		"reblogs_count": 2,
-		"favourites_count": 9,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Except for the very, very explicit language in this article, this is exactly how I feel about Go: <a href=\"https://blainsmith.com/articles/just-fucking-use-go/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blainsmith.com/articles/just-f</span><span class=\"invisible\">ucking-use-go/</span></a> </p><p>Oh, and the added benefit is that AI agents usually write the same Go code that I would, because, you know, the language is dumb and boring (in a great way).</p><p><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a></p>",
-		"reblog": null,
-		"application": {
-			"name": "Buffer",
-			"website": "https://buffer.com"
-		},
-		"account": {
-			"id": "3656",
-			"username": "preslavrachev",
-			"acct": "preslavrachev",
-			"display_name": "Preslav Rachev",
-			"locked": false,
-			"bot": false,
-			"discoverable": true,
-			"indexable": true,
-			"group": false,
-			"created_at": "2016-10-06T00:00:00.000Z",
-			"note": "<p>Creator of <span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.social/@murmel_social\" class=\"u-url mention\">@<span>murmel_social</span></a></span>, <span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.social/@feedle\" class=\"u-url mention\">@<span>feedle</span></a></span> and other tools that help you cut doomscrolling. A firm believer in the Open Web, and the power of critical thinking.</p>",
-			"url": "https://mastodon.social/@preslavrachev",
-			"uri": "https://mastodon.social/users/preslavrachev",
-			"avatar": "https://files.mastodon.social/accounts/avatars/000/003/656/original/fbdf7aa6e48525de.jpeg",
-			"avatar_static": "https://files.mastodon.social/accounts/avatars/000/003/656/original/fbdf7aa6e48525de.jpeg",
-			"avatar_description": "",
-			"header": "https://mastodon.social/headers/original/missing.png",
-			"header_static": "https://mastodon.social/headers/original/missing.png",
-			"header_description": "",
-			"followers_count": 1155,
-			"following_count": 598,
-			"statuses_count": 3452,
-			"last_status_at": "2026-05-09",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"noindex": false,
-			"feature_approval": {
-				"automatic": [
-					"public"
-				],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"roles": [],
-			"fields": [
-				{
-					"name": "🏡 My home on the Internet.",
-					"value": "<a href=\"https://preslav.me\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">preslav.me</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2022-11-20T17:33:21.515+00:00"
-				},
-				{
-					"name": "Discover new people through RSS feeds.",
-					"value": "<a href=\"https://feedle.world/\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">feedle.world/</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				},
-				{
-					"name": "The best of your Fediverse-world in one email a day.",
-					"value": "<a href=\"https://murmel.social\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">murmel.social</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://blainsmith.com/articles/just-fucking-use-go/",
-			"title": "Just Fucking Use Go - Blain Smith",
-			"description": "",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "",
-			"provider_url": "",
-			"html": "",
-			"width": 0,
-			"height": 0,
-			"image": null,
-			"image_description": "",
-			"embed_url": "",
-			"blurhash": null,
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116543521216551861",
-		"created_at": "2026-05-09T07:50:05.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116543521114017804",
-		"url": "https://goark.fedicity.net/@goark/116543521114017804",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> Release v1.3.4 · goark/errs<br><a href=\"https://github.com/goark/errs/releases/tag/v1.3.4\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goark/errs/releases</span><span class=\"invisible\">/tag/v1.3.4</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/goark/errs/releases/tag/v1.3.4",
-			"title": "Release v1.3.4 · goark/errs",
-			"description": "Release v1.3.4\nIncluded pull requests:\n\n#36 Clarify concurrency semantics and polish docs/examples\n#35 Clarify errs.Join nil behavior and update zap example\n#34 Fix nil Err handling and zap context...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/229/098/original/db3aff8b4bb314c0.png",
-			"image_description": "Release v1.3.4\nIncluded pull requests:\n\n#36 Clarify concurrency semantics and polish docs/examples\n#35 Clarify errs.Join nil behavior and update zap example\n#34 Fix nil Err handling and zap context...",
-			"embed_url": "",
-			"blurhash": "URR:Qf%MITt7-UxvM{ofI?R*oLay~VM{xufQ",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116542741301192414",
-		"created_at": "2026-05-09T04:31:46.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://fosstodon.org/users/pez23/statuses/116542741335533599",
-		"url": "https://fosstodon.org/@pez23/116542741335533599",
-		"replies_count": 0,
-		"reblogs_count": 1,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p class=\"quote-inline\">RE: <a href=\"https://mastodon.social/@lobsters/116539097935458817\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">mastodon.social/@lobsters/1165</span><span class=\"invisible\">39097935458817</span></a></p><p>Good job, Simpson! Although that's more cursing... than I like to hear from a cadet in peacetime. </p><p><a href=\"https://fosstodon.org/tags/go\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>go</span></a> <a href=\"https://fosstodon.org/tags/GoLang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a> <a href=\"https://fosstodon.org/tags/opinion\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>opinion</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "110495710116847983",
-			"username": "pez23",
-			"acct": "pez23@fosstodon.org",
-			"display_name": "pez23",
-			"locked": false,
-			"bot": false,
-			"discoverable": false,
-			"indexable": false,
-			"group": false,
-			"created_at": "2023-06-06T00:00:00.000Z",
-			"note": "<p>I'm a Colorado native raising a family in the mountains. I'm a software engineer by trade, focusing on Architecture, APIs, Data, and Platforms. I use as much Free Software as I can every day. Away from the screens my passions are reading, gaming, cooking, and music. I advocate for community, freedom, and diversity. I am an ally.</p>",
-			"url": "https://fosstodon.org/@pez23",
-			"uri": "https://fosstodon.org/users/pez23",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/110/495/710/116/847/983/original/51b4bf1d6590f835.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/110/495/710/116/847/983/original/51b4bf1d6590f835.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/110/495/710/116/847/983/original/69b5f850e39683ae.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/110/495/710/116/847/983/original/69b5f850e39683ae.png",
-			"header_description": "",
-			"followers_count": 28,
-			"following_count": 178,
-			"statuses_count": 544,
-			"last_status_at": "2026-05-09",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Pronouns",
-					"value": "he / him",
-					"verified_at": null
-				},
-				{
-					"name": "Bookwyrm",
-					"value": "<a href=\"https://bookwyrm.social/user/cjmf\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"\">bookwyrm.social/user/cjmf</span><span class=\"invisible\"></span></a>",
-					"verified_at": null
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "go",
-				"url": "https://mastodon.social/tags/go"
-			},
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			},
-			{
-				"name": "opinion",
-				"url": "https://mastodon.social/tags/opinion"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": {
-			"state": "accepted",
-			"quoted_status": {
-				"id": "116539097935458817",
-				"created_at": "2026-05-08T13:05:12.939Z",
-				"in_reply_to_id": null,
-				"in_reply_to_account_id": null,
-				"sensitive": false,
-				"spoiler_text": "",
-				"visibility": "public",
-				"language": "en",
-				"uri": "https://mastodon.social/users/lobsters/statuses/116539097935458817",
-				"url": "https://mastodon.social/@lobsters/116539097935458817",
-				"replies_count": 2,
-				"reblogs_count": 1,
-				"favourites_count": 2,
-				"quotes_count": 1,
-				"edited_at": null,
-				"content": "<p>Just Fucking Use Go - Blain Smith  <a href=\"https://lobste.rs/s/znlkib\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">lobste.rs/s/znlkib</span><span class=\"invisible\"></span></a> <a href=\"https://mastodon.social/tags/go\" class=\"mention hashtag\" rel=\"tag\">#<span>go</span></a><br /><a href=\"https://blainsmith.com/articles/just-fucking-use-go/\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blainsmith.com/articles/just-f</span><span class=\"invisible\">ucking-use-go/</span></a></p>",
-				"reblog": null,
-				"account": {
-					"id": "113635103853964473",
-					"username": "lobsters",
-					"acct": "lobsters",
-					"display_name": "Lobsters",
-					"locked": false,
-					"bot": true,
-					"discoverable": true,
-					"indexable": true,
-					"group": false,
-					"created_at": "2024-12-11T00:00:00.000Z",
-					"note": "<p>Feed for stories that have reached the front page of lobste.rs.</p>",
-					"url": "https://mastodon.social/@lobsters",
-					"uri": "https://mastodon.social/users/lobsters",
-					"avatar": "https://files.mastodon.social/accounts/avatars/113/635/103/853/964/473/original/0a4435eaf8d5c473.png",
-					"avatar_static": "https://files.mastodon.social/accounts/avatars/113/635/103/853/964/473/original/0a4435eaf8d5c473.png",
-					"avatar_description": "",
-					"header": "https://mastodon.social/headers/original/missing.png",
-					"header_static": "https://mastodon.social/headers/original/missing.png",
-					"header_description": "",
-					"followers_count": 3792,
-					"following_count": 20,
-					"statuses_count": 14116,
-					"last_status_at": "2026-05-11",
-					"hide_collections": false,
-					"show_media": true,
-					"show_media_replies": true,
-					"show_featured": true,
-					"noindex": false,
-					"feature_approval": {
-						"automatic": [
-							"public"
-						],
-						"manual": [],
-						"current_user": "denied"
-					},
-					"emojis": [],
-					"roles": [],
-					"fields": [
-						{
-							"name": "Lobsters",
-							"value": "<a href=\"https://lobste.rs\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">lobste.rs</span><span class=\"invisible\"></span></a>",
-							"verified_at": null
-						},
-						{
-							"name": "Source code",
-							"value": "<a href=\"https://github.com/lobsters/lobsters\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/lobsters/lobsters</span><span class=\"invisible\"></span></a> in extras/mastodon.rb, script/mastodon*",
-							"verified_at": null
-						},
-						{
-							"name": "Maintainer",
-							"value": "peter at push.cx",
-							"verified_at": null
-						}
-					]
-				},
-				"media_attachments": [],
-				"mentions": [],
-				"tags": [
-					{
-						"name": "go",
-						"url": "https://mastodon.social/tags/go"
-					}
-				],
-				"emojis": [],
-				"tagged_collections": [],
-				"quote": null,
-				"card": {
-					"url": "https://lobste.rs/s/znlkib",
-					"title": "Just Fucking Use Go - Blain Smith",
-					"description": "0 comments",
-					"language": "en",
-					"type": "link",
-					"author_name": "",
-					"author_url": "",
-					"provider_name": "Lobsters",
-					"provider_url": "",
-					"html": "",
-					"width": 144,
-					"height": 144,
-					"image": "https://files.mastodon.social/cache/preview_cards/images/192/138/625/original/7fa009130081f067.png",
-					"image_description": "",
-					"embed_url": "",
-					"blurhash": "UQLd_wx]8wDOVstRj[RPMxRjtlx]xuV@ayoz",
-					"published_at": null,
-					"authors": []
-				},
-				"poll": null,
-				"quote_approval": {
-					"automatic": [
-						"public"
-					],
-					"manual": [],
-					"current_user": "denied"
-				}
-			}
-		},
-		"card": null,
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116542604000660775",
-		"created_at": "2026-05-09T03:56:50.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.online/users/WindOfChange/statuses/116542603968983843",
-		"url": "https://mastodon.online/@WindOfChange/116542603968983843",
-		"replies_count": 1,
-		"reblogs_count": 0,
-		"favourites_count": 1,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Open lobste.rs. first article is this <a href=\"https://blainsmith.com/articles/just-fucking-use-go/\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">blainsmith.com/articles/just-f</span><span class=\"invisible\">ucking-use-go/</span></a></p><p>Yes, it's funny and edgy. Then read comments on lobst.rs. WTF, when do people turn into whiny snobs? Oh, right, it is a lobste.rs crowd and the post is about <a href=\"https://mastodon.online/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a>.</p><p>And ofc first comment mentions if err != nil. Just grow up!</p><p><a href=\"https://mastodon.online/tags/rant\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>rant</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111177409397847420",
-			"username": "WindOfChange",
-			"acct": "WindOfChange@mastodon.online",
-			"display_name": "Wind (Vējš)",
-			"locked": true,
-			"bot": false,
-			"discoverable": true,
-			"indexable": false,
-			"group": false,
-			"created_at": "2023-10-04T00:00:00.000Z",
-			"note": "<p>Slowly but steadily losing faith in humanity.</p><p>Toots in EN and LV.</p><p><a href=\"https://mastodon.online/tags/NoToWar\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>NoToWar</span></a><br><a href=\"https://mastodon.online/tags/Photography\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Photography</span></a><br><a href=\"https://mastodon.online/tags/Camping\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Camping</span></a><br><a href=\"https://mastodon.online/tags/Bushcraft\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Bushcraft</span></a><br><a href=\"https://mastodon.online/tags/GoLang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoLang</span></a><br><a href=\"https://mastodon.online/tags/Linux\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Linux</span></a><br><a href=\"https://mastodon.online/tags/FOSS\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>FOSS</span></a><br><a href=\"https://mastodon.online/tags/BrainCoding\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>BrainCoding</span></a><br><a href=\"https://mastodon.online/tags/Gaming\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Gaming</span></a><br><a href=\"https://mastodon.online/tags/VideoDev\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>VideoDev</span></a><br><a href=\"https://mastodon.online/tags/SciFi\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>SciFi</span></a><br><a href=\"https://mastodon.online/tags/SocialJustice\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>SocialJustice</span></a><br><a href=\"https://mastodon.online/tags/AbolishTheRich\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>AbolishTheRich</span></a><br><a href=\"https://mastodon.online/tags/nobot\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>nobot</span></a><br><a href=\"https://mastodon.online/tags/noai\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>noai</span></a><br><a href=\"https://mastodon.online/tags/noindex\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>noindex</span></a></p>",
-			"url": "https://mastodon.online/@WindOfChange",
-			"uri": "https://mastodon.online/users/WindOfChange",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/177/409/397/847/420/original/e165076d57240dbd.jpg",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/177/409/397/847/420/original/e165076d57240dbd.jpg",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/177/409/397/847/420/original/9e7f817e6ac2a5f6.jpg",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/177/409/397/847/420/original/9e7f817e6ac2a5f6.jpg",
-			"header_description": "",
-			"followers_count": 140,
-			"following_count": 587,
-			"statuses_count": 118,
-			"last_status_at": "2026-05-10",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [
-					"followers"
-				],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": []
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			},
-			{
-				"name": "rant",
-				"url": "https://mastodon.social/tags/rant"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://blainsmith.com/articles/just-fucking-use-go/",
-			"title": "Just Fucking Use Go - Blain Smith",
-			"description": "",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "",
-			"provider_url": "",
-			"html": "",
-			"width": 0,
-			"height": 0,
-			"image": null,
-			"image_description": "",
-			"embed_url": "",
-			"blurhash": null,
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116542384882154272",
-		"created_at": "2026-05-09T03:01:07.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116542384830525978",
-		"url": "https://goark.fedicity.net/@goark/116542384830525978",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> ＞ Release v2.16.0-126cb846-nightly · goreleaser/goreleaser<br><a href=\"https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-126cb846-nightly\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/goreleaser/goreleas</span><span class=\"invisible\">er/releases/tag/v2.16.0-126cb846-nightly</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-126cb846-nightly",
-			"title": "Release v2.16.0-126cb846-nightly · goreleaser/goreleaser",
-			"description": "Changelog\nNew Features\n\nbb532b6: feat(archive): xz format (#6520)\n9500ead: feat(builders): add node sea support (#6579)\n\nBug fixes\n\nbb9062f: fix(cask): emit generate_completions_from_executable aft...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/212/277/original/c4a05196118bae8e.png",
-			"image_description": "Changelog\nNew Features\n\nbb532b6: feat(archive): xz format (#6520)\n9500ead: feat(builders): add node sea support (#6579)\n\nBug fixes\n\nbb9062f: fix(cask): emit generate_completions_from_executable aft...",
-			"embed_url": "",
-			"blurhash": "UMR{*~j?E1%MRjxuWBxtxuj[t7ay~pRjxaRj",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116542384840755927",
-		"created_at": "2026-05-09T03:01:05.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "ja",
-		"uri": "https://goark.fedicity.net/users/goark/statuses/116542384720982618",
-		"url": "https://goark.fedicity.net/@goark/116542384720982618",
-		"replies_count": 0,
-		"reblogs_count": 0,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p><a href=\"https://goark.fedicity.net/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a> ＞ Release v0.45.0: go.mod: update golang.org/x dependencies · golang/tools<br><a href=\"https://github.com/golang/tools/releases/tag/v0.45.0\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/golang/tools/releas</span><span class=\"invisible\">es/tag/v0.45.0</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "111530040895444639",
-			"username": "goark",
-			"acct": "goark@goark.fedicity.net",
-			"display_name": "Goark",
-			"locked": false,
-			"bot": true,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2023-12-03T00:00:00.000Z",
-			"note": "<p>Playing with Go language</p>",
-			"url": "https://goark.fedicity.net/@goark",
-			"uri": "https://goark.fedicity.net/users/goark",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/111/530/040/895/444/639/original/d1710aff643fcacd.png",
-			"avatar_description": "",
-			"header": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_static": "https://files.mastodon.social/cache/accounts/headers/111/530/040/895/444/639/original/deeda9978987fb5b.png",
-			"header_description": "",
-			"followers_count": 12,
-			"following_count": 1,
-			"statuses_count": 307,
-			"last_status_at": "2026-05-11",
-			"hide_collections": true,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": [
-				{
-					"name": "Bot Owner",
-					"value": "<a href=\"https://goark.fedicity.net/@spiegel\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">goark.fedicity.net/@spiegel</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:05.410+00:00"
-				},
-				{
-					"name": "GitHub",
-					"value": "<a href=\"https://github.com/goark\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">github.com/goark</span><span class=\"invisible\"></span></a>",
-					"verified_at": "2026-05-10T01:09:06.237+00:00"
-				}
-			]
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/golang/tools/releases/tag/v0.45.0",
-			"title": "Release v0.45.0: go.mod: update golang.org/x dependencies · golang/tools",
-			"description": "Update golang.org/x dependencies to their latest tagged versions.\nChange-Id: I494817f935a60bb286833f636256e69884ee8a25\nReviewed-on: https://go-review.googlesource.com/c/tools/+/775723\nAuto-Submit: ...",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/212/319/original/be6c52debbd50951.png",
-			"image_description": "Update golang.org/x dependencies to their latest tagged versions.\nChange-Id: I494817f935a60bb286833f636256e69884ee8a25\nReviewed-on: https://go-review.googlesource.com/c/tools/+/775723\nAuto-Submit: ...",
-			"embed_url": "",
-			"blurhash": "UOSF|kWCay%M?GWBWBt69bayoLj[~Vt6ofWB",
-			"published_at": null,
-			"authors": []
-		},
-		"poll": null,
-		"quote_approval": {
-			"automatic": [
-				"public"
-			],
-			"manual": [],
-			"current_user": "denied"
-		}
-	},
-	{
-		"id": "116542307191731716",
-		"created_at": "2026-05-09T02:41:21.000Z",
-		"in_reply_to_id": null,
-		"in_reply_to_account_id": null,
-		"sensitive": false,
-		"spoiler_text": "",
-		"visibility": "public",
-		"language": "en",
-		"uri": "https://mastodon.sayzard.org/ap/users/115823033418578765/statuses/116542307114505583",
-		"url": "https://mastodon.sayzard.org/@sayzard/116542307114505583",
-		"replies_count": 0,
-		"reblogs_count": 1,
-		"favourites_count": 0,
-		"quotes_count": 0,
-		"edited_at": null,
-		"content": "<p>Show HN: PDF 2 Context – Convert PDF text to JSONL files</p><p>pdf2context는 PDF 파일을 LLM과 RAG 파이프라인에 적합한 JSONL 형식의 텍스트 청크로 변환하는 Golang 기반 CLI 도구입니다. pdftotext를 이용한 텍스트 추출과 OCR 자동 대체 기능을 제공하며, 헤더/푸터 제거, 유니코드 정규화 등 텍스트 전처리도 지원합니다. 병렬 처리, 청크 크기 및 중첩 설정이 가능하고, 처리 현황을 실시간으로 보여주는 TUI를 포함해 대규모 PDF 데이터셋을 효율적으로 준비할 수 있습니다. AI 개발자가 LLM 학습 및 검색 증강 생성에 활용할 수 있는 실용적인 도구입니다.</p><p><a href=\"https://github.com/EwanValentine/pdf2context\" rel=\"nofollow noopener\" translate=\"no\" target=\"_blank\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/EwanValentine/pdf2c</span><span class=\"invisible\">ontext</span></a></p><p><a href=\"https://mastodon.sayzard.org/tags/pdf\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>pdf</span></a> <a href=\"https://mastodon.sayzard.org/tags/jsonl\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>jsonl</span></a> <a href=\"https://mastodon.sayzard.org/tags/llm\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>llm</span></a> <a href=\"https://mastodon.sayzard.org/tags/rag\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>rag</span></a> <a href=\"https://mastodon.sayzard.org/tags/golang\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>golang</span></a></p>",
-		"reblog": null,
-		"account": {
-			"id": "115823075815387747",
-			"username": "sayzard",
-			"acct": "sayzard@mastodon.sayzard.org",
-			"display_name": "sayzard",
-			"locked": false,
-			"bot": false,
-			"discoverable": false,
-			"indexable": true,
-			"group": false,
-			"created_at": "2026-01-02T00:00:00.000Z",
-			"note": "",
-			"url": "https://mastodon.sayzard.org/@sayzard",
-			"uri": "https://mastodon.sayzard.org/ap/users/115823033418578765",
-			"avatar": "https://files.mastodon.social/cache/accounts/avatars/115/823/075/815/387/747/original/bea27fbb1b568ee1.png",
-			"avatar_static": "https://files.mastodon.social/cache/accounts/avatars/115/823/075/815/387/747/original/bea27fbb1b568ee1.png",
-			"avatar_description": "",
-			"header": "https://mastodon.social/headers/original/missing.png",
-			"header_static": "https://mastodon.social/headers/original/missing.png",
-			"header_description": "",
-			"followers_count": 41,
-			"following_count": 1,
-			"statuses_count": 14201,
-			"last_status_at": "2026-05-11",
-			"hide_collections": false,
-			"show_media": true,
-			"show_media_replies": true,
-			"show_featured": true,
-			"feature_approval": {
-				"automatic": [],
-				"manual": [],
-				"current_user": "denied"
-			},
-			"emojis": [],
-			"fields": []
-		},
-		"media_attachments": [],
-		"mentions": [],
-		"tags": [
-			{
-				"name": "pdf",
-				"url": "https://mastodon.social/tags/pdf"
-			},
-			{
-				"name": "jsonl",
-				"url": "https://mastodon.social/tags/jsonl"
-			},
-			{
-				"name": "llm",
-				"url": "https://mastodon.social/tags/llm"
-			},
-			{
-				"name": "rag",
-				"url": "https://mastodon.social/tags/rag"
-			},
-			{
-				"name": "golang",
-				"url": "https://mastodon.social/tags/golang"
-			}
-		],
-		"emojis": [],
-		"tagged_collections": [],
-		"quote": null,
-		"card": {
-			"url": "https://github.com/EwanValentine/pdf2context",
-			"title": "GitHub - EwanValentine/pdf2context: A Golang CLI for converting PDF files to JSONL for efficient use with LLMs",
-			"description": "A Golang CLI for converting PDF files to JSONL for efficient use with LLMs - EwanValentine/pdf2context",
-			"language": "en",
-			"type": "link",
-			"author_name": "",
-			"author_url": "",
-			"provider_name": "GitHub",
-			"provider_url": "",
-			"html": "",
-			"width": 678,
-			"height": 339,
-			"image": "https://files.mastodon.social/cache/preview_cards/images/192/174/075/original/771f89924954886f.png",
-			"image_description": "A Golang CLI for converting PDF files to JSONL for efficient use with LLMs - EwanValentine/pdf2context",
-			"embed_url": "",
-			"blurhash": "UbRC}NxuM{%MwItRRjt7T0j[ofWB~WRjt7Rj",
-			"published_at": null,
-			"authors": []
 		},
 		"poll": null,
 		"quote_approval": {

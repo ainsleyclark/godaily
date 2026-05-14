@@ -2,6 +2,209 @@
 	{
 		"id": 0,
 		"source": "reddit",
+		"title": "Built ltm in Go: portable session-state protocol for LLM agents. Single static binary, no cgo, code review welcome.",
+		"url": "https://www.reddit.com/r/golang/comments/1tb08kp/built_ltm_in_go_portable_sessionstate_protocol/",
+		"author": {
+			"username": "devulders",
+			"profile_url": "https://www.reddit.com/user/devulders"
+		},
+		"snippet": "I switch between a few AI editors (Cursor on desktop, Claude Code on the laptop, Zed sometimes) and every time I'd swap machines I'd burn ten minutes re-explaining myself to a fresh agent. So I built ",
+		"tag": "discussion",
+		"comments": 5,
+		"score": 0.1,
+		"published": "2026-05-12T12:32:34Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "cmd-stream: Simpler API, 12-hour stress test, and 8.3 OpenSSF Scorecard",
+		"url": "https://www.reddit.com/r/golang/comments/1tb077n/cmdstream_simpler_api_12hour_stress_test_and_83/",
+		"image_url": "https://external-preview.redd.it/-2NvtoTWv1JLY6KySU6CiZ5o9AORpoPuUdN-qYsk6ZE.png?auto=webp\u0026s=7548c75d517a49c072a10dbbc1a6188d3ba027ea",
+		"author": {
+			"username": "ymz-ncnk",
+			"profile_url": "https://www.reddit.com/user/ymz-ncnk"
+		},
+		"snippet": "After three years of development and hardening, [cmd-stream](https://github.com/cmd-stream/cmd-stream-go) has evolved into a high-performance Distributed Command Pattern (DCP) framework designed as an",
+		"tag": "discussion",
+		"comments": 1,
+		"score": 0.23804628387473528,
+		"published": "2026-05-12T12:30:55Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Debugged port exhaustion killing 95% of requests in my Go load balancer",
+		"url": "https://medium.com/@sohamsarkar59/part-2-from-port-exhaustion-to-8-2m-requests-debugging-a-production-performance-issue-2c5175e09660",
+		"author": {
+			"username": "Icy-Athlete9047",
+			"profile_url": "https://www.reddit.com/user/Icy-Athlete9047"
+		},
+		"snippet": "I recently wrote a Load Balancer to learn Distributed Systems and Go, and got amazing results (18k req/s)",
+		"tag": "discussion",
+		"comments": 1,
+		"score": 0.1,
+		"published": "2026-05-12T08:48:59Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Allowlisting Config Capabilities by Embedding Rye in Go",
+		"url": "https://ryelang.org/blog/posts/whitelist-config-with-rye/",
+		"author": {
+			"username": "middayc",
+			"profile_url": "https://www.reddit.com/user/middayc"
+		},
+		"snippet": "We will explore how to embed the Rye language into a Go application and why its capability-based model makes it uniquely suited for configuration, despite being a general-purpose language.",
+		"tag": "discussion",
+		"comments": 4,
+		"score": 0.5195737064824407,
+		"published": "2026-05-12T06:21:20Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Popular Go Library fsnotify Raises Supply Chain Alarms After Maintainer Access Changes",
+		"url": "https://cybersecuritynews.com/popular-go-library-fsnotify-raises-supply-chain/",
+		"image_url": "https://external-preview.redd.it/3vc0saQDebveqPzLbiPMkTVUtVgcASXpx34Pow1Q7kY.jpeg?auto=webp\u0026s=d8fbc49b75baa0512200301e186e760130a23909",
+		"author": {
+			"username": "Penetal",
+			"profile_url": "https://www.reddit.com/user/Penetal"
+		},
+		"snippet": "fsnotify maintainer changes sparked supply chain fears due to its massive use across developer tools and pipelines.",
+		"tag": "discussion",
+		"comments": 17,
+		"score": 1,
+		"published": "2026-05-11T20:55:05Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Small Projects",
+		"url": "https://www.reddit.com/r/golang/comments/1tacwby/small_projects/",
+		"author": {
+			"username": "AutoModerator",
+			"profile_url": "https://www.reddit.com/user/AutoModerator"
+		},
+		"snippet": "This is the weekly thread for Small Projects. The point of this thread is to have looser posting standards than the main board. As such, projects are pretty much only removed from here by the mods for",
+		"tag": "discussion",
+		"comments": 8,
+		"score": 0.5384272503221113,
+		"published": "2026-05-11T19:00:48Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "New version for lfk (v0.11.0) - the TUI for Kubernetes you'll actually enjoy to use",
+		"url": "https://github.com/janosmiko/lfk/",
+		"image_url": "https://external-preview.redd.it/dgIgBmUL72zDqy9VgjAiYJfm6rtgb2gS3DKpbsGx1fc.png?auto=webp\u0026s=78a8e95e85a0f7f6f807376887790313c3131b19",
+		"author": {
+			"username": "Mixe3y",
+			"profile_url": "https://www.reddit.com/user/Mixe3y"
+		},
+		"snippet": "Release highlights from the last few releases: \\- ArgoCD Sync Wave Timeline \\- Support k3d/kind/minikube cluster management \\- Traffic capture support \\- Ephemeral Container support \\- Better support ",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.4216379923242304,
+		"published": "2026-05-11T18:03:39Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Update: Loom / Welvet v0.76 - if anyone’s into Go + local LLMs",
+		"url": "https://www.reddit.com/r/golang/comments/1ta5jg8/update_loom_welvet_v076_if_anyones_into_go_local/",
+		"image_url": "https://external-preview.redd.it/fGxzv0FgQjCxWHualCGmGNY3krUrqJBl0XA3f_zI164.png?auto=webp\u0026s=9123d426e5d43ddba764125c1f34da93a7b6bec6",
+		"author": {
+			"username": "Apricot-Zestyclose",
+			"profile_url": "https://www.reddit.com/user/Apricot-Zestyclose"
+		},
+		"snippet": "Not sure how niche this is here, but posting in case it’s useful we cut on Loom (deterministic-ish neural runtime). Rough highlights if you’re curious: * `lucy/` — small Go tool bundled in the r",
+		"tag": "discussion",
+		"comments": 1,
+		"score": 0.1,
+		"published": "2026-05-11T14:48:58Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Welcome to go-acme/lego v5",
+		"url": "https://ldez.github.io/blog/2026/05/11/lego-v5/",
+		"image_url": "https://ldez.github.io/images/lego-logo.min.svg",
+		"author": {
+			"username": "ldez",
+			"profile_url": "https://www.reddit.com/user/ldez"
+		},
+		"snippet": "I am thrilled to announce go-acme/lego v5! This is a major release that brings a completely redesigned CLI, and powerful new features.",
+		"tag": "discussion",
+		"comments": 2,
+		"score": 0.7703694949060205,
+		"published": "2026-05-11T14:43:55Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "jsondec: 2.5x–4.5x faster than encoding/json, easy to use (no code gen), extra features",
+		"url": "https://github.com/alasdairforsythe/jsondec",
+		"image_url": "https://opengraph.githubassets.com/5100dc0fde4d5641454db6a995da47a8b6be76dc819931be8007eed98ef20c8d/alasdairforsythe/jsondec",
+		"author": {
+			"username": "al4sdair",
+			"profile_url": "https://www.reddit.com/user/al4sdair"
+		},
+		"snippet": "I love JSON and I hate using JSON in Go because it's unnecessarily painful. The encoding/json package is heavy, slow, and unnecessarily attempts to base64 decode anything going into \\`\\[\\]byte\\` There",
+		"tag": "discussion",
+		"comments": 74,
+		"score": 0.9844368669660623,
+		"published": "2026-05-11T12:20:33Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "GoLand 2026.2 EAP cycle has started! Check how the EAP works and what's coming in the 2026.2 release",
+		"url": "https://blog.jetbrains.com/go/2026/05/11/the-goland-2026-2-early-access-program-has-started/",
+		"image_url": "https://external-preview.redd.it/uZ8R4dpbnCQOf5uoF4xRj1HKyXR8IBvzHmb0Na-TuZU.png?auto=webp\u0026s=258bf0ef7c102c31fe67100d971f72bb32a5812c",
+		"author": {
+			"username": "Nika_84",
+			"profile_url": "https://www.reddit.com/user/Nika_84"
+		},
+		"snippet": "The Early Access Program (EAP) for GoLand 2026.2 is now open. It’s a great opportunity to try upcoming features for free and help shape the product. EAP builds give you early access to what we’re ",
+		"tag": "discussion",
+		"comments": 3,
+		"score": 0.6262830509731585,
+		"published": "2026-05-11T12:05:44Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Anyone building own coding agent?",
+		"url": "https://www.reddit.com/r/golang/comments/1t9yd11/anyone_building_own_coding_agent/",
+		"author": {
+			"username": "gdevvedg",
+			"profile_url": "https://www.reddit.com/user/gdevvedg"
+		},
+		"snippet": "I’m building my coding agent in a language I’m familiar with, which is Go. Of course I’m not writing it myself I’m letting codex to write one. After Claude Code wasting more tokens than usual ",
+		"tag": "discussion",
+		"comments": 11,
+		"score": 0.1,
+		"published": "2026-05-11T09:40:13Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
+		"title": "Native WebP v1.3.0 Compression Improvements in Pure Go!",
+		"url": "https://www.reddit.com/r/golang/comments/1t9vhyn/native_webp_v130_compression_improvements_in_pure/",
+		"image_url": "https://external-preview.redd.it/1rkhgJhfsgxqc0uHj63hjCquucrQxCFxugayXVoVCxM.png?auto=webp\u0026s=97ca5dc71dbb3d1fde970d2dbfa6d79b7223e43f",
+		"author": {
+			"username": "Pretend-Ad1926",
+			"profile_url": "https://www.reddit.com/user/Pretend-Ad1926"
+		},
+		"snippet": "Nativewebp v1.3.0 is here, introducing a new `CompressionLevel` option along with a first round of compression improvements aimed at bringing the encoder closer to libwebp behavior. Compression tuning",
+		"tag": "discussion",
+		"comments": 0,
+		"score": 0.49892198580547814,
+		"published": "2026-05-11T06:55:15Z"
+	},
+	{
+		"id": 0,
+		"source": "reddit",
 		"title": "What do you think about Spec Driven Development?",
 		"url": "https://www.vitaliihonchar.com/insights/spec-driven-development",
 		"image_url": "https://external-preview.redd.it/LeFq7d_EmJA9x1ja6RyfzkArfyMKZW6FHP0mCHTxmK0.png?auto=webp\u0026s=7be654ab4d8e462e9fa8697b5f54a9de378754df",
@@ -10,9 +213,9 @@
 			"profile_url": "https://www.reddit.com/user/Historical_Wing_9573"
 		},
 		"snippet": "I tried to build Go app with spec driven development and results were pretty good. What do you think about it? Did you try Spec driven development? I see a huge difference between vibe coding and spec",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.34873150258179014,
+		"tag": "discussion",
+		"comments": 27,
+		"score": 0.6379982859432913,
 		"published": "2026-05-11T05:00:53Z"
 	},
 	{
@@ -25,9 +228,9 @@
 			"profile_url": "https://www.reddit.com/user/darkayngl"
 		},
 		"snippet": "Ok so I am just learning how to program and using Go as my language of choice, my question is I created a database and a table inside the db using some code. Now obviously, I am going to be playing ar",
-		"tag": "article",
-		"comments": 10,
-		"score": 0.3003809664473759,
+		"tag": "discussion",
+		"comments": 14,
+		"score": 0.4760925677494707,
 		"published": "2026-05-10T21:25:23Z"
 	},
 	{
@@ -40,8 +243,8 @@
 			"profile_url": "https://www.reddit.com/user/notomarsol"
 		},
 		"snippet": "i spent most of my career in java and typescript where abstraction is basically a competitive sport. every problem gets an interface, a factory, a strategy pattern, maybe a decorator if you're feeling",
-		"tag": "article",
-		"comments": 38,
+		"tag": "discussion",
+		"comments": 68,
 		"score": 1,
 		"published": "2026-05-10T19:11:23Z"
 	},
@@ -55,7 +258,7 @@
 			"profile_url": "https://www.reddit.com/user/Warm_Low_4155"
 		},
 		"snippet": "In this short video, I introduce how to manage buttons' events work in Gio using Go. I built a simple UI with a button and a label, then I made the label react to different button states like hovering",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.23804628387473528,
 		"published": "2026-05-10T16:57:50Z"
@@ -71,7 +274,7 @@
 			"profile_url": "https://www.reddit.com/user/roro_jpg"
 		},
 		"snippet": "Hello everyone. I created this tool to switch base16 palettes on Linux on the fly. I know it’s nothing fancy yet, but it might be useful to others here who tinker with Linux (and ricing). Go is such",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 0,
 		"score": 0.3003809664473759,
 		"published": "2026-05-10T16:48:38Z"
@@ -86,9 +289,9 @@
 			"profile_url": "https://www.reddit.com/user/quirissum"
 		},
 		"snippet": "I've been thinking about how most personal productivity tools are SaaS for business reasons, not technical ones. A time tracker has no reason to store your data on a remote server. So I built one wher",
-		"tag": "article",
-		"comments": 15,
-		"score": 0.8760445698180267,
+		"tag": "discussion",
+		"comments": 20,
+		"score": 0.9651638088320625,
 		"published": "2026-05-10T11:18:20Z"
 	},
 	{
@@ -101,211 +304,9 @@
 			"profile_url": "https://www.reddit.com/user/Friendly_Meaning_388"
 		},
 		"snippet": "Hi Gophers, I’ve been a lead engineer for 10 years, mostly focused on the standard Go stack: microservices, K8s, and high-concurrency backends. Recently, I’ve been deep-diving into **Autonomous AI",
-		"tag": "article",
-		"comments": 10,
+		"tag": "discussion",
+		"comments": 15,
 		"score": 0.1,
 		"published": "2026-05-10T10:53:19Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "An open source go IDE for Android",
-		"url": "https://www.reddit.com/r/golang/comments/1t8txy2/an_open_source_go_ide_for_android/",
-		"image_url": "https://external-preview.redd.it/WMBIAoyAIPArgZCJZimm4IJUqYpMm5tWUt2rb3PL6qk.png?auto=webp\u0026s=d41846a47d8121932e130e2181f7afc40d60d422",
-		"author": {
-			"username": "NoBeginning2551",
-			"profile_url": "https://www.reddit.com/user/NoBeginning2551"
-		},
-		"snippet": "I created an open source Go IDE for Android with gopls LSP support, 245 themes, git and Github integration, AI completion, agentic coding panel for vibe coders, etc Note: This is not some vibe coded a",
-		"tag": "article",
-		"comments": 9,
-		"score": 0.8871587529039013,
-		"published": "2026-05-10T02:09:19Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Struggling with method design for a CLI. What is part of a client library? What is part of cobra?",
-		"url": "https://www.reddit.com/r/golang/comments/1t8rf2b/struggling_with_method_design_for_a_cli_what_is/",
-		"author": {
-			"username": "James_Keenan",
-			"profile_url": "https://www.reddit.com/user/James_Keenan"
-		},
-		"snippet": "Say we have an internal platform with an exposed API. This is for creating testing environments, deploying new versions, etc. 1. I have a generic \\`makeRequest\\` method that's a wrapper around [httpCl",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.38823676709842325,
-		"published": "2026-05-10T00:11:18Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "How I built the core loop of a browser multiplayer game",
-		"url": "https://packagemain.tech/p/how-i-built-the-core-loop-of-a-browser",
-		"image_url": "https://external-preview.redd.it/Gckkf3BAXtA6dgmIEDVTuFAaeBVCQTe-MclUU-tLvw0.jpeg?auto=webp\u0026s=95fafd77e253f7f4fe4401af3a2dffb7e7f12c73",
-		"author": {
-			"username": "der_gopher",
-			"profile_url": "https://www.reddit.com/user/der_gopher"
-		},
-		"snippet": "Why an async, queued action loop can still feel as immediate as a real-time game — and what it took to get there",
-		"tag": "article",
-		"comments": 1,
-		"score": 0.6007619328947518,
-		"published": "2026-05-09T12:53:34Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Does fasthttp still not allow streamed responses?",
-		"url": "https://www.reddit.com/r/golang/comments/1t80ff8/does_fasthttp_still_not_allow_streamed_responses/",
-		"author": {
-			"username": "Fluffy_Wafer_9212",
-			"profile_url": "https://www.reddit.com/user/Fluffy_Wafer_9212"
-		},
-		"snippet": "The last time I tested fasthttp (both the server and client), it always attempted to load the entire responses into the RAM even though there were properties like \\`SteamBody\\` and \\`StreamRequestBody",
-		"tag": "article",
-		"comments": 10,
-		"score": 0.6793959560724939,
-		"published": "2026-05-09T09:46:06Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Built a PostgreSQL WAL reader in Go using pglogrepl — walkthrough of how I did it",
-		"url": "https://www.reddit.com/r/golang/comments/1t800w8/built_a_postgresql_wal_reader_in_go_using/",
-		"image_url": "https://external-preview.redd.it/h5xVtoCsaLqtyx0UZ9fam1K_zskvoPe1ABtynDpSRXY.jpeg?auto=webp\u0026s=1c402ebb7e0119f9d805ed9cf80a18ce5863021d",
-		"author": {
-			"username": "VermicelliLittle6451",
-			"profile_url": "https://www.reddit.com/user/VermicelliLittle6451"
-		},
-		"snippet": "https://dev.to/mujib77/how-i-built-a-real-time-postgresql-wal-reader-in-go-4568",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.45057144967106383,
-		"published": "2026-05-09T09:22:08Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Diagnostic logging in Go?",
-		"url": "https://www.reddit.com/r/golang/comments/1t7ylrn/diagnostic_logging_in_go/",
-		"author": {
-			"username": "gwynevans",
-			"profile_url": "https://www.reddit.com/user/gwynevans"
-		},
-		"snippet": "Just wondering what people do in the situation where there’s an aspect of the code that isn’t working in certain circumstances, so could benefit from debug logging, but enabling debug logging glob",
-		"tag": "article",
-		"comments": 39,
-		"score": 0.3003809664473759,
-		"published": "2026-05-09T08:00:48Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Effective Error Handling in Go: A Deep Dive into Error Wrapping",
-		"url": "https://dev.to/lovestaco/error-handling-in-go-stop-panicking-start-wrapping-351d",
-		"image_url": "https://external-preview.redd.it/Zk_h04PdFP38f5ej8pdq1e2oq0Eg_y6LUVsJh7Y45_U.jpeg?auto=webp\u0026s=91f2669caa9fc11cd3e60257408a098922ee03e0",
-		"author": {
-			"username": "athreyaaaa",
-			"profile_url": "https://www.reddit.com/user/athreyaaaa"
-		},
-		"snippet": "Hello, I'm Maneshwar. I'm building git-lrc, a Micro AI code reviewer that runs on every commit. It is...",
-		"tag": "article",
-		"comments": 16,
-		"score": 1,
-		"published": "2026-05-09T06:20:59Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Integrating syntax highlighting into bubble tea textarea with chroma",
-		"url": "https://www.reddit.com/r/golang/comments/1t7ryq0/integrating_syntax_highlighting_into_bubble_tea/",
-		"author": {
-			"username": "Goal-based76",
-			"profile_url": "https://www.reddit.com/user/Goal-based76"
-		},
-		"snippet": "hey guys, I've been working on a tui app using bubble tea and trying to add syntax highlighting to a textarea bubble. I've found the chroma lexer library which seems like it would do the job, but I'm ",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.15019048322368794,
-		"published": "2026-05-09T02:17:37Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Walks the full cmd/compile pipeline in order: package names, data structures, and the SSA construction that drives inlining, escape analysis, bounds-check elimination, and register allocation, with flags to observe each phase directly.",
-		"url": "https://blog.gaborkoos.com/posts/2026-05-08-The-Go-Compiler-a-Deep-Dive-Into-How-Your-Code-Becomes-a-Binary/?utm_source=reddit\u0026amp;utm_medium=social\u0026amp;utm_campaign=go-compiler-deep-dive\u0026amp;utm_content=r_golang",
-		"image_url": "https://external-preview.redd.it/bXY9OVsCFC8N4L2_QsZCJGpAUbdiw4FgZgUFdNj0fiI.png?auto=webp\u0026s=600c443859bd4e8609bfa5721e1ffcf1551cb6fe",
-		"author": {
-			"username": "OtherwisePush6424",
-			"profile_url": "https://www.reddit.com/user/OtherwisePush6424"
-		},
-		"snippet": "This one took a while, it's probably the longest thing I've written on this blog. I wanted to do a proper end-to-end walkthrough of `cmd/compile`: real package names, real data structures, diagrams fo",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.649112469029166,
-		"published": "2026-05-08T23:29:09Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "How we secure the Cilium Go supply chain: Why we still vendor everything in 2026",
-		"url": "https://cilium.io/blog/2026/05/06/securing-cicd-open-source-lessons-from-cilium/",
-		"image_url": "https://external-preview.redd.it/APALUHWwKAMNUFr6lt44FnR7N5GRT4O9Ga5t-4OekZQ.jpeg?auto=webp\u0026s=ad7662e6450404f1bb0f1423b4a9224227631ac6",
-		"author": {
-			"username": "xmull1gan",
-			"profile_url": "https://www.reddit.com/user/xmull1gan"
-		},
-		"snippet": "We’ve just published a detailed breakdown of how we harden our CI/CD. For r/golang, the most relevant parts are how we handle dependency management at scale: * Why we still vendor: We move the \"trus",
-		"tag": "article",
-		"comments": 7,
-		"score": 0.8476534883872682,
-		"published": "2026-05-08T20:56:40Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Nabat - A Go CLI framework with adaptive args, structured output, and built-in themes",
-		"url": "https://www.reddit.com/r/golang/comments/1t7i7kh/nabat_a_go_cli_framework_with_adaptive_args/",
-		"author": {
-			"username": "atkrad",
-			"profile_url": "https://www.reddit.com/user/atkrad"
-		},
-		"snippet": "I have been working on CLI tools in Go for a while, and I always felt that Cobra is great for routing and flags, but there is a lot of boilerplate every time you want to do something a bit more polish",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.3003809664473759,
-		"published": "2026-05-08T19:34:16Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "Question about Python and Go serverless performance",
-		"url": "https://www.reddit.com/r/golang/comments/1t7g6xw/question_about_python_and_go_serverless/",
-		"author": {
-			"username": "GongtingLover",
-			"profile_url": "https://www.reddit.com/user/GongtingLover"
-		},
-		"snippet": "Hi everyone, At my last role, we used Python for most of our serverless applications. Lately, though, I've been reading up on Go and really seeing the potential benefits of using Go instead of Python ",
-		"tag": "article",
-		"comments": 31,
-		"score": 0.764088502509945,
-		"published": "2026-05-08T18:21:11Z"
-	},
-	{
-		"id": 0,
-		"source": "reddit",
-		"title": "ncruces/wasm2go: A Wasm to Go translator",
-		"url": "https://github.com/ncruces/wasm2go",
-		"image_url": "https://external-preview.redd.it/WDeEZkwJ5yS5Og2w_WB4UeWlcDaISnzvIzBqaz310To.png?auto=webp\u0026s=bcbcdf9d15d91768cca12b95ccc0c04713098364",
-		"author": {
-			"username": "ncruces",
-			"profile_url": "https://www.reddit.com/user/ncruces"
-		},
-		"snippet": "Just released a new version of my Wasm to Go translator. Since I last posted it here [a couple of months ago](https://www.reddit.com/r/golang/comments/1rfou6m/a_wasm_to_go_translator/): - I moved my [",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.757619990357176,
-		"published": "2026-05-08T16:18:41Z"
 	}
 ]

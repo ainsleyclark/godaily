@@ -9,7 +9,7 @@ import (
 
 templ Sources() {
 	<section id="sources" class="sources">
-		<div class="section">
+		@Container(false) {
 			<div class="section__label">Coverage</div>
 			<h2 class="section__title">{ fmt.Sprintf("%d sources. Zero tabs to babysit.", len(news.FeaturedSources)) }</h2>
 			<p class="section__sub">
@@ -32,6 +32,6 @@ templ Sources() {
 					</div>
 				}
 			</div>
-		</div>
+		}
 	</section>
 }

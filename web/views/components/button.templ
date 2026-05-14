@@ -1,0 +1,52 @@
+package components
+
+type ButtonVariant string
+type ButtonSize string
+
+const (
+	ButtonVariantPrimary ButtonVariant = "primary"
+	ButtonVariantGhost   ButtonVariant = "ghost"
+	ButtonSizeSm        ButtonSize    = "sm"
+)
+
+type ButtonProps struct {
+	Variant  ButtonVariant
+	Size     ButtonSize
+	Type     string
+	Href     templ.SafeURL
+	Disabled bool
+	Attrs    templ.Attributes
+}
+
+func buttonClasses(variant ButtonVariant, size ButtonSize) string {
+	classes := "button"
+	switch variant {
+	case ButtonVariantGhost:
+		classes += " button--ghost"
+	default:
+		classes += " button--primary"
+	}
+	if size == ButtonSizeSm {
+		classes += " button--sm"
+	}
+	return classes
+}
+
+func buttonType(t string) string {
+	if t == "" {
+		return "button"
+	}
+	return t
+}
+
+templ Button(props ButtonProps) {
+	if props.Href != "" {
+		<a class={ buttonClasses(props.Variant, props.Size) } href={ props.Href } { props.Attrs... }>
+			{ children... }
+		</a>
+	} else {
+		<button class={ buttonClasses(props.Variant, props.Size) } type={ buttonType(props.Type) } disabled?={ props.Disabled } { props.Attrs... }>
+			{ children... }
+		</button>
+	}
+}

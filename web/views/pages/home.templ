@@ -30,6 +30,6 @@ templ Home(data HomeData) {
 		@components.Issues(data.RecentIssues)
 		@components.Rule()
 		@components.SampleSection(data.SampleIssue)
-		@components.Footer()
+		@components.SubscribeCTA(components.SubscribeCTAProps{FlushTop: true})
 	}
 }

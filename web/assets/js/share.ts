@@ -18,11 +18,11 @@ async function handleCopy(btn: HTMLButtonElement): Promise<void> {
 		document.body.removeChild(ta);
 	}
 	const label = btn.querySelector<HTMLElement>('[data-share-copy-label]');
-	const original = label?.textContent ?? 'Copy link';
+	const original = label?.textContent ?? 'Copy';
 	if (label) label.textContent = 'Copied!';
-	btn.classList.add('share-buttons__btn--copied');
+	btn.classList.add('button--copied');
 	setTimeout(() => {
 		if (label) label.textContent = original;
-		btn.classList.remove('share-buttons__btn--copied');
+		btn.classList.remove('button--copied');
 	}, 2000);
 }

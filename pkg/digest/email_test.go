@@ -75,12 +75,12 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.Subject, "April 26, 2026")
 		assert.Contains(t, got.HTML, "hello")
 		assert.Contains(t, got.Text, "hello")
-		assert.Contains(t, got.HTML, "42 pts")
+		assert.NotContains(t, got.HTML, "42 pts")
 		assert.Contains(t, got.HTML, "7 comments")
 		// Each item should advertise its source via the "Read on" link and
 		// the inline mark image (HN has a mark file registered).
 		assert.Contains(t, got.HTML, "Read on Hacker News")
-		assert.Contains(t, got.HTML, "/assets/images/marks/hacker_news.svg")
+		assert.Contains(t, got.HTML, "https://godaily.dev/assets/images/marks/hacker_news.svg")
 	})
 
 	t.Run("Groups By Section", func(t *testing.T) {
@@ -177,7 +177,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		err := agg.sendRendered(t.Context(), "to@example.com", rendered)
 		require.NoError(t, err)
 		require.True(t, m.called)
-		assert.Equal(t, "noreply@godaily.dev", m.req.From)
+		assert.Equal(t, "GoDaily <noreply@godaily.dev>", m.req.From)
 		assert.Equal(t, []string{"to@example.com"}, m.req.To)
 		assert.Contains(t, m.req.Subject, "April 26, 2026")
 		assert.Contains(t, m.req.Html, "hello")

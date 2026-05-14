@@ -46,15 +46,22 @@ type Aggregator struct {
 	email             email.Sender
 	adminEmailAddress string
 	suggester         suggester
+	synthesiser       synthesiser
 	issues            news.IssueRepository
 	items             news.ItemRepository
 	subscribers       news.SubscriberRepository
 }
 
-// suggester abstracts the synth client so tests can substitute a fake
-// without hitting Anthropic.
+// suggester abstracts the synth client for social-post generation so tests
+// can substitute a fake without hitting Anthropic.
 type suggester interface {
 	Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
+}
+
+// synthesiser abstracts the synth client for digest metadata (subject title
+// and intro paragraph) so tests can substitute a fake without hitting Anthropic.
+type synthesiser interface {
+	Synthesise(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.DigestMeta, error)
 }
 
 // New creates a new Aggregator, validating that all news
@@ -63,10 +70,12 @@ func New(issues news.IssueRepository, items news.ItemRepository, subscribers new
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
+	client := synth.New()
 	return &Aggregator{
 		email:             email.New(),
 		adminEmailAddress: os.Getenv("EMAIL_SEND_ADDRESS"),
-		suggester:         synth.New(),
+		suggester:         client,
+		synthesiser:       client,
 		issues:            issues,
 		items:             items,
 		subscribers:       subscribers,

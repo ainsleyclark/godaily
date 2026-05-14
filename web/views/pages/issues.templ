@@ -16,29 +16,30 @@ templ IssuesArchive(issues []news.Issue) {
 	}) {
 		@components.Header()
 		<section class="section issues-archive">
-			<div class="section__label">All issues</div>
-			<h1 class="section__title">The complete archive</h1>
-			<p class="section__sub">
-				Every issue of GoDaily, fully linked and readable.
-			</p>
-			if len(issues) == 0 {
-				<div class="issues__empty">
-					The first issue lands soon. Subscribe to be first to read it.
-				</div>
-			} else {
-				<div class="issues__grid">
-					for _, issue := range issues {
-						<a class="issues__card" href={ templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)) }>
-							<span class="issues__number">Issue #{ fmt.Sprintf("%d", issue.ID) }</span>
-							<span class="issues__subject">{ issue.Subject }</span>
-							<span class="issues__date">{ components.FormatIssueDate(issue.SentAt) }</span>
-						</a>
-					}
-				</div>
+			@components.Container(false) {
+				<div class="section__label">All issues</div>
+				<h1 class="section__title">The complete archive</h1>
+				<p class="section__sub">
+					Every issue of GoDaily, fully linked and readable.
+				</p>
+				if len(issues) == 0 {
+					<div class="issues__empty">
+						The first issue lands soon. Subscribe to be first to read it.
+					</div>
+				} else {
+					<div class="issues__grid">
+						for _, issue := range issues {
+							<a class="issues__card" href={ templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)) }>
+								<span class="issues__number">Issue #{ fmt.Sprintf("%d", issue.ID) }</span>
+								<span class="issues__subject">{ issue.Subject }</span>
+								<span class="issues__date">{ components.FormatIssueDate(issue.SentAt) }</span>
+							</a>
+						}
+					</div>
+				}
 			}
 		</section>
 		@components.Rule()
-		@components.SubscribeCTA()
-		@components.Footer()
+		@components.SubscribeCTA(components.SubscribeCTAProps{})
 	}
 }

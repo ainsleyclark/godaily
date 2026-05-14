@@ -4,46 +4,58 @@ import "fmt"
 
 templ Hero(flash string, subscriberCount int64) {
 	<section id="hero" class="hero">
-		<div class="hero__content">
-			<div class="hero__badge">
-				<span class="hero__badge-dot"></span>
-				<span>Open source, built in Go</span>
+		@Container(false) {
+			<div class="hero__content">
+				<div class="hero__badge">
+					@Tag("Delivered every weekday", TagProps{})
+				</div>
+				<h1 class="hero__title">
+					Daily <span class="hero__title-accent">Go</span> news,<br/>
+					straight to your inbox
+				</h1>
+				<p class="hero__lead">
+					The best stories from the Go community, ranked and summarised, delivered before standup. Free, weekday mornings, no noise.
+				</p>
+				if flash != "" {
+					<p class="hero__flash">{ flash }</p>
+				} else {
+					<form class="hero__form" data-subscribe>
+						<input
+							class="hero__input"
+							type="email"
+							name="email"
+							placeholder="you@example.com"
+							autocomplete="email"
+							aria-label="Email address"
+							required
+						/>
+						@Button(ButtonProps{Type: "submit"}) {
+							Get the digest
+						}
+						<p class="hero__hint" data-subscribe-hint hidden></p>
+					</form>
+				}
+				if subscriberCount > 50 {
+					<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } subscribers. Free forever. No spam. Unsubscribe any time.</p>
+				} else {
+					<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
+				}
 			</div>
-			<h1 class="hero__title">
-				Daily <span class="hero__title-accent">Go</span> news,<br/>
-				straight to your inbox
-			</h1>
-			<p class="hero__lead">
-				The best stories from the Go community, ranked and summarised, delivered before standup. Free, weekday mornings, no noise.
-			</p>
-			if flash != "" {
-				<p class="hero__flash">{ flash }</p>
-			} else {
-				<form class="hero__form" data-subscribe>
-					<input
-						class="hero__input"
-						type="email"
-						name="email"
-						placeholder="you@example.com"
-						autocomplete="email"
-						aria-label="Email address"
-						required
-					/>
-					<button class="button button--primary" type="submit">Get the digest</button>
-				</form>
-				<p class="hero__hint" data-subscribe-hint hidden></p>
-			}
-			if subscriberCount > 50 {
-				<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } subscribers. Free forever. No spam. Unsubscribe any time.</p>
-			} else {
-				<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
-			}
-		</div>
-		<div class="hero__visual" aria-hidden="true">
-			<picture>
-				<source media="(max-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
-				<img class="hero__image" src="/assets/images/hero-gopher.png" alt=""/>
-			</picture>
-		</div>
+			<div class="hero__visual" aria-hidden="true">
+				<div class="hero__gopher-wrap">
+					<div class="hero__ring"></div>
+					<div class="hero__chip hero__chip--top">
+						@Tag("go1.24 released", TagProps{Dot: true, Shadow: true})
+					</div>
+					<div class="hero__chip hero__chip--bottom">
+						@Tag("5 min read", TagProps{Dot: true, Shadow: true})
+					</div>
+					<picture>
+						<source media="(max-width: 900px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"/>
+						<img class="hero__image" src="/assets/images/hero-gopher.png" alt=""/>
+					</picture>
+				</div>
+			</div>
+		}
 	</section>
 }

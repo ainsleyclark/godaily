@@ -56,6 +56,42 @@ jobs:
           path: coverage.out
           if-no-files-found: ignore
 
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Build web assets
+        run: pnpm install && pnpm run build
+        working-directory: web
+
+      - name: Install Playwright dependencies
+        run: pnpm install
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+        working-directory: e2e
+
+      - name: Build e2e server
+        run: go build -o e2e/server ./e2e
+
+      - name: Run e2e tests (Playwright)
+        run: pnpm exec playwright test
+        working-directory: e2e
+
   govulncheck:
     runs-on: ubuntu-latest
     steps:

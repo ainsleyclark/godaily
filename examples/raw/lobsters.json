@@ -1,12 +1,49 @@
 [
 	{
+		"short_id": "z4nd1a",
+		"created_at": "2026-05-12T06:27:38.000-05:00",
+		"title": "Fuzzing fork of go toolchain",
+		"url": "https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./",
+		"score": 5,
+		"flags": 0,
+		"comment_count": 0,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "bazzargh",
+		"user_is_author": false,
+		"tags": [
+			"go"
+		],
+		"short_id_url": "https://lobste.rs/s/z4nd1a",
+		"comments_url": "https://lobste.rs/s/z4nd1a/fuzzing_fork_go_toolchain"
+	},
+	{
+		"short_id": "7rpqbo",
+		"created_at": "2026-05-11T22:49:30.000-05:00",
+		"title": "Popular Go library fsnotify raises supply chain alarms after maintainer access changes",
+		"url": "https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns",
+		"score": 16,
+		"flags": 2,
+		"comment_count": 6,
+		"description": "",
+		"description_plain": "",
+		"submitter_user": "knedl",
+		"user_is_author": false,
+		"tags": [
+			"go",
+			"security"
+		],
+		"short_id_url": "https://lobste.rs/s/7rpqbo",
+		"comments_url": "https://lobste.rs/s/7rpqbo/popular_go_library_fsnotify_raises"
+	},
+	{
 		"short_id": "njobov",
 		"created_at": "2026-05-10T15:07:57.000-05:00",
 		"title": "let-go: Almost Clojure written in Go",
 		"url": "https://github.com/nooga/let-go",
-		"score": 19,
-		"flags": 0,
-		"comment_count": 1,
+		"score": 53,
+		"flags": 2,
+		"comment_count": 4,
 		"description": "",
 		"description_plain": "",
 		"submitter_user": "nooga",
@@ -14,7 +51,8 @@
 		"tags": [
 			"clojure",
 			"go",
-			"lisp"
+			"lisp",
+			"vibecoding"
 		],
 		"short_id_url": "https://lobste.rs/s/njobov",
 		"comments_url": "https://lobste.rs/s/njobov/let_go_almost_clojure_written_go"
@@ -24,9 +62,9 @@
 		"created_at": "2026-05-10T10:20:12.000-05:00",
 		"title": "btype: B-tree based collection types for Go",
 		"url": "https://github.com/tidwall/btype",
-		"score": 1,
+		"score": 4,
 		"flags": 0,
-		"comment_count": 1,
+		"comment_count": 6,
 		"description": "",
 		"description_plain": "",
 		"submitter_user": "eatonphil",
@@ -43,7 +81,7 @@
 		"created_at": "2026-05-09T12:24:19.000-05:00",
 		"title": "Yggdrasil Network as an Embedded Go Library",
 		"url": "https://dev.to/asciimoth/yggdrasil-network-as-an-embedded-go-library-9h",
-		"score": 9,
+		"score": 10,
 		"flags": 0,
 		"comment_count": 0,
 		"description": "",
@@ -64,9 +102,9 @@
 		"created_at": "2026-05-08T07:58:28.000-05:00",
 		"title": "Just Fucking Use Go",
 		"url": "https://blainsmith.com/articles/just-fucking-use-go/",
-		"score": 183,
-		"flags": 12,
-		"comment_count": 280,
+		"score": 186,
+		"flags": 13,
+		"comment_count": 301,
 		"description": "",
 		"description_plain": "",
 		"submitter_user": "zarldev",
@@ -82,7 +120,7 @@
 		"created_at": "2026-05-06T07:39:32.000-05:00",
 		"title": "Solod v0.1: Go ergonomics, practical stdlib, native C interop",
 		"url": "https://antonz.org/solod-v0-1/",
-		"score": 21,
+		"score": 22,
 		"flags": 0,
 		"comment_count": 7,
 		"description": "",
@@ -119,7 +157,7 @@
 		"created_at": "2026-05-05T23:42:18.000-05:00",
 		"title": "Go is FIPS 140-3 certified",
 		"url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5247",
-		"score": 64,
+		"score": 65,
 		"flags": 0,
 		"comment_count": 18,
 		"description": "",
@@ -405,7 +443,7 @@
 		"created_at": "2026-04-01T12:49:53.000-05:00",
 		"title": "A game with programmable space combat written in Go",
 		"url": "https://store.steampowered.com/app/3024370/NebuLeet",
-		"score": 24,
+		"score": 25,
 		"flags": 2,
 		"comment_count": 18,
 		"description": "",
@@ -436,44 +474,5 @@
 		],
 		"short_id_url": "https://lobste.rs/s/wlgi4a",
 		"comments_url": "https://lobste.rs/s/wlgi4a/data_indexing_golang"
-	},
-	{
-		"short_id": "h1hr9m",
-		"created_at": "2026-03-30T09:32:20.000-05:00",
-		"title": "A fast, compact, immutable map from strings to uint64 values in Go",
-		"url": "https://github.com/lemire/constmap",
-		"score": 13,
-		"flags": 0,
-		"comment_count": 2,
-		"description": "",
-		"description_plain": "",
-		"submitter_user": "eatonphil",
-		"user_is_author": false,
-		"tags": [
-			"go",
-			"performance"
-		],
-		"short_id_url": "https://lobste.rs/s/h1hr9m",
-		"comments_url": "https://lobste.rs/s/h1hr9m/fast_compact_immutable_map_from_strings"
-	},
-	{
-		"short_id": "y5hfo9",
-		"created_at": "2026-03-30T09:07:40.000-05:00",
-		"title": "I Made a Terminal Pager",
-		"url": "https://theleo.zone/posts/pager/",
-		"score": 5,
-		"flags": 0,
-		"comment_count": 0,
-		"description": "",
-		"description_plain": "",
-		"submitter_user": "robinovitch61",
-		"user_is_author": true,
-		"tags": [
-			"go",
-			"release",
-			"show"
-		],
-		"short_id_url": "https://lobste.rs/s/y5hfo9",
-		"comments_url": "https://lobste.rs/s/y5hfo9/i_made_terminal_pager"
 	}
 ]

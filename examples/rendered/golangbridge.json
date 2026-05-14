@@ -11,7 +11,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/flexd"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 4,
 		"score": 1,
 		"published": "2018-07-03T07:31:23.214Z"
@@ -28,10 +28,79 @@
 			"profile_url": "https://forum.golangbridge.org/u/system"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 2,
 		"score": 1,
 		"published": "2015-09-06T22:41:07.631Z"
+	},
+	{
+		"id": 0,
+		"source": "golangbridge",
+		"title": "Review on resume",
+		"url": "https://forum.golangbridge.org/t/review-on-resume/41904",
+		"image_url": "https://forum.golangbridge.org/uploads/default/optimized/3X/6/1/61fbe111a3f624a0fdf96547fb18b66a022d1f8a_2_791x1024.jpeg",
+		"author": {
+			"name": "Vaibhav ",
+			"username": "Vaibhav",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/vaibhav/90/17610_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/Vaibhav"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 4,
+		"score": 0.3011425333831624,
+		"published": "2026-05-12T04:17:21.795Z"
+	},
+	{
+		"id": 0,
+		"source": "golangbridge",
+		"title": "Weak Pointers with Embedded Interface Types - Type Casting Workaround",
+		"url": "https://forum.golangbridge.org/t/weak-pointers-with-embedded-interface-types-type-casting-workaround/41901",
+		"author": {
+			"name": "filcuc",
+			"username": "filcuc",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/filcuc/90/17607_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/filcuc"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 3,
+		"score": 0.39932375002662385,
+		"published": "2026-05-11T06:55:33.322Z"
+	},
+	{
+		"id": 0,
+		"source": "golangbridge",
+		"title": "Agent OS — self-hosted AI assistant in Go. One message, any channel, no code to add agents",
+		"url": "https://forum.golangbridge.org/t/agent-os-self-hosted-ai-assistant-in-go-one-message-any-channel-no-code-to-add-agents/41903",
+		"author": {
+			"name": "Marco",
+			"username": "Marco",
+			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/m/a698b9/90.png",
+			"profile_url": "https://forum.golangbridge.org/u/Marco"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 1,
+		"score": 0.22846311188087914,
+		"published": "2026-05-11T20:44:59.466Z"
+	},
+	{
+		"id": 0,
+		"source": "golangbridge",
+		"title": "Next.js in Golang",
+		"url": "https://forum.golangbridge.org/t/next-js-in-golang/41902",
+		"author": {
+			"name": "João Vitor Cunha",
+			"username": "plcunha",
+			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/plcunha/90/17608_2.png",
+			"profile_url": "https://forum.golangbridge.org/u/plcunha"
+		},
+		"snippet": "",
+		"tag": "discussion",
+		"comments": 1,
+		"score": 0.3326385534911539,
+		"published": "2026-05-11T17:25:36.853Z"
 	},
 	{
 		"id": 0,
@@ -45,9 +114,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/SalzDevs"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.22846311188087914,
+		"score": 0.3393493407813016,
 		"published": "2026-05-10T22:12:57.746Z"
 	},
 	{
@@ -62,9 +131,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/toniphan21"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.25796913834026824,
+		"score": 0.3953434768381744,
 		"published": "2026-05-10T21:04:19.219Z"
 	},
 	{
@@ -79,9 +148,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Caryn_Babstock"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 4,
-		"score": 0.49189401706678226,
+		"score": 0.49539895837322057,
 		"published": "2026-04-07T17:49:55.428Z"
 	},
 	{
@@ -96,9 +165,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/ras0q"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.3011425333831624,
+		"score": 0.30984331432191253,
 		"published": "2026-05-09T16:21:52.266Z"
 	},
 	{
@@ -113,9 +182,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Kentzo"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.3825227358241957,
+		"score": 0.40690101220516667,
 		"published": "2026-05-07T19:20:32.006Z"
 	},
 	{
@@ -130,9 +199,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Vertix"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.3456972009988743,
+		"score": 0.3779179568309128,
 		"published": "2026-05-07T15:50:52.388Z"
 	},
 	{
@@ -147,9 +216,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Karl"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.3326385534911539,
+		"score": 0.35171938329752306,
 		"published": "2026-05-07T13:33:54.212Z"
 	},
 	{
@@ -164,9 +233,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/BeatStars"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.45203356522623295,
+		"score": 0.46390293826522905,
 		"published": "2026-05-06T22:02:48.496Z"
 	},
 	{
@@ -181,9 +250,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/KylerBear11"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 7,
-		"score": 0.5243280460083085,
+		"score": 0.5283083191967579,
 		"published": "2026-05-03T01:55:49.904Z"
 	},
 	{
@@ -198,7 +267,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/ew_re"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 3,
 		"score": 0.5173788691652169,
 		"published": "2026-04-27T13:02:32.57Z"
@@ -215,9 +284,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/molecularman"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.42707740343990763,
+		"score": 0.4359986667241836,
 		"published": "2026-04-29T15:20:42.687Z"
 	},
 	{
@@ -233,9 +302,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/romanbielyi.amor"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 10,
-		"score": 0.6109858477050749,
+		"score": 0.6116291743255968,
 		"published": "2026-01-28T11:27:55.571Z"
 	},
 	{
@@ -250,7 +319,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/Z3NTL3"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 4,
 		"score": 0.5173788691652169,
 		"published": "2026-04-15T09:48:32.397Z"
@@ -267,9 +336,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/orimdominic"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 2,
-		"score": 0.3681283877384764,
+		"score": 0.3731251764932341,
 		"published": "2026-04-24T15:34:46.604Z"
 	},
 	{
@@ -284,9 +353,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/jmen"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 3,
-		"score": 0.5115073049943298,
+		"score": 0.5130029534305411,
 		"published": "2026-04-09T09:26:38.398Z"
 	},
 	{
@@ -301,9 +370,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/omarluq"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.5021097456633682,
+		"score": 0.5069025260010469,
 		"published": "2026-04-21T15:51:12.047Z"
 	},
 	{
@@ -318,9 +387,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/jcbhmr"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 3,
-		"score": 0.4495085901795098,
+		"score": 0.4569262237617583,
 		"published": "2026-04-20T05:19:42.065Z"
 	},
 	{
@@ -335,7 +404,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/Andrzej_Gromczynski"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 2,
 		"score": 0.49010151179861877,
 		"published": "2026-03-04T16:10:34.466Z"
@@ -353,7 +422,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/tslocum"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
 		"score": 0.4415905242363008,
 		"published": "2026-04-16T21:41:30.087Z"
@@ -370,9 +439,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Z3NTL3"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 10,
-		"score": 0.6300021505439015,
+		"score": 0.6305495026517571,
 		"published": "2026-01-24T14:33:59.844Z"
 	},
 	{
@@ -387,9 +456,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/Yamil_Bracho"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 8,
-		"score": 0.5539839216450124,
+		"score": 0.5550275446454246,
 		"published": "2026-03-04T02:03:17.835Z"
 	},
 	{
@@ -404,9 +473,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/mrvaibh"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 1,
-		"score": 0.3629094478966482,
+		"score": 0.3681283877384764,
 		"published": "2026-04-13T15:28:08.252Z"
 	},
 	{
@@ -421,7 +490,7 @@
 			"profile_url": "https://forum.golangbridge.org/u/Karl"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 2,
 		"score": 0.5004676655464526,
 		"published": "2026-04-09T09:52:27.976Z"
@@ -438,77 +507,9 @@
 			"profile_url": "https://forum.golangbridge.org/u/flexd"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "discussion",
 		"comments": 12,
 		"score": 1,
 		"published": "2017-08-12T14:25:32.097Z"
-	},
-	{
-		"id": 0,
-		"source": "golangbridge",
-		"title": "Best api testing tool as Postman Alternative",
-		"url": "https://forum.golangbridge.org/t/best-api-testing-tool-as-postman-alternative/41734",
-		"author": {
-			"name": "FG QA",
-			"username": "FG_QA",
-			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/fg_qa/90/17503_2.png",
-			"profile_url": "https://forum.golangbridge.org/u/FG_QA"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 8,
-		"score": 0.5452831407062624,
-		"published": "2026-03-21T03:31:48.94Z"
-	},
-	{
-		"id": 0,
-		"source": "golangbridge",
-		"title": "Why url query skip param key value with semicolon ;?",
-		"url": "https://forum.golangbridge.org/t/why-url-query-skip-param-key-value-with-semicolon/41808",
-		"author": {
-			"name": "Mike",
-			"username": "linlh",
-			"avatar_url": "https://forum.golangbridge.org/letter_avatar_proxy/v4/letter/l/59ef9b/90.png",
-			"profile_url": "https://forum.golangbridge.org/u/linlh"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 3,
-		"score": 0.4569262237617583,
-		"published": "2026-04-07T12:43:00.072Z"
-	},
-	{
-		"id": 0,
-		"source": "golangbridge",
-		"title": "Request: better namespacing for vendor/ directory",
-		"url": "https://forum.golangbridge.org/t/request-better-namespacing-for-vendor-directory/41782",
-		"author": {
-			"name": "Andrew",
-			"username": "mcandre",
-			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/mcandre/90/3126_2.png",
-			"profile_url": "https://forum.golangbridge.org/u/mcandre"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 5,
-		"score": 0.5130029534305411,
-		"published": "2026-04-02T20:13:46.901Z"
-	},
-	{
-		"id": 0,
-		"source": "golangbridge",
-		"title": "Beyond the Compiler: External SSA Analysis Workflows",
-		"url": "https://forum.golangbridge.org/t/beyond-the-compiler-external-ssa-analysis-workflows/41758",
-		"author": {
-			"name": "Ashutosh Sharma",
-			"username": "Ashutosh_Sharma",
-			"avatar_url": "https://forum.golangbridge.org/user_avatar/forum.golangbridge.org/ashutosh_sharma/90/16965_2.png",
-			"profile_url": "https://forum.golangbridge.org/u/Ashutosh_Sharma"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 2,
-		"score": 0.4545053789342674,
-		"published": "2026-03-25T13:43:29.976Z"
 	}
 ]

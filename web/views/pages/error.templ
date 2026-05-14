@@ -30,13 +30,16 @@ templ Error(status int) {
 	}) {
 		@components.Header()
 		<section class="error">
-			<div class="error__content">
-				<p class="error__code">{ strconv.Itoa(status) }</p>
-				<h1 class="error__title">{ errorDetails(status).title }</h1>
-				<p class="error__lead">{ errorDetails(status).message }</p>
-				<a href="/" class="button button--primary">Back to home</a>
-			</div>
+			@components.Container(false) {
+				<div class="error__content">
+					<p class="error__code">{ strconv.Itoa(status) }</p>
+					<h1 class="error__title">{ errorDetails(status).title }</h1>
+					<p class="error__lead">{ errorDetails(status).message }</p>
+					@components.Button(components.ButtonProps{Href: "/"}) {
+						Back to home
+					}
+				</div>
+			}
 		</section>
-		@components.Footer()
 	}
 }

@@ -29,6 +29,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"flag"
 	"io"
 	"log/slog"
 	"net/http"
@@ -44,6 +45,9 @@ import (
 )
 
 func main() {
+	only := flag.String("source", "", "regenerate only this source (e.g. golang_nuts)")
+	flag.Parse()
+
 	_ = godotenv.Load(filepath.Join("..", "..", ".env"))
 	renderedDir := filepath.Join("..", "..", "examples", "rendered")
 	rawDir := filepath.Join("..", "..", "examples", "raw")
@@ -57,6 +61,9 @@ func main() {
 	ctx := context.Background()
 
 	for _, s := range news.Sources {
+		if *only != "" && string(s) != *only {
+			continue
+		}
 		fetcher, err := news.Get(s)
 		if err != nil {
 			slog.Warn("Skipping source", "source", s, "err", err)

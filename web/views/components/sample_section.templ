@@ -6,13 +6,15 @@ import "github.com/ainsleyclark/godaily/pkg/news"
 // homepage. The digest page renders Sample directly without a wrapping section.
 templ SampleSection(issue news.Issue) {
 	<section id="sample" class="section">
-		<div class="section__label">Sample output</div>
-		<h2 class="section__title">What lands in your inbox</h2>
-		<p class="section__sub">
-			A clean, readable digest. No ads, no cruft. Just the Go stories worth your time.
-		</p>
-		<div class="email-preview email-preview--wide">
-			@sampleInner(issue)
-		</div>
+		@Container(false) {
+			<div class="section__label">Sample output</div>
+			<h2 class="section__title">What lands in your inbox</h2>
+			<p class="section__sub">
+				A clean, readable digest. No ads, no cruft. Just the Go stories worth your time.
+			</p>
+			<div class="email-preview email-preview--wide">
+				@sampleInner(issue)
+			</div>
+		}
 	</section>
 }

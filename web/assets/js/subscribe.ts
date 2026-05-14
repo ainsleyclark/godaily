@@ -64,8 +64,9 @@ function resetButton(button: HTMLButtonElement, hint: HTMLElement | null, origin
 	setHint(hint, message);
 }
 
-function setHint(el: HTMLElement | null, message: string): void {
+function setHint(el: HTMLElement | null, message: string, isError = true): void {
 	if (!el) return;
 	el.textContent = message;
 	el.hidden = false;
+	el.classList.toggle('hero__hint--error', isError);
 }

@@ -100,7 +100,22 @@ Key points:
 - For empty snippets (e.g. external link posts), the cron pipeline calls `ingest.EnrichSnippets`
   after fetch, which fills them in from the article's meta description.
 
-## 3. Capture a real-API fixture
+## 3. Add a mark/logo asset
+
+Add a square SVG (or PNG/WebP for raster brands) to `web/assets/images/marks/<source_id>.<ext>` and
+register its path in the `sourceMarkURLs` map in `internal/news/sources.go`:
+
+```go
+var sourceMarkURLs = map[Source]string{
+    // ...
+    SourceFoo: "/assets/images/marks/foo.svg",
+}
+```
+
+Sources without a `MarkURL` entry fall back to their `ShortLabel` chip — that is acceptable for
+sources whose brand assets cannot be freely redistributed, but a mark file is strongly preferred.
+
+## 4. Capture a real-API fixture
 
 Tests load the OK-case payload from `testdata/<source>.{json,xml,atom,html}` rather than embedding
 the response inline. Capture a small real response from the upstream once and commit it:
@@ -119,7 +134,7 @@ no substitution — leave the captured URLs verbatim.
 Edge-case payloads (malformed cards, missing fields, self-posts) stay inline as small `const`
 strings — those are crafted negative tests, not real API samples.
 
-## 4. Write tests
+## 5. Write tests
 
 Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API; load the fixture
 once at the top of the test and (for enriching sources) `strings.ReplaceAll` the sentinel:
@@ -204,7 +219,7 @@ When the upstream API schema changes and the fixture-based test fails, re-run th
 to capture a fresh response, re-apply the `__SERVER_URL__` substitution if the source enriches, and
 update the OK-case assertions to match the new first-item values.
 
-## 5. Verify
+## 6. Verify
 
 ```sh
 make test        # unit tests

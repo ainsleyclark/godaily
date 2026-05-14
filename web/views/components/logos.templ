@@ -21,9 +21,11 @@ var logoItems = []logoEntry{
 }
 
 templ Logos() {
-	<div class="logo-ticker" aria-hidden="true">
-		for _, l := range logoItems {
-			@Picture(l.src, l.alt, "logo-ticker__img", nil)
-		}
-	</div>
+	@Container(false) {
+		<div class="logo-ticker" aria-hidden="true">
+			for _, l := range logoItems {
+				@Picture(l.src, l.alt, "logo-ticker__img", nil)
+			}
+		</div>
+	}
 }

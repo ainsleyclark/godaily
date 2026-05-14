@@ -33,6 +33,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/email"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
@@ -57,6 +58,7 @@ var sectionAccents = map[news.Tag]string{
 type (
 	emailItem struct {
 		URL            string
+		ReadOnURL      string
 		Title          string
 		Snippet        string
 		Meta           string
@@ -74,6 +76,7 @@ type (
 	}
 	digestData struct {
 		Date           time.Time
+		Intro          string
 		Sections       []emailSection
 		UnsubscribeURL string
 		CanonicalURL   string
@@ -93,6 +96,8 @@ type (
 
 	digestOptions struct {
 		Day            time.Time
+		Subject        string // AI-generated title; falls back to static date format when empty
+		Intro          string // AI-generated intro paragraph; omitted from email when empty
 		Sources        []news.SourceItems
 		UnsubscribeURL string
 		CanonicalURL   string
@@ -101,10 +106,15 @@ type (
 
 func renderDigest(opts digestOptions) (renderedDigest, error) {
 	sections := buildSections(opts.Sources)
-	subject := "GoDaily - " + opts.Day.Format("January 2, 2006")
+
+	subject := opts.Subject
+	if subject == "" {
+		subject = "GoDaily - " + opts.Day.Format("January 2, 2006")
+	}
 
 	data := digestData{
 		Date:           opts.Day,
+		Intro:          opts.Intro,
 		Sections:       sections,
 		UnsubscribeURL: opts.UnsubscribeURL,
 		CanonicalURL:   opts.CanonicalURL,
@@ -177,27 +187,33 @@ func buildSections(sources []news.SourceItems) []emailSection {
 
 func toEmailItem(item news.Item) emailItem {
 	parts := []string{item.Source.NiceName()}
-	if item.Score > 0 {
-		parts = append(parts, fmt.Sprintf("%.0f pts", item.Score))
-	}
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
 	}
+	markURL := item.Source.MarkURL()
+	if markURL != "" {
+		markURL = env.AppURL + markURL
+	}
+	readOnURL := item.URL
+	if item.OriginalURL != "" {
+		readOnURL = item.OriginalURL
+	}
 	return emailItem{
 		URL:            item.URL,
+		ReadOnURL:      readOnURL,
 		Title:          item.Title,
 		Snippet:        item.Snippet,
 		Meta:           strings.Join(parts, " · "),
 		Source:         string(item.Source),
 		SourceNiceName: item.Source.NiceName(),
 		SourceLabel:    item.Source.ShortLabel(),
-		MarkURL:        item.Source.MarkURL(),
+		MarkURL:        markURL,
 	}
 }
 
 func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {
 	return a.email.Send(ctx, email.SendEmailRequest{
-		From:    "noreply@godaily.dev",
+		From:    "GoDaily <noreply@godaily.dev>",
 		To:      []string{to},
 		Subject: d.Subject,
 		Html:    d.HTML,

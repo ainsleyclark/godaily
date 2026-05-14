@@ -6,27 +6,29 @@ const latestMaxItems = 6
 
 templ Latest(issue news.Issue) {
 	<section id="latest" class="section latest">
-		<div class="section__label">Fresh off the press</div>
-		<h2 class="section__title">What landed in today's digest</h2>
-		<p class="section__sub">
-			A peek at the most recent issue. Subscribe to get the full thing in your inbox.
-		</p>
-		if len(issue.Items) == 0 {
-			<div class="latest__empty">
-				The first issue lands soon. Subscribe above to be first to read it.
-			</div>
-		} else {
-			@SwiperContainer("latest__swiper") {
-				for _, item := range latestItems(issue.Items) {
-					<a class="latest__card swiper-slide" href={ templ.URL(item.URL) } target="_blank" rel="noopener">
-						<span class="latest__source">
-							{ item.Source.Emoji() } { item.Source.NiceName() }
-						</span>
-						<span class="latest__title">{ item.Title }</span>
-						if item.Snippet != "" {
-							<span class="latest__snippet">{ item.Snippet }</span>
-						}
-					</a>
+		@Container(false) {
+			<div class="section__label">Fresh off the press</div>
+			<h2 class="section__title">What landed in today's digest</h2>
+			<p class="section__sub">
+				A peek at the most recent issue. Subscribe to get the full thing in your inbox.
+			</p>
+			if len(issue.Items) == 0 {
+				<div class="latest__empty">
+					The first issue lands soon. Subscribe above to be first to read it.
+				</div>
+			} else {
+				@SwiperContainer("latest__swiper") {
+					for _, item := range latestItems(issue.Items) {
+						<a class="latest__card swiper-slide" href={ templ.URL(item.URL) } target="_blank" rel="noopener">
+							<span class="latest__source">
+								{ item.Source.Emoji() } { item.Source.NiceName() }
+							</span>
+							<span class="latest__title">{ item.Title }</span>
+							if item.Snippet != "" {
+								<span class="latest__snippet">{ item.Snippet }</span>
+							}
+						</a>
+					}
 				}
 			}
 		}

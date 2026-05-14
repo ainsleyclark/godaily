@@ -32,8 +32,18 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
+// Handler returns the configured HTTP handler for the web server without
+// starting it. Useful for composing with additional routes in tests.
+func Handler(a *godaily.App) http.Handler {
+	return newKit(a)
+}
+
 // Start boots the HTTP server on the given port.
 func Start(a *godaily.App, port string) error {
+	return newKit(a).Start(fmt.Sprintf(":%s", port))
+}
+
+func newKit(a *godaily.App) *webkit.Kit {
 	kit := webkit.New()
 
 	kit.Plug(kitmiddleware.NonWWWRedirect)
@@ -62,5 +72,5 @@ func Start(a *godaily.App, port string) error {
 		kit.Mux().Get("/internal/reload/", handlers.ReloadHTTP)
 	}
 
-	return kit.Start(fmt.Sprintf(":%s", port))
+	return kit
 }

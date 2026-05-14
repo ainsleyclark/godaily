@@ -1,0 +1,15 @@
+package components
+
+type TagProps struct {
+	Dot    bool
+	Shadow bool
+}
+
+templ Tag(text string, props TagProps) {
+	<span class={ "tag", templ.KV("tag--shadow", props.Shadow) }>
+		if props.Dot {
+			<span class="tag__dot"></span>
+		}
+		{ text }
+	</span>
+}

@@ -87,7 +87,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 	}
 
 	return a.email.Send(ctx, email.SendEmailRequest{
-		From:    "noreply@godaily.dev",
+		From:    "GoDaily <noreply@godaily.dev>",
 		To:      []string{a.adminEmailAddress},
 		Subject: "GoDaily Synth - " + date.Format("2006-01-02"),
 		Html:    html,

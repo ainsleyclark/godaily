@@ -12,44 +12,10 @@
 		font-weight: 600;
 		color: var(--text-3);
 		margin-right: 0.25rem;
-	}
 
-	&__btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 5px;
-		padding: 0.35rem 0.7rem;
-		border-radius: 8px;
-		border: 1px solid var(--border);
-		background: var(--bg-card);
-		color: var(--text-2);
-		font-family: var(--font);
-		font-size: 0.8rem;
-		font-weight: 500;
-		cursor: pointer;
-		text-decoration: none;
-		transition: border-color 0.15s, color 0.15s, background 0.15s;
-
-		svg {
-			flex-shrink: 0;
-		}
-
-		&:hover {
-			border-color: var(--accent);
-			color: var(--accent-dark);
-			background: var(--accent-light);
-		}
-
-		&--copied {
-			border-color: var(--color-success);
-			color: var(--color-success);
-			background: rgba(45, 189, 122, 0.08);
-
-			&:hover {
-				border-color: var(--color-success);
-				color: var(--color-success);
-				background: rgba(45, 189, 122, 0.08);
-			}
+		@include mobile {
+			flex-basis: 100%;
+			margin-right: 0;
 		}
 	}
 }

@@ -2,13 +2,27 @@
 	{
 		"id": 0,
 		"source": "awesome_go",
+		"title": "PR to add aytechnet/decimal (#6314)",
+		"url": "https://github.com/avelino/awesome-go/commit/0994f0bd77c7c5eb65dfd80ebd57ef6af488003d",
+		"author": {
+			"name": "François Pons"
+		},
+		"snippet": "",
+		"tag": "trending",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-12T12:53:23Z"
+	},
+	{
+		"id": 0,
+		"source": "awesome_go",
 		"title": "Adding zenflow  (#6311)",
 		"url": "https://github.com/avelino/awesome-go/commit/5224c9a0ea1649f1e219ba41107de0654c95fd39",
 		"author": {
 			"name": "anh"
 		},
 		"snippet": "* Add goai – Go SDK for building AI applications. One SDK, 20+ providers. Add goai – Go SDK for building AI applications. One SDK, 20+ providers. https://github.com/zendev-sh/goai * Add goai – G",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-10T23:22:02Z"
@@ -22,7 +36,7 @@
 			"name": "Carlos"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-09T17:29:29Z"
@@ -36,7 +50,7 @@
 			"name": "alzhi"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-06T17:21:46Z"
@@ -50,7 +64,7 @@
 			"name": "Michael Primeaux"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-06T01:14:46Z"
@@ -64,7 +78,7 @@
 			"name": "ChrisJr404"
 		},
 		"snippet": "emicklei/proto is a parser and writer for Google ProtocolBuffers .proto files. MIT-licensed, v1.14.3 SemVer release, A+ Go Report Card grade, 615+ stars and active maintenance (most recent push 2026-0",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-05T21:25:07Z"
@@ -78,7 +92,7 @@
 			"name": "Hosaina Y."
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-05T09:34:46Z"
@@ -92,7 +106,7 @@
 			"name": "alzhi"
 		},
 		"snippet": "* Add pgrwl to 'Database Tools' section * fix: add dot in description",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-05T04:09:56Z"
@@ -106,7 +120,7 @@
 			"name": "Aman Bansal"
 		},
 		"snippet": "A distributed lock family for Go with one interface and five backends (filelock, flock, Redis, Postgres, etcd). Backends share a Locker interface so callers swap between them with one line of wiring. ",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-04T19:59:41Z"
@@ -120,7 +134,7 @@
 			"name": "Youngkwang Yang"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-04T16:12:40Z"
@@ -134,7 +148,7 @@
 			"name": "mike392"
 		},
 		"snippet": "Co-authored-by: mikhail.barsukou",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-03T17:31:37Z"
@@ -148,7 +162,7 @@
 			"name": "mike392"
 		},
 		"snippet": "Co-authored-by: mikhail.barsukou",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-03T17:25:08Z"
@@ -162,7 +176,7 @@
 			"name": "nilpoona"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-03T14:11:38Z"
@@ -176,7 +190,7 @@
 			"name": "Andrey Kolkov"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-01T09:50:19Z"
@@ -190,7 +204,7 @@
 			"name": "Balaji j"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-01T07:57:31Z"
@@ -204,7 +218,7 @@
 			"name": "Ricardo Lüders"
 		},
 		"snippet": "Added canery project to the list of tools in README.",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-01T03:11:04Z"
@@ -218,7 +232,7 @@
 			"name": "Ricardo Lüders"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-05-01T02:41:08Z"
@@ -232,7 +246,7 @@
 			"name": "Andrey Kolkov"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-04-30T19:22:58Z"
@@ -246,7 +260,7 @@
 			"name": "Andrew Gillis"
 		},
 		"snippet": "Added link to adaptive radix tree implementation.",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-04-30T01:55:57Z"
@@ -260,23 +274,9 @@
 			"name": "Evgenii Orlov"
 		},
 		"snippet": "",
-		"tag": "article",
+		"tag": "trending",
 		"comments": 0,
 		"score": 0.5,
 		"published": "2026-04-27T08:30:23Z"
-	},
-	{
-		"id": 0,
-		"source": "awesome_go",
-		"title": "docs: update NoKV description (#6280)",
-		"url": "https://github.com/avelino/awesome-go/commit/a870df79861bdeadbc6e790122937cae34f35caa",
-		"author": {
-			"name": "Guocheng Song"
-		},
-		"snippet": "",
-		"tag": "article",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-04-26T03:17:26Z"
 	}
 ]

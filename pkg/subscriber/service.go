@@ -143,7 +143,7 @@ func (s Service) sendWelcome(ctx context.Context, to, unsubURL, latestIssueURL, 
 	}
 
 	return s.email.Send(ctx, email.SendEmailRequest{
-		From:    "noreply@godaily.dev",
+		From:    "GoDaily <noreply@godaily.dev>",
 		To:      []string{to},
 		Subject: "Welcome to GoDaily!",
 		Html:    htmlBuf.String(),
