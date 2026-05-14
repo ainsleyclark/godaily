@@ -95,10 +95,10 @@ const options = {
 (async () => {
 	// Check for watch flag in arguments
 	if (isProd) {
+		await esbuild.build(options);
 		if (!excludeImages) {
 			await copyAndConvertImages('assets/images', 'dist/images');
 		}
-		await esbuild.build(options);
 	} else {
 		try {
 			const ctx = await esbuild.context(options);

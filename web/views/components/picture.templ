@@ -1,0 +1,28 @@
+package components
+
+import (
+	"path"
+	"strings"
+)
+
+func pictureExt(src, ext string) string {
+	return strings.TrimSuffix(src, path.Ext(src)) + ext
+}
+
+// Picture renders a <picture> element with AVIF and WebP <source> elements
+// falling back to a PNG <img>. SVG files are passed through as a plain <img>
+// since they don't benefit from format conversion.
+//
+// attrs is spread onto the <img> tag — pass templ.Attributes{"width": "32",
+// "height": "32"} for fixed-size marks, or nil for CSS-controlled sizes.
+templ Picture(src, alt, class string, attrs templ.Attributes) {
+	if path.Ext(src) == ".svg" {
+		<img class={ class } src={ src } alt={ alt } { attrs... }/>
+	} else {
+		<picture>
+			<source type="image/avif" srcset={ pictureExt(src, ".avif") }/>
+			<source type="image/webp" srcset={ pictureExt(src, ".webp") }/>
+			<img class={ class } src={ pictureExt(src, ".png") } alt={ alt } { attrs... }/>
+		</picture>
+	}
+}

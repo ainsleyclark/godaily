@@ -23,7 +23,7 @@ var logoItems = []logoEntry{
 templ Logos() {
 	<div class="logo-ticker" aria-hidden="true">
 		for _, l := range logoItems {
-			<img class="logo-ticker__img" src={ l.src } alt={ l.alt }/>
+			@Picture(l.src, l.alt, "logo-ticker__img", nil)
 		}
 	</div>
 }
