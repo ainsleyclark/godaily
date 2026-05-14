@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Turso CLI
-        run: curl -sSfL https://get.tur.so/install.sh | bash
+        run: |
+          curl -sSfL https://get.tur.so/install.sh | bash
+          echo "$HOME/.turso" >> $GITHUB_PATH
 
       - name: Dump database and upload to Backblaze B2
         env:
