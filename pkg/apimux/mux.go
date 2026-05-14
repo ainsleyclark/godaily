@@ -17,35 +17,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+// Package apimux wires all API handler functions into a single http.Handler.
+// It lives outside api/ so Vercel's serverless function glob ("api/**/*.go")
+// does not pick it up as a function entry point.
+package apimux
 
 import (
-	"context"
-	"errors"
 	"net/http"
 
+	apihandlers "github.com/ainsleyclark/godaily/api"
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 )
 
-// HandleConfirm is the Vercel serverless function entry point for GET /api/confirm.
-func HandleConfirm(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		token := r.URL.Query().Get("token")
-		if token == "" {
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		}
-
-		if err := a.Subscribers.Confirm(ctx, token); errors.Is(err, store.ErrNotFound) {
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		} else if err != nil {
-			api.Error(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		http.Redirect(w, r, "/confirmed/", http.StatusFound)
-	})(w, r)
+// Handler returns an http.Handler for all API routes with app injected into
+// every request context. Routes are relative to /api — callers should mount
+// or strip the /api prefix before dispatching here.
+func Handler(app *godaily.App) http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /subscribe", apihandlers.HandleSubscribe)
+	mux.HandleFunc("GET /confirm", apihandlers.HandleConfirm)
+	mux.HandleFunc("GET /unsubscribe", apihandlers.HandleUnsubscribe)
+	mux.HandleFunc("GET /collect", apihandlers.HandleCollect)
+	mux.HandleFunc("GET /send", apihandlers.HandleSend)
+	mux.HandleFunc("GET /healthz", apihandlers.HandleHealthz)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mux.ServeHTTP(w, r.WithContext(pkgapi.WithApp(r.Context(), app)))
+	})
 }

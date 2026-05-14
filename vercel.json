@@ -8,13 +8,13 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"rewrites": [
-		{ "source": "/healthz", "destination": "/api/healthz" },
+		{ "source": "/healthz",          "destination": "/api/healthz" },
 		{ "source": "/api/issues/:slug", "destination": "/api/issues/slug?slug=:slug" },
-		{ "source": "/api/items/:id", "destination": "/api/items/id?id=:id" }
+		{ "source": "/api/items/:id",    "destination": "/api/items/id?id=:id" }
 	],
 	"crons": [
-		{ "path": "/api/collect/", "schedule": "0 1 * * 1-5" },
-		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
+		{ "path": "/api/collect", "schedule": "0 1 * * 1-5" },
+		{ "path": "/api/send",    "schedule": "0 8 * * 1-5" }
 	],
 	"functions": {
 		"api/**/*.go": {

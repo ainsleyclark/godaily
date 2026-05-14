@@ -67,7 +67,7 @@ func Confirmed(issue news.Issue) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"thank-you__content\"><div class=\"thank-you__check\">✓</div><h1 class=\"thank-you__title\">You&#39;re subscribed!</h1><p class=\"thank-you__lead\">You&#39;re all set — weekday mornings, fresh Go news lands in your inbox.</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"thank-you__content\"><div class=\"thank-you__check\">✓</div><h1 class=\"thank-you__title\">You're subscribed!</h1><p class=\"thank-you__lead\">You're all set. Fresh Go news lands in your inbox every weekday morning.</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -79,7 +79,7 @@ func Confirmed(issue news.Issue) templ.Component {
 					var templ_7745c5c3_Var4 templ.SafeURL
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/issues/" + issue.Slug + "/"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/confirmed.templ`, Line: 27, Col: 85}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/confirmed.templ`, Line: 23, Col: 85}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {

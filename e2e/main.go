@@ -36,9 +36,8 @@ import (
 	"syscall"
 	"time"
 
-	apihandlers "github.com/ainsleyclark/godaily/api"
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/apimux"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/email"
@@ -119,26 +118,20 @@ func main() {
 
 	webH := webserver.Handler(app)
 
-	apiMux := http.NewServeMux()
-	apiMux.HandleFunc("POST /api/subscribe", apihandlers.HandleSubscribe)
-	apiMux.HandleFunc("GET /api/unsubscribe", apihandlers.HandleUnsubscribe)
-	apiMux.HandleFunc("GET /api/collect", apihandlers.HandleCollect)
-	apiMux.HandleFunc("GET /api/send", apihandlers.HandleSend)
-	apiMux.HandleFunc("GET /api/healthz", apihandlers.HandleHealthz)
-	// Debug endpoint — exposes captured emails so Playwright tests can read
-	// the unsubscribe token without needing a real email provider.
-	apiMux.HandleFunc("GET /api/e2e/emails", func(w http.ResponseWriter, r *http.Request) {
-		spy.mu.Lock()
-		defer spy.mu.Unlock()
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(spy.sent)
-	})
+	apiH := http.StripPrefix("/api", apimux.Handler(app))
 
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasPrefix(r.URL.Path, "/api/") {
-			r = r.WithContext(pkgapi.WithApp(r.Context(), app))
-			apiMux.ServeHTTP(w, r)
-		} else {
+		switch {
+		case r.URL.Path == "/api/e2e/emails":
+			// Debug endpoint — exposes captured emails so Playwright tests can read
+			// the unsubscribe/confirm token without needing a real email provider.
+			spy.mu.Lock()
+			defer spy.mu.Unlock()
+			w.Header().Set("Content-Type", "application/json")
+			_ = json.NewEncoder(w).Encode(spy.sent)
+		case strings.HasPrefix(r.URL.Path, "/api/"):
+			apiH.ServeHTTP(w, r)
+		default:
 			webH.ServeHTTP(w, r)
 		}
 	})

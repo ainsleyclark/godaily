@@ -71,14 +71,14 @@ func ThankYou(email string) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				if email != "" {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"thank-you__lead\">We&#39;ve sent a confirmation link to <strong>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p class=\"thank-you__lead\">We've sent a confirmation link to <strong>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(email)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/thankyou.templ`, Line: 18, Col: 57}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/thankyou.templ`, Line: 19, Col: 82}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -89,12 +89,12 @@ func ThankYou(email string) templ.Component {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"thank-you__lead\">We&#39;ve sent you a confirmation link. Click the link in the email to confirm your subscription to GoDaily.</p>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"thank-you__lead\">We've sent you a confirmation link. Click the link in the email to confirm your subscription to GoDaily.</p>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<p class=\"thank-you__lead\">If you don&#39;t see it, check your spam folder.</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<p class=\"thank-you__lead\">If you don't see it, check your spam folder.</p></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
