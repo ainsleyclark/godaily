@@ -54,6 +54,12 @@ sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
 	sqlc generate
 .PHONY: sqlc
 
+db-backup: # Dump the remote Turso database to godaily.db on the local filesystem
+	@command -v turso >/dev/null 2>&1 || { echo "turso CLI is required (curl -sSfL https://get.tur.so/install.sh | bash)"; exit 1; }
+	@[ -n "$$TURSO_DB_NAME" ] || { echo "TURSO_DB_NAME is not set"; exit 1; }
+	turso db shell "$$TURSO_DB_NAME" ".dump" > godaily.db
+.PHONY: db-backup
+
 migrate-up: # Apply all pending database migrations against TURSO_URL
 	go run main.go migrate up
 .PHONY: migrate-up
