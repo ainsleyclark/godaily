@@ -10,9 +10,10 @@ import (
 
 templ IssuesArchive(issues []news.Issue) {
 	@layouts.Base(layouts.PageMeta{
-		Title:        "All Issues",
-		Description:  "Browse every issue of GoDaily, the daily Go news digest.",
+		Title:        "Go Newsletter Archive: All Issues",
+		Description:  "Browse the complete GoDaily archive. Every issue of the daily Go newsletter, fully linked and readable. Go news delivered weekdays.",
 		CanonicalURL: "https://godaily.dev/issues/",
+		SchemaJSON:   layouts.ArchiveSchemas(issues),
 	}) {
 		@components.Header()
 		<section class="section issues-archive">

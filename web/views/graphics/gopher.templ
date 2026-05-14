@@ -3,5 +3,9 @@ package graphics
 import "fmt"
 
 templ GopherLogo(size int) {
-	<img src="/assets/favicon/favicon.png" width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } alt="GoDaily"/>
+	<picture>
+		<source type="image/avif" srcset="/assets/favicon/favicon.avif"/>
+		<source type="image/webp" srcset="/assets/favicon/favicon.webp"/>
+		<img src="/assets/favicon/favicon.png" width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } alt="GoDaily"/>
+	</picture>
 }

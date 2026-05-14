@@ -66,7 +66,7 @@ func Logos() templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, l := range logoItems {
-				templ_7745c5c3_Err = Picture(l.src, l.alt, "logo-ticker__img", nil).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = Picture(l.src, l.alt, "logo-ticker__img", templ.Attributes{"height": "34", "width": "auto"}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

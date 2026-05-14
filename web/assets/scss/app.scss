@@ -1,5 +1,6 @@
 @use 'abstracts/variables';
 @use 'abstracts/mixins';
+@use 'base/fonts';
 @use 'base/reset';
 @use 'base/typography';
 @use 'layout/container';
@@ -25,4 +26,5 @@
 @use 'components/error';
 @use 'components/subscribe-cta';
 @use 'components/privacy';
+@use 'components/breadcrumb';
 @use 'components/share-buttons';

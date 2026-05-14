@@ -69,14 +69,24 @@ func Digest(issue news.Issue) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">")
+				templ_7745c5c3_Err = components.Breadcrumb(components.BreadcrumbProps{
+					Items: []components.BreadcrumbItem{
+						{Label: "Home", URL: "/"},
+						{Label: "Issues", URL: "/issues/"},
+						{Label: fmt.Sprintf("Issue #%d", issue.ID)},
+					},
+				}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " <div class=\"section__label\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Issue #%d", issue.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 21, Col: 68}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 31, Col: 68}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -89,7 +99,7 @@ func Digest(issue news.Issue) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Subject)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 22, Col: 46}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 32, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -107,7 +117,7 @@ func Digest(issue news.Issue) templ.Component {
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Summary)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 24, Col: 44}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 34, Col: 44}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -159,10 +169,13 @@ func Digest(issue news.Issue) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        fmt.Sprintf("Issue #%d – %s", issue.ID, issue.Subject),
+			Title:        fmt.Sprintf("Go Newsletter – Issue #%d: %s", issue.ID, issue.Subject),
 			Description:  issue.Summary,
 			CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 			OGImage:      fmt.Sprintf("https://godaily.dev/og/issues/%s.png", issue.Slug),
+			IsArticle:    true,
+			ArticleDate:  issue.SentAt,
+			SchemaJSON:   layouts.IssueSchemas(issue),
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

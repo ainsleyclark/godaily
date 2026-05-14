@@ -6,6 +6,7 @@
  * @author Email: hello@ainsley.dev
  */
 
+import 'htmx.org';
 import { initSubscribeForm } from './subscribe';
 import { initSwipers } from './swiper';
 import { initLogoTicker } from './logos';

@@ -45,10 +45,16 @@ type sitemapURL struct {
 // sitemap writes sitemap.xml to outDir containing the homepage and one entry
 // per issue at /issues/{slug}/.
 func sitemap(w website, outDir string) error {
+	home := sitemapURL{Loc: env.AppURL + "/", Priority: "1.0"}
+	if len(w.Issues) > 0 {
+		home.LastMod = w.Issues[0].SentAt.Format("2006-01-02")
+	}
+
 	set := urlSet{
 		Xmlns: sitemapNamespace,
 		URLs: []sitemapURL{
-			{Loc: env.AppURL + "/", Priority: "1.0"},
+			home,
+			{Loc: env.AppURL + "/issues/", Priority: "0.9"},
 		},
 	}
 
