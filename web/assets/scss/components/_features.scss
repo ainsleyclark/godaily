@@ -14,7 +14,7 @@
 	}
 
 	&__swiper {
-		--swiper-columns: repeat(auto-fit, minmax(260px, 1fr));
+		--swiper-columns: repeat(4, 1fr);
 		--swiper-gap: 1.5rem;
 
 		@include tablet {
