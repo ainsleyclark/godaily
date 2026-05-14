@@ -21,7 +21,7 @@ func WebSiteSchema() string {
 		"@type":    "WebSite",
 		"name":     "GoDaily",
 		"url":      env.AppURL + "/",
-		"description": "The daily Go newsletter — best stories from the Go community, ranked and delivered before standup.",
+		"description": "The daily Go newsletter. Best stories from the Go community, ranked and delivered before standup.",
 		"potentialAction": map[string]any{
 			"@type": "SearchAction",
 			"target": map[string]any{
@@ -84,7 +84,7 @@ func ArchiveSchemas(issues []news.Issue) string {
 	collection := map[string]any{
 		"@context":    "https://schema.org",
 		"@type":       "CollectionPage",
-		"name":        "GoDaily — Go Newsletter Archive",
+		"name":        "GoDaily: Go Newsletter Archive",
 		"description": "Browse every issue of GoDaily, the daily Go newsletter.",
 		"url":         archiveURL,
 	}

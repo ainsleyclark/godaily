@@ -171,7 +171,7 @@ func IssuesArchive(issues []news.Issue) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "Go Newsletter Archive — All Issues",
+			Title:        "Go Newsletter Archive: All Issues",
 			Description:  "Browse the complete GoDaily archive. Every issue of the daily Go newsletter, fully linked and readable. Go news delivered weekdays.",
 			CanonicalURL: "https://godaily.dev/issues/",
 			SchemaJSON:   layouts.ArchiveSchemas(issues),

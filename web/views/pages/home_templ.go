@@ -151,7 +151,7 @@ func Home(data HomeData) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "GoLang Newsletter — Daily Go News Before Standup",
+			Title:        "GoLang Newsletter: Daily Go News Before Standup",
 			Description:  "A free GoLang newsletter delivering the best Go news, articles, and community discussions to your inbox every weekday morning.",
 			CanonicalURL: "https://godaily.dev/",
 			PreloadImage: "/assets/images/hero-gopher.avif",
