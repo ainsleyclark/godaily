@@ -84,6 +84,14 @@ func TestRedditChild_ShouldInclude(t *testing.T) {
 			input: redditChild{Data: redditPost{Title: "Go microservices", SelfText: "Looking for FEEDBACK on the architecture."}},
 			want:  false,
 		},
+		"Learning in title": {
+			input: redditChild{Data: redditPost{Title: "Learning goroutines with sync.WaitGroup"}},
+			want:  false,
+		},
+		"Learning case insensitive": {
+			input: redditChild{Data: redditPost{Title: "I'm LEARNING Go and have a question"}},
+			want:  false,
+		},
 	}
 
 	for name, test := range tt {

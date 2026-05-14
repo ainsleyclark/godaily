@@ -58,6 +58,34 @@ func TestTruncate(t *testing.T) {
 	}
 }
 
+func TestSanitise(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input string
+		want  string
+	}{
+		"Plain text":          {input: "hello world", want: "hello world"},
+		"HTML tags":           {input: "<b>bold</b> text", want: "bold text"},
+		"HTML entities":       {input: "foo &amp; bar", want: "foo & bar"},
+		"Inline code":         {input: "use `wg.Add(1)` to increment", want: "use to increment"},
+		"Fenced code block":   {input: "```go\nfmt.Println()\n```", want: ""},
+		"Emphasis markers":    {input: "**bold** and _italic_", want: "bold and italic"},
+		"Heading marker":      {input: "## Section title", want: "Section title"},
+		"Markdown link":       {input: "[Testo](https://github.com/ozontech/testo)", want: "Testo"},
+		"Link mid-sentence":   {input: "built on [testing.T](https://pkg.go.dev/testing) package", want: "built on testing.T package"},
+		"Multiple links":      {input: "[A](https://a.com) and [B](https://b.com)", want: "A and B"},
+		"Collapsed whitespace": {input: "foo   \n  bar", want: "foo bar"},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, sanitise(test.input))
+		})
+	}
+}
+
 func TestTransformAll(t *testing.T) {
 	t.Parallel()
 
