@@ -17,7 +17,7 @@ jobs:
       - name: Dump database and upload to Backblaze B2
         env:
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_DB_TOKEN }}
-          TURSO_DB_URL: ${{ secrets.TURSO_DB_URL }}
+          TURSO_DB_URL: ${{ secrets.TURSO_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
           B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
