@@ -98,11 +98,13 @@ const options = {
 		await esbuild.build(options);
 		if (!excludeImages) {
 			await copyAndConvertImages('assets/images', 'dist/images');
+			await copyAndConvertImages('assets/favicon', 'dist/favicon');
 		}
 	} else {
 		try {
 			if (!excludeImages) {
 				await copyAndConvertImages('assets/images', 'dist/images');
+				await copyAndConvertImages('assets/favicon', 'dist/favicon');
 			}
 			const ctx = await esbuild.context(options);
 			await ctx.watch();

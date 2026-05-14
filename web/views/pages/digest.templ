@@ -10,14 +10,24 @@ import (
 
 templ Digest(issue news.Issue) {
 	@layouts.Base(layouts.PageMeta{
-		Title:        fmt.Sprintf("Issue #%d – %s", issue.ID, issue.Subject),
+		Title:        fmt.Sprintf("Go Newsletter – Issue #%d: %s", issue.ID, issue.Subject),
 		Description:  issue.Summary,
 		CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 		OGImage:      fmt.Sprintf("https://godaily.dev/og/issues/%s.png", issue.Slug),
+		IsArticle:    true,
+		ArticleDate:  issue.SentAt,
+		SchemaJSON:   layouts.IssueSchemas(issue),
 	}) {
 		@components.Header()
 		<div class="section">
 			@components.Container(true) {
+				@components.Breadcrumb(components.BreadcrumbProps{
+					Items: []components.BreadcrumbItem{
+						{Label: "Home", URL: "/"},
+						{Label: "Issues", URL: "/issues/"},
+						{Label: fmt.Sprintf("Issue #%d", issue.ID)},
+					},
+				})
 				<div class="section__label">{ fmt.Sprintf("Issue #%d", issue.ID) }</div>
 				<h1 class="section__title">{ issue.Subject }</h1>
 				if issue.Summary != "" {

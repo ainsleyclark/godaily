@@ -149,7 +149,7 @@ func Hero(flash string, subscriberCount int64) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><picture><source media=\"(max-width: 900px)\" srcset=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\"> <img class=\"hero__image\" src=\"/assets/images/hero-gopher.png\" alt=\"\"></picture></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><picture><source media=\"(max-width: 900px)\" srcset=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\"> <source type=\"image/avif\" srcset=\"/assets/images/hero-gopher.avif\"> <source type=\"image/webp\" srcset=\"/assets/images/hero-gopher.webp\"> <img class=\"hero__image\" src=\"/assets/images/hero-gopher.png\" alt=\"Go Gopher mascot\" width=\"440\" height=\"440\" fetchpriority=\"high\" loading=\"eager\"></picture></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

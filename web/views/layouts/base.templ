@@ -1,6 +1,8 @@
 package layouts
 
 import (
+	"time"
+
 	"github.com/ainsleyclark/godaily/web/views/components"
 	"github.com/ainsleydev/webkit/pkg/env"
 )
@@ -13,10 +15,14 @@ const (
 
 // PageMeta holds the SEO and social-sharing metadata rendered in <head>.
 type PageMeta struct {
-	Title        string // falls back to defaultTitle when empty
-	Description  string // falls back to defaultDescription when empty
-	CanonicalURL string // full URL; omitted when empty
-	OGImage      string // absolute URL to a 1200×630 OG image; falls back to defaultOGImage when empty
+	Title        string    // falls back to defaultTitle when empty
+	Description  string    // falls back to defaultDescription when empty
+	CanonicalURL string    // full URL; omitted when empty
+	OGImage      string    // absolute URL to a 1200×630 OG image; falls back to defaultOGImage when empty
+	PreloadImage string    // absolute URL to an image to <link rel="preload"> for LCP
+	SchemaJSON   string    // pre-serialised JSON-LD; rendered in <head> when non-empty
+	IsArticle    bool      // renders og:type=article and article:published_time
+	ArticleDate  time.Time // used when IsArticle is true
 }
 
 func (m PageMeta) title() string {
@@ -54,7 +60,15 @@ templ Base(meta PageMeta) {
 				<link rel="canonical" href={ meta.CanonicalURL }/>
 			}
 			<!-- Open Graph -->
-			<meta property="og:type" content="website"/>
+			if meta.IsArticle {
+				<meta property="og:type" content="article"/>
+				if !meta.ArticleDate.IsZero() {
+					<meta property="article:published_time" content={ meta.ArticleDate.UTC().Format(time.RFC3339) }/>
+				}
+				<meta name="author" content="GoDaily"/>
+			} else {
+				<meta property="og:type" content="website"/>
+			}
 			<meta property="og:title" content={ meta.title() }/>
 			<meta property="og:description" content={ meta.description() }/>
 			if meta.CanonicalURL != "" {
@@ -76,16 +90,21 @@ templ Base(meta PageMeta) {
 			<link rel="shortcut icon" href="/assets/favicon/favicon.ico"/>
 			<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png"/>
 			<link rel="manifest" href="/assets/favicon/site.webmanifest"/>
+			<!-- Structured Data -->
+			@templ.Raw(`<script type="application/ld+json">` + OrgSchema + `</script>`)
+			if meta.SchemaJSON != "" {
+				@templ.Raw(`<script type="application/ld+json">` + meta.SchemaJSON + `</script>`)
+			}
 			<!-- Scripts -->
 			<script defer src="/assets/js/app.js"></script>
-			<script defer src="https://unpkg.com/htmx.org@2.0.1"></script>
 			<!-- Fonts -->
-			<link rel="preconnect" href="https://fonts.googleapis.com"/>
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"/>
+			<link rel="preload" href="/assets/fonts/DMSans-Regular.ttf" as="font" type="font/ttf" crossorigin/>
 			<!-- Styles -->
 			<link rel="stylesheet" href="/assets/css/app.css"/>
-			<!-- Preload -->
+			<!-- LCP image preload -->
+			if meta.PreloadImage != "" {
+				<link rel="preload" href={ meta.PreloadImage } as="image" type="image/avif"/>
+			}
 		</head>
 		<body>
 			<!-- Content -->

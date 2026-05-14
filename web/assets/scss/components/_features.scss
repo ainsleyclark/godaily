@@ -16,6 +16,10 @@
 	&__swiper {
 		--swiper-columns: repeat(auto-fit, minmax(260px, 1fr));
 		--swiper-gap: 1.5rem;
+
+		@include mobile {
+			min-height: 220px;
+		}
 	}
 
 	&__card {
@@ -27,6 +31,7 @@
 
 		@include mobile {
 			padding: 1.25rem;
+			min-height: 170px;
 		}
 
 		&:hover {

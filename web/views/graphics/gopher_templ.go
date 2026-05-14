@@ -31,14 +31,14 @@ func GopherLogo(size int) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<img src=\"/assets/favicon/favicon.png\" width=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<picture><source type=\"image/avif\" srcset=\"/assets/favicon/favicon.avif\"> <source type=\"image/webp\" srcset=\"/assets/favicon/favicon.webp\"> <img src=\"/assets/favicon/favicon.png\" width=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%d", size))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 6, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 9, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -51,13 +51,13 @@ func GopherLogo(size int) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("%d", size))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 6, Col: 106}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/graphics/gopher.templ`, Line: 9, Col: 107}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" alt=\"GoDaily\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" alt=\"GoDaily\"></picture>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

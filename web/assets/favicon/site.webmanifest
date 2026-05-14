@@ -1,15 +1,17 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "GoDaily",
+  "short_name": "GoDaily",
+  "description": "The daily Go newsletter — best Go news delivered before standup.",
+  "start_url": "/",
   "icons": [
     {
-      "src": "/favicon/web-app-manifest-192x192.png",
+      "src": "/assets/favicon/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/favicon/web-app-manifest-512x512.png",
+      "src": "/assets/favicon/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

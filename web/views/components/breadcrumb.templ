@@ -1,0 +1,34 @@
+package components
+
+// BreadcrumbItem is a single crumb in the breadcrumb nav.
+// Set URL to empty string for the current (last) item.
+type BreadcrumbItem struct {
+	Label string
+	URL   string
+}
+
+// BreadcrumbProps holds the items for the breadcrumb nav.
+type BreadcrumbProps struct {
+	Items []BreadcrumbItem
+}
+
+templ Breadcrumb(props BreadcrumbProps) {
+	if len(props.Items) > 0 {
+		<nav aria-label="Breadcrumb" class="breadcrumb">
+			<ol class="breadcrumb__list">
+				for i, item := range props.Items {
+					<li class="breadcrumb__item">
+						if item.URL != "" {
+							<a class="breadcrumb__link" href={ templ.URL(item.URL) }>{ item.Label }</a>
+						} else {
+							<span class="breadcrumb__current" aria-current="page">{ item.Label }</span>
+						}
+						if i < len(props.Items)-1 {
+							<span class="breadcrumb__sep" aria-hidden="true">›</span>
+						}
+					</li>
+				}
+			</ol>
+		</nav>
+	}
+}
