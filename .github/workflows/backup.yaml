@@ -24,18 +24,3 @@ jobs:
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
           turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
-
-      - name: Delete backups older than 6 weeks
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
-          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
-          B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
-        run: |
-          CUTOFF=$(date -d "42 days ago" +%Y-%m-%d)
-          aws s3 ls "s3://$B2_BUCKET_NAME/" --endpoint-url "$B2_ENDPOINT" | while read -r date _ _ filename; do
-            if [[ -n "$filename" && "$date" < "$CUTOFF" ]]; then
-              echo "Deleting $filename (last modified: $date)"
-              aws s3 rm "s3://$B2_BUCKET_NAME/$filename" --endpoint-url "$B2_ENDPOINT"
-            fi
-          done
