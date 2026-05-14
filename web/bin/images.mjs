@@ -46,6 +46,6 @@ async function processDir(src, dest, opts) {
 	}
 }
 
-export default async function copyAndConvertImages(src, dest) {
-	await processDir(src, dest, DEFAULT_OPTS);
+export default async function copyAndConvertImages(src, dest, opts = DEFAULT_OPTS) {
+	await processDir(src, dest, opts);
 }

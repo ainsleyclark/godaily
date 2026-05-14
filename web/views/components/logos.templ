@@ -24,7 +24,7 @@ templ Logos() {
 	@Container(false) {
 		<div class="logo-ticker" aria-hidden="true">
 			for _, l := range logoItems {
-				@Picture(l.src, l.alt, "logo-ticker__img", nil)
+				@Picture(l.src, l.alt, "logo-ticker__img", templ.Attributes{"height": "34", "width": "auto"})
 			}
 		</div>
 	}

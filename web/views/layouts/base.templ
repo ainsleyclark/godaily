@@ -99,8 +99,10 @@ templ Base(meta PageMeta) {
 			<script defer src="/assets/js/app.js"></script>
 			<!-- Fonts -->
 			<link rel="preload" href="/assets/fonts/DMSans-Regular.ttf" as="font" type="font/ttf" crossorigin/>
-			<!-- Styles -->
-			<link rel="stylesheet" href="/assets/css/app.css"/>
+			<!-- Styles: critical inline + async full stylesheet -->
+			<style>:root{--bg:#f5fbff;--bg-header:rgba(245,251,255,.9);--text:#0d2236;--accent:#2aa8d8;--border:#d0e8f5}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column;min-height:100vh}main{flex:1}.header{position:sticky;top:0;z-index:100;background:var(--bg-header);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}.container{width:100%;max-width:1200px;margin:0 auto;padding:0 1rem}</style>
+			<link rel="stylesheet" href="/assets/css/app.css" media="print" onload="this.media='all'"/>
+			<noscript><link rel="stylesheet" href="/assets/css/app.css"/></noscript>
 			<!-- LCP image preload -->
 			if meta.PreloadImage != "" {
 				<link rel="preload" href={ meta.PreloadImage } as="image" type="image/avif"/>
