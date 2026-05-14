@@ -16,8 +16,8 @@ jobs:
 
       - name: Dump database and upload to Backblaze B2
         env:
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_DB_TOKEN }}
-          TURSO_DB_URL: ${{ secrets.TURSO_URL }}
+          TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
+          TURSO_DB_NAME: ${{ secrets.TURSO_DB_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
           B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
@@ -28,14 +28,15 @@ jobs:
             echo "Error: turso CLI not found on PATH" >&2
             exit 1
           fi
-          for var in TURSO_AUTH_TOKEN TURSO_DB_URL AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY B2_BUCKET_NAME B2_ENDPOINT; do
+          for var in TURSO_API_TOKEN TURSO_DB_NAME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY B2_BUCKET_NAME B2_ENDPOINT; do
             if [[ -z "${!var}" ]]; then
               echo "Error: $var is not set" >&2
               exit 1
             fi
           done
+          turso auth login --token "$TURSO_API_TOKEN"
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
-          turso db shell "$TURSO_DB_URL" --auth-token "$TURSO_AUTH_TOKEN" ".dump" | gzip > "$FILENAME"
+          turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
 
       - name: Delete backups older than 42 days
