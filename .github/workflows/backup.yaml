@@ -28,10 +28,12 @@ jobs:
             echo "Error: turso CLI not found on PATH" >&2
             exit 1
           fi
-          if [[ -z "$TURSO_DB_NAME" ]]; then
-            echo "Error: TURSO_DB_NAME is not set" >&2
-            exit 1
-          fi
+          for var in TURSO_API_TOKEN TURSO_DB_NAME AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY B2_BUCKET_NAME B2_ENDPOINT; do
+            if [[ -z "${!var}" ]]; then
+              echo "Error: $var is not set" >&2
+              exit 1
+            fi
+          done
           FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
           turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
           aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
