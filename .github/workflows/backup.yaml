@@ -1,0 +1,32 @@
+name: Backup Database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 0" # 2 AM UTC every Sunday
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Export and upload database backup
+        env:
+          APP_ENV: production
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_TOKEN: ${{ secrets.RESEND_TOKEN }}
+          EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
+          TURSO_URL: ${{ secrets.TURSO_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APP_KEY: ${{ secrets.B2_APP_KEY }}
+          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+          B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
+        run: go run main.go backup
