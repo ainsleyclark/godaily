@@ -1,0 +1,26 @@
+name: Backup Database
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 0" # 2 AM UTC every Sunday
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Turso CLI
+        run: curl -sSfL https://get.tur.so/install.sh | bash
+
+      - name: Dump database and upload to Backblaze B2
+        env:
+          TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
+          TURSO_DB_NAME: ${{ secrets.TURSO_DB_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.B2_APP_KEY }}
+          B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+          B2_ENDPOINT: ${{ secrets.B2_ENDPOINT }}
+        run: |
+          FILENAME="godaily-backup-$(date +%Y-%m-%d).sql.gz"
+          turso db shell "$TURSO_DB_NAME" ".dump" | gzip > "$FILENAME"
+          aws s3 cp "$FILENAME" "s3://$B2_BUCKET_NAME/$FILENAME" --endpoint-url "$B2_ENDPOINT"
