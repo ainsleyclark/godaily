@@ -92,15 +92,18 @@ func truncate(s string, max int) string {
 }
 
 var (
-	htmlTagRe  = regexp.MustCompile(`<[^>]*>`)
-	mdNoiseRe  = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
+	htmlTagRe = regexp.MustCompile(`<[^>]*>`)
+	mdLinkRe  = regexp.MustCompile(`\[([^\]]+)\]\([^)]+\)`)
+	mdNoiseRe = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
 )
 
-// sanitise produces a clean, single-line snippet: strips HTML tags, markdown
-// syntax (code fences, inline code, emphasis markers), unescapes HTML entities,
-// and collapses runs of whitespace into a single space.
+// sanitise produces a clean, single-line snippet: strips HTML tags, collapses
+// markdown links to their visible text, strips remaining markdown syntax
+// (code fences, inline code, emphasis markers), unescapes HTML entities, and
+// collapses runs of whitespace into a single space.
 func sanitise(s string) string {
 	s = htmlTagRe.ReplaceAllString(s, " ")
+	s = mdLinkRe.ReplaceAllString(s, "$1")
 	s = mdNoiseRe.ReplaceAllString(s, " ")
 	s = html.UnescapeString(s)
 	return strings.Join(strings.Fields(s), " ")
