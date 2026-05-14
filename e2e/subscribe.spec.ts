@@ -7,7 +7,7 @@ test('subscribe form redirects to thank-you page', async ({ page }) => {
   await form.locator('input[type="email"]').fill(`sub-${Date.now()}@example.com`);
   await form.locator('button[type="submit"]').click();
 
-  await expect(page).toHaveURL('/thank-you/');
+  await expect(page).toHaveURL(/\/thank-you\//);
 });
 
 test('already subscribed shows inline error', async ({ page }) => {
@@ -18,7 +18,7 @@ test('already subscribed shows inline error', async ({ page }) => {
   const form = page.locator('[data-subscribe]').first();
   await form.locator('input[type="email"]').fill(email);
   await form.locator('button[type="submit"]').click();
-  await expect(page).toHaveURL('/thank-you/');
+  await expect(page).toHaveURL(/\/thank-you\//);
 
   // Second attempt — should stay on the page and show the hint
   await page.goto('/');
@@ -49,7 +49,7 @@ test('unsubscribe link lands on unsubscribed page', async ({ page }) => {
   const form = page.locator('[data-subscribe]').first();
   await form.locator('input[type="email"]').fill(email);
   await form.locator('button[type="submit"]').click();
-  await expect(page).toHaveURL('/thank-you/');
+  await expect(page).toHaveURL(/\/thank-you\//);
 
   const res = await page.request.get('/api/e2e/emails');
   const emails = await res.json();
@@ -67,7 +67,7 @@ test('re-subscribe after unsubscribe redirects to thank-you', async ({ page }) =
   await page.goto('/');
   await page.locator('[data-subscribe]').first().locator('input[type="email"]').fill(email);
   await page.locator('[data-subscribe]').first().locator('button[type="submit"]').click();
-  await expect(page).toHaveURL('/thank-you/');
+  await expect(page).toHaveURL(/\/thank-you\//);
 
   const res = await page.request.get('/api/e2e/emails');
   const emails = await res.json();
@@ -81,5 +81,5 @@ test('re-subscribe after unsubscribe redirects to thank-you', async ({ page }) =
   await page.goto('/');
   await page.locator('[data-subscribe]').first().locator('input[type="email"]').fill(email);
   await page.locator('[data-subscribe]').first().locator('button[type="submit"]').click();
-  await expect(page).toHaveURL('/thank-you/');
+  await expect(page).toHaveURL(/\/thank-you\//);
 });

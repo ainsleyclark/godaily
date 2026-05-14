@@ -106,8 +106,9 @@ func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscrib
 		return news.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
 	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
+	unsubscribeURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
 
-	if err = s.sendConfirmation(ctx, sub.Email, confirmURL); err != nil {
+	if err = s.sendConfirmation(ctx, sub.Email, confirmURL, unsubscribeURL); err != nil {
 		slog.ErrorContext(ctx, "Failed to send confirmation email", "email", sub.Email, "error", err)
 	}
 
@@ -126,9 +127,10 @@ func (s Service) Unsubscribe(ctx context.Context, token string) error {
 	return s.repo.Unsubscribe(ctx, token)
 }
 
-func (s Service) sendConfirmation(ctx context.Context, to, confirmURL string) error {
+func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscribeURL string) error {
 	data := confirmData{
-		ConfirmURL: confirmURL,
+		ConfirmURL:     confirmURL,
+		UnsubscribeURL: unsubscribeURL,
 	}
 
 	var htmlBuf bytes.Buffer
@@ -147,5 +149,9 @@ func (s Service) sendConfirmation(ctx context.Context, to, confirmURL string) er
 		Subject: "Confirm your GoDaily subscription",
 		Html:    htmlBuf.String(),
 		Text:    textBuf.String(),
+		Headers: map[string]string{
+			"List-Unsubscribe":      "<" + unsubscribeURL + ">",
+			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+		},
 	})
 }

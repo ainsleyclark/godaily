@@ -64,6 +64,10 @@ migrate-down: # Roll back the most recent database migration against TURSO_URL
 
 excluded := grep -v gen | grep -v res
 
+e2e: # Run Playwright E2E tests
+	cd e2e && npx playwright test
+.PHONY: e2e
+
 test: # Test uses race and coverage
 	go clean -testcache && go test $$(go list ./... | $(excluded)) -coverprofile=coverage.out -covermode=atomic
 .PHONY: test
