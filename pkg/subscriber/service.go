@@ -30,8 +30,8 @@ import (
 	"log/slog"
 	texttemplate "text/template"
 
-	"github.com/ainsleyclark/godaily/internal/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/templates"
