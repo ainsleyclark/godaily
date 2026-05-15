@@ -93,7 +93,7 @@ func TestHandleSubscribe(t *testing.T) {
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			test.mock(svc)
 
-			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			a := &godaily.App{Subscribers: svc, Config: &env.Config{}, Slack: noopSlack{}}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()

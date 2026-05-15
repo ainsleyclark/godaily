@@ -33,6 +33,7 @@ import (
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
+			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
 			return
 		}

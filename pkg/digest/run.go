@@ -39,6 +39,12 @@ type Runner interface {
 	SendSuggestion(ctx context.Context, date time.Time) error
 }
 
+// slackNotifier is a minimal interface satisfied by *slack.Client, kept here
+// to avoid importing the gateway package from the digest package.
+type slackNotifier interface {
+	MustSend(ctx context.Context, message string)
+}
+
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
@@ -49,6 +55,7 @@ type Aggregator struct {
 	issues            news.IssueRepository
 	items             news.ItemRepository
 	subscribers       news.SubscriberRepository
+	slack             slackNotifier
 }
 
 // suggester abstracts the synth client for social-post generation so tests
@@ -65,8 +72,9 @@ type synthesiser interface {
 
 // New creates a new Aggregator, validating that all news sources have
 // registered fetchers. Pass a non-nil synthClient to enable AI synthesis
-// and suggestion; nil disables those features gracefully.
-func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+// and suggestion; nil disables those features gracefully. Pass a non-nil
+// slack to enable Slack notifications on key events; nil disables them.
+func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
@@ -76,6 +84,7 @@ func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client,
 		issues:            issues,
 		items:             items,
 		subscribers:       subscribers,
+		slack:             slack,
 	}
 	if synthClient != nil {
 		agg.suggester = synthClient

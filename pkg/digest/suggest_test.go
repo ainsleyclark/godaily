@@ -249,4 +249,33 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "synth")
 	})
+
+	t.Run("Suggester Error Sends Slack Notification", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-18")
+		stored, err := issueRepo.Create(t.Context(), news.Issue{
+			Slug:    "2026-05-18",
+			Subject: "GoDaily - 2026-05-18",
+			Status:  news.IssueStatusDraft,
+			SentAt:  time.Now().UTC(),
+		})
+		require.NoError(t, err)
+		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+			Source:    news.SourceDevTo,
+			Title:     "item",
+			URL:       "https://example.com/x",
+			Published: time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour).Add(time.Hour),
+		})
+		require.NoError(t, err)
+
+		sg := &mockSuggester{err: errors.New("rate limited")}
+		sl := &mockSlack{}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, slack: sl, issues: issueRepo, items: itemRepo}
+
+		err = agg.SendSuggestion(t.Context(), date)
+		require.Error(t, err)
+		require.Len(t, sl.msgs, 1)
+		assert.Contains(t, sl.msgs[0], "Claude suggestion failed")
+		assert.Contains(t, sl.msgs[0], "rate limited")
+	})
 }

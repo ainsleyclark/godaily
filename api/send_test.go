@@ -74,7 +74,7 @@ func TestHandleSend(t *testing.T) {
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
-			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}}
+			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}, Slack: noopSlack{}}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()

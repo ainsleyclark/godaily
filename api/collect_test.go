@@ -58,7 +58,7 @@ func TestHandleCollect(t *testing.T) {
 			runner := mockdigest.NewMockRunner(ctrl)
 			test.mock(runner)
 
-			a := &godaily.App{Runner: runner, Config: &env.Config{}}
+			a := &godaily.App{Runner: runner, Config: &env.Config{}, Slack: noopSlack{}}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()

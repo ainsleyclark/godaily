@@ -72,7 +72,7 @@ func TestNew(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 
-			got, err := New(email.New(""), test.envAddr, nil, nil, nil, nil)
+			got, err := New(email.New(""), test.envAddr, nil, nil, nil, nil, nil)
 			test.want(t, got, err)
 		})
 	}
