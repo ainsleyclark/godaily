@@ -25,6 +25,8 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/anthropics/anthropic-sdk-go/option"
+
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/email"
@@ -35,6 +37,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
@@ -95,7 +98,14 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers: subsStore,
 	}
 
-	aggregator, err := digest.New(config.AnthropicAPIKey, issueStore, repo.Items, subsStore)
+	emailSender := email.New(config.ResendToken)
+
+	var synthClient *synth.Client
+	if config.AnthropicAPIKey != "" {
+		synthClient = synth.New(option.WithAPIKey(config.AnthropicAPIKey))
+	}
+
+	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
@@ -106,6 +116,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Repository:  repo,
 		Runner:      aggregator,
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cachedIssues, email.New()),
+		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
 	}, teardown, nil
 }

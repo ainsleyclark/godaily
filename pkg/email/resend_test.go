@@ -30,9 +30,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Setenv("RESEND_TOKEN", "test-token")
-
-	c := New()
+	c := New("test-token")
 
 	require.NotNil(t, c)
 	require.NotNil(t, c.resend)
@@ -47,7 +45,7 @@ func TestClient_Send(t *testing.T) {
 		srv := httptest.NewServer(stub)
 		t.Cleanup(srv.Close)
 
-		c := New()
+		c := New("test-token")
 		base, err := url.Parse(srv.URL + "/")
 		require.NoError(t, err)
 		c.resend.BaseURL = base

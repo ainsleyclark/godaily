@@ -22,7 +22,6 @@ package email
 import (
 	"context"
 	"log/slog"
-	"os"
 
 	"github.com/resend/resend-go/v3"
 )
@@ -40,11 +39,10 @@ type Client struct {
 	resend *resend.Client
 }
 
-// New returns a Client authenticated with the RESEND_TOKEN
-// environment variable.
-func New() *Client {
+// New returns a Client authenticated with the given Resend API token.
+func New(token string) *Client {
 	return &Client{
-		resend: resend.NewClient(os.Getenv("RESEND_TOKEN")),
+		resend: resend.NewClient(token),
 	}
 }
 
