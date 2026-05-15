@@ -35,11 +35,13 @@ func HandleSend(w http.ResponseWriter, r *http.Request) {
 		yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 
 		if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
+			a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 			return
 		}
 
 		if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
+			a.Slack.MustSend(ctx, "Send suggestion failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
 			return
 		}

@@ -58,6 +58,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				Sources: sources,
 			})
 			if err != nil {
+				a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 				return err
 			}
 

@@ -284,6 +284,21 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		assert.Empty(t, stored.Summary)
 	})
 
+	t.Run("Synthesiser Error Sends Slack Notification", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		syn := &mockSynthesiser{err: errors.New("anthropic timeout")}
+		sl := &mockSlack{}
+		issueRepo, itemRepo := newTestStores(t)
+		agg := Aggregator{synthesiser: syn, slack: sl, issues: issueRepo, items: itemRepo}
+
+		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+		require.Len(t, sl.msgs, 1)
+		assert.Contains(t, sl.msgs[0], "Claude synthesis failed")
+		assert.Contains(t, sl.msgs[0], "anthropic timeout")
+	})
+
 	t.Run("Nil Synthesiser Falls Back To Static Subject", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 

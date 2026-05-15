@@ -61,6 +61,7 @@ func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		a.Slack.MustSend(ctx, "New subscriber: "+body.Email)
 		api.OK(w)
 	})(w, r)
 }

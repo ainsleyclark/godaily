@@ -163,6 +163,9 @@ func (a Aggregator) synthesiseDigestMeta(ctx context.Context, day time.Time, sec
 	meta, err := a.synthesiser.Synthesise(ctx, day, sections)
 	if err != nil {
 		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
+		if a.slack != nil {
+			a.slack.MustSend(ctx, "Claude synthesis failed: "+err.Error())
+		}
 		return subject, ""
 	}
 	return meta.Title, meta.Intro

@@ -77,6 +77,9 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 
 	s, err := a.suggester.Suggest(ctx, date, sections)
 	if err != nil {
+		if a.slack != nil {
+			a.slack.MustSend(ctx, "Claude suggestion failed: "+err.Error())
+		}
 		return errors.Wrap(err, "synth")
 	}
 	s.Date = date

@@ -80,6 +80,14 @@ func (m *mockSynthesiser) Synthesise(_ context.Context, _ time.Time, _ []news.So
 	return m.resp, m.err
 }
 
+type mockSlack struct {
+	msgs []string
+}
+
+func (m *mockSlack) MustSend(_ context.Context, message string) {
+	m.msgs = append(m.msgs, message)
+}
+
 // allRegistered returns a registry populated with mock fetchers for
 // every source in news.Sources.
 func allRegistered() map[news.Source]news.Fetcher {

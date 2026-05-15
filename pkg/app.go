@@ -103,7 +103,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	synthClient := synth.New(config.AnthropicAPIKey)
 
-	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, issueStore, repo.Items, subsStore)
+	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}

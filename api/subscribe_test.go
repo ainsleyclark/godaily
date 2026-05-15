@@ -29,6 +29,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
@@ -91,9 +92,11 @@ func TestHandleSubscribe(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
+			slack := mockslack.NewMockSender(ctrl)
+			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 			test.mock(svc)
 
-			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			a := &godaily.App{Subscribers: svc, Config: &env.Config{}, Slack: slack}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()
