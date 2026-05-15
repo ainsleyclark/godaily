@@ -100,10 +100,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	emailSender := email.New(config.ResendToken)
 
-	var synthClient *synth.Client
-	if config.AnthropicAPIKey != "" {
-		synthClient = synth.New(option.WithAPIKey(config.AnthropicAPIKey))
-	}
+	synthClient := synth.New(option.WithAPIKey(config.AnthropicAPIKey))
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, issueStore, repo.Items, subsStore)
 	if err != nil {
