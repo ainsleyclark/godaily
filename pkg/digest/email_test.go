@@ -197,4 +197,14 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		assert.Equal(t, "<"+unsubURL+">", m.req.Headers["List-Unsubscribe"])
 		assert.Equal(t, "List-Unsubscribe=One-Click", m.req.Headers["List-Unsubscribe-Post"])
 	})
+
+	t.Run("No List-Unsubscribe Headers For Admin", func(t *testing.T) {
+		t.Parallel()
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+
+		require.NoError(t, agg.sendRendered(t.Context(), "admin@example.com", rendered))
+		assert.Empty(t, m.req.Headers)
+	})
 }

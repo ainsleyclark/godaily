@@ -41,6 +41,13 @@ func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// RFC 8058: mail clients send a POST for one-click unsubscribe and
+		// expect a 2xx response, not a redirect.
+		if r.Method == http.MethodPost {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		http.Redirect(w, r, "/unsubscribed/", http.StatusFound)
 	})(w, r)
 }
