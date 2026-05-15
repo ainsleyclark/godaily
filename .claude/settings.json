@@ -1,0 +1,6 @@
+{
+  "env": {
+    "GODAILY_API_URL": "https://godaily.dev",
+    "GODAILY_API_KEY": ""
+  }
+}
