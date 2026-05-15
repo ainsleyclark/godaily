@@ -30,7 +30,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/email"
+	"github.com/ainsleyclark/godaily/internal/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleyclark/godaily/pkg/templates"

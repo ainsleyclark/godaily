@@ -25,7 +25,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/email"
+	"github.com/ainsleyclark/godaily/internal/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/synth"
 )
