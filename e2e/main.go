@@ -65,6 +65,12 @@ func (s *spyEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	return nil
 }
 
+// noopSlack satisfies slack.Sender without making any API calls.
+type noopSlack struct{}
+
+func (noopSlack) Send(_ context.Context, _ string) error { return nil }
+func (noopSlack) MustSend(_ context.Context, _ string)  {}
+
 // stubRunner satisfies digest.Runner without performing any work.
 type stubRunner struct{}
 
@@ -114,6 +120,7 @@ func main() {
 		Runner:      stubRunner{},
 		Cache:       store,
 		Subscribers: subscriber.New(subsStore, cached, spy),
+		Slack:       noopSlack{},
 	}
 
 	webH := webserver.Handler(app)
