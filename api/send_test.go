@@ -29,6 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -72,9 +73,11 @@ func TestHandleSend(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			runner := mockdigest.NewMockRunner(ctrl)
+			slack := mockslack.NewMockSender(ctrl)
+			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 			test.mock(runner)
 
-			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}, Slack: noopSlack{}}
+			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}, Slack: slack}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()

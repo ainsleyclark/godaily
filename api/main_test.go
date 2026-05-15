@@ -20,7 +20,6 @@
 package api
 
 import (
-	"context"
 	"os"
 	"testing"
 
@@ -31,8 +30,3 @@ func TestMain(m *testing.M) {
 	api.Limiter = api.NewRateLimiter(1000, 1000)
 	os.Exit(m.Run())
 }
-
-type noopSlack struct{}
-
-func (noopSlack) Send(_ context.Context, _ string) error { return nil }
-func (noopSlack) MustSend(_ context.Context, _ string)  {}
