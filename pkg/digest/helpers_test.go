@@ -29,7 +29,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/db"
-	"github.com/ainsleyclark/godaily/pkg/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"

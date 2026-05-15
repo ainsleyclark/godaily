@@ -32,8 +32,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/email"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
