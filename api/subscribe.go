@@ -23,6 +23,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/mail"
 
@@ -61,7 +62,11 @@ func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		a.Slack.MustSend(ctx, "New subscriber: "+body.Email)
+		msg := "New subscriber: " + body.Email
+		if count, err := a.Repository.Subscribers.CountActive(ctx); err == nil {
+			msg += fmt.Sprintf(" | Total subscribers: %d", count)
+		}
+		a.Slack.MustSend(ctx, msg)
 		api.OK(w)
 	})(w, r)
 }
