@@ -29,6 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -47,6 +48,7 @@ type App struct {
 	Runner      digest.Runner
 	Cache       cache.Store
 	Subscribers subscriber.Subscriber
+	Slack       slack.Sender
 }
 
 // Repository defines the datastore for the application.
@@ -97,6 +99,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 
 	emailSender := email.New(config.ResendToken)
+	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 
 	synthClient := synth.New(config.AnthropicAPIKey)
 
@@ -112,5 +115,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Runner:      aggregator,
 		Cache:       store,
 		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
+		Slack:       slackClient,
 	}, teardown, nil
 }
