@@ -29,6 +29,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/news"
@@ -42,6 +43,7 @@ func TestHandleSubscribe(t *testing.T) {
 		body       string
 		method     string
 		mock       func(s *mocksubscriber.MockSubscriber)
+		repoMock   func(r *mocknews.MockSubscriberRepository)
 		wantStatus int
 	}{
 		"OK": {
@@ -50,24 +52,30 @@ func TestHandleSubscribe(t *testing.T) {
 			mock: func(s *mocksubscriber.MockSubscriber) {
 				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(news.Subscriber{}, nil)
 			},
+			repoMock: func(r *mocknews.MockSubscriberRepository) {
+				r.EXPECT().CountActive(gomock.Any()).Return(int64(42), nil)
+			},
 			wantStatus: http.StatusOK,
 		},
 		"Wrong Method": {
 			body:       `{"email":"test@example.com"}`,
 			method:     http.MethodGet,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
 			wantStatus: http.StatusMethodNotAllowed,
 		},
 		"Missing Email": {
 			body:       `{}`,
 			method:     http.MethodPost,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Invalid Email": {
 			body:       `{"email":"notanemail"}`,
 			method:     http.MethodPost,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
+			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Already Subscribed": {
@@ -76,6 +84,7 @@ func TestHandleSubscribe(t *testing.T) {
 			mock: func(s *mocksubscriber.MockSubscriber) {
 				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(news.Subscriber{}, subscriber.ErrAlreadySubscribed)
 			},
+			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
 			wantStatus: http.StatusConflict,
 		},
 		"Subscribe Error": {
@@ -84,6 +93,7 @@ func TestHandleSubscribe(t *testing.T) {
 			mock: func(s *mocksubscriber.MockSubscriber) {
 				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(news.Subscriber{}, errors.New("db error"))
 			},
+			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
 			wantStatus: http.StatusInternalServerError,
 		},
 	}
@@ -93,10 +103,17 @@ func TestHandleSubscribe(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			slack := mockslack.NewMockSender(ctrl)
+			repo := mocknews.NewMockSubscriberRepository(ctrl)
 			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 			test.mock(svc)
+			test.repoMock(repo)
 
-			a := &godaily.App{Subscribers: svc, Config: &env.Config{}, Slack: slack}
+			a := &godaily.App{
+				Subscribers: svc,
+				Config:      &env.Config{},
+				Slack:       slack,
+				Repository:  &godaily.Repository{Subscribers: repo},
+			}
 			api.SetApp(a)
 
 			w := httptest.NewRecorder()
