@@ -88,3 +88,20 @@ func TestHandleUnsubscribe(t *testing.T) {
 		})
 	}
 }
+
+func TestHandleUnsubscribePost(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	svc := mocksubscriber.NewMockSubscriber(ctrl)
+	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
+
+	a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+	api.SetApp(a)
+
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodPost, "/api/unsubscribe?token=valid-token", nil)
+
+	HandleUnsubscribe(w, r)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Empty(t, w.Header().Get("Location"))
+}

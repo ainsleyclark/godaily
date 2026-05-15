@@ -212,15 +212,18 @@ func toEmailItem(item news.Item) emailItem {
 }
 
 func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {
-	return a.email.Send(ctx, email.SendEmailRequest{
+	req := email.SendEmailRequest{
 		From:    "GoDaily <noreply@godaily.dev>",
 		To:      []string{to},
 		Subject: d.Subject,
 		Html:    d.HTML,
 		Text:    d.Text,
-		Headers: map[string]string{
+	}
+	if d.UnsubscribeURL != "" {
+		req.Headers = map[string]string{
 			"List-Unsubscribe":      "<" + d.UnsubscribeURL + ">",
 			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-		},
-	})
+		}
+	}
+	return a.email.Send(ctx, req)
 }
