@@ -69,7 +69,7 @@ func (s *spyEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 type noopSlack struct{}
 
 func (noopSlack) Send(_ context.Context, _ string) error { return nil }
-func (noopSlack) MustSend(_ context.Context, _ string)  {}
+func (noopSlack) MustSend(_ context.Context, _ string)   {}
 
 // stubRunner satisfies digest.Runner without performing any work.
 type stubRunner struct{}
