@@ -25,8 +25,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/anthropics/anthropic-sdk-go/option"
-
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/email"
@@ -100,7 +98,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	emailSender := email.New(config.ResendToken)
 
-	synthClient := synth.New(option.WithAPIKey(config.AnthropicAPIKey))
+	synthClient := synth.New(config.AnthropicAPIKey)
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, issueStore, repo.Items, subsStore)
 	if err != nil {
