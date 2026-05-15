@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ainsleyclark/godaily/pkg/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -70,9 +71,8 @@ func TestNew(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
-			t.Setenv("EMAIL_SEND_ADDRESS", test.envAddr)
 
-			got, err := New(nil, nil, nil)
+			got, err := New(email.New(""), test.envAddr, nil, nil, nil, nil)
 			test.want(t, got, err)
 		})
 	}

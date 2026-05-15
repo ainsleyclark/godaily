@@ -121,7 +121,7 @@ func validResponse(post string) string {
 
 func TestNew(t *testing.T) {
 	t.Parallel()
-	c := New()
+	c := New("test")
 	assert.Equal(t, defaultFilterConfig(), c.filter)
 }
 
@@ -136,7 +136,7 @@ func TestClient_Suggest(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) { called++ }))
 		t.Cleanup(srv.Close)
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		got, err := c.Suggest(context.Background(), day, nil)
 
 		require.ErrorIs(t, err, ErrNoItems)
@@ -148,11 +148,7 @@ func TestClient_Suggest(t *testing.T) {
 		t.Parallel()
 		srv, _ := fakeServer(t, http.StatusInternalServerError, `{"error":{"type":"api_error","message":"boom"}}`)
 
-		c := New(
-			option.WithBaseURL(srv.URL),
-			option.WithAPIKey("test"),
-			option.WithMaxRetries(0),
-		)
+		c := New("test", option.WithBaseURL(srv.URL), option.WithMaxRetries(0))
 		_, err := c.Suggest(context.Background(), day, sampleSections())
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "anthropic:")
@@ -168,7 +164,7 @@ func TestClient_Suggest(t *testing.T) {
 		})
 		srv, _ := fakeServer(t, http.StatusOK, string(envelope))
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		_, err := c.Suggest(context.Background(), day, sampleSections())
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "parse (raw=")
@@ -178,7 +174,7 @@ func TestClient_Suggest(t *testing.T) {
 		t.Parallel()
 		srv, got := fakeServer(t, http.StatusOK, validResponse("hi"))
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		sug, err := c.Suggest(context.Background(), day, sampleSections())
 		require.NoError(t, err)
 
@@ -213,7 +209,7 @@ func TestClient_Suggest(t *testing.T) {
 			})
 		}
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		_, err := c.Suggest(context.Background(), day, []news.SourceItems{si})
 		require.NoError(t, err)
 

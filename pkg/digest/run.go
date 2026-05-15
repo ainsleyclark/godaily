@@ -23,7 +23,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"os"
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/email"
@@ -64,22 +63,25 @@ type synthesiser interface {
 	Synthesise(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.DigestMeta, error)
 }
 
-// New creates a new Aggregator, validating that all news
-// sources have registered fetchers.
-func New(issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+// New creates a new Aggregator, validating that all news sources have
+// registered fetchers. Pass a non-nil synthClient to enable AI synthesis
+// and suggestion; nil disables those features gracefully.
+func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	client := synth.New()
-	return &Aggregator{
-		email:             email.New(),
-		adminEmailAddress: os.Getenv("EMAIL_SEND_ADDRESS"),
-		suggester:         client,
-		synthesiser:       client,
+	agg := &Aggregator{
+		email:             emailSender,
+		adminEmailAddress: adminEmail,
 		issues:            issues,
 		items:             items,
 		subscribers:       subscribers,
-	}, nil
+	}
+	if synthClient != nil {
+		agg.suggester = synthClient
+		agg.synthesiser = synthClient
+	}
+	return agg, nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

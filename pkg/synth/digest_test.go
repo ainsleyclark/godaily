@@ -137,7 +137,7 @@ func TestClient_Synthesise(t *testing.T) {
 		srv := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) { called++ }))
 		t.Cleanup(srv.Close)
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		got, err := c.Synthesise(context.Background(), day, nil)
 
 		require.ErrorIs(t, err, ErrNoItems)
@@ -149,11 +149,7 @@ func TestClient_Synthesise(t *testing.T) {
 		t.Parallel()
 		srv, _ := fakeServer(t, http.StatusInternalServerError, `{"error":{"type":"api_error","message":"boom"}}`)
 
-		c := New(
-			option.WithBaseURL(srv.URL),
-			option.WithAPIKey("test"),
-			option.WithMaxRetries(0),
-		)
+		c := New("test", option.WithBaseURL(srv.URL), option.WithMaxRetries(0))
 		_, err := c.Synthesise(context.Background(), day, sampleSections())
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "anthropic:")
@@ -169,7 +165,7 @@ func TestClient_Synthesise(t *testing.T) {
 		})
 		srv, _ := fakeServer(t, http.StatusOK, string(envelope))
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		_, err := c.Synthesise(context.Background(), day, sampleSections())
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "parse (raw=")
@@ -179,7 +175,7 @@ func TestClient_Synthesise(t *testing.T) {
 		t.Parallel()
 		srv, got := fakeServer(t, http.StatusOK, validDigestResponse("Go 1.24 lands", "Goroutines got faster."))
 
-		c := New(option.WithBaseURL(srv.URL), option.WithAPIKey("test"))
+		c := New("test", option.WithBaseURL(srv.URL))
 		meta, err := c.Synthesise(context.Background(), day, sampleSections())
 		require.NoError(t, err)
 

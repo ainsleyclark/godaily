@@ -35,6 +35,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
@@ -95,7 +96,11 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers: subsStore,
 	}
 
-	aggregator, err := digest.New(issueStore, repo.Items, subsStore)
+	emailSender := email.New(config.ResendToken)
+
+	synthClient := synth.New(config.AnthropicAPIKey)
+
+	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
@@ -106,6 +111,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Repository:  repo,
 		Runner:      aggregator,
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cachedIssues, email.New()),
+		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
 	}, teardown, nil
 }

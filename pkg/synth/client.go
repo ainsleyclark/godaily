@@ -42,12 +42,12 @@ type Client struct {
 	filter    filterConfig
 }
 
-// New constructs a Client using ANTHROPIC_API_KEY from the environment.
-// Request options are forwarded to the SDK — tests pass
-// option.WithBaseURL to redirect to an httptest.Server.
-func New(opts ...option.RequestOption) *Client {
+// New constructs a Client using the given API key. Additional request options
+// are forwarded to the SDK — tests pass option.WithBaseURL to redirect to an
+// httptest.Server.
+func New(apiKey string, opts ...option.RequestOption) *Client {
 	return &Client{
-		anthropic: anthropic.NewClient(opts...),
+		anthropic: anthropic.NewClient(append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)...),
 		filter:    defaultFilterConfig(),
 	}
 }
