@@ -32,7 +32,7 @@ go.work.sum
 .vscode/
 
 # Binaries
-godaily
+/godaily
 e2e/server
 
 # Database & Cache
