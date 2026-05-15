@@ -26,6 +26,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/anthropics/anthropic-sdk-go/option"
+
 	"github.com/ainsleyclark/godaily/pkg/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/synth"
@@ -65,21 +67,25 @@ type synthesiser interface {
 }
 
 // New creates a new Aggregator, validating that all news
-// sources have registered fetchers.
-func New(issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+// sources have registered fetchers. apiKey is the Anthropic API key; when
+// empty, AI synthesis and suggestion features are disabled.
+func New(apiKey string, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	client := synth.New()
-	return &Aggregator{
+	agg := &Aggregator{
 		email:             email.New(),
 		adminEmailAddress: os.Getenv("EMAIL_SEND_ADDRESS"),
-		suggester:         client,
-		synthesiser:       client,
 		issues:            issues,
 		items:             items,
 		subscribers:       subscribers,
-	}, nil
+	}
+	if apiKey != "" {
+		client := synth.New(option.WithAPIKey(apiKey))
+		agg.suggester = client
+		agg.synthesiser = client
+	}
+	return agg, nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

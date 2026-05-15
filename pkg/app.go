@@ -95,7 +95,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers: subsStore,
 	}
 
-	aggregator, err := digest.New(issueStore, repo.Items, subsStore)
+	aggregator, err := digest.New(config.AnthropicAPIKey, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
