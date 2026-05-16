@@ -37,7 +37,7 @@ type Config struct {
 	AppEnv                         env.Environment `env:"APP_ENV"`
 	ResendToken                    string          `env:"RESEND_TOKEN,required,unset"`
 	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required,unset"`
-	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,unset"`
+	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,required"` // TODO: Mark unset when injector is complete in source
 	GitHubToken                    string          `env:"GITHUB_TOKEN,unset"`
 	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required,unset"`
 	TursoURL                       string          `env:"TURSO_URL,required,unset"`

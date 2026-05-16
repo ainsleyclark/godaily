@@ -19,10 +19,6 @@
 
 // gen-examples fetches live data from every registered source and writes the
 // results to internal/examples/rendered and internal/examples/raw. Run via:
-//
-//	go generate ./...
-//
-//go:generate go run main.go
 package main
 
 import (
@@ -31,14 +27,14 @@ import (
 	"encoding/json"
 	"flag"
 	"io"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/joho/godotenv"
-
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	_ "github.com/ainsleyclark/godaily/pkg/source"
@@ -48,17 +44,21 @@ func main() {
 	only := flag.String("source", "", "regenerate only this source (e.g. golang_nuts)")
 	flag.Parse()
 
-	_ = godotenv.Load(filepath.Join("..", "..", ".env"))
-	renderedDir := filepath.Join("..", "..", "examples", "rendered")
-	rawDir := filepath.Join("..", "..", "examples", "raw")
+	ctx := context.Background()
+
+	_, err := env.New(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	renderedDir := filepath.Join("examples", "rendered")
+	rawDir := filepath.Join("examples", "raw")
 	for _, dir := range []string{renderedDir, rawDir} {
 		if err := os.MkdirAll(dir, 0o750); err != nil {
 			slog.Error("Create dir", "dir", dir, "err", err)
 			os.Exit(1)
 		}
 	}
-
-	ctx := context.Background()
 
 	for _, s := range news.Sources {
 		if *only != "" && string(s) != *only {
