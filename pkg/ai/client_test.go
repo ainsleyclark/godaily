@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package ai
 
 import (
 	"context"
@@ -123,6 +123,7 @@ func TestNew(t *testing.T) {
 	t.Parallel()
 	c := New("test")
 	assert.Equal(t, defaultFilterConfig(), c.filter)
+	assert.Nil(t, c.fallback)
 }
 
 func TestClient_Suggest(t *testing.T) {

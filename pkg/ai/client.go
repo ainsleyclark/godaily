@@ -17,11 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package synth turns a day's scored news into a short suggested social
-// post by calling the Anthropic Messages API. It keeps input cheap by
-// filtering to top-N items and caching the static system prompt (the
-// embedded style guide) on the request.
-package synth
+package ai
 
 import (
 	"context"
@@ -32,19 +28,21 @@ import (
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/pkg/errors"
 
+	anthr "github.com/ainsleyclark/godaily/pkg/ai/anthropic"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-// Client wraps the Anthropic SDK with the prompt construction and
-// filtering needed to draft social posts from a day's news.
+// Client wraps AI provider(s) with prompt construction and filtering
+// logic needed to draft social posts and digest metadata from a day's news.
 type Client struct {
 	anthropic anthropic.Client
+	fallback  Prompter
 	filter    filterConfig
 }
 
-// New constructs a Client using the given API key. Additional request options
-// are forwarded to the SDK — tests pass option.WithBaseURL to redirect to an
-// httptest.Server.
+// New constructs a Client using Anthropic as the sole AI provider.
+// Additional request options are forwarded to the SDK — tests pass
+// option.WithBaseURL to redirect to an httptest.Server.
 func New(apiKey string, opts ...option.RequestOption) *Client {
 	return &Client{
 		anthropic: anthropic.NewClient(append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)...),
@@ -52,16 +50,17 @@ func New(apiKey string, opts ...option.RequestOption) *Client {
 	}
 }
 
-const (
-	model       = anthropic.ModelClaudeSonnet4_6
-	maxTokens   = int64(1024)
-	temperature = 0.4
-)
+// NewWithFallback constructs a Client that tries Anthropic first and falls
+// back to the given Prompter on any error.
+func NewWithFallback(apiKey string, fallback Prompter, opts ...option.RequestOption) *Client {
+	c := New(apiKey, opts...)
+	c.fallback = fallback
+	return c
+}
 
-// Suggest filters the day's sections to top items, calls the model with
-// a cached system prompt, and returns a parsed Suggestion. ErrNoItems
-// is returned (without making an API call) when there is nothing to
-// summarise. Token usage and model are logged for cost tracking.
+// Suggest filters the day's sections to top items, calls the primary AI
+// provider (with optional fallback), and returns a parsed Suggestion.
+// ErrNoItems is returned (without any API call) when there is nothing to summarise.
 func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (Suggestion, error) {
 	items := filterItems(sections, c.filter)
 	if len(items) == 0 {
@@ -69,39 +68,20 @@ func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.Sou
 	}
 
 	user := buildUserPrompt(day, items)
+	system := buildSystemText(buildSystemBlocks())
 
-	slog.InfoContext(ctx, "Calling anthropic",
-		"model", model,
-		"items", len(items),
-		"max_tokens", maxTokens,
-	)
+	slog.InfoContext(ctx, "Requesting AI suggestion", "items", len(items))
 
-	resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       model,
-		MaxTokens:   maxTokens,
-		Temperature: anthropic.Float(temperature),
-		System:      buildSystemBlocks(),
-		Messages: []anthropic.MessageParam{
-			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
-		},
-	})
+	primary := anthr.New(c.anthropic, buildSystemBlocks())
+	raw, err := prompt(ctx, primary, c.fallback, system, user)
 	if err != nil {
-		return Suggestion{}, errors.Wrap(err, "anthropic")
+		return Suggestion{}, errors.Wrap(err, "ai suggest")
 	}
 
-	slog.InfoContext(ctx, "Synth response",
-		"model", resp.Model,
-		"input_tokens", resp.Usage.InputTokens,
-		"output_tokens", resp.Usage.OutputTokens,
-		"cache_creation_tokens", resp.Usage.CacheCreationInputTokens,
-		"cache_read_tokens", resp.Usage.CacheReadInputTokens,
-	)
-
-	sug, err := parseResponse(resp)
+	sug, err := parseSuggestionBytes(raw)
 	if err != nil {
 		return Suggestion{}, err
 	}
-
 	sug.Date = day
 	return sug, nil
 }

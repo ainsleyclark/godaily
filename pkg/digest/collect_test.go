@@ -28,8 +28,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 func TestAggregator_Collect(t *testing.T) {
@@ -232,7 +232,7 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 	t.Run("Suggester Is Never Called During Collect", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		sg := &mockSuggester{resp: ai.Suggestion{Post: "p"}}
 		agg := Aggregator{suggester: sg}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
@@ -243,7 +243,7 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 	t.Run("DryRun Does Not Call Synthesiser", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "t", Intro: "i"}}
+		syn := &mockSynthesiser{resp: ai.DigestMeta{Title: "t", Intro: "i"}}
 		agg := Aggregator{synthesiser: syn}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
@@ -254,7 +254,7 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 	t.Run("Synthesiser Populates Subject And Summary On Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "Go 1.24 lands", Intro: "Goroutines got faster."}}
+		syn := &mockSynthesiser{resp: ai.DigestMeta{Title: "Go 1.24 lands", Intro: "Goroutines got faster."}}
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{synthesiser: syn, issues: issueRepo, items: itemRepo}
 

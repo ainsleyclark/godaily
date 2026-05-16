@@ -25,6 +25,8 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/ai/gemini"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
@@ -36,7 +38,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
@@ -101,9 +102,12 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 
-	synthClient := synth.New(config.AnthropicAPIKey)
+	aiClient := ai.New(config.AnthropicAPIKey)
+	if config.GeminiAPIKey != "" {
+		aiClient = ai.NewWithFallback(config.AnthropicAPIKey, gemini.New(config.GeminiAPIKey))
+	}
 
-	aggregator, err := digest.New(emailSender, config.EmailSendAddress, synthClient, slackClient, issueStore, repo.Items, subsStore)
+	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}

@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package ai
 
 import (
 	"context"
@@ -31,6 +31,7 @@ import (
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/pkg/errors"
 
+	anthr "github.com/ainsleyclark/godaily/pkg/ai/anthropic"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -40,32 +41,6 @@ const maxTitleChars = 80
 type DigestMeta struct {
 	Title string `json:"title"` // ≤80 chars — email subject / card title
 	Intro string `json:"intro"` // 1–2 sentence digest intro paragraph
-}
-
-const digestSystemIntro = `You are an editor writing metadata for a daily Go programming language digest email.
-
-You will receive a JSON list of items aggregated from Go news sources for a single day, already ranked by relevance.
-
-Output strict JSON, schema:
-{
-  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
-  "intro": string  // 1-2 plain sentences summarising what mattered most today, for the top of the email body
-}
-
-Do not begin the intro with "Today" or the date. Write in present tense, active voice, no filler.
-Output the JSON object alone. No prose, no markdown fences, no commentary.`
-
-// buildDigestSystemBlocks assembles the system prompt for digest metadata
-// synthesis. The trailing style guide block carries the cache breakpoint so
-// both blocks are cached together across calls.
-func buildDigestSystemBlocks() []anthropic.TextBlockParam {
-	return []anthropic.TextBlockParam{
-		{Text: digestSystemIntro},
-		{
-			Text:         "## Style guide\n\n" + styleMD,
-			CacheControl: anthropic.NewCacheControlEphemeralParam(),
-		},
-	}
 }
 
 // Synthesise filters the day's items, calls the model, and returns DigestMeta
@@ -78,57 +53,29 @@ func (c *Client) Synthesise(ctx context.Context, day time.Time, sections []news.
 	}
 
 	user := buildUserPrompt(day, items)
+	system := buildSystemText(buildDigestSystemBlocks())
 
-	slog.InfoContext(ctx, "Calling anthropic for digest meta",
-		"model", model,
-		"items", len(items),
-	)
+	slog.InfoContext(ctx, "Requesting AI digest meta", "items", len(items))
 
-	resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       model,
-		MaxTokens:   maxTokens,
-		Temperature: anthropic.Float(temperature),
-		System:      buildDigestSystemBlocks(),
-		Messages: []anthropic.MessageParam{
-			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
-		},
-	})
+	primary := anthr.New(c.anthropic, buildDigestSystemBlocks())
+	raw, err := prompt(ctx, primary, c.fallback, system, user)
 	if err != nil {
-		return DigestMeta{}, errors.Wrap(err, "anthropic")
+		return DigestMeta{}, errors.Wrap(err, "ai synthesise")
 	}
 
-	slog.InfoContext(ctx, "Synth digest meta response",
-		"model", resp.Model,
-		"input_tokens", resp.Usage.InputTokens,
-		"output_tokens", resp.Usage.OutputTokens,
-		"cache_read_tokens", resp.Usage.CacheReadInputTokens,
-	)
-
-	return parseDigestResponse(resp)
+	return parseDigestBytes(raw)
 }
 
-// parseDigestResponse extracts DigestMeta from the model's text blocks.
-func parseDigestResponse(m *anthropic.Message) (DigestMeta, error) {
-	if m == nil {
-		return DigestMeta{}, errors.New("nil message")
-	}
-
-	var raw strings.Builder
-	for _, b := range m.Content {
-		if b.Type == "text" {
-			raw.WriteString(b.Text)
-		}
-	}
-	body := stripFences(raw.String())
+// parseDigestBytes parses raw model output bytes into DigestMeta.
+func parseDigestBytes(raw []byte) (DigestMeta, error) {
+	body := stripFences(string(raw))
 	if body == "" {
 		return DigestMeta{}, errors.New("empty response body")
 	}
-
 	var out DigestMeta
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
 		return DigestMeta{}, fmt.Errorf("parse (raw=%q): %w", body, err)
 	}
-
 	if out.Title == "" {
 		return DigestMeta{}, errors.New("missing title field")
 	}
@@ -138,6 +85,20 @@ func parseDigestResponse(m *anthropic.Message) (DigestMeta, error) {
 	if n := utf8.RuneCountInString(out.Title); n > maxTitleChars {
 		slog.Warn("Title exceeded char limit", "chars", n, "max", maxTitleChars)
 	}
-
 	return out, nil
+}
+
+// parseDigestResponse extracts DigestMeta from the model's text blocks.
+// Kept for existing tests.
+func parseDigestResponse(m *anthropic.Message) (DigestMeta, error) {
+	if m == nil {
+		return DigestMeta{}, errors.New("nil message")
+	}
+	var raw strings.Builder
+	for _, b := range m.Content {
+		if b.Type == "text" {
+			raw.WriteString(b.Text)
+		}
+	}
+	return parseDigestBytes([]byte(raw.String()))
 }

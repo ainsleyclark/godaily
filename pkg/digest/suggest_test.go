@@ -29,17 +29,17 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 var suggestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)
 
-func sampleSuggestion() synth.Suggestion {
-	return synth.Suggestion{
+func sampleSuggestion() ai.Suggestion {
+	return ai.Suggestion{
 		Date: suggestDay,
 		Post: "Go 1.24 is out — range-over-func is now stable.",
-		References: []synth.Ref{
+		References: []ai.Ref{
 			{Title: "Go 1.24 Release Notes", URL: "https://go.dev/doc/go1.24", Source: news.SourceGoBlog},
 		},
 	}
@@ -102,7 +102,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
+		sg := &mockSuggester{resp: ai.Suggestion{Post: "punchy-post"}}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
@@ -145,7 +145,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		sg := &mockSuggester{resp: ai.Suggestion{Post: "p"}}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
@@ -216,7 +216,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
+		sg := &mockSuggester{resp: ai.Suggestion{Post: "p"}}
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)

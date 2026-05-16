@@ -17,13 +17,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package ai
 
 import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/anthropics/anthropic-sdk-go"
@@ -62,6 +63,19 @@ Output strict JSON, schema:
   "references": [{"title": string, "url": string, "source": string}, ...]
 }
 
+Output the JSON object alone. No prose, no markdown fences, no commentary.`
+
+const digestSystemIntro = `You are an editor writing metadata for a daily Go programming language digest email.
+
+You will receive a JSON list of items aggregated from Go news sources for a single day, already ranked by relevance.
+
+Output strict JSON, schema:
+{
+  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
+  "intro": string  // 1-2 plain sentences summarising what mattered most today, for the top of the email body
+}
+
+Do not begin the intro with "Today" or the date. Write in present tense, active voice, no filler.
 Output the JSON object alone. No prose, no markdown fences, no commentary.`
 
 // promptItem is the wire shape sent to the model — a stripped-down
@@ -143,6 +157,33 @@ func buildSystemBlocks() []anthropic.TextBlockParam {
 			CacheControl: anthropic.NewCacheControlEphemeralParam(),
 		},
 	}
+}
+
+// buildDigestSystemBlocks assembles the system prompt for digest metadata
+// synthesis. The trailing style guide block carries the cache breakpoint so
+// both blocks are cached together across calls.
+func buildDigestSystemBlocks() []anthropic.TextBlockParam {
+	return []anthropic.TextBlockParam{
+		{Text: digestSystemIntro},
+		{
+			Text:         "## Style guide\n\n" + styleMD,
+			CacheControl: anthropic.NewCacheControlEphemeralParam(),
+		},
+	}
+}
+
+// buildSystemText extracts the plain-text content of system blocks,
+// joining them with double newlines. Used when passing the system prompt
+// to providers that do not support structured block params (e.g. Gemini).
+func buildSystemText(blocks []anthropic.TextBlockParam) string {
+	var b strings.Builder
+	for i, block := range blocks {
+		if i > 0 {
+			b.WriteString("\n\n")
+		}
+		b.WriteString(block.Text)
+	}
+	return b.String()
 }
 
 // buildUserPrompt formats the day's filtered items as a compact JSON

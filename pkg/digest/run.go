@@ -25,9 +25,9 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../mocks/digest/Runner.go github.com/ainsleyclark/godaily/pkg/digest Runner
@@ -58,23 +58,23 @@ type Aggregator struct {
 	slack             slackNotifier
 }
 
-// suggester abstracts the synth client for social-post generation so tests
+// suggester abstracts the AI client for social-post generation so tests
 // can substitute a fake without hitting Anthropic.
 type suggester interface {
-	Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.Suggestion, error)
+	Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (ai.Suggestion, error)
 }
 
-// synthesiser abstracts the synth client for digest metadata (subject title
+// synthesiser abstracts the AI client for digest metadata (subject title
 // and intro paragraph) so tests can substitute a fake without hitting Anthropic.
 type synthesiser interface {
-	Synthesise(ctx context.Context, day time.Time, sections []news.SourceItems) (synth.DigestMeta, error)
+	Synthesise(ctx context.Context, day time.Time, sections []news.SourceItems) (ai.DigestMeta, error)
 }
 
 // New creates a new Aggregator, validating that all news sources have
-// registered fetchers. Pass a non-nil synthClient to enable AI synthesis
+// registered fetchers. Pass a non-nil aiClient to enable AI synthesis
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
-func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+func New(emailSender email.Sender, adminEmail string, aiClient *ai.Client, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
@@ -86,9 +86,9 @@ func New(emailSender email.Sender, adminEmail string, synthClient *synth.Client,
 		subscribers:       subscribers,
 		slack:             slack,
 	}
-	if synthClient != nil {
-		agg.suggester = synthClient
-		agg.synthesiser = synthClient
+	if aiClient != nil {
+		agg.suggester = aiClient
+		agg.synthesiser = aiClient
 	}
 	return agg, nil
 }

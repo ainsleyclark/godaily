@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package ai
 
 import (
 	"encoding/json"
@@ -37,7 +37,7 @@ const maxPostChars = 280
 
 // ErrNoItems is returned by Suggest when there is nothing to summarise.
 // Callers can treat this as a soft skip rather than a hard error.
-var ErrNoItems = errors.New("synth: no items to suggest from")
+var ErrNoItems = errors.New("ai: no items to suggest from")
 
 type (
 	// Suggestion is the structured output returned by Suggest.
@@ -100,25 +100,12 @@ func stripFences(s string) string {
 	return strings.TrimSpace(s)
 }
 
-// parseResponse extracts the suggestion JSON from the model's text
-// blocks, validates length and required fields, and returns a populated
-// Suggestion (without Date — that is filled in by the caller).
-func parseResponse(m *anthropic.Message) (Suggestion, error) {
-	if m == nil {
-		return Suggestion{}, errors.New("nil message")
-	}
-
-	var raw strings.Builder
-	for _, b := range m.Content {
-		if b.Type == "text" {
-			raw.WriteString(b.Text)
-		}
-	}
-	body := stripFences(raw.String())
+// parseSuggestionBytes parses raw model output bytes into a Suggestion.
+func parseSuggestionBytes(raw []byte) (Suggestion, error) {
+	body := stripFences(string(raw))
 	if body == "" {
 		return Suggestion{}, errors.New("empty response body")
 	}
-
 	var out struct {
 		Post       string `json:"post"`
 		References []Ref  `json:"references"`
@@ -126,16 +113,26 @@ func parseResponse(m *anthropic.Message) (Suggestion, error) {
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
 		return Suggestion{}, fmt.Errorf("parse (raw=%q): %w", body, err)
 	}
-
 	if out.Post == "" {
 		return Suggestion{}, errors.New("missing post field")
 	}
 	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
 		slog.Warn("Post exceeded char limit", "chars", n, "max", maxPostChars)
 	}
+	return Suggestion{Post: out.Post, References: out.References}, nil
+}
 
-	return Suggestion{
-		Post:       out.Post,
-		References: out.References,
-	}, nil
+// parseResponse extracts a Suggestion from the model's text blocks.
+// Kept for existing tests.
+func parseResponse(m *anthropic.Message) (Suggestion, error) {
+	if m == nil {
+		return Suggestion{}, errors.New("nil message")
+	}
+	var raw strings.Builder
+	for _, b := range m.Content {
+		if b.Type == "text" {
+			raw.WriteString(b.Text)
+		}
+	}
+	return parseSuggestionBytes([]byte(raw.String()))
 }

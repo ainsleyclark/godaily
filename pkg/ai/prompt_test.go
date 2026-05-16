@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package ai
 
 import (
 	"encoding/json"
@@ -189,4 +189,38 @@ func TestBuildUserPrompt(t *testing.T) {
 	var parsed []promptItem
 	require.NoError(t, json.Unmarshal([]byte(got[idx:end+1]), &parsed))
 	assert.Equal(t, items, parsed)
+}
+
+func TestBuildSystemText(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Empty Blocks", func(t *testing.T) {
+		t.Parallel()
+		got := buildSystemText(nil)
+		assert.Equal(t, "", got)
+	})
+
+	t.Run("Single Block", func(t *testing.T) {
+		t.Parallel()
+		blocks := buildSystemBlocks()[:1]
+		got := buildSystemText(blocks)
+		assert.Equal(t, systemIntro, got)
+	})
+
+	t.Run("Two Blocks Joined With Double Newline", func(t *testing.T) {
+		t.Parallel()
+		blocks := buildSystemBlocks()
+		got := buildSystemText(blocks)
+		assert.Contains(t, got, systemIntro)
+		assert.Contains(t, got, "\n\n")
+		assert.Contains(t, got, "Style guide")
+	})
+
+	t.Run("Contains Both Block Texts", func(t *testing.T) {
+		t.Parallel()
+		blocks := buildDigestSystemBlocks()
+		got := buildSystemText(blocks)
+		assert.Contains(t, got, digestSystemIntro)
+		assert.Contains(t, got, "Voice & style guide")
+	})
 }

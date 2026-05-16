@@ -30,9 +30,9 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
@@ -98,7 +98,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 	})
 }
 
-func renderSuggestion(s synth.Suggestion) (html, text string, err error) {
+func renderSuggestion(s ai.Suggestion) (html, text string, err error) {
 	var htmlBuf bytes.Buffer
 	if err = suggestHTMLTmpl.Execute(&htmlBuf, s); err != nil {
 		return "", "", errors.Wrap(err, "rendering suggest html")
