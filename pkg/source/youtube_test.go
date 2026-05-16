@@ -111,6 +111,58 @@ func TestYouTube_Fetch(t *testing.T) {
 				}, items[0])
 			},
 		},
+		// Two videos returned from search; stats only covers one of them.
+		// The video with stats gets a view-count score; the other falls back
+		// to the flat 0.5 score rather than erroring.
+		"OK - Partial Stats": {
+			key: "test-key",
+			stub: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusOK)
+				if r.URL.Query().Get("part") == "statistics" {
+					// Only vid-aaa has stats; vid-bbb is absent.
+					_, _ = w.Write([]byte(`{"items":[{"id":"vid-aaa","statistics":{"viewCount":"3000"}}]}`))
+				} else {
+					_, _ = w.Write([]byte(`{"items":[` +
+						`{"id":{"videoId":"vid-aaa"},"snippet":{"publishedAt":"2024-04-25T14:00:00Z","channelId":"c1","title":"A","description":"","channelTitle":"Ch1"}},` +
+						`{"id":{"videoId":"vid-bbb"},"snippet":{"publishedAt":"2024-04-25T13:00:00Z","channelId":"c2","title":"B","description":"","channelTitle":"Ch2"}}` +
+						`]}`))
+				}
+			},
+			want: func(items []news.Item, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, items, 2)
+				assert.Equal(t, news.ScoreOf(news.SourceYouTube, news.TagVideo, 3000, true), items[0].Score)
+				assert.Equal(t, float64(0.5), items[1].Score) // no stats → flat
+			},
+		},
+		// Two videos with different view counts must produce distinct scores
+		// so the higher-viewed video sorts above the lower one.
+		"OK - Scores Reflect View Count": {
+			key: "test-key",
+			stub: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusOK)
+				if r.URL.Query().Get("part") == "statistics" {
+					_, _ = w.Write([]byte(`{"items":[` +
+						`{"id":"vid-low","statistics":{"viewCount":"100"}},` +
+						`{"id":"vid-high","statistics":{"viewCount":"4000"}}` +
+						`]}`))
+				} else {
+					_, _ = w.Write([]byte(`{"items":[` +
+						`{"id":{"videoId":"vid-low"},"snippet":{"publishedAt":"2024-04-25T14:00:00Z","channelId":"c1","title":"Low","description":"","channelTitle":"Ch1"}},` +
+						`{"id":{"videoId":"vid-high"},"snippet":{"publishedAt":"2024-04-25T13:00:00Z","channelId":"c2","title":"High","description":"","channelTitle":"Ch2"}}` +
+						`]}`))
+				}
+			},
+			want: func(items []news.Item, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, items, 2)
+				lowScore := news.ScoreOf(news.SourceYouTube, news.TagVideo, 100, true)
+				highScore := news.ScoreOf(news.SourceYouTube, news.TagVideo, 4000, true)
+				assert.Greater(t, highScore, lowScore)
+				assert.Equal(t, lowScore, items[0].Score)
+				assert.Equal(t, highScore, items[1].Score)
+			},
+		},
 	}
 
 	for name, test := range tt {
