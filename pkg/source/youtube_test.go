@@ -34,10 +34,12 @@ import (
 func TestYouTube_Fetch(t *testing.T) {
 	t.Parallel()
 
-	// YouTube Data API v3 sample response shape (matches Google's documented
-	// schema). YouTube has no enrichment hop (EnrichmentURL returns ""),
-	// so no URL substitution is required.
+	// YouTube Data API v3 sample response shapes. The search endpoint returns
+	// snippet-only data; a second call to videos.list enriches each result
+	// with view count statistics for quality-based scoring.
 	fixture, err := os.ReadFile("testdata/youtube.json")
+	require.NoError(t, err)
+	statsFixture, err := os.ReadFile("testdata/youtube-stats.json")
 	require.NoError(t, err)
 
 	tt := map[string]struct {
@@ -63,11 +65,34 @@ func TestYouTube_Fetch(t *testing.T) {
 				assert.Nil(t, items)
 			},
 		},
-		"OK": {
+		"OK - Stats Unavailable": {
 			key: "test-key",
-			stub: func(w http.ResponseWriter, _ *http.Request) {
+			stub: func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Query().Get("part") == "statistics" {
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
 				w.WriteHeader(http.StatusOK)
 				_, err := w.Write(fixture)
+				assert.NoError(t, err)
+			},
+			want: func(items []news.Item, err error) {
+				assert.NoError(t, err)
+				assert.Len(t, items, 1)
+				assert.Equal(t, float64(0.5), items[0].Score) // flat score: no stats
+			},
+		},
+		"OK": {
+			key: "test-key",
+			stub: func(w http.ResponseWriter, r *http.Request) {
+				var body []byte
+				if r.URL.Query().Get("part") == "statistics" {
+					body = statsFixture
+				} else {
+					body = fixture
+				}
+				w.WriteHeader(http.StatusOK)
+				_, err := w.Write(body)
 				assert.NoError(t, err)
 			},
 			want: func(items []news.Item, err error) {
@@ -81,7 +106,7 @@ func TestYouTube_Fetch(t *testing.T) {
 					Author:    &news.Author{Name: "GopherCon", Username: "UCx0L2ZdYfiq-tsAXb8IXpQg", ProfileURL: "https://www.youtube.com/channel/UCx0L2ZdYfiq-tsAXb8IXpQg"},
 					Snippet:   "An introduction to concurrency patterns in Go.",
 					Tag:       news.TagVideo,
-					Score:     0.5, // no signal: weight 1.0 * constant 0.5
+					Score:     news.ScoreOf(news.SourceYouTube, news.TagVideo, 2500, true),
 					Published: time.Date(2024, 4, 25, 14, 0, 0, 0, time.UTC),
 				}, items[0])
 			},
@@ -91,13 +116,15 @@ func TestYouTube_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			url := "http://unused"
+			searchURL := "http://unused"
+			statsURL := "http://unused-stats"
 			if test.stub != nil {
 				s := httptest.NewServer(test.stub)
 				defer s.Close()
-				url = s.URL
+				searchURL = s.URL + "?part=snippet"
+				statsURL = s.URL + "?part=statistics"
 			}
-			got, err := YouTube{url: url, key: test.key}.Fetch(t.Context())
+			got, err := YouTube{url: searchURL, videosURL: statsURL, key: test.key}.Fetch(t.Context())
 			test.want(got, err)
 		})
 	}
