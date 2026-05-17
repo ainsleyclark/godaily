@@ -35,6 +35,23 @@ import (
 
 const maxTitleChars = 80
 
+const digestSystemIntro = `You are an editor writing metadata for a daily Go programming language digest email.
+
+You will receive a JSON list of items aggregated from Go news sources for a single day, already ranked by relevance.
+
+Output strict JSON, schema:
+{
+  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
+  "intro": string  // 1-2 plain sentences summarising what mattered most today, for the top of the email body
+}
+
+Do not begin the intro with "Today" or the date. Write in present tense, active voice, no filler.
+Output the JSON object alone. No prose, no markdown fences, no commentary.`
+
+func buildDigestSystem() string {
+	return digestSystemIntro + "\n\n## Style guide\n\n" + styleMD
+}
+
 // Synthesise builds the digest-meta prompt, calls p, and parses the response.
 // ErrNoItems is returned (without calling p) when sections is empty.
 func Synthesise(ctx context.Context, p ai.Prompter, day time.Time, sections []news.SourceItems) (DigestMeta, error) {

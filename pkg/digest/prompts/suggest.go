@@ -36,6 +36,33 @@ import (
 
 const maxPostChars = 280
 
+const systemIntro = `You write a single short social media post about the
+Go programming language community in the voice of Ainsley Clark.
+
+You will receive a JSON list of items aggregated from Go news sources for
+a single day, already ranked by relevance. Pick the SINGLE most notable
+item (the one with the most technical substance) and write one short,
+punchy post about that one topic. Go deep on one thing, do not summarise
+the day, do not list multiple items, do not produce a checklist or
+roundup.
+
+If a small cluster of items is clearly the same topic (same release,
+same proposal, same project), treat them as one and reference both. The
+"references" array should contain only the item(s) the post is actually
+about (usually one, occasionally two).
+
+Output strict JSON, schema:
+{
+  "post":       string  // <= 280 chars, one topic
+  "references": [{"title": string, "url": string, "source": string}, ...]
+}
+
+Output the JSON object alone. No prose, no markdown fences, no commentary.`
+
+func buildSuggestSystem() string {
+	return systemIntro + "\n\n## Style guide\n\n" + styleMD
+}
+
 // Suggest builds the social-post prompt, calls p, and parses the response.
 // ErrNoItems is returned (without calling p) when sections is empty.
 func Suggest(ctx context.Context, p ai.Prompter, day time.Time, sections []news.SourceItems) (Suggestion, error) {

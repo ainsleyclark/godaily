@@ -35,54 +35,6 @@ import (
 //go:embed style.md
 var styleMD string
 
-// systemIntro is the task framing prepended to the style guide for social posts.
-const systemIntro = `You write a single short social media post about the
-Go programming language community in the voice of Ainsley Clark.
-
-You will receive a JSON list of items aggregated from Go news sources for
-a single day, already ranked by relevance. Pick the SINGLE most notable
-item (the one with the most technical substance) and write one short,
-punchy post about that one topic. Go deep on one thing, do not summarise
-the day, do not list multiple items, do not produce a checklist or
-roundup.
-
-If a small cluster of items is clearly the same topic (same release,
-same proposal, same project), treat them as one and reference both. The
-"references" array should contain only the item(s) the post is actually
-about (usually one, occasionally two).
-
-Output strict JSON, schema:
-{
-  "post":       string  // <= 280 chars, one topic
-  "references": [{"title": string, "url": string, "source": string}, ...]
-}
-
-Output the JSON object alone. No prose, no markdown fences, no commentary.`
-
-// digestSystemIntro is the task framing for digest metadata synthesis.
-const digestSystemIntro = `You are an editor writing metadata for a daily Go programming language digest email.
-
-You will receive a JSON list of items aggregated from Go news sources for a single day, already ranked by relevance.
-
-Output strict JSON, schema:
-{
-  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
-  "intro": string  // 1-2 plain sentences summarising what mattered most today, for the top of the email body
-}
-
-Do not begin the intro with "Today" or the date. Write in present tense, active voice, no filler.
-Output the JSON object alone. No prose, no markdown fences, no commentary.`
-
-// buildSuggestSystem returns the complete system prompt string for social-post suggestion.
-func buildSuggestSystem() string {
-	return systemIntro + "\n\n## Style guide\n\n" + styleMD
-}
-
-// buildDigestSystem returns the complete system prompt string for digest metadata synthesis.
-func buildDigestSystem() string {
-	return digestSystemIntro + "\n\n## Style guide\n\n" + styleMD
-}
-
 // promptItem is the wire shape sent to the model — a stripped-down
 // projection of news.Item that drops fields irrelevant to a post
 // (Published, Comments) so input tokens stay low.
