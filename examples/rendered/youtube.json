@@ -2,6 +2,295 @@
 	{
 		"id": 0,
 		"source": "youtube",
+		"title": "Golang - intro - part 2",
+		"url": "https://www.youtube.com/watch?v=qz2Sg4ahUak",
+		"image_url": "https://i.ytimg.com/vi/qz2Sg4ahUak/hqdefault.jpg",
+		"author": {
+			"name": "Purple Gravity",
+			"username": "UC06vnBpzRyABRaeKeD3_MzQ",
+			"profile_url": "https://www.youtube.com/channel/UC06vnBpzRyABRaeKeD3_MzQ"
+		},
+		"snippet": "Today we're continuing our Go lesson.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.1289845691701341,
+		"published": "2026-05-17T09:29:32Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Go Variables \u0026amp; Data Types Explained 🚀 | Day 2 of Learning Go",
+		"url": "https://www.youtube.com/watch?v=GP1_C8e-Kzc",
+		"image_url": "https://i.ytimg.com/vi/GP1_C8e-Kzc/hqdefault.jpg",
+		"author": {
+			"name": "Shubham Rawat",
+			"username": "UCRa7O4AsWJfZQw_wc_kN_aA",
+			"profile_url": "https://www.youtube.com/channel/UCRa7O4AsWJfZQw_wc_kN_aA"
+		},
+		"snippet": "Day 2 of my 30 Day Go Learning Challenge. Today I learned: Variables in Go Data types Short variable syntax Constants Basic ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.5406783617129794,
+		"published": "2026-05-17T08:59:28Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Kelas Santai - Session 12 - Golang Pointer and Struct",
+		"url": "https://www.youtube.com/watch?v=Oe4lgQKg1bk",
+		"image_url": "https://i.ytimg.com/vi/Oe4lgQKg1bk/hqdefault.jpg",
+		"author": {
+			"name": "Yudhistira Media",
+			"username": "UCH-0yWsg4z_F1osvmDqaV5A",
+			"profile_url": "https://www.youtube.com/channel/UCH-0yWsg4z_F1osvmDqaV5A"
+		},
+		"snippet": "Kelas Santai - Session 12 - Golang Pointer and Struct.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.1889589784154564,
+		"published": "2026-05-17T08:51:18Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Тирлист зарплат в IT #golang #it #собеседование",
+		"url": "https://www.youtube.com/watch?v=hiadKkxCw_E",
+		"image_url": "https://i.ytimg.com/vi/hiadKkxCw_E/hqdefault.jpg",
+		"author": {
+			"name": "Максим Карась",
+			"username": "UCba-ETUfEAm6HkvWMb-fWww",
+			"profile_url": "https://www.youtube.com/channel/UCba-ETUfEAm6HkvWMb-fWww"
+		},
+		"snippet": "Больше о работе в айти и разработке пишу в своем тг-канале, ссылка в шапке профиля https://t.me/karasgopath.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.6559810667363469,
+		"published": "2026-05-17T08:49:06Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Golang part 1",
+		"url": "https://www.youtube.com/watch?v=kBtzLeDwiaE",
+		"image_url": "https://i.ytimg.com/vi/kBtzLeDwiaE/hqdefault.jpg",
+		"author": {
+			"name": "Purple Gravity",
+			"username": "UC06vnBpzRyABRaeKeD3_MzQ",
+			"profile_url": "https://www.youtube.com/channel/UC06vnBpzRyABRaeKeD3_MzQ"
+		},
+		"snippet": "Setting up Golang in a windows environment.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.21036477161116746,
+		"published": "2026-05-17T07:26:54Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Kelas Santai - Session 13 - Golang Goroutine",
+		"url": "https://www.youtube.com/watch?v=ct1ickCIzeY",
+		"image_url": "https://i.ytimg.com/vi/ct1ickCIzeY/hqdefault.jpg",
+		"author": {
+			"name": "Yudhistira Media",
+			"username": "UCH-0yWsg4z_F1osvmDqaV5A",
+			"profile_url": "https://www.youtube.com/channel/UCH-0yWsg4z_F1osvmDqaV5A"
+		},
+		"snippet": "Golang Goroutine dan channel adalah salah satu fitur dari golang concurrency.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.1889589784154564,
+		"published": "2026-05-17T07:01:16Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Сравнимые и несравнимые типы данных в Go #shorts",
+		"url": "https://www.youtube.com/watch?v=X9-m3DMNpqc",
+		"image_url": "https://i.ytimg.com/vi/X9-m3DMNpqc/hqdefault.jpg",
+		"author": {
+			"name": "ШОРТКАТ: Golang — менторская программа",
+			"username": "UCaVnYGexLVg-Vamp5niibYQ",
+			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
+		},
+		"snippet": "Go: когда типы данных могут быть ключами мапы, а когда нет. Разбираемся в тонкостях сравнимых и несравнимых тип",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.7520174693266861,
+		"published": "2026-05-17T06:04:29Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #ide #vscode #javascript #typescipt #golang #rust #computer",
+		"url": "https://www.youtube.com/watch?v=w8yWf3RE4yM",
+		"image_url": "https://i.ytimg.com/vi/w8yWf3RE4yM/hqdefault.jpg",
+		"author": {
+			"name": "CodeMotion",
+			"username": "UCWk6V9lPJO7wldGaL1i5gCg",
+			"profile_url": "https://www.youtube.com/channel/UCWk6V9lPJO7wldGaL1i5gCg"
+		},
+		"snippet": "ПОДПИШИСЬ НА ТГ: cdmtn it code ide vscode javascript typescipt golang rust computer.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.7636477549683317,
+		"published": "2026-05-17T05:00:21Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Vue js axios post request to golang server, Preflight error (2 Solutions!!)",
+		"url": "https://www.youtube.com/watch?v=3vJmlwS-5cs",
+		"image_url": "https://i.ytimg.com/vi/3vJmlwS-5cs/hqdefault.jpg",
+		"author": {
+			"name": "Roel Van de Paar",
+			"username": "UCPF-oYb2-xN5FbCXy0167Gg",
+			"profile_url": "https://www.youtube.com/channel/UCPF-oYb2-xN5FbCXy0167Gg"
+		},
+		"snippet": "Vue js axios post request to golang server, Preflight error Helpful? Please use the Thanks button above! Or, thank me via ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.24414060732309997,
+		"published": "2026-05-17T03:24:23Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Belajar Backend Golang",
+		"url": "https://www.youtube.com/watch?v=g0y4hk4m9eg",
+		"image_url": "https://i.ytimg.com/vi/g0y4hk4m9eg/hqdefault.jpg",
+		"author": {
+			"name": "dAAn",
+			"username": "UCieGSCaH-IvHHwREjz___1Q",
+			"profile_url": "https://www.youtube.com/channel/UCieGSCaH-IvHHwREjz___1Q"
+		},
+		"snippet": "",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.30984331432191253,
+		"published": "2026-05-17T03:18:37Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "GitHub Trend Depoları: overnote/over-golang 🇹🇷",
+		"url": "https://www.youtube.com/watch?v=ApBADkmKNLk",
+		"image_url": "https://i.ytimg.com/vi/ApBADkmKNLk/hqdefault.jpg",
+		"author": {
+			"name": "Sekademi Cybersecurity",
+			"username": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+			"profile_url": "https://www.youtube.com/channel/UC8AF3Ad1lpVQWcAojPe-Hmg"
+		},
+		"snippet": "Go dünyasında uzmanlaşmak için ihtiyacın olan her şey Kapsamlı Go Programlama ve Yazılım Mimarisi Notları - Go dilinin ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-16T22:28:30Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "GitHub Trending Repositories: overnote/over-golang 🇬🇧",
+		"url": "https://www.youtube.com/watch?v=2buUg-Knq6g",
+		"image_url": "https://i.ytimg.com/vi/2buUg-Knq6g/hqdefault.jpg",
+		"author": {
+			"name": "Sekademi Cybersecurity",
+			"username": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+			"profile_url": "https://www.youtube.com/channel/UC8AF3Ad1lpVQWcAojPe-Hmg"
+		},
+		"snippet": "Master Golang from Basics to Advanced Systems Ultimate Go Language Learning Path and Notes - Curated knowledge base ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.1289845691701341,
+		"published": "2026-05-16T22:25:19Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "GitHub Trend Depoları: OutlawQAQ/MinerProxy 🇹🇷",
+		"url": "https://www.youtube.com/watch?v=0sI_qavs_sY",
+		"image_url": "https://i.ytimg.com/vi/0sI_qavs_sY/hqdefault.jpg",
+		"author": {
+			"name": "Sekademi Cybersecurity",
+			"username": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+			"profile_url": "https://www.youtube.com/channel/UC8AF3Ad1lpVQWcAojPe-Hmg"
+		},
+		"snippet": "Kayıp yaşamadan kripto madencilik trafiğini kolayca yönet GoLang ile Geliştirilen Yüksek Performanslı MinerProxy - Madencilik ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-16T21:37:42Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "GitHub Trending Repositories: OutlawQAQ/MinerProxy 🇬🇧",
+		"url": "https://www.youtube.com/watch?v=Iu1bFPhJawA",
+		"image_url": "https://i.ytimg.com/vi/Iu1bFPhJawA/hqdefault.jpg",
+		"author": {
+			"name": "Sekademi Cybersecurity",
+			"username": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+			"profile_url": "https://www.youtube.com/channel/UC8AF3Ad1lpVQWcAojPe-Hmg"
+		},
+		"snippet": "Supercharge your mining pool connection with zero loss High Performance GoLang Miner Proxy Tool - Acts as a high-speed ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.1,
+		"published": "2026-05-16T21:34:54Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "GitHub Trending Repositories: ouqiang/gocron 🇬🇧",
+		"url": "https://www.youtube.com/watch?v=jVFNBKxDjEw",
+		"image_url": "https://i.ytimg.com/vi/jVFNBKxDjEw/hqdefault.jpg",
+		"author": {
+			"name": "Sekademi Cybersecurity",
+			"username": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+			"profile_url": "https://www.youtube.com/channel/UC8AF3Ad1lpVQWcAojPe-Hmg"
+		},
+		"snippet": "Take control of your scheduled tasks with ease Gocron Lightweight Task Management System - Provides a centralized web ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-16T21:05:39Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "Produsen Golang Galing terbesar di Sidamulya ",
+		"url": "https://www.youtube.com/watch?v=7WjlY-_HtE8",
+		"image_url": "https://i.ytimg.com/vi/7WjlY-_HtE8/hqdefault.jpg",
+		"author": {
+			"name": "LANTAI 7 SIDAMULYA ",
+			"username": "UCHfSd96Lqkg0XyNk14XUDQg",
+			"profile_url": "https://www.youtube.com/channel/UCHfSd96Lqkg0XyNk14XUDQg"
+		},
+		"snippet": "MAJU,TUMBUH DAN BERKEMBANG UMKM SIDAMULYA.",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.6116291743255968,
+		"published": "2026-05-16T20:23:06Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
+		"title": "[Livecoding] - Bikin Web Forum Pake Golang \u0026amp; React Part 10 (Mediashare On!)",
+		"url": "https://www.youtube.com/watch?v=6iQaGHuGBZI",
+		"image_url": "https://i.ytimg.com/vi/6iQaGHuGBZI/hqdefault.jpg",
+		"author": {
+			"name": "codeWithDiki",
+			"username": "UCG1PQlXk-K9GXKyjm_ckJ3Q",
+			"profile_url": "https://www.youtube.com/channel/UCG1PQlXk-K9GXKyjm_ckJ3Q"
+		},
+		"snippet": "Made with Restream. Livestream on 30+ platforms at once via https://restream.io Donate / Mediashare ...",
+		"tag": "video",
+		"comments": 0,
+		"score": 0.6716035835709191,
+		"published": "2026-05-16T15:28:15Z"
+	},
+	{
+		"id": 0,
+		"source": "youtube",
 		"title": "【#28】Golangラボ【2026年5月16日】",
 		"url": "https://www.youtube.com/watch?v=t1poBK2SGno",
 		"image_url": "https://i.ytimg.com/vi/t1poBK2SGno/hqdefault.jpg",
@@ -13,25 +302,8 @@
 		"snippet": "チャンネル登録はこちら↓ https://www.youtube.com/@tomoyuki go?sub confirmation=1 ◇Go言語（Golang）slog.GroupAttrsの ...",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.1289845691701341,
 		"published": "2026-05-16T15:19:06Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Go: Programming Language Ki Baat!",
-		"url": "https://www.youtube.com/watch?v=922MBAvuAH8",
-		"image_url": "https://i.ytimg.com/vi/922MBAvuAH8/hqdefault.jpg",
-		"author": {
-			"name": "Code Vibe",
-			"username": "UCToakFlOnaEhE2BsvdoMSEg",
-			"profile_url": "https://www.youtube.com/channel/UCToakFlOnaEhE2BsvdoMSEg"
-		},
-		"snippet": "Go: Programming Language Ki Baat! Yeh Go programming ka ek hidden feature hai jo sab bhool jaate hain! Q: Go kya hai?",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T13:30:27Z"
 	},
 	{
 		"id": 0,
@@ -64,7 +336,7 @@
 		"snippet": "In this video, we solve the Add One to a Single Linked List problem using Golang. Learn how to efficiently add one to a number ...",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.21036477161116746,
 		"published": "2026-05-16T11:34:33Z"
 	},
 	{
@@ -81,7 +353,7 @@
 		"snippet": "In this video, we solve the Remove Nth Node From End of a Single Linked List problem using Golang. Learn the optimized fast ...",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.22846311188087914,
 		"published": "2026-05-16T11:26:06Z"
 	},
 	{
@@ -115,7 +387,7 @@
 		"snippet": "00:00 - Решение на доске. 14:35 - Пишем код. 26:08 - Немного про comeback. Мой телеграм: https://t.me/RSCoding.",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.35171938329752306,
 		"published": "2026-05-16T09:55:51Z"
 	},
 	{
@@ -132,13 +404,13 @@
 		"snippet": "Starting a 30 Day Go Learning Challenge. I'll learn Go step by step and share everything publicly — from basics and ...",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.5358855813753007,
 		"published": "2026-05-16T09:25:06Z"
 	},
 	{
 		"id": 0,
 		"source": "youtube",
-		"title": "Почему Golang такой быстрый #golang #it #собеседованиеReels Go",
+		"title": "Почему Golang такой быстрый #golang #it #собеседование",
 		"url": "https://www.youtube.com/watch?v=xCftT3vB5vc",
 		"image_url": "https://i.ytimg.com/vi/xCftT3vB5vc/hqdefault.jpg",
 		"author": {
@@ -149,279 +421,7 @@
 		"snippet": "Больше о работе в айти и разработке пишу в своем тг-канале, ссылка в шапке профиля https://t.me/karasgopath.",
 		"tag": "video",
 		"comments": 0,
-		"score": 0.5,
+		"score": 0.7444013885614156,
 		"published": "2026-05-16T07:12:22Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "🔴 #day97  Coding a  SQL Database Management Tool in Golang - Modify configs | Live Coding | Testing",
-		"url": "https://www.youtube.com/watch?v=sXQls3AXJqE",
-		"image_url": "https://i.ytimg.com/vi/sXQls3AXJqE/hqdefault.jpg",
-		"author": {
-			"name": "Biisal",
-			"username": "UCbLupDZIcwOnt7-GYSEQANA",
-			"profile_url": "https://www.youtube.com/channel/UCbLupDZIcwOnt7-GYSEQANA"
-		},
-		"snippet": "day97 Coding a SQL Database Management Tool in Golang | Live Coding | Testing https://github.com/biisal/rowsql Today we're ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T06:27:48Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Go: Каналы для записи и чтения #shorts",
-		"url": "https://www.youtube.com/watch?v=Jms0MVzzwaU",
-		"image_url": "https://i.ytimg.com/vi/Jms0MVzzwaU/hqdefault.jpg",
-		"author": {
-			"name": "ШОРТКАТ: Golang — менторская программа",
-			"username": "UCaVnYGexLVg-Vamp5niibYQ",
-			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
-		},
-		"snippet": "Записаться на мок-интервью в ШОРТКАТ: https://shortcut.education?utm source=youtube shorts Базовые сценарии работы с ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T05:54:34Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Kelas Santai - Session 02 - Golang Struct , Interface, and Panic",
-		"url": "https://www.youtube.com/watch?v=WlKdyKbFSPk",
-		"image_url": "https://i.ytimg.com/vi/WlKdyKbFSPk/hqdefault.jpg",
-		"author": {
-			"name": "Yudhistira Media",
-			"username": "UCH-0yWsg4z_F1osvmDqaV5A",
-			"profile_url": "https://www.youtube.com/channel/UCH-0yWsg4z_F1osvmDqaV5A"
-		},
-		"snippet": "Golang Struct adalah alternatif dari OOP, perlu diingat, golang tidak memiliki OOP. jadi struct semacam alternatif dari OOP. struct ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T05:13:46Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Обзор кода Go: Фокус на обработке данных #shorts",
-		"url": "https://www.youtube.com/watch?v=PKSJXLs4Qhw",
-		"image_url": "https://i.ytimg.com/vi/PKSJXLs4Qhw/hqdefault.jpg",
-		"author": {
-			"name": "ШОРТКАТ: Golang — менторская программа",
-			"username": "UCaVnYGexLVg-Vamp5niibYQ",
-			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
-		},
-		"snippet": "Записаться на мок-интервью в ШОРТКАТ: https://shortcut.education?utm source=youtube shorts Анализ кода выявляет ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T03:55:28Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Learn Gorm in 30 sec #golang #gorm#backenddevelopment #sql",
-		"url": "https://www.youtube.com/watch?v=CMprj8msCAs",
-		"image_url": "https://i.ytimg.com/vi/CMprj8msCAs/hqdefault.jpg",
-		"author": {
-			"name": "GO Developers",
-			"username": "UC6PTOu9YnZmqBVZoSPvZS3w",
-			"profile_url": "https://www.youtube.com/channel/UC6PTOu9YnZmqBVZoSPvZS3w"
-		},
-		"snippet": "In this video, you'll learn everything about GORM, the most popular ORM library in Golang. We'll understand how GORM ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T02:36:52Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Как Go обрабатывает долгие системные вызовы #shorts",
-		"url": "https://www.youtube.com/watch?v=eNY8AIatMYo",
-		"image_url": "https://i.ytimg.com/vi/eNY8AIatMYo/hqdefault.jpg",
-		"author": {
-			"name": "ШОРТКАТ: Golang — менторская программа",
-			"username": "UCaVnYGexLVg-Vamp5niibYQ",
-			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
-		},
-		"snippet": "Узнайте, как Go отслеживает время выполнения горутины и отсоединяет M от P при долгих блокирующих системных ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T02:03:18Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Это открывает эволюцию! 🚀 Лучший Go-проект на GitHub #Shorts",
-		"url": "https://www.youtube.com/watch?v=etI1jZ-Be5A",
-		"image_url": "https://i.ytimg.com/vi/etI1jZ-Be5A/hqdefault.jpg",
-		"author": {
-			"name": "GitShortAi",
-			"username": "UC59NikwLoSzf5kr4J6c1uOQ",
-			"profile_url": "https://www.youtube.com/channel/UC59NikwLoSzf5kr4J6c1uOQ"
-		},
-		"snippet": "Это открывает эволюцию! Посмотри, что создано на Go! Проект pranshuparmar/witr поражает своей сложностью и ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-16T01:45:55Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Two Weeks Series | Golang | Day 2/14",
-		"url": "https://www.youtube.com/watch?v=Sy1hVtl4sjU",
-		"image_url": "https://i.ytimg.com/vi/Sy1hVtl4sjU/hqdefault.jpg",
-		"author": {
-			"name": "The Breeze",
-			"username": "UCHgo5AhtLecFgr8hKzu66tQ",
-			"profile_url": "https://www.youtube.com/channel/UCHgo5AhtLecFgr8hKzu66tQ"
-		},
-		"snippet": "",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T23:52:16Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Для чего нужен defer - вопрос с Golang собеса #golang #собеседование #ментор",
-		"url": "https://www.youtube.com/watch?v=YD4rniFEJpg",
-		"image_url": "https://i.ytimg.com/vi/YD4rniFEJpg/hqdefault.jpg",
-		"author": {
-			"name": "Айдар Асфандияров",
-			"username": "UCvoXE2ptuGMwhRCi0Pmg8NQ",
-			"profile_url": "https://www.youtube.com/channel/UCvoXE2ptuGMwhRCi0Pmg8NQ"
-		},
-		"snippet": "Больше такого в тг - t.me/asfandiiarov golang собеседование ментор.",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T22:53:00Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Модификация массива на месте: когда исходный и измененный массивы - одно целое #shorts",
-		"url": "https://www.youtube.com/watch?v=FAG65VU3gTg",
-		"image_url": "https://i.ytimg.com/vi/FAG65VU3gTg/hqdefault.jpg",
-		"author": {
-			"name": "ШОРТКАТ: Golang — менторская программа",
-			"username": "UCaVnYGexLVg-Vamp5niibYQ",
-			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
-		},
-		"snippet": "Разработчик объясняет подводные камни итерации по массиву с одновременной модификацией. Узнайте, почему ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T22:00:32Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Буферный канал: Что разблокирует писателя? #shorts",
-		"url": "https://www.youtube.com/watch?v=x5TndFS-fMs",
-		"image_url": "https://i.ytimg.com/vi/x5TndFS-fMs/hqdefault.jpg",
-		"author": {
-			"name": "ШОРТКАТ: Golang — менторская программа",
-			"username": "UCaVnYGexLVg-Vamp5niibYQ",
-			"profile_url": "https://www.youtube.com/channel/UCaVnYGexLVg-Vamp5niibYQ"
-		},
-		"snippet": "Сценарий с буферизованным каналом: писатель блокируется, когда канал заполняется. Что произойдет, чтобы снят",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T20:02:33Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Rust vs Go for Backend — Which One Actually Wins? #Shorts",
-		"url": "https://www.youtube.com/watch?v=YujslMq2TME",
-		"image_url": "https://i.ytimg.com/vi/YujslMq2TME/hqdefault.jpg",
-		"author": {
-			"name": "Elite Dev Comparisons",
-			"username": "UCXRLKv2eSCtTnbJwFzlHx4w",
-			"profile_url": "https://www.youtube.com/channel/UCXRLKv2eSCtTnbJwFzlHx4w"
-		},
-		"snippet": "Rust vs Go for backend development: two languages, two philosophies, one decision that shapes your entire stack. Go was built ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T16:59:13Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "[Livecoding] - Bikin Web Forum Pake Golang \u0026amp; React Part 9 (Mediashare On!)",
-		"url": "https://www.youtube.com/watch?v=qzNtuF9aXvM",
-		"image_url": "https://i.ytimg.com/vi/qzNtuF9aXvM/hqdefault.jpg",
-		"author": {
-			"name": "codeWithDiki",
-			"username": "UCG1PQlXk-K9GXKyjm_ckJ3Q",
-			"profile_url": "https://www.youtube.com/channel/UCG1PQlXk-K9GXKyjm_ckJ3Q"
-		},
-		"snippet": "Made with Restream. Livestream on 30+ platforms at once via https://restream.io Donate / Mediashare ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T15:47:56Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Secret Golang Goroutine Tutorial: Fix Concurrency Bugs Fast",
-		"url": "https://www.youtube.com/watch?v=iokCaTc1SA4",
-		"image_url": "https://i.ytimg.com/vi/iokCaTc1SA4/hqdefault.jpg",
-		"author": {
-			"name": "Sharda Learning Center",
-			"username": "UC92TsHHeVdM6Ay0rpTXZ5VQ",
-			"profile_url": "https://www.youtube.com/channel/UC92TsHHeVdM6Ay0rpTXZ5VQ"
-		},
-		"snippet": "Tired of slow backend code? This Golang goroutine tutorial shows you how to fix concurrency bugs fast and optimize ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T14:48:32Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "🔥 Complete Golang Roadmap 2026 🚀 | Learn Go Language Step by Step",
-		"url": "https://www.youtube.com/watch?v=LpoAnnNHhMI",
-		"image_url": "https://i.ytimg.com/vi/LpoAnnNHhMI/hqdefault.jpg",
-		"author": {
-			"name": "Coding Dialect",
-			"username": "UCLPANZXhusTRkboNqg5eAPQ",
-			"profile_url": "https://www.youtube.com/channel/UCLPANZXhusTRkboNqg5eAPQ"
-		},
-		"snippet": "Want to master Go (Golang) and become a Backend Developer? This Complete Go Roadmap covers: ✓ Go Basics \u0026 Syntax ...",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T14:16:42Z"
-	},
-	{
-		"id": 0,
-		"source": "youtube",
-		"title": "Two Weeks Series | Golang | Day 1/14",
-		"url": "https://www.youtube.com/watch?v=1a991iYKiQI",
-		"image_url": "https://i.ytimg.com/vi/1a991iYKiQI/hqdefault.jpg",
-		"author": {
-			"name": "The Breeze",
-			"username": "UCHgo5AhtLecFgr8hKzu66tQ",
-			"profile_url": "https://www.youtube.com/channel/UCHgo5AhtLecFgr8hKzu66tQ"
-		},
-		"snippet": "",
-		"tag": "video",
-		"comments": 0,
-		"score": 0.5,
-		"published": "2026-05-15T14:08:47Z"
 	}
 ]

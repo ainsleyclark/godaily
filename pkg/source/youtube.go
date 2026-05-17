@@ -33,8 +33,9 @@ import (
 
 // YouTube defines the type that implements news.Fetcher for YouTube video search.
 type YouTube struct {
-	url string
-	key string
+	url       string
+	videosURL string
+	key       string
 }
 
 var _ news.Fetcher = &YouTube{}
@@ -43,18 +44,24 @@ func init() {
 	news.Register(news.SourceYouTube, NewYouTube())
 }
 
-const youtubeURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=golang&type=video&order=date&maxResults=25"
+const (
+	youtubeURL       = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=golang&type=video&order=date&maxResults=25"
+	youtubeVideosURL = "https://www.googleapis.com/youtube/v3/videos?part=statistics"
+)
 
 // NewYouTube creates a YouTube client. It reads YOUTUBE_API_KEY from the
 // environment to authenticate with the YouTube Data API v3.
 func NewYouTube() *YouTube {
 	return &YouTube{
-		url: youtubeURL,
-		key: os.Getenv("YOUTUBE_API_KEY"),
+		url:       youtubeURL,
+		videosURL: youtubeVideosURL,
+		key:       os.Getenv("YOUTUBE_API_KEY"),
 	}
 }
 
-// Fetch retrieves the latest Go-related videos from YouTube, sorted by upload date.
+// Fetch retrieves the latest Go-related videos from YouTube, sorted by upload
+// date. A second call to the videos.list endpoint enriches each result with its
+// view count so items can be ranked by quality before the section limit is applied.
 func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if y.key == "" {
 		slog.Warn("YOUTUBE_API_KEY is not set, skipping")
@@ -68,6 +75,29 @@ func (y YouTube) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	ids := make([]string, 0, len(resp.Items))
+	for _, item := range resp.Items {
+		if item.ID.VideoID != "" {
+			ids = append(ids, item.ID.VideoID)
+		}
+	}
+	if len(ids) > 0 {
+		statsURL := y.videosURL + "&id=" + strings.Join(ids, ",") + "&key=" + y.key
+		statsResp, serr := ingest.Fetch[ytVideosResponse](ctx, statsURL, "youtube-stats", json.Unmarshal)
+		if serr != nil {
+			slog.WarnContext(ctx, "Failed to fetch YouTube video statistics, items will be unranked", "err", serr)
+		} else {
+			viewCounts := make(map[string]int64, len(statsResp.Items))
+			for _, v := range statsResp.Items {
+				viewCounts[v.ID] = v.Statistics.ViewCount
+			}
+			for i := range resp.Items {
+				resp.Items[i].ViewCount = viewCounts[resp.Items[i].ID.VideoID]
+			}
+		}
+	}
+
 	return ingest.TransformAll(ctx, resp.Items), nil
 }
 
@@ -88,7 +118,7 @@ func (v ytItem) Transform() news.Item {
 		},
 		Snippet:   v.Snippet.Description,
 		Tag:       news.TagVideo,
-		Score:     news.ScoreOf(news.SourceYouTube, news.TagVideo, 0, false),
+		Score:     news.ScoreOf(news.SourceYouTube, news.TagVideo, float64(v.ViewCount), v.ViewCount > 0),
 		Published: published,
 	}
 }
@@ -98,8 +128,9 @@ type ytSearchResponse struct {
 }
 
 type ytItem struct {
-	ID      ytID      `json:"id"`
-	Snippet ytSnippet `json:"snippet"`
+	ID        ytID      `json:"id"`
+	Snippet   ytSnippet `json:"snippet"`
+	ViewCount int64     // populated after stats lookup, not from JSON
 }
 
 type ytID struct {
@@ -112,4 +143,17 @@ type ytSnippet struct {
 	ChannelTitle string `json:"channelTitle"`
 	ChannelID    string `json:"channelId"`
 	PublishedAt  string `json:"publishedAt"`
+}
+
+type ytVideosResponse struct {
+	Items []ytVideoItem `json:"items"`
+}
+
+type ytVideoItem struct {
+	ID         string       `json:"id"`
+	Statistics ytStatistics `json:"statistics"`
+}
+
+type ytStatistics struct {
+	ViewCount int64 `json:"viewCount,string"`
 }

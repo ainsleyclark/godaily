@@ -1,0 +1,15 @@
+{
+  "kind": "youtube#videoListResponse",
+  "etag": "abc123",
+  "items": [
+    {
+      "kind": "youtube#video",
+      "id": "dQw4w9WgXcQ",
+      "statistics": {
+        "viewCount": "2500",
+        "likeCount": "120",
+        "commentCount": "45"
+      }
+    }
+  ]
+}

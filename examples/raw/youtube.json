@@ -1,13 +1,591 @@
 {
 	"kind": "youtube#searchListResponse",
-	"etag": "-JjDBlQexsv_0Qi2lD9lRvn0-CE",
+	"etag": "HUNKH3vHZbxPWvy2wJt3qdjug6E",
 	"nextPageToken": "CBkQAA",
 	"regionCode": "GB",
 	"pageInfo": {
-		"totalResults": 357849,
+		"totalResults": 357855,
 		"resultsPerPage": 25
 	},
 	"items": [
+		{
+			"kind": "youtube#searchResult",
+			"etag": "R82Ia9Kx-3PlC5qerLsZ_I5ErPM",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "qz2Sg4ahUak"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T09:29:32Z",
+				"channelId": "UC06vnBpzRyABRaeKeD3_MzQ",
+				"title": "Golang - intro - part 2",
+				"description": "Today we're continuing our Go lesson.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/qz2Sg4ahUak/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/qz2Sg4ahUak/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/qz2Sg4ahUak/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Purple Gravity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T09:29:32Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "4KYUwdJI958dEobMGeziWvVWvXk",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "GP1_C8e-Kzc"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T08:59:28Z",
+				"channelId": "UCRa7O4AsWJfZQw_wc_kN_aA",
+				"title": "Go Variables &amp; Data Types Explained 🚀 | Day 2 of Learning Go",
+				"description": "Day 2 of my 30 Day Go Learning Challenge. Today I learned: Variables in Go Data types Short variable syntax Constants Basic ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/GP1_C8e-Kzc/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/GP1_C8e-Kzc/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/GP1_C8e-Kzc/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Shubham Rawat",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T08:59:28Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "rIXs_S4LWpvxJ08MVKwR8qo3v1w",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "Oe4lgQKg1bk"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T08:51:18Z",
+				"channelId": "UCH-0yWsg4z_F1osvmDqaV5A",
+				"title": "Kelas Santai - Session 12 - Golang Pointer and Struct",
+				"description": "Kelas Santai - Session 12 - Golang Pointer and Struct.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/Oe4lgQKg1bk/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/Oe4lgQKg1bk/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/Oe4lgQKg1bk/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Yudhistira Media",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T08:51:18Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "jYjVkcWcfTsnwk13xvxGGyrbQz4",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "hiadKkxCw_E"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T08:49:06Z",
+				"channelId": "UCba-ETUfEAm6HkvWMb-fWww",
+				"title": "Тирлист зарплат в IT #golang #it #собеседование",
+				"description": "Больше о работе в айти и разработке пишу в своем тг-канале, ссылка в шапке профиля https://t.me/karasgopath.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/hiadKkxCw_E/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/hiadKkxCw_E/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/hiadKkxCw_E/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Максим Карась",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T08:49:06Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "0rPQiJIo029tSGHaJQnGasgys_k",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "kBtzLeDwiaE"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T07:26:54Z",
+				"channelId": "UC06vnBpzRyABRaeKeD3_MzQ",
+				"title": "Golang part 1",
+				"description": "Setting up Golang in a windows environment.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/kBtzLeDwiaE/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/kBtzLeDwiaE/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/kBtzLeDwiaE/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Purple Gravity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T07:26:54Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "xlztW4GJLjMe5uELxUEfpcU_EGo",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "ct1ickCIzeY"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T07:01:16Z",
+				"channelId": "UCH-0yWsg4z_F1osvmDqaV5A",
+				"title": "Kelas Santai - Session 13 - Golang Goroutine",
+				"description": "Golang Goroutine dan channel adalah salah satu fitur dari golang concurrency.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/ct1ickCIzeY/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/ct1ickCIzeY/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/ct1ickCIzeY/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Yudhistira Media",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T07:01:16Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "veglegsyplBEP7s5hrZb1xaza0w",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "X9-m3DMNpqc"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T06:04:29Z",
+				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
+				"title": "Сравнимые и несравнимые типы данных в Go #shorts",
+				"description": "Go: когда типы данных могут быть ключами мапы, а когда нет. Разбираемся в тонкостях сравнимых и несравнимых типов ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/X9-m3DMNpqc/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/X9-m3DMNpqc/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/X9-m3DMNpqc/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T06:04:29Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "RL-Ea5O2B55Nl9EJOaPegCu70Fw",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "w8yWf3RE4yM"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T05:00:21Z",
+				"channelId": "UCWk6V9lPJO7wldGaL1i5gCg",
+				"title": "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #ide #vscode #javascript #typescipt #golang #rust #computer",
+				"description": "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #ide #vscode #javascript #typescipt #golang #rust #computer.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/w8yWf3RE4yM/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/w8yWf3RE4yM/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/w8yWf3RE4yM/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "CodeMotion",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T05:00:21Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "uE9TYJo3dKFUopMhNyGMFAFt-Ig",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "3vJmlwS-5cs"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T03:24:23Z",
+				"channelId": "UCPF-oYb2-xN5FbCXy0167Gg",
+				"title": "Vue js axios post request to golang server, Preflight error (2 Solutions!!)",
+				"description": "Vue js axios post request to golang server, Preflight error Helpful? Please use the *Thanks* button above! Or, thank me via ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/3vJmlwS-5cs/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/3vJmlwS-5cs/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/3vJmlwS-5cs/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Roel Van de Paar",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T03:24:23Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "x1inJ3wCuuPLwg5PYORdFPuMHWM",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "g0y4hk4m9eg"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-17T03:18:37Z",
+				"channelId": "UCieGSCaH-IvHHwREjz___1Q",
+				"title": "Belajar Backend Golang",
+				"description": "",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/g0y4hk4m9eg/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/g0y4hk4m9eg/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/g0y4hk4m9eg/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "dAAn",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-17T03:18:37Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "9tqC4ixdzlf2HSVdq61dTxAvqgI",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "ApBADkmKNLk"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T22:28:30Z",
+				"channelId": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+				"title": "GitHub Trend Depoları: overnote/over-golang 🇹🇷",
+				"description": "Go dünyasında uzmanlaşmak için ihtiyacın olan her şey Kapsamlı Go Programlama ve Yazılım Mimarisi Notları - Go dilinin ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/ApBADkmKNLk/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/ApBADkmKNLk/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/ApBADkmKNLk/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Sekademi Cybersecurity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T22:28:30Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "DfyZBg71PsRL0mfD5adLq9la4Uc",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "2buUg-Knq6g"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T22:25:19Z",
+				"channelId": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+				"title": "GitHub Trending Repositories: overnote/over-golang 🇬🇧",
+				"description": "Master Golang from Basics to Advanced Systems Ultimate Go Language Learning Path and Notes - Curated knowledge base ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/2buUg-Knq6g/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/2buUg-Knq6g/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/2buUg-Knq6g/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Sekademi Cybersecurity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T22:25:19Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "i3GPXkiYPbA7WeDyRS6egl9Gl1o",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "0sI_qavs_sY"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T21:37:42Z",
+				"channelId": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+				"title": "GitHub Trend Depoları: OutlawQAQ/MinerProxy 🇹🇷",
+				"description": "Kayıp yaşamadan kripto madencilik trafiğini kolayca yönet GoLang ile Geliştirilen Yüksek Performanslı MinerProxy - Madencilik ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/0sI_qavs_sY/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/0sI_qavs_sY/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/0sI_qavs_sY/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Sekademi Cybersecurity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T21:37:42Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "k_IdL_mSNGK7KyoXZreFJUP2nes",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "Iu1bFPhJawA"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T21:34:54Z",
+				"channelId": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+				"title": "GitHub Trending Repositories: OutlawQAQ/MinerProxy 🇬🇧",
+				"description": "Supercharge your mining pool connection with zero loss High Performance GoLang Miner Proxy Tool - Acts as a high-speed ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/Iu1bFPhJawA/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/Iu1bFPhJawA/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/Iu1bFPhJawA/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Sekademi Cybersecurity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T21:34:54Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "Gm15sjpm6lAYW55NDQEXmZEkfAo",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "jVFNBKxDjEw"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T21:05:39Z",
+				"channelId": "UC8AF3Ad1lpVQWcAojPe-Hmg",
+				"title": "GitHub Trending Repositories: ouqiang/gocron 🇬🇧",
+				"description": "Take control of your scheduled tasks with ease Gocron Lightweight Task Management System - Provides a centralized web ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/jVFNBKxDjEw/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/jVFNBKxDjEw/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/jVFNBKxDjEw/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "Sekademi Cybersecurity",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T21:05:39Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "u2SglQZB_EjCfWA6j_Sd1StWoeg",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "7WjlY-_HtE8"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T20:23:06Z",
+				"channelId": "UCHfSd96Lqkg0XyNk14XUDQg",
+				"title": "Produsen Golang Galing terbesar di Sidamulya ",
+				"description": "MAJU,TUMBUH DAN BERKEMBANG UMKM SIDAMULYA.",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/7WjlY-_HtE8/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/7WjlY-_HtE8/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/7WjlY-_HtE8/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "LANTAI 7 SIDAMULYA ",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T20:23:06Z"
+			}
+		},
+		{
+			"kind": "youtube#searchResult",
+			"etag": "gNxTDmyPsmudM2DRF-SdbgaE-k0",
+			"id": {
+				"kind": "youtube#video",
+				"videoId": "6iQaGHuGBZI"
+			},
+			"snippet": {
+				"publishedAt": "2026-05-16T15:28:15Z",
+				"channelId": "UCG1PQlXk-K9GXKyjm_ckJ3Q",
+				"title": "[Livecoding] - Bikin Web Forum Pake Golang &amp; React Part 10 (Mediashare On!)",
+				"description": "Made with Restream. Livestream on 30+ platforms at once via https://restream.io Donate / Mediashare ...",
+				"thumbnails": {
+					"default": {
+						"url": "https://i.ytimg.com/vi/6iQaGHuGBZI/default.jpg",
+						"width": 120,
+						"height": 90
+					},
+					"medium": {
+						"url": "https://i.ytimg.com/vi/6iQaGHuGBZI/mqdefault.jpg",
+						"width": 320,
+						"height": 180
+					},
+					"high": {
+						"url": "https://i.ytimg.com/vi/6iQaGHuGBZI/hqdefault.jpg",
+						"width": 480,
+						"height": 360
+					}
+				},
+				"channelTitle": "codeWithDiki",
+				"liveBroadcastContent": "none",
+				"publishTime": "2026-05-16T15:28:15Z"
+			}
+		},
 		{
 			"kind": "youtube#searchResult",
 			"etag": "szX0JrFtM185WpkFejNhwgF7B9Y",
@@ -40,40 +618,6 @@
 				"channelTitle": "TomoyukiのGolangラボ",
 				"liveBroadcastContent": "none",
 				"publishTime": "2026-05-16T15:19:06Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "zdRRThqIZlEEnJpc-_isYLXKNvA",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "922MBAvuAH8"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T13:30:27Z",
-				"channelId": "UCToakFlOnaEhE2BsvdoMSEg",
-				"title": "Go: Programming Language Ki Baat!",
-				"description": "Go: Programming Language Ki Baat! Yeh Go programming ka ek hidden feature hai jo sab bhool jaate hain! Q: Go kya hai?",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/922MBAvuAH8/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/922MBAvuAH8/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/922MBAvuAH8/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Code Vibe",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T13:30:27Z"
 			}
 		},
 		{
@@ -282,7 +826,7 @@
 		},
 		{
 			"kind": "youtube#searchResult",
-			"etag": "aItmfyf23hPo38lcwdtXu8ByG00",
+			"etag": "ZMsQ22vnYp6538kqugkUG4jr_XI",
 			"id": {
 				"kind": "youtube#video",
 				"videoId": "xCftT3vB5vc"
@@ -290,7 +834,7 @@
 			"snippet": {
 				"publishedAt": "2026-05-16T07:12:22Z",
 				"channelId": "UCba-ETUfEAm6HkvWMb-fWww",
-				"title": "Почему Golang такой быстрый #golang #it #собеседованиеReels Go",
+				"title": "Почему Golang такой быстрый #golang #it #собеседование",
 				"description": "Больше о работе в айти и разработке пишу в своем тг-канале, ссылка в шапке профиля https://t.me/karasgopath.",
 				"thumbnails": {
 					"default": {
@@ -312,550 +856,6 @@
 				"channelTitle": "Максим Карась",
 				"liveBroadcastContent": "none",
 				"publishTime": "2026-05-16T07:12:22Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "dWgJu1jc6VfcM4yL7apVyvkBgBc",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "sXQls3AXJqE"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T06:27:48Z",
-				"channelId": "UCbLupDZIcwOnt7-GYSEQANA",
-				"title": "🔴 #day97  Coding a  SQL Database Management Tool in Golang - Modify configs | Live Coding | Testing",
-				"description": "day97 Coding a SQL Database Management Tool in Golang | Live Coding | Testing https://github.com/biisal/rowsql Today we're ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/sXQls3AXJqE/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/sXQls3AXJqE/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/sXQls3AXJqE/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Biisal",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T06:27:48Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "dFZJ-meIhoBtk8o9R3J1Tyt59K8",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "Jms0MVzzwaU"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T05:54:34Z",
-				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
-				"title": "Go: Каналы для записи и чтения #shorts",
-				"description": "Записаться на мок-интервью в ШОРТКАТ: https://shortcut.education?utm_source=youtube_shorts Базовые сценарии работы с ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/Jms0MVzzwaU/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/Jms0MVzzwaU/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/Jms0MVzzwaU/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T05:54:34Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "qLh_YuYhzLtEJj20dPenbOrOeUk",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "WlKdyKbFSPk"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T05:13:46Z",
-				"channelId": "UCH-0yWsg4z_F1osvmDqaV5A",
-				"title": "Kelas Santai - Session 02 - Golang Struct , Interface, and Panic",
-				"description": "Golang Struct adalah alternatif dari OOP, perlu diingat, golang tidak memiliki OOP. jadi struct semacam alternatif dari OOP. struct ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/WlKdyKbFSPk/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/WlKdyKbFSPk/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/WlKdyKbFSPk/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Yudhistira Media",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T05:13:46Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "MTxhwkG8FDey0h3tbkmmOmSgcpY",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "PKSJXLs4Qhw"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T03:55:28Z",
-				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
-				"title": "Обзор кода Go: Фокус на обработке данных #shorts",
-				"description": "Записаться на мок-интервью в ШОРТКАТ: https://shortcut.education?utm_source=youtube_shorts Анализ кода выявляет ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/PKSJXLs4Qhw/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/PKSJXLs4Qhw/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/PKSJXLs4Qhw/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T03:55:28Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "gja3ukdip4KBbTaXIiXTC-Bt3_I",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "CMprj8msCAs"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T02:36:52Z",
-				"channelId": "UC6PTOu9YnZmqBVZoSPvZS3w",
-				"title": "Learn Gorm in 30 sec #golang #gorm#backenddevelopment #sql",
-				"description": "In this video, you'll learn everything about GORM, the most popular ORM library in Golang. We'll understand how GORM ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/CMprj8msCAs/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/CMprj8msCAs/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/CMprj8msCAs/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "GO Developers",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T02:36:52Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "T7j0AMDNqARlWcBV8blQg0hjkMM",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "eNY8AIatMYo"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T02:03:18Z",
-				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
-				"title": "Как Go обрабатывает долгие системные вызовы #shorts",
-				"description": "Узнайте, как Go отслеживает время выполнения горутины и отсоединяет M от P при долгих блокирующих системных ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/eNY8AIatMYo/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/eNY8AIatMYo/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/eNY8AIatMYo/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T02:03:18Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "tFT6yPtAxHGnSh5lf_iUEvUYVXM",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "etI1jZ-Be5A"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-16T01:45:55Z",
-				"channelId": "UC59NikwLoSzf5kr4J6c1uOQ",
-				"title": "Это открывает эволюцию! 🚀 Лучший Go-проект на GitHub #Shorts",
-				"description": "Это открывает эволюцию! Посмотри, что создано на Go! Проект pranshuparmar/witr поражает своей сложностью и ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/etI1jZ-Be5A/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/etI1jZ-Be5A/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/etI1jZ-Be5A/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "GitShortAi",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-16T01:45:55Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "pC4EtfM25QBjRu5RpZKoImenI2E",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "Sy1hVtl4sjU"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T23:52:16Z",
-				"channelId": "UCHgo5AhtLecFgr8hKzu66tQ",
-				"title": "Two Weeks Series | Golang | Day 2/14",
-				"description": "",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/Sy1hVtl4sjU/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/Sy1hVtl4sjU/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/Sy1hVtl4sjU/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "The Breeze",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T23:52:16Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "yCZSusxRw51tZCk8Oh_hmGdXjlU",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "YD4rniFEJpg"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T22:53:00Z",
-				"channelId": "UCvoXE2ptuGMwhRCi0Pmg8NQ",
-				"title": "Для чего нужен defer - вопрос с Golang собеса #golang #собеседование #ментор",
-				"description": "Больше такого в тг - t.me/asfandiiarov #golang #собеседование #ментор.",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/YD4rniFEJpg/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/YD4rniFEJpg/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/YD4rniFEJpg/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Айдар Асфандияров",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T22:53:00Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "x8M_63UzTNoz4J8rfpwl3B40dKk",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "FAG65VU3gTg"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T22:00:32Z",
-				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
-				"title": "Модификация массива на месте: когда исходный и измененный массивы - одно целое #shorts",
-				"description": "Разработчик объясняет подводные камни итерации по массиву с одновременной модификацией. Узнайте, почему ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/FAG65VU3gTg/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/FAG65VU3gTg/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/FAG65VU3gTg/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T22:00:32Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "tabk0puHLLMX25gu9JpRL8jQjNE",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "x5TndFS-fMs"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T20:02:33Z",
-				"channelId": "UCaVnYGexLVg-Vamp5niibYQ",
-				"title": "Буферный канал: Что разблокирует писателя? #shorts",
-				"description": "Сценарий с буферизованным каналом: писатель блокируется, когда канал заполняется. Что произойдет, чтобы снять ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/x5TndFS-fMs/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/x5TndFS-fMs/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/x5TndFS-fMs/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "ШОРТКАТ: Golang — менторская программа",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T20:02:33Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "VgsmEVtr0TEd4Vk3j0nrg9JDXuI",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "YujslMq2TME"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T16:59:13Z",
-				"channelId": "UCXRLKv2eSCtTnbJwFzlHx4w",
-				"title": "Rust vs Go for Backend — Which One Actually Wins? #Shorts",
-				"description": "Rust vs Go for backend development: two languages, two philosophies, one decision that shapes your entire stack. Go was built ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/YujslMq2TME/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/YujslMq2TME/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/YujslMq2TME/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Elite Dev Comparisons",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T16:59:13Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "eDguX9CA8xO8n4Q-_et0v2MMgHY",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "qzNtuF9aXvM"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T15:47:56Z",
-				"channelId": "UCG1PQlXk-K9GXKyjm_ckJ3Q",
-				"title": "[Livecoding] - Bikin Web Forum Pake Golang &amp; React Part 9 (Mediashare On!)",
-				"description": "Made with Restream. Livestream on 30+ platforms at once via https://restream.io Donate / Mediashare ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/qzNtuF9aXvM/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/qzNtuF9aXvM/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/qzNtuF9aXvM/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "codeWithDiki",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T15:47:56Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "SszcqQXe9RZ3n1geFTu6PDN0edI",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "iokCaTc1SA4"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T14:48:32Z",
-				"channelId": "UC92TsHHeVdM6Ay0rpTXZ5VQ",
-				"title": "Secret Golang Goroutine Tutorial: Fix Concurrency Bugs Fast",
-				"description": "Tired of slow backend code? This Golang goroutine tutorial shows you how to fix concurrency bugs fast and optimize ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/iokCaTc1SA4/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/iokCaTc1SA4/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/iokCaTc1SA4/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Sharda Learning Center",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T14:48:32Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "HnMLcEjsqfi9AqPJ4bl_ohxZi50",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "LpoAnnNHhMI"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T14:16:42Z",
-				"channelId": "UCLPANZXhusTRkboNqg5eAPQ",
-				"title": "🔥 Complete Golang Roadmap 2026 🚀 | Learn Go Language Step by Step",
-				"description": "Want to master Go (Golang) and become a Backend Developer? This Complete Go Roadmap covers: ✓ Go Basics & Syntax ...",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/LpoAnnNHhMI/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/LpoAnnNHhMI/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/LpoAnnNHhMI/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "Coding Dialect",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T14:16:42Z"
-			}
-		},
-		{
-			"kind": "youtube#searchResult",
-			"etag": "YUs4lFHwMPs6rJyMAh4BaF2usrM",
-			"id": {
-				"kind": "youtube#video",
-				"videoId": "1a991iYKiQI"
-			},
-			"snippet": {
-				"publishedAt": "2026-05-15T14:08:47Z",
-				"channelId": "UCHgo5AhtLecFgr8hKzu66tQ",
-				"title": "Two Weeks Series | Golang | Day 1/14",
-				"description": "",
-				"thumbnails": {
-					"default": {
-						"url": "https://i.ytimg.com/vi/1a991iYKiQI/default.jpg",
-						"width": 120,
-						"height": 90
-					},
-					"medium": {
-						"url": "https://i.ytimg.com/vi/1a991iYKiQI/mqdefault.jpg",
-						"width": 320,
-						"height": 180
-					},
-					"high": {
-						"url": "https://i.ytimg.com/vi/1a991iYKiQI/hqdefault.jpg",
-						"width": 480,
-						"height": 360
-					}
-				},
-				"channelTitle": "The Breeze",
-				"liveBroadcastContent": "none",
-				"publishTime": "2026-05-15T14:08:47Z"
 			}
 		}
 	]
