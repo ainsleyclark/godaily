@@ -67,6 +67,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		t.Parallel()
+
 		srv, _ := fakeGeminiServer(t, http.StatusOK, validGeminiResponse(`{"post":"hello"}`))
 
 		c := New("test-key")
@@ -79,6 +80,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("HTTP Non-200 Returns Error", func(t *testing.T) {
 		t.Parallel()
+
 		srv, _ := fakeGeminiServer(t, http.StatusUnauthorized, `{"error":"invalid key"}`)
 
 		c := New("bad-key")
@@ -91,6 +93,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("Malformed JSON Returns Error", func(t *testing.T) {
 		t.Parallel()
+
 		srv, _ := fakeGeminiServer(t, http.StatusOK, "not json")
 
 		c := New("test-key")
@@ -103,6 +106,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("Empty Candidates Returns Error", func(t *testing.T) {
 		t.Parallel()
+
 		body, _ := json.Marshal(map[string]any{"candidates": []any{}})
 		srv, _ := fakeGeminiServer(t, http.StatusOK, string(body))
 
@@ -116,6 +120,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("System And User Merged In Request Body", func(t *testing.T) {
 		t.Parallel()
+
 		srv, captured := fakeGeminiServer(t, http.StatusOK, validGeminiResponse("ok"))
 
 		c := New("test-key")

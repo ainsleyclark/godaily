@@ -36,49 +36,53 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("Primary Success", func(t *testing.T) {
 		t.Parallel()
+
 		ctrl := gomock.NewController(t)
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("result"), nil)
 
-		got, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("result"), got)
 	})
 
 	t.Run("Primary Fails Nil Fallback", func(t *testing.T) {
 		t.Parallel()
+
 		ctrl := gomock.NewController(t)
 		primary := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
 
-		_, err := New(primary, nil).Prompt(context.Background(), "sys", "user")
+		_, err := (&Client{primary: primary}).Prompt(context.Background(), "sys", "user")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "primary failed")
 	})
 
 	t.Run("Primary Fails Fallback Used", func(t *testing.T) {
 		t.Parallel()
+
 		ctrl := gomock.NewController(t)
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
 		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("fallback"), nil)
 
-		got, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("fallback"), got)
 	})
 
 	t.Run("Both Fail", func(t *testing.T) {
 		t.Parallel()
+
 		ctrl := gomock.NewController(t)
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
 		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("fallback failed"))
 
-		_, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		_, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "fallback failed")
 	})

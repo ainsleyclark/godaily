@@ -81,6 +81,7 @@ func TestSynthesise(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			p := mockai.NewMockPrompter(gomock.NewController(t))
 			if len(test.sections) > 0 {
 				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
@@ -153,6 +154,7 @@ func TestParseDigestBytes(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			got, err := parseDigestBytes(test.raw)
 			if test.wantErr != "" {
 				require.Error(t, err)

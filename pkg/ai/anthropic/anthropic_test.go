@@ -77,6 +77,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("API Error Wrapped", func(t *testing.T) {
 		t.Parallel()
+
 		srv, _ := fakeAnthropicServer(t, http.StatusInternalServerError,
 			`{"error":{"type":"api_error","message":"internal error"}}`)
 
@@ -89,6 +90,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("OK Returns Text Bytes", func(t *testing.T) {
 		t.Parallel()
+
 		srv, _ := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse(`{"post":"hello"}`))
 
 		c := New("test", option.WithBaseURL(srv.URL))
@@ -100,6 +102,7 @@ func TestClient_Prompt(t *testing.T) {
 
 	t.Run("System String Sent As Single Block", func(t *testing.T) {
 		t.Parallel()
+
 		srv, captured := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse("ok"))
 
 		c := New("test", option.WithBaseURL(srv.URL))

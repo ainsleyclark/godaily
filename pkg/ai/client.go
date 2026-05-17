@@ -22,6 +22,10 @@ package ai
 import (
 	"context"
 	"log/slog"
+
+	"github.com/ainsleyclark/godaily/pkg/ai/anthropic"
+	"github.com/ainsleyclark/godaily/pkg/ai/gemini"
+	"github.com/ainsleyclark/godaily/pkg/env"
 )
 
 // Client chains a primary Prompter with an optional fallback.
@@ -31,8 +35,14 @@ type Client struct {
 	fallback Prompter
 }
 
-// New constructs a Client. Pass nil fallback to disable fallback.
-func New(primary Prompter, fallback Prompter) *Client {
+// New constructs a Client from config, using Anthropic as the primary
+// Prompter and Gemini as an optional fallback when GeminiAPIKey is set.
+func New(cfg env.Config) *Client {
+	primary := anthropic.New(cfg.AnthropicAPIKey)
+	var fallback Prompter
+	if cfg.GeminiAPIKey != "" {
+		fallback = gemini.New(cfg.GeminiAPIKey)
+	}
 	return &Client{primary: primary, fallback: fallback}
 }
 

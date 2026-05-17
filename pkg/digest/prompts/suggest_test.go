@@ -102,6 +102,7 @@ func TestSuggest(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			p := mockai.NewMockPrompter(gomock.NewController(t))
 			if len(test.sections) > 0 {
 				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
@@ -171,6 +172,7 @@ func TestParseSuggestionBytes(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			got, err := parseSuggestionBytes(test.raw)
 			if test.wantErr != "" {
 				require.Error(t, err)
@@ -204,6 +206,7 @@ func TestStripFences(t *testing.T) {
 	for name, tc := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			assert.Equal(t, tc.want, stripFences(tc.in))
 		})
 	}
@@ -224,6 +227,7 @@ func TestSuggestion_Markdown(t *testing.T) {
 
 	t.Run("With References", func(t *testing.T) {
 		t.Parallel()
+
 		md := s.Markdown()
 		assert.Contains(t, md, "## Suggested post: 2026-04-27")
 		assert.Contains(t, md, "post text")
@@ -233,6 +237,7 @@ func TestSuggestion_Markdown(t *testing.T) {
 
 	t.Run("Without References", func(t *testing.T) {
 		t.Parallel()
+
 		noRef := s
 		noRef.References = nil
 		md := noRef.Markdown()
