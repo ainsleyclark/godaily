@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/ai/anthropic"
 	"github.com/ainsleyclark/godaily/pkg/ai/gemini"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/digest"
@@ -102,9 +103,10 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 
-	aiClient := ai.New(config.AnthropicAPIKey)
+	anthropicClient := anthropic.New(config.AnthropicAPIKey)
+	var aiClient ai.Prompter = ai.New(anthropicClient, nil)
 	if config.GeminiAPIKey != "" {
-		aiClient = ai.NewWithFallback(config.AnthropicAPIKey, gemini.New(config.GeminiAPIKey))
+		aiClient = ai.New(anthropicClient, gemini.New(config.GeminiAPIKey))
 	}
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)

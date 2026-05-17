@@ -57,6 +57,7 @@ func TestNew(t *testing.T) {
 		t.Setenv("APP_ENV", "development")
 		t.Setenv("RESEND_TOKEN", "re_vercel")
 		t.Setenv("ANTHROPIC_API_KEY", "sk-ant-vercel")
+		t.Setenv("YOUTUBE_API_KEY", "yt_vercel")
 		t.Setenv("EMAIL_SEND_ADDRESS", "vercel@example.com")
 		t.Setenv("TURSO_URL", "file:./vercel.db")
 		t.Setenv("TURSO_AUTH_TOKEN", "turso_vercel")

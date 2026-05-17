@@ -27,8 +27,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/anthropics/anthropic-sdk-go"
-	sdkanthr "github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -77,27 +75,14 @@ func validAnthropicResponse(text string) string {
 func TestClient_Prompt(t *testing.T) {
 	t.Parallel()
 
-	systemBlocks := []sdkanthr.TextBlockParam{
-		{Text: "You are a helpful assistant."},
-		{
-			Text:         "Style guide content.",
-			CacheControl: anthropic.NewCacheControlEphemeralParam(),
-		},
-	}
-
 	t.Run("API Error Wrapped", func(t *testing.T) {
 		t.Parallel()
 		srv, _ := fakeAnthropicServer(t, http.StatusInternalServerError,
 			`{"error":{"type":"api_error","message":"internal error"}}`)
 
-		sdkClient := sdkanthr.NewClient(
-			option.WithAPIKey("test"),
-			option.WithBaseURL(srv.URL),
-			option.WithMaxRetries(0),
-		)
-		c := New(sdkClient, systemBlocks)
+		c := New("test", option.WithBaseURL(srv.URL), option.WithMaxRetries(0))
 
-		_, err := c.Prompt(context.Background(), "system ignored", "user payload")
+		_, err := c.Prompt(context.Background(), "system text", "user payload")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "anthropic")
 	})
@@ -106,28 +91,20 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 		srv, _ := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse(`{"post":"hello"}`))
 
-		sdkClient := sdkanthr.NewClient(
-			option.WithAPIKey("test"),
-			option.WithBaseURL(srv.URL),
-		)
-		c := New(sdkClient, systemBlocks)
+		c := New("test", option.WithBaseURL(srv.URL))
 
-		got, err := c.Prompt(context.Background(), "ignored system string", "user payload")
+		got, err := c.Prompt(context.Background(), "system text", "user payload")
 		require.NoError(t, err)
 		assert.Equal(t, `{"post":"hello"}`, string(got))
 	})
 
-	t.Run("System Blocks Sent Correctly", func(t *testing.T) {
+	t.Run("System String Sent As Single Block", func(t *testing.T) {
 		t.Parallel()
 		srv, captured := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse("ok"))
 
-		sdkClient := sdkanthr.NewClient(
-			option.WithAPIKey("test"),
-			option.WithBaseURL(srv.URL),
-		)
-		c := New(sdkClient, systemBlocks)
+		c := New("test", option.WithBaseURL(srv.URL))
 
-		_, err := c.Prompt(context.Background(), "system arg ignored", "user data")
+		_, err := c.Prompt(context.Background(), "You are a helpful assistant.", "user data")
 		require.NoError(t, err)
 
 		var req struct {
@@ -146,11 +123,9 @@ func TestClient_Prompt(t *testing.T) {
 		}
 		require.NoError(t, json.Unmarshal(*captured, &req))
 
-		require.Len(t, req.System, 2)
+		require.Len(t, req.System, 1)
 		assert.Equal(t, "You are a helpful assistant.", req.System[0].Text)
 		assert.Nil(t, req.System[0].CacheControl)
-		require.NotNil(t, req.System[1].CacheControl)
-		assert.Equal(t, "ephemeral", req.System[1].CacheControl.Type)
 
 		require.Len(t, req.Messages, 1)
 		assert.Equal(t, "user", req.Messages[0].Role)

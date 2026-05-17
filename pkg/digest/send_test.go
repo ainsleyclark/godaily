@@ -20,6 +20,7 @@
 package digest
 
 import (
+	"encoding/json"
 	"errors"
 	htmltemplate "html/template"
 	"testing"
@@ -28,7 +29,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -38,6 +38,11 @@ func TestAggregator_SendDigest(t *testing.T) {
 		d, err := time.Parse("2006-01-02", s)
 		require.NoError(t, err)
 		return d
+	}
+
+	validSuggestJSON := func(post string) []byte {
+		raw, _ := json.Marshal(map[string]any{"post": post, "references": []any{}})
+		return raw
 	}
 
 	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
@@ -175,7 +180,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		assert.Contains(t, err.Error(), "rendering digest")
 	})
 
-	t.Run("Synth Never Called During Send", func(t *testing.T) {
+	t.Run("Prompter Never Called During Send", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-01")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -194,12 +199,12 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		sg := &mockSuggester{resp: ai.Suggestion{Post: "punchy-post"}}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		p := &mockPrompter{raw: validSuggestJSON("punchy-post")}
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
-		assert.False(t, sg.called, "synth must not be called during Send")
+		assert.False(t, p.called, "prompter must not be called during SendDigest")
 		assert.True(t, m.called)
 		assert.NotContains(t, m.req.Html, "punchy-post")
 	})

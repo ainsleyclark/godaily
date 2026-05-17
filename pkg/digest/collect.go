@@ -27,6 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -152,19 +153,19 @@ func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections
 	return nil
 }
 
-// synthesiseDigestMeta calls the synthesiser to generate the email subject title
+// synthesiseDigestMeta calls the prompter to generate the email subject title
 // and intro paragraph. On failure it logs a warning and returns static fallbacks
 // so a missing API key never blocks delivery.
 func (a Aggregator) synthesiseDigestMeta(ctx context.Context, day time.Time, sections []news.SourceItems) (subject, summary string) {
 	subject = "GoDaily - " + day.Format("January 2, 2006")
-	if a.synthesiser == nil {
+	if a.prompter == nil {
 		return subject, ""
 	}
-	meta, err := a.synthesiser.Synthesise(ctx, day, sections)
+	meta, err := prompts.Synthesise(ctx, a.prompter, day, sections)
 	if err != nil {
 		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
 		if a.slack != nil {
-			a.slack.MustSend(ctx, "Claude synthesis failed: "+err.Error())
+			a.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
 		}
 		return subject, ""
 	}

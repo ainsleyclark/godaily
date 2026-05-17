@@ -50,47 +50,30 @@ type slackNotifier interface {
 type Aggregator struct {
 	email             email.Sender
 	adminEmailAddress string
-	suggester         suggester
-	synthesiser       synthesiser
+	prompter          ai.Prompter
 	issues            news.IssueRepository
 	items             news.ItemRepository
 	subscribers       news.SubscriberRepository
 	slack             slackNotifier
 }
 
-// suggester abstracts the AI client for social-post generation so tests
-// can substitute a fake without hitting Anthropic.
-type suggester interface {
-	Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (ai.Suggestion, error)
-}
-
-// synthesiser abstracts the AI client for digest metadata (subject title
-// and intro paragraph) so tests can substitute a fake without hitting Anthropic.
-type synthesiser interface {
-	Synthesise(ctx context.Context, day time.Time, sections []news.SourceItems) (ai.DigestMeta, error)
-}
-
 // New creates a new Aggregator, validating that all news sources have
-// registered fetchers. Pass a non-nil aiClient to enable AI synthesis
+// registered fetchers. Pass a non-nil prompter to enable AI synthesis
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
-func New(emailSender email.Sender, adminEmail string, aiClient *ai.Client, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+func New(emailSender email.Sender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
-	agg := &Aggregator{
+	return &Aggregator{
 		email:             emailSender,
 		adminEmailAddress: adminEmail,
+		prompter:          prompter,
 		issues:            issues,
 		items:             items,
 		subscribers:       subscribers,
 		slack:             slack,
-	}
-	if aiClient != nil {
-		agg.suggester = aiClient
-		agg.synthesiser = aiClient
-	}
-	return agg, nil
+	}, nil
 }
 
 func (a Aggregator) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {

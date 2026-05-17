@@ -27,6 +27,7 @@ import (
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/pkg/errors"
 )
 
@@ -37,24 +38,19 @@ const (
 )
 
 // Client satisfies ai.Prompter using the Anthropic Messages API.
-// The system string argument to Prompt is unused — the pre-built cached
-// TextBlockParams stored at construction time are used instead.
 type Client struct {
 	client anthropic.Client
-	system []anthropic.TextBlockParam
 }
 
-// New constructs a Client with a pre-initialised SDK client and system blocks.
-// The SDK client is initialised once by the caller (ai.Client constructor) and
-// shared across calls for connection reuse.
-func New(sdkClient anthropic.Client, system []anthropic.TextBlockParam) *Client {
-	return &Client{client: sdkClient, system: system}
+// New constructs a Client initialising the Anthropic SDK internally.
+func New(apiKey string, opts ...option.RequestOption) *Client {
+	allOpts := append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)
+	return &Client{client: anthropic.NewClient(allOpts...)}
 }
 
-// Prompt sends user to the Anthropic Messages API with the stored system
-// blocks. The system string argument is ignored (see type doc). Returns the
-// concatenated text content bytes of the response.
-func (c *Client) Prompt(ctx context.Context, _, user string) ([]byte, error) {
+// Prompt sends system as a single TextBlockParam and user as the user message.
+// Returns the concatenated text content bytes of the response.
+func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
 	slog.InfoContext(ctx, "Calling Anthropic",
 		"model", model,
 		"max_tokens", maxTokens,
@@ -63,7 +59,7 @@ func (c *Client) Prompt(ctx context.Context, _, user string) ([]byte, error) {
 		Model:       model,
 		MaxTokens:   maxTokens,
 		Temperature: anthropic.Float(temperature),
-		System:      c.system,
+		System:      []anthropic.TextBlockParam{{Text: system}},
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
 		},
