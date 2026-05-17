@@ -22,66 +22,29 @@ package ai
 import (
 	"context"
 	"log/slog"
-	"time"
-
-	"github.com/anthropics/anthropic-sdk-go"
-	"github.com/anthropics/anthropic-sdk-go/option"
-	"github.com/pkg/errors"
-
-	anthr "github.com/ainsleyclark/godaily/pkg/ai/anthropic"
-	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-// Client wraps AI provider(s) with prompt construction and filtering
-// logic needed to draft social posts and digest metadata from a day's news.
+// Client chains a primary Prompter with an optional fallback.
+// It satisfies Prompter itself so it can be composed freely.
 type Client struct {
-	anthropic anthropic.Client
-	fallback  Prompter
-	filter    filterConfig
+	primary  Prompter
+	fallback Prompter
 }
 
-// New constructs a Client using Anthropic as the sole AI provider.
-// Additional request options are forwarded to the SDK — tests pass
-// option.WithBaseURL to redirect to an httptest.Server.
-func New(apiKey string, opts ...option.RequestOption) *Client {
-	return &Client{
-		anthropic: anthropic.NewClient(append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)...),
-		filter:    defaultFilterConfig(),
-	}
+// New constructs a Client. Pass nil fallback to disable fallback.
+func New(primary Prompter, fallback Prompter) *Client {
+	return &Client{primary: primary, fallback: fallback}
 }
 
-// NewWithFallback constructs a Client that tries Anthropic first and falls
-// back to the given Prompter on any error.
-func NewWithFallback(apiKey string, fallback Prompter, opts ...option.RequestOption) *Client {
-	c := New(apiKey, opts...)
-	c.fallback = fallback
-	return c
-}
-
-// Suggest filters the day's sections to top items, calls the primary AI
-// provider (with optional fallback), and returns a parsed Suggestion.
-// ErrNoItems is returned (without any API call) when there is nothing to summarise.
-func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (Suggestion, error) {
-	items := filterItems(sections, c.filter)
-	if len(items) == 0 {
-		return Suggestion{}, ErrNoItems
+// Prompt calls primary; on error, logs a warning and tries fallback (if set).
+func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
+	raw, err := c.primary.Prompt(ctx, system, user)
+	if err == nil {
+		return raw, nil
 	}
-
-	user := buildUserPrompt(day, items)
-	system := buildSystemText(buildSystemBlocks())
-
-	slog.InfoContext(ctx, "Requesting AI suggestion", "items", len(items))
-
-	primary := anthr.New(c.anthropic, buildSystemBlocks())
-	raw, err := prompt(ctx, primary, c.fallback, system, user)
-	if err != nil {
-		return Suggestion{}, errors.Wrap(err, "ai suggest")
+	if c.fallback == nil {
+		return nil, err
 	}
-
-	sug, err := parseSuggestionBytes(raw)
-	if err != nil {
-		return Suggestion{}, err
-	}
-	sug.Date = day
-	return sug, nil
+	slog.WarnContext(ctx, "Primary AI call failed, trying fallback", "err", err)
+	return c.fallback.Prompt(ctx, system, user)
 }

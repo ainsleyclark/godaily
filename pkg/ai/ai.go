@@ -17,34 +17,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package ai turns a day's scored news into a short suggested social post or
-// digest metadata by calling an AI provider. It supports Anthropic as the
-// primary provider with an optional Gemini fallback.
+// Package ai provides a transport-only abstraction for AI prompt round-trips.
+// Domain logic (prompt building, response parsing, Go-news types) lives in
+// pkg/digest/prompts; this package only defines the Prompter interface and the
+// chaining Client.
 package ai
 
-import (
-	"context"
-	"log/slog"
-)
+import "context"
 
 // Prompter abstracts a single AI prompt round-trip.
 // system is the task directive; user is the data payload.
-// Implementations decide how to combine them for their provider.
 // Implementations must be safe for concurrent use.
 type Prompter interface {
 	Prompt(ctx context.Context, system, user string) ([]byte, error)
-}
-
-// prompt tries primary; on error logs a warning and tries fallback (if set).
-// A nil fallback causes the original error to be returned unchanged.
-func prompt(ctx context.Context, primary, fallback Prompter, system, user string) ([]byte, error) {
-	raw, err := primary.Prompt(ctx, system, user)
-	if err == nil {
-		return raw, nil
-	}
-	if fallback == nil {
-		return nil, err
-	}
-	slog.WarnContext(ctx, "Primary AI call failed, trying fallback", "err", err)
-	return fallback.Prompt(ctx, system, user)
 }
