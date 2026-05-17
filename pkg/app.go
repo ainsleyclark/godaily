@@ -103,11 +103,12 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 
-	anthropicClient := anthropic.New(config.AnthropicAPIKey)
-	var aiClient ai.Prompter = ai.New(anthropicClient, nil)
+	primary := anthropic.New(config.AnthropicAPIKey)
+	var fallback ai.Prompter
 	if config.GeminiAPIKey != "" {
-		aiClient = ai.New(anthropicClient, gemini.New(config.GeminiAPIKey))
+		fallback = gemini.New(config.GeminiAPIKey)
 	}
+	aiClient := ai.New(primary, fallback)
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
