@@ -27,6 +27,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,7 +44,7 @@ func TestSynthesise(t *testing.T) {
 
 	tt := map[string]struct {
 		p        *mockPrompter
-		sections interface{}
+		sections []news.SourceItems
 		wantErr  string
 		check    func(t *testing.T, m DigestMeta)
 	}{
@@ -76,12 +77,7 @@ func TestSynthesise(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			var sections []interface{}
-			_ = sections
-			got, err := Synthesise(context.Background(), test.p, day, sampleSections())
-			if test.sections == nil {
-				got, err = Synthesise(context.Background(), test.p, day, nil)
-			}
+			got, err := Synthesise(context.Background(), test.p, day, test.sections)
 			if test.wantErr != "" {
 				require.Error(t, err)
 				assert.Contains(t, err.Error(), test.wantErr)
