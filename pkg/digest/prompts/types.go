@@ -17,43 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+// Package prompts provides domain-level prompt construction, AI invocation, and
+// response parsing for Go news digests and social-post suggestions.
+package prompts
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log/slog"
 	"strings"
 	"time"
-	"unicode/utf8"
-
-	"github.com/anthropics/anthropic-sdk-go"
-	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-const maxPostChars = 280
-
-// ErrNoItems is returned by Suggest when there is nothing to summarise.
-// Callers can treat this as a soft skip rather than a hard error.
-var ErrNoItems = errors.New("synth: no items to suggest from")
-
 type (
-	// Suggestion is the structured output returned by Suggest.
+	// Suggestion is the structured output from Suggest.
 	Suggestion struct {
 		Date       time.Time `json:"date"`
 		Post       string    `json:"post"`
 		References []Ref     `json:"references"`
 	}
-	// Ref is a single item the model cited when drafting the posts. Source
-	// is the news.Source string ("hacker_news", "go_blog", ...).
+	// Ref is a single item the model cited when drafting the post.
 	Ref struct {
 		Title  string      `json:"title"`
 		URL    string      `json:"url"`
 		Source news.Source `json:"source"`
 	}
+	// DigestMeta is the structured output returned by Synthesise.
+	DigestMeta struct {
+		Title string `json:"title"` // ≤80 chars — email subject / card title
+		Intro string `json:"intro"` // 1–2 sentence digest intro paragraph
+	}
 )
+
+// ErrNoItems is returned when there is nothing to summarise.
+var ErrNoItems = errors.New("prompts: no items to summarise")
 
 // Markdown renders a Suggestion as a human-readable markdown document
 // suitable for stdout, the email digest, or copy/paste.
@@ -79,63 +78,4 @@ func (s Suggestion) Markdown() string {
 // jq or storing alongside the daily digest output.
 func (s Suggestion) JSON() ([]byte, error) {
 	return json.MarshalIndent(s, "", "\t")
-}
-
-// stripFences defensively removes a wrapping ```json ... ``` (or plain
-// ``` ... ```) block if the model emits one despite being told not to.
-// Anything outside the fence is discarded.
-func stripFences(s string) string {
-	s = strings.TrimSpace(s)
-	if !strings.HasPrefix(s, "```") {
-		return s
-	}
-	if i := strings.IndexByte(s, '\n'); i >= 0 {
-		s = s[i+1:]
-	} else {
-		return s
-	}
-	if j := strings.LastIndex(s, "```"); j >= 0 {
-		s = s[:j]
-	}
-	return strings.TrimSpace(s)
-}
-
-// parseResponse extracts the suggestion JSON from the model's text
-// blocks, validates length and required fields, and returns a populated
-// Suggestion (without Date — that is filled in by the caller).
-func parseResponse(m *anthropic.Message) (Suggestion, error) {
-	if m == nil {
-		return Suggestion{}, errors.New("nil message")
-	}
-
-	var raw strings.Builder
-	for _, b := range m.Content {
-		if b.Type == "text" {
-			raw.WriteString(b.Text)
-		}
-	}
-	body := stripFences(raw.String())
-	if body == "" {
-		return Suggestion{}, errors.New("empty response body")
-	}
-
-	var out struct {
-		Post       string `json:"post"`
-		References []Ref  `json:"references"`
-	}
-	if err := json.Unmarshal([]byte(body), &out); err != nil {
-		return Suggestion{}, fmt.Errorf("parse (raw=%q): %w", body, err)
-	}
-
-	if out.Post == "" {
-		return Suggestion{}, errors.New("missing post field")
-	}
-	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
-		slog.Warn("Post exceeded char limit", "chars", n, "max", maxPostChars)
-	}
-
-	return Suggestion{
-		Post:       out.Post,
-		References: out.References,
-	}, nil
 }

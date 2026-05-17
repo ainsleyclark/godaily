@@ -20,6 +20,7 @@
 package digest
 
 import (
+	"encoding/json"
 	"errors"
 	htmltemplate "html/template"
 	"testing"
@@ -28,18 +29,20 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 var suggestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)
 
-func sampleSuggestion() synth.Suggestion {
-	return synth.Suggestion{
+func sampleSuggestion() prompts.Suggestion {
+	return prompts.Suggestion{
 		Date: suggestDay,
 		Post: "Go 1.24 is out — range-over-func is now stable.",
-		References: []synth.Ref{
+		References: []prompts.Ref{
 			{Title: "Go 1.24 Release Notes", URL: "https://go.dev/doc/go1.24", Source: news.SourceGoBlog},
 		},
 	}
@@ -83,6 +86,11 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		return d
 	}
 
+	validJSON := func(post string) []byte {
+		raw, _ := json.Marshal(map[string]any{"post": post, "references": []any{}})
+		return raw
+	}
+
 	t.Run("Sends Suggestion Email To Owner", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
@@ -102,12 +110,12 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "punchy-post"}}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("punchy-post"), nil)
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
-		assert.True(t, sg.called)
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Subject, "Synth")
 		assert.Contains(t, m.req.Html, "punchy-post")
@@ -115,7 +123,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		assert.Equal(t, []string{"to@example.com"}, m.req.To)
 	})
 
-	t.Run("Returns Error When Suggester Nil", func(t *testing.T) {
+	t.Run("Returns Error When Prompter Nil", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
@@ -125,8 +133,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	})
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
-		sg := &mockSuggester{}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-12"))
 		require.Error(t, err)
@@ -145,20 +153,19 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
-		assert.False(t, sg.called)
 		assert.False(t, m.called)
 	})
 
 	t.Run("No Send Address Skips Without Error", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		sg := &mockSuggester{}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "", suggester: sg, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: m, adminEmailAddress: "", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), day("2026-05-14")))
 		assert.False(t, m.called)
@@ -166,8 +173,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		sg := &mockSuggester{}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("1999-01-01"))
 		require.Error(t, err)
@@ -186,8 +193,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		badItems := errItemRepo{err: errors.New("db failure")}
-		sg := &mockSuggester{}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: badItems}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: badItems}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
@@ -216,15 +223,16 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("p"), nil)
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "rendering suggest html")
 	})
 
-	t.Run("Returns Error When Suggester Fails", func(t *testing.T) {
+	t.Run("Returns Error When Prompter Fails", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-15")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -242,15 +250,16 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		sg := &mockSuggester{err: errors.New("anthropic down")}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, issues: issueRepo, items: itemRepo}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic down"))
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "synth")
 	})
 
-	t.Run("Suggester Error Sends Slack Notification", func(t *testing.T) {
+	t.Run("Prompter Error Sends Slack Notification", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-18")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -268,14 +277,15 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		sg := &mockSuggester{err: errors.New("rate limited")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("rate limited"))
 		sl := &mockSlack{}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", suggester: sg, slack: sl, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
 		require.Len(t, sl.msgs, 1)
-		assert.Contains(t, sl.msgs[0], "Claude suggestion failed")
+		assert.Contains(t, sl.msgs[0], "AI suggestion failed")
 		assert.Contains(t, sl.msgs[0], "rate limited")
 	})
 }

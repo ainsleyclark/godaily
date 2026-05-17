@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package synth
+package prompts
 
 import (
 	"encoding/json"
@@ -148,24 +148,11 @@ func TestFilterItems(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			got := filterItems(test.sections, test.cfg)
 			test.want(t, got)
 		})
 	}
-}
-
-func TestBuildSystemBlocks(t *testing.T) {
-	t.Parallel()
-
-	blocks := buildSystemBlocks()
-	require.Len(t, blocks, 2)
-
-	assert.Equal(t, systemIntro, blocks[0].Text)
-	assert.Empty(t, blocks[0].CacheControl.Type, "intro block must not be the cache breakpoint")
-
-	assert.Contains(t, blocks[1].Text, "Voice & style guide", "second block must embed style.md")
-	assert.Contains(t, blocks[1].Text, "FACTUAL ONLY")
-	assert.Equal(t, "ephemeral", string(blocks[1].CacheControl.Type), "trailing block must carry cache breakpoint")
 }
 
 func TestBuildUserPrompt(t *testing.T) {
@@ -189,4 +176,22 @@ func TestBuildUserPrompt(t *testing.T) {
 	var parsed []promptItem
 	require.NoError(t, json.Unmarshal([]byte(got[idx:end+1]), &parsed))
 	assert.Equal(t, items, parsed)
+}
+
+func TestBuildSuggestSystem(t *testing.T) {
+	t.Parallel()
+
+	got := buildSuggestSystem()
+	assert.Contains(t, got, systemIntro)
+	assert.Contains(t, got, "## Style guide")
+	assert.Contains(t, got, "Voice & style guide")
+}
+
+func TestBuildDigestSystem(t *testing.T) {
+	t.Parallel()
+
+	got := buildDigestSystem()
+	assert.Contains(t, got, digestSystemIntro)
+	assert.Contains(t, got, "## Style guide")
+	assert.Contains(t, got, "Voice & style guide")
 }

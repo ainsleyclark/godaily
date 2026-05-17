@@ -17,40 +17,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package synth turns a day's scored news into a short suggested social
-// post by calling the Anthropic Messages API. It keeps input cheap by
-// filtering to top-N items and caching the static system prompt (the
-// embedded style guide) on the request.
-package synth
+// Package anthropic provides an ai.Prompter implementation backed by the
+// Anthropic Messages API via the official anthropic-sdk-go SDK.
+package anthropic
 
 import (
 	"context"
 	"log/slog"
-	"time"
+	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/pkg/errors"
-
-	"github.com/ainsleyclark/godaily/pkg/news"
 )
-
-// Client wraps the Anthropic SDK with the prompt construction and
-// filtering needed to draft social posts from a day's news.
-type Client struct {
-	anthropic anthropic.Client
-	filter    filterConfig
-}
-
-// New constructs a Client using the given API key. Additional request options
-// are forwarded to the SDK — tests pass option.WithBaseURL to redirect to an
-// httptest.Server.
-func New(apiKey string, opts ...option.RequestOption) *Client {
-	return &Client{
-		anthropic: anthropic.NewClient(append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)...),
-		filter:    defaultFilterConfig(),
-	}
-}
 
 const (
 	model       = anthropic.ModelClaudeSonnet4_6
@@ -58,50 +37,48 @@ const (
 	temperature = 0.4
 )
 
-// Suggest filters the day's sections to top items, calls the model with
-// a cached system prompt, and returns a parsed Suggestion. ErrNoItems
-// is returned (without making an API call) when there is nothing to
-// summarise. Token usage and model are logged for cost tracking.
-func (c *Client) Suggest(ctx context.Context, day time.Time, sections []news.SourceItems) (Suggestion, error) {
-	items := filterItems(sections, c.filter)
-	if len(items) == 0 {
-		return Suggestion{}, ErrNoItems
-	}
+// Client satisfies ai.Prompter using the Anthropic Messages API.
+type Client struct {
+	client anthropic.Client
+}
 
-	user := buildUserPrompt(day, items)
+// New constructs a Client initialising the Anthropic SDK internally.
+func New(apiKey string, opts ...option.RequestOption) *Client {
+	allOpts := append([]option.RequestOption{option.WithAPIKey(apiKey)}, opts...)
+	return &Client{client: anthropic.NewClient(allOpts...)}
+}
 
-	slog.InfoContext(ctx, "Calling anthropic",
+// Prompt sends system as a single TextBlockParam and user as the user message.
+// Returns the concatenated text content bytes of the response.
+func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
+	slog.InfoContext(ctx, "Calling Anthropic",
 		"model", model,
-		"items", len(items),
 		"max_tokens", maxTokens,
 	)
-
-	resp, err := c.anthropic.Messages.New(ctx, anthropic.MessageNewParams{
+	resp, err := c.client.Messages.New(ctx, anthropic.MessageNewParams{
 		Model:       model,
 		MaxTokens:   maxTokens,
 		Temperature: anthropic.Float(temperature),
-		System:      buildSystemBlocks(),
+		System:      []anthropic.TextBlockParam{{Text: system}},
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
 		},
 	})
 	if err != nil {
-		return Suggestion{}, errors.Wrap(err, "anthropic")
+		return nil, errors.Wrap(err, "anthropic")
 	}
-
-	slog.InfoContext(ctx, "Synth response",
+	slog.InfoContext(ctx, "Anthropic response",
 		"model", resp.Model,
 		"input_tokens", resp.Usage.InputTokens,
 		"output_tokens", resp.Usage.OutputTokens,
 		"cache_creation_tokens", resp.Usage.CacheCreationInputTokens,
 		"cache_read_tokens", resp.Usage.CacheReadInputTokens,
 	)
-
-	sug, err := parseResponse(resp)
-	if err != nil {
-		return Suggestion{}, err
+	var out strings.Builder
+	for _, b := range resp.Content {
+		if b.Type == "text" {
+			out.WriteString(b.Text)
+		}
 	}
-
-	sug.Date = day
-	return sug, nil
+	return []byte(out.String()), nil
 }

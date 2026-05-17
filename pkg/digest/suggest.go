@@ -30,9 +30,9 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
@@ -44,7 +44,7 @@ var (
 // SendSuggestion generates an AI post suggestion from the stored digest
 // items for the given date and emails it to the owner address only.
 func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
-	if a.suggester == nil {
+	if a.prompter == nil {
 		return errors.New("synth send requires ANTHROPIC_API_KEY")
 	}
 	if a.issues == nil || a.items == nil {
@@ -75,14 +75,13 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 		return nil
 	}
 
-	s, err := a.suggester.Suggest(ctx, date, sections)
+	s, err := prompts.Suggest(ctx, a.prompter, date, sections)
 	if err != nil {
 		if a.slack != nil {
-			a.slack.MustSend(ctx, "Claude suggestion failed: "+err.Error())
+			a.slack.MustSend(ctx, "AI suggestion failed: "+err.Error())
 		}
 		return errors.Wrap(err, "synth")
 	}
-	s.Date = date
 
 	html, text, err := renderSuggestion(s)
 	if err != nil {
@@ -98,7 +97,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 	})
 }
 
-func renderSuggestion(s synth.Suggestion) (html, text string, err error) {
+func renderSuggestion(s prompts.Suggestion) (html, text string, err error) {
 	var htmlBuf bytes.Buffer
 	if err = suggestHTMLTmpl.Execute(&htmlBuf, s); err != nil {
 		return "", "", errors.Wrap(err, "rendering suggest html")

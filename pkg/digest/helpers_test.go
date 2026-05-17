@@ -23,7 +23,6 @@ import (
 	"context"
 	"path/filepath"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -34,7 +33,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 type mockFetcher struct {
@@ -56,28 +54,6 @@ func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	m.called = true
 	m.req = req
 	return m.err
-}
-
-type mockSuggester struct {
-	called bool
-	resp   synth.Suggestion
-	err    error
-}
-
-func (m *mockSuggester) Suggest(_ context.Context, _ time.Time, _ []news.SourceItems) (synth.Suggestion, error) {
-	m.called = true
-	return m.resp, m.err
-}
-
-type mockSynthesiser struct {
-	called bool
-	resp   synth.DigestMeta
-	err    error
-}
-
-func (m *mockSynthesiser) Synthesise(_ context.Context, _ time.Time, _ []news.SourceItems) (synth.DigestMeta, error) {
-	m.called = true
-	return m.resp, m.err
 }
 
 type mockSlack struct {

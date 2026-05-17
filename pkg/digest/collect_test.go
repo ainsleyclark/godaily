@@ -20,6 +20,7 @@
 package digest
 
 import (
+	"encoding/json"
 	"errors"
 	htmltemplate "html/template"
 	"testing"
@@ -27,9 +28,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/synth"
 )
 
 func TestAggregator_Collect(t *testing.T) {
@@ -229,51 +231,55 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		},
 	}
 
-	t.Run("Suggester Is Never Called During Collect", func(t *testing.T) {
+	validDigestJSON := func(title, intro string) []byte {
+		raw, _ := json.Marshal(map[string]string{"title": title, "intro": intro})
+		return raw
+	}
+
+	t.Run("Prompter Is Never Called For Suggestion During Collect", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		sg := &mockSuggester{resp: synth.Suggestion{Post: "p"}}
-		agg := Aggregator{suggester: sg}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{prompter: p}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
-		assert.False(t, sg.called, "suggester must not be called during Collect")
 	})
 
-	t.Run("DryRun Does Not Call Synthesiser", func(t *testing.T) {
+	t.Run("DryRun Does Not Call Prompter", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "t", Intro: "i"}}
-		agg := Aggregator{synthesiser: syn}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		agg := Aggregator{prompter: p}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
-		assert.False(t, syn.called, "synthesiser must not be called during a dry run")
 	})
 
-	t.Run("Synthesiser Populates Subject And Summary On Persist", func(t *testing.T) {
+	t.Run("Prompter Populates Subject And Summary On Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{resp: synth.DigestMeta{Title: "Go 1.24 lands", Intro: "Goroutines got faster."}}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validDigestJSON("Go 1.24 lands", "Goroutines got faster."), nil)
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{synthesiser: syn, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{prompter: p, issues: issueRepo, items: itemRepo}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
 		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.True(t, syn.called)
 		assert.Equal(t, "Go 1.24 lands", stored.Subject)
 		assert.Equal(t, "Goroutines got faster.", stored.Summary)
 	})
 
-	t.Run("Synthesiser Error Falls Back To Static Subject", func(t *testing.T) {
+	t.Run("Prompter Error Falls Back To Static Subject", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{err: errors.New("boom")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{synthesiser: syn, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{prompter: p, issues: issueRepo, items: itemRepo}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
@@ -284,26 +290,27 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		assert.Empty(t, stored.Summary)
 	})
 
-	t.Run("Synthesiser Error Sends Slack Notification", func(t *testing.T) {
+	t.Run("Prompter Error Sends Slack Notification", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		syn := &mockSynthesiser{err: errors.New("anthropic timeout")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic timeout"))
 		sl := &mockSlack{}
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{synthesiser: syn, slack: sl, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 		require.Len(t, sl.msgs, 1)
-		assert.Contains(t, sl.msgs[0], "Claude synthesis failed")
+		assert.Contains(t, sl.msgs[0], "AI synthesis failed")
 		assert.Contains(t, sl.msgs[0], "anthropic timeout")
 	})
 
-	t.Run("Nil Synthesiser Falls Back To Static Subject", func(t *testing.T) {
+	t.Run("Nil Prompter Falls Back To Static Subject", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{synthesiser: nil, issues: issueRepo, items: itemRepo}
+		agg := Aggregator{prompter: nil, issues: issueRepo, items: itemRepo}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
