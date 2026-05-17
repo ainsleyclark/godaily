@@ -26,77 +26,60 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 )
-
-type mockPrompter struct {
-	called bool
-	raw    []byte
-	err    error
-}
-
-func (m *mockPrompter) Prompt(_ context.Context, _, _ string) ([]byte, error) {
-	m.called = true
-	return m.raw, m.err
-}
 
 func TestClient_Prompt(t *testing.T) {
 	t.Parallel()
 
-	ctx := context.Background()
-	primaryErr := errors.New("primary failed")
-	fallbackErr := errors.New("fallback failed")
+	t.Run("Primary Success", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
+		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("result"), nil)
 
-	tt := map[string]struct {
-		primary  *mockPrompter
-		fallback *mockPrompter
-		wantRaw  []byte
-		wantErr  error
-	}{
-		"Primary Success": {
-			primary:  &mockPrompter{raw: []byte("result")},
-			fallback: &mockPrompter{raw: []byte("fallback result")},
-			wantRaw:  []byte("result"),
-		},
-		"Primary Fails Nil Fallback": {
-			primary: &mockPrompter{err: primaryErr},
-			wantErr: primaryErr,
-		},
-		"Primary Fails Fallback Used": {
-			primary:  &mockPrompter{err: primaryErr},
-			fallback: &mockPrompter{raw: []byte("fallback result")},
-			wantRaw:  []byte("fallback result"),
-		},
-		"Both Fail": {
-			primary:  &mockPrompter{err: primaryErr},
-			fallback: &mockPrompter{err: fallbackErr},
-			wantErr:  fallbackErr,
-		},
-	}
+		got, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		require.NoError(t, err)
+		assert.Equal(t, []byte("result"), got)
+	})
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
+	t.Run("Primary Fails Nil Fallback", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
 
-			var fallback Prompter
-			if test.fallback != nil {
-				fallback = test.fallback
-			}
-			c := New(test.primary, fallback)
-			got, err := c.Prompt(ctx, "sys", "user")
+		_, err := New(primary, nil).Prompt(context.Background(), "sys", "user")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "primary failed")
+	})
 
-			if test.wantErr != nil {
-				require.ErrorIs(t, err, test.wantErr)
-				assert.Nil(t, got)
-				return
-			}
-			require.NoError(t, err)
-			assert.Equal(t, test.wantRaw, got)
-			assert.True(t, test.primary.called)
+	t.Run("Primary Fails Fallback Used", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
+		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
+		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("fallback"), nil)
 
-			// When primary succeeds, fallback must not be called.
-			if test.fallback != nil && test.primary.err == nil {
-				assert.False(t, test.fallback.called, "fallback must not be called when primary succeeds")
-			}
-		})
-	}
+		got, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		require.NoError(t, err)
+		assert.Equal(t, []byte("fallback"), got)
+	})
+
+	t.Run("Both Fail", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
+		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("primary failed"))
+		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return(nil, errors.New("fallback failed"))
+
+		_, err := New(primary, fallback).Prompt(context.Background(), "sys", "user")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "fallback failed")
+	})
 }

@@ -25,6 +25,8 @@ package ai
 
 import "context"
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockai -destination=../mocks/ai/Prompter.go . Prompter
+
 // Prompter abstracts a single AI prompt round-trip.
 // system is the task directive; user is the data payload.
 // Implementations must be safe for concurrent use.

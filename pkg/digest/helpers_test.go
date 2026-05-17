@@ -56,17 +56,6 @@ func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	return m.err
 }
 
-type mockPrompter struct {
-	called bool
-	raw    []byte
-	err    error
-}
-
-func (m *mockPrompter) Prompt(_ context.Context, _, _ string) ([]byte, error) {
-	m.called = true
-	return m.raw, m.err
-}
-
 type mockSlack struct {
 	msgs []string
 }

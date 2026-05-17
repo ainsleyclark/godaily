@@ -20,7 +20,6 @@
 package digest
 
 import (
-	"encoding/json"
 	"errors"
 	htmltemplate "html/template"
 	"testing"
@@ -28,7 +27,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -38,11 +39,6 @@ func TestAggregator_SendDigest(t *testing.T) {
 		d, err := time.Parse("2006-01-02", s)
 		require.NoError(t, err)
 		return d
-	}
-
-	validSuggestJSON := func(post string) []byte {
-		raw, _ := json.Marshal(map[string]any{"post": post, "references": []any{}})
-		return raw
 	}
 
 	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
@@ -199,14 +195,12 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		p := &mockPrompter{raw: validSuggestJSON("punchy-post")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
-		assert.False(t, p.called, "prompter must not be called during SendDigest")
 		assert.True(t, m.called)
-		assert.NotContains(t, m.req.Html, "punchy-post")
 	})
 }
 

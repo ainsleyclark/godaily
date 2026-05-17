@@ -29,8 +29,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -108,7 +110,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		p := &mockPrompter{raw: validJSON("punchy-post")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("punchy-post"), nil)
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
@@ -130,7 +133,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	})
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
-		p := &mockPrompter{}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-12"))
@@ -150,7 +153,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		p := &mockPrompter{raw: validJSON("p")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
@@ -160,7 +163,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("No Send Address Skips Without Error", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		p := &mockPrompter{}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "", prompter: p, issues: issueRepo, items: itemRepo}
 
@@ -170,7 +173,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		p := &mockPrompter{}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("1999-01-01"))
@@ -190,7 +193,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		badItems := errItemRepo{err: errors.New("db failure")}
-		p := &mockPrompter{}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: badItems}
 
 		err = agg.SendSuggestion(t.Context(), date)
@@ -220,7 +223,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
-		p := &mockPrompter{raw: validJSON("p")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("p"), nil)
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
@@ -246,7 +250,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		p := &mockPrompter{err: errors.New("anthropic down")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic down"))
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
@@ -272,7 +277,8 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		p := &mockPrompter{err: errors.New("rate limited")}
+		p := mockai.NewMockPrompter(gomock.NewController(t))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("rate limited"))
 		sl := &mockSlack{}
 		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
 

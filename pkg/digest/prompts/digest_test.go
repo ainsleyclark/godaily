@@ -27,9 +27,12 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
 func validDigestJSON(title, intro string) []byte {
@@ -43,28 +46,29 @@ func TestSynthesise(t *testing.T) {
 	day := time.Date(2026, time.April, 27, 0, 0, 0, 0, time.UTC)
 
 	tt := map[string]struct {
-		p        *mockPrompter
-		sections []news.SourceItems
-		wantErr  string
-		check    func(t *testing.T, m DigestMeta)
+		raw       []byte
+		promptErr error
+		sections  []news.SourceItems
+		wantErr   string
+		check     func(t *testing.T, m DigestMeta)
 	}{
 		"No Items Returns ErrNoItems": {
-			p:        &mockPrompter{raw: validDigestJSON("t", "i")},
+			raw:      validDigestJSON("t", "i"),
 			sections: nil,
 			wantErr:  ErrNoItems.Error(),
 		},
 		"Prompter Error Wrapped": {
-			p:        &mockPrompter{err: context.DeadlineExceeded},
-			sections: sampleSections(),
-			wantErr:  "ai",
+			promptErr: context.DeadlineExceeded,
+			sections:  sampleSections(),
+			wantErr:   "ai",
 		},
 		"Parse Error Surfaced": {
-			p:        &mockPrompter{raw: []byte("not json")},
+			raw:      []byte("not json"),
 			sections: sampleSections(),
 			wantErr:  "parse (raw=",
 		},
 		"OK Returns Title And Intro": {
-			p:        &mockPrompter{raw: validDigestJSON("Go 1.24 lands", "Goroutines got faster.")},
+			raw:      validDigestJSON("Go 1.24 lands", "Goroutines got faster."),
 			sections: sampleSections(),
 			check: func(t *testing.T, m DigestMeta) {
 				t.Helper()
@@ -77,7 +81,11 @@ func TestSynthesise(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			got, err := Synthesise(context.Background(), test.p, day, test.sections)
+			p := mockai.NewMockPrompter(gomock.NewController(t))
+			if len(test.sections) > 0 {
+				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
+			}
+			got, err := Synthesise(context.Background(), p, day, test.sections)
 			if test.wantErr != "" {
 				require.Error(t, err)
 				assert.Contains(t, err.Error(), test.wantErr)
