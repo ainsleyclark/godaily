@@ -32,15 +32,15 @@ import (
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		yesterday := time.Now().UTC().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+		today := time.Now().UTC().Truncate(24 * time.Hour)
 
-		if err := a.Runner.SendDigest(ctx, yesterday, false); err != nil {
+		if err := a.Runner.SendDigest(ctx, today, false); err != nil {
 			a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 			return
 		}
 
-		if err := a.Runner.SendSuggestion(ctx, yesterday); err != nil {
+		if err := a.Runner.SendSuggestion(ctx, today); err != nil {
 			a.Slack.MustSend(ctx, "Send suggestion failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
 			return

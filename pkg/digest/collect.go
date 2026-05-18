@@ -48,7 +48,6 @@ type CollectOptions struct {
 // DryRun) persists it as a draft issue in the database.
 func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error) {
 	day, next := collectWindow(time.Now())
-	slug := next.AddDate(0, 0, -1) // always "yesterday", matching send.go
 
 	sources := opts.Sources
 	if len(sources) == 0 {
@@ -94,15 +93,15 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 		return results, nil
 	}
 
-	if _, err := renderDigest(digestOptions{Day: slug, Sources: results}); err != nil {
+	if _, err := renderDigest(digestOptions{Day: next, Sources: results}); err != nil {
 		slog.ErrorContext(ctx, "Failed to render digest", "err", err)
 		return results, nil
 	}
 
-	subject, summary := a.synthesiseDigestMeta(ctx, slug, results)
+	subject, summary := a.synthesiseDigestMeta(ctx, next, results)
 
 	issue := news.Issue{
-		Slug:    slug.Format("2006-01-02"),
+		Slug:    next.Format("2006-01-02"),
 		Subject: subject,
 		Summary: summary,
 		Status:  news.IssueStatusDraft,
