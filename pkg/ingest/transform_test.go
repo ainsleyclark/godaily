@@ -93,10 +93,11 @@ func TestTransformAll(t *testing.T) {
 		items []fakeTransformer
 		want  []news.Item
 	}{
-		"Empty":                {items: nil, want: nil},
-		"Multiple":             {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
-		"Filtered by include":  {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
-		"Filtered by language": {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
+		"Empty":                  {items: nil, want: nil},
+		"Multiple":               {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
+		"Filtered by include":    {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Filtered by language":   {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
+		"HTML entities in title": {items: []fakeTransformer{{title: "pkg &amp; internal directories are way overused", include: true}}, want: []news.Item{{Title: "pkg & internal directories are way overused"}}},
 	}
 
 	for name, test := range tt {

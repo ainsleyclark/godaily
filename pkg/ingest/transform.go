@@ -72,6 +72,7 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
+		i.Title = html.UnescapeString(i.Title)
 		if !isEnglishTitle(i.Title) {
 			continue
 		}
