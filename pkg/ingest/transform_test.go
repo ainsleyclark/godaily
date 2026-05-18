@@ -93,15 +93,40 @@ func TestTransformAll(t *testing.T) {
 		items []fakeTransformer
 		want  []news.Item
 	}{
-		"Empty":    {items: nil, want: nil},
-		"Multiple": {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
-		"Filtered": {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Empty":                {items: nil, want: nil},
+		"Multiple":             {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
+		"Filtered by include":  {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Filtered by language": {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency", include: true}}, want: []news.Item{{Title: "Go Concurrency"}}},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, test.want, TransformAll(t.Context(), test.items))
+		})
+	}
+}
+
+func TestIsEnglishTitle(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input string
+		want  bool
+	}{
+		"English title":              {input: "Go Concurrency Patterns", want: true},
+		"English with hashtags":      {input: "Go #shorts #golang", want: true},
+		"Numbers and symbols only":   {input: "123 #shorts!", want: true},
+		"Empty string":               {input: "", want: true},
+		"Cyrillic title":             {input: "Сравнимые типы данных в Go", want: false},
+		"Mostly Cyrillic":            {input: "Тирлист зарплат в IT #golang", want: false},
+		"Mostly Latin with one CJK":  {input: "Go and 語 programming", want: true}, // 1/4 = 25% — boundary, passes
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, isEnglishTitle(test.input))
 		})
 	}
 }

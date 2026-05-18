@@ -24,6 +24,7 @@ import (
 	"html"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -64,6 +65,9 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
+		if !isEnglishTitle(i.Title) {
+			continue
+		}
 		i.Snippet = truncate(sanitise(i.Snippet), maxSnippetLen)
 		out = append(out, i)
 		enrichURLs = append(enrichURLs, item.EnrichmentURL())
@@ -83,6 +87,22 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 }
 
 const maxSnippetLen = 200
+
+// isEnglishTitle returns false when ≥25% of the letters in s belong to a
+// non-Latin Unicode script (Cyrillic, CJK, Arabic, …). Titles with no letters
+// (pure numbers, symbols, code snippets) are accepted.
+func isEnglishTitle(s string) bool {
+	var letters, nonLatin int
+	for _, r := range s {
+		if unicode.IsLetter(r) {
+			letters++
+			if !unicode.Is(unicode.Latin, r) {
+				nonLatin++
+			}
+		}
+	}
+	return letters == 0 || float64(nonLatin)/float64(letters) < 0.25
+}
 
 func truncate(s string, max int) string {
 	if len(s) > max {
