@@ -135,6 +135,23 @@ func TestYouTube_Fetch(t *testing.T) {
 				assert.Equal(t, float64(0.5), items[1].Score) // no stats → flat
 			},
 		},
+		// A video whose title is entirely Cyrillic must be dropped by the shared
+		// isEnglishTitle filter in TransformAll regardless of view count.
+		"Filters Cyrillic title": {
+			key: "test-key",
+			stub: func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusOK)
+				if r.URL.Query().Get("part") == "statistics" {
+					_, _ = w.Write([]byte(`{"items":[{"id":"vid-ru","statistics":{"viewCount":"5000"}}]}`))
+				} else {
+					_, _ = w.Write([]byte(`{"items":[{"id":{"videoId":"vid-ru"},"snippet":{"publishedAt":"2024-04-25T14:00:00Z","channelId":"c1","title":"Сравнимые типы данных в Go #shorts","description":"","channelTitle":"RuChannel"}}]}`))
+				}
+			},
+			want: func(items []news.Item, err error) {
+				assert.NoError(t, err)
+				assert.Empty(t, items)
+			},
+		},
 		// Two videos with different view counts must produce distinct scores
 		// so the higher-viewed video sorts above the lower one.
 		"OK - Scores Reflect View Count": {

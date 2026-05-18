@@ -93,15 +93,72 @@ func TestTransformAll(t *testing.T) {
 		items []fakeTransformer
 		want  []news.Item
 	}{
-		"Empty":    {items: nil, want: nil},
-		"Multiple": {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
-		"Filtered": {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Empty":                {items: nil, want: nil},
+		"Multiple":             {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
+		"Filtered by include":  {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Filtered by language": {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
+		"HTML entities in title": {items: []fakeTransformer{{title: "pkg &amp; internal directories are way overused", include: true}}, want: []news.Item{{Title: "pkg & internal directories are way overused"}}},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, test.want, TransformAll(t.Context(), test.items))
+		})
+	}
+}
+
+func TestIsEnglishTitle(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input string
+		want  bool
+	}{
+		// Clearly English — must always pass
+		"Plain English sentence":      {input: "Writing a concurrent web server in Go", want: true},
+		"English with Go jargon":      {input: "Understanding goroutines and channels", want: true},
+		"English with version number": {input: "Go 1.23 release notes and new features", want: true},
+		"English with hashtags":       {input: "Go generics deep dive #golang #shorts", want: true},
+		"English with URL-like text":  {input: "pkg.go.dev tips and tricks", want: true},
+		"English with code snippet":   {input: "Why use sync.Mutex instead of channels", want: true},
+		"English with numbers":        {input: "10 mistakes every Go developer makes", want: true},
+		"English repo name style":     {input: "[Livecoding] Building a REST API in Go", want: true},
+		"English with trailing URL":   {input: "Understanding Go modules https://go.dev/ref/mod", want: true},
+
+		// Ambiguous / short — pass through; not enough natural-language words
+		// for lingua to make a reliable decision after URL/hashtag stripping.
+		"Empty string":               {input: "", want: true},
+		"Only numbers":               {input: "123 456", want: true},
+		"Only hashtags":              {input: "#golang #go #shorts!", want: true},
+		"Only a URL":                 {input: "https://pkg.go.dev/net/http", want: true},
+		"Single common English word": {input: "Golang", want: true},
+		"Two words only":             {input: "Go programming", want: true},
+
+		// Russian (Cyrillic) — must be rejected
+		"Russian title":             {input: "Сравнимые типы данных в Go #shorts", want: false},
+		"Russian salary post":       {input: "Тирлист зарплат в IT #golang #it #собеседование", want: false},
+		"Russian mutex explanation": {input: "RV-мьютексы против обычных: когда читать быстрее", want: false},
+		"Russian subscribe CTA":     {input: "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #golang", want: false},
+		"Russian goroutines post":   {input: "Горутины в Go: полное руководство", want: false},
+
+		// German (Latin script) — must be rejected
+		"German gamedev post":       {input: "So langsam kommt Leben in das kleine Spiel", want: false},
+		"German technical sentence": {input: "Nebenläufigkeit in Go mit Goroutinen und Kanälen", want: false},
+
+		// Other non-English languages
+		"Japanese title":              {input: "Goの並行処理パターンを理解する", want: false},
+		"Chinese title":               {input: "Go语言并发编程实战", want: false},
+		"Korean title":                {input: "Go 언어로 웹 서버 만들기", want: false},
+		"Indonesian livecoding title": {input: "Bikin Web Forum Pake Golang dan React", want: false},
+		"Portuguese title":            {input: "Concorrência em Go com goroutines e canais", want: false},
+		"Spanish title":               {input: "Construyendo microservicios con Go y gRPC", want: false},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, isEnglishTitle(test.input))
 		})
 	}
 }

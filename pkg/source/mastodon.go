@@ -63,10 +63,13 @@ func (m Mastodon) Fetch(ctx context.Context) ([]news.Item, error) {
 	return ingest.TransformAll(ctx, statuses), nil
 }
 
-// ShouldInclude filters out boosts (which duplicate other instances' posts)
-// and low-engagement noise. The favourites threshold is a coarse but cheap
-// proxy for "someone besides the author cared".
+// ShouldInclude filters out boosts (which duplicate other instances' posts),
+// low-engagement noise, and non-English posts. The favourites threshold is a
+// coarse but cheap proxy for "someone besides the author cared".
 func (s mastodonStatus) ShouldInclude() bool {
+	if s.Language != "" && s.Language != "en" {
+		return false
+	}
 	return s.Reblog == nil && s.FavouritesCount >= mastodonMinFavourites
 }
 
@@ -125,6 +128,7 @@ type (
 		CreatedAt        time.Time            `json:"created_at"`
 		URL              string               `json:"url"`
 		Content          string               `json:"content"`
+		Language         string               `json:"language"`
 		RepliesCount     int                  `json:"replies_count"`
 		FavouritesCount  int                  `json:"favourites_count"`
 		Reblog           *mastodonStatus      `json:"reblog"`

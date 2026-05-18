@@ -106,7 +106,7 @@ var SectionLimits = map[Tag]int{
 	TagProposal:   NoLimit,
 	TagArticle:    5,
 	TagDiscussion: 8,
-	TagVideo:      10,
+	TagVideo:      5,
 	TagTrending:   5,
 }
 
