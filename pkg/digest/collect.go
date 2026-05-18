@@ -93,15 +93,15 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 		return results, nil
 	}
 
-	if _, err := renderDigest(digestOptions{Day: day, Sources: results}); err != nil {
+	if _, err := renderDigest(digestOptions{Day: next, Sources: results}); err != nil {
 		slog.ErrorContext(ctx, "Failed to render digest", "err", err)
 		return results, nil
 	}
 
-	subject, summary := a.synthesiseDigestMeta(ctx, day, results)
+	subject, summary := a.synthesiseDigestMeta(ctx, next, results)
 
 	issue := news.Issue{
-		Slug:    day.Format("2006-01-02"),
+		Slug:    next.Format("2006-01-02"),
 		Subject: subject,
 		Summary: summary,
 		Status:  news.IssueStatusDraft,

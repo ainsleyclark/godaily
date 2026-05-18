@@ -222,7 +222,7 @@ func TestAggregator_Collect_RenderFallback(t *testing.T) {
 }
 
 func TestAggregator_Collect_Synthesiser(t *testing.T) {
-	day, _ := collectWindow(time.Now())
+	day, next := collectWindow(time.Now())
 	inWindow := day.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
@@ -267,7 +267,7 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, "Go 1.24 lands", stored.Subject)
 		assert.Equal(t, "Goroutines got faster.", stored.Summary)
@@ -284,9 +284,9 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, "GoDaily - "+day.Format("January 2, 2006"), stored.Subject)
+		assert.Equal(t, "GoDaily - "+next.Format("January 2, 2006"), stored.Subject)
 		assert.Empty(t, stored.Summary)
 	})
 
@@ -315,15 +315,15 @@ func TestAggregator_Collect_Synthesiser(t *testing.T) {
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
-		assert.Equal(t, "GoDaily - "+day.Format("January 2, 2006"), stored.Subject)
+		assert.Equal(t, "GoDaily - "+next.Format("January 2, 2006"), stored.Subject)
 		assert.Empty(t, stored.Summary)
 	})
 }
 
 func TestAggregator_Collect_Persistence(t *testing.T) {
-	day, _ := collectWindow(time.Now())
+	day, next := collectWindow(time.Now())
 	inWindow := day.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
@@ -363,7 +363,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, news.IssueStatusDraft, stored.Status)
 
@@ -396,7 +396,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		first, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		first, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
 		require.NotZero(t, first.ID)
 
@@ -405,7 +405,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err = agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		second, err := issueRepo.FindBySlug(t.Context(), day.Format("2006-01-02"))
+		second, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
 		require.NoError(t, err)
 		assert.Equal(t, first.ID, second.ID, "second collect must not create a duplicate issue")
 	})
@@ -428,5 +428,24 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		count, err := issueRepo.Count(t.Context())
 		require.NoError(t, err)
 		assert.Equal(t, int64(0), count)
+	})
+}
+
+func TestCollectWindow(t *testing.T) {
+	monday := time.Date(2026, 5, 18, 1, 0, 0, 0, time.UTC) // The day this bug was found
+	tuesday := time.Date(2026, 5, 19, 1, 0, 0, 0, time.UTC)
+
+	t.Run("Monday window covers Saturday and Sunday", func(t *testing.T) {
+		day, next := collectWindow(monday)
+		assert.Equal(t, "2026-05-16", day.Format("2006-01-02"), "window start should be Saturday")
+		// next = today (Monday) — used as the slug so it matches the send date
+		assert.Equal(t, "2026-05-18", next.Format("2006-01-02"), "slug should be today (Monday)")
+	})
+
+	t.Run("Non-Monday window covers yesterday only", func(t *testing.T) {
+		day, next := collectWindow(tuesday)
+		assert.Equal(t, "2026-05-18", day.Format("2006-01-02"), "window start should be Monday")
+		// next = today (Tuesday) — slug matches the send date
+		assert.Equal(t, "2026-05-19", next.Format("2006-01-02"), "slug should be today (Tuesday)")
 	})
 }
