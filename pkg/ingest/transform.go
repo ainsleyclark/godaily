@@ -64,6 +64,7 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
+		i.Title = html.UnescapeString(i.Title)
 		i.Snippet = truncate(sanitise(i.Snippet), maxSnippetLen)
 		out = append(out, i)
 		enrichURLs = append(enrichURLs, item.EnrichmentURL())
