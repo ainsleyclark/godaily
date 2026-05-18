@@ -24,9 +24,16 @@ import (
 	"html"
 	"regexp"
 	"strings"
-	"unicode"
+
+	lingua "github.com/pemistahl/lingua-go"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
+)
+
+var (
+	urlRe       = regexp.MustCompile(`https?://\S+`)
+	hashtagRe   = regexp.MustCompile(`#\S+`)
+	techTokenRe = regexp.MustCompile(`\S*/\S*|\w+(?:\.\w+){2,}`) // strips r/golang, net/http, pkg.go.dev
 )
 
 // Transformer is implemented by all per-source response item types.
@@ -88,20 +95,40 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 
 const maxSnippetLen = 200
 
-// isEnglishTitle returns false when ≥25% of the letters in s belong to a
-// non-Latin Unicode script (Cyrillic, CJK, Arabic, …). Titles with no letters
-// (pure numbers, symbols, code snippets) are accepted.
+// langDetector is built once at startup with the languages most commonly seen
+// in non-English Go content. Limiting to a targeted set keeps the in-memory
+// model footprint small compared to loading all 75 supported languages.
+var langDetector = lingua.NewLanguageDetectorBuilder().
+	FromLanguages(
+		lingua.English,
+		lingua.Russian,
+		lingua.German,
+		lingua.French,
+		lingua.Chinese,
+		lingua.Japanese,
+		lingua.Korean,
+		lingua.Indonesian,
+		lingua.Portuguese,
+		lingua.Spanish,
+	).
+	Build()
+
+// isEnglishTitle returns false when lingua confidently detects a non-English
+// language. Before detection:
+//   - URLs, hashtags, and path-like tech tokens (r/golang, pkg.go.dev, net/http)
+//     are stripped so they don't mislead the detector on short English phrases.
+//   - If fewer than 8 runes remain the text is too short for reliable detection
+//     and the item passes through, avoiding false drops.
 func isEnglishTitle(s string) bool {
-	var letters, nonLatin int
-	for _, r := range s {
-		if unicode.IsLetter(r) {
-			letters++
-			if !unicode.Is(unicode.Latin, r) {
-				nonLatin++
-			}
-		}
+	clean := urlRe.ReplaceAllString(s, " ")
+	clean = hashtagRe.ReplaceAllString(clean, " ")
+	clean = techTokenRe.ReplaceAllString(clean, " ")
+	clean = strings.Join(strings.Fields(clean), " ")
+	if len([]rune(clean)) < 8 {
+		return true
 	}
-	return letters == 0 || float64(nonLatin)/float64(letters) < 0.25
+	lang, exists := langDetector.DetectLanguageOf(clean)
+	return !exists || lang == lingua.English
 }
 
 func truncate(s string, max int) string {
