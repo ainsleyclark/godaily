@@ -92,6 +92,31 @@ func TestMastodon_Fetch(t *testing.T) {
 				assert.Empty(t, items)
 			},
 		},
+		"Non-English language filtered": {
+			body: []byte(`[{"id":"1","created_at":"2026-04-28T08:00:00.000Z","url":"https://mastodon.social/@x/1","content":"<p>So langsam kommt Leben in das kleine Spiel</p>","language":"de","replies_count":0,"favourites_count":10,"reblog":null,"account":{"username":"x","display_name":"X"},"media_attachments":[]}]`),
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				assert.Empty(t, items)
+			},
+		},
+		"English language kept": {
+			body: []byte(`[{"id":"2","created_at":"2026-04-28T08:00:00.000Z","url":"https://mastodon.social/@x/2","content":"<p>Writing a Go web server from scratch</p>","language":"en","replies_count":0,"favourites_count":5,"reblog":null,"account":{"username":"x","display_name":"X"},"media_attachments":[]}]`),
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				assert.Equal(t, news.SourceMastodon, items[0].Source)
+			},
+		},
+		"No language field kept": {
+			body: []byte(`[{"id":"3","created_at":"2026-04-28T08:00:00.000Z","url":"https://mastodon.social/@x/3","content":"<p>Go generics deep dive</p>","language":"","replies_count":0,"favourites_count":4,"reblog":null,"account":{"username":"x","display_name":"X"},"media_attachments":[]}]`),
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+			},
+		},
 	}
 
 	for name, test := range tt {

@@ -45,7 +45,7 @@ func init() {
 }
 
 const (
-	youtubeURL       = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=golang&type=video&order=date&maxResults=25"
+	youtubeURL       = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=golang&type=video&order=date&maxResults=25&relevanceLanguage=en"
 	youtubeVideosURL = "https://www.googleapis.com/youtube/v3/videos?part=statistics"
 )
 
