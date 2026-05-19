@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -41,7 +42,7 @@ type GoRelease struct {
 var _ news.Fetcher = &GoRelease{}
 
 func init() {
-	news.Register(news.SourceGoRelease, NewGoRelease())
+	news.Register(news.SourceGoRelease, func(cfg env.Config) news.Fetcher { return NewGoRelease(cfg) })
 }
 
 const (
@@ -53,7 +54,7 @@ const (
 // NewGoRelease creates a Go release downloads client. The endpoint returns
 // every historical release; we cap at goReleaseLimit so the digest never
 // drowns in years of past versions.
-func NewGoRelease() *GoRelease {
+func NewGoRelease(_ env.Config) *GoRelease {
 	return &GoRelease{
 		url:     goReleaseURL,
 		dlBase:  goReleaseDLBase,

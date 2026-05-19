@@ -59,6 +59,7 @@ directory is loaded automatically.
 | `ANTHROPIC_API_KEY`  | API key for Claude, used to synthesise the digest.         |
 | `YOUTUBE_API_KEY`    | API key for the YouTube Data source.                       |
 | `GITHUB_TOKEN`       | Token used by the GitHub trending source.                  |
+| `SCRAPER_API_KEY`    | Optional ScraperAPI key routing Reddit through a proxy.    |
 | `EMAIL_SEND_ADDRESS` | Recipient address for the digest email.                    |
 
 Copy `.env.example` to `.env` and fill in the values to get started locally.

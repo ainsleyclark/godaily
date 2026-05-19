@@ -27,6 +27,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -40,7 +41,7 @@ type Mastodon struct {
 var _ news.Fetcher = &Mastodon{}
 
 func init() {
-	news.Register(news.SourceMastodon, NewMastodon())
+	news.Register(news.SourceMastodon, func(cfg env.Config) news.Fetcher { return NewMastodon(cfg) })
 }
 
 const (
@@ -50,7 +51,7 @@ const (
 )
 
 // NewMastodon creates a Mastodon hashtag-timeline client.
-func NewMastodon() *Mastodon {
+func NewMastodon(_ env.Config) *Mastodon {
 	return &Mastodon{url: mastodonURL}
 }
 

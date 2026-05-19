@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type GoBlog struct {
 var _ news.Fetcher = &GoBlog{}
 
 func init() {
-	news.Register(news.SourceGoBlog, NewGoBlog())
+	news.Register(news.SourceGoBlog, func(cfg env.Config) news.Fetcher { return NewGoBlog(cfg) })
 }
 
 const goBlogURL = "https://go.dev/blog/feed.atom"
 
 // NewGoBlog creates a Go Dev Blog client.
-func NewGoBlog() *GoBlog {
+func NewGoBlog(_ env.Config) *GoBlog {
 	return &GoBlog{
 		url: goBlogURL,
 	}

@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type Lobsters struct {
 var _ news.Fetcher = &Lobsters{}
 
 func init() {
-	news.Register(news.SourceLobsters, NewLobsters())
+	news.Register(news.SourceLobsters, func(cfg env.Config) news.Fetcher { return NewLobsters(cfg) })
 }
 
 const lobstersURL = "https://lobste.rs/t/go.json"
 
 // NewLobsters creates a Lobsters client targeting the Go tag.
-func NewLobsters() *Lobsters {
+func NewLobsters(_ env.Config) *Lobsters {
 	return &Lobsters{url: lobstersURL}
 }
 

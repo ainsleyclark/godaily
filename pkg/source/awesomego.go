@@ -23,10 +23,10 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -42,18 +42,18 @@ type AwesomeGo struct {
 var _ news.Fetcher = &AwesomeGo{}
 
 func init() {
-	news.Register(news.SourceAwesomeGo, NewAwesomeGo())
+	news.Register(news.SourceAwesomeGo, func(cfg env.Config) news.Fetcher { return NewAwesomeGo(cfg) })
 }
 
 const awesomeGoURL = "https://api.github.com/repos/avelino/awesome-go/commits?per_page=20"
 
-// NewAwesomeGo creates an Awesome Go commits client. It reuses GITHUB_TOKEN
+// NewAwesomeGo creates an Awesome Go commits client. It reuses cfg.GitHubToken
 // when set so the source shares the elevated 5000/hr rate limit with the
 // existing GitHub fetcher.
-func NewAwesomeGo() *AwesomeGo {
+func NewAwesomeGo(cfg env.Config) *AwesomeGo {
 	return &AwesomeGo{
 		url:   awesomeGoURL,
-		token: os.Getenv("GITHUB_TOKEN"),
+		token: cfg.GitHubToken,
 	}
 }
 

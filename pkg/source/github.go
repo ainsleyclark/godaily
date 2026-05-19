@@ -23,11 +23,11 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -41,7 +41,7 @@ type GitHub struct {
 var _ news.Fetcher = &GitHub{}
 
 func init() {
-	news.Register(news.SourceGitHub, NewGitHub())
+	news.Register(news.SourceGitHub, func(cfg env.Config) news.Fetcher { return NewGitHub(cfg) })
 }
 
 const ghBase = "https://api.github.com/repos/golang/go/issues"
@@ -64,12 +64,12 @@ type ghEndpoint struct {
 	tag news.Tag
 }
 
-// NewGitHub creates a GitHub client. It reads GITHUB_TOKEN from the environment
-// and uses it as a Bearer token if present (raises rate limit from 60 to 5000/hr).
-func NewGitHub() *GitHub {
+// NewGitHub creates a GitHub client. It uses cfg.GitHubToken as a Bearer token
+// if present (raises rate limit from 60 to 5000/hr).
+func NewGitHub(cfg env.Config) *GitHub {
 	return &GitHub{
 		endpoints: ghDefaultEndpoints,
-		token:     os.Getenv("GITHUB_TOKEN"),
+		token:     cfg.GitHubToken,
 	}
 }
 

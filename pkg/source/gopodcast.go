@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type GoPodcast struct {
 var _ news.Fetcher = &GoPodcast{}
 
 func init() {
-	news.Register(news.SourceGoPodcast, NewGoPodcast())
+	news.Register(news.SourceGoPodcast, func(cfg env.Config) news.Fetcher { return NewGoPodcast(cfg) })
 }
 
 const goPodcastURL = "https://feeds.transistor.fm/go-podcast"
 
 // NewGoPodcast creates a go podcast() RSS client.
-func NewGoPodcast() *GoPodcast {
+func NewGoPodcast(_ env.Config) *GoPodcast {
 	return &GoPodcast{url: goPodcastURL}
 }
 

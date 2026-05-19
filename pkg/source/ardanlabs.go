@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -38,13 +39,13 @@ type ArdanLabs struct {
 var _ news.Fetcher = &ArdanLabs{}
 
 func init() {
-	news.Register(news.SourceArdanLabs, NewArdanLabs())
+	news.Register(news.SourceArdanLabs, func(cfg env.Config) news.Fetcher { return NewArdanLabs(cfg) })
 }
 
 const ardanLabsURL = "https://feeds.buzzsprout.com/1466944.rss"
 
 // NewArdanLabs creates an Ardan Labs Podcast RSS client.
-func NewArdanLabs() *ArdanLabs {
+func NewArdanLabs(_ env.Config) *ArdanLabs {
 	return &ArdanLabs{url: ardanLabsURL}
 }
 

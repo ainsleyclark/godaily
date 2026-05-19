@@ -23,10 +23,10 @@ import (
 	"context"
 	"encoding/json"
 	"log/slog"
-	"os"
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -41,7 +41,7 @@ type YouTube struct {
 var _ news.Fetcher = &YouTube{}
 
 func init() {
-	news.Register(news.SourceYouTube, NewYouTube())
+	news.Register(news.SourceYouTube, func(cfg env.Config) news.Fetcher { return NewYouTube(cfg) })
 }
 
 const (
@@ -49,13 +49,13 @@ const (
 	youtubeVideosURL = "https://www.googleapis.com/youtube/v3/videos?part=statistics"
 )
 
-// NewYouTube creates a YouTube client. It reads YOUTUBE_API_KEY from the
-// environment to authenticate with the YouTube Data API v3.
-func NewYouTube() *YouTube {
+// NewYouTube creates a YouTube client. It uses cfg.YouTubeAPIKey to authenticate
+// with the YouTube Data API v3.
+func NewYouTube(cfg env.Config) *YouTube {
 	return &YouTube{
 		url:       youtubeURL,
 		videosURL: youtubeVideosURL,
-		key:       os.Getenv("YOUTUBE_API_KEY"),
+		key:       cfg.YouTubeAPIKey,
 	}
 }
 

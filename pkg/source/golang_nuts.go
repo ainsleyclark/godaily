@@ -25,6 +25,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -39,13 +40,13 @@ type GolangNuts struct {
 var _ news.Fetcher = &GolangNuts{}
 
 func init() {
-	news.Register(news.SourceGolangNuts, NewGolangNuts())
+	news.Register(news.SourceGolangNuts, func(cfg env.Config) news.Fetcher { return NewGolangNuts(cfg) })
 }
 
 const golangNutsURL = "https://www.mail-archive.com/golang-nuts@googlegroups.com/maillist.xml"
 
 // NewGolangNuts creates a golang-nuts mail-archive.com RSS client.
-func NewGolangNuts() *GolangNuts {
+func NewGolangNuts(_ env.Config) *GolangNuts {
 	return &GolangNuts{url: golangNutsURL}
 }
 

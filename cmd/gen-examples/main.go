@@ -46,8 +46,11 @@ func main() {
 
 	ctx := context.Background()
 
-	_, err := env.New(ctx)
+	cfg, err := env.New(ctx)
 	if err != nil {
+		log.Fatal(err)
+	}
+	if err := news.Materialise(cfg); err != nil {
 		log.Fatal(err)
 	}
 

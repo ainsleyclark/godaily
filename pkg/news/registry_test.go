@@ -20,21 +20,27 @@
 package news
 
 import (
+	"context"
 	"testing"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+type stubFetcher struct{}
+
+func (stubFetcher) Fetch(context.Context) ([]Item, error) { return nil, nil }
+
 func TestRegister(t *testing.T) {
 	tt := map[string]struct {
 		source  Source
-		fetcher Fetcher
+		builder Builder
 		want    func(error)
 	}{
 		"OK": {
 			source:  "test_source",
-			fetcher: nil,
+			builder: func(env.Config) Fetcher { return stubFetcher{} },
 			want: func(err error) {
 				assert.NoError(t, err)
 			},
@@ -45,7 +51,7 @@ func TestRegister(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
 
-			Register(test.source, test.fetcher)
+			Register(test.source, test.builder)
 			_, err := Get(test.source)
 			test.want(err)
 		})
@@ -60,11 +66,12 @@ func TestGet(t *testing.T) {
 	}{
 		"OK": {
 			setup: func() {
-				Register("test_get", nil)
+				Register("test_get", func(env.Config) Fetcher { return stubFetcher{} })
 			},
 			source: "test_get",
-			want: func(_ Fetcher, err error) {
+			want: func(f Fetcher, err error) {
 				assert.NoError(t, err)
+				assert.NotNil(t, f)
 			},
 		},
 		"Not Found": {
@@ -96,7 +103,7 @@ func TestValidate(t *testing.T) {
 		"All Registered": {
 			setup: func() {
 				for _, s := range Sources {
-					Register(s, nil)
+					Register(s, func(env.Config) Fetcher { return stubFetcher{} })
 				}
 			},
 			want: func(err error) {
@@ -121,4 +128,51 @@ func TestValidate(t *testing.T) {
 			test.want(err)
 		})
 	}
+}
+
+func TestMaterialise(t *testing.T) {
+	t.Run("Builds Every Source", func(t *testing.T) {
+		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+
+		calls := map[Source]int{}
+		for _, s := range Sources {
+			Register(s, func(env.Config) Fetcher {
+				calls[s]++
+				return stubFetcher{}
+			})
+		}
+
+		require.NoError(t, Materialise(env.Config{}))
+		for _, s := range Sources {
+			assert.Equal(t, 1, calls[s], "builder for %s should run exactly once", s)
+		}
+	})
+
+	t.Run("Missing Source Returns Error", func(t *testing.T) {
+		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+
+		err := Materialise(env.Config{})
+		require.Error(t, err)
+		assert.ErrorContains(t, err, "materialise: no builder registered")
+	})
+
+	t.Run("Caches Built Fetchers", func(t *testing.T) {
+		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+
+		calls := 0
+		for _, s := range Sources {
+			Register(s, func(env.Config) Fetcher {
+				calls++
+				return stubFetcher{}
+			})
+		}
+		require.NoError(t, Materialise(env.Config{}))
+
+		before := calls
+		for _, s := range Sources {
+			_, err := Get(s)
+			require.NoError(t, err)
+		}
+		assert.Equal(t, before, calls, "Get must not re-invoke builders after Materialise")
+	})
 }

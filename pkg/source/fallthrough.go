@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type Fallthrough struct {
 var _ news.Fetcher = &Fallthrough{}
 
 func init() {
-	news.Register(news.SourceFallthrough, NewFallthrough())
+	news.Register(news.SourceFallthrough, func(cfg env.Config) news.Fetcher { return NewFallthrough(cfg) })
 }
 
 const fallthroughURL = "https://feeds.transistor.fm/fallthrough"
 
 // NewFallthrough creates a Fallthrough RSS client.
-func NewFallthrough() *Fallthrough {
+func NewFallthrough(_ env.Config) *Fallthrough {
 	return &Fallthrough{url: fallthroughURL}
 }
 
