@@ -33,7 +33,7 @@ import (
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		now := time.Now().UTC()
+		now := nowUTC()
 		if wd := now.Weekday(); wd == time.Saturday || wd == time.Sunday {
 			slog.InfoContext(ctx, "Skipping send — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)

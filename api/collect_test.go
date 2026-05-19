@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
@@ -37,6 +38,7 @@ import (
 func TestHandleCollect(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
+		now        func() time.Time
 		wantStatus int
 	}{
 		"OK": {
@@ -51,10 +53,23 @@ func TestHandleCollect(t *testing.T) {
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
+		"Weekend": {
+			mock: func(r *mockdigest.MockRunner) {},
+			now: func() time.Time {
+				return time.Date(2026, 5, 16, 10, 0, 0, 0, time.UTC) // Saturday
+			},
+			wantStatus: http.StatusOK,
+		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
+			if test.now != nil {
+				orig := nowUTC
+				nowUTC = test.now
+				t.Cleanup(func() { nowUTC = orig })
+			}
+
 			ctrl := gomock.NewController(t)
 			runner := mockdigest.NewMockRunner(ctrl)
 			slack := mockslack.NewMockSender(ctrl)
