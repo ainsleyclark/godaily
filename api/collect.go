@@ -31,12 +31,15 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/hook"
 )
 
-var nowUTC = func() time.Time { return time.Now().UTC() }
+func isWeekend(t time.Time) bool {
+	wd := t.Weekday()
+	return wd == time.Saturday || wd == time.Sunday
+}
 
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if wd := nowUTC().Weekday(); wd == time.Saturday || wd == time.Sunday {
+		if isWeekend(time.Now().UTC()) {
 			slog.InfoContext(ctx, "Skipping collect — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
 			api.OK(w)
