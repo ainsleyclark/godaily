@@ -101,7 +101,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",
@@ -211,7 +211,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",
@@ -242,7 +242,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",
@@ -269,7 +269,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",

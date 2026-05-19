@@ -13,8 +13,9 @@
 		{ "source": "/api/items/:id",    "destination": "/api/items/id?id=:id" }
 	],
 	"crons": [
-		{ "path": "/api/collect/", "schedule": "0 1 * * *" },
-		{ "path": "/api/send/",    "schedule": "0 8 * * *" }
+		{ "path": "/api/collect/", "schedule": "0 1 * * *"   },
+		{ "path": "/api/build/",   "schedule": "0 2 * * 1-5" },
+		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5" }
 	],
 	"functions": {
 		"api/**/*.go": {

@@ -23,6 +23,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -58,12 +60,21 @@ func (s Store) Find(ctx context.Context, id int64) (news.Item, error) {
 	return transformItem(i), nil
 }
 
-func (s Store) ListByIssue(ctx context.Context, issueID int64) ([]news.Item, error) {
+func (s Store) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item, error) {
+	if opts.IssueID != nil {
+		return s.listByIssue(ctx, *opts.IssueID)
+	}
+	if opts.From != nil && opts.To != nil {
+		return s.listByDateRange(ctx, *opts.From, *opts.To)
+	}
+	return nil, fmt.Errorf("items.List: at least one filter (IssueID or From/To) must be set")
+}
+
+func (s Store) listByIssue(ctx context.Context, issueID int64) ([]news.Item, error) {
 	rows, err := s.sqlc.ItemListByIssue(ctx, issueID)
 	if err != nil {
 		return nil, err
 	}
-
 	out := make([]news.Item, 0, len(rows))
 	for _, r := range rows {
 		out = append(out, transformItem(r))
@@ -71,11 +82,37 @@ func (s Store) ListByIssue(ctx context.Context, issueID int64) ([]news.Item, err
 	return out, nil
 }
 
-func (s Store) Create(ctx context.Context, issueID int64, position int, item news.Item) (news.Item, error) {
+func (s Store) listByDateRange(ctx context.Context, from, to time.Time) ([]news.Item, error) {
+	rows, err := s.sqlc.ItemListByDateRange(ctx, sqlc.ItemListByDateRangeParams{
+		From: from,
+		To:   to,
+	})
+	if err != nil {
+		return nil, err
+	}
+	out := make([]news.Item, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, transformItem(r))
+	}
+	return out, nil
+}
+
+func (s Store) Create(ctx context.Context, issueID *int64, position int, item news.Item) (news.Item, error) {
 	name, username, avatar, profile := authorFields(item.Author)
 
+	var nid sql.NullInt64
+	if issueID != nil {
+		nid = sql.NullInt64{Int64: *issueID, Valid: true}
+	}
+
+	var published *time.Time
+	if !item.Published.IsZero() {
+		t := item.Published
+		published = &t
+	}
+
 	created, err := s.sqlc.ItemCreate(ctx, sqlc.ItemCreateParams{
-		IssueID:          issueID,
+		IssueID:          nid,
 		Source:           item.Source.String(),
 		Tag:              string(item.Tag),
 		Title:            item.Title,
@@ -88,6 +125,7 @@ func (s Store) Create(ctx context.Context, issueID int64, position int, item new
 		Score:            sql.NullFloat64{Float64: item.Score, Valid: true},
 		Summary:          nullString(item.Snippet),
 		Position:         int64(position),
+		Published:        published,
 	})
 	if err != nil {
 		return news.Item{}, err
@@ -110,6 +148,9 @@ func transformItem(i sqlc.Item) news.Item {
 		OriginalURL: i.OriginalUrl.String,
 		Snippet:     i.Summary.String,
 		Score:       i.Score.Float64,
+	}
+	if i.Published != nil {
+		out.Published = *i.Published
 	}
 	if a := authorFromRow(i); a != nil {
 		out.Author = a

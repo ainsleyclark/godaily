@@ -48,6 +48,7 @@ func TestItems_Store(t *testing.T) {
 
 	s := items.New(db)
 
+	published := time.Date(2026, time.April, 28, 7, 0, 0, 0, time.UTC)
 	itemWithAuthor := news.Item{
 		Source:    news.SourceGoBlog,
 		Title:     "Go 1.30 released",
@@ -55,21 +56,22 @@ func TestItems_Store(t *testing.T) {
 		Snippet:   "Headline post",
 		Score:     0.9,
 		Author:    &news.Author{Name: "Ainsley", Username: "ainsleyclark"},
-		Published: time.Date(2026, time.April, 28, 7, 0, 0, 0, time.UTC),
+		Published: published,
 	}
 	itemNoAuthor := news.Item{
-		Source: news.SourceHN,
-		Title:  "Trending discussion",
-		URL:    "https://news.ycombinator.com/item?id=1",
-		Score:  0.5,
+		Source:    news.SourceHN,
+		Title:     "Trending discussion",
+		URL:       "https://news.ycombinator.com/item?id=1",
+		Score:     0.5,
+		Published: published,
 	}
 
 	var firstID int64
 
-	t.Run("Create", func(t *testing.T) {
+	t.Run("Create with issue", func(t *testing.T) {
 		t.Log("Happy path with author")
 		{
-			got, err := s.Create(ctx, issue.ID, 0, itemWithAuthor)
+			got, err := s.Create(ctx, &issue.ID, 0, itemWithAuthor)
 			require.NoError(t, err)
 			assert.NotZero(t, got.ID)
 			assert.Equal(t, news.SourceGoBlog, got.Source)
@@ -85,11 +87,18 @@ func TestItems_Store(t *testing.T) {
 
 		t.Log("Without author returns nil Author")
 		{
-			got, err := s.Create(ctx, issue.ID, 1, itemNoAuthor)
+			got, err := s.Create(ctx, &issue.ID, 1, itemNoAuthor)
 			require.NoError(t, err)
 			assert.NotZero(t, got.ID)
 			assert.Nil(t, got.Author)
 		}
+	})
+
+	t.Run("Create without issue", func(t *testing.T) {
+		got, err := s.Create(ctx, nil, 2, itemWithAuthor)
+		require.NoError(t, err)
+		assert.NotZero(t, got.ID)
+		assert.Equal(t, itemWithAuthor.Title, got.Title)
 	})
 
 	t.Run("Find", func(t *testing.T) {
@@ -110,10 +119,10 @@ func TestItems_Store(t *testing.T) {
 		}
 	})
 
-	t.Run("ListByIssue", func(t *testing.T) {
+	t.Run("List by issue", func(t *testing.T) {
 		t.Log("Returns rows ordered by position")
 		{
-			got, err := s.ListByIssue(ctx, issue.ID)
+			got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
 			require.NoError(t, err)
 			require.Len(t, got, 2)
 			assert.Equal(t, itemWithAuthor.Title, got[0].Title)
@@ -122,15 +131,29 @@ func TestItems_Store(t *testing.T) {
 
 		t.Log("Empty for unknown issue")
 		{
-			got, err := s.ListByIssue(ctx, 999_999)
+			unknown := int64(999_999)
+			got, err := s.List(ctx, news.ItemListOptions{IssueID: &unknown})
 			require.NoError(t, err)
 			assert.Empty(t, got)
 		}
 	})
 
+	t.Run("List by date range", func(t *testing.T) {
+		from := published.Add(-time.Hour)
+		to := published.Add(time.Hour * 2)
+		got, err := s.List(ctx, news.ItemListOptions{From: &from, To: &to})
+		require.NoError(t, err)
+		assert.NotEmpty(t, got)
+	})
+
+	t.Run("List no filter error", func(t *testing.T) {
+		_, err := s.List(ctx, news.ItemListOptions{})
+		assert.Error(t, err)
+	})
+
 	t.Run("DeleteByIssue", func(t *testing.T) {
 		require.NoError(t, s.DeleteByIssue(ctx, issue.ID))
-		got, err := s.ListByIssue(ctx, issue.ID)
+		got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
 		require.NoError(t, err)
 		assert.Empty(t, got)
 	})
@@ -146,15 +169,16 @@ func TestItems_Store(t *testing.T) {
 			assert.NotErrorIs(t, err, store.ErrNotFound)
 		}
 
-		t.Log("ListByIssue")
+		t.Log("List by issue")
 		{
-			_, err := s.ListByIssue(ctx, 1)
+			id := int64(1)
+			_, err := s.List(ctx, news.ItemListOptions{IssueID: &id})
 			assert.Error(t, err)
 		}
 
 		t.Log("Create")
 		{
-			_, err := s.Create(ctx, 1, 0, news.Item{Source: news.SourceHN, Title: "x", URL: "x"})
+			_, err := s.Create(ctx, nil, 0, news.Item{Source: news.SourceHN, Title: "x", URL: "x"})
 			assert.Error(t, err)
 		}
 

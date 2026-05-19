@@ -11,7 +11,7 @@ CREATE TABLE issues (
 
 CREATE TABLE items (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    issue_id           INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
+    issue_id           INTEGER REFERENCES issues(id) ON DELETE CASCADE,
     source             TEXT NOT NULL,
     title              TEXT NOT NULL,
     url                TEXT NOT NULL,

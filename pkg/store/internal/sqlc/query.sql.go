@@ -162,7 +162,7 @@ func (q *Queries) IssueUpdateStatus(ctx context.Context, arg IssueUpdateStatusPa
 }
 
 const itemByID = `-- name: ItemByID :one
-SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url FROM items WHERE id = ? LIMIT 1
+SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
@@ -183,6 +183,7 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 		&i.Summary,
 		&i.Position,
 		&i.OriginalUrl,
+		&i.Published,
 	)
 	return i, err
 }
@@ -191,17 +192,17 @@ const itemCreate = `-- name: ItemCreate :one
 INSERT INTO items (
     issue_id, source, tag, title, url, original_url,
     author_name, author_username, author_avatar_url, author_profile_url,
-    score, summary, position
+    score, summary, position, published
 ) VALUES (
     ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?,
-    ?, ?, ?
+    ?, ?, ?, ?
 )
-RETURNING id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url
+RETURNING id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published
 `
 
 type ItemCreateParams struct {
-	IssueID          int64           `json:"issue_id"`
+	IssueID          sql.NullInt64   `json:"issue_id"`
 	Source           string          `json:"source"`
 	Tag              string          `json:"tag"`
 	Title            string          `json:"title"`
@@ -214,6 +215,7 @@ type ItemCreateParams struct {
 	Score            sql.NullFloat64 `json:"score"`
 	Summary          sql.NullString  `json:"summary"`
 	Position         int64           `json:"position"`
+	Published        *time.Time      `json:"published"`
 }
 
 func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, error) {
@@ -231,6 +233,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		arg.Score,
 		arg.Summary,
 		arg.Position,
+		arg.Published,
 	)
 	var i Item
 	err := row.Scan(
@@ -248,6 +251,7 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 		&i.Summary,
 		&i.Position,
 		&i.OriginalUrl,
+		&i.Published,
 	)
 	return i, err
 }
@@ -262,7 +266,7 @@ func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID int64) error {
 }
 
 const itemListByIssue = `-- name: ItemListByIssue :many
-SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url FROM items
+SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
 WHERE issue_id = ?
 ORDER BY position ASC
 `
@@ -291,6 +295,57 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID int64) ([]Item, e
 			&i.Summary,
 			&i.Position,
 			&i.OriginalUrl,
+			&i.Published,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const itemListByDateRange = `-- name: ItemListByDateRange :many
+SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
+WHERE published >= ? AND published < ?
+ORDER BY score DESC
+`
+
+type ItemListByDateRangeParams struct {
+	From time.Time `json:"from"`
+	To   time.Time `json:"to"`
+}
+
+func (q *Queries) ItemListByDateRange(ctx context.Context, arg ItemListByDateRangeParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, itemListByDateRange, arg.From, arg.To)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Item{}
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Source,
+			&i.Title,
+			&i.Url,
+			&i.Tag,
+			&i.AuthorName,
+			&i.AuthorUsername,
+			&i.AuthorAvatarUrl,
+			&i.AuthorProfileUrl,
+			&i.Score,
+			&i.Summary,
+			&i.Position,
+			&i.OriginalUrl,
+			&i.Published,
 		); err != nil {
 			return nil, err
 		}

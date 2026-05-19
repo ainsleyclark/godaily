@@ -29,3 +29,8 @@ sql:
               pointer: true
           - column: "subscribers.created_at"
             go_type: "time.Time"
+          - column: "items.published"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true

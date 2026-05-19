@@ -42,7 +42,7 @@ func (m *MockItemRepository) EXPECT() *MockItemRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockItemRepository) Create(ctx context.Context, issueID int64, position int, item news.Item) (news.Item, error) {
+func (m *MockItemRepository) Create(ctx context.Context, issueID *int64, position int, item news.Item) (news.Item, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, issueID, position, item)
 	ret0, _ := ret[0].(news.Item)
@@ -85,17 +85,17 @@ func (mr *MockItemRepositoryMockRecorder) Find(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockItemRepository)(nil).Find), ctx, id)
 }
 
-// ListByIssue mocks base method.
-func (m *MockItemRepository) ListByIssue(ctx context.Context, issueID int64) ([]news.Item, error) {
+// List mocks base method.
+func (m *MockItemRepository) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListByIssue", ctx, issueID)
+	ret := m.ctrl.Call(m, "List", ctx, opts)
 	ret0, _ := ret[0].([]news.Item)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListByIssue indicates an expected call of ListByIssue.
-func (mr *MockItemRepositoryMockRecorder) ListByIssue(ctx, issueID any) *gomock.Call {
+// List indicates an expected call of List.
+func (mr *MockItemRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByIssue", reflect.TypeOf((*MockItemRepository)(nil).ListByIssue), ctx, issueID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockItemRepository)(nil).List), ctx, opts)
 }

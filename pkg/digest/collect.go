@@ -27,15 +27,12 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // CollectOptions configures a Collect call.
 type CollectOptions struct {
-	// DryRun skips rendering and persisting the digest; only the raw
-	// source items are returned.
+	// DryRun skips persisting items; only the raw source items are returned.
 	DryRun bool
 
 	// Sources restricts the run to the given sources. If empty,
@@ -44,14 +41,25 @@ type CollectOptions struct {
 }
 
 // Collect fetches Go news items from all registered sources within the current
-// collection window, scores and sorts them, renders the digest and (unless
-// DryRun) persists it as a draft issue in the database.
+// collection window, scores and sorts them, and (unless DryRun) persists them
+// as unlinked items in the database (issue_id = nil).
 func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error) {
-	day, next := collectWindow(time.Now())
+	start, end := collectWindow(time.Now())
 
 	sources := opts.Sources
 	if len(sources) == 0 {
 		sources = news.Sources
+	}
+
+	if !opts.DryRun && a.items != nil {
+		existing, err := a.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
+		if err != nil {
+			return nil, errors.Wrap(err, "checking existing items")
+		}
+		if len(existing) > 0 {
+			slog.InfoContext(ctx, "Items already collected for window, skipping", "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"), "count", len(existing))
+			return nil, nil
+		}
 	}
 
 	var results []news.SourceItems
@@ -68,7 +76,7 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 				slog.ErrorContext(ctx, "Item has zero published date", "source", src, "title", item.Title)
 				continue
 			}
-			if item.Published.After(day) && item.Published.Before(next) {
+			if item.Published.After(start) && item.Published.Before(end) {
 				si.Items = append(si.Items, item)
 			}
 		}
@@ -87,87 +95,31 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	})
 
 	if opts.DryRun || len(results) == 0 {
-		if !opts.DryRun {
-			slog.WarnContext(ctx, "No items found for date window, issue will not be created", "date", day.Format("2006-01-02"))
+		if !opts.DryRun && a.items != nil {
+			slog.WarnContext(ctx, "No items found for date window", "start", start.Format("2006-01-02"))
 		}
 		return results, nil
 	}
 
-	if _, err := renderDigest(digestOptions{Day: next, Sources: results}); err != nil {
-		slog.ErrorContext(ctx, "Failed to render digest", "err", err)
-		return results, nil
-	}
-
-	subject, summary := a.synthesiseDigestMeta(ctx, next, results)
-
-	issue := news.Issue{
-		Slug:    next.Format("2006-01-02"),
-		Subject: subject,
-		Summary: summary,
-		Status:  news.IssueStatusDraft,
-		SentAt:  time.Now().UTC(),
-	}
-
-	return results, a.persistIssue(ctx, issue, results)
-}
-
-// collectWindow returns the date range to collect for a given time. On Monday
-// UTC the window covers Saturday and Sunday; on any other day it covers
-// yesterday only.
-func collectWindow(now time.Time) (start, end time.Time) {
-	today := now.UTC().Truncate(24 * time.Hour)
-	if now.UTC().Weekday() == time.Monday {
-		return today.AddDate(0, 0, -2), today
-	}
-	return today.AddDate(0, 0, -1), today
-}
-
-func (a Aggregator) persistIssue(ctx context.Context, issue news.Issue, sections []news.SourceItems) error {
-	_, err := a.issues.FindBySlug(ctx, issue.Slug)
-	switch {
-	case err == nil: // No error indicates it exists.
-		slog.WarnContext(ctx, "Issue already persisted in the store, skipping", "slug", issue.Slug)
-		return nil
-	case !errors.Is(err, store.ErrNotFound): // Is a database error.
-		return errors.Wrap(err, "checking existing issue")
-	}
-
-	created, err := a.issues.Create(ctx, issue)
-	if err != nil {
-		return errors.Wrap(err, "creating issue")
-	}
-
 	var position int
-	for _, section := range sections {
+	for _, section := range results {
 		for _, item := range section.Items {
 			position++
 			item.Source = section.Source
-			if _, err = a.items.Create(ctx, created.ID, position, item); err != nil {
-				return errors.Wrap(err, "creating news item")
+			if _, err := a.items.Create(ctx, nil, position, item); err != nil {
+				return results, errors.Wrap(err, "creating news item")
 			}
 		}
 	}
 
-	slog.InfoContext(ctx, "Persisted issue", "slug", issue.Slug)
+	slog.InfoContext(ctx, "Collected items", "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"), "count", position)
 
-	return nil
+	return results, nil
 }
 
-// synthesiseDigestMeta calls the prompter to generate the email subject title
-// and intro paragraph. On failure it logs a warning and returns static fallbacks
-// so a missing API key never blocks delivery.
-func (a Aggregator) synthesiseDigestMeta(ctx context.Context, day time.Time, sections []news.SourceItems) (subject, summary string) {
-	subject = "GoDaily - " + day.Format("January 2, 2006")
-	if a.prompter == nil {
-		return subject, ""
-	}
-	meta, err := prompts.Synthesise(ctx, a.prompter, day, sections)
-	if err != nil {
-		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
-		if a.slack != nil {
-			a.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
-		}
-		return subject, ""
-	}
-	return meta.Title, meta.Intro
+// collectWindow returns the date range to collect for a given time. The window
+// is always yesterday-to-today (one day) to capture items published yesterday.
+func collectWindow(now time.Time) (start, end time.Time) {
+	today := now.UTC().Truncate(24 * time.Hour)
+	return today.AddDate(0, 0, -1), today
 }

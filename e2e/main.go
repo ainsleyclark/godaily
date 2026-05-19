@@ -77,6 +77,7 @@ type stubRunner struct{}
 func (stubRunner) Collect(_ context.Context, _ digest.CollectOptions) ([]news.SourceItems, error) {
 	return nil, nil
 }
+func (stubRunner) Build(_ context.Context, _ time.Time) error              { return nil }
 func (stubRunner) SendDigest(_ context.Context, _ time.Time, _ bool) error { return nil }
 func (stubRunner) SendSuggestion(_ context.Context, _ time.Time) error     { return nil }
 
