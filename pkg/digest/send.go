@@ -85,7 +85,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 			slog.ErrorContext(ctx, "Skipping subscriber with missing unsubscribe token", "email", sub.Email)
 			continue
 		}
-		unsubURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+		// Trailing slash is required: vercel.json sets trailingSlash:true,
+		// so /api/unsubscribe responds 308 → /api/unsubscribe/, and Gmail's
+		// RFC 8058 one-click POST will not be honoured by a redirect.
+		unsubURL := env.AppURL + "/api/unsubscribe/?token=" + sub.UnsubscribeToken
 		subRendered, renderErr := renderDigest(digestOptions{
 			Day:            date,
 			Subject:        issue.Subject,

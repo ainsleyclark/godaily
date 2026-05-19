@@ -186,7 +186,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 	t.Run("Sets List-Unsubscribe Headers For Subscriber", func(t *testing.T) {
 		t.Parallel()
 
-		const unsubURL = "https://godaily.dev/api/unsubscribe?token=abc123"
+		const unsubURL = "https://godaily.dev/api/unsubscribe/?token=abc123"
 		subRendered, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sampleSections(), UnsubscribeURL: unsubURL})
 		require.NoError(t, err)
 

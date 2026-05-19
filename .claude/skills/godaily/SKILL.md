@@ -46,7 +46,7 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 | GET | `/api/send` | **Yes** | Send the current draft digest by email |
 | POST | `/api/subscribe` | No | Subscribe an email address |
 | GET | `/api/confirm` | No | Confirm a subscription via token |
-| GET | `/api/unsubscribe` | No | Unsubscribe via token |
+| GET / POST | `/api/unsubscribe/` | No | Unsubscribe via token (POST is RFC 8058 one-click) |
 
 ## Operations
 
@@ -190,7 +190,7 @@ Unsubscribe using the token from the newsletter footer.
 ```bash
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 TOKEN="the-unsubscribe-token"
-curl -sf "$BASE/api/unsubscribe?token=$TOKEN" | jq .
+curl -sfL "$BASE/api/unsubscribe/?token=$TOKEN"
 ```
 
 ---

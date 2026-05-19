@@ -27,7 +27,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
-// HandleUnsubscribe is the Vercel serverless function entry point for GET /api/unsubscribe.
+// HandleUnsubscribe is the Vercel serverless function entry point for
+// /api/unsubscribe/. GET serves the link click (redirect to /unsubscribed/),
+// POST serves the RFC 8058 one-click unsubscribe (return 200 OK).
 func HandleUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		token := r.URL.Query().Get("token")

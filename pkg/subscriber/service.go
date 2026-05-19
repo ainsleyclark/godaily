@@ -106,7 +106,7 @@ func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscrib
 		return news.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
 	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
-	unsubscribeURL := env.AppURL + "/api/unsubscribe?token=" + sub.UnsubscribeToken
+	unsubscribeURL := env.AppURL + "/api/unsubscribe/?token=" + sub.UnsubscribeToken
 
 	if err = s.sendConfirmation(ctx, sub.Email, confirmURL, unsubscribeURL); err != nil {
 		slog.ErrorContext(ctx, "Failed to send confirmation email", "email", sub.Email, "error", err)
