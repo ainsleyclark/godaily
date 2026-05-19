@@ -21,6 +21,7 @@ package api
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -32,7 +33,15 @@ import (
 // HandleSend is the Vercel serverless function entry point for GET /api/send.
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		today := time.Now().UTC().Truncate(24 * time.Hour)
+		now := time.Now().UTC()
+		if wd := now.Weekday(); wd == time.Saturday || wd == time.Sunday {
+			slog.InfoContext(ctx, "Skipping send — weekend")
+			hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
+			api.OK(w)
+			return
+		}
+
+		today := now.Truncate(24 * time.Hour)
 
 		if err := a.Runner.SendDigest(ctx, today, false); err != nil {
 			a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
