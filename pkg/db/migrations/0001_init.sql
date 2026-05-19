@@ -22,11 +22,9 @@ CREATE TABLE items (
     author_profile_url TEXT,
     score              REAL,
     summary            TEXT,
-    position           INTEGER NOT NULL,
-    published          TIMESTAMP
+    position           INTEGER NOT NULL
 );
 CREATE INDEX idx_items_issue ON items(issue_id);
-CREATE INDEX items_published_idx ON items (published);
 
 CREATE TABLE subscribers (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +40,6 @@ CREATE INDEX idx_subscribers_active ON subscribers(id) WHERE unsubscribed_at IS 
 -- +goose StatementBegin
 DROP INDEX IF EXISTS idx_subscribers_active;
 DROP TABLE IF EXISTS subscribers;
-DROP INDEX IF EXISTS items_published_idx;
 DROP INDEX IF EXISTS idx_items_issue;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS issues;
