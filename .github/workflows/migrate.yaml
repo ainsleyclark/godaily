@@ -25,4 +25,5 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           EMAIL_SEND_ADDRESS: ${{ secrets.EMAIL_SEND_ADDRESS }}
           API_SECRET: ${{ secrets.API_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: go run . migrate up
