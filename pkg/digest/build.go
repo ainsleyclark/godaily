@@ -53,6 +53,8 @@ func (a Aggregator) Build(ctx context.Context, date time.Time) error {
 		return nil
 	}
 
+	slog.InfoContext(ctx, "Found news items", "slug", slug, "items count", len(items))
+
 	sections := groupIntoSections(items)
 
 	subject, summary := a.synthesiseDigestMeta(ctx, today, sections)
