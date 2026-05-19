@@ -19,36 +19,10 @@
 
 package api
 
-import (
-	"context"
-	"log/slog"
-	"net/http"
-	"time"
+import "time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/digest"
-	"github.com/ainsleyclark/godaily/pkg/hook"
-)
-
-// HandleCollect is the Vercel serverless function entry point for GET /api/collect.
-func HandleCollect(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if api.IsWeekend(time.Now().UTC()) {
-			slog.InfoContext(ctx, "Skipping collect — weekend")
-			hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
-			api.OK(w)
-			return
-		}
-
-		if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
-			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
-			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
-			return
-		}
-
-		hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
-
-		api.OK(w)
-	})(w, r)
+// IsWeekend reports whether t falls on a Saturday or Sunday.
+func IsWeekend(t time.Time) bool {
+	wd := t.Weekday()
+	return wd == time.Saturday || wd == time.Sunday
 }
