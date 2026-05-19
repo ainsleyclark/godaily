@@ -33,14 +33,15 @@ import (
 // HandleBuild is the Vercel serverless function entry point for GET /api/build.
 func HandleBuild(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if api.IsWeekend(time.Now().UTC()) {
+		now := time.Now().UTC()
+		if api.IsWeekend(now) {
 			slog.InfoContext(ctx, "Skipping build — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackBuildHeartbeatURL)
 			api.OK(w)
 			return
 		}
 
-		if err := a.Runner.Build(ctx); err != nil {
+		if err := a.Runner.Build(ctx, now); err != nil {
 			api.Error(w, http.StatusInternalServerError, "build failed: "+err.Error())
 			return
 		}

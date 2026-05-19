@@ -34,11 +34,11 @@ import (
 
 // Build loads collected items for the appropriate date window, ranks and
 // deduplicates them, runs AI synthesis, and persists a draft Issue with the
-// items associated. If a draft already exists for today it is deleted and
-// rebuilt. On any failure a Slack notification is sent.
-func (a Aggregator) Build(ctx context.Context) error {
-	start, end := buildWindow(time.Now())
-	today := time.Now().UTC().Truncate(24 * time.Hour)
+// items associated. If a draft already exists for the date's slug it is deleted
+// and rebuilt. On any failure a Slack notification is sent.
+func (a Aggregator) Build(ctx context.Context, date time.Time) error {
+	today := date.UTC().Truncate(24 * time.Hour)
+	start, end := buildWindow(today)
 	slug := today.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Building digest", "slug", slug, "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"))
@@ -104,9 +104,9 @@ func (a Aggregator) Build(ctx context.Context) error {
 // buildWindow returns the date range of items to include in the digest.
 // On Monday, it covers the previous Friday through Monday (4-day window).
 // Tuesday through Friday, it covers only the previous day.
-func buildWindow(now time.Time) (start, end time.Time) {
-	today := now.UTC().Truncate(24 * time.Hour)
-	if now.UTC().Weekday() == time.Monday {
+// today must already be truncated to midnight UTC.
+func buildWindow(today time.Time) (start, end time.Time) {
+	if today.Weekday() == time.Monday {
 		return today.AddDate(0, 0, -3), today
 	}
 	return today.AddDate(0, 0, -1), today
