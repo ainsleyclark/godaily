@@ -24,6 +24,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"testing/synctest"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
@@ -37,6 +39,7 @@ import (
 func TestHandleSend(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
+		weekend    bool
 		secret     string
 		authHeader string
 		wantStatus int
@@ -67,25 +70,35 @@ func TestHandleSend(t *testing.T) {
 			authHeader: "Bearer wrongtoken",
 			wantStatus: http.StatusUnauthorized,
 		},
+		"Weekend": {
+			mock:       func(r *mockdigest.MockRunner) {},
+			weekend:    true,
+			wantStatus: http.StatusOK,
+		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			runner := mockdigest.NewMockRunner(ctrl)
-			slack := mockslack.NewMockSender(ctrl)
-			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
-			test.mock(runner)
+			synctest.Test(t, func(t *testing.T) {
+				if !test.weekend {
+					// Fake clock starts on Saturday 2000-01-01; advance to Monday.
+					time.Sleep(48 * time.Hour)
+				}
 
-			a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}, Slack: slack}
-			api.SetApp(a)
+				ctrl := gomock.NewController(t)
+				runner := mockdigest.NewMockRunner(ctrl)
+				slack := mockslack.NewMockSender(ctrl)
+				slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+				test.mock(runner)
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
+				a := &godaily.App{Runner: runner, Config: &env.Config{APISecret: test.secret}, Slack: slack}
+				api.SetApp(a)
 
-			HandleSend(w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
+				w := httptest.NewRecorder()
+				r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
+				HandleSend(w, r)
+				assert.Equal(t, test.wantStatus, w.Code)
+			})
 		})
 	}
 }
