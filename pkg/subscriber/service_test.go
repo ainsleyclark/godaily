@@ -137,7 +137,7 @@ func TestService_Subscribe(t *testing.T) {
 		assert.True(t, sender.called)
 		assert.Equal(t, "Confirm your GoDaily subscription", sender.req.Subject)
 		assert.Contains(t, sender.req.Html, sub.ConfirmToken)
-		assert.Equal(t, "<https://godaily.dev/api/unsubscribe?token=tok123>", sender.req.Headers["List-Unsubscribe"])
+		assert.Equal(t, "<https://godaily.dev/api/unsubscribe/?token=tok123>", sender.req.Headers["List-Unsubscribe"])
 		assert.Equal(t, "List-Unsubscribe=One-Click", sender.req.Headers["List-Unsubscribe-Post"])
 	})
 
