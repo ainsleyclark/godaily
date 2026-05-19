@@ -21,7 +21,9 @@ package api
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
@@ -32,6 +34,13 @@ import (
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		if wd := time.Now().UTC().Weekday(); wd == time.Saturday || wd == time.Sunday {
+			slog.InfoContext(ctx, "Skipping collect — weekend")
+			hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
+			api.OK(w)
+			return
+		}
+
 		if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
 			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
