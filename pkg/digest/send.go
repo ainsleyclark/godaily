@@ -42,7 +42,7 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	issue, err := a.issues.FindBySlug(ctx, slug)
 	if errors.Is(err, store.ErrNotFound) {
-		return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
+		return fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
 	} else if err != nil {
 		return errors.Wrap(err, "loading digest")
 	} else if !force && issue.Status != news.IssueStatusDraft {
@@ -112,9 +112,9 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 // loadSections fetches stored items for an issue and groups them into
 // SourceItems slices sorted by source priority, matching the shape
-// produced by Collect.
+// produced by Build.
 func loadSections(ctx context.Context, repo news.ItemRepository, issueID int64) ([]news.SourceItems, error) {
-	items, err := repo.ListByIssue(ctx, issueID)
+	items, err := repo.List(ctx, news.ItemListOptions{IssueID: &issueID})
 	if err != nil {
 		return nil, err
 	}

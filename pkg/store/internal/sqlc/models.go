@@ -20,7 +20,7 @@ type Issue struct {
 
 type Item struct {
 	ID               int64           `json:"id"`
-	IssueID          int64           `json:"issue_id"`
+	IssueID          sql.NullInt64   `json:"issue_id"`
 	Source           string          `json:"source"`
 	Title            string          `json:"title"`
 	Url              string          `json:"url"`
@@ -33,6 +33,7 @@ type Item struct {
 	Summary          sql.NullString  `json:"summary"`
 	Position         int64           `json:"position"`
 	OriginalUrl      sql.NullString  `json:"original_url"`
+	Published        *time.Time      `json:"published"`
 }
 
 type Subscriber struct {

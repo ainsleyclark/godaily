@@ -20,25 +20,21 @@
 package digest
 
 import (
-	"encoding/json"
 	"errors"
-	htmltemplate "html/template"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
 
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
 func TestAggregator_Collect(t *testing.T) {
-	day, next := collectWindow(time.Now())
-	inWindow := day.Add(time.Hour)
-	beforeWindow := day.Add(-time.Hour)
-	afterWindow := next.Add(time.Hour)
+	start, end := collectWindow(time.Now())
+	inWindow := start.Add(time.Hour)
+	beforeWindow := start.Add(-time.Hour)
+	afterWindow := end.Add(time.Hour)
 
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
@@ -166,7 +162,7 @@ func TestAggregator_Collect(t *testing.T) {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{items: []news.Item{}},
 			},
-			opts: CollectOptions{Sources: []news.Source{news.SourceDevTo}},
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
 			want: func(t *testing.T, items []news.SourceItems, err error) {
 				t.Helper()
 				require.NoError(t, err)
@@ -174,9 +170,6 @@ func TestAggregator_Collect(t *testing.T) {
 			},
 		},
 	}
-
-	// Note: "Render Failure Falls Back Gracefully" is tested separately below
-	// because it mutates a package-level template var and cannot run in parallel.
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
@@ -189,142 +182,9 @@ func TestAggregator_Collect(t *testing.T) {
 	}
 }
 
-func TestAggregator_Collect_RenderFallback(t *testing.T) {
-	day, _ := collectWindow(time.Now())
-	inWindow := day.Add(time.Hour)
-
-	registry := map[news.Source]news.Fetcher{
-		news.SourceDevTo: mockFetcher{
-			items: []news.Item{{Title: "in", Published: inWindow}},
-		},
-	}
-
-	// When renderDigest fails (broken template), Collect logs and returns the
-	// raw results without persisting rather than surfacing an error.
-	t.Run("Render Failure Falls Back Gracefully", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		orig := htmlTmpl
-		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(`{{ .Missing.NotAField }}`))
-		t.Cleanup(func() { htmlTmpl = orig })
-
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{issues: issueRepo, items: itemRepo}
-
-		got, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-		require.Len(t, got, 1, "raw items still returned despite render failure")
-
-		count, err := issueRepo.Count(t.Context())
-		require.NoError(t, err)
-		assert.Equal(t, int64(0), count, "nothing persisted when render fails")
-	})
-}
-
-func TestAggregator_Collect_Synthesiser(t *testing.T) {
-	day, next := collectWindow(time.Now())
-	inWindow := day.Add(time.Hour)
-
-	registry := map[news.Source]news.Fetcher{
-		news.SourceDevTo: mockFetcher{
-			items: []news.Item{{Title: "in", Published: inWindow}},
-		},
-	}
-
-	validDigestJSON := func(title, intro string) []byte {
-		raw, _ := json.Marshal(map[string]string{"title": title, "intro": intro})
-		return raw
-	}
-
-	t.Run("Prompter Is Never Called For Suggestion During Collect", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{prompter: p}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-	})
-
-	t.Run("DryRun Does Not Call Prompter", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{prompter: p}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-	})
-
-	t.Run("Prompter Populates Subject And Summary On Persist", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validDigestJSON("Go 1.24 lands", "Goroutines got faster."), nil)
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{prompter: p, issues: issueRepo, items: itemRepo}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-
-		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
-		require.NoError(t, err)
-		assert.Equal(t, "Go 1.24 lands", stored.Subject)
-		assert.Equal(t, "Goroutines got faster.", stored.Summary)
-	})
-
-	t.Run("Prompter Error Falls Back To Static Subject", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{prompter: p, issues: issueRepo, items: itemRepo}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-
-		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
-		require.NoError(t, err)
-		assert.Equal(t, "GoDaily - "+next.Format("January 2, 2006"), stored.Subject)
-		assert.Empty(t, stored.Summary)
-	})
-
-	t.Run("Prompter Error Sends Slack Notification", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic timeout"))
-		sl := &mockSlack{}
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-		require.Len(t, sl.msgs, 1)
-		assert.Contains(t, sl.msgs[0], "AI synthesis failed")
-		assert.Contains(t, sl.msgs[0], "anthropic timeout")
-	})
-
-	t.Run("Nil Prompter Falls Back To Static Subject", func(t *testing.T) {
-		t.Cleanup(news.SwapRegistry(registry))
-
-		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{prompter: nil, issues: issueRepo, items: itemRepo}
-
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
-		require.NoError(t, err)
-
-		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
-		require.NoError(t, err)
-		assert.Equal(t, "GoDaily - "+next.Format("January 2, 2006"), stored.Subject)
-		assert.Empty(t, stored.Summary)
-	})
-}
-
 func TestAggregator_Collect_Persistence(t *testing.T) {
-	day, next := collectWindow(time.Now())
-	inWindow := day.Add(time.Hour)
+	start, _ := collectWindow(time.Now())
+	inWindow := start.Add(time.Hour)
 
 	registry := map[news.Source]news.Fetcher{
 		news.SourceDevTo: mockFetcher{
@@ -351,23 +211,19 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		},
 	}
 
-	t.Run("Persists Issue As Draft With Items", func(t *testing.T) {
+	t.Run("Persists Items Without Issue", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		issueRepo, itemRepo := newTestStores(t)
+		_, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			issues: issueRepo,
-			items:  itemRepo,
+			items: itemRepo,
 		}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
-		stored, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
-		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusDraft, stored.Status)
-
-		got, err := itemRepo.ListByIssue(t.Context(), stored.ID)
+		collStart, collEnd := collectWindow(time.Now())
+		got, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
 		require.NoError(t, err)
 		require.Len(t, got, 2)
 		// Items are persisted in score-descending order, so "second" (0.9) comes first.
@@ -382,13 +238,12 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.Equal(t, "https://dev.to/ada", got[1].Author.ProfileURL)
 	})
 
-	t.Run("Second Collect Same Day Skips Without Creating Duplicate", func(t *testing.T) {
+	t.Run("Second Collect Same Day Skips Without Creating Duplicates", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		issueRepo, itemRepo := newTestStores(t)
+		_, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			issues: issueRepo,
-			items:  itemRepo,
+			items: itemRepo,
 		}
 
 		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
@@ -396,27 +251,27 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
 
-		first, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
+		collStart, collEnd := collectWindow(time.Now())
+		first, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
 		require.NoError(t, err)
-		require.NotZero(t, first.ID)
+		require.Len(t, first, 2)
 
-		// Second collect on the same day logs a warning and returns nil;
-		// the existing issue must not be duplicated.
-		_, err = agg.Collect(t.Context(), opts)
+		// Second collect on the same day returns nil (idempotent).
+		result, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
+		assert.Nil(t, result, "second collect must return nil when items already exist")
 
-		second, err := issueRepo.FindBySlug(t.Context(), next.Format("2006-01-02"))
+		second, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
 		require.NoError(t, err)
-		assert.Equal(t, first.ID, second.ID, "second collect must not create a duplicate issue")
+		assert.Len(t, second, 2, "second collect must not create duplicate items")
 	})
 
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
-		issueRepo, itemRepo := newTestStores(t)
+		_, itemRepo := newTestStores(t)
 		agg := Aggregator{
-			issues: issueRepo,
-			items:  itemRepo,
+			items: itemRepo,
 		}
 
 		_, err := agg.Collect(t.Context(), CollectOptions{
@@ -425,27 +280,26 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		count, err := issueRepo.Count(t.Context())
+		collStart, collEnd := collectWindow(time.Now())
+		got, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
 		require.NoError(t, err)
-		assert.Equal(t, int64(0), count)
+		assert.Empty(t, got)
 	})
 }
 
 func TestCollectWindow(t *testing.T) {
-	monday := time.Date(2026, 5, 18, 1, 0, 0, 0, time.UTC) // The day this bug was found
 	tuesday := time.Date(2026, 5, 19, 1, 0, 0, 0, time.UTC)
 
-	t.Run("Monday window covers Saturday and Sunday", func(t *testing.T) {
-		day, next := collectWindow(monday)
-		assert.Equal(t, "2026-05-16", day.Format("2006-01-02"), "window start should be Saturday")
-		// next = today (Monday) — used as the slug so it matches the send date
-		assert.Equal(t, "2026-05-18", next.Format("2006-01-02"), "slug should be today (Monday)")
+	t.Run("Window always covers yesterday to today", func(t *testing.T) {
+		start, end := collectWindow(tuesday)
+		assert.Equal(t, "2026-05-18", start.Format("2006-01-02"), "window start should be yesterday")
+		assert.Equal(t, "2026-05-19", end.Format("2006-01-02"), "window end should be today")
 	})
 
-	t.Run("Non-Monday window covers yesterday only", func(t *testing.T) {
-		day, next := collectWindow(tuesday)
-		assert.Equal(t, "2026-05-18", day.Format("2006-01-02"), "window start should be Monday")
-		// next = today (Tuesday) — slug matches the send date
-		assert.Equal(t, "2026-05-19", next.Format("2006-01-02"), "slug should be today (Tuesday)")
+	t.Run("Monday also covers only yesterday", func(t *testing.T) {
+		monday := time.Date(2026, 5, 18, 1, 0, 0, 0, time.UTC)
+		start, end := collectWindow(monday)
+		assert.Equal(t, "2026-05-17", start.Format("2006-01-02"), "window start should be Sunday")
+		assert.Equal(t, "2026-05-18", end.Format("2006-01-02"), "window end should be today (Monday)")
 	})
 }

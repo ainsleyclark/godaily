@@ -45,6 +45,7 @@ type IssueRepository interface {
 	List(ctx context.Context, opts ListOptions) ([]Issue, error)
 	Latest(ctx context.Context, limit int) ([]Issue, error)
 	Create(ctx context.Context, issue Issue) (Issue, error)
+	Delete(ctx context.Context, id int64) (Issue, error)
 	UpdateStatus(ctx context.Context, id int64, status IssueStatus, sentAt time.Time) (Issue, error)
 	Count(ctx context.Context) (int64, error)
 }

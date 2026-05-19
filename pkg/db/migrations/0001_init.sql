@@ -11,7 +11,7 @@ CREATE TABLE issues (
 
 CREATE TABLE items (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    issue_id           INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
+    issue_id           INTEGER REFERENCES issues(id) ON DELETE CASCADE,
     source             TEXT NOT NULL,
     title              TEXT NOT NULL,
     url                TEXT NOT NULL,
@@ -22,9 +22,11 @@ CREATE TABLE items (
     author_profile_url TEXT,
     score              REAL,
     summary            TEXT,
-    position           INTEGER NOT NULL
+    position           INTEGER NOT NULL,
+    published          TIMESTAMP
 );
 CREATE INDEX idx_items_issue ON items(issue_id);
+CREATE INDEX items_published_idx ON items (published);
 
 CREATE TABLE subscribers (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,6 +42,7 @@ CREATE INDEX idx_subscribers_active ON subscribers(id) WHERE unsubscribed_at IS 
 -- +goose StatementBegin
 DROP INDEX IF EXISTS idx_subscribers_active;
 DROP TABLE IF EXISTS subscribers;
+DROP INDEX IF EXISTS items_published_idx;
 DROP INDEX IF EXISTS idx_items_issue;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS issues;

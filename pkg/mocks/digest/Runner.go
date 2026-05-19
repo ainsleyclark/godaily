@@ -43,6 +43,20 @@ func (m *MockRunner) EXPECT() *MockRunnerMockRecorder {
 	return m.recorder
 }
 
+// Build mocks base method.
+func (m *MockRunner) Build(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Build", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Build indicates an expected call of Build.
+func (mr *MockRunnerMockRecorder) Build(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockRunner)(nil).Build), ctx)
+}
+
 // Collect mocks base method.
 func (m *MockRunner) Collect(ctx context.Context, opts digest.CollectOptions) ([]news.SourceItems, error) {
 	m.ctrl.T.Helper()

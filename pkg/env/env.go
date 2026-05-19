@@ -49,6 +49,7 @@ type Config struct {
 	VercelDeployHookURL            string          `env:"VERCEL_DEPLOY_HOOK_URL,unset"`
 	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL,unset"`
 	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL,unset"`
+	BetterStackBuildHeartbeatURL   string          `env:"BETTERSTACK_BUILD_HEARTBEAT_URL,unset"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file

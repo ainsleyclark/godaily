@@ -158,7 +158,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",
@@ -186,7 +186,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), stored.ID, 1, news.Item{
+		_, err = itemRepo.Create(t.Context(), &stored.ID, 1, news.Item{
 			Source:    news.SourceDevTo,
 			Title:     "item",
 			URL:       "https://example.com/x",
@@ -231,11 +231,11 @@ func TestLoadSections(t *testing.T) {
 		published := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour).Add(time.Hour)
 
 		// Insert two sources — GoBlog has higher priority than Medium.
-		_, err = itemRepo.Create(t.Context(), issue.ID, 1, news.Item{Source: news.SourceMedium, Title: "medium-1", URL: "https://medium.com/1", Published: published})
+		_, err = itemRepo.Create(t.Context(), &issue.ID, 1, news.Item{Source: news.SourceMedium, Title: "medium-1", URL: "https://medium.com/1", Published: published})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), issue.ID, 2, news.Item{Source: news.SourceGoBlog, Title: "goblog-1", URL: "https://go.dev/1", Published: published})
+		_, err = itemRepo.Create(t.Context(), &issue.ID, 2, news.Item{Source: news.SourceGoBlog, Title: "goblog-1", URL: "https://go.dev/1", Published: published})
 		require.NoError(t, err)
-		_, err = itemRepo.Create(t.Context(), issue.ID, 3, news.Item{Source: news.SourceGoBlog, Title: "goblog-2", URL: "https://go.dev/2", Published: published})
+		_, err = itemRepo.Create(t.Context(), &issue.ID, 3, news.Item{Source: news.SourceGoBlog, Title: "goblog-2", URL: "https://go.dev/2", Published: published})
 		require.NoError(t, err)
 
 		sections, err := loadSections(t.Context(), itemRepo, issue.ID)

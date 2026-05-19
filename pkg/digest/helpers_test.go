@@ -83,7 +83,7 @@ func newSubsMock(t *testing.T) *mocknews.MockSubscriberRepository {
 	return m
 }
 
-// errItemRepo is an ItemRepository that always returns errItemRepoErr from ListByIssue.
+// errItemRepo is an ItemRepository that always returns errItemRepoErr from List.
 type errItemRepo struct {
 	err error
 }
@@ -92,11 +92,11 @@ func (e errItemRepo) Find(_ context.Context, _ int64) (news.Item, error) {
 	return news.Item{}, nil
 }
 
-func (e errItemRepo) ListByIssue(_ context.Context, _ int64) ([]news.Item, error) {
+func (e errItemRepo) List(_ context.Context, _ news.ItemListOptions) ([]news.Item, error) {
 	return nil, e.err
 }
 
-func (e errItemRepo) Create(_ context.Context, _ int64, _ int, _ news.Item) (news.Item, error) {
+func (e errItemRepo) Create(_ context.Context, _ *int64, _ int, _ news.Item) (news.Item, error) {
 	return news.Item{}, nil
 }
 func (e errItemRepo) DeleteByIssue(_ context.Context, _ int64) error { return nil }

@@ -126,6 +126,20 @@ func (s Store) Create(ctx context.Context, issue news.Issue) (news.Issue, error)
 	return issueFromRows(i, nil), nil
 }
 
+func (s Store) Delete(ctx context.Context, id int64) (news.Issue, error) {
+	i, err := s.sqlc.IssueByID(ctx, id)
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		return news.Issue{}, store.ErrNotFound
+	} else if err != nil {
+		return news.Issue{}, err
+	}
+	_, err = s.db.ExecContext(ctx, "DELETE FROM issues WHERE id = ?", id)
+	if err != nil {
+		return news.Issue{}, err
+	}
+	return issueFromRows(i, nil), nil
+}
+
 func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStatus, sentAt time.Time) (news.Issue, error) {
 	i, err := s.sqlc.IssueUpdateStatus(ctx, sqlc.IssueUpdateStatusParams{
 		ID:     id,

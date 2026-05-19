@@ -42,11 +42,18 @@ type Item struct {
 
 //go:generate mockgen -package=mocknews -destination=../mocks/news/ItemRepository.go . ItemRepository
 
+// ItemListOptions filters for List queries.
+type ItemListOptions struct {
+	IssueID *int64
+	From    *time.Time
+	To      *time.Time
+}
+
 // ItemRepository defines the methods for interacting with the Item store.
 type ItemRepository interface {
 	Find(ctx context.Context, id int64) (Item, error)
-	ListByIssue(ctx context.Context, issueID int64) ([]Item, error)
-	Create(ctx context.Context, issueID int64, position int, item Item) (Item, error)
+	List(ctx context.Context, opts ItemListOptions) ([]Item, error)
+	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)
 	DeleteByIssue(ctx context.Context, issueID int64) error
 }
 
