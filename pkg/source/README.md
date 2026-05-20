@@ -8,7 +8,7 @@ in `internal/ingest`; this package only holds per-provider fetchers.
 
 ## 1. Register the source constant
 
-In `internal/news/sources.go`, add a constant and append it to the `Sources` slice:
+In `pkg/news/sources.go`, add a constant and append it to the `Sources` slice:
 
 ```go
 const (
@@ -24,7 +24,7 @@ var Sources = []Source{
 
 ## 2. Create the implementation
 
-Create `internal/source/foo.go`:
+Create `pkg/source/foo.go`:
 
 ```go
 package source
@@ -33,8 +33,8 @@ import (
     "context"
     "encoding/json" // or encoding/xml
 
-    "github.com/ainsleyclark/godaily/internal/ingest"
-    "github.com/ainsleyclark/godaily/internal/news"
+    "github.com/ainsleyclark/godaily/pkg/news"
+    "github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
 type Foo struct {
@@ -58,7 +58,7 @@ func (f Foo) Fetch(ctx context.Context) ([]news.Item, error) {
     if err != nil {
         return nil, err
     }
-    return ingest.TransformAll(response.Items), nil
+    return ingest.TransformAll(ctx, response.Items), nil
 }
 
 func (i fooItem) ShouldInclude() bool { return true }
@@ -103,7 +103,7 @@ Key points:
 ## 3. Add a mark/logo asset
 
 Add a square SVG (or PNG/WebP for raster brands) to `web/assets/images/marks/<source_id>.<ext>` and
-register its path in the `sourceMarkURLs` map in `internal/news/sources.go`:
+register its path in the `sourceMarkURLs` map in `pkg/news/sources.go`:
 
 ```go
 var sourceMarkURLs = map[Source]string{
@@ -121,7 +121,7 @@ Tests load the OK-case payload from `testdata/<source>.{json,xml,atom,html}` rat
 the response inline. Capture a small real response from the upstream once and commit it:
 
 ```sh
-curl -s 'https://api.example.com/feed?limit=3' -o internal/source/testdata/foo.json
+curl -s 'https://api.example.com/feed?limit=3' -o pkg/source/testdata/foo.json
 ```
 
 Trim to ~2–3 representative items so the file stays readable but still exercises multi-item parsing.
@@ -136,7 +136,7 @@ strings — those are crafted negative tests, not real API samples.
 
 ## 5. Write tests
 
-Create `internal/source/foo_test.go`. Use `httptest.NewServer` to stub the API; load the fixture
+Create `pkg/source/foo_test.go`. Use `httptest.NewServer` to stub the API; load the fixture
 once at the top of the test and (for enriching sources) `strings.ReplaceAll` the sentinel:
 
 ```go
@@ -149,7 +149,7 @@ import (
     "strings"
     "testing"
 
-    "github.com/ainsleyclark/godaily/internal/news"
+    "github.com/ainsleyclark/godaily/pkg/news"
     "github.com/stretchr/testify/assert"
     "github.com/stretchr/testify/require"
 )

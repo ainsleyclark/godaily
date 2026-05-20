@@ -7,13 +7,9 @@ Copy-paste ready content for every channel. Execute in order on launch day.
 ## Pre-Launch Checklist (D-3)
 
 - [ ] GitHub README polished (hero GIF, subscribe badge, source list, self-hosting steps)
-- [ ] Add repo topics: `golang`, `go`, `newsletter`, `ai`, `claude`, `rss-aggregator`, `self-hosted`, `email-newsletter`
-- [ ] Enable GitHub Discussions — seed "Suggest a source" thread
 - [ ] 3–5 example newsletters publicly archived on the site
 - [ ] UTM links ready (see bottom of this file)
 - [ ] Demo GIF created (600px wide, ≤5MB, 15–30s loop)
-- [ ] Hero banner created (1200×628px PNG)
-- [ ] Architecture diagram created (Excalidraw recommended)
 - [ ] Newsletter screenshot (annotated with AI scores visible)
 - [ ] Dev.to article published (D-1)
 - [ ] YouTube video uploaded unlisted (D-1)

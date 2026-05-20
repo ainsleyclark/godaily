@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Planet Golang</title>
+  <id>https://planetgolang.dev</id>
+  <updated>2026-05-20T06:00:28Z</updated>
+  <subtitle>An unopinionated collection of newest Golang articles from all around the web.</subtitle>
+  <link href="https://planetgolang.dev"></link>
+  <author>
+    <name>Tomas Urbanec</name>
+    <email>hi@planetgolang.dev</email>
+  </author>
+  <entry>
+    <title>Reading List</title>
+    <updated>2026-05-20T00:54:56Z</updated>
+    <id>tag:pliutau.com,2026-05-20:/reading-list/</id>
+    <link href="https://pliutau.com/reading-list/" rel="alternate"></link>
+    <summary type="html">This page is auto-generated from Github Actions workflow that runs every day at night and fetches the 5 latest articles from each of my favorite blogs.</summary>
+  </entry>
+  <entry>
+    <title>The select Statement</title>
+    <updated>2026-05-18T07:00:00Z</updated>
+    <id>tag:internals-for-interns.com,2026-05-18:/posts/go-runtime-select/</id>
+    <link href="https://internals-for-interns.com/posts/go-runtime-select/" rel="alternate"></link>
+    <summary type="html">In the previous article&#xA; we walked through slices, maps, and channels, and how each of them is structured under the hood. Out of those three, channels are probably the most involved one in terms of how you actually use them — and there&amp;rsquo;s one language construct that really...</summary>
+  </entry>
+  <entry>
+    <title>Testing Go CLIs with testscript</title>
+    <updated>2026-05-18T00:00:00Z</updated>
+    <id>tag:rednafi.com,2026-05-18:/go/testscript-cli/</id>
+    <link href="https://rednafi.com/go/testscript-cli/" rel="alternate"></link>
+    <summary type="html">How cmd/go&amp;#39;s script tests led me to testscript, and how to use it for CLI tests that exercise argv, stdout, stderr, exit codes, and scratch files.</summary>
+  </entry>
+  <entry>
+    <title>Why Cilium vendors every Go module in 2026</title>
+    <updated>2026-05-15T00:00:00Z</updated>
+    <id>tag:golangweekly.com,2026-05-15:/issues/601</id>
+    <link href="https://golangweekly.com/issues/601" rel="alternate"></link>
+    <summary type="html">#​601 — May 15, 2026&#xA;Read the Web Version&#xA;&#xA;&#xA;&#xA;    &#xA;    Go Weekly&#xA;&#xA;  &#xA;&#xA;&#xA;&#xA;  &#xA;  &#39;Go Fuzzing Was Missing Half the Toolkit: We Forked the Toolchain to Fix It&#39; — Go’s fuzzer lags the LibAFL-class tools Rust and C++ devs take for granted. Enter gosentry: a fork o...</summary>
+  </entry>
+  <entry>
+    <title>A GNU Emacs learning experience with text-mode hooks</title>
+    <updated>2026-05-14T17:51:54Z</updated>
+    <id>tag:utcc.utoronto.ca,2026-05-14:/~cks/space/blog/programming/EmacsTextModeHooksGotcha</id>
+    <link href="https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsTextModeHooksGotcha" rel="alternate"></link>
+    <summary type="html"></summary>
+    <author>
+      <name>cks</name>
+    </author>
+  </entry>
+  <entry>
+    <title>Moving from lsp-mode in GNU Emacs to Eglot</title>
+    <updated>2026-05-11T03:15:43Z</updated>
+    <id>tag:utcc.utoronto.ca,2026-05-11:/~cks/space/blog/programming/EmacsLspModeToEglot</id>
+    <link href="https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsLspModeToEglot" rel="alternate"></link>
+    <summary type="html"></summary>
+    <author>
+      <name>cks</name>
+    </author>
+  </entry>
+  <entry>
+    <title>Where the sun keeps shinin&#39;: the provider pattern in Rust</title>
+    <updated>2026-05-10T10:06:00Z</updated>
+    <id>tag:bitfieldconsulting.com,2026-05-10:/posts/sun-keeps-shinin</id>
+    <link href="https://bitfieldconsulting.com/posts/sun-keeps-shinin" rel="alternate"></link>
+    <summary type="html">Let’s add a provider abstraction to brighten up our Rust weather client’s &#xD;&#xA;API.</summary>
+    <author>
+      <name>John Arundel</name>
+    </author>
+  </entry>
+  <entry>
+    <title>A tour of txtar</title>
+    <updated>2026-05-10T00:00:00Z</updated>
+    <id>tag:rednafi.com,2026-05-10:/go/txtar/</id>
+    <link href="https://rednafi.com/go/txtar/" rel="alternate"></link>
+    <summary type="html">txtar is a tiny plain-text archive format Russ Cox introduced in 2018 for multi-file test fixtures. The Go Playground, cmd/go&amp;#39;s script tests, gopls&amp;#39;s marker tests, and rsc.io/rf all reach for it.</summary>
+  </entry>
+  <entry>
+    <title>Notes on using GNU Emacs&#39; Tramp system in an unusual shell environment</title>
+    <updated>2026-05-09T02:09:46Z</updated>
+    <id>tag:utcc.utoronto.ca,2026-05-09:/~cks/space/blog/programming/EmacsTrampNotes</id>
+    <link href="https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsTrampNotes" rel="alternate"></link>
+    <summary type="html"></summary>
+    <author>
+      <name>cks</name>
+    </author>
+  </entry>
+  <entry>
+    <title>Type-safe slogging</title>
+    <updated>2026-05-09T00:00:00Z</updated>
+    <id>tag:rednafi.com,2026-05-09:/go/typesafe-slogging/</id>
+    <link href="https://rednafi.com/go/typesafe-slogging/" rel="alternate"></link>
+    <summary type="html">The default slog API is loose enough that a careless line ships broken JSON to production. Pin it down with Attr constructors, LogAttrs, a context-borne logger, and sloglint.</summary>
+  </entry>
+</feed>
