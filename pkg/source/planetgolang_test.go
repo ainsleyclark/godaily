@@ -80,6 +80,8 @@ func TestPlanetGolang_Fetch(t *testing.T) {
 					Score:     0.5, // no signal: weight 1.0 * constant 0.5
 					Published: time.Date(2026, 5, 10, 9, 0, 0, 0, time.UTC),
 				}, items[0])
+				// Second entry has no <author>; Author should be nil, not an empty struct.
+				assert.Nil(t, items[1].Author)
 			},
 		},
 	}

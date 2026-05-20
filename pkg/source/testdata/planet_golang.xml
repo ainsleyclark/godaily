@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Planet Golang</title>
-  <link href="https://www.planetgolang.dev/" rel="alternate"/>
+  <id>https://planetgolang.dev</id>
+  <updated>2026-05-20T06:00:28Z</updated>
   <link href="https://www.planetgolang.dev/index.xml" rel="self"/>
-  <id>https://www.planetgolang.dev/</id>
-  <updated>2026-05-18T09:00:00Z</updated>
+  <link href="https://planetgolang.dev"></link>
   <entry>
-    <title>Understanding Go's Memory Model</title>
-    <link href="__SERVER_URL__" rel="alternate"/>
-    <id>https://example.com/go-memory-model</id>
-    <published>2026-05-10T09:00:00Z</published>
+    <title>Understanding Go&#39;s Memory Model</title>
     <updated>2026-05-10T09:00:00Z</updated>
+    <id>tag:example.com,2026-05-10:/go-memory-model</id>
+    <link href="__SERVER_URL__" rel="alternate"></link>
+    <summary type="html">A deep dive into how Go manages memory and goroutine synchronisation.</summary>
     <author>
       <name>Alex Writer</name>
     </author>
-    <summary>A deep dive into how Go manages memory and goroutine synchronisation.</summary>
   </entry>
   <entry>
     <title>Building REST APIs with Go 1.26</title>
-    <link href="__SERVER_URL__" rel="alternate"/>
-    <id>https://example.com/rest-apis-go-126</id>
-    <published>2026-05-09T14:30:00Z</published>
     <updated>2026-05-09T14:30:00Z</updated>
-    <author>
-      <name>Jordan Dev</name>
-    </author>
-    <summary>Practical patterns for building efficient REST APIs using the latest Go release.</summary>
+    <id>tag:example.com,2026-05-09:/rest-apis-go-126</id>
+    <link href="__SERVER_URL__" rel="alternate"></link>
+    <summary type="html">Practical patterns for building efficient REST APIs using the latest Go release.</summary>
   </entry>
 </feed>

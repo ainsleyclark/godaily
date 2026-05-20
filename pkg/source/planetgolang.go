@@ -71,14 +71,21 @@ func (e planetGolangEntry) url() string {
 }
 
 func (e planetGolangEntry) Transform() news.Item {
-	published, _ := time.Parse(time.RFC3339, e.Published)
+	// The feed omits <published> and uses <updated> as the only date field.
+	dateStr := e.Published
+	if dateStr == "" {
+		dateStr = e.Updated
+	}
+	published, _ := time.Parse(time.RFC3339, dateStr)
+	var author *news.Author
+	if e.Author.Name != "" {
+		author = &news.Author{Name: e.Author.Name}
+	}
 	return news.Item{
-		Source: news.SourcePlanetGolang,
-		Title:  e.Title,
-		URL:    e.url(),
-		Author: &news.Author{
-			Name: e.Author.Name,
-		},
+		Source:    news.SourcePlanetGolang,
+		Title:     e.Title,
+		URL:       e.url(),
+		Author:    author,
 		Snippet:   e.Summary,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourcePlanetGolang, news.TagArticle, 0, false),
@@ -88,15 +95,16 @@ func (e planetGolangEntry) Transform() news.Item {
 
 type (
 	planetGolangFeed struct {
-		XMLName xml.Name             `xml:"http://www.w3.org/2005/Atom feed"`
-		Entries []planetGolangEntry  `xml:"http://www.w3.org/2005/Atom entry"`
+		XMLName xml.Name            `xml:"http://www.w3.org/2005/Atom feed"`
+		Entries []planetGolangEntry `xml:"http://www.w3.org/2005/Atom entry"`
 	}
 	planetGolangEntry struct {
-		Title     string               `xml:"http://www.w3.org/2005/Atom title"`
-		Links     []planetGolangLink   `xml:"http://www.w3.org/2005/Atom link"`
-		Author    planetGolangAuthor   `xml:"http://www.w3.org/2005/Atom author"`
-		Published string               `xml:"http://www.w3.org/2005/Atom published"`
-		Summary   string               `xml:"http://www.w3.org/2005/Atom summary"`
+		Title     string             `xml:"http://www.w3.org/2005/Atom title"`
+		Links     []planetGolangLink `xml:"http://www.w3.org/2005/Atom link"`
+		Author    planetGolangAuthor `xml:"http://www.w3.org/2005/Atom author"`
+		Published string             `xml:"http://www.w3.org/2005/Atom published"`
+		Updated   string             `xml:"http://www.w3.org/2005/Atom updated"`
+		Summary   string             `xml:"http://www.w3.org/2005/Atom summary"`
 	}
 	planetGolangLink struct {
 		Href string `xml:"href,attr"`
