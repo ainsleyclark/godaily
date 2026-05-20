@@ -106,7 +106,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 
-	aiClient := ai.New(config)
+	aiClient := ai.New(config, slackClient)
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
