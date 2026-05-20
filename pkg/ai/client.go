@@ -23,7 +23,6 @@ import (
 	"context"
 	"log/slog"
 	"strings"
-	"sync"
 
 	"github.com/ainsleyclark/godaily/pkg/ai/anthropic"
 	"github.com/ainsleyclark/godaily/pkg/ai/gemini"
@@ -56,36 +55,22 @@ func New(cfg env.Config, n notifier) *Client {
 	return &Client{primary: primary, fallback: fallback, notifier: n}
 }
 
-// Prompt calls the primary (Anthropic) and fallback (Gemini) prompters in
-// parallel, posts a side-by-side comparison of their output to Slack, then
-// returns the primary's result. The fallback's result is used only when the
-// primary fails.
+// Prompt calls the primary (Anthropic) and fallback (Gemini) prompters, posts
+// a side-by-side comparison of their output to Slack, then returns the
+// primary's result. The fallback's result is used only when the primary fails.
 //
 // TODO: the dual-call comparison is temporary, kept while evaluating whether
 // Gemini can replace Anthropic. Drop it once a single provider is chosen.
 func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
+	primaryRaw, primaryErr := c.primary.Prompt(ctx, system, user)
+
 	var (
-		wg          sync.WaitGroup
-		primaryRaw  []byte
-		primaryErr  error
 		fallbackRaw []byte
 		fallbackErr error
 	)
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		primaryRaw, primaryErr = c.primary.Prompt(ctx, system, user)
-	}()
-
 	if c.fallback != nil {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, system, user)
-		}()
+		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, system, user)
 	}
-	wg.Wait()
 
 	c.notifyComparison(ctx, primaryRaw, primaryErr, fallbackRaw, fallbackErr)
 
