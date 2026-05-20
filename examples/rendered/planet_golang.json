@@ -1,0 +1,44 @@
+[
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Understanding Go's Memory Model",
+		"url": "https://example.com/go-memory-model",
+		"author": {
+			"name": "Alex Writer"
+		},
+		"snippet": "A deep dive into how Go manages memory and goroutine synchronisation.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-18T09:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Building REST APIs with Go 1.26",
+		"url": "https://example.com/rest-apis-go-126",
+		"author": {
+			"name": "Jordan Dev"
+		},
+		"snippet": "Practical patterns for building efficient REST APIs using the latest Go release.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-17T14:30:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Go generics in practice: lessons from a year of production use",
+		"url": "https://example.com/go-generics-production",
+		"author": {
+			"name": "Sam Engineer"
+		},
+		"snippet": "What we learned after migrating a large codebase to use generics in Go 1.21 and beyond.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-05-16T11:00:00Z"
+	}
+]
