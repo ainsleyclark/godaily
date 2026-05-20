@@ -21,6 +21,8 @@ package ai
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log/slog"
 	"strings"
 
@@ -98,7 +100,7 @@ func (c *Client) notifyComparison(ctx context.Context, primaryRaw []byte, primar
 	if primaryErr != nil {
 		b.WriteString("error: " + primaryErr.Error())
 	} else {
-		b.Write(primaryRaw)
+		b.WriteString(renderForSlack(primaryRaw))
 	}
 	b.WriteString("\n\nGemini (fallback):\n")
 	switch {
@@ -107,7 +109,32 @@ func (c *Client) notifyComparison(ctx context.Context, primaryRaw []byte, primar
 	case fallbackErr != nil:
 		b.WriteString("error: " + fallbackErr.Error())
 	default:
-		b.Write(fallbackRaw)
+		b.WriteString(renderForSlack(fallbackRaw))
 	}
 	c.notifier.MustSend(ctx, b.String())
+}
+
+// renderForSlack extracts human-readable string fields from a JSON AI response.
+// It surfaces the known output fields (post, title, intro) in a readable format
+// and falls back to the raw string if the bytes are not valid JSON.
+func renderForSlack(raw []byte) string {
+	var m map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &m); err != nil {
+		return string(raw)
+	}
+	var b strings.Builder
+	for _, key := range []string{"title", "intro", "post"} {
+		v, ok := m[key]
+		if !ok {
+			continue
+		}
+		var s string
+		if err := json.Unmarshal(v, &s); err == nil {
+			fmt.Fprintf(&b, "*%s:* %s\n", key, s)
+		}
+	}
+	if b.Len() == 0 {
+		return string(raw)
+	}
+	return strings.TrimRight(b.String(), "\n")
 }

@@ -29,6 +29,8 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -36,6 +38,8 @@ import (
 const (
 	geminiModel      = "gemini-2.0-flash"
 	geminiDefaultURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+	maxRetries       = 3
+	baseRetryDelay   = time.Second
 )
 
 // Client satisfies ai.Prompter using Google's Gemini REST API via net/http.
@@ -70,20 +74,46 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 		},
 	})
 	url := c.baseURL + "?key=" + c.apiKey
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(reqBody))
-	if err != nil {
-		return nil, errors.Wrap(err, "gemini: building request")
-	}
-	req.Header.Set("Content-Type", "application/json")
 
 	slog.InfoContext(ctx, "Calling Gemini fallback", "model", geminiModel)
 
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, errors.Wrap(err, "gemini: request")
+	var (
+		resp  *http.Response
+		body  []byte
+		delay = baseRetryDelay
+	)
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		r, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(reqBody))
+		if err != nil {
+			return nil, errors.Wrap(err, "gemini: building request")
+		}
+		r.Header.Set("Content-Type", "application/json")
+		resp, err = c.http.Do(r)
+		if err != nil {
+			return nil, errors.Wrap(err, "gemini: request")
+		}
+		body, _ = io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if resp.StatusCode != http.StatusTooManyRequests {
+			break
+		}
+		if attempt == maxRetries {
+			break
+		}
+		wait := delay
+		if ra := resp.Header.Get("Retry-After"); ra != "" {
+			if secs, err := strconv.Atoi(ra); err == nil {
+				wait = time.Duration(secs) * time.Second
+			}
+		}
+		slog.WarnContext(ctx, "Gemini rate limited, retrying", "attempt", attempt+1, "wait", wait)
+		select {
+		case <-time.After(wait):
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+		delay *= 2
 	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("gemini: HTTP %d: %s", resp.StatusCode, string(body))
 	}
