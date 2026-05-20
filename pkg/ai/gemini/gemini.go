@@ -31,6 +31,8 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+
+	"github.com/ainsleyclark/godaily/pkg/gohttp"
 )
 
 const (
@@ -52,7 +54,7 @@ func New(apiKey string) *Client {
 	return &Client{
 		apiKey:  apiKey,
 		baseURL: geminiDefaultURL,
-		http:    http.DefaultClient,
+		http:    gohttp.New(gohttp.WithRetryMethods(http.MethodPost)),
 	}
 }
 
