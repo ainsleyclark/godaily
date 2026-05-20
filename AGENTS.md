@@ -9,31 +9,34 @@ them to Anthropic Claude for summarisation and ranking; renders the result
 into an email; and ships it via Resend.
 
 It's a single static binary configured entirely through environment variables,
-designed to run unattended on a GitHub Actions cron (weekday mornings, 08:00
-London).
+deployed to Vercel and run unattended on Vercel cron jobs (weekday mornings).
 
 This file sits next to `README.md`. The README is for users; this file is for
 contributors and agents working inside the repo.
 
 ## Project Overview
 
-`godaily` is a single-binary Go CLI driven by environment variables and run on
-a GitHub Actions schedule (weekday mornings, 08:00 London). The pipeline is:
+`godaily` is a single-binary Go CLI driven by environment variables. The
+pipeline runs as Vercel cron jobs (the `api/` serverless functions) and is
+also runnable locally via the CLI. The pipeline is:
 
-1. **Fetch** — `internal/source` pulls items from each provider (Hacker News,
+1. **Fetch** — `pkg/source` pulls items from each provider (Hacker News,
    Reddit, Lobsters, Dev.to, Medium, GitHub trending, YouTube, golangbridge,
    godevblog).
-2. **Score / register** — `internal/news` defines the shared item model,
+2. **Score / register** — `pkg/domain/news` defines the shared item model,
    provider registry and scoring/priority logic.
-3. **Synthesise** — `internal/synth` calls Anthropic Claude to summarise and
-   rank items. Style guidance lives in `internal/synth/style.md`.
-4. **Collect** — `internal/digest.Aggregator.Collect` fetches, scores,
-   renders and persists the digest as a draft issue. Templates are in
-   `internal/digest/email.html` and `email.txt`.
-5. **Send** — `internal/digest.Aggregator.Send` loads the rendered draft and
-   ships it via `internal/email` (Resend). Updates the issue status to
+3. **Synthesise** — `pkg/services/digest` calls an AI provider (`pkg/ai`,
+   Anthropic Claude or Gemini) to summarise and rank items. Prompts live in
+   `pkg/services/digest/prompts`; style guidance is
+   `pkg/services/digest/prompts/style.md`.
+4. **Collect** — `pkg/services/digest.Aggregator.Collect` fetches, scores,
+   renders and persists the digest as a draft issue. Email templates are in
+   `pkg/templates` (`email.html`, `email.txt`).
+5. **Send** — `pkg/services/digest.Aggregator.Send` loads the rendered draft
+   and ships it via `pkg/gateway/email` (Resend). Updates the issue status to
    `"sent"` or `"error"` in the database.
-6. **Entry point** — `cmd/godaily/main.go` wires the CLI (`urfave/cli/v3`).
+6. **Entry point** — `main.go` wires the CLI (`urfave/cli/v3`); commands live
+   in `pkg/cmd`. Serverless entry points live in `api/`.
 
 `cmd/gen-examples` regenerates the fixtures under `examples/`.
 
@@ -41,19 +44,27 @@ a GitHub Actions schedule (weekday mornings, 08:00 London). The pipeline is:
 
 ```
 godaily/
+├── main.go              # CLI entry point
+├── api/                 # Vercel serverless functions (cron + HTTP endpoints)
 ├── cmd/
-│   ├── godaily/         # CLI entry point
 │   └── gen-examples/    # Example regenerator
-├── internal/
-│   ├── digest/          # Collect + Send orchestration; email templates
+├── pkg/
+│   ├── ai/              # AI provider clients (Anthropic, Gemini)
+│   ├── api/             # Shared HTTP helpers (handler wrapper, auth, responses)
+│   ├── cmd/             # CLI command definitions (urfave/cli/v3)
 │   ├── db/              # *sql.DB lifecycle + embedded goose migrations
-│   ├── email/           # Resend client
-│   ├── news/            # Item model, registry, scoring
+│   ├── domain/          # Domain models + repository interfaces
+│   │   └── news/        # Item/Issue/Subscriber/SocialPost models, registry, scoring
+│   ├── env/             # Environment config
+│   ├── gateway/         # Outbound integrations (email/Resend, slack, social, hook)
+│   ├── mocks/           # Generated test mocks
+│   ├── services/        # Orchestration (digest, social, subscriber)
 │   ├── source/          # Per-provider fetchers
 │   ├── store/           # sqlc-generated queries + hand-rolled domain logic
-│   └── synth/           # Claude synthesis (client, prompt, suggestions)
+│   └── templates/       # Embedded email/HTML templates
 ├── examples/            # Sample raw + rendered digests
-└── .github/workflows/   # Daily cron + CI
+├── web/                 # Public website (templ + esbuild)
+└── .github/workflows/   # CI, DB migrate + backup
 ```
 
 ## Build, Test & Lint
@@ -74,7 +85,7 @@ Use the `Makefile` targets — don't reinvent commands.
 | `make cover`             | Open the HTML coverage report.                             |
 | `make lic`               | Re-stamp MIT license headers on `.go` files.               |
 | `make all`               | `lic` + `format` + `lint` + `test`.                        |
-| `make sqlc`              | Regenerate query code from `internal/store/*.sql`.         |
+| `make sqlc`              | Regenerate query code from `pkg/store/*/query.sql`.        |
 | `make migrate-up`        | Apply pending migrations against `TURSO_URL`.              |
 | `make migrate-down`      | Roll back the most recent migration.                       |
 
@@ -89,12 +100,20 @@ Reads env vars; `.env` in the working directory is auto-loaded.
 |----------------------|--------------------------------------------------|
 | `RESEND_TOKEN`       | API token for Resend (digest delivery).          |
 | `ANTHROPIC_API_KEY`  | Claude API key for synthesis.                    |
+| `GEMINI_API_KEY`     | Optional Gemini API key (alternate AI provider). |
 | `YOUTUBE_API_KEY`    | YouTube Data API key.                            |
 | `GITHUB_TOKEN`       | GitHub API token (trending source).              |
 | `SCRAPER_API_KEY`    | Optional ScraperAPI key for routing Reddit.      |
 | `EMAIL_SEND_ADDRESS` | Recipient address for the digest.                |
 | `TURSO_URL`          | libsql/Turso URL, or `file:./godaily.db` locally.|
 | `TURSO_AUTH_TOKEN`   | Turso auth token (omit for `file:` URLs).        |
+| `API_SECRET`         | Bearer token guarding cron/internal API routes.  |
+| `SLACK_TOKEN`        | Optional Slack token for run notifications.      |
+| `SLACK_CHANNEL`      | Optional Slack channel for run notifications.    |
+
+Optional integration vars also exist for Vercel deploy hooks, BetterStack
+heartbeats and the social platforms (Bluesky, LinkedIn, Mastodon) — see
+`pkg/env/env.go` for the full list.
 
 Copy `.env.example` to `.env` for local dev. Never commit `.env`.
 
@@ -521,14 +540,15 @@ system boundary — Terraform execution, encryption providers, file I/O
 wrappers, etc.
 
 - Prefer fakes or real in-memory types where possible.
-- Place generated mocks under `internal/mocks/`, prefixed `Mock`
-  (e.g. `MockInfraManager`).
+- Place generated mocks under `pkg/mocks/`, prefixed `Mock`
+  (e.g. `MockSubscriberRepository`).
 - Clean up with `defer ctrl.Finish()`; avoid over-mocking.
 - Use [`gomock`](https://pkg.go.dev/go.uber.org/mock/gomock).
-- Generate into `internal/mocks/`:
+- Mocks are declared with a `//go:generate` directive next to the interface
+  and refreshed by `make generate`, e.g.:
 
-```bash
-go tool go.uber.org/mock/mockgen -source=gen.go -destination ../mocks/fs.go -package=mocks
+```go
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/IssueRepository.go . IssueRepository
 ```
 
 ### Setup Functions
@@ -570,23 +590,23 @@ func TestApp_OrderedCommands(t *testing.T) {
 
 ## Database
 
-Stage 1 introduced two packages:
+Two packages own persistence:
 
-- `internal/db` owns the `*sql.DB` lifecycle. `db.New(ctx, url, token)` opens
+- `pkg/db` owns the `*sql.DB` lifecycle. `db.New(ctx, url, token)` opens
   a connection — Turso URLs (`libsql://`, `https://`, `wss://`) go through
   the `tursodatabase/libsql-client-go` driver; `file:` URLs use the pure-Go
-  `modernc.org/sqlite` driver. `db.Migrate` / `db.Down` apply embedded
-  `goose` migrations from `internal/db/migrations/`.
-- `internal/store` owns typed query access. `*.sql` files are sqlc input,
-  `*.sql.go` files are sqlc output (regenerate with `make sqlc` or
-  `go generate ./internal/store/...`). Hand-written `*.go` files only
-  appear when there is logic beyond a single query — e.g.
-  `subscribers.go` generates the confirm/unsubscribe tokens before
-  delegating to the generated `CreateSubscriber`.
+  `modernc.org/sqlite` driver. `db.Up` / `db.Down` apply embedded
+  `goose` migrations from `pkg/db/migrations/`.
+- `pkg/store` owns typed query access, one sub-package per entity
+  (`issues`, `items`, `subscribers`, `socialposts`). Each has a `query.sql`
+  (sqlc input) and a `store.go` (hand-written, implements the matching
+  `pkg/domain/news` repository interface and maps rows to domain models).
+  sqlc output lands in `pkg/store/internal/sqlc/` — regenerate with
+  `make sqlc`.
 
 ### Adding a migration
 
-1. Create `internal/db/migrations/000N_name.sql` with `-- +goose Up` and
+1. Create `pkg/db/migrations/000N_name.sql` with `-- +goose Up` and
    `-- +goose Down` blocks.
 2. If it changes the schema shape used by queries, run `make sqlc` so the
    generated models stay in sync.
@@ -599,16 +619,16 @@ Stage 1 introduced two packages:
   `.env.example`, fixtures or tests.
 - **Examples are fixtures, not docs.** `examples/` is regenerated by
   `make generate` / `cmd/gen-examples` — edit the generator, not the output.
-- **Synthesis style** lives in `internal/synth/style.md`. Treat it as the
-  source of truth for digest tone — change it there, not in prompt strings
-  scattered across code.
-- **Digest orchestration** lives in `internal/digest`. `Collect` gathers and
-  persists; `Send` dispatches the stored draft. The two are wired together by
-  `godaily run` and separated by `godaily collect` / `godaily send`.
-- **Source providers** (`internal/source/*.go`) follow a common shape: a
+- **Synthesis style** lives in `pkg/services/digest/prompts/style.md`. Treat
+  it as the source of truth for digest tone — change it there, not in prompt
+  strings scattered across code.
+- **Digest orchestration** lives in `pkg/services/digest`. `Collect` gathers
+  and persists; `Send` dispatches the stored draft. The two are wired together
+  by `godaily run` and separated by `godaily collect` / `godaily send`.
+- **Source providers** (`pkg/source/*.go`) follow a common shape: a
   fetcher + a transform step. Add new sources by mirroring an existing one
-  and wiring through `internal/news/registry.go` and `sources.go`.
-- **Integration tests** in `internal/source/source_integration_test.go` hit
+  and wiring through `pkg/domain/news/registry.go` and `sources.go`.
+- **Integration tests** in `pkg/source/source_integration_test.go` hit
   the network. Skip via the default `make test`; run explicitly with
   `make test-integration`.
 - **License headers** are managed by `make lic` (`addlicense`). Don't write
