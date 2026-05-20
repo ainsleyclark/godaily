@@ -86,12 +86,23 @@ adds a **read-back** step.
 - Run it on a new Vercel cron (e.g. daily), re-fetching posts from the
   last N days so late engagement is captured.
 
-**Tradeoff:** platform parity is uneven. Bluesky (`getPostThread`) and
-Mastodon (status endpoint) expose like/repost counts on open APIs —
-easy. LinkedIn only exposes share statistics for **organization-page**
-posts, not personal-profile posts. Recommendation: ship Bluesky +
-Mastodon first; treat LinkedIn as best-effort and only viable if GoDaily
-posts from a company page.
+**All three platforms are in scope.** GoDaily posts daily to Bluesky,
+Mastodon, and LinkedIn, and the LinkedIn client publishes to an
+**organisation page** (`pkg/gateway/social/linkedin/linkedin.go` —
+`urn:li:organization` author, `w_organization_social` scope). That
+matters: org-page posts *do* expose engagement, so LinkedIn stats are
+reachable — unlike personal-profile posts, which are not.
+
+- **Bluesky** (`getPostThread`) and **Mastodon** (status endpoint)
+  expose like/repost/reply counts on open APIs — straightforward.
+- **LinkedIn** read-back needs the token to also carry
+  `r_organization_social`, then uses `organizationalEntityShareStatistics`
+  (impressions, clicks, engagement rate) plus the Social Actions API
+  (likes/comments) for the org's shares.
+
+**Tradeoff:** LinkedIn's API versions retire ~yearly (see the
+`LINKEDIN_API_VERSION` note in the client), so the read-back code needs
+the same version-pinning discipline as the posting code.
 
 ## Phase 3 — Experiments ledger
 
@@ -116,7 +127,9 @@ The piece that makes the loop compound rather than repeat itself.
   — so the Routine's environment never needs DB credentials.
 - The same command can post a plain weekly metrics snapshot to Slack via
   the existing `pkg/gateway/slack` client — a no-AI sanity baseline,
-  useful even before Phase 5 exists.
+  useful even before Phase 5 exists. (This deterministic snapshot runs as
+  a cron job, so it uses the Go Slack gateway directly; the *agentic*
+  suggestion in Phase 5 posts differently — see below.)
 
 ## Phase 5 — The growth Routine (the loop itself)
 
@@ -134,17 +147,19 @@ on a schedule without anyone's machine being on. Scheduled weekly.
 4. Open a **draft** PR. **Do not merge.**
 5. Post a Slack message: a one-paragraph suggestion + the PR link.
 
-**The Slack step — two options:**
+**The Slack step — via the Slack MCP connector.** The Routine session
+posts the suggestion and PR link to Slack through the Slack MCP
+connector. This keeps the message inside the agent's session, so a reply
+in the Slack thread can feed straight back into the refinement loop.
 
-- **Option A (recommended): reuse the existing Slack gateway.** Add a
-  small `godaily growth-notify --pr <url> --summary "..."` subcommand
-  that posts through `pkg/gateway/slack`. The Routine knows the PR URL
-  once it creates the PR, so it just calls this command. No new
-  integration to configure; consistent with how GoDaily already Slacks.
-- **Option B: the Slack MCP connector.** The Routine session posts to
-  Slack via an MCP connector. More flexible (threaded replies) but
-  requires linking a Slack account and adding the connector to the
-  Routine config.
+Setup required once: link a Slack account to Claude Code and add the
+Slack connector to the Routine's configuration. The connector's traffic
+is routed through Anthropic's servers, so no network-allowlist change is
+needed in the Routine environment.
+
+(The existing `pkg/gateway/slack` Go client is still used for the
+deterministic Phase 4 snapshot — that runs as a cron job outside any
+agent session and so can't use an MCP connector.)
 
 **Refinement via chat:** a Routine run *is* a Claude Code session, and
 the session is resumable. Replying continues that same session — you
@@ -185,14 +200,17 @@ plugs in afterward as an additional data source feeding the same
 `growth-digest` report. Ship 1, 3, 4, 5 first; add 2 once the loop has
 proven it produces useful PRs.
 
-## Open questions to resolve before building
+## Decisions
 
-1. **Autonomy:** always human-merge (the default in this plan), or
-   eventually let very low-risk changes — pure copy tweaks — become
-   auto-merge-eligible once the loop has a track record?
-2. **Slack delivery:** Option A (existing gateway via CLI) or Option B
-   (MCP connector)?
-3. **LinkedIn:** does GoDaily post from a personal profile or a company
-   page? This decides whether LinkedIn stats are reachable at all.
-4. **Cadence:** weekly, or fortnightly to give each experiment more time
-   to accumulate measurable data?
+These were settled before the doc was finalised:
+
+1. **Autonomy — always human-merge.** No auto-merge tier, ever. Every
+   change, however small, is reviewed and merged by a person.
+2. **Slack delivery — the Slack MCP connector.** Keeps the suggestion
+   inside the agent's session so thread replies feed the refinement
+   loop. Requires linking a Slack account and adding the connector to
+   the Routine config (one-time setup).
+3. **LinkedIn — in scope.** GoDaily posts to a LinkedIn organisation
+   page, so share statistics are reachable; all three social platforms
+   feed the loop.
+4. **Cadence — weekly.** One proposal per week.
