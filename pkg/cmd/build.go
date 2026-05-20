@@ -21,50 +21,18 @@ package cmd
 
 import (
 	"context"
-	"log/slog"
-	"os"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
 	"github.com/urfave/cli/v3"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
+func buildCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "build",
+		Usage: "Build the daily digest issue from collected items.",
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			return a.Runner.Build(ctx, time.Now().UTC())
 		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
 	}
 }
