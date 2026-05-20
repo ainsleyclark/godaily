@@ -28,6 +28,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
@@ -117,13 +118,13 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 		Tag:              string(item.Tag),
 		Title:            item.Title,
 		Url:              item.URL,
-		OriginalUrl:      store.NullString(item.OriginalURL),
+		OriginalUrl:      dbtypes.NullString(item.OriginalURL),
 		AuthorName:       name,
 		AuthorUsername:   username,
 		AuthorAvatarUrl:  avatar,
 		AuthorProfileUrl: profile,
 		Score:            sql.NullFloat64{Float64: item.Score, Valid: true},
-		Summary:          store.NullString(item.Snippet),
+		Summary:          dbtypes.NullString(item.Snippet),
 		Position:         int64(position),
 		Published:        published,
 	})
@@ -174,5 +175,5 @@ func authorFields(a *news.Author) (name, username, avatar, profile sql.NullStrin
 	if a == nil {
 		return
 	}
-	return store.NullString(a.Name), store.NullString(a.Username), store.NullString(a.AvatarURL), store.NullString(a.ProfileURL)
+	return dbtypes.NullString(a.Name), dbtypes.NullString(a.Username), dbtypes.NullString(a.AvatarURL), dbtypes.NullString(a.ProfileURL)
 }

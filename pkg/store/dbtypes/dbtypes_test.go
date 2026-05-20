@@ -17,14 +17,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package store
+package dbtypes_test
 
-import "database/sql"
+import (
+	"database/sql"
+	"testing"
 
-// NullString converts s to a sql.NullString, treating empty string as NULL.
-func NullString(s string) sql.NullString {
-	if s == "" {
-		return sql.NullString{}
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
+)
+
+func TestNullString(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want sql.NullString
+	}{
+		"Empty":     {in: "", want: sql.NullString{}},
+		"Non-empty": {in: "hello", want: sql.NullString{String: "hello", Valid: true}},
+		"Spaces":    {in: "  ", want: sql.NullString{String: "  ", Valid: true}},
 	}
-	return sql.NullString{String: s, Valid: true}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tc.want, dbtypes.NullString(tc.in))
+		})
+	}
 }

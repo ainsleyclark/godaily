@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
@@ -68,7 +68,7 @@ func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, 
 		IssueID:  p.IssueID,
 		Platform: p.Platform,
 		Text:     p.Text,
-		PostUrl:  store.NullString(p.PostURL),
+		PostUrl:  dbtypes.NullString(p.PostURL),
 		PostedAt: postedAt,
 	})
 	if err != nil {

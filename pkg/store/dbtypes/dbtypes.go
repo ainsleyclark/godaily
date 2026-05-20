@@ -17,33 +17,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package store_test
+// Package dbtypes provides helpers for converting Go values to database/sql types.
+package dbtypes
 
-import (
-	"database/sql"
-	"testing"
+import "database/sql"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/ainsleyclark/godaily/pkg/store"
-)
-
-func TestNullString(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		in   string
-		want sql.NullString
-	}{
-		"Empty":     {in: "", want: sql.NullString{}},
-		"Non-empty": {in: "hello", want: sql.NullString{String: "hello", Valid: true}},
-		"Spaces":    {in: "  ", want: sql.NullString{String: "  ", Valid: true}},
+// NullString converts s to a sql.NullString, treating empty string as NULL.
+func NullString(s string) sql.NullString {
+	if s == "" {
+		return sql.NullString{}
 	}
-
-	for name, tc := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, tc.want, store.NullString(tc.in))
-		})
-	}
+	return sql.NullString{String: s, Valid: true}
 }
