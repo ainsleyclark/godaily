@@ -360,6 +360,98 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID sql.NullInt64) ([
 	return items, nil
 }
 
+const socialPostCreate = `-- name: SocialPostCreate :one
+INSERT INTO social_posts (
+    issue_id, platform, text, post_url, posted_at
+) VALUES (
+    ?, ?, ?, ?, ?
+)
+RETURNING id, issue_id, platform, text, post_url, posted_at
+`
+
+type SocialPostCreateParams struct {
+	IssueID  int64          `json:"issue_id"`
+	Platform string         `json:"platform"`
+	Text     string         `json:"text"`
+	PostUrl  sql.NullString `json:"post_url"`
+	PostedAt time.Time      `json:"posted_at"`
+}
+
+func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreateParams) (SocialPost, error) {
+	row := q.db.QueryRowContext(ctx, socialPostCreate,
+		arg.IssueID,
+		arg.Platform,
+		arg.Text,
+		arg.PostUrl,
+		arg.PostedAt,
+	)
+	var i SocialPost
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.Platform,
+		&i.Text,
+		&i.PostUrl,
+		&i.PostedAt,
+	)
+	return i, err
+}
+
+const socialPostExists = `-- name: SocialPostExists :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE issue_id = ? AND platform = ?
+) AS exists_flag
+`
+
+type SocialPostExistsParams struct {
+	IssueID  int64  `json:"issue_id"`
+	Platform string `json:"platform"`
+}
+
+func (q *Queries) SocialPostExists(ctx context.Context, arg SocialPostExistsParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, socialPostExists, arg.IssueID, arg.Platform)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
+const socialPostListByIssue = `-- name: SocialPostListByIssue :many
+SELECT id, issue_id, platform, text, post_url, posted_at FROM social_posts
+WHERE issue_id = ?
+ORDER BY posted_at ASC
+`
+
+func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]SocialPost, error) {
+	rows, err := q.db.QueryContext(ctx, socialPostListByIssue, issueID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SocialPost{}
+	for rows.Next() {
+		var i SocialPost
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Platform,
+			&i.Text,
+			&i.PostUrl,
+			&i.PostedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
 SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE confirm_token = ? LIMIT 1
 `

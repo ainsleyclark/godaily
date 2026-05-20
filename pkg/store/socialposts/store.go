@@ -20,9 +20,6 @@
 // Package socialposts persists social media posts that have been published
 // for a given digest issue. It provides idempotency for the social cron via
 // HasPosted, and an audit log via ListForIssue.
-//
-// This store is hand-written rather than generated to keep the small,
-// social-specific schema isolated from the larger sqlc-managed surface.
 package socialposts
 
 import (
@@ -31,40 +28,32 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
 // New creates a new social posts Store.
 func New(db *sql.DB) *Store {
-	return &Store{db: db}
+	return &Store{
+		sqlc: sqlc.New(db),
+		db:   db,
+	}
 }
 
 // Store provides methods for interacting with social_posts in the database.
 type Store struct {
-	db *sql.DB
+	sqlc *sqlc.Queries
+	db   *sql.DB
 }
 
 var _ news.SocialPostRepository = (*Store)(nil)
 
-const hasPostedSQL = `
-SELECT EXISTS (
-    SELECT 1 FROM social_posts
-    WHERE issue_id = ? AND platform = ?
-)`
-
 // HasPosted reports whether a row exists for the given issue and platform.
 func (s Store) HasPosted(ctx context.Context, issueID int64, platform string) (bool, error) {
-	var exists bool
-	err := s.db.QueryRowContext(ctx, hasPostedSQL, issueID, platform).Scan(&exists)
-	if err != nil {
-		return false, err
-	}
-	return exists, nil
+	return s.sqlc.SocialPostExists(ctx, sqlc.SocialPostExistsParams{
+		IssueID:  issueID,
+		Platform: platform,
+	})
 }
-
-const createSQL = `
-INSERT INTO social_posts (issue_id, platform, text, post_url, posted_at)
-VALUES (?, ?, ?, ?, ?)
-RETURNING id, issue_id, platform, text, post_url, posted_at`
 
 // Create persists a new social post record. When PostedAt is the zero value
 // it defaults to time.Now().UTC() so callers don't need to set it.
@@ -74,55 +63,46 @@ func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, 
 		postedAt = time.Now().UTC()
 	}
 
-	var postURLArg any
-	if p.PostURL == "" {
-		postURLArg = nil
-	} else {
-		postURLArg = p.PostURL
-	}
-
-	var (
-		out     news.SocialPost
-		postURL sql.NullString
-	)
-	err := s.db.QueryRowContext(ctx, createSQL,
-		p.IssueID, p.Platform, p.Text, postURLArg, postedAt,
-	).Scan(&out.ID, &out.IssueID, &out.Platform, &out.Text, &postURL, &out.PostedAt)
+	row, err := s.sqlc.SocialPostCreate(ctx, sqlc.SocialPostCreateParams{
+		IssueID:  p.IssueID,
+		Platform: p.Platform,
+		Text:     p.Text,
+		PostUrl:  nullString(p.PostURL),
+		PostedAt: postedAt,
+	})
 	if err != nil {
 		return news.SocialPost{}, err
 	}
-	out.PostURL = postURL.String
-	return out, nil
+	return transform(row), nil
 }
-
-const listByIssueSQL = `
-SELECT id, issue_id, platform, text, post_url, posted_at
-FROM social_posts
-WHERE issue_id = ?
-ORDER BY posted_at ASC`
 
 // ListForIssue returns all posts associated with an issue, oldest first.
 func (s Store) ListForIssue(ctx context.Context, issueID int64) ([]news.SocialPost, error) {
-	rows, err := s.db.QueryContext(ctx, listByIssueSQL, issueID)
+	rows, err := s.sqlc.SocialPostListByIssue(ctx, issueID)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-
-	out := make([]news.SocialPost, 0)
-	for rows.Next() {
-		var (
-			p       news.SocialPost
-			postURL sql.NullString
-		)
-		if err := rows.Scan(&p.ID, &p.IssueID, &p.Platform, &p.Text, &postURL, &p.PostedAt); err != nil {
-			return nil, err
-		}
-		p.PostURL = postURL.String
-		out = append(out, p)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
+	out := make([]news.SocialPost, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, transform(r))
 	}
 	return out, nil
+}
+
+func transform(r sqlc.SocialPost) news.SocialPost {
+	return news.SocialPost{
+		ID:       r.ID,
+		IssueID:  r.IssueID,
+		Platform: r.Platform,
+		Text:     r.Text,
+		PostURL:  r.PostUrl.String,
+		PostedAt: r.PostedAt,
+	}
+}
+
+func nullString(s string) sql.NullString {
+	if s == "" {
+		return sql.NullString{}
+	}
+	return sql.NullString{String: s, Valid: true}
 }

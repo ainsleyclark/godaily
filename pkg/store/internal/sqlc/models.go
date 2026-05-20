@@ -36,6 +36,15 @@ type Item struct {
 	Published        *time.Time      `json:"published"`
 }
 
+type SocialPost struct {
+	ID       int64          `json:"id"`
+	IssueID  int64          `json:"issue_id"`
+	Platform string         `json:"platform"`
+	Text     string         `json:"text"`
+	PostUrl  sql.NullString `json:"post_url"`
+	PostedAt time.Time      `json:"posted_at"`
+}
+
 type Subscriber struct {
 	ID               int64          `json:"id"`
 	Email            string         `json:"email"`

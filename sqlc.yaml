@@ -6,6 +6,7 @@ sql:
       - "pkg/store/issues/query.sql"
       - "pkg/store/items/query.sql"
       - "pkg/store/subscribers/query.sql"
+      - "pkg/store/socialposts/query.sql"
     gen:
       go:
         package: "sqlc"
@@ -34,3 +35,5 @@ sql:
               type: "Time"
               import: "time"
               pointer: true
+          - column: "social_posts.posted_at"
+            go_type: "time.Time"
