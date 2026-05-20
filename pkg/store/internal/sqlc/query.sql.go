@@ -701,7 +701,9 @@ func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken sql.NullSt
 }
 
 const subscriberCountActive = `-- name: SubscriberCountActive :one
-SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL
+SELECT COUNT(*) FROM subscribers
+WHERE unsubscribed_at IS NULL
+  AND bounced_at IS NULL
 `
 
 func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
@@ -746,6 +748,7 @@ const subscriberListActive = `-- name: SubscriberListActive :many
 SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers
 WHERE unsubscribed_at IS NULL
   AND confirmed_at IS NOT NULL
+  AND bounced_at IS NULL
 ORDER BY id ASC
 `
 
@@ -779,6 +782,28 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 		return nil, err
 	}
 	return items, nil
+}
+
+const subscriberMarkBounced = `-- name: SubscriberMarkBounced :exec
+UPDATE subscribers
+SET bounced_at = CURRENT_TIMESTAMP
+WHERE email = ? AND bounced_at IS NULL
+`
+
+func (q *Queries) SubscriberMarkBounced(ctx context.Context, email string) error {
+	_, err := q.db.ExecContext(ctx, subscriberMarkBounced, email)
+	return err
+}
+
+const subscriberMarkComplained = `-- name: SubscriberMarkComplained :exec
+UPDATE subscribers
+SET unsubscribed_at = CURRENT_TIMESTAMP
+WHERE email = ? AND unsubscribed_at IS NULL
+`
+
+func (q *Queries) SubscriberMarkComplained(ctx context.Context, email string) error {
+	_, err := q.db.ExecContext(ctx, subscriberMarkComplained, email)
+	return err
 }
 
 const subscriberReactivate = `-- name: SubscriberReactivate :one

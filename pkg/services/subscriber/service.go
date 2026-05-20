@@ -37,13 +37,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../mocks/subscriber/Subscriber.go . Subscriber
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Subscriber.go . Subscriber
 
-// Subscriber defines the subscription lifecycle methods used by HTTP handlers.
+// Subscriber defines the subscription lifecycle methods used by HTTP handlers
+// and the email webhook pipeline.
 type Subscriber interface {
 	Subscribe(ctx context.Context, email string) (news.Subscriber, error)
 	Confirm(ctx context.Context, token string) error
 	Unsubscribe(ctx context.Context, token string) error
+	MarkBounced(ctx context.Context, email string) error
+	MarkComplained(ctx context.Context, email string) error
 }
 
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
@@ -125,6 +128,18 @@ func (s Service) Confirm(ctx context.Context, token string) error {
 // Unsubscribe marks a subscriber as unsubscribed using their token.
 func (s Service) Unsubscribe(ctx context.Context, token string) error {
 	return s.repo.Unsubscribe(ctx, token)
+}
+
+// MarkBounced flags a subscriber whose address hard-bounced so the digest is
+// no longer sent to it. It is keyed by email because bounce notifications
+// identify the recipient by address, not token.
+func (s Service) MarkBounced(ctx context.Context, email string) error {
+	return s.repo.MarkBounced(ctx, email)
+}
+
+// MarkComplained unsubscribes a subscriber who reported the digest as spam.
+func (s Service) MarkComplained(ctx context.Context, email string) error {
+	return s.repo.MarkComplained(ctx, email)
 }
 
 func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscribeURL string) error {

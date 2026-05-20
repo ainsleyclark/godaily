@@ -146,6 +146,34 @@ func (mr *MockSubscriberRepositoryMockRecorder) ListActive(ctx any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActive", reflect.TypeOf((*MockSubscriberRepository)(nil).ListActive), ctx)
 }
 
+// MarkBounced mocks base method.
+func (m *MockSubscriberRepository) MarkBounced(ctx context.Context, email string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkBounced", ctx, email)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkBounced indicates an expected call of MarkBounced.
+func (mr *MockSubscriberRepositoryMockRecorder) MarkBounced(ctx, email any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkBounced", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkBounced), ctx, email)
+}
+
+// MarkComplained mocks base method.
+func (m *MockSubscriberRepository) MarkComplained(ctx context.Context, email string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkComplained", ctx, email)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkComplained indicates an expected call of MarkComplained.
+func (mr *MockSubscriberRepositoryMockRecorder) MarkComplained(ctx, email any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkComplained), ctx, email)
+}
+
 // Reactivate mocks base method.
 func (m *MockSubscriberRepository) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()

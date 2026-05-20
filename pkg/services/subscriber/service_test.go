@@ -262,3 +262,51 @@ func TestService_Unsubscribe(t *testing.T) {
 		assert.ErrorIs(t, err, errBoom)
 	})
 }
+
+func TestService_MarkBounced(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkBounced(gomock.Any(), "user@example.com").Return(nil)
+
+		err := New(repo, issues, sender).MarkBounced(t.Context(), "user@example.com")
+		require.NoError(t, err)
+	})
+
+	t.Run("Error", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkBounced(gomock.Any(), "user@example.com").Return(errBoom)
+
+		err := New(repo, issues, sender).MarkBounced(t.Context(), "user@example.com")
+		assert.ErrorIs(t, err, errBoom)
+	})
+}
+
+func TestService_MarkComplained(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkComplained(gomock.Any(), "user@example.com").Return(nil)
+
+		err := New(repo, issues, sender).MarkComplained(t.Context(), "user@example.com")
+		require.NoError(t, err)
+	})
+
+	t.Run("Error", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkComplained(gomock.Any(), "user@example.com").Return(errBoom)
+
+		err := New(repo, issues, sender).MarkComplained(t.Context(), "user@example.com")
+		assert.ErrorIs(t, err, errBoom)
+	})
+}
