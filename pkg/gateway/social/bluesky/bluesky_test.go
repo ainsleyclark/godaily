@@ -140,6 +140,38 @@ func TestClient_Post(t *testing.T) {
 		_, err := c.Post(context.Background(), "x")
 		require.Error(t, err)
 	})
+
+	t.Run("Facets included when text contains URL", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.server.createSession":
+				_, _ = w.Write([]byte(`{"accessJwt":"jwt","did":"did:plc:xyz"}`))
+			case "/xrpc/com.atproto.repo.createRecord":
+				body, _ := io.ReadAll(r.Body)
+				var got map[string]any
+				require.NoError(t, json.Unmarshal(body, &got))
+				record, ok := got["record"].(map[string]any)
+				require.True(t, ok)
+				facets, ok := record["facets"]
+				require.True(t, ok, "expected facets field in record")
+				fl, ok := facets.([]any)
+				require.True(t, ok)
+				require.Len(t, fl, 1, "expected one facet for the URL")
+				_, _ = w.Write([]byte(`{"uri":"at://did:plc:xyz/app.bsky.feed.post/abc","cid":"x"}`))
+			default:
+				t.Fatalf("unexpected path %s", r.URL.Path)
+			}
+		}))
+		defer srv.Close()
+
+		c := New("godaily.bsky.social", "pw")
+		c.baseURL = srv.URL
+
+		_, err := c.Post(context.Background(), "New release\n\nhttps://go.dev/dl\n#golang")
+		require.NoError(t, err)
+	})
 }
 
 func TestPostURLFromURI(t *testing.T) {
@@ -174,6 +206,55 @@ func TestPostURLFromURI(t *testing.T) {
 			t.Parallel()
 			got := c.postURLFromURI(test.input)
 			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
+func TestBuildFacets(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		text string
+		want []facet
+	}{
+		"No URL": {
+			text: "Go 1.30 released",
+			want: nil,
+		},
+		"Single URL": {
+			text: "New release\n\nhttps://go.dev/dl\n#golang",
+			want: []facet{{
+				Index:    facetIndex{ByteStart: 13, ByteEnd: 30},
+				Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://go.dev/dl"}},
+			}},
+		},
+		"URL with trailing period trimmed": {
+			text: "See https://example.com.",
+			want: []facet{{
+				Index:    facetIndex{ByteStart: 4, ByteEnd: 23},
+				Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://example.com"}},
+			}},
+		},
+		"Two URLs": {
+			text: "https://a.io and https://b.io",
+			want: []facet{
+				{
+					Index:    facetIndex{ByteStart: 0, ByteEnd: 12},
+					Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://a.io"}},
+				},
+				{
+					Index:    facetIndex{ByteStart: 17, ByteEnd: 29},
+					Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://b.io"}},
+				},
+			},
+		},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := buildFacets(tc.text)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }
