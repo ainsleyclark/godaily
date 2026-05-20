@@ -1,130 +1,89 @@
-<p align="center">
-  <h3 align="center">godaily</h3>
-</p>
-
-<p align="center">
-  Daily Go news, straight to your inbox.
-</p>
-
-<p align="center" style="margin-bottom: 1rem;">
-  <a href="#usage"><strong>Usage</strong></a> ·
-  <a href="#configuration"><strong>Configuration</strong></a> ·
-  <a href="#scheduled-runs"><strong>GitHub Action</strong></a>
-</p>
-
 <div align="center">
 
+<img src="web/assets/favicon/favicon.png" width="160" alt="GoDaily">
+
+# GoDaily
+
+**Daily Go news, straight to your inbox.**
+
+The best stories from the Go community — ranked, summarised,
+and delivered before standup.
+
+[**Subscribe**](https://godaily.dev) · [How it works](#how-it-works) · [Sources](#sources) · [API](#api)
+
+<br>
+
+[![Website](https://img.shields.io/badge/godaily.dev-00ADD8?logo=go&logoColor=white)](https://godaily.dev)
+[![Made with Go](https://img.shields.io/badge/Made%20with-Go-00ADD8.svg?logo=go)](https://go.dev)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ainsleyclark/godaily)](https://goreportcard.com/report/github.com/ainsleyclark/godaily)
-![Made with Go](https://img.shields.io/badge/Made%20with-Go-00ADD8.svg?logo=go)
-[![Go Reference](https://pkg.go.dev/badge/github.com/ainsleyclark/godaily.svg)](https://pkg.go.dev/github.com/ainsleyclark/godaily)
-[![License](https://img.shields.io/github/license/ainsleyclark/godaily?color=orange)](https://github.com/ainsleyclark/godaily/blob/main/LICENSE)
-[![Daily Digest](https://github.com/ainsleyclark/godaily/actions/workflows/daily.yaml/badge.svg)](https://github.com/ainsleyclark/godaily/actions/workflows/daily.yaml)
 [![ainsley.dev](https://img.shields.io/badge/-ainsley.dev-black?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAAB3RJTUUH5wEYDzUGL1b35AAABA1JREFUWMPtlttvFVUUxn977ZnZu+W0tLalqRovBAUvQag0xNQbpSIosSSIJC198YknJfHJxDf9A/DBJ0x8MbFACjVqvCASq6FYFLFBvJAaAomkFCmhHGpLO+PDzOmZzpn2nKP4pCs5ycmevb7vW99as/fA//FfD1XO5p1nzuA3NWJHx5T8cVkRBPHHQfRjd0tzyZhOOQIy27bAxET9zCuvvhY0r2kC/OiRABeAN4BL/4oDr9+3lGszPs7UVNfUE23v3Nj5koszR/8N4EXg3XJckFIFuCLUuU7GWNNtTg25cu4syJx0F+gGMuU4UJKAt1Yux1UKV6TVat1qs+OYwQESMwDQCjwKsOv4iZsnwGihwbiuEek2WjJGhMrvv0UujYKa08VFkQvuTXNgz6oVeCIo1CqrZYMRwTiaytERKn44kRQAsAFYDbBrsLgLRQU0GI919TXKiHQaUQ1GBCuCCQKqjg/MqInrM4lZrgc6A1CljHhRAZ4Ip65m77FaOmbJdehC5vzZr1RAf/T6x6NDwb3/uAVfP74GnwCjZasRuXuWXASj9XQme+3t6erqPcB0IvUuYCsUH8YFBRhRNBqvyYpsn0MeOnG6wvc/9x33MPBjSvp24Na/7cDP7Y/gKIURecZoeTBObkSwWg7UNjaOeFfGLgK9KRAPAM8Wc2FeAUaEWtddbEV2WBFtREXkCqvlghE5yOQkvucBHAR+T0BooAtYXLYDI5sewxWFJ/Kk1bI2UTlW5DMFp03+JPwJ+DQFai2wbiEXUgVUas0trmuslm4jUmGi/tuwDVmrpafBuNPVrs7N/wzQA2QTUJbwYLIlOxB0tOGJ4IhqsSJts+T54Rv0lBz1RFh9ZJA385fOAHAshaMNaAF4OcWFQgeUwhMlrlJdnqjaOLkR8Y2WvbWec9VIQeo4sJf8FZ2LmmgWJO1cmm8I7wc2a6XwosGL+v+rFfnYUYplh47Obo5dvZ8Av6TgbSZ8KxYWEGxZn/u7Dbg9t8HNnwF9S2qqzqVUn4vzQF/K+m3AC1A4jGlId0QC8l0BXKVGrahe//okNR99WZAUc6EXuJiC+zxw57wOxKp/DliRAvCFKDUkxS+YIeBwyvryCHuOC0kH6oBOCj/V/gTeA6aK0oefZj3ARGJdRdh1BQ7Eqm8HHk4B/Q7oB1B9acWFEWtDf5STjGbgqbgLcQcqCQ8NL5EUAPuBsRKqz8UVYB+F97QXcSyatSXoWJ8zvB04AFQlkoaBp4HhhaqPR1TdUsLjeVni8TjhVX0odCAkd4AdKeQAHxIwXEb1Odt+Az5IeVQVcTmhgDBWAhtTNl8G9qGAwKfU2N3SnJvi/RFGMjYCD8UFdACNKRsHgZMA6v0j5ZpAlPtNyvqSiJO/AKik60y0ALlUAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTAxLTI0VDE1OjUzOjA2KzAwOjAwm5vntAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wMS0yNFQxNTo1MzowNiswMDowMOrGXwgAAABXelRYdFJhdyBwcm9maWxlIHR5cGUgaXB0YwAAeJzj8gwIcVYoKMpPy8xJ5VIAAyMLLmMLEyMTS5MUAxMgRIA0w2QDI7NUIMvY1MjEzMQcxAfLgEigSi4A6hcRdPJCNZUAAAAASUVORK5CYII=)](https://ainsley.dev)
-[![Twitter Handle](https://img.shields.io/twitter/follow/ainsleydev)](https://twitter.com/ainsleydev)
+[![Twitter](https://img.shields.io/twitter/follow/ainsleydev)](https://twitter.com/ainsleydev)
 
 </div>
 
-## godaily
+---
 
-`godaily` is a CLI that aggregates the day's Go news from a handful of community sources, hands it
-to Claude for synthesis, and ships the resulting digest to your inbox via Resend. It's designed to
-run unattended on a schedule — one binary, a few env vars, and a GitHub Actions cron.
+**GoDaily** is a free daily newsletter for Go developers. Every weekday morning it
+gathers the day's news from across the Go community, uses Claude AI to rank and
+summarise what actually matters, and sends you one short read — before standup.
 
-**Key Features:**
+No drip campaigns. No upsell. No tracking pixels. Read it by email, or browse
+every issue at **[godaily.dev](https://godaily.dev)**.
 
-- **Multi-source aggregation**: Hacker News, Reddit, Lobsters, Dev.to, Medium, GitHub trending, YouTube, golangbridge, godevblog
-- **AI synthesis**: items summarised and ranked by Anthropic Claude
-- **Email delivery**: digests rendered and sent through Resend
-- **Scheduled by default**: weekday mornings at 08:00 London time via GitHub Actions
-- **Single static binary**: configured entirely through environment variables
+## Why GoDaily
 
-## Installation
+- **Every corner of the Go community** — Hacker News, r/golang, Lobsters, the Go
+  Blog, GitHub releases, YouTube and more, deduplicated into a single read.
+- **Ranked, summarised, opinionated** — every story is read, summarised and
+  scored for relevance, novelty and signal. Only what matters to a working Go
+  developer makes the cut.
+- **Lands before your first coffee** — a weekday-morning email that skips
+  weekends and public holidays.
+- **No noise** — no drip sequences, no "upgrade for full access", no tracking
+  pixels. Free, forever.
 
-**Build from source:**
+## How it works
 
-```bash
-git clone https://github.com/ainsleyclark/godaily.git
-cd godaily
-make build
-```
+GoDaily runs a fully automated pipeline every weekday:
 
-## Configuration
+1. **Collect** — fetches the latest posts from 18 community sources.
+2. **Deduplicate** — merges the same story surfaced in multiple places.
+3. **Rank** — Claude scores every item on relevance, novelty and signal quality.
+4. **Summarise** — the highest-signal items are written up into a single digest.
+5. **Deliver** — the digest lands in your inbox, on the web archive, and across
+   GoDaily's social feeds.
 
-`godaily` reads configuration from environment variables. A local `.env` file in the working
-directory is loaded automatically.
+## Sources
 
-| Variable             | Purpose                                                    |
-|----------------------|------------------------------------------------------------|
-| `RESEND_TOKEN`       | API token for sending the digest via [Resend](https://resend.com). |
-| `ANTHROPIC_API_KEY`  | API key for Claude, used to synthesise the digest.         |
-| `YOUTUBE_API_KEY`    | API key for the YouTube Data source.                       |
-| `GITHUB_TOKEN`       | Token used by the GitHub trending source.                  |
-| `SCRAPER_API_KEY`    | Optional ScraperAPI key routing Reddit through a proxy.    |
-| `EMAIL_SEND_ADDRESS` | Recipient address for the digest email.                    |
+GoDaily reads from 18 sources across the Go ecosystem:
 
-Copy `.env.example` to `.env` and fill in the values to get started locally.
+Hacker News · r/golang · Lobsters · the Go Blog · Go release notes ·
+GitHub releases · GitHub trending · Dev.to · Medium · YouTube · Go Podcast ·
+Fallthrough · Ardan Labs · JetBrains · golang-nuts · Golang Bridge ·
+Awesome Go · Mastodon
 
-## Usage
+## API
 
-**Run the full digest:**
+Every issue is also available as JSON. Base URL: `https://godaily.dev`
 
-```bash
-godaily run
-```
+| Endpoint | Description |
+|---|---|
+| `GET /api/issues` | Paginated list of digest issues (`page`, `per_page`) |
+| `GET /api/issues/{slug}` | A single digest issue |
+| `GET /api/items/{id}` | A single news item |
+| `GET /healthz` | Service health check |
 
-Useful flags:
+## Built with
 
-- `--dry-run` — gather everything but skip sending the email.
-- `--output <path>` — write the aggregated items to a JSON file.
-- `--source <name>` — only run the named source(s); repeat for multiple. Defaults to all.
+Go · [Templ](https://templ.guide) · PostgreSQL · [Resend](https://resend.com) ·
+[Anthropic Claude](https://www.anthropic.com) · deployed on [Vercel](https://vercel.com)
 
-**List registered sources:**
+---
 
-```bash
-godaily sources
-```
+<div align="center">
 
-**Fetch a single provider (JSON to stdout):**
+### Read the Go community's best, every weekday.
 
-```bash
-godaily fetch --provider hackernews
-```
+[**Subscribe at godaily.dev →**](https://godaily.dev)
 
-## Project Structure
-
-```
-godaily/
-├── cmd/
-│   └── godaily/         # CLI entry point
-├── internal/
-│   ├── cron/            # Orchestration of a full digest run
-│   ├── news/            # Source registry and shared types
-│   ├── source/          # Per-source fetchers (HN, Reddit, GitHub, ...)
-│   ├── synth/           # Claude-powered synthesis & ranking
-│   └── email/           # Templating and Resend delivery
-├── examples/            # Example digest outputs
-└── .github/workflows/   # Scheduled GitHub Actions
-```
-
-## Development
-
-```bash
-make build              # Build the godaily binary
-make test               # Run unit tests with coverage
-make test-race          # Run tests with the race detector
-make test-integration   # Hit real source endpoints (tagged: integration)
-make lint               # golangci-lint with autofix
-make cover              # Open the HTML coverage report
-make all                # Format, lint, license, and test
-```
-
-## Scheduled Runs
-
-The [`Daily Digest`](.github/workflows/daily.yaml) workflow runs `godaily run` every weekday at
-08:00 London time. Two cron entries (08:00 GMT and 07:00 UTC) cover GMT/BST, and a London-time
-guard skips the firing that falls outside 08:00 local. The workflow can also be dispatched manually
-with a `--dry-run` toggle.
-
-## License
-
-Code released under the [MIT License](LICENSE).
+</div>
