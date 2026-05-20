@@ -59,6 +59,7 @@ type Result struct {
 type Poster interface {
 	// Platform identifies which platform this poster targets.
 	Platform() Platform
+
 	// Post publishes text to the platform. Implementations are responsible
 	// for any auth dance their API requires.
 	Post(ctx context.Context, text string) (Result, error)

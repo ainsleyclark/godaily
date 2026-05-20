@@ -33,6 +33,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
@@ -40,12 +41,6 @@ import (
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocialservice -destination=../../mocks/socialservice/Service.go github.com/ainsleyclark/godaily/pkg/services/social Poster
-
-// slackNotifier is a minimal interface satisfied by *slack.Client, kept
-// here to avoid importing the gateway package from the service package.
-type slackNotifier interface {
-	MustSend(ctx context.Context, message string)
-}
 
 // reframer reframes a featured item for one platform. Function-typed so
 // tests can inject deterministic text without going through the AI.
@@ -67,20 +62,20 @@ type Service struct {
 	issues    news.IssueRepository
 	items     news.ItemRepository
 	posts     news.SocialPostRepository
-	slack     slackNotifier
+	slack     slack.Sender
 	reframers map[social.Platform]reframer
 }
 
 // New creates a new social Service. posters may be empty (nothing to post);
 // the service errors if prompter, issues, items, or posts are nil.
-// slack may be nil to disable Slack notifications.
+// slackSender may be nil to disable Slack notifications.
 func New(
 	posters []social.Poster,
 	prompter ai.Prompter,
 	issues news.IssueRepository,
 	items news.ItemRepository,
 	posts news.SocialPostRepository,
-	slack slackNotifier,
+	slackSender slack.Sender,
 ) (*Service, error) {
 	if prompter == nil {
 		return nil, errors.New("social: ai.Prompter is required")
@@ -97,7 +92,7 @@ func New(
 		issues:    issues,
 		items:     items,
 		posts:     posts,
-		slack:     slack,
+		slack:     slackSender,
 		reframers: defaultReframers(),
 	}, nil
 }
@@ -112,9 +107,11 @@ func (s *Service) HasPosters() bool {
 type PostOptions struct {
 	// Date is the digest date — the issue slug is its UTC YYYY-MM-DD.
 	Date time.Time
+
 	// DryRun runs the full pipeline (DB read, AI calls, text generation)
 	// but skips both platform HTTP and the social_posts insert.
 	DryRun bool
+
 	// Platforms optionally restricts which configured posters run. When
 	// empty, every configured poster runs. Unknown platforms are ignored
 	// with a log line.
@@ -127,7 +124,9 @@ type PostResult struct {
 	Text     string
 	PostURL  string
 	Err      error
-	Skipped  bool // true when this platform was already posted today
+
+	// Skipped is true when this platform was already posted today.
+	Skipped bool
 }
 
 // Post is the main entry point. It:

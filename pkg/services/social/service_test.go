@@ -33,6 +33,7 @@ import (
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
@@ -46,13 +47,6 @@ func constReframer(text string) reframer {
 	}
 }
 
-// stubSlack captures messages sent during a test.
-type stubSlack struct {
-	msgs []string
-}
-
-func (s *stubSlack) MustSend(_ context.Context, msg string) { s.msgs = append(s.msgs, msg) }
-
 type fixture struct {
 	t         *testing.T
 	ctrl      *gomock.Controller
@@ -60,7 +54,7 @@ type fixture struct {
 	issues    *mocknews.MockIssueRepository
 	items     *mocknews.MockItemRepository
 	posts     *mocknews.MockSocialPostRepository
-	slack     *stubSlack
+	slack     *mockslack.MockSender
 	posters   []socialgw.Poster
 	reframers map[socialgw.Platform]reframer
 }
@@ -76,7 +70,7 @@ func newFixture(t *testing.T) *fixture {
 		issues:   mocknews.NewMockIssueRepository(ctrl),
 		items:    mocknews.NewMockItemRepository(ctrl),
 		posts:    mocknews.NewMockSocialPostRepository(ctrl),
-		slack:    &stubSlack{},
+		slack:    mockslack.NewMockSender(ctrl),
 	}
 }
 
@@ -241,6 +235,9 @@ func TestService_Post_HappyPath(t *testing.T) {
 			return p, nil
 		})
 
+	// No Slack notification expected on the happy path; mockslack with no
+	// EXPECT() will fail the test if MustSend is called.
+
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
 	require.NoError(t, err)
@@ -248,7 +245,6 @@ func TestService_Post_HappyPath(t *testing.T) {
 	assert.Equal(t, socialgw.PlatformBluesky, res[0].Platform)
 	assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", res[0].PostURL)
 	assert.False(t, res[0].Skipped)
-	assert.Empty(t, f.slack.msgs)
 }
 
 func TestService_Post_SkipsAlreadyPosted(t *testing.T) {
@@ -315,13 +311,18 @@ func TestService_Post_PosterErrorNotifiesSlack(t *testing.T) {
 		Return(featureJSON(), nil)
 	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
 
+	// Capture the Slack notification so we can assert on its content.
+	var slackMsg string
+	f.slack.EXPECT().
+		MustSend(gomock.Any(), gomock.Any()).
+		Do(func(_ context.Context, m string) { slackMsg = m })
+
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
 	require.Error(t, err)
 	require.Len(t, res, 1)
 	assert.Contains(t, res[0].Err.Error(), "API down")
-	require.Len(t, f.slack.msgs, 1)
-	assert.Contains(t, f.slack.msgs[0], "bluesky")
+	assert.Contains(t, slackMsg, "bluesky")
 }
 
 func TestService_Post_PlatformsFilter(t *testing.T) {

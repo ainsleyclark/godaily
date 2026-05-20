@@ -43,8 +43,10 @@ type SocialPost struct {
 type SocialPostRepository interface {
 	// HasPosted reports whether a row exists for the given issue and platform.
 	HasPosted(ctx context.Context, issueID int64, platform string) (bool, error)
+
 	// Create persists a new social post record.
 	Create(ctx context.Context, p SocialPost) (SocialPost, error)
+
 	// ListForIssue returns all posts associated with an issue, oldest first.
 	ListForIssue(ctx context.Context, issueID int64) ([]SocialPost, error)
 }
