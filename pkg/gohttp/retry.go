@@ -100,7 +100,7 @@ func jitteredDelay(attempt int, base, max time.Duration) time.Duration {
 	if cap <= 0 {
 		return 0
 	}
-	return time.Duration(rand.Int64N(int64(cap)))
+	return time.Duration(rand.Int64N(int64(cap))) //nolint:gosec // Jitter for HTTP back-off does not require cryptographic randomness.
 }
 
 // parseRetryAfter parses the Retry-After header value as integer seconds.

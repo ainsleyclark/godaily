@@ -301,12 +301,12 @@ func TestParseRetryAfter(t *testing.T) {
 		input string
 		want  time.Duration
 	}{
-		"Empty string":    {input: "", want: 0},
-		"Valid seconds":   {input: "5", want: 5 * time.Second},
-		"Zero":            {input: "0", want: 0},
-		"Negative":        {input: "-1", want: 0},
-		"Non-numeric":     {input: "abc", want: 0},
-		"HTTP-date":       {input: "Wed, 21 Oct 2015 07:28:00 GMT", want: 0},
+		"Empty string":  {input: "", want: 0},
+		"Valid seconds": {input: "5", want: 5 * time.Second},
+		"Zero":          {input: "0", want: 0},
+		"Negative":      {input: "-1", want: 0},
+		"Non-numeric":   {input: "abc", want: 0},
+		"HTTP-date":     {input: "Wed, 21 Oct 2015 07:28:00 GMT", want: 0},
 	}
 
 	for name, test := range tt {
