@@ -68,7 +68,7 @@ func (s Store) FindBySlug(ctx context.Context, slug string) (news.Issue, error) 
 }
 
 func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) {
-	rows, err := s.sqlc.ItemListByIssue(ctx, i.ID)
+	rows, err := s.sqlc.ItemListByIssue(ctx, sql.NullInt64{Int64: i.ID, Valid: true})
 	if err != nil {
 		return news.Issue{}, err
 	}
