@@ -81,6 +81,13 @@ func TestNew(t *testing.T) {
 		t.Setenv("TURSO_URL", "file:./test.db")
 		t.Setenv("TURSO_AUTH_TOKEN", "turso_test")
 		t.Setenv("API_SECRET", "secret_test")
+		t.Setenv("BLUESKY_HANDLE", "godaily.bsky.social")
+		t.Setenv("BLUESKY_APP_PASSWORD", "bsky_pw")
+		t.Setenv("LINKEDIN_OAUTH_TOKEN", "li_token")
+		t.Setenv("LINKEDIN_ORG_URN", "urn:li:organization:12345")
+		t.Setenv("MASTODON_SERVER", "https://mastodon.social")
+		t.Setenv("MASTODON_APP_TOKEN", "mastodon_token")
+		t.Setenv("BETTERSTACK_SOCIAL_HEARTBEAT_URL", "https://uptime.betterstack.com/social")
 
 		cfg, err := New(t.Context())
 
@@ -93,6 +100,13 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "test@example.com", cfg.EmailSendAddress)
 		assert.Equal(t, "file:./test.db", cfg.TursoURL)
 		assert.Equal(t, "turso_test", cfg.TursoAuthToken)
+		assert.Equal(t, "godaily.bsky.social", cfg.BlueskyHandle)
+		assert.Equal(t, "bsky_pw", cfg.BlueskyAppPassword)
+		assert.Equal(t, "li_token", cfg.LinkedInOAuthToken)
+		assert.Equal(t, "urn:li:organization:12345", cfg.LinkedInOrgURN)
+		assert.Equal(t, "https://mastodon.social", cfg.MastodonServer)
+		assert.Equal(t, "mastodon_token", cfg.MastodonAppToken)
+		assert.Equal(t, "https://uptime.betterstack.com/social", cfg.BetterStackSocialHeartbeatURL)
 	})
 
 	t.Run("Error", func(t *testing.T) {

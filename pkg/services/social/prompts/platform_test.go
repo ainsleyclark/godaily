@@ -1,0 +1,257 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package prompts
+
+import (
+	"errors"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/news"
+)
+
+func sampleFeatured() Featured {
+	return Featured{
+		Title:  "Go 1.30 released",
+		URL:    "https://go.dev/blog/go1.30",
+		Source: news.SourceGoRelease,
+		Tag:    news.TagRelease,
+		Hook:   "Go 1.30 ships generic type inference improvements.",
+	}
+}
+
+func TestBuildPlatformSystem(t *testing.T) {
+	t.Parallel()
+
+	cfg := platformConfig{
+		name:      "Bluesky",
+		charLimit: 300,
+		hashtags:  []string{"#golang"},
+		guidance:  "be terse",
+	}
+	sys := buildPlatformSystem(cfg)
+
+	assert.Contains(t, sys, "Bluesky")
+	assert.Contains(t, sys, "300 characters")
+	assert.Contains(t, sys, "#golang")
+	assert.Contains(t, sys, "be terse")
+	assert.Contains(t, sys, "JSON")
+	assert.NotContains(t, sys, "No hashtags",
+		"no-hashtag branch should not appear when hashtags are present")
+}
+
+func TestBuildPlatformSystem_NoHashtags(t *testing.T) {
+	t.Parallel()
+
+	sys := buildPlatformSystem(platformConfig{name: "X", charLimit: 100, guidance: "g"})
+	assert.Contains(t, sys, "No hashtags")
+}
+
+func TestReframe(t *testing.T) {
+	t.Parallel()
+
+	cfg := platformConfig{
+		name:      "Bluesky",
+		charLimit: 300,
+		hashtags:  []string{"#golang"},
+		guidance:  "Be terse.",
+	}
+
+	t.Run("Nil prompter errors", func(t *testing.T) {
+		t.Parallel()
+		_, err := reframe(t.Context(), nil, cfg, sampleFeatured())
+		require.Error(t, err)
+	})
+
+	t.Run("Empty URL errors", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		f := sampleFeatured()
+		f.URL = ""
+		_, err := reframe(t.Context(), p, cfg, f)
+		require.Error(t, err)
+	})
+
+	t.Run("Happy path returns trimmed text", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Return([]byte(`{"text":"  Go 1.30 ships generic improvements.\n\nhttps://go.dev/blog/go1.30\n#golang  "}`), nil)
+
+		got, err := reframe(t.Context(), p, cfg, sampleFeatured())
+		require.NoError(t, err)
+		assert.True(t, strings.HasPrefix(got, "Go 1.30"))
+		assert.Contains(t, got, "https://go.dev/blog/go1.30")
+		assert.Contains(t, got, "#golang")
+	})
+
+	t.Run("Strips fences", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		fenced := "```json\n" + `{"text":"hello"}` + "\n```"
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(fenced), nil)
+
+		got, err := reframe(t.Context(), p, cfg, sampleFeatured())
+		require.NoError(t, err)
+		assert.Equal(t, "hello", got)
+	})
+
+	t.Run("AI error wrapped", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("network down"))
+
+		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "ai")
+	})
+
+	t.Run("Empty body errors", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte("   "), nil)
+
+		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
+		require.Error(t, err)
+	})
+
+	t.Run("Empty text field errors", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(`{"text":""}`), nil)
+
+		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
+		require.Error(t, err)
+	})
+
+	t.Run("Over-limit logs but still returns text", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		tiny := platformConfig{name: "X", charLimit: 5, hashtags: nil, guidance: "g"}
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Return([]byte(`{"text":"this is well over five characters"}`), nil)
+
+		got, err := reframe(t.Context(), p, tiny, sampleFeatured())
+		require.NoError(t, err)
+		assert.Contains(t, got, "characters")
+	})
+}
+
+func TestBlueskyLinkedInMastodonShape(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Bluesky calls reframe with #golang and 300 limit", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+				assert.Contains(t, system, "Bluesky")
+				assert.Contains(t, system, "300 characters")
+				assert.Contains(t, system, "#golang")
+				return []byte(`{"text":"ok"}`), nil
+			})
+
+		_, err := Bluesky(t.Context(), p, sampleFeatured())
+		require.NoError(t, err)
+	})
+
+	t.Run("LinkedIn uses 1300 limit and 3 hashtags", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+				assert.Contains(t, system, "LinkedIn")
+				assert.Contains(t, system, "1300 characters")
+				for _, tag := range LinkedInHashtags {
+					assert.Contains(t, system, tag)
+				}
+				return []byte(`{"text":"ok"}`), nil
+			})
+
+		_, err := LinkedIn(t.Context(), p, sampleFeatured())
+		require.NoError(t, err)
+	})
+
+	t.Run("Mastodon uses 500 limit and #go", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		p := mockai.NewMockPrompter(ctrl)
+		p.EXPECT().
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+				assert.Contains(t, system, "Mastodon")
+				assert.Contains(t, system, "500 characters")
+				assert.Contains(t, system, "#go")
+				return []byte(`{"text":"ok"}`), nil
+			})
+
+		_, err := Mastodon(t.Context(), p, sampleFeatured())
+		require.NoError(t, err)
+	})
+}
+
+func TestStripFences(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input string
+		want  string
+	}{
+		"No fences":    {input: `{"a":1}`, want: `{"a":1}`},
+		"json fenced":  {input: "```json\n" + `{"a":1}` + "\n```", want: `{"a":1}`},
+		"plain fenced": {input: "```\n" + `{"a":1}` + "\n```", want: `{"a":1}`},
+		"Whitespace":   {input: "   \n\n", want: ""},
+		"Single line":  {input: "```{a}```", want: "```{a}```"},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, stripFences(test.input))
+		})
+	}
+}

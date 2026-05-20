@@ -30,12 +30,18 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
+	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
+	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
+	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleydev/webkit/pkg/cache"
 	"github.com/pkg/errors"
@@ -47,6 +53,7 @@ type App struct {
 	DB          *sql.DB
 	Repository  *Repository
 	Runner      digest.Runner
+	Social      *social.Service
 	Cache       cache.Store
 	Subscribers subscriber.Subscriber
 	Slack       slack.Sender
@@ -57,6 +64,7 @@ type Repository struct {
 	Issues      news.IssueRepository
 	Items       news.ItemRepository
 	Subscribers news.SubscriberRepository
+	SocialPosts news.SocialPostRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -96,11 +104,13 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	cachedIssues := issues.NewCaching(issueStore, store)
 
 	subsStore := subscribers.New(conn)
+	socialPostsStore := socialposts.New(conn)
 
 	repo := &Repository{
 		Issues:      cachedIssues,
 		Items:       items.New(conn),
 		Subscribers: subsStore,
+		SocialPosts: socialPostsStore,
 	}
 
 	emailSender := email.New(config.ResendToken)
@@ -113,13 +123,43 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
+	socialSvc, err := social.New(
+		buildSocialPosters(config),
+		aiClient,
+		issueStore,
+		repo.Items,
+		socialPostsStore,
+		slackClient,
+	)
+	if err != nil {
+		return nil, teardown, err
+	}
+
 	return &App{
 		Config:      &config,
 		DB:          conn,
 		Repository:  repo,
 		Runner:      aggregator,
+		Social:      socialSvc,
 		Cache:       store,
 		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
 		Slack:       slackClient,
 	}, teardown, nil
+}
+
+// buildSocialPosters returns the slice of social.Poster implementations
+// whose credentials are present in the config. Each platform is opt-in:
+// missing creds means the platform is skipped entirely.
+func buildSocialPosters(c env.Config) []socialgw.Poster {
+	var out []socialgw.Poster
+	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
+		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
+	}
+	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
+		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN))
+	}
+	if c.MastodonServer != "" && c.MastodonAppToken != "" {
+		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
+	}
+	return out
 }

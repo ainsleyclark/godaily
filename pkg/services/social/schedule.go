@@ -17,53 +17,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package social
 
 import (
-	"context"
-	"log/slog"
-	"os"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"hash/fnv"
+	"time"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+// SlotsPerHour is how many 10-minute slots /api/social is invoked per day.
+// vercel.json declares the matching cron: `0,10,20,30,40,50 11 * * 1-5`.
+const SlotsPerHour = 6
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
+// PickSlot returns the 10-minute slot (0..SlotsPerHour-1) that should
+// actually post for the given date. The result is stable across retries
+// on the same day, so a cron invocation in the wrong slot can safely
+// short-circuit while the right slot does the work.
+//
+// The slot is derived deterministically from the date so the time of
+// posting jitters day-to-day without persisting state.
+func PickSlot(date time.Time) int {
+	h := fnv.New32a()
+	_, _ = h.Write([]byte(date.UTC().Format("2006-01-02")))
+	return int(h.Sum32() % SlotsPerHour)
 }
 
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
+// ShouldRun reports whether the current minute matches the slot picked for
+// the given date. Returns false when now's minute falls outside any slot
+// boundary, so an unexpected invocation is a safe no-op.
+func ShouldRun(now, date time.Time) bool {
+	return now.UTC().Minute()/10 == PickSlot(date)
 }

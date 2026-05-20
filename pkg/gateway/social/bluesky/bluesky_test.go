@@ -1,0 +1,197 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package bluesky
+
+import (
+	"context"
+	"encoding/json"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+)
+
+func TestClient_Platform(t *testing.T) {
+	t.Parallel()
+
+	c := New("godaily.bsky.social", "pw")
+	assert.Equal(t, social.PlatformBluesky, c.Platform())
+}
+
+func TestClient_Post(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Happy path returns post URL", func(t *testing.T) {
+		t.Parallel()
+
+		var sessionHits, recordHits int
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			require.Equal(t, "application/json", r.Header.Get("Content-Type"))
+
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.server.createSession":
+				sessionHits++
+				body, _ := io.ReadAll(r.Body)
+				var got map[string]string
+				require.NoError(t, json.Unmarshal(body, &got))
+				assert.Equal(t, "godaily.bsky.social", got["identifier"])
+				assert.Equal(t, "secret", got["password"])
+				_, _ = w.Write([]byte(`{"accessJwt":"jwt-token","did":"did:plc:xyz"}`))
+
+			case "/xrpc/com.atproto.repo.createRecord":
+				recordHits++
+				assert.Equal(t, "Bearer jwt-token", r.Header.Get("Authorization"))
+				body, _ := io.ReadAll(r.Body)
+				var got map[string]any
+				require.NoError(t, json.Unmarshal(body, &got))
+				assert.Equal(t, "did:plc:xyz", got["repo"])
+				assert.Equal(t, "app.bsky.feed.post", got["collection"])
+				record, ok := got["record"].(map[string]any)
+				require.True(t, ok)
+				assert.Equal(t, "Go 1.30 released", record["text"])
+				_, _ = w.Write([]byte(`{"uri":"at://did:plc:xyz/app.bsky.feed.post/3kabcdef","cid":"bafy"}`))
+
+			default:
+				t.Fatalf("unexpected path %s", r.URL.Path)
+			}
+		}))
+		defer srv.Close()
+
+		c := New("godaily.bsky.social", "secret")
+		c.baseURL = srv.URL
+		c.publicURL = "https://bsky.app"
+
+		got, err := c.Post(context.Background(), "Go 1.30 released")
+		require.NoError(t, err)
+		assert.Equal(t, "https://bsky.app/profile/godaily.bsky.social/post/3kabcdef", got.PostURL)
+		assert.Equal(t, 1, sessionHits)
+		assert.Equal(t, 1, recordHits)
+	})
+
+	t.Run("Session error surfaces", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusUnauthorized)
+			_, _ = w.Write([]byte(`{"error":"AuthenticationRequired"}`))
+		}))
+		defer srv.Close()
+
+		c := New("h", "bad")
+		c.baseURL = srv.URL
+
+		_, err := c.Post(context.Background(), "x")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "createSession")
+		assert.Contains(t, err.Error(), "401")
+	})
+
+	t.Run("CreateRecord error surfaces", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.server.createSession":
+				_, _ = w.Write([]byte(`{"accessJwt":"jwt","did":"did:plc:abc"}`))
+			case "/xrpc/com.atproto.repo.createRecord":
+				w.WriteHeader(http.StatusBadRequest)
+				_, _ = w.Write([]byte(`{"error":"InvalidRequest"}`))
+			}
+		}))
+		defer srv.Close()
+
+		c := New("h", "pw")
+		c.baseURL = srv.URL
+
+		_, err := c.Post(context.Background(), "x")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "createRecord")
+	})
+
+	t.Run("Transport error", func(t *testing.T) {
+		t.Parallel()
+
+		c := New("h", "pw")
+		c.baseURL = "http://127.0.0.1:1" // nothing listening
+
+		_, err := c.Post(context.Background(), "x")
+		require.Error(t, err)
+	})
+}
+
+func TestPostURLFromURI(t *testing.T) {
+	t.Parallel()
+
+	c := New("godaily.bsky.social", "pw")
+
+	tt := map[string]struct {
+		input string
+		want  string
+	}{
+		"Happy path": {
+			input: "at://did:plc:xyz/app.bsky.feed.post/3kabcdef",
+			want:  "https://bsky.app/profile/godaily.bsky.social/post/3kabcdef",
+		},
+		"Missing prefix": {
+			input: "did:plc:xyz/app.bsky.feed.post/3k",
+			want:  "",
+		},
+		"Too few parts": {
+			input: "at://did:plc:xyz",
+			want:  "",
+		},
+		"Empty": {
+			input: "",
+			want:  "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := c.postURLFromURI(test.input)
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
+// Sanity check that body is sent as application/json.
+func TestClient_doJSON_SetsHeaders(t *testing.T) {
+	t.Parallel()
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
+		assert.True(t, strings.HasPrefix(r.URL.Path, "/xrpc/"))
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	defer srv.Close()
+
+	c := New("h", "p")
+	c.baseURL = srv.URL
+
+	err := c.doJSON(context.Background(), "x.y.z", "tok", map[string]string{"k": "v"}, nil)
+	require.NoError(t, err)
+}
