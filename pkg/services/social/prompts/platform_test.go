@@ -30,6 +30,7 @@ import (
 
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 func sampleFeatured() Featured {
@@ -251,7 +252,7 @@ func TestStripFences(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, stripFences(test.input))
+			assert.Equal(t, test.want, aiutil.StripFences(test.input))
 		})
 	}
 }

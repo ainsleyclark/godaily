@@ -17,25 +17,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package prompts
+package store
 
-import "strings"
+import "database/sql"
 
-// stripFences defensively removes a wrapping ```json ... ``` (or plain
-// ``` ... ```) block if the model emits one despite being told not to.
-// Mirrors digest/prompts.stripFences.
-func stripFences(s string) string {
-	s = strings.TrimSpace(s)
-	if !strings.HasPrefix(s, "```") {
-		return s
+// NullString converts s to a sql.NullString, treating empty string as NULL.
+func NullString(s string) sql.NullString {
+	if s == "" {
+		return sql.NullString{}
 	}
-	if i := strings.IndexByte(s, '\n'); i >= 0 {
-		s = s[i+1:]
-	} else {
-		return s
-	}
-	if j := strings.LastIndex(s, "```"); j >= 0 {
-		s = s[:j]
-	}
-	return strings.TrimSpace(s)
+	return sql.NullString{String: s, Valid: true}
 }

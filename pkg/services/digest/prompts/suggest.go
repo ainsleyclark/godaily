@@ -24,7 +24,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
-	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -32,6 +31,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 const maxPostChars = 280
@@ -85,7 +85,7 @@ func Suggest(ctx context.Context, p ai.Prompter, day time.Time, sections []news.
 
 // parseSuggestionBytes parses raw model output bytes into a Suggestion.
 func parseSuggestionBytes(raw []byte) (Suggestion, error) {
-	body := stripFences(string(raw))
+	body := aiutil.StripFences(string(raw))
 	if body == "" {
 		return Suggestion{}, errors.New("empty response body")
 	}
@@ -105,21 +105,3 @@ func parseSuggestionBytes(raw []byte) (Suggestion, error) {
 	return Suggestion{Post: out.Post, References: out.References}, nil
 }
 
-// stripFences defensively removes a wrapping ```json ... ``` (or plain
-// ``` ... ```) block if the model emits one despite being told not to.
-// Anything outside the fence is discarded.
-func stripFences(s string) string {
-	s = strings.TrimSpace(s)
-	if !strings.HasPrefix(s, "```") {
-		return s
-	}
-	if i := strings.IndexByte(s, '\n'); i >= 0 {
-		s = s[i+1:]
-	} else {
-		return s
-	}
-	if j := strings.LastIndex(s, "```"); j >= 0 {
-		s = s[:j]
-	}
-	return strings.TrimSpace(s)
-}

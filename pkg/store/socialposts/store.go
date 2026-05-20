@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
@@ -67,7 +68,7 @@ func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, 
 		IssueID:  p.IssueID,
 		Platform: p.Platform,
 		Text:     p.Text,
-		PostUrl:  nullString(p.PostURL),
+		PostUrl:  store.NullString(p.PostURL),
 		PostedAt: postedAt,
 	})
 	if err != nil {
@@ -98,11 +99,4 @@ func transform(r sqlc.SocialPost) news.SocialPost {
 		PostURL:  r.PostUrl.String,
 		PostedAt: r.PostedAt,
 	}
-}
-
-func nullString(s string) sql.NullString {
-	if s == "" {
-		return sql.NullString{}
-	}
-	return sql.NullString{String: s, Valid: true}
 }

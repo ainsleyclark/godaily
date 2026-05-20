@@ -117,13 +117,13 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 		Tag:              string(item.Tag),
 		Title:            item.Title,
 		Url:              item.URL,
-		OriginalUrl:      nullString(item.OriginalURL),
+		OriginalUrl:      store.NullString(item.OriginalURL),
 		AuthorName:       name,
 		AuthorUsername:   username,
 		AuthorAvatarUrl:  avatar,
 		AuthorProfileUrl: profile,
 		Score:            sql.NullFloat64{Float64: item.Score, Valid: true},
-		Summary:          nullString(item.Snippet),
+		Summary:          store.NullString(item.Snippet),
 		Position:         int64(position),
 		Published:        published,
 	})
@@ -174,12 +174,5 @@ func authorFields(a *news.Author) (name, username, avatar, profile sql.NullStrin
 	if a == nil {
 		return
 	}
-	return nullString(a.Name), nullString(a.Username), nullString(a.AvatarURL), nullString(a.ProfileURL)
-}
-
-func nullString(s string) sql.NullString {
-	if s == "" {
-		return sql.NullString{}
-	}
-	return sql.NullString{String: s, Valid: true}
+	return store.NullString(a.Name), store.NullString(a.Username), store.NullString(a.AvatarURL), store.NullString(a.ProfileURL)
 }

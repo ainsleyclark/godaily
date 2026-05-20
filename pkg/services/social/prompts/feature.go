@@ -30,6 +30,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 // tagWeights bias the candidate shortlist toward items most likely to drive
@@ -159,7 +160,7 @@ func Feature(ctx context.Context, p ai.Prompter, day time.Time, items []news.Ite
 }
 
 func parseFeatured(raw []byte) (Featured, error) {
-	body := stripFences(string(raw))
+	body := aiutil.StripFences(string(raw))
 	if body == "" {
 		return Featured{}, errors.New("empty featured response")
 	}

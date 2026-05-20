@@ -32,6 +32,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -207,7 +208,7 @@ func TestStripFences(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			assert.Equal(t, tc.want, stripFences(tc.in))
+			assert.Equal(t, tc.want, aiutil.StripFences(tc.in))
 		})
 	}
 }
