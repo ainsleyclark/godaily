@@ -25,7 +25,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 const orgLogoURL = "https://godaily.dev/assets/favicon/favicon-96x96.png"

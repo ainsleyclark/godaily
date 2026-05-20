@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/ainsleyclark/godaily/pkg/news"
+import "github.com/ainsleyclark/godaily/pkg/domain/news"
 
 // SampleSection wraps Sample with the standard section heading used on the
 // homepage. The digest page renders Sample directly without a wrapping section.

@@ -8,7 +8,7 @@ in `internal/ingest`; this package only holds per-provider fetchers.
 
 ## 1. Register the source constant
 
-In `pkg/news/sources.go`, add a constant and append it to the `Sources` slice:
+In `pkg/domain/news/sources.go`, add a constant and append it to the `Sources` slice:
 
 ```go
 const (
@@ -33,7 +33,7 @@ import (
     "context"
     "encoding/json" // or encoding/xml
 
-    "github.com/ainsleyclark/godaily/pkg/news"
+    "github.com/ainsleyclark/godaily/pkg/domain/news"
     "github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
@@ -103,7 +103,7 @@ Key points:
 ## 3. Add a mark/logo asset
 
 Add a square SVG (or PNG/WebP for raster brands) to `web/assets/images/marks/<source_id>.<ext>` and
-register its path in the `sourceMarkURLs` map in `pkg/news/sources.go`:
+register its path in the `sourceMarkURLs` map in `pkg/domain/news/sources.go`:
 
 ```go
 var sourceMarkURLs = map[Source]string{
@@ -149,7 +149,7 @@ import (
     "strings"
     "testing"
 
-    "github.com/ainsleyclark/godaily/pkg/news"
+    "github.com/ainsleyclark/godaily/pkg/domain/news"
     "github.com/stretchr/testify/assert"
     "github.com/stretchr/testify/require"
 )

@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	news "github.com/ainsleyclark/godaily/pkg/news"
+	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	gomock "go.uber.org/mock/gomock"
 )
 

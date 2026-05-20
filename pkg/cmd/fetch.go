@@ -24,7 +24,7 @@ import (
 	"fmt"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/urfave/cli/v3"
 )
 

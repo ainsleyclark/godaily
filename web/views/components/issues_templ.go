@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 func Issues(issues []news.Issue) templ.Component {

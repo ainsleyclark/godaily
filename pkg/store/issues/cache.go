@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
