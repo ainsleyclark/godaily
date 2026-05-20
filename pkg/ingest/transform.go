@@ -145,7 +145,11 @@ func hasNonLatinScript(s string) bool {
 			unicode.Is(unicode.Han, r) ||
 			unicode.Is(unicode.Hiragana, r) ||
 			unicode.Is(unicode.Katakana, r) ||
-			unicode.Is(unicode.Hangul, r) {
+			unicode.Is(unicode.Hangul, r) ||
+			unicode.Is(unicode.Arabic, r) ||
+			unicode.Is(unicode.Hebrew, r) ||
+			unicode.Is(unicode.Devanagari, r) ||
+			unicode.Is(unicode.Thai, r) {
 			return true
 		}
 	}

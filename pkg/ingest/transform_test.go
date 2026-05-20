@@ -155,6 +155,10 @@ func TestIsEnglishTitle(t *testing.T) {
 		"Indonesian livecoding title": {input: "Bikin Web Forum Pake Golang dan React", want: false},
 		"Portuguese title":            {input: "Concorrência em Go com goroutines e canais", want: false},
 		"Spanish title":               {input: "Construyendo microservicios con Go y gRPC", want: false},
+
+		// Arabic — must be rejected (was slipping through before Arabic script check was added)
+		"Arabic mixed with Latin tech terms": {input: "Learn Go Programming | #09 - Slices | كورس GoLang بالعربي", want: false},
+		"Arabic only":                        {input: "شرح كامل لل Slices في ال GoLang بالتفصيل", want: false},
 	}
 
 	for name, test := range tt {
