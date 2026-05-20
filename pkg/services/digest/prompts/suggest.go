@@ -104,4 +104,3 @@ func parseSuggestionBytes(raw []byte) (Suggestion, error) {
 	}
 	return Suggestion{Post: out.Post, References: out.References}, nil
 }
-
