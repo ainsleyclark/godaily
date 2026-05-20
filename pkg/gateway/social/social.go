@@ -26,8 +26,6 @@ import (
 	"context"
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/gateway/social Poster
-
 // Platform identifies a social platform.
 type Platform string
 
@@ -50,6 +48,8 @@ func (p Platform) String() string {
 type Result struct {
 	PostURL string
 }
+
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/gateway/social Poster
 
 // Poster publishes a single text post on one social platform.
 //
