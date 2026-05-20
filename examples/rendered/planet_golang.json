@@ -2,43 +2,122 @@
 	{
 		"id": 0,
 		"source": "planet_golang",
-		"title": "Understanding Go's Memory Model",
-		"url": "https://example.com/go-memory-model",
-		"author": {
-			"name": "Alex Writer"
-		},
-		"snippet": "A deep dive into how Go manages memory and goroutine synchronisation.",
+		"title": "Reading List",
+		"url": "https://pliutau.com/reading-list/",
+		"image_url": "https://pliutau.com/me.jpg",
+		"author": {},
+		"snippet": "This page is auto-generated from Github Actions workflow that runs every day at night and fetches the 5 latest articles from each of my favorite blogs.",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.5,
-		"published": "2026-05-18T09:00:00Z"
+		"published": "0001-01-01T00:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "planet_golang",
-		"title": "Building REST APIs with Go 1.26",
-		"url": "https://example.com/rest-apis-go-126",
-		"author": {
-			"name": "Jordan Dev"
-		},
-		"snippet": "Practical patterns for building efficient REST APIs using the latest Go release.",
+		"title": "The select Statement",
+		"url": "https://internals-for-interns.com/posts/go-runtime-select/",
+		"image_url": "https://internals-for-interns.com/images/go-runtime-header.webp",
+		"author": {},
+		"snippet": "In the previous article we walked through slices, maps, and channels, and how each of them is structured under the hood. Out of those three, channels are probably the most involved one in terms of how",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.5,
-		"published": "2026-05-17T14:30:00Z"
+		"published": "0001-01-01T00:00:00Z"
 	},
 	{
 		"id": 0,
 		"source": "planet_golang",
-		"title": "Go generics in practice: lessons from a year of production use",
-		"url": "https://example.com/go-generics-production",
-		"author": {
-			"name": "Sam Engineer"
-		},
-		"snippet": "What we learned after migrating a large codebase to use generics in Go 1.21 and beyond.",
+		"title": "Testing Go CLIs with testscript",
+		"url": "https://rednafi.com/go/testscript-cli/",
+		"image_url": "https://blob.rednafi.com/static/images/home/cover.png",
+		"author": {},
+		"snippet": "How cmd/go\u0026 39;s script tests led me to testscript, and how to use it for CLI tests that exercise argv, stdout, stderr, exit codes, and scratch files.",
 		"tag": "article",
 		"comments": 0,
 		"score": 0.5,
-		"published": "2026-05-16T11:00:00Z"
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Why Cilium vendors every Go module in 2026",
+		"url": "https://golangweekly.com/issues/601",
+		"author": {},
+		"snippet": "​601 — May 15, 2026 Read the Web Version Go Weekly 'Go Fuzzing Was Missing Half the Toolkit: We Forked the Toolchain to Fix It' — Go’s fuzzer lags the LibAFL-class tools Rust and C++ devs take",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "A GNU Emacs learning experience with text-mode hooks",
+		"url": "https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsTextModeHooksGotcha",
+		"author": {
+			"name": "cks"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Moving from lsp-mode in GNU Emacs to Eglot",
+		"url": "https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsLspModeToEglot",
+		"author": {
+			"name": "cks"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Where the sun keeps shinin': the provider pattern in Rust",
+		"url": "https://bitfieldconsulting.com/posts/sun-keeps-shinin",
+		"image_url": "http://static1.squarespace.com/static/5e10bdc20efb8f0d169f85f9/5e949913434baa2223121b85/685e7b4a4c51632dea3f3650/1778408754965/umbrella-square.jpg?format=1500w",
+		"author": {
+			"name": "John Arundel"
+		},
+		"snippet": "Let’s add a provider abstraction to brighten up our Rust weather client’s API.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Notes on using GNU Emacs' Tramp system in an unusual shell environment",
+		"url": "https://utcc.utoronto.ca/~cks/space/blog/programming/EmacsTrampNotes",
+		"author": {
+			"name": "cks"
+		},
+		"snippet": "",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
+	},
+	{
+		"id": 0,
+		"source": "planet_golang",
+		"title": "Type-safe slogging",
+		"url": "https://rednafi.com/go/typesafe-slogging/",
+		"image_url": "https://blob.rednafi.com/static/images/home/cover.png",
+		"author": {},
+		"snippet": "The default slog API is loose enough that a careless line ships broken JSON to production. Pin it down with Attr constructors, LogAttrs, a context-borne logger, and sloglint.",
+		"tag": "article",
+		"comments": 0,
+		"score": 0.5,
+		"published": "0001-01-01T00:00:00Z"
 	}
 ]
