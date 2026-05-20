@@ -22,6 +22,7 @@ package digest
 import (
 	"errors"
 	htmltemplate "html/template"
+	"strconv"
 	"testing"
 	"time"
 
@@ -30,7 +31,9 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 )
 
 func TestAggregator_SendDigest(t *testing.T) {
@@ -174,6 +177,37 @@ func TestAggregator_SendDigest(t *testing.T) {
 		err = agg.SendDigest(t.Context(), date, false)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "rendering digest")
+	})
+
+	t.Run("Tags Each Email With Issue And Subscriber IDs", func(t *testing.T) {
+		issueRepo, itemRepo := newTestStores(t)
+		date := day("2026-05-10")
+		stored, err := issueRepo.Create(t.Context(), news.Issue{
+			Slug:    "2026-05-10",
+			Subject: "GoDaily - 2026-05-10",
+			Status:  news.IssueStatusDraft,
+			SentAt:  time.Now().UTC(),
+		})
+		require.NoError(t, err)
+
+		subs := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]news.Subscriber{
+			{ID: 99, Email: "reader@example.com", UnsubscribeToken: "tok-99"},
+		}, nil)
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com", issues: issueRepo, items: itemRepo, subscribers: subs}
+
+		require.NoError(t, agg.SendDigest(t.Context(), date, false))
+		require.Len(t, m.reqs, 2)
+
+		issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(stored.ID, 10)}
+
+		t.Log("Admin email carries only the issue tag")
+		assert.Equal(t, []email.Tag{issueTag}, m.reqs[0].Tags)
+
+		t.Log("Subscriber email carries issue and subscriber tags")
+		assert.Equal(t, []email.Tag{issueTag, {Name: email.TagSubscriberID, Value: "99"}}, m.reqs[1].Tags)
 	})
 
 	t.Run("Prompter Never Called During Send", func(t *testing.T) {

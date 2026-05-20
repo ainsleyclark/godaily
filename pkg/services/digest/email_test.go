@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -162,7 +163,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{err: errors.New("boom")}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
-		err := agg.sendRendered(t.Context(), "to@example.com", rendered)
+		err := agg.sendRendered(t.Context(), "to@example.com", rendered, nil)
 		assert.True(t, m.called)
 		assert.ErrorContains(t, err, "boom")
 	})
@@ -173,7 +174,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
 
-		err := agg.sendRendered(t.Context(), "to@example.com", rendered)
+		err := agg.sendRendered(t.Context(), "to@example.com", rendered, nil)
 		require.NoError(t, err)
 		require.True(t, m.called)
 		assert.Equal(t, "GoDaily <digest@godaily.dev>", m.req.From)
@@ -193,7 +194,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
 
-		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", subRendered))
+		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", subRendered, nil))
 		assert.Equal(t, "<"+unsubURL+">", m.req.Headers["List-Unsubscribe"])
 		assert.Equal(t, "List-Unsubscribe=One-Click", m.req.Headers["List-Unsubscribe-Post"])
 	})
@@ -204,7 +205,22 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		m := &mockEmail{}
 		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
 
-		require.NoError(t, agg.sendRendered(t.Context(), "admin@example.com", rendered))
+		require.NoError(t, agg.sendRendered(t.Context(), "admin@example.com", rendered, nil))
 		assert.Empty(t, m.req.Headers)
+	})
+
+	t.Run("Attaches Tags To Outbound Email", func(t *testing.T) {
+		t.Parallel()
+
+		tags := []email.Tag{
+			{Name: email.TagIssueID, Value: "42"},
+			{Name: email.TagSubscriberID, Value: "7"},
+		}
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+
+		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", rendered, tags))
+		assert.Equal(t, tags, m.req.Tags)
 	})
 }

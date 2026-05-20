@@ -211,13 +211,17 @@ func toEmailItem(item news.Item) emailItem {
 	}
 }
 
-func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {
+// sendRendered ships a rendered digest to a single recipient. tags are
+// attached to the outbound email so the provider's webhook events can be
+// correlated back to the issue and subscriber they belong to.
+func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest, tags []email.Tag) error {
 	req := email.SendEmailRequest{
 		From:    "GoDaily <digest@godaily.dev>",
 		To:      []string{to},
 		Subject: d.Subject,
 		Html:    d.HTML,
 		Text:    d.Text,
+		Tags:    tags,
 	}
 	if d.UnsubscribeURL != "" {
 		req.Headers = map[string]string{

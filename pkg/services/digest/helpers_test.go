@@ -46,13 +46,15 @@ func (m mockFetcher) Fetch(_ context.Context) ([]news.Item, error) {
 
 type mockEmail struct {
 	called bool
-	req    email.SendEmailRequest
+	req    email.SendEmailRequest   // the most recent request
+	reqs   []email.SendEmailRequest // every request, in send order
 	err    error
 }
 
 func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	m.called = true
 	m.req = req
+	m.reqs = append(m.reqs, req)
 	return m.err
 }
 

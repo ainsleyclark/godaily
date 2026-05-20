@@ -24,12 +24,14 @@ import (
 	"fmt"
 	"log/slog"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -73,8 +75,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		return errors.Wrap(err, "rendering digest")
 	}
 
+	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
+
 	status := news.IssueStatusSent
-	if err = a.sendRendered(ctx, a.adminEmailAddress, adminRendered); err != nil {
+	if err = a.sendRendered(ctx, a.adminEmailAddress, adminRendered, []email.Tag{issueTag}); err != nil {
 		slog.ErrorContext(ctx, "Failed to send digest email to admin", "err", err)
 		status = news.IssueStatusError
 	}
@@ -101,7 +105,8 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 			slog.ErrorContext(ctx, "Failed to render digest for subscriber", "email", sub.Email, "err", renderErr)
 			continue
 		}
-		if sendErr := a.sendRendered(ctx, sub.Email, subRendered); sendErr != nil {
+		tags := []email.Tag{issueTag, {Name: email.TagSubscriberID, Value: strconv.FormatInt(sub.ID, 10)}}
+		if sendErr := a.sendRendered(ctx, sub.Email, subRendered, tags); sendErr != nil {
 			slog.ErrorContext(ctx, "Failed to send digest to subscriber", "email", sub.Email, "err", sendErr)
 		}
 	}
