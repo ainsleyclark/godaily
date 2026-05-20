@@ -7,6 +7,7 @@ sql:
       - "pkg/store/items/query.sql"
       - "pkg/store/subscribers/query.sql"
       - "pkg/store/socialposts/query.sql"
+      - "pkg/store/emailevents/query.sql"
     gen:
       go:
         package: "sqlc"
@@ -36,4 +37,13 @@ sql:
               import: "time"
               pointer: true
           - column: "social_posts.posted_at"
+            go_type: "time.Time"
+          - column: "subscribers.bounced_at"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true
+          - column: "email_events.occurred_at"
+            go_type: "time.Time"
+          - column: "email_events.created_at"
             go_type: "time.Time"

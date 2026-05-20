@@ -27,6 +27,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	emaildomain "github.com/ainsleyclark/godaily/pkg/domain/email"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -39,6 +40,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
+	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
@@ -65,6 +67,7 @@ type Repository struct {
 	Items       news.ItemRepository
 	Subscribers news.SubscriberRepository
 	SocialPosts news.SocialPostRepository
+	EmailEvents emaildomain.EventRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -111,6 +114,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Items:       items.New(conn),
 		Subscribers: subsStore,
 		SocialPosts: socialPostsStore,
+		EmailEvents: emailevents.New(conn),
 	}
 
 	emailSender := email.New(config.ResendToken)
