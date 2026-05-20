@@ -213,7 +213,7 @@ func toEmailItem(item news.Item) emailItem {
 
 func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest) error {
 	req := email.SendEmailRequest{
-		From:    "GoDaily <noreply@godaily.dev>",
+		From:    "GoDaily <digest@godaily.dev>",
 		To:      []string{to},
 		Subject: d.Subject,
 		Html:    d.HTML,
