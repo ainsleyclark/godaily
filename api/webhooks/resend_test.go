@@ -39,9 +39,9 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockemail "github.com/ainsleyclark/godaily/pkg/mocks/domain/email"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 )
@@ -65,10 +65,10 @@ func sign(t *testing.T, secret, id, timestamp, payload string) string {
 	return "v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func newApp(t *testing.T, secret string) (*godaily.App, *mockemail.MockEventRepository, *mocksubscriber.MockSubscriber) {
+func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmailEventRepository, *mocksubscriber.MockSubscriber) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
-	events := mockemail.NewMockEventRepository(ctrl)
+	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return &godaily.App{
 		Config:      &env.Config{ResendWebhookSecret: secret},
@@ -99,7 +99,7 @@ func TestHandler(t *testing.T) {
 	t.Run("Valid signed event is processed", func(t *testing.T) {
 		a, events, _ := newApp(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
-		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(email.Event{}, nil)
+		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
 
 		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "delivered.json")))
 		assert.Equal(t, http.StatusOK, w.Code)
@@ -108,7 +108,7 @@ func TestHandler(t *testing.T) {
 	t.Run("Bounced event marks the subscriber", func(t *testing.T) {
 		a, events, subs := newApp(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
-		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(email.Event{}, nil)
+		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
 		subs.EXPECT().MarkBounced(gomock.Any(), "dead-inbox@example.com").Return(nil)
 
 		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "bounced.json")))
@@ -160,7 +160,7 @@ func TestHandler(t *testing.T) {
 	t.Run("Processing failure returns a server error", func(t *testing.T) {
 		a, events, _ := newApp(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
-		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(email.Event{}, errors.New("db down"))
+		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, errors.New("db down"))
 
 		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
 		assert.Equal(t, http.StatusInternalServerError, w.Code)

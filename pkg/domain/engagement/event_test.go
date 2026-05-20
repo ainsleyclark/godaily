@@ -17,31 +17,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package email_test
+package engagement_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-func TestEventType_Valid(t *testing.T) {
+func TestEmailEventType_Valid(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		input email.EventType
+		input engagement.EmailEventType
 		want  bool
 	}{
-		"Delivered":  {input: email.EventTypeDelivered, want: true},
-		"Opened":     {input: email.EventTypeOpened, want: true},
-		"Clicked":    {input: email.EventTypeClicked, want: true},
-		"Bounced":    {input: email.EventTypeBounced, want: true},
-		"Complained": {input: email.EventTypeComplained, want: true},
-		"Unknown":    {input: email.EventType("exploded"), want: false},
-		"Empty":      {input: email.EventType(""), want: false},
-		"Wire form":  {input: email.EventType("email.opened"), want: false},
+		"Delivered":  {input: engagement.EmailEventTypeDelivered, want: true},
+		"Opened":     {input: engagement.EmailEventTypeOpened, want: true},
+		"Clicked":    {input: engagement.EmailEventTypeClicked, want: true},
+		"Bounced":    {input: engagement.EmailEventTypeBounced, want: true},
+		"Complained": {input: engagement.EmailEventTypeComplained, want: true},
+		"Unknown":    {input: engagement.EmailEventType("exploded"), want: false},
+		"Empty":      {input: engagement.EmailEventType(""), want: false},
+		"Wire form":  {input: engagement.EmailEventType("email.opened"), want: false},
 	}
 
 	for name, test := range tt {
@@ -52,7 +52,7 @@ func TestEventType_Valid(t *testing.T) {
 	}
 }
 
-func TestEventType_String(t *testing.T) {
+func TestEmailEventType_String(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "clicked", email.EventTypeClicked.String())
+	assert.Equal(t, "clicked", engagement.EmailEventTypeClicked.String())
 }

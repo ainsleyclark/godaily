@@ -27,7 +27,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
@@ -46,11 +46,11 @@ type Store struct {
 	db   *sql.DB
 }
 
-var _ email.EventRepository = (*Store)(nil)
+var _ engagement.EmailEventRepository = (*Store)(nil)
 
 // Create persists an email event. When OccurredAt is the zero value it
 // defaults to time.Now().UTC() so callers don't need to set it.
-func (s Store) Create(ctx context.Context, e email.Event) (email.Event, error) {
+func (s Store) Create(ctx context.Context, e engagement.EmailEvent) (engagement.EmailEvent, error) {
 	occurredAt := e.OccurredAt
 	if occurredAt.IsZero() {
 		occurredAt = time.Now().UTC()
@@ -67,7 +67,7 @@ func (s Store) Create(ctx context.Context, e email.Event) (email.Event, error) {
 		OccurredAt:   occurredAt,
 	})
 	if err != nil {
-		return email.Event{}, err
+		return engagement.EmailEvent{}, err
 	}
 	return transform(row), nil
 }
@@ -80,13 +80,13 @@ func (s Store) ExistsByEventID(ctx context.Context, eventID string) (bool, error
 
 // IssueStats returns aggregate engagement for a single issue. Open and click
 // rates are derived in Go to keep the SQL a plain set of counts.
-func (s Store) IssueStats(ctx context.Context, issueID int64) (email.IssueStats, error) {
+func (s Store) IssueStats(ctx context.Context, issueID int64) (engagement.IssueStats, error) {
 	row, err := s.sqlc.EmailEventIssueStats(ctx, sql.NullInt64{Int64: issueID, Valid: true})
 	if err != nil {
-		return email.IssueStats{}, err
+		return engagement.IssueStats{}, err
 	}
 
-	stats := email.IssueStats{
+	stats := engagement.IssueStats{
 		IssueID:      issueID,
 		Delivered:    row.Delivered,
 		UniqueOpens:  row.UniqueOpens,
@@ -104,7 +104,7 @@ func (s Store) IssueStats(ctx context.Context, issueID int64) (email.IssueStats,
 }
 
 // TopLinks returns the most-clicked links for an issue, most clicks first.
-func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]email.LinkClicks, error) {
+func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]engagement.LinkClicks, error) {
 	rows, err := s.sqlc.EmailEventTopLinks(ctx, sqlc.EmailEventTopLinksParams{
 		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
 		Limit:   limit,
@@ -113,20 +113,20 @@ func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]emai
 		return nil, err
 	}
 
-	out := make([]email.LinkClicks, 0, len(rows))
+	out := make([]engagement.LinkClicks, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, email.LinkClicks{URL: r.Url.String, Clicks: r.Clicks})
+		out = append(out, engagement.LinkClicks{URL: r.Url.String, Clicks: r.Clicks})
 	}
 	return out, nil
 }
 
-func transform(r sqlc.EmailEvent) email.Event {
-	return email.Event{
+func transform(r sqlc.EmailEvent) engagement.EmailEvent {
+	return engagement.EmailEvent{
 		ID:           r.ID,
 		IssueID:      int64Ptr(r.IssueID),
 		SubscriberID: int64Ptr(r.SubscriberID),
 		Email:        r.Email,
-		Type:         email.EventType(r.EventType),
+		Type:         engagement.EmailEventType(r.EventType),
 		URL:          r.Url.String,
 		ProviderID:   r.ProviderID.String,
 		EventID:      r.EventID,

@@ -27,7 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
@@ -35,7 +35,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 )
 
-func mustCreate(t *testing.T, ctx context.Context, s email.EventRepository, e email.Event) {
+func mustCreate(t *testing.T, ctx context.Context, s engagement.EmailEventRepository, e engagement.EmailEvent) {
 	t.Helper()
 	_, err := s.Create(ctx, e)
 	require.NoError(t, err)
@@ -62,11 +62,11 @@ func TestEmailEvents_Store(t *testing.T) {
 	s := emailevents.New(db)
 
 	t.Run("Create persists row and defaults OccurredAt", func(t *testing.T) {
-		got, err := s.Create(ctx, email.Event{
+		got, err := s.Create(ctx, engagement.EmailEvent{
 			IssueID:      &issue.ID,
 			SubscriberID: &subA.ID,
 			Email:        "a@example.com",
-			Type:         email.EventTypeDelivered,
+			Type:         engagement.EmailEventTypeDelivered,
 			ProviderID:   "re_abc123",
 			EventID:      "evt_delivered_a",
 		})
@@ -79,9 +79,9 @@ func TestEmailEvents_Store(t *testing.T) {
 	})
 
 	t.Run("Create accepts nil issue and subscriber", func(t *testing.T) {
-		got, err := s.Create(ctx, email.Event{
+		got, err := s.Create(ctx, engagement.EmailEvent{
 			Email:   "stranger@example.com",
-			Type:    email.EventTypeBounced,
+			Type:    engagement.EmailEventTypeBounced,
 			EventID: "evt_orphan",
 		})
 		require.NoError(t, err)
@@ -90,9 +90,9 @@ func TestEmailEvents_Store(t *testing.T) {
 	})
 
 	t.Run("Duplicate event ID is rejected", func(t *testing.T) {
-		_, err := s.Create(ctx, email.Event{
+		_, err := s.Create(ctx, engagement.EmailEvent{
 			Email:   "a@example.com",
-			Type:    email.EventTypeDelivered,
+			Type:    engagement.EmailEventTypeDelivered,
 			EventID: "evt_delivered_a",
 		})
 		assert.Error(t, err)
@@ -115,11 +115,11 @@ func TestEmailEvents_Store(t *testing.T) {
 	})
 
 	t.Run("IssueStats aggregates engagement", func(t *testing.T) {
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: email.EventTypeDelivered, EventID: "evt_delivered_b"})
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: email.EventTypeOpened, EventID: "evt_open_a1"})
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: email.EventTypeOpened, EventID: "evt_open_a2"})
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: email.EventTypeOpened, EventID: "evt_open_b1"})
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: email.EventTypeClicked, URL: "https://go.dev", EventID: "evt_click_a1"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "evt_delivered_b"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "evt_open_a1"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "evt_open_a2"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeOpened, EventID: "evt_open_b1"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://go.dev", EventID: "evt_click_a1"})
 
 		got, err := s.IssueStats(ctx, issue.ID)
 		require.NoError(t, err)
@@ -140,8 +140,8 @@ func TestEmailEvents_Store(t *testing.T) {
 	})
 
 	t.Run("TopLinks ranks clicks", func(t *testing.T) {
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: email.EventTypeClicked, URL: "https://go.dev", EventID: "evt_click_b1"})
-		mustCreate(t, ctx, s, email.Event{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: email.EventTypeClicked, URL: "https://pkg.go.dev", EventID: "evt_click_a2"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://go.dev", EventID: "evt_click_b1"})
+		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://pkg.go.dev", EventID: "evt_click_a2"})
 
 		got, err := s.TopLinks(ctx, issue.ID, 10)
 		require.NoError(t, err)
@@ -160,7 +160,7 @@ func TestEmailEvents_Store(t *testing.T) {
 	// MUST be last: closing the DB makes every subsequent query fail.
 	t.Run("Query error on closed DB", func(t *testing.T) {
 		require.NoError(t, db.Close())
-		_, err := s.Create(ctx, email.Event{Email: "x@example.com", Type: email.EventTypeOpened, EventID: "evt_closed"})
+		_, err := s.Create(ctx, engagement.EmailEvent{Email: "x@example.com", Type: engagement.EmailEventTypeOpened, EventID: "evt_closed"})
 		assert.Error(t, err)
 	})
 }

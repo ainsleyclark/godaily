@@ -27,18 +27,18 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
-	mockemail "github.com/ainsleyclark/godaily/pkg/mocks/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 )
 
 var errBoom = errors.New("boom")
 
-func setup(t *testing.T) (*mockemail.MockEventRepository, *mocksubscriber.MockSubscriber, *emailevent.Service) {
+func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockSubscriber, *emailevent.Service) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
-	events := mockemail.NewMockEventRepository(ctrl)
+	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return events, subs, emailevent.New(events, subs)
 }
@@ -46,7 +46,7 @@ func setup(t *testing.T) (*mockemail.MockEventRepository, *mocksubscriber.MockSu
 func TestService_Process(t *testing.T) {
 	t.Parallel()
 
-	opened := email.Event{Type: email.EventTypeOpened, EventID: "evt_opened", Email: "reader@example.com"}
+	opened := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_opened", Email: "reader@example.com"}
 
 	t.Run("Stores event with no side effect", func(t *testing.T) {
 		t.Parallel()
@@ -61,7 +61,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Bounced event marks the subscriber bounced", func(t *testing.T) {
 		t.Parallel()
 
-		bounced := email.Event{Type: email.EventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		bounced := engagement.EmailEvent{Type: engagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)
@@ -73,7 +73,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Complained event unsubscribes the subscriber", func(t *testing.T) {
 		t.Parallel()
 
-		complained := email.Event{Type: email.EventTypeComplained, EventID: "evt_spam", Email: "angry@example.com"}
+		complained := engagement.EmailEvent{Type: engagement.EmailEventTypeComplained, EventID: "evt_spam", Email: "angry@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_spam").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), complained).Return(complained, nil)
@@ -105,7 +105,7 @@ func TestService_Process(t *testing.T) {
 
 		events, _, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(false, nil)
-		events.EXPECT().Create(gomock.Any(), opened).Return(email.Event{}, errBoom)
+		events.EXPECT().Create(gomock.Any(), opened).Return(engagement.EmailEvent{}, errBoom)
 
 		assert.ErrorIs(t, svc.Process(t.Context(), opened), errBoom)
 	})
@@ -113,7 +113,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Side effect error propagates", func(t *testing.T) {
 		t.Parallel()
 
-		bounced := email.Event{Type: email.EventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		bounced := engagement.EmailEvent{Type: engagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)

@@ -27,7 +27,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/resend/resend-go/v3"
 
-	domainemail "github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 // WebhookHeaders carries the Svix-style signature headers Resend sends with
@@ -58,12 +58,12 @@ type WebhookData struct {
 
 // webhookEventTypes maps Resend's wire event names to GoDaily's canonical
 // event types. Types absent from this map are not tracked.
-var webhookEventTypes = map[string]domainemail.EventType{
-	resend.EventEmailDelivered:  domainemail.EventTypeDelivered,
-	resend.EventEmailOpened:     domainemail.EventTypeOpened,
-	resend.EventEmailClicked:    domainemail.EventTypeClicked,
-	resend.EventEmailBounced:    domainemail.EventTypeBounced,
-	resend.EventEmailComplained: domainemail.EventTypeComplained,
+var webhookEventTypes = map[string]engagement.EmailEventType{
+	resend.EventEmailDelivered:  engagement.EmailEventTypeDelivered,
+	resend.EventEmailOpened:     engagement.EmailEventTypeOpened,
+	resend.EventEmailClicked:    engagement.EmailEventTypeClicked,
+	resend.EventEmailBounced:    engagement.EmailEventTypeBounced,
+	resend.EventEmailComplained: engagement.EmailEventTypeComplained,
 }
 
 // VerifyWebhook checks the Svix-style signature on a Resend webhook request.
@@ -96,10 +96,10 @@ func ParseWebhook(body []byte) (WebhookEvent, error) {
 // domain event. eventID is the Svix message ID, used as the idempotency key.
 // The returned bool reports whether the event type is one GoDaily tracks;
 // when false the event should be acknowledged and ignored.
-func ToEmailEvent(evt WebhookEvent, eventID string) (domainemail.Event, bool, error) {
+func ToEmailEvent(evt WebhookEvent, eventID string) (engagement.EmailEvent, bool, error) {
 	eventType, tracked := webhookEventTypes[evt.Type]
 	if !tracked {
-		return domainemail.Event{}, false, nil
+		return engagement.EmailEvent{}, false, nil
 	}
 
 	occurredAt, err := time.Parse(time.RFC3339, evt.CreatedAt)
@@ -109,7 +109,7 @@ func ToEmailEvent(evt WebhookEvent, eventID string) (domainemail.Event, bool, er
 		occurredAt = time.Time{}
 	}
 
-	out := domainemail.Event{
+	out := engagement.EmailEvent{
 		Type:       eventType,
 		EventID:    eventID,
 		ProviderID: evt.Data.EmailID,

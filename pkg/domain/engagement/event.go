@@ -17,73 +17,74 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package email defines the domain model for email lifecycle events —
-// opens, clicks, bounces and complaints — received from the email provider,
-// together with the engagement aggregates derived from them.
-package email
+// Package engagement defines the domain model for measured engagement with
+// GoDaily: email lifecycle events (opens, clicks, bounces, complaints) and
+// the per-issue and per-link aggregates derived from them. It is the data
+// foundation the growth loop reads from.
+package engagement
 
 import (
 	"context"
 	"time"
 )
 
-// EventType identifies an email lifecycle event that GoDaily tracks.
-type EventType string
+// EmailEventType identifies an email lifecycle event that GoDaily tracks.
+type EmailEventType string
 
 const (
-	// EventTypeDelivered marks an email accepted by the recipient's server.
-	// It is the denominator for open and click rates.
-	EventTypeDelivered EventType = "delivered"
-	// EventTypeOpened marks an email open. Treated as unreliable — Apple Mail
-	// Privacy Protection pre-fetches images and inflates opens.
-	EventTypeOpened EventType = "opened"
-	// EventTypeClicked marks a link click. This is the primary engagement
-	// signal.
-	EventTypeClicked EventType = "clicked"
-	// EventTypeBounced marks a hard delivery failure.
-	EventTypeBounced EventType = "bounced"
-	// EventTypeComplained marks a spam complaint.
-	EventTypeComplained EventType = "complained"
+	// EmailEventTypeDelivered marks an email accepted by the recipient's
+	// server. It is the denominator for open and click rates.
+	EmailEventTypeDelivered EmailEventType = "delivered"
+	// EmailEventTypeOpened marks an email open. Treated as unreliable — Apple
+	// Mail Privacy Protection pre-fetches images and inflates opens.
+	EmailEventTypeOpened EmailEventType = "opened"
+	// EmailEventTypeClicked marks a link click. This is the primary
+	// engagement signal.
+	EmailEventTypeClicked EmailEventType = "clicked"
+	// EmailEventTypeBounced marks a hard delivery failure.
+	EmailEventTypeBounced EmailEventType = "bounced"
+	// EmailEventTypeComplained marks a spam complaint.
+	EmailEventTypeComplained EmailEventType = "complained"
 )
 
-var validEventTypes = map[EventType]bool{
-	EventTypeDelivered:  true,
-	EventTypeOpened:     true,
-	EventTypeClicked:    true,
-	EventTypeBounced:    true,
-	EventTypeComplained: true,
+var validEmailEventTypes = map[EmailEventType]bool{
+	EmailEventTypeDelivered:  true,
+	EmailEventTypeOpened:     true,
+	EmailEventTypeClicked:    true,
+	EmailEventTypeBounced:    true,
+	EmailEventTypeComplained: true,
 }
 
 // String returns the event type as a string.
-func (t EventType) String() string {
+func (t EmailEventType) String() string {
 	return string(t)
 }
 
 // Valid reports whether t is a recognised event type.
-func (t EventType) Valid() bool {
-	return validEventTypes[t]
+func (t EmailEventType) Valid() bool {
+	return validEmailEventTypes[t]
 }
 
-// Event is a single email lifecycle event. IssueID and SubscriberID are
+// EmailEvent is a single email lifecycle event. IssueID and SubscriberID are
 // optional: events for non-digest mail (such as confirmation emails), or for
 // recipients that aren't tracked subscribers, still record — with the unknown
 // identifier left nil.
-type Event struct {
-	ID           int64     `json:"id"`
-	IssueID      *int64    `json:"issue_id,omitempty"`
-	SubscriberID *int64    `json:"subscriber_id,omitempty"`
-	Email        string    `json:"email"`
-	Type         EventType `json:"type"`
-	URL          string    `json:"url,omitempty"`
-	ProviderID   string    `json:"provider_id,omitempty"`
-	EventID      string    `json:"event_id"`
-	OccurredAt   time.Time `json:"occurred_at"`
-	CreatedAt    time.Time `json:"created_at"`
+type EmailEvent struct {
+	ID           int64          `json:"id"`
+	IssueID      *int64         `json:"issue_id,omitempty"`
+	SubscriberID *int64         `json:"subscriber_id,omitempty"`
+	Email        string         `json:"email"`
+	Type         EmailEventType `json:"type"`
+	URL          string         `json:"url,omitempty"`
+	ProviderID   string         `json:"provider_id,omitempty"`
+	EventID      string         `json:"event_id"`
+	OccurredAt   time.Time      `json:"occurred_at"`
+	CreatedAt    time.Time      `json:"created_at"`
 }
 
-// IssueStats aggregates engagement for a single digest issue. OpenRate and
-// ClickRate are unique events over delivered; both are zero when nothing was
-// delivered.
+// IssueStats aggregates email engagement for a single digest issue. OpenRate
+// and ClickRate are unique events over delivered; both are zero when nothing
+// was delivered.
 type IssueStats struct {
 	IssueID      int64   `json:"issue_id"`
 	Delivered    int64   `json:"delivered"`
@@ -103,12 +104,13 @@ type LinkClicks struct {
 	Clicks int64  `json:"clicks"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockemail -destination=../../mocks/domain/email/EventRepository.go . EventRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/EmailEventRepository.go . EmailEventRepository
 
-// EventRepository persists email events and answers engagement aggregates.
-type EventRepository interface {
+// EmailEventRepository persists email events and answers engagement
+// aggregates.
+type EmailEventRepository interface {
 	// Create persists an email event. OccurredAt defaults to now when zero.
-	Create(ctx context.Context, e Event) (Event, error)
+	Create(ctx context.Context, e EmailEvent) (EmailEvent, error)
 
 	// ExistsByEventID reports whether an event with the given provider event
 	// ID has already been stored — the idempotency guard for webhook retries.

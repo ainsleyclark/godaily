@@ -27,7 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 // SubscriberHealth applies the list-health side effects of email events.
@@ -39,12 +39,12 @@ type SubscriberHealth interface {
 
 // Service stores email events and applies their subscriber-health effects.
 type Service struct {
-	events      email.EventRepository
+	events      engagement.EmailEventRepository
 	subscribers SubscriberHealth
 }
 
 // New returns a Service wired to the event store and subscriber health.
-func New(events email.EventRepository, subscribers SubscriberHealth) *Service {
+func New(events engagement.EmailEventRepository, subscribers SubscriberHealth) *Service {
 	return &Service{
 		events:      events,
 		subscribers: subscribers,
@@ -53,11 +53,11 @@ func New(events email.EventRepository, subscribers SubscriberHealth) *Service {
 
 // sideEffects maps an event type to the subscriber-health action it triggers.
 // Event types without an entry are stored but carry no side effect.
-var sideEffects = map[email.EventType]func(context.Context, *Service, string) error{
-	email.EventTypeBounced: func(ctx context.Context, s *Service, addr string) error {
+var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, string) error{
+	engagement.EmailEventTypeBounced: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkBounced(ctx, addr)
 	},
-	email.EventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
+	engagement.EmailEventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkComplained(ctx, addr)
 	},
 }
@@ -65,7 +65,7 @@ var sideEffects = map[email.EventType]func(context.Context, *Service, string) er
 // Process stores an email event and applies any subscriber-health side
 // effect. Events whose EventID has already been stored are treated as
 // duplicate webhook deliveries and skipped, making Process idempotent.
-func (s *Service) Process(ctx context.Context, e email.Event) error {
+func (s *Service) Process(ctx context.Context, e engagement.EmailEvent) error {
 	exists, err := s.events.ExistsByEventID(ctx, e.EventID)
 	if err != nil {
 		return errors.Wrap(err, "checking for duplicate event")

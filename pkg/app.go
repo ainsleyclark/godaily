@@ -27,7 +27,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/db"
-	emaildomain "github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -69,7 +69,7 @@ type Repository struct {
 	Items       news.ItemRepository
 	Subscribers news.SubscriberRepository
 	SocialPosts news.SocialPostRepository
-	EmailEvents emaildomain.EventRepository
+	EmailEvents engagement.EmailEventRepository
 }
 
 // Bootstrap ties all the app dependencies together

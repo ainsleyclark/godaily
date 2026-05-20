@@ -34,7 +34,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	domainemail "github.com/ainsleyclark/godaily/pkg/domain/email"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 )
 
@@ -90,7 +90,7 @@ func TestToEmailEvent(t *testing.T) {
 		got, tracked, err := email.ToEmailEvent(evt, "msg_click")
 		require.NoError(t, err)
 		require.True(t, tracked)
-		assert.Equal(t, domainemail.EventTypeClicked, got.Type)
+		assert.Equal(t, engagement.EmailEventTypeClicked, got.Type)
 		assert.Equal(t, "msg_click", got.EventID)
 		assert.Equal(t, "re_delivered_abc123", got.ProviderID)
 		assert.Equal(t, "reader@example.com", got.Email)
@@ -110,7 +110,7 @@ func TestToEmailEvent(t *testing.T) {
 		gotBounced, tracked, err := email.ToEmailEvent(bounced, "msg_b")
 		require.NoError(t, err)
 		require.True(t, tracked)
-		assert.Equal(t, domainemail.EventTypeBounced, gotBounced.Type)
+		assert.Equal(t, engagement.EmailEventTypeBounced, gotBounced.Type)
 		assert.Equal(t, "dead-inbox@example.com", gotBounced.Email)
 
 		complained, err := email.ParseWebhook(loadFixture(t, "complained.json"))
@@ -118,7 +118,7 @@ func TestToEmailEvent(t *testing.T) {
 		gotComplained, tracked, err := email.ToEmailEvent(complained, "msg_c")
 		require.NoError(t, err)
 		require.True(t, tracked)
-		assert.Equal(t, domainemail.EventTypeComplained, gotComplained.Type)
+		assert.Equal(t, engagement.EmailEventTypeComplained, gotComplained.Type)
 		assert.Equal(t, "unhappy@example.com", gotComplained.Email)
 	})
 
