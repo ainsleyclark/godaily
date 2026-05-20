@@ -79,7 +79,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Get(srv.URL)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -102,7 +102,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Get(srv.URL)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -121,7 +121,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Get(srv.URL)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -140,7 +140,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Post(srv.URL, "application/json", http.NoBody) //nolint:noctx
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -159,7 +159,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Get(srv.URL)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -226,7 +226,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := newFastClient(3)
+		c := newFastClient()
 		resp, err := c.Get(srv.URL)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -279,7 +279,7 @@ func TestJitteredDelay(t *testing.T) {
 	}{
 		"Attempt 0": {attempt: 0, base: 100 * time.Millisecond, max: 10 * time.Second},
 		"Attempt 5": {attempt: 5, base: 100 * time.Millisecond, max: 10 * time.Second},
-		"Zero base":  {attempt: 2, base: 0, max: 10 * time.Second},
+		"Zero base": {attempt: 2, base: 0, max: 10 * time.Second},
 	}
 
 	for name, test := range tt {
@@ -319,9 +319,9 @@ func TestParseRetryAfter(t *testing.T) {
 }
 
 // newFastClient returns a retry client with near-zero delays, suitable for tests.
-func newFastClient(maxAttempts int) *http.Client {
+func newFastClient() *http.Client {
 	return New(
-		WithMaxAttempts(maxAttempts),
+		WithMaxAttempts(3),
 		WithBaseDelay(time.Millisecond),
 		WithMaxDelay(5*time.Millisecond),
 	)
