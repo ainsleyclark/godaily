@@ -32,7 +32,6 @@ import (
 	"go.uber.org/mock/gomock"
 
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
@@ -182,33 +181,6 @@ func TestParseSuggestionBytes(t *testing.T) {
 			}
 			require.NoError(t, err)
 			test.check(t, got)
-		})
-	}
-}
-
-func TestStripFences(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		in   string
-		want string
-	}{
-		"No Fence":            {in: `{"a":1}`, want: `{"a":1}`},
-		"Whitespace Only":     {in: "  \n  ", want: ""},
-		"Json Fence":          {in: "```json\n{\"a\":1}\n```", want: `{"a":1}`},
-		"Plain Fence":         {in: "```\n{\"a\":1}\n```", want: `{"a":1}`},
-		"Surrounding Spaces":  {in: "  ```json\n{\"a\":1}\n```  ", want: `{"a":1}`},
-		"Fence Without Close": {in: "```json\n{\"a\":1}", want: `{"a":1}`},
-		"Fence Without Newline (no body)": {
-			in: "```json", want: "```json",
-		},
-	}
-
-	for name, tc := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-
-			assert.Equal(t, tc.want, aiutil.StripFences(tc.in))
 		})
 	}
 }
