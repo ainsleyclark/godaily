@@ -31,6 +31,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 const maxTitleChars = 80
@@ -69,7 +70,7 @@ func Synthesise(ctx context.Context, p ai.Prompter, day time.Time, sections []ne
 
 // parseDigestBytes parses raw model output bytes into DigestMeta.
 func parseDigestBytes(raw []byte) (DigestMeta, error) {
-	body := stripFences(string(raw))
+	body := aiutil.StripFences(string(raw))
 	if body == "" {
 		return DigestMeta{}, errors.New("empty response body")
 	}

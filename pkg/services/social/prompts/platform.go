@@ -30,6 +30,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 // platformConfig captures the rules a single platform imposes on a post.
@@ -113,7 +114,7 @@ func buildPlatformSystem(cfg platformConfig) string {
 }
 
 func parsePlatformPost(raw []byte) (string, error) {
-	body := stripFences(string(raw))
+	body := aiutil.StripFences(string(raw))
 	if body == "" {
 		return "", errors.New("empty platform post response")
 	}

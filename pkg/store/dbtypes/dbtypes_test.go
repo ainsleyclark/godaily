@@ -17,25 +17,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package prompts
+package dbtypes_test
 
-import "strings"
+import (
+	"database/sql"
+	"testing"
 
-// stripFences defensively removes a wrapping ```json ... ``` (or plain
-// ``` ... ```) block if the model emits one despite being told not to.
-// Mirrors digest/prompts.stripFences.
-func stripFences(s string) string {
-	s = strings.TrimSpace(s)
-	if !strings.HasPrefix(s, "```") {
-		return s
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
+)
+
+func TestNullString(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want sql.NullString
+	}{
+		"Empty":     {in: "", want: sql.NullString{}},
+		"Non-empty": {in: "hello", want: sql.NullString{String: "hello", Valid: true}},
+		"Spaces":    {in: "  ", want: sql.NullString{String: "  ", Valid: true}},
 	}
-	if i := strings.IndexByte(s, '\n'); i >= 0 {
-		s = s[i+1:]
-	} else {
-		return s
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tc.want, dbtypes.NullString(tc.in))
+		})
 	}
-	if j := strings.LastIndex(s, "```"); j >= 0 {
-		s = s[:j]
-	}
-	return strings.TrimSpace(s)
 }

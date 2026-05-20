@@ -233,25 +233,3 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		require.NoError(t, err)
 	})
 }
-
-func TestStripFences(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		input string
-		want  string
-	}{
-		"No fences":    {input: `{"a":1}`, want: `{"a":1}`},
-		"json fenced":  {input: "```json\n" + `{"a":1}` + "\n```", want: `{"a":1}`},
-		"plain fenced": {input: "```\n" + `{"a":1}` + "\n```", want: `{"a":1}`},
-		"Whitespace":   {input: "   \n\n", want: ""},
-		"Single line":  {input: "```{a}```", want: "```{a}```"},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, stripFences(test.input))
-		})
-	}
-}
