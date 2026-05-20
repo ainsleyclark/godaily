@@ -86,7 +86,33 @@ func Privacy() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section privacy\"><div class=\"section__label\">Legal</div><h1 class=\"section__title\">Privacy Policy</h1><p class=\"section__sub\">Last updated: May 2026</p><div class=\"privacy__content\"><h2 class=\"privacy__heading\">What we collect</h2><p class=\"privacy__body\">We collect your email address when you subscribe to GoDaily. No other personal data is collected.</p><h2 class=\"privacy__heading\">How we use it</h2><p class=\"privacy__body\">Your email address is used solely to deliver the GoDaily digest. We do not share your data with third parties, sell mailing lists, or use it for advertising.</p><h2 class=\"privacy__heading\">Email delivery</h2><p class=\"privacy__body\">Digests are sent via <a class=\"privacy__link\" href=\"https://resend.com\">Resend</a>. Your address is stored in our database and passed to Resend only at send time.</p><h2 class=\"privacy__heading\">Unsubscribing</h2><p class=\"privacy__body\">Every digest contains an unsubscribe link. Clicking it removes your address immediately and permanently. You can also email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a> to request removal.</p><h2 class=\"privacy__heading\">Cookies &amp; tracking</h2><p class=\"privacy__body\">GoDaily does not use cookies, tracking pixels, or analytics of any kind.</p><h2 class=\"privacy__heading\">Contact</h2><p class=\"privacy__body\">Questions? Email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a>.</p></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section privacy\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Legal</div><h1 class=\"section__title\">Privacy Policy</h1><p class=\"section__sub\">Last updated: May 2026</p><div class=\"privacy__content\"><h2 class=\"privacy__heading\">What we collect</h2><p class=\"privacy__body\">We collect your email address when you subscribe to GoDaily. No other personal data is collected.</p><h2 class=\"privacy__heading\">How we use it</h2><p class=\"privacy__body\">Your email address is used solely to deliver the GoDaily digest. We do not share your data with third parties, sell mailing lists, or use it for advertising.</p><h2 class=\"privacy__heading\">Email delivery</h2><p class=\"privacy__body\">Digests are sent via <a class=\"privacy__link\" href=\"https://resend.com\">Resend</a>. Your address is stored in our database and passed to Resend only at send time.</p><h2 class=\"privacy__heading\">Unsubscribing</h2><p class=\"privacy__body\">Every digest contains an unsubscribe link. Clicking it removes your address immediately and permanently. You can also email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a> to request removal.</p><h2 class=\"privacy__heading\">Cookies &amp; tracking</h2><p class=\"privacy__body\">GoDaily does not use cookies, tracking pixels, or analytics of any kind.</p><h2 class=\"privacy__heading\">Contact</h2><p class=\"privacy__body\">Questions? Email <a class=\"privacy__link\" href=\"mailto:hello@godaily.dev\">hello@godaily.dev</a>.</p></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = components.Container(false).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

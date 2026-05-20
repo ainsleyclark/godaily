@@ -71,7 +71,7 @@ func (s Store) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item
 }
 
 func (s Store) listByIssue(ctx context.Context, issueID int64) ([]news.Item, error) {
-	rows, err := s.sqlc.ItemListByIssue(ctx, issueID)
+	rows, err := s.sqlc.ItemListByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
 	if err != nil {
 		return nil, err
 	}
@@ -84,8 +84,8 @@ func (s Store) listByIssue(ctx context.Context, issueID int64) ([]news.Item, err
 
 func (s Store) listByDateRange(ctx context.Context, from, to time.Time) ([]news.Item, error) {
 	rows, err := s.sqlc.ItemListByDateRange(ctx, sqlc.ItemListByDateRangeParams{
-		From: from,
-		To:   to,
+		From: &from,
+		To:   &to,
 	})
 	if err != nil {
 		return nil, err
@@ -135,7 +135,7 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 }
 
 func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
-	return s.sqlc.ItemDeleteByIssue(ctx, issueID)
+	return s.sqlc.ItemDeleteByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
 }
 
 func transformItem(i sqlc.Item) news.Item {

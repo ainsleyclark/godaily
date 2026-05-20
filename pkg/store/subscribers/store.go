@@ -142,7 +142,7 @@ func (s Store) Reactivate(ctx context.Context, email string) (news.Subscriber, e
 }
 
 func (s Store) Confirm(ctx context.Context, token string) (news.Subscriber, error) {
-	sub, err := s.sqlc.SubscriberConfirm(ctx, token)
+	sub, err := s.sqlc.SubscriberConfirm(ctx, sql.NullString{String: token, Valid: true})
 	if errors.Is(err, sql.ErrNoRows) {
 		return news.Subscriber{}, store.ErrNotFound
 	} else if err != nil {

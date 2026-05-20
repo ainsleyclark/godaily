@@ -20,7 +20,7 @@ ORDER BY position ASC;
 
 -- name: ItemListByDateRange :many
 SELECT * FROM items
-WHERE published >= ? AND published < ?
+WHERE published >= @from AND published < @to
 ORDER BY score DESC;
 
 -- name: ItemDeleteByIssue :exec
