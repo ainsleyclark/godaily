@@ -29,6 +29,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -78,10 +79,9 @@ type createRecordResponse struct {
 	CID string `json:"cid"`
 }
 
-// Post publishes text as a single post on the configured account.
-//
-// Bluesky linkifies bare URLs in post text automatically — callers should
-// include the URL inline rather than via facets to keep this adapter simple.
+// Post publishes text as a single post on the configured account. URLs in the
+// text are annotated with AT Protocol link facets so they render as clickable
+// hyperlinks in Bluesky clients.
 func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 	session, err := c.createSession(ctx)
 	if err != nil {
@@ -93,6 +93,9 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 		"text":      text,
 		"createdAt": time.Now().UTC().Format(time.RFC3339),
 		"langs":     []string{"en"},
+	}
+	if facets := buildFacets(text); len(facets) > 0 {
+		record["facets"] = facets
 	}
 
 	body := map[string]any{
@@ -159,6 +162,48 @@ func (c *Client) doJSON(ctx context.Context, method, token string, body, out any
 		return errors.Wrap(err, "decoding response")
 	}
 	return nil
+}
+
+// urlRe matches http/https URLs in post text. Trailing punctuation is stripped
+// separately so it isn't captured as part of the link target.
+var urlRe = regexp.MustCompile(`https?://[^\s]+`)
+
+type facetIndex struct {
+	ByteStart int `json:"byteStart"`
+	ByteEnd   int `json:"byteEnd"`
+}
+
+type facetFeature struct {
+	Type string `json:"$type"`
+	URI  string `json:"uri"`
+}
+
+type facet struct {
+	Index    facetIndex     `json:"index"`
+	Features []facetFeature `json:"features"`
+}
+
+// buildFacets returns AT Protocol link facets for every URL found in text.
+// Byte offsets are computed over the UTF-8 encoding of text, as required by
+// the AT Protocol richtext spec.
+func buildFacets(text string) []facet {
+	b := []byte(text)
+	matches := urlRe.FindAllIndex(b, -1)
+	if len(matches) == 0 {
+		return nil
+	}
+	out := make([]facet, 0, len(matches))
+	for _, m := range matches {
+		uri := strings.TrimRight(string(b[m[0]:m[1]]), ".,;:!?)'\"")
+		out = append(out, facet{
+			Index: facetIndex{ByteStart: m[0], ByteEnd: m[0] + len(uri)},
+			Features: []facetFeature{{
+				Type: "app.bsky.richtext.facet#link",
+				URI:  uri,
+			}},
+		})
+	}
+	return out
 }
 
 // postURLFromURI converts an at:// URI ("at://did:plc:xxx/app.bsky.feed.post/<rkey>")
