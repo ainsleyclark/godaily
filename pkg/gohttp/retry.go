@@ -20,8 +20,9 @@
 package gohttp
 
 import (
+	"crypto/rand"
 	"io"
-	"math/rand/v2"
+	"math/big"
 	"net/http"
 	"strconv"
 	"time"
@@ -100,7 +101,11 @@ func jitteredDelay(attempt int, base, max time.Duration) time.Duration {
 	if cap <= 0 {
 		return 0
 	}
-	return time.Duration(rand.Int64N(int64(cap))) //nolint:gosec // Jitter for HTTP back-off does not require cryptographic randomness.
+	n, err := rand.Int(rand.Reader, big.NewInt(int64(cap)))
+	if err != nil {
+		return cap / 2
+	}
+	return time.Duration(n.Int64())
 }
 
 // parseRetryAfter parses the Retry-After header value as integer seconds.
