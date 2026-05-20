@@ -1,0 +1,124 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package emailevent_test
+
+import (
+	"errors"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/email"
+	mockemail "github.com/ainsleyclark/godaily/pkg/mocks/domain/email"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
+)
+
+var errBoom = errors.New("boom")
+
+func setup(t *testing.T) (*mockemail.MockEventRepository, *mocksubscriber.MockSubscriber, *emailevent.Service) {
+	t.Helper()
+	ctrl := gomock.NewController(t)
+	events := mockemail.NewMockEventRepository(ctrl)
+	subs := mocksubscriber.NewMockSubscriber(ctrl)
+	return events, subs, emailevent.New(events, subs)
+}
+
+func TestService_Process(t *testing.T) {
+	t.Parallel()
+
+	opened := email.Event{Type: email.EventTypeOpened, EventID: "evt_opened", Email: "reader@example.com"}
+
+	t.Run("Stores event with no side effect", func(t *testing.T) {
+		t.Parallel()
+
+		events, _, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), opened).Return(opened, nil)
+
+		require.NoError(t, svc.Process(t.Context(), opened))
+	})
+
+	t.Run("Bounced event marks the subscriber bounced", func(t *testing.T) {
+		t.Parallel()
+
+		bounced := email.Event{Type: email.EventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		events, subs, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)
+		subs.EXPECT().MarkBounced(gomock.Any(), "dead@example.com").Return(nil)
+
+		require.NoError(t, svc.Process(t.Context(), bounced))
+	})
+
+	t.Run("Complained event unsubscribes the subscriber", func(t *testing.T) {
+		t.Parallel()
+
+		complained := email.Event{Type: email.EventTypeComplained, EventID: "evt_spam", Email: "angry@example.com"}
+		events, subs, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_spam").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), complained).Return(complained, nil)
+		subs.EXPECT().MarkComplained(gomock.Any(), "angry@example.com").Return(nil)
+
+		require.NoError(t, svc.Process(t.Context(), complained))
+	})
+
+	t.Run("Duplicate event is skipped", func(t *testing.T) {
+		t.Parallel()
+
+		events, _, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(true, nil)
+
+		require.NoError(t, svc.Process(t.Context(), opened))
+	})
+
+	t.Run("Existence check error propagates", func(t *testing.T) {
+		t.Parallel()
+
+		events, _, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(false, errBoom)
+
+		assert.ErrorIs(t, svc.Process(t.Context(), opened), errBoom)
+	})
+
+	t.Run("Store error propagates", func(t *testing.T) {
+		t.Parallel()
+
+		events, _, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), opened).Return(email.Event{}, errBoom)
+
+		assert.ErrorIs(t, svc.Process(t.Context(), opened), errBoom)
+	})
+
+	t.Run("Side effect error propagates", func(t *testing.T) {
+		t.Parallel()
+
+		bounced := email.Event{Type: email.EventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		events, subs, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)
+		subs.EXPECT().MarkBounced(gomock.Any(), "dead@example.com").Return(errBoom)
+
+		assert.ErrorIs(t, svc.Process(t.Context(), bounced), errBoom)
+	})
+}

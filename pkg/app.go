@@ -37,6 +37,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
@@ -58,6 +59,7 @@ type App struct {
 	Social      *social.Service
 	Cache       cache.Store
 	Subscribers subscriber.Subscriber
+	EmailEvents *emailevent.Service
 	Slack       slack.Sender
 }
 
@@ -139,6 +141,8 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
+	subscriberSvc := subscriber.New(subsStore, cachedIssues, emailSender)
+
 	return &App{
 		Config:      &config,
 		DB:          conn,
@@ -146,7 +150,8 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Runner:      aggregator,
 		Social:      socialSvc,
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
+		Subscribers: subscriberSvc,
+		EmailEvents: emailevent.New(repo.EmailEvents, subscriberSvc),
 		Slack:       slackClient,
 	}, teardown, nil
 }
