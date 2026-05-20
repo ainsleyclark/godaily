@@ -47,28 +47,39 @@ func NewPlanetGolang(_ env.Config) *PlanetGolang {
 	return &PlanetGolang{url: planetGolangURL}
 }
 
-// Fetch retrieves the latest articles from the Planet Golang RSS feed.
+// Fetch retrieves the latest articles from the Planet Golang Atom feed.
 func (p PlanetGolang) Fetch(ctx context.Context) ([]news.Item, error) {
-	feed, err := ingest.Fetch[planetGolangRSS](ctx, p.url, "planet golang", xml.Unmarshal)
+	feed, err := ingest.Fetch[planetGolangFeed](ctx, p.url, "planet golang", xml.Unmarshal)
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(ctx, feed.Channel.Items), nil
+	return ingest.TransformAll(ctx, feed.Entries), nil
 }
 
-func (i planetGolangItem) ShouldInclude() bool   { return true }
-func (i planetGolangItem) EnrichmentURL() string { return i.Link }
+func (e planetGolangEntry) ShouldInclude() bool   { return true }
+func (e planetGolangEntry) EnrichmentURL() string { return e.url() }
 
-func (i planetGolangItem) Transform() news.Item {
-	published, _ := time.Parse(time.RFC1123Z, i.PubDate)
+// url returns the canonical URL by finding the first link with rel="alternate"
+// or an empty rel, mirroring the same logic used by the Go Blog source.
+func (e planetGolangEntry) url() string {
+	for _, l := range e.Links {
+		if l.Rel == "alternate" || l.Rel == "" {
+			return l.Href
+		}
+	}
+	return ""
+}
+
+func (e planetGolangEntry) Transform() news.Item {
+	published, _ := time.Parse(time.RFC3339, e.Published)
 	return news.Item{
 		Source: news.SourcePlanetGolang,
-		Title:  i.Title,
-		URL:    i.Link,
+		Title:  e.Title,
+		URL:    e.url(),
 		Author: &news.Author{
-			Name: i.Creator,
+			Name: e.Author.Name,
 		},
-		Snippet:   i.Description,
+		Snippet:   e.Summary,
 		Tag:       news.TagArticle,
 		Score:     news.ScoreOf(news.SourcePlanetGolang, news.TagArticle, 0, false),
 		Published: published.UTC(),
@@ -76,18 +87,22 @@ func (i planetGolangItem) Transform() news.Item {
 }
 
 type (
-	planetGolangRSS struct {
-		XMLName xml.Name            `xml:"rss"`
-		Channel planetGolangChannel `xml:"channel"`
+	planetGolangFeed struct {
+		XMLName xml.Name             `xml:"http://www.w3.org/2005/Atom feed"`
+		Entries []planetGolangEntry  `xml:"http://www.w3.org/2005/Atom entry"`
 	}
-	planetGolangChannel struct {
-		Items []planetGolangItem `xml:"item"`
+	planetGolangEntry struct {
+		Title     string               `xml:"http://www.w3.org/2005/Atom title"`
+		Links     []planetGolangLink   `xml:"http://www.w3.org/2005/Atom link"`
+		Author    planetGolangAuthor   `xml:"http://www.w3.org/2005/Atom author"`
+		Published string               `xml:"http://www.w3.org/2005/Atom published"`
+		Summary   string               `xml:"http://www.w3.org/2005/Atom summary"`
 	}
-	planetGolangItem struct {
-		Title       string `xml:"title"`
-		Link        string `xml:"link"`
-		Creator     string `xml:"http://purl.org/dc/elements/1.1/ creator"`
-		Description string `xml:"description"`
-		PubDate     string `xml:"pubDate"`
+	planetGolangLink struct {
+		Href string `xml:"href,attr"`
+		Rel  string `xml:"rel,attr"`
+	}
+	planetGolangAuthor struct {
+		Name string `xml:"http://www.w3.org/2005/Atom name"`
 	}
 )

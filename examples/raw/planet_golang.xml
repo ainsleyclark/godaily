@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Planet Golang</title>
-    <link>https://www.planetgolang.dev/</link>
-    <description>Planet Golang - aggregated Go community content</description>
-    <atom:link href="https://www.planetgolang.dev/index.xml" rel="self" type="application/rss+xml"/>
-    <item>
-      <title>Understanding Go&#39;s Memory Model</title>
-      <link>https://example.com/go-memory-model</link>
-      <dc:creator>Alex Writer</dc:creator>
-      <description>A deep dive into how Go manages memory and goroutine synchronisation.</description>
-      <pubDate>Sun, 18 May 2026 09:00:00 +0000</pubDate>
-      <guid isPermaLink="true">https://example.com/go-memory-model</guid>
-    </item>
-    <item>
-      <title>Building REST APIs with Go 1.26</title>
-      <link>https://example.com/rest-apis-go-126</link>
-      <dc:creator>Jordan Dev</dc:creator>
-      <description>Practical patterns for building efficient REST APIs using the latest Go release.</description>
-      <pubDate>Sat, 17 May 2026 14:30:00 +0000</pubDate>
-      <guid isPermaLink="true">https://example.com/rest-apis-go-126</guid>
-    </item>
-    <item>
-      <title>Go generics in practice: lessons from a year of production use</title>
-      <link>https://example.com/go-generics-production</link>
-      <dc:creator>Sam Engineer</dc:creator>
-      <description>What we learned after migrating a large codebase to use generics in Go 1.21 and beyond.</description>
-      <pubDate>Fri, 16 May 2026 11:00:00 +0000</pubDate>
-      <guid isPermaLink="true">https://example.com/go-generics-production</guid>
-    </item>
-  </channel>
-</rss>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Planet Golang</title>
+  <link href="https://www.planetgolang.dev/" rel="alternate"/>
+  <link href="https://www.planetgolang.dev/index.xml" rel="self"/>
+  <id>https://www.planetgolang.dev/</id>
+  <updated>2026-05-18T09:00:00Z</updated>
+  <entry>
+    <title>Understanding Go's Memory Model</title>
+    <link href="https://example.com/go-memory-model" rel="alternate"/>
+    <id>https://example.com/go-memory-model</id>
+    <published>2026-05-18T09:00:00Z</published>
+    <updated>2026-05-18T09:00:00Z</updated>
+    <author>
+      <name>Alex Writer</name>
+    </author>
+    <summary>A deep dive into how Go manages memory and goroutine synchronisation.</summary>
+  </entry>
+  <entry>
+    <title>Building REST APIs with Go 1.26</title>
+    <link href="https://example.com/rest-apis-go-126" rel="alternate"/>
+    <id>https://example.com/rest-apis-go-126</id>
+    <published>2026-05-17T14:30:00Z</published>
+    <updated>2026-05-17T14:30:00Z</updated>
+    <author>
+      <name>Jordan Dev</name>
+    </author>
+    <summary>Practical patterns for building efficient REST APIs using the latest Go release.</summary>
+  </entry>
+  <entry>
+    <title>Go generics in practice: lessons from a year of production use</title>
+    <link href="https://example.com/go-generics-production" rel="alternate"/>
+    <id>https://example.com/go-generics-production</id>
+    <published>2026-05-16T11:00:00Z</published>
+    <updated>2026-05-16T11:00:00Z</updated>
+    <author>
+      <name>Sam Engineer</name>
+    </author>
+    <summary>What we learned after migrating a large codebase to use generics in Go 1.21 and beyond.</summary>
+  </entry>
+</feed>
