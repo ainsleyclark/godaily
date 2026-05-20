@@ -29,6 +29,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 func TestClient_Prompt(t *testing.T) {
@@ -41,10 +42,33 @@ func TestClient_Prompt(t *testing.T) {
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("result"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("fallback"), nil)
 
 		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("result"), got)
+	})
+
+	t.Run("Posts Comparison To Slack", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
+		slackMock := mockslack.NewMockSender(ctrl)
+		primary.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("anthropic out"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("gemini out"), nil)
+
+		var sent string
+		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).Do(func(_ context.Context, msg string) {
+			sent = msg
+		})
+
+		got, err := (&Client{primary: primary, fallback: fallback, notifier: slackMock}).Prompt(context.Background(), "sys", "user")
+		require.NoError(t, err)
+		assert.Equal(t, []byte("anthropic out"), got)
+		assert.Contains(t, sent, "anthropic out")
+		assert.Contains(t, sent, "gemini out")
 	})
 
 	t.Run("Primary Fails Nil Fallback", func(t *testing.T) {
