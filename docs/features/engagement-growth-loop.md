@@ -1,306 +1,261 @@
 # Engagement-Driven Growth Loop
 
-A closed feedback loop that lets GoDaily improve itself: monitor real
-engagement, and once a week have an AI agent take **data-backed actions**
-to grow it. Not every action is the same — a code change is reviewed as a
-draft pull request before a human merges it, while extra social posts
-publish autonomously but only inside limits enforced by code. The gate
-matches the blast radius of the action; see *Action tiers* below.
+GoDaily ships a daily digest and auto-posts to social, but it does so
+blind: nothing measures what content lands, and nothing turns that
+measurement back into better content. This plan closes that gap.
+
+The mental model matters more than any single feature. GoDaily is **not**
+becoming an autonomous AI employee. It is becoming a **continuously
+learning experimentation system**: a loop that records what happens,
+notices patterns, proposes experiments, and applies the winners. The
+database is the memory; the LLM only reasons over it. Every part of the
+design follows from that distinction.
 
 ## Why this exists
 
-GoDaily already ships a daily digest and auto-posts to social. What it
-lacks is a measurement-to-improvement loop: today there is no first-party
-data on what content lands, and no mechanism to turn that data into
-concrete, data-backed actions. This plan builds that loop.
+There is no first-party data on what resonates and no mechanism to act on
+it. Without stored memory of past experiments, any agent asked to "grow
+GoDaily" re-derives the same generic advice every week. This plan builds
+the data foundation first, then a small loop on top of it.
+
+## The learning loop
+
+```
+ new content ──► raw events ──► content_metrics ──► insights
+      ▲          (opens,        (aggregated)        (patterns)
+      │           clicks,                               │
+      │           social stats)                         ▼
+      └── prompt / content changes ◄── experiments ◄─────┘
+             (Tier 1 PRs)           (hypotheses → results)
+```
+
+Raw events become metrics, metrics become insights, insights become
+experiments, winning experiments become prompt and content changes — and
+those produce new content, which generates new events. The loop
+compounds because each stage is **persisted in a table**, not held in an
+agent's head.
 
 ## Principles
 
-- **The gate matches the blast radius.** Code changes are always reviewed
-  and merged by a person — nothing auto-merges. Public content (social
-  posts) publishes autonomously, but only within hard limits that live in
-  code, not in the agent's prompt.
-- **Decisions are grounded in first-party data**, not model intuition.
-- **Proposals reference prior outcomes.** Each suggestion cites the
-  measured result of an earlier experiment, so advice compounds instead
-  of looping back to generic tips.
+- **The database is the memory.** Institutional knowledge — what worked,
+  what failed, which prompt produced which result — lives in tables. The
+  LLM is stateless reasoning over that memory; it never "learns" on its
+  own.
+- **Deterministic jobs vs agentic steps.** Ingestion, aggregation, and
+  scheduling stay plain Go. The LLM is used only where judgement is
+  needed: generating insights, proposing experiments, drafting copy and
+  code.
+- **The gate matches the blast radius.** Code and prompt changes are
+  always reviewed and merged by a person — nothing auto-merges. Public
+  content publishes autonomously only within hard limits that live in
+  code, not in a prompt.
+- **Proposals cite prior outcomes.** Each suggestion references a
+  measured experiment, so advice compounds instead of looping back to
+  generic tips.
 - **Reuse existing infrastructure** — the Slack gateway
-  (`pkg/gateway/slack`), social adapters (`pkg/gateway/social/*`), Vercel
-  crons, Resend, and the sqlc + goose migration stack.
+  (`pkg/gateway/slack`), the AI client (`pkg/ai`), social adapters
+  (`pkg/gateway/social/*`), Resend, Vercel crons, and the sqlc + goose
+  migration stack.
 
-## Architecture at a glance
+## Action tiers
 
-```
- ┌─ email events (Resend webhooks) ──┐
- ├─ social post stats (read-back) ───┤
- └─ experiments ledger ──────────────┴─► metrics in DB ─► `godaily growth-digest`
-                                                                  │
-                                                weekly Claude Code Routine
-                                                                  │
-                       ┌──────────────────────┼──────────────────────┐
-                       ▼                      ▼                      ▼
-              Tier 1: code change    Tier 2: social posts    Tier 3: report
-              draft PR, never        queued into capped,     Slack metrics
-              merged → human         non-colliding slots,    snapshot,
-              reviews & merges       publish autonomously    no gate
-                       └──────────────────────┼──────────────────────┘
-                                                  │
-                                  outcomes recorded in experiments ledger
-                                                  └──► loop
-```
+A weekly run can produce one or more **actions**. They are not
+interchangeable — each gets the lightest gate that is still safe.
 
-## What the loop does — action tiers
+| Tier | Action | Gate | Mechanism |
+|------|--------|------|-----------|
+| 1 | Code or prompt change | **Human reviews & merges** a draft PR | `claude/*` branch → draft PR |
+| 2 | Extra social post | **Autonomous, within code-enforced limits** | capped, non-colliding `social_posts` slots — *deferred to Phase 6* |
+| 3 | Metrics report | None — information only | Slack snapshot |
 
-Each weekly run can produce one or more **actions**. Actions are not
-interchangeable: a code change and a published post carry very different
-risk, so each tier gets the lightest gate that is still safe.
+Tier 1 is the deliberate lever — anything that changes how GoDaily
+*works*, including prompt edits. Tier 2 is the fast lever (more reach,
+no code review) and its safety is entirely structural; it is deliberately
+deferred until the core loop is proven. Tier 3 is just visibility.
 
-| Tier | Action | What it touches | Gate | Mechanism |
-|------|--------|-----------------|------|-----------|
-| 1 | Code change | digest logic, email/site templates, scoring, social copy generation | **Human reviews & merges** a draft PR | `claude/*` branch → draft PR |
-| 2 | Extra social post | a net-new post on Bluesky / Mastodon / LinkedIn | **Autonomous, within code-enforced limits** | queued into capped, non-colliding `social_posts` slots |
-| 3 | Metrics report | nothing — information only | None | Slack snapshot |
+## Data model — five tables
 
-Tier 1 is the slow, deliberate lever — anything that changes how GoDaily
-*works*. Tier 2 is the fast lever — more reach without code review — and
-its safety comes entirely from the limits being structural (see *Social
-posting: the collision constraint*). Tier 3 is just visibility.
+The loop is built on five tables. All ship as goose migrations after the
+current latest (`pkg/db/migrations/0005_social_posts.sql`), each with an
+sqlc query file under `pkg/store/`.
 
-A future Tier-2 action, noted but out of scope for v1: replying to
-comments on GoDaily's own social posts — same tier, same gating model.
+### 1. `email_events` — raw telemetry
 
-## Phase 1 — Email analytics (data foundation)
+`(id, issue_id, subscriber_id, event_type, url, occurred_at)`
 
-Implements `docs/features/email-analytics.md`.
+Append-only raw record of Resend webhook events. `email.clicked` is the
+**primary signal** (records which URL was clicked); `email.opened` is
+stored but flagged unreliable — Apple Mail Privacy Protection inflates
+opens; `email.bounced` / `email.complained` mark the subscriber inactive
+via `pkg/services/subscriber`.
 
-- **New endpoint:** `POST /api/webhooks/resend` — a Vercel function at
-  `api/webhooks/resend.go`. Public but signature-verified (Resend uses
-  Svix-style signing headers; verification is new code — the existing
-  `pkg/gateway/hook` package only does *outbound* heartbeats/deploy
-  hooks).
-- **Migration `0006_email_events.sql`:** an `email_events` table —
-  `(issue_id, subscriber_id, event_type, url, occurred_at)`.
-- **New store package** `pkg/store/emailevents` with sqlc queries for the
-  per-issue and per-link aggregates.
-- **Event handling:**
-  - `email.clicked` — record the URL clicked. **This is the primary
-    signal.**
-  - `email.opened` — stored, but flagged unreliable: Apple Mail Privacy
-    Protection pre-fetches images and inflates opens for a large share of
-    subscribers. Never make a decision on opens alone.
-  - `email.bounced` / `email.complained` — mark the subscriber inactive
-    or unsubscribe, reusing `pkg/services/subscriber`.
+**Populated by** the `POST /api/webhooks/resend` handler — one row per
+event, never aggregated in place.
 
-**Deliverable:** per-issue and per-link engagement is queryable.
-**Tradeoff:** opens are noise; the loop weights click-through rate (CTR),
-unsubscribes, and complaints.
+### 2. `content_metrics` — aggregated layer
 
-## Phase 2 — Social engagement ingestion
+`(content_id, platform, impressions, clicks, ctr, opens, open_rate,
+likes, reposts, comments, unsubscribes, updated_at)`
 
-GoDaily already posts via `pkg/gateway/social/{linkedin,bluesky,mastodon}`
-and records each post in `social_posts` (migration `0005`). This phase
-adds a **read-back** step.
+The clean summary layer the loop reads — agents never touch raw events.
+`content_id` is an issue id (email) or a `social_posts` id; `platform`
+records the channel.
 
-- For each recent `social_posts` row, fetch engagement stats for *our own
-  post* from the platform and store them in a new `social_post_stats`
-  table (**migration `0007`**), keyed by `social_posts.id`, capturing
-  likes/reposts/comments/impressions and a fetched-at timestamp.
-- Run it on a new Vercel cron (e.g. daily), re-fetching posts from the
-  last N days so late engagement is captured.
+**Populated by** a deterministic `godaily aggregate-metrics` job (daily
+cron) that rolls up `email_events` plus social-platform stats into one
+row per piece of content.
 
-**All three platforms are in scope.** GoDaily posts daily to Bluesky,
-Mastodon, and LinkedIn, and the LinkedIn client publishes to an
-**organisation page** (`pkg/gateway/social/linkedin/linkedin.go` —
-`urn:li:organization` author, `w_organization_social` scope). That
-matters: org-page posts *do* expose engagement, so LinkedIn stats are
-reachable — unlike personal-profile posts, which are not.
+### 3. `prompt_versions` — prompt registry
 
-- **Bluesky** (`getPostThread`) and **Mastodon** (status endpoint)
-  expose like/repost/reply counts on open APIs — straightforward.
-- **LinkedIn** read-back needs the token to also carry
-  `r_organization_social`, then uses `organizationalEntityShareStatistics`
-  (impressions, clicks, engagement rate) plus the Social Actions API
-  (likes/comments) for the org's shares.
+`(id, prompt_type, version, prompt_text, content_hash, created_at)`
 
-**Tradeoff:** LinkedIn's API versions retire ~yearly (see the
-`LINKEDIN_API_VERSION` note in the client), so the read-back code needs
-the same version-pinning discipline as the posting code.
+Prompts stay in **Go code** — git is the source of truth (see
+*Decisions*). This table is an auto-populated *registry*: on each
+generation run the app hashes the active prompt; if the `content_hash`
+is new, it inserts a version row that **snapshots** `prompt_text` for
+historical and debugging reference.
 
-## Phase 3 — Experiments ledger
+**Populated automatically** at content-generation time. Each generated
+row links back via a new `prompt_version_id` column on `issues` and
+`social_posts` — so every digest and post remembers which prompt made
+it, enabling a prompt-version performance leaderboard.
+
+### 4. `experiments` — institutional memory
+
+`(id, tier, hypothesis, variable, control_value, test_value, change_ref,
+metric_name, baseline_value, result_value, uplift, confidence, status,
+created_at, completed_at)`
 
 The piece that makes the loop compound rather than repeat itself.
+`status` moves through `proposed → shipped → measured → kept | rejected`.
+`change_ref` points at a PR URL, a `prompt_versions` id, or a batch of
+`social_posts`. Without this ledger the agent re-derives generic advice
+every week; with it, a proposal reads: *"subject-line teasers (shipped
+wk 12) lifted CTR 1.2pp — next, try X."*
 
-- **Migration `0008_experiments.sql`:** an `experiments` table —
-  `(id, tier, hypothesis, change_ref, shipped_at, metric_name,
-  baseline_value, result_value, status)`. `tier` records which action
-  tier this was; `change_ref` points at a PR URL (Tier 1) or a batch of
-  `social_posts` rows (Tier 2). `status` moves through
-  `proposed → shipped → measured → rejected`.
-- A Tier-1 experiment is linked when its PR merges; a Tier-2 experiment
-  the moment its posts are queued. After ~2 weeks of follow-on data the
-  loop fills in `result_value`.
-- Without this ledger the agent re-derives generic advice every week.
-  With it, a proposal reads: *"subject-line teasers (shipped wk 12)
-  lifted CTR 1.2pp; next, try X."*
+**Populated by** the Phase 3 analyst (proposes new rows); generation and
+evaluation jobs fill in `result_value`, `uplift`, and `confidence` after
+~2 weeks of follow-on data.
 
-## Phase 4 — `growth-digest` CLI
+### 5. `insights` — machine-generated conclusions
 
-- A new `godaily growth-digest` command (`cmd/godaily`) aggregates the
-  last 4 weeks of `email_events` + `social_post_stats` + open/measured
-  `experiments` into a single Markdown/JSON report.
-- The agent reads this report instead of touching the database directly
-  — so the Routine's environment never needs DB credentials.
-- The same command can post a plain weekly metrics snapshot to Slack via
-  the existing `pkg/gateway/slack` client — a no-AI sanity baseline,
-  useful even before Phase 5 exists. (This deterministic snapshot runs as
-  a cron job, so it uses the Go Slack gateway directly; the *agentic*
-  suggestion in Phase 5 posts differently — see below.)
+`(id, insight, confidence, supporting_data, created_at)`
 
-## Phase 5 — The growth Routine (the loop itself)
+Durable growth notes — e.g. *"subject lines over 70 chars reduce opens
+(confidence 0.79)"*. Distinct from experiments: an insight is an
+observation, an experiment is a test.
 
-A **Claude Code Routine** — a saved, cloud-run configuration that fires
-on a schedule without anyone's machine being on. Scheduled weekly, and
-triggered purely by that schedule — no event-driven runs (see
-*Decisions*).
+**Populated by** the Phase 3 weekly analyst from the LLM's structured
+output.
 
-**Each weekly run:**
+## Cadence — daily vs weekly
 
-1. Run `godaily growth-digest` and read the report.
-2. Decide this week's actions across the tiers — typically one Tier-1
-   experiment, optionally a small batch of Tier-2 posts, always the
-   Tier-3 snapshot. Every choice must be justified by the data and the
-   experiments ledger. Candidate Tier-1 levers already exist in
-   `docs/features/synth-ideas.md` (subject lines, TL;DR intro, semantic
-   dedup) and `docs/features/weekly-roundup.md`.
-3. **Tier 1:** implement the change on a `claude/*` branch and open a
-   **draft** PR. **Never merge.**
-4. **Tier 2:** draft the posts and queue them through the guarded social
-   path, which rejects anything over the cap or in a colliding slot —
-   the agent cannot override this.
-5. Record each action in the experiments ledger.
-6. Post one Slack message summarising the run: the Tier-1 PR link, the
-   Tier-2 posts queued (for visibility, not approval), and the Tier-3
-   metrics snapshot.
+The loop runs at two speeds so feedback is not needlessly slow:
 
-**The Slack step — via the Slack MCP connector.** The Routine session
-posts the suggestion and PR link to Slack through the Slack MCP
-connector. This keeps the message inside the agent's session, so a reply
-in the Slack thread can feed straight back into the refinement loop.
+- **Daily** — ingestion (`email_events`), aggregation
+  (`content_metrics`), and lightweight metric refresh. Plain deterministic
+  jobs.
+- **Weekly** — the analyst run: insights, experiment proposals, and any
+  Tier-1 PRs.
 
-Setup required once: link a Slack account to Claude Code and add the
-Slack connector to the Routine's configuration. The connector's traffic
-is routed through Anthropic's servers, so no network-allowlist change is
-needed in the Routine environment.
+## Phases
 
-(The existing `pkg/gateway/slack` Go client is still used for the
-deterministic Phase 4 snapshot — that runs as a cron job outside any
-agent session and so can't use an MCP connector.)
+### Phase 1 — Data foundation
 
-**Refinement via chat:** a Routine run *is* a Claude Code session, and
-the session is resumable. Replying continues that same session — you
-iterate on the Tier-1 PR conversationally ("make the copy punchier",
-"also update the txt template") and the agent pushes follow-up commits.
-The PR stays a draft until you mark it ready and merge. (Refinement
-applies to Tier 1; a Tier-2 post that lands wrong is deleted rather than
-refined — that is the cost of the autonomous tier, and the reason its
-limits are strict.)
+Build the five tables above and the ingestion endpoint. **No agents
+yet.** A new `POST /api/webhooks/resend` Vercel function
+(`api/webhooks/resend.go`) verifies the Resend signature header and
+writes `email_events` — verification is new code; the existing
+`pkg/gateway/hook` package only does *outbound* heartbeats and deploy
+hooks. This phase implements and extends `docs/features/email-analytics.md`.
 
-## Social posting: the collision constraint
+### Phase 2 — `growth-digest` CLI
 
-GoDaily already posts **once per platform per weekday** — the
-`/api/social` cron picks a jittered 10-minute slot between 11:00–11:50
-UTC, Monday to Friday, and skips weekends entirely
-(`api/social.go`, `pkg/services/social`). Tier-2 posts must not erode
-that rhythm: a second post stacked onto a day that already carries the
-digest post reads as spam and competes with GoDaily's own best content
-of the day.
+A new `godaily growth-digest` command (`pkg/cmd/`, registered in
+`pkg/cmd/cmd.go`) aggregates ~4 weeks of `content_metrics`,
+`experiments`, and `insights` into a single Markdown/JSON report: top
+and worst content, top hooks and topics, the prompt-version leaderboard,
+CTR trends, unsubscribe anomalies, and experiment outcomes. The agent
+reads this report instead of touching the database — so its environment
+never needs DB credentials. The deterministic `godaily aggregate-metrics`
+job (daily Vercel cron) also lands here, and the command can post a
+plain Slack metrics snapshot via `pkg/gateway/slack` — a no-AI baseline
+useful even before Phase 3.
 
-The rule: **never a second post on a day that already carries the daily
-digest post.** Today that resolves to **weekends only** — the one slot
-currently empty.
+### Phase 3 — Weekly AI analyst
 
-Two consequences:
+A **simple weekly cron** — no Claude Routine, no MCP connector. The flow:
+run `growth-digest` → send the report to the LLM (`pkg/ai`) → the LLM
+returns insights, hypotheses, and experiment ideas as JSON → store them
+in `insights` and `experiments` (`status=proposed`) → post a summary to
+Slack. One cron, one LLM call. This alone is already valuable.
 
-1. **A one-time Tier-1 prerequisite.** The social handler hard-skips
-   weekends today. Supporting Tier-2 posts means a code change first:
-   extend the scheduler with a small, fixed number of *growth slots*
-   that are weekend-only and capped (start at ≤1 per platform per
-   weekend day — i.e. ≤2 posts/week). The cap and the no-collision rule
-   live in this code. It ships as a normal reviewed PR.
-2. **The agent fills a queue; it does not post freely.** Once the slots
-   exist, the Routine drafts posts and inserts them as scheduled
-   `social_posts` rows; the existing idempotent posting pipeline
-   publishes them. If the Routine tries to exceed the cap or target a
-   colliding day, the guarded path rejects the write. "Autonomous within
-   limits" means the *limits are structural* — a misbehaving prompt
-   cannot over-post.
+### Phase 4 — Controlled experiments
 
-Whether weekend posts actually earn engagement from a weekday-oriented
-developer audience is itself unknown — so it is a measured experiment
-like any other. Phase 2 stats compare growth-slot posts against daily
-posts; if weekend posts underperform, the loop stops scheduling them.
+Run real A/B tests: subject-line, hook, intro, and CTA variants. Each
+variant is a registered `prompt_versions` row; a selector assigns issues
+to control or test; `prompt_version_id` records the assignment; and
+`content_metrics` + `experiments` measure the `uplift` and `confidence`.
+This is where compounding begins.
 
-## Why Routines (and where not to use them)
+### Phase 5 — Prompt & content evolution
 
-| | Routine | `/loop` skill | GitHub Actions / Vercel cron |
-|---|---|---|---|
-| Runs in cloud, machine off | yes | no | yes |
-| Survives restarts, durable | yes | no (session-scoped) | yes |
-| Can do agentic PR drafting | yes | yes (if session open) | no |
-| Opens PRs, never merges | yes (`claude/*` by default) | n/a | n/a |
-| Min interval | 1 hour | 1 minute | cron |
+The AI now proposes real changes — prompt edits, scoring tweaks, template
+changes — as **draft PRs** on `claude/*` branches. Human reviews and
+merges; never auto-merge. This is the first phase that needs an *agentic*
+step able to write code and open PRs; a Claude Code Routine is one option,
+deliberately deferred to here rather than introduced earlier. Candidate
+levers already exist in `docs/features/synth-ideas.md` and
+`docs/features/weekly-roundup.md`.
 
-**Recommendation:** use deterministic schedulers (Vercel cron / GitHub
-Actions) for the *data jobs* — Phases 1–4 ingestion and aggregation are
-plain code and don't need an AI session. Use a **Routine only for
-Phase 5**, the agentic step that reads, reasons, drafts, and proposes.
-`/loop` is the wrong tool here — it needs an open interactive session.
+### Phase 6 — Optional autonomous social posting (Tier 2)
+
+Only once experiments and metrics are trustworthy. GoDaily posts **once
+per platform per weekday** (the `/api/social` cron, 11:00–11:50 UTC,
+weekdays — `pkg/services/social`). The rule for extra growth posts:
+**never a second post on a day that already carries the digest post** —
+which today resolves to **weekends only**. Enabling this needs a one-time
+reviewed PR adding a small, fixed number of weekend-only *growth slots*
+to the scheduler, hard-capped (start at ≤2 posts/week). The cap and the
+no-collision rule live in scheduler code — a misbehaving prompt cannot
+over-post. Whether weekend posts earn engagement from a weekday audience
+is itself a measured experiment.
 
 ## Guardrails
 
-- **Tier 1:** the Routine pushes only to `claude/*` branches and never
-  merges; PRs open as **draft**. The prompt forbids schema migrations and
-  infra/CI changes unless explicitly flagged in the PR description, and
-  caps the diff size.
-- **Tier 2:** the per-week post cap and the no-collision rule are
-  enforced in the social-scheduler code, not the prompt. Every queued
-  post is reported in the Slack summary so a human can delete it before
-  or shortly after it publishes.
+- **Tier 1** — the agent pushes only to `claude/*` branches; PRs open as
+  **draft** and never auto-merge. The prompt forbids schema migrations
+  and infra/CI changes unless explicitly flagged, and caps diff size.
+- **Tier 2** — the per-week post cap and no-collision rule are enforced
+  in scheduler code, not the prompt. Every queued post is reported in
+  Slack so a human can delete it.
 - **Tier 3** changes nothing and needs no guardrail.
-- Routines have a per-account daily run cap — a weekly cadence is well
-  within it.
+- Deterministic jobs (Phases 1–2) involve no LLM and need no AI gate.
 
-## Suggested sequencing
+## Minimum viable loop
 
-The minimum viable loop is **email-only, Tier 1 + Tier 3**: Phases
-1 → 3 → 4 → 5. Phase 2 (social ingestion) plugs in afterward as another
-data source feeding the same `growth-digest` report.
-
-Tier-2 social posting has two prerequisites before it can run: Phase 2
-(so its posts can be measured) and the one-time social-scheduler change
-described above (so the non-colliding slots exist). Recommended order:
-ship the Tier-1/Tier-3 loop first; add Phase 2; then enable Tier 2 once
-the loop has shown it produces useful PRs.
+The four highest-ROI pieces, in order: `email_events`, `experiments`,
+`prompt_versions`, and `growth-digest` — i.e. Phases 1 → 2 → 3. That
+delivers a measured, memory-backed weekly analyst before any autonomous
+behaviour exists. Phases 4–6 layer on afterward; Phase 6 is optional.
 
 ## Decisions
 
-These were settled before the doc was finalised:
-
-1. **Autonomy — always human-merge.** No auto-merge tier, ever. Every
-   change, however small, is reviewed and merged by a person.
-2. **Slack delivery — the Slack MCP connector.** Keeps the suggestion
-   inside the agent's session so thread replies feed the refinement
-   loop. Requires linking a Slack account and adding the connector to
-   the Routine config (one-time setup).
-3. **LinkedIn — in scope.** GoDaily posts to a LinkedIn organisation
-   page, so share statistics are reachable; all three social platforms
-   feed the loop.
-4. **Cadence — weekly.** One run per week.
-5. **Content gate — autonomous within code-enforced limits.** Tier-2
-   social posts publish without per-post approval, but the volume cap
-   and the no-collision-with-the-daily-post rule live in the
-   social-scheduler code — the agent fills a constrained queue, it never
-   posts ad hoc. Initial cap: ≤2 growth posts per week, weekend slots
-   only.
-6. **Triggers — scheduled only.** The loop runs on its weekly schedule;
-   no event-driven runs. Simpler to reason about and to rate-limit.
+1. **Prompts stay in Go code.** Git is the source of truth;
+   `prompt_versions` is an auto-populated registry that snapshots prompt
+   text. Prompt edits flow through reviewed PRs (Phase 5) — keeping the
+   human-merge gate that a DB-stored prompt would bypass.
+2. **No auto-merge, ever.** Every code and prompt change is reviewed and
+   merged by a person.
+3. **The weekly analyst is a plain cron + one LLM call** — no Routine, no
+   MCP — until Phase 5 needs agentic PR drafting.
+4. **Cadence is split:** daily ingestion and aggregation, weekly
+   analysis.
+5. **Stats: email + Bluesky + Mastodon first.** Bluesky and Mastodon
+   expose engagement on open APIs. LinkedIn analytics
+   (`organizationalEntityShareStatistics`) are reachable for the org page
+   but carry API-versioning overhead — deferred to v2.
+6. **Autonomous social posting is deferred to Phase 6**, behind
+   structural caps and the no-collision rule.
+7. **Triggers are scheduled only** — no event-driven runs. Simpler to
+   reason about and to rate-limit.
