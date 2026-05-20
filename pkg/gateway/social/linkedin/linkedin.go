@@ -37,8 +37,12 @@ import (
 )
 
 const (
-	defaultBaseURL    = "https://api.linkedin.com"
-	defaultAPIVersion = "202504"
+	defaultBaseURL = "https://api.linkedin.com"
+	// DefaultAPIVersion is the LinkedIn-Version header value used when none
+	// is provided to New. LinkedIn retires versions ~12 months after release,
+	// so callers should override this via LINKEDIN_API_VERSION in production
+	// rather than relying on the bundled default rolling forward.
+	DefaultAPIVersion = "202601"
 )
 
 // Client posts to LinkedIn via the /rest/posts endpoint.
@@ -52,14 +56,18 @@ type Client struct {
 
 // New creates a new LinkedIn Client. authorURN is the URN of the entity that
 // authored the post (e.g. "urn:li:organization:12345" for an organisation
-// page).
-func New(token, authorURN string) *Client {
+// page). apiVersion sets the LinkedIn-Version header — pass "" to use
+// DefaultAPIVersion.
+func New(token, authorURN, apiVersion string) *Client {
+	if apiVersion == "" {
+		apiVersion = DefaultAPIVersion
+	}
 	return &Client{
 		token:      token,
 		authorURN:  authorURN,
 		httpClient: &http.Client{Timeout: 15 * time.Second},
 		baseURL:    defaultBaseURL,
-		apiVersion: defaultAPIVersion,
+		apiVersion: apiVersion,
 	}
 }
 

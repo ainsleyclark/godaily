@@ -156,7 +156,7 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN))
+		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ""))
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
