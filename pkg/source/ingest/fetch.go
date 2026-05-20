@@ -29,6 +29,7 @@ import (
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/ainsleyclark/godaily/pkg/gohttp"
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 )
@@ -39,7 +40,7 @@ import (
 const htmlBodyMax = 2 * 1024 * 1024
 
 // httpClient is the shared HTTP client used by Fetch and EnrichSnippets.
-var httpClient = &http.Client{}
+var httpClient = gohttp.New()
 
 // SetHTTPClient replaces the shared HTTP client used by all sources.
 func SetHTTPClient(c *http.Client) {

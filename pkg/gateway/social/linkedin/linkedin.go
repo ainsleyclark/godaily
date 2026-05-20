@@ -35,6 +35,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/gohttp"
 )
 
 const (
@@ -63,7 +64,7 @@ func New(token, authorURN string) *Client {
 	return &Client{
 		token:      token,
 		authorURN:  authorURN,
-		httpClient: &http.Client{Timeout: 15 * time.Second},
+		httpClient: gohttp.New(gohttp.WithTimeout(15 * time.Second)),
 		baseURL:    defaultBaseURL,
 		apiVersion: defaultAPIVersion,
 	}

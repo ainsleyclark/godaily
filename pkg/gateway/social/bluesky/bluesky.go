@@ -37,6 +37,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/gohttp"
 )
 
 // defaultBaseURL is the public Bluesky PDS that user accounts live on by
@@ -59,7 +60,7 @@ func New(handle, appPassword string) *Client {
 	return &Client{
 		handle:      handle,
 		appPassword: appPassword,
-		httpClient:  &http.Client{Timeout: 15 * time.Second},
+		httpClient:  gohttp.New(gohttp.WithTimeout(15 * time.Second)),
 		baseURL:     defaultBaseURL,
 		publicURL:   "https://bsky.app",
 	}
