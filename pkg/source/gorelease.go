@@ -27,16 +27,18 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gohttp"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
 // GoRelease defines the type that implements news.Fetcher for go.dev/dl/.
 type GoRelease struct {
-	url     string
-	dlBase  string
-	limit   int
-	dateFor func(ctx context.Context, fileURL string) time.Time
+	url        string
+	dlBase     string
+	limit      int
+	httpClient *http.Client
+	dateFor    func(ctx context.Context, fileURL string) time.Time
 }
 
 var _ news.Fetcher = &GoRelease{}
@@ -55,12 +57,16 @@ const (
 // every historical release; we cap at goReleaseLimit so the digest never
 // drowns in years of past versions.
 func NewGoRelease(_ env.Config) *GoRelease {
-	return &GoRelease{
-		url:     goReleaseURL,
-		dlBase:  goReleaseDLBase,
-		limit:   goReleaseLimit,
-		dateFor: lastModified,
+	g := &GoRelease{
+		url:        goReleaseURL,
+		dlBase:     goReleaseDLBase,
+		limit:      goReleaseLimit,
+		httpClient: gohttp.New(),
 	}
+	g.dateFor = func(ctx context.Context, u string) time.Time {
+		return lastModified(ctx, u, g.httpClient)
+	}
+	return g
 }
 
 // Fetch retrieves the Go release index and returns the most recent stable
@@ -117,13 +123,13 @@ func (r goRelease) sourceFile() string {
 // lastModified issues a HEAD against url and parses the Last-Modified
 // header. Returns zero time on any error — the cron pipeline drops zero-date
 // items, which is the right fallback when the lookup fails.
-func lastModified(ctx context.Context, url string) time.Time {
+func lastModified(ctx context.Context, url string, c *http.Client) time.Time {
 	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, nil)
 	if err != nil {
 		return time.Time{}
 	}
 	req.Header.Set("User-Agent", "godaily/1.0")
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := c.Do(req)
 	if err != nil {
 		return time.Time{}
 	}
