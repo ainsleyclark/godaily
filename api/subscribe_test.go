@@ -33,7 +33,7 @@ import (
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/news"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )

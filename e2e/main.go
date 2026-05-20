@@ -37,16 +37,16 @@ import (
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/apimux"
+	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
-	"github.com/ainsleyclark/godaily/pkg/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
 	webserver "github.com/ainsleyclark/godaily/web/server"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
@@ -126,7 +126,7 @@ func main() {
 
 	webH := webserver.Handler(app)
 
-	apiH := http.StripPrefix("/api", apimux.Handler(app))
+	apiH := http.StripPrefix("/api", mux.Handler(app))
 
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {

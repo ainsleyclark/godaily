@@ -35,9 +35,9 @@ import (
 	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	_ "github.com/ainsleyclark/godaily/pkg/source"
+	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
 func main() {

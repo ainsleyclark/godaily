@@ -29,7 +29,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 )
 
 // HandleSubscribe is the Vercel serverless function entry point for POST /api/subscribe.

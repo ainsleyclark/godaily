@@ -58,7 +58,7 @@ func rss(w website, outDir string) error {
 		Title:       "GoDaily",
 		Link:        env.AppURL,
 		Description: "A daily digest of the best Go news, articles, and community content.",
-		Language:    "en",
+		Language:    "en-gb",
 	}
 
 	if len(w.Issues) > 0 {

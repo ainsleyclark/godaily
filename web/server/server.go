@@ -23,10 +23,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/apimux"
 	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/env"
@@ -68,7 +68,7 @@ func newKit(a *godaily.App) *webkit.Kit {
 	})
 
 	// Mount API routes on the raw chi mux so they bypass webkit's middleware chain.
-	kit.Mux().Mount("/api", http.StripPrefix("/api", apimux.Handler(a)))
+	kit.Mux().Mount("/api", http.StripPrefix("/api", mux.Handler(a)))
 
 	if env.IsDevelopment() {
 		// Register on the raw chi mux so SSE bypasses webkit's middleware chain

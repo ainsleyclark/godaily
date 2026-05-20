@@ -27,7 +27,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
 // HandleBuild is the Vercel serverless function entry point for GET /api/build.

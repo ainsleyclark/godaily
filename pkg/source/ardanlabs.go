@@ -27,8 +27,8 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
 // ArdanLabs fetches episodes from the Ardan Labs Podcast (Buzzsprout).

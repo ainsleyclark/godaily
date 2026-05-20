@@ -17,10 +17,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package apimux wires all API handler functions into a single http.Handler.
+// Package mux wires all API handler functions into a single http.Handler.
 // It lives outside api/ so Vercel's serverless function glob ("api/**/*.go")
 // does not pick it up as a function entry point.
-package apimux
+package mux
 
 import (
 	"net/http"

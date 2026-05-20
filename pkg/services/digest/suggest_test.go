@@ -31,9 +31,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/ainsleyclark/godaily/pkg/digest/prompts"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 )
 
 var suggestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)

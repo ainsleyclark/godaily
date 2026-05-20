@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/urfave/cli/v3"
 )
 

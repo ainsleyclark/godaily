@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
 // Fallthrough fetches episodes from the Fallthrough podcast (Transistor.fm).
