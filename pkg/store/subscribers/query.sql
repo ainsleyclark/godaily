@@ -37,7 +37,7 @@ SET unsubscribed_at = NULL,
     confirm_token = ?,
     unsubscribe_token = ?
 WHERE email = ? AND unsubscribed_at IS NOT NULL
-RETURNING id, email, unsubscribe_token, confirm_token, confirmed_at, unsubscribed_at, created_at;
+RETURNING *;
 
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
