@@ -30,14 +30,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
-// postStatusFn matches mastodon.Client.PostStatus so tests can stub the
-// network without depending on the package's concrete type.
-type postStatusFn func(ctx context.Context, toot *mastodon.Toot) (*mastodon.Status, error)
-
 // Client publishes statuses to a Mastodon instance.
 type Client struct {
 	postStatusFunc postStatusFn
 }
+
+// postStatusFn matches mastodon.Client.PostStatus so tests can stub the
+// network without depending on the package's concrete type.
+type postStatusFn func(ctx context.Context, toot *mastodon.Toot) (*mastodon.Status, error)
 
 // New creates a new Mastodon Client. server is the full base URL of the
 // instance (e.g. "https://mastodon.social"); accessToken is an app-token
@@ -65,8 +65,10 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 	if err != nil {
 		return social.Result{}, errors.Wrap(err, "mastodon PostStatus")
 	}
+
 	if status == nil {
 		return social.Result{}, nil
 	}
+
 	return social.Result{PostURL: status.URL}, nil
 }

@@ -31,6 +31,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
@@ -38,11 +39,11 @@ import (
 
 const (
 	defaultBaseURL = "https://api.linkedin.com"
-	// DefaultAPIVersion is the LinkedIn-Version header value used when none
+	// defaultAPIVersion is the LinkedIn-Version header value used when none
 	// is provided to New. LinkedIn retires versions ~12 months after release,
 	// so callers should override this via LINKEDIN_API_VERSION in production
 	// rather than relying on the bundled default rolling forward.
-	DefaultAPIVersion = "202601"
+	defaultAPIVersion = "202601"
 )
 
 // Client posts to LinkedIn via the /rest/posts endpoint.
@@ -57,17 +58,14 @@ type Client struct {
 // New creates a new LinkedIn Client. authorURN is the URN of the entity that
 // authored the post (e.g. "urn:li:organization:12345" for an organisation
 // page). apiVersion sets the LinkedIn-Version header — pass "" to use
-// DefaultAPIVersion.
-func New(token, authorURN, apiVersion string) *Client {
-	if apiVersion == "" {
-		apiVersion = DefaultAPIVersion
-	}
+// defaultAPIVersion.
+func New(token, authorURN string) *Client {
 	return &Client{
 		token:      token,
 		authorURN:  authorURN,
 		httpClient: &http.Client{Timeout: 15 * time.Second},
 		baseURL:    defaultBaseURL,
-		apiVersion: apiVersion,
+		apiVersion: defaultAPIVersion,
 	}
 }
 
@@ -76,22 +74,23 @@ func (c *Client) Platform() social.Platform {
 	return social.PlatformLinkedIn
 }
 
-// postRequest is the body sent to /rest/posts. Field names follow the
-// platform's documented shape.
-type postRequest struct {
-	Author                    string       `json:"author"`
-	Commentary                string       `json:"commentary"`
-	Visibility                string       `json:"visibility"`
-	Distribution              distribution `json:"distribution"`
-	LifecycleState            string       `json:"lifecycleState"`
-	IsReshareDisabledByAuthor bool         `json:"isReshareDisabledByAuthor"`
-}
-
-type distribution struct {
-	FeedDistribution               string   `json:"feedDistribution"`
-	TargetEntities                 []string `json:"targetEntities"`
-	ThirdPartyDistributionChannels []string `json:"thirdPartyDistributionChannels"`
-}
+type (
+	// postRequest is the body sent to /rest/posts. Field names follow the
+	// platform's documented shape.
+	postRequest struct {
+		Author                    string       `json:"author"`
+		Commentary                string       `json:"commentary"`
+		Visibility                string       `json:"visibility"`
+		Distribution              distribution `json:"distribution"`
+		LifecycleState            string       `json:"lifecycleState"`
+		IsReshareDisabledByAuthor bool         `json:"isReshareDisabledByAuthor"`
+	}
+	distribution struct {
+		FeedDistribution               string   `json:"feedDistribution"`
+		TargetEntities                 []string `json:"targetEntities"`
+		ThirdPartyDistributionChannels []string `json:"thirdPartyDistributionChannels"`
+	}
+)
 
 // Post publishes text to the configured organisation's feed.
 //
@@ -119,6 +118,7 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 	if err != nil {
 		return social.Result{}, errors.Wrap(err, "building request")
 	}
+
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("LinkedIn-Version", c.apiVersion)
@@ -130,7 +130,7 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+	if !httputil.Is2xx(resp.StatusCode) {
 		respBuf := new(bytes.Buffer)
 		_, _ = respBuf.ReadFrom(resp.Body)
 		return social.Result{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())

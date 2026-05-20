@@ -33,6 +33,7 @@ func TestPickSlot(t *testing.T) {
 
 	t.Run("Stable across calls for same date", func(t *testing.T) {
 		t.Parallel()
+
 		d := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 		first := social.PickSlot(d)
 		for i := 0; i < 10; i++ {
@@ -42,6 +43,7 @@ func TestPickSlot(t *testing.T) {
 
 	t.Run("Always within 0..SlotsPerHour-1", func(t *testing.T) {
 		t.Parallel()
+
 		start := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
 		for i := 0; i < 365; i++ {
 			d := start.AddDate(0, 0, i)
@@ -53,6 +55,7 @@ func TestPickSlot(t *testing.T) {
 
 	t.Run("Different dates can produce different slots", func(t *testing.T) {
 		t.Parallel()
+
 		start := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
 		seen := make(map[int]bool)
 		for i := 0; i < 60; i++ {
@@ -64,6 +67,7 @@ func TestPickSlot(t *testing.T) {
 
 	t.Run("Date-only — time of day is irrelevant", func(t *testing.T) {
 		t.Parallel()
+
 		d := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 		dPM := time.Date(2026, time.May, 20, 23, 59, 59, 0, time.UTC)
 		assert.Equal(t, social.PickSlot(d), social.PickSlot(dPM))
@@ -78,6 +82,7 @@ func TestShouldRun(t *testing.T) {
 
 	t.Run("True for the picked minute slot", func(t *testing.T) {
 		t.Parallel()
+
 		// Picked slot maps to minutes [slot*10, slot*10+9].
 		now := time.Date(2026, time.May, 20, 11, slot*10+3, 0, 0, time.UTC)
 		assert.True(t, social.ShouldRun(now, d))
@@ -85,6 +90,7 @@ func TestShouldRun(t *testing.T) {
 
 	t.Run("False for other slots", func(t *testing.T) {
 		t.Parallel()
+
 		other := (slot + 1) % social.SlotsPerHour
 		now := time.Date(2026, time.May, 20, 11, other*10+3, 0, 0, time.UTC)
 		assert.False(t, social.ShouldRun(now, d))
@@ -92,6 +98,7 @@ func TestShouldRun(t *testing.T) {
 
 	t.Run("All 6 minute slots map to exactly one match in an hour", func(t *testing.T) {
 		t.Parallel()
+
 		matches := 0
 		for s := 0; s < social.SlotsPerHour; s++ {
 			now := time.Date(2026, time.May, 20, 11, s*10, 0, 0, time.UTC)

@@ -32,6 +32,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
@@ -68,15 +69,16 @@ func (c *Client) Platform() social.Platform {
 	return social.PlatformBluesky
 }
 
-type sessionResponse struct {
-	AccessJWT string `json:"accessJwt"`
-	DID       string `json:"did"`
-}
-
-type createRecordResponse struct {
-	URI string `json:"uri"`
-	CID string `json:"cid"`
-}
+type (
+	sessionResponse struct {
+		AccessJWT string `json:"accessJwt"`
+		DID       string `json:"did"`
+	}
+	createRecordResponse struct {
+		URI string `json:"uri"`
+		CID string `json:"cid"`
+	}
+)
 
 // Post publishes text as a single post on the configured account.
 //
@@ -146,7 +148,7 @@ func (c *Client) doJSON(ctx context.Context, method, token string, body, out any
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+	if !httputil.Is2xx(resp.StatusCode) {
 		respBuf := new(bytes.Buffer)
 		_, _ = respBuf.ReadFrom(resp.Body)
 		return fmt.Errorf("%s: %d %s: %s", method, resp.StatusCode, resp.Status, respBuf.String())
@@ -155,9 +157,11 @@ func (c *Client) doJSON(ctx context.Context, method, token string, body, out any
 	if out == nil {
 		return nil
 	}
-	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+
+	if err = json.NewDecoder(resp.Body).Decode(out); err != nil {
 		return errors.Wrap(err, "decoding response")
 	}
+
 	return nil
 }
 
@@ -168,10 +172,12 @@ func (c *Client) postURLFromURI(uri string) string {
 	if !strings.HasPrefix(uri, prefix) {
 		return ""
 	}
+
 	parts := strings.SplitN(strings.TrimPrefix(uri, prefix), "/", 3)
 	if len(parts) != 3 {
 		return ""
 	}
-	rkey := parts[2]
-	return fmt.Sprintf("%s/profile/%s/post/%s", c.publicURL, c.handle, rkey)
+
+	rKey := parts[2]
+	return fmt.Sprintf("%s/profile/%s/post/%s", c.publicURL, c.handle, rKey)
 }

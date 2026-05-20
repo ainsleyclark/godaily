@@ -36,7 +36,7 @@ import (
 func TestClient_Platform(t *testing.T) {
 	t.Parallel()
 
-	c := New("tok", "urn:li:organization:1", "")
+	c := New("tok", "urn:li:organization:1")
 	assert.Equal(t, social.PlatformLinkedIn, c.Platform())
 }
 
@@ -50,7 +50,7 @@ func TestClient_Post(t *testing.T) {
 			assert.Equal(t, "/rest/posts", r.URL.Path)
 			assert.Equal(t, "Bearer my-token", r.Header.Get("Authorization"))
 			assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
-			assert.Equal(t, DefaultAPIVersion, r.Header.Get("LinkedIn-Version"))
+			assert.Equal(t, defaultAPIVersion, r.Header.Get("LinkedIn-Version"))
 			assert.Equal(t, "2.0.0", r.Header.Get("X-Restli-Protocol-Version"))
 
 			body, err := io.ReadAll(r.Body)
@@ -68,7 +68,7 @@ func TestClient_Post(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := New("my-token", "urn:li:organization:99", "")
+		c := New("my-token", "urn:li:organization:99")
 		c.baseURL = srv.URL
 
 		res, err := c.Post(context.Background(), "Hello, Go community")
@@ -88,7 +88,7 @@ func TestClient_Post(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := New("bad", "urn:li:organization:1", "")
+		c := New("bad", "urn:li:organization:1")
 		c.baseURL = srv.URL
 
 		_, err := c.Post(context.Background(), "x")
@@ -105,7 +105,7 @@ func TestClient_Post(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", "")
+		c := New("tok", "urn:li:organization:1")
 		c.baseURL = srv.URL
 
 		res, err := c.Post(context.Background(), "x")
@@ -116,7 +116,7 @@ func TestClient_Post(t *testing.T) {
 	t.Run("Transport error", func(t *testing.T) {
 		t.Parallel()
 
-		c := New("tok", "urn", "")
+		c := New("tok", "urn")
 		c.baseURL = "http://127.0.0.1:1"
 
 		_, err := c.Post(context.Background(), "x")

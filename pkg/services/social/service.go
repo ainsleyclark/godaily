@@ -42,6 +42,17 @@ import (
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocialservice -destination=../../mocks/socialservice/Service.go github.com/ainsleyclark/godaily/pkg/services/social Poster
 
+// Service publishes social media posts for the day's digest.
+type Service struct {
+	posters   []social.Poster
+	prompter  ai.Prompter
+	issues    news.IssueRepository
+	items     news.ItemRepository
+	posts     news.SocialPostRepository
+	slack     slack.Sender
+	reframers map[social.Platform]reframer
+}
+
 // reframer reframes a featured item for one platform. Function-typed so
 // tests can inject deterministic text without going through the AI.
 type reframer func(ctx context.Context, p ai.Prompter, f prompts.Featured) (string, error)
@@ -53,17 +64,6 @@ func defaultReframers() map[social.Platform]reframer {
 		social.PlatformLinkedIn: prompts.LinkedIn,
 		social.PlatformMastodon: prompts.Mastodon,
 	}
-}
-
-// Service publishes social media posts for the day's digest.
-type Service struct {
-	posters   []social.Poster
-	prompter  ai.Prompter
-	issues    news.IssueRepository
-	items     news.ItemRepository
-	posts     news.SocialPostRepository
-	slack     slack.Sender
-	reframers map[social.Platform]reframer
 }
 
 // New creates a new social Service. posters may be empty (nothing to post);

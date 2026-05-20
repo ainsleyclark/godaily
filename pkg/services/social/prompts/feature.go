@@ -97,6 +97,7 @@ func buildCandidates(items []news.Item) []candidate {
 	if len(out) > maxCandidates {
 		out = out[:maxCandidates]
 	}
+
 	return out
 }
 
@@ -162,6 +163,7 @@ func parseFeatured(raw []byte) (Featured, error) {
 	if body == "" {
 		return Featured{}, errors.New("empty featured response")
 	}
+
 	var out struct {
 		Title  string `json:"title"`
 		URL    string `json:"url"`
@@ -169,15 +171,19 @@ func parseFeatured(raw []byte) (Featured, error) {
 		Tag    string `json:"tag"`
 		Hook   string `json:"hook"`
 	}
+
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
 		return Featured{}, fmt.Errorf("parse featured (raw=%q): %w", body, err)
 	}
+
 	if out.URL == "" || out.Title == "" {
 		return Featured{}, errors.New("featured missing title or url")
 	}
+
 	if out.Hook == "" {
 		return Featured{}, errors.New("featured missing hook")
 	}
+
 	return Featured{
 		Title:  out.Title,
 		URL:    out.URL,

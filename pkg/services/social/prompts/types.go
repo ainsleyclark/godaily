@@ -28,18 +28,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-type (
-	// Featured is the one item picked from the day's news to anchor every
-	// social post. Hook is the model's one-line reason this item matters,
-	// used to seed the per-platform reframing prompts.
-	Featured struct {
-		Title  string      `json:"title"`
-		URL    string      `json:"url"`
-		Source news.Source `json:"source"`
-		Tag    news.Tag    `json:"tag"`
-		Hook   string      `json:"hook"`
-	}
-)
+// Featured is the one item picked from the day's news to anchor every
+// social post. Hook is the model's one-line reason this item matters,
+// used to seed the per-platform reframing prompts.
+type Featured struct {
+	Title  string      `json:"title"`
+	URL    string      `json:"url"`
+	Source news.Source `json:"source"`
+	Tag    news.Tag    `json:"tag"`
+	Hook   string      `json:"hook"`
+}
 
 // ErrNoCandidates is returned by Feature when the input contains no
 // items suitable for posting.
