@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Planet Golang</title>
+    <link>https://www.planetgolang.dev/</link>
+    <description>Planet Golang - aggregated Go community content</description>
+    <atom:link href="https://www.planetgolang.dev/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Understanding Go&#39;s Memory Model</title>
+      <link>__SERVER_URL__</link>
+      <dc:creator>Alex Writer</dc:creator>
+      <description>A deep dive into how Go manages memory and goroutine synchronisation.</description>
+      <pubDate>Sun, 10 May 2026 09:00:00 +0000</pubDate>
+      <guid isPermaLink="false">https://example.com/go-memory-model</guid>
+    </item>
+    <item>
+      <title>Building REST APIs with Go 1.26</title>
+      <link>__SERVER_URL__</link>
+      <dc:creator>Jordan Dev</dc:creator>
+      <description>Practical patterns for building efficient REST APIs using the latest Go release.</description>
+      <pubDate>Sat, 09 May 2026 14:30:00 +0000</pubDate>
+      <guid isPermaLink="false">https://example.com/rest-apis-go-126</guid>
+    </item>
+  </channel>
+</rss>

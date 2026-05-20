@@ -60,6 +60,7 @@ const (
 	SourceAwesomeGo      Source = "awesome_go"
 	SourceJetBrains      Source = "jetbrains"
 	SourceGolangNuts     Source = "golang_nuts"
+	SourcePlanetGolang   Source = "planet_golang"
 )
 
 // Sources defines a list of all source types.
@@ -82,6 +83,7 @@ var Sources = []Source{
 	SourceAwesomeGo,
 	SourceJetBrains,
 	SourceGolangNuts,
+	SourcePlanetGolang,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -113,24 +115,25 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
-	SourceGoRelease:      18,
-	SourceGoBlog:         17,
-	SourceGitHub:         16,
-	SourceGitHubTrending: 15,
-	SourceHN:             14,
-	SourceLobsters:       13,
-	SourceReddit:         12,
-	SourceJetBrains:      11,
-	SourceDevTo:          10,
-	SourceGolangBridge:   9,
-	SourceGoPodcast:      8,
-	SourceFallthrough:    7,
-	SourceArdanLabs:      6,
-	SourceYouTube:        5,
-	SourceMastodon:       4,
-	SourceAwesomeGo:      3,
-	SourceMedium:         2,
-	SourceGolangNuts:     1,
+	SourceGoRelease:      19,
+	SourceGoBlog:         18,
+	SourceGitHub:         17,
+	SourceGitHubTrending: 16,
+	SourceHN:             15,
+	SourceLobsters:       14,
+	SourceReddit:         13,
+	SourceJetBrains:      12,
+	SourceDevTo:          11,
+	SourceGolangBridge:   10,
+	SourceGoPodcast:      9,
+	SourceFallthrough:    8,
+	SourceArdanLabs:      7,
+	SourceYouTube:        6,
+	SourceMastodon:       5,
+	SourceAwesomeGo:      4,
+	SourceMedium:         3,
+	SourceGolangNuts:     2,
+	SourcePlanetGolang:   1,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -159,6 +162,7 @@ var sourceNiceNames = map[Source]string{
 	SourceAwesomeGo:      "Awesome Go",
 	SourceJetBrains:      "JetBrains GoLand",
 	SourceGolangNuts:     "Golang Nuts",
+	SourcePlanetGolang:   "Planet Golang",
 }
 
 // NiceName returns a formatted string of the source.
@@ -189,6 +193,7 @@ var sourceEmojis = map[Source]string{
 	SourceGolangBridge:   "🌉",
 	SourceFallthrough:    "📡",
 	SourceGolangNuts:     "📬",
+	SourcePlanetGolang:   "🌐",
 }
 
 // Emoji returns the display emoji for the source.
@@ -246,6 +251,7 @@ var sourceShortLabels = map[Source]string{
 	SourceReddit:         "r/",
 	SourceYouTube:        "YT",
 	SourceGolangNuts:     "GN",
+	SourcePlanetGolang:   "PG",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,
