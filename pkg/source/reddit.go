@@ -26,10 +26,10 @@ import (
 	"html"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -42,7 +42,7 @@ type Reddit struct {
 var _ news.Fetcher = &Reddit{}
 
 func init() {
-	news.Register(news.SourceReddit, NewReddit())
+	news.Register(news.SourceReddit, func(cfg env.Config) news.Fetcher { return NewReddit(cfg) })
 }
 
 const (
@@ -51,11 +51,11 @@ const (
 )
 
 // NewReddit creates a Reddit client targeting r/golang.
-// If SCRAPER_API_KEY is set, requests are routed through ScraperAPI to avoid
+// If cfg.ScraperAPIKey is set, requests are routed through ScraperAPI to avoid
 // IP blocks on restricted hosting environments (e.g. Vercel, GitHub Actions).
-func NewReddit() *Reddit {
+func NewReddit(cfg env.Config) *Reddit {
 	u := redditURL
-	if key := os.Getenv("SCRAPER_API_KEY"); key != "" {
+	if key := cfg.ScraperAPIKey; key != "" {
 		u = fmt.Sprintf("http://api.scraperapi.com?api_key=%s&url=%s", key, url.QueryEscape(redditURL))
 	}
 	return &Reddit{url: u}

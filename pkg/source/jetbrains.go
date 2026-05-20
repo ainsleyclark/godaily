@@ -25,6 +25,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -38,13 +39,13 @@ type JetBrains struct {
 var _ news.Fetcher = &JetBrains{}
 
 func init() {
-	news.Register(news.SourceJetBrains, NewJetBrains())
+	news.Register(news.SourceJetBrains, func(cfg env.Config) news.Fetcher { return NewJetBrains(cfg) })
 }
 
 const jetbrainsURL = "https://blog.jetbrains.com/go/feed/"
 
 // NewJetBrains creates a JetBrains GoLand blog RSS client.
-func NewJetBrains() *JetBrains {
+func NewJetBrains(_ env.Config) *JetBrains {
 	return &JetBrains{url: jetbrainsURL}
 }
 

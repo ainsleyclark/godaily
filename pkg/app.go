@@ -38,6 +38,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleyclark/godaily/pkg/subscriber"
 	"github.com/ainsleydev/webkit/pkg/cache"
+	"github.com/pkg/errors"
 )
 
 // App defines a global state for godaily.
@@ -64,6 +65,10 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	config, err := env.New(ctx)
 	if err != nil {
 		return nil, func() {}, err
+	}
+
+	if err := news.Materialise(config); err != nil {
+		return nil, func() {}, errors.Wrap(err, "materialising sources")
 	}
 
 	conn, err := db.New(ctx, config.TursoURL, config.TursoAuthToken)

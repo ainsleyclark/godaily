@@ -22,40 +22,70 @@ package news
 import (
 	"fmt"
 	"sync"
+
+	"github.com/ainsleyclark/godaily/pkg/env"
 )
+
+// Builder constructs a Fetcher from an env.Config. Sources register a
+// Builder in init() so construction is deferred until configuration is
+// loaded by env.New.
+type Builder func(env.Config) Fetcher
 
 var (
 	registryMu sync.RWMutex
-	registry   = map[Source]Fetcher{}
+	registry   = map[Source]Builder{}
 )
 
-// Register associates a Source with a Fetcher.
+// Register associates a Source with a Builder.
 // Called from each source package's init().
-func Register(s Source, f Fetcher) {
+func Register(s Source, b Builder) {
 	registryMu.Lock()
 	defer registryMu.Unlock()
-	registry[s] = f
+	registry[s] = b
 }
 
-// Get returns the Fetcher for the given Source.
+// Get returns the Fetcher for the given Source. Pre-Materialise the Builder
+// runs against a zero env.Config, so callers depending on env-derived values
+// must invoke Materialise during startup.
 func Get(s Source) (Fetcher, error) {
 	registryMu.RLock()
-	defer registryMu.RUnlock()
-	f, ok := registry[s]
+	b, ok := registry[s]
+	registryMu.RUnlock()
 	if !ok {
 		return nil, fmt.Errorf("no fetcher registered for source %q", s)
 	}
-	return f, nil
+	return b(env.Config{}), nil
 }
 
-// SwapRegistry replaces the fetcher registry with reg and returns a
-// function that restores the previous registry. Intended for use in
-// tests across packages.
+// Materialise builds every registered Source against cfg and replaces each
+// Builder with a closure returning the prebuilt instance. Called from
+// Bootstrap after env.New so .env values reach source constructors.
+func Materialise(cfg env.Config) error {
+	registryMu.Lock()
+	defer registryMu.Unlock()
+	for _, s := range Sources {
+		b, ok := registry[s]
+		if !ok {
+			return fmt.Errorf("materialise: no builder registered for source %q", s)
+		}
+		f := b(cfg)
+		registry[s] = func(env.Config) Fetcher { return f }
+	}
+	return nil
+}
+
+// SwapRegistry replaces the registry with fetchers from reg and returns a
+// function that restores the previous registry. Each Fetcher is wrapped in
+// a constant Builder. Intended for use in tests across packages.
 func SwapRegistry(reg map[Source]Fetcher) (restore func()) {
 	registryMu.Lock()
 	defer registryMu.Unlock()
 	orig := registry
-	registry = reg
+	next := make(map[Source]Builder, len(reg))
+	for s, f := range reg {
+		next[s] = func(env.Config) Fetcher { return f }
+	}
+	registry = next
 	return func() {
 		registryMu.Lock()
 		defer registryMu.Unlock()
@@ -63,7 +93,7 @@ func SwapRegistry(reg map[Source]Fetcher) (restore func()) {
 	}
 }
 
-// Validate checks that every entry in Sources has a registered fetcher.
+// Validate checks that every entry in Sources has a registered builder.
 // Call at startup or in tests to catch missing registrations early.
 func Validate() error {
 	registryMu.RLock()

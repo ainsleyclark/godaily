@@ -91,6 +91,7 @@ Reads env vars; `.env` in the working directory is auto-loaded.
 | `ANTHROPIC_API_KEY`  | Claude API key for synthesis.                    |
 | `YOUTUBE_API_KEY`    | YouTube Data API key.                            |
 | `GITHUB_TOKEN`       | GitHub API token (trending source).              |
+| `SCRAPER_API_KEY`    | Optional ScraperAPI key for routing Reddit.      |
 | `EMAIL_SEND_ADDRESS` | Recipient address for the digest.                |
 | `TURSO_URL`          | libsql/Turso URL, or `file:./godaily.db` locally.|
 | `TURSO_AUTH_TOKEN`   | Turso auth token (omit for `file:` URLs).        |

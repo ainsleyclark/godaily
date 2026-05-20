@@ -24,6 +24,7 @@ import (
 	"encoding/xml"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type Medium struct {
 var _ news.Fetcher = &Medium{}
 
 func init() {
-	news.Register(news.SourceMedium, NewMedium())
+	news.Register(news.SourceMedium, func(cfg env.Config) news.Fetcher { return NewMedium(cfg) })
 }
 
 const mediumURL = "https://medium.com/feed/tag/golang"
 
 // NewMedium creates a Medium client targeting the golang tag RSS feed.
-func NewMedium() *Medium {
+func NewMedium(_ env.Config) *Medium {
 	return &Medium{url: mediumURL}
 }
 

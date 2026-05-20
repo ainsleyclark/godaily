@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -36,13 +37,13 @@ type DevTo struct {
 var _ news.Fetcher = &DevTo{}
 
 func init() {
-	news.Register(news.SourceDevTo, NewDevTo())
+	news.Register(news.SourceDevTo, func(cfg env.Config) news.Fetcher { return NewDevTo(cfg) })
 }
 
 const devToUrl = "https://dev.to/api/articles?tag=go&top=1"
 
 // NewDevTo creates a dev.to client.
-func NewDevTo() *DevTo {
+func NewDevTo(_ env.Config) *DevTo {
 	return &DevTo{
 		url: devToUrl,
 	}

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -38,13 +39,13 @@ type GolangBridge struct {
 var _ news.Fetcher = &GolangBridge{}
 
 func init() {
-	news.Register(news.SourceGolangBridge, NewGolangBridge())
+	news.Register(news.SourceGolangBridge, func(cfg env.Config) news.Fetcher { return NewGolangBridge(cfg) })
 }
 
 const golangBridgeURL = "https://forum.golangbridge.org/latest.json"
 
 // NewGolangBridge creates a GolangBridge Discourse forum client.
-func NewGolangBridge() *GolangBridge {
+func NewGolangBridge(_ env.Config) *GolangBridge {
 	return &GolangBridge{
 		url: golangBridgeURL,
 	}

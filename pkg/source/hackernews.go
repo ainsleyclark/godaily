@@ -26,6 +26,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 )
@@ -38,13 +39,13 @@ type HackerNews struct {
 var _ news.Fetcher = &HackerNews{}
 
 func init() {
-	news.Register(news.SourceHN, NewHackerNews())
+	news.Register(news.SourceHN, func(cfg env.Config) news.Fetcher { return NewHackerNews(cfg) })
 }
 
 const hnBaseURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story&hitsPerPage=50"
 
 // NewHackerNews creates a Hacker News Algolia client.
-func NewHackerNews() *HackerNews {
+func NewHackerNews(_ env.Config) *HackerNews {
 	return &HackerNews{}
 }
 

@@ -26,12 +26,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestSources_Integration(t *testing.T) {
+	cfg, err := env.New(t.Context())
+	require.NoError(t, err)
+	require.NoError(t, news.Materialise(cfg))
+
 	for _, source := range news.Sources {
 		t.Run(source.String(), func(t *testing.T) {
 			t.Parallel()

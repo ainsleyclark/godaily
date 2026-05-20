@@ -27,6 +27,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/ingest"
 	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/pkg/errors"
@@ -40,13 +41,13 @@ type GitHubTrending struct {
 var _ news.Fetcher = &GitHubTrending{}
 
 func init() {
-	news.Register(news.SourceGitHubTrending, NewGitHubTrending())
+	news.Register(news.SourceGitHubTrending, func(cfg env.Config) news.Fetcher { return NewGitHubTrending(cfg) })
 }
 
 const githubTrendingURL = "https://github.com/trending/go?since=daily"
 
 // NewGitHubTrending creates a GitHub Trending (Go) scraper.
-func NewGitHubTrending() *GitHubTrending {
+func NewGitHubTrending(_ env.Config) *GitHubTrending {
 	return &GitHubTrending{url: githubTrendingURL}
 }
 

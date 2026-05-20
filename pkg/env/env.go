@@ -38,8 +38,9 @@ type Config struct {
 	ResendToken                    string          `env:"RESEND_TOKEN,required,unset"`
 	AnthropicAPIKey                string          `env:"ANTHROPIC_API_KEY,required,unset"`
 	GeminiAPIKey                   string          `env:"GEMINI_API_KEY,unset"`
-	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,required"` // TODO: Mark unset when injector is complete in source
+	YouTubeAPIKey                  string          `env:"YOUTUBE_API_KEY,required,unset"`
 	GitHubToken                    string          `env:"GITHUB_TOKEN,unset"`
+	ScraperAPIKey                  string          `env:"SCRAPER_API_KEY,unset"`
 	EmailSendAddress               string          `env:"EMAIL_SEND_ADDRESS,required,unset"`
 	TursoURL                       string          `env:"TURSO_URL,required,unset"`
 	TursoAuthToken                 string          `env:"TURSO_AUTH_TOKEN,required,unset"`
