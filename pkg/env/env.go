@@ -51,6 +51,13 @@ type Config struct {
 	BetterStackCollectHeartbeatURL string          `env:"BETTERSTACK_COLLECT_HEARTBEAT_URL,unset"`
 	BetterStackBuildHeartbeatURL   string          `env:"BETTERSTACK_BUILD_HEARTBEAT_URL,unset"`
 	BetterStackSendHeartbeatURL    string          `env:"BETTERSTACK_SEND_HEARTBEAT_URL,unset"`
+	BetterStackSocialHeartbeatURL  string          `env:"BETTERSTACK_SOCIAL_HEARTBEAT_URL,unset"`
+	BlueskyHandle                  string          `env:"BLUESKY_HANDLE,unset"`
+	BlueskyAppPassword             string          `env:"BLUESKY_APP_PASSWORD,unset"`
+	LinkedInOAuthToken             string          `env:"LINKEDIN_OAUTH_TOKEN,unset"`
+	LinkedInOrgURN                 string          `env:"LINKEDIN_ORG_URN,unset"`
+	MastodonServer                 string          `env:"MASTODON_SERVER,unset"`
+	MastodonAppToken               string          `env:"MASTODON_APP_TOKEN,unset"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file

@@ -17,54 +17,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package prompts
 
 import (
 	"context"
-	"log/slog"
-	"os"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/pkg/ai"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+// MastodonHashtags is the canonical hashtag list appended to every Mastodon
+// status.
+var MastodonHashtags = []string{"#golang", "#go", "#programming"}
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
+const mastodonCharLimit = 500
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
+const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses hashtags actively for discovery — keep them.
+- Lead with the factual hook (Line 1). One or two short supporting lines for context.
+- Drop the URL on its own line. Mastodon renders it as a clickable link.
+- Strict structure (line breaks matter):
+    Line 1: factual hook
+    Line 2 (optional): one extra detail
+    Line 3: blank
+    Line 4: URL
+    Line 5: hashtags from the list above
+- 280-400 chars is the sweet spot.`
 
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
+// Mastodon reframes the featured item as a Mastodon status.
+func Mastodon(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
+	return reframe(ctx, p, platformConfig{
+		name:      "Mastodon",
+		charLimit: mastodonCharLimit,
+		hashtags:  MastodonHashtags,
+		guidance:  mastodonGuidance,
+	}, f)
 }

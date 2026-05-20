@@ -17,54 +17,36 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package news
 
 import (
 	"context"
-	"log/slog"
-	"os"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"time"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
+// SocialPost records a single published social media post tied back to the
+// digest issue it originated from. Used both as an audit log and as the
+// idempotency guard against retried crons.
+type SocialPost struct {
+	ID       int64     `json:"id"`
+	IssueID  int64     `json:"issue_id"`
+	Platform string    `json:"platform"`
+	Text     string    `json:"text"`
+	PostURL  string    `json:"post_url,omitempty"`
+	PostedAt time.Time `json:"posted_at"`
 }
 
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../mocks/news/SocialPostRepository.go . SocialPostRepository
+
+// SocialPostRepository defines the methods for interacting with the
+// social_posts store.
+type SocialPostRepository interface {
+	// HasPosted reports whether a row exists for the given issue and platform.
+	HasPosted(ctx context.Context, issueID int64, platform string) (bool, error)
+
+	// Create persists a new social post record.
+	Create(ctx context.Context, p SocialPost) (SocialPost, error)
+
+	// ListForIssue returns all posts associated with an issue, oldest first.
+	ListForIssue(ctx context.Context, issueID int64) ([]SocialPost, error)
 }

@@ -17,54 +17,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+// Package prompts builds the AI prompts that drive the social posting
+// pipeline. One Feature call picks the day's most engaging item; per-platform
+// reframing prompts re-voice that item for each target platform.
+package prompts
 
 import (
-	"context"
-	"log/slog"
-	"os"
+	"errors"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/pkg/news"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
+type (
+	// Featured is the one item picked from the day's news to anchor every
+	// social post. Hook is the model's one-line reason this item matters,
+	// used to seed the per-platform reframing prompts.
+	Featured struct {
+		Title  string      `json:"title"`
+		URL    string      `json:"url"`
+		Source news.Source `json:"source"`
+		Tag    news.Tag    `json:"tag"`
+		Hook   string      `json:"hook"`
 	}
+)
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
-}
+// ErrNoCandidates is returned by Feature when the input contains no
+// items suitable for posting.
+var ErrNoCandidates = errors.New("prompts: no candidate items")

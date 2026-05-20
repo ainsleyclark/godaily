@@ -17,54 +17,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package social_test
 
 import (
-	"context"
-	"log/slog"
-	"os"
+	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+func TestPlatform_String(t *testing.T) {
+	t.Parallel()
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
+	tt := map[string]struct {
+		input social.Platform
+		want  string
+	}{
+		"Bluesky":  {input: social.PlatformBluesky, want: "bluesky"},
+		"LinkedIn": {input: social.PlatformLinkedIn, want: "linkedin"},
+		"Mastodon": {input: social.PlatformMastodon, want: "mastodon"},
 	}
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, test.input.String())
+		})
 	}
 }
