@@ -144,7 +144,7 @@ func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscri
 	}
 
 	return s.email.Send(ctx, email.SendEmailRequest{
-		From:    "GoDaily <noreply@godaily.dev>",
+		From:    "GoDaily <digest@godaily.dev>",
 		To:      []string{to},
 		Subject: "Confirm your GoDaily subscription",
 		Html:    htmlBuf.String(),
