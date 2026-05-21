@@ -61,6 +61,7 @@ const (
 	SourceJetBrains      Source = "jetbrains"
 	SourceGolangNuts     Source = "golang_nuts"
 	SourcePlanetGolang   Source = "planet_golang"
+	SourceMeetup         Source = "meetup"
 )
 
 // Sources defines a list of all source types.
@@ -84,6 +85,7 @@ var Sources = []Source{
 	SourceJetBrains,
 	SourceGolangNuts,
 	SourcePlanetGolang,
+	SourceMeetup,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -107,6 +109,7 @@ var FeaturedSources = []Source{
 	SourceMastodon,
 	SourceAwesomeGo,
 	SourceGolangNuts,
+	SourceMeetup,
 }
 
 // String implements fmt.Stringer on source.
@@ -115,6 +118,7 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
+	SourceMeetup:         20,
 	SourceGoRelease:      19,
 	SourceGoBlog:         18,
 	SourceGitHub:         17,
@@ -163,6 +167,7 @@ var sourceNiceNames = map[Source]string{
 	SourceJetBrains:      "JetBrains GoLand",
 	SourceGolangNuts:     "Golang Nuts",
 	SourcePlanetGolang:   "Planet Golang",
+	SourceMeetup:         "Meetup",
 }
 
 // NiceName returns a formatted string of the source.
@@ -194,6 +199,7 @@ var sourceEmojis = map[Source]string{
 	SourceFallthrough:    "📡",
 	SourceGolangNuts:     "📬",
 	SourcePlanetGolang:   "🌐",
+	SourceMeetup:         "📅",
 }
 
 // Emoji returns the display emoji for the source.
@@ -224,6 +230,7 @@ var sourceMarkURLs = map[Source]string{
 	SourceReddit:       "/assets/images/marks/reddit.svg",
 	SourceYouTube:      "/assets/images/marks/youtube.svg",
 	SourceGolangNuts:   "/assets/images/marks/golang_nuts.svg",
+	SourceMeetup:       "/assets/images/marks/meetup.svg",
 }
 
 // MarkURL returns the public path of the source's mark/logo asset, or ""
@@ -252,6 +259,7 @@ var sourceShortLabels = map[Source]string{
 	SourceYouTube:        "YT",
 	SourceGolangNuts:     "GN",
 	SourcePlanetGolang:   "PG",
+	SourceMeetup:         "MT",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,

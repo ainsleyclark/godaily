@@ -47,6 +47,7 @@ var (
 // most email clients strip <style> blocks, so colour is passed through the
 // template rather than driven from a CSS class.
 var sectionAccents = map[news.Tag]string{
+	news.TagEvent:      "#16a34a",
 	news.TagRelease:    "#9333ea",
 	news.TagProposal:   "#6366f1",
 	news.TagArticle:    "#1a7fa8",
