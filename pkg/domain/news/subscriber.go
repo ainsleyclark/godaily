@@ -56,5 +56,4 @@ type SubscriberRepository interface {
 	// MarkComplained flags the subscriber with the given email as having filed
 	// a spam complaint. The address is suppressed from future sends.
 	MarkComplained(ctx context.Context, email string) error
-	MarkUnsubscribed(ctx context.Context, email string) error
 }
