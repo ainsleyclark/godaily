@@ -25,7 +25,6 @@ package main
 import (
 	"bufio"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -71,13 +70,13 @@ func main() {
 	}
 
 	if len(missing) == 0 {
-		fmt.Println("conferences-check: all wiki conferences are present in conferences.yaml")
+		log.Println("conferences-check: all wiki conferences are present in conferences.yaml")
 		return
 	}
 
-	fmt.Printf("conferences-check: %d URL(s) found in the Go wiki but not in conferences.yaml:\n", len(missing))
+	log.Printf("conferences-check: %d URL(s) found in the Go wiki but not in conferences.yaml:\n", len(missing))
 	for _, u := range missing {
-		fmt.Printf("  - %s\n", u)
+		log.Printf("  - %s\n", u)
 	}
 }
 

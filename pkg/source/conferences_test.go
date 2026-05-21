@@ -29,20 +29,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const testConferencesYAML = `
-- slug: gophercon-test-2099
-  name: GopherCon Test 2099
-  url: https://gophercon.test/
-  location: Testville, TX
-  start_date: 2099-08-10
-  end_date: 2099-08-12
-  description: "Test conference description."
-  notify_dates:
-    - 2099-05-01
-    - 2099-05-10
-    - 2099-08-03
-`
-
 func makeTestConferences(notifyDates ...string) *Conferences {
 	var datesYAML string
 	for _, d := range notifyDates {
