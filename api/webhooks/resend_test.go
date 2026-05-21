@@ -115,6 +115,26 @@ func TestHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
+	t.Run("Complained event marks the subscriber", func(t *testing.T) {
+		a, events, subs := newApp(t, webhookSecret)
+		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
+		subs.EXPECT().MarkComplained(gomock.Any(), "unhappy@example.com").Return(nil)
+
+		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "complained.json")))
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+
+	t.Run("Unsubscribed event marks the subscriber", func(t *testing.T) {
+		a, events, subs := newApp(t, webhookSecret)
+		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
+		subs.EXPECT().MarkUnsubscribed(gomock.Any(), "leaving@example.com").Return(nil)
+
+		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "unsubscribed.json")))
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+
 	t.Run("Invalid signature is rejected", func(t *testing.T) {
 		a, _, _ := newApp(t, webhookSecret)
 		r := signedPOST(t, webhookSecret, "{}")

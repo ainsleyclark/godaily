@@ -33,6 +33,7 @@ type Subscriber struct {
 	ConfirmedAt      *time.Time `json:"confirmed_at,omitempty"`
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at,omitempty"`
 	BouncedAt        *time.Time `json:"bounced_at,omitempty"`
+	ComplainedAt     *time.Time `json:"complained_at,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
@@ -51,5 +52,9 @@ type SubscriberRepository interface {
 	ListActive(ctx context.Context) ([]Subscriber, error)
 	CountActive(ctx context.Context) (int64, error)
 	MarkBounced(ctx context.Context, email string) error
+
+	// MarkComplained flags the subscriber with the given email as having filed
+	// a spam complaint. The address is suppressed from future sends.
 	MarkComplained(ctx context.Context, email string) error
+	MarkUnsubscribed(ctx context.Context, email string) error
 }

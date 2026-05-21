@@ -64,6 +64,7 @@ var webhookEventTypes = map[string]engagement.EmailEventType{
 	resend.EventEmailClicked:    engagement.EmailEventTypeClicked,
 	resend.EventEmailBounced:    engagement.EmailEventTypeBounced,
 	resend.EventEmailComplained: engagement.EmailEventTypeComplained,
+	"email.unsubscribed":        engagement.EmailEventTypeUnsubscribed,
 }
 
 // VerifyWebhook checks the Svix-style signature on a Resend webhook request.

@@ -248,15 +248,16 @@ func TestSubscribers_Store(t *testing.T) {
 		_, err = s.Confirm(ctx, complainer.ConfirmToken)
 		require.NoError(t, err)
 
-		t.Log("Sets unsubscribed_at")
+		t.Log("Sets complained_at")
 		{
 			require.NoError(t, s.MarkComplained(ctx, "spam@example.com"))
 			got, err := s.FindByEmail(ctx, "spam@example.com")
 			require.NoError(t, err)
-			assert.NotNil(t, got.UnsubscribedAt)
+			assert.NotNil(t, got.ComplainedAt)
+			assert.Nil(t, got.UnsubscribedAt)
 		}
 
-		t.Log("Idempotent on an already-unsubscribed address")
+		t.Log("Idempotent on an already-complained address")
 		{
 			require.NoError(t, s.MarkComplained(ctx, "spam@example.com"))
 		}
