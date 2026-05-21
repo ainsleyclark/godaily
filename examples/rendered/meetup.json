@@ -2,61 +2,49 @@
 	{
 		"id": 0,
 		"source": "meetup",
-		"title": "May Gophers @ Muzz!",
-		"url": "https://www.meetup.com/londongophers/events/314847774/",
-		"image_url": "https://secure.meetupstatic.com/photos/event/5/b/0/f/highres_511523311.jpeg",
-		"snippet": "Tue May 26 · London, GB · 80 RSVPs",
+		"title": "Building Grafana with AI: What Actually Works (in-person and virtual)",
+		"url": "https://www.meetup.com/golangmn/events/314701730/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/7/b/9/0/highres_380551632.jpeg",
+		"snippet": "Wed May 20 · Minneapolis, US · 35 RSVPs",
 		"tag": "event",
 		"comments": 0,
 		"score": 0,
-		"published": "2026-05-21T05:19:33.501465Z"
+		"published": "2026-05-21T07:51:29.094122Z"
 	},
 	{
 		"id": 0,
 		"source": "meetup",
-		"title": "[Paid] GopherCon Singapore 2026",
-		"url": "https://www.meetup.com/golangsg/events/314210013/",
-		"image_url": "https://secure.meetupstatic.com/photos/event/a/e/7/e/highres_533624670.jpeg",
-		"snippet": "Fri May 22 · Singapore, SG · 12 RSVPs",
+		"title": "Golang Reston Monthly Meetup",
+		"url": "https://www.meetup.com/golang-reston/events/308418381/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/7/f/7/highres_433982039.jpeg",
+		"snippet": "Wed May 20 · Online · 10 RSVPs",
 		"tag": "event",
 		"comments": 0,
 		"score": 0,
-		"published": "2026-05-21T05:19:33.780171Z"
+		"published": "2026-05-21T07:51:29.381988Z"
 	},
 	{
 		"id": 0,
 		"source": "meetup",
-		"title": "[Paid] Ultimate Practical AI by Florin Pățan ",
-		"url": "https://www.meetup.com/golangsg/events/314616263/",
-		"image_url": "https://secure.meetupstatic.com/photos/event/8/a/7/e/highres_528635454.jpeg",
-		"snippet": "Thu May 21 · Singapore, SG · 2 RSVPs",
+		"title": "Thursday Afternoon Go (remote)",
+		"url": "https://www.meetup.com/thursday-go/events/314790069/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/c/1/9/9/highres_531349561.jpeg",
+		"snippet": "Thu May 21 · Online · 2 RSVPs",
 		"tag": "event",
 		"comments": 0,
 		"score": 0,
-		"published": "2026-05-21T05:19:33.780361Z"
+		"published": "2026-05-21T07:51:29.382187Z"
 	},
 	{
 		"id": 0,
 		"source": "meetup",
-		"title": "[Outside Event]  Free OPEN Passes to AI DevSummit 2026",
-		"url": "https://www.meetup.com/golangsf/events/314515624/",
-		"image_url": "https://secure.meetupstatic.com/photos/event/e/a/d/highres_533943757.jpeg",
-		"snippet": "Wed May 27 · South San Francisco, US · 1 RSVPs",
+		"title": "Nigerian Gophers May Meetup",
+		"url": "https://www.meetup.com/golangnigeria/events/314772614/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/d/f/e/d/highres_534237325.jpeg",
+		"snippet": "Sat May 23 · Online · 20 RSVPs",
 		"tag": "event",
 		"comments": 0,
 		"score": 0,
-		"published": "2026-05-21T05:19:33.780548Z"
-	},
-	{
-		"id": 0,
-		"source": "meetup",
-		"title": "Go Bangalore Meetup #86",
-		"url": "https://www.meetup.com/golang-bangalore/events/314608048/",
-		"image_url": "https://secure.meetupstatic.com/photos/event/7/6/0/f/highres_486810223.jpeg",
-		"snippet": "Sat May 30 · Bengaluru, IN · 204 RSVPs",
-		"tag": "event",
-		"comments": 0,
-		"score": 0,
-		"published": "2026-05-21T05:19:33.780698Z"
+		"published": "2026-05-21T07:51:29.382339Z"
 	}
 ]
