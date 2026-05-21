@@ -1,0 +1,62 @@
+[
+	{
+		"id": 0,
+		"source": "meetup",
+		"title": "May Gophers @ Muzz!",
+		"url": "https://www.meetup.com/londongophers/events/314847774/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/5/b/0/f/highres_511523311.jpeg",
+		"snippet": "Tue May 26 · London, GB · 80 RSVPs",
+		"tag": "event",
+		"comments": 0,
+		"score": 0,
+		"published": "2026-05-21T05:19:33.501465Z"
+	},
+	{
+		"id": 0,
+		"source": "meetup",
+		"title": "[Paid] GopherCon Singapore 2026",
+		"url": "https://www.meetup.com/golangsg/events/314210013/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/a/e/7/e/highres_533624670.jpeg",
+		"snippet": "Fri May 22 · Singapore, SG · 12 RSVPs",
+		"tag": "event",
+		"comments": 0,
+		"score": 0,
+		"published": "2026-05-21T05:19:33.780171Z"
+	},
+	{
+		"id": 0,
+		"source": "meetup",
+		"title": "[Paid] Ultimate Practical AI by Florin Pățan ",
+		"url": "https://www.meetup.com/golangsg/events/314616263/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/8/a/7/e/highres_528635454.jpeg",
+		"snippet": "Thu May 21 · Singapore, SG · 2 RSVPs",
+		"tag": "event",
+		"comments": 0,
+		"score": 0,
+		"published": "2026-05-21T05:19:33.780361Z"
+	},
+	{
+		"id": 0,
+		"source": "meetup",
+		"title": "[Outside Event]  Free OPEN Passes to AI DevSummit 2026",
+		"url": "https://www.meetup.com/golangsf/events/314515624/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/e/a/d/highres_533943757.jpeg",
+		"snippet": "Wed May 27 · South San Francisco, US · 1 RSVPs",
+		"tag": "event",
+		"comments": 0,
+		"score": 0,
+		"published": "2026-05-21T05:19:33.780548Z"
+	},
+	{
+		"id": 0,
+		"source": "meetup",
+		"title": "Go Bangalore Meetup #86",
+		"url": "https://www.meetup.com/golang-bangalore/events/314608048/",
+		"image_url": "https://secure.meetupstatic.com/photos/event/7/6/0/f/highres_486810223.jpeg",
+		"snippet": "Sat May 30 · Bengaluru, IN · 204 RSVPs",
+		"tag": "event",
+		"comments": 0,
+		"score": 0,
+		"published": "2026-05-21T05:19:33.780698Z"
+	}
+]
