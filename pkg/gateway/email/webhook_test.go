@@ -145,23 +145,24 @@ func TestToEmailEvent(t *testing.T) {
 		assert.Equal(t, int64(9), *got.SubscriberID)
 	})
 
-	t.Run("Missing tags leave IDs nil", func(t *testing.T) {
+	t.Run("Missing tags are not tracked", func(t *testing.T) {
 		t.Parallel()
-		got, _, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m")
+		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m")
 		require.NoError(t, err)
-		assert.Nil(t, got.IssueID)
-		assert.Nil(t, got.SubscriberID)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
 	})
 
-	t.Run("Non-numeric tag value leaves the ID nil", func(t *testing.T) {
+	t.Run("Non-numeric issue_id tag is not tracked", func(t *testing.T) {
 		t.Parallel()
 		evt := email.WebhookEvent{
 			Type: "email.opened",
 			Data: email.WebhookData{Tags: json.RawMessage(`{"issue_id":"not-a-number"}`)},
 		}
-		got, _, err := email.ToEmailEvent(evt, "m")
+		got, tracked, err := email.ToEmailEvent(evt, "m")
 		require.NoError(t, err)
-		assert.Nil(t, got.IssueID)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
 	})
 
 	t.Run("Malformed timestamp falls back to zero", func(t *testing.T) {
