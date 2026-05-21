@@ -45,8 +45,8 @@ import (
 const maxHTMLBytes = 16_000
 
 func main() {
-	yamlPath := flag.String("yaml", "pkg/source/conferences.yaml", "path to conferences.yaml")
-	watchPath := flag.String("watch", "pkg/source/conferences-watch.yaml", "path to conferences-watch.yaml")
+	yamlPath := flag.String("yaml", "pkg/source/data/conferences.yaml", "path to conferences.yaml")
+	watchPath := flag.String("watch", "pkg/source/data/conferences-watch.yaml", "path to conferences-watch.yaml")
 	flag.Parse()
 
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")

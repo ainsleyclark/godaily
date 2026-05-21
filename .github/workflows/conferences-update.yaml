@@ -22,12 +22,12 @@ jobs:
       - name: Run conferences-update
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml -watch pkg/source/conferences-watch.yaml
+        run: go run ./cmd/conferences-update/... -yaml pkg/source/data/conferences.yaml -watch pkg/source/data/conferences-watch.yaml
 
       - name: Check for changes
         id: diff
         run: |
-          if git diff --quiet pkg/source/conferences.yaml; then
+          if git diff --quiet pkg/source/data/conferences.yaml; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -43,7 +43,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git checkout -b "$BRANCH"
-          git add pkg/source/conferences.yaml
+          git add pkg/source/data/conferences.yaml
           git commit -m "chore: add conferences found in Go wiki (${DATE})"
           git push -u origin "$BRANCH"
           gh pr create \
@@ -54,7 +54,7 @@ jobs:
 
 This PR was opened automatically by the weekly conferences-update workflow.
 
-The [Go wiki Conferences page](https://go.dev/wiki/Conferences) was checked for URLs not present in \`pkg/source/conferences.yaml\`. Each missing conference website was fetched and processed by Claude to extract structured data.
+The [Go wiki Conferences page](https://go.dev/wiki/Conferences) was checked for URLs not present in \`pkg/source/data/conferences.yaml\`. Each missing conference website was fetched and processed by Claude to extract structured data.
 
 **Review before merging:**
 - [ ] Conference dates are correct

@@ -38,7 +38,7 @@ import (
 const wikiURL = "https://raw.githubusercontent.com/golang/wiki/master/Conferences.md"
 
 func main() {
-	yamlPath := flag.String("yaml", "pkg/source/conferences.yaml", "path to conferences.yaml (relative to repo root)")
+	yamlPath := flag.String("yaml", "pkg/source/data/conferences.yaml", "path to conferences.yaml (relative to repo root)")
 	flag.Parse()
 
 	localYAML, err := os.ReadFile(*yamlPath)
