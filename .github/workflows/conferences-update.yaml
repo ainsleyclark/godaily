@@ -46,22 +46,22 @@ jobs:
           git add pkg/source/data/conferences.yaml
           git commit -m "chore: add conferences found in Go wiki (${DATE})"
           git push -u origin "$BRANCH"
+          printf '%s\n' \
+            '## Automated conference update' \
+            '' \
+            'This PR was opened automatically by the weekly conferences-update workflow.' \
+            '' \
+            'Each URL in `pkg/source/data/conferences-watch.yaml` was checked against `pkg/source/data/conferences.yaml`. Missing conferences had their websites fetched and processed by Claude to extract structured data.' \
+            '' \
+            '**Review before merging:**' \
+            '- [ ] Conference dates are correct' \
+            '- [ ] `notify_dates` match your preferred schedule (announcement, reminder, alert)' \
+            '- [ ] `slug` is unique and follows the `name-year` convention' \
+            '- [ ] `location` and `description` are accurate' \
+            '- [ ] Add `image_url` if desired (left empty by default)' \
+            > /tmp/pr-body.md
           gh pr create \
             --draft \
             --title "chore: auto-update conferences from Go wiki (${DATE})" \
-            --body "$(cat <<'EOF'
-## Automated conference update
-
-This PR was opened automatically by the weekly conferences-update workflow.
-
-The [Go wiki Conferences page](https://go.dev/wiki/Conferences) was checked for URLs not present in \`pkg/source/data/conferences.yaml\`. Each missing conference website was fetched and processed by Claude to extract structured data.
-
-**Review before merging:**
-- [ ] Conference dates are correct
-- [ ] \`notify_dates\` match your preferred schedule (announcement, reminder, alert)
-- [ ] \`slug\` is unique and follows the \`name-year\` convention
-- [ ] \`location\` and \`description\` are accurate
-- [ ] Add \`image_url\` if desired (left empty by default)
-EOF
-)" \
+            --body-file /tmp/pr-body.md \
             --base main
