@@ -23,9 +23,8 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
 )
 
 func TestNullString(t *testing.T) {

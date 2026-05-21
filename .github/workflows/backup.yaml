@@ -3,7 +3,7 @@ name: Backup Database
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * 0" # 2 AM UTC every Sunday
+    - cron: "0 23 * * *" # 11 PM UTC every day
 
 jobs:
   backup:

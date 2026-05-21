@@ -93,6 +93,7 @@ func Fetch[T any](
 	if err = unmarshal(data, &out); err != nil {
 		return zero, errors.Wrap(err, "parsing response")
 	}
+
 	return out, nil
 }
 
@@ -105,6 +106,7 @@ func FetchHTML(ctx context.Context, url, name string, headers ...http.Header) (*
 	if err != nil {
 		return nil, errors.Wrap(err, name+" request creation failed")
 	}
+
 	req.Header.Set("User-Agent", "godaily/1.0")
 	req.Header.Set("Accept", "text/html,application/xhtml+xml")
 

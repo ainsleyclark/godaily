@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
+	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
