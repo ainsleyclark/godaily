@@ -4,9 +4,9 @@ DELETE FROM items
 WHERE id NOT IN (
     SELECT MIN(id)
     FROM items
-    GROUP BY url, tag
+    GROUP BY issue_id, url, tag
 );
-CREATE UNIQUE INDEX items_url_tag_unique ON items (url, tag);
+CREATE UNIQUE INDEX items_url_tag_unique ON items (issue_id, url, tag);
 -- +goose StatementEnd
 
 -- +goose Down

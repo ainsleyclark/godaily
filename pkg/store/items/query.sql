@@ -8,7 +8,7 @@ INSERT OR IGNORE INTO items (
     ?, ?, ?, ?,
     ?, ?, ?, ?
 )
-ON CONFLICT (url, tag) DO NOTHING
+ON CONFLICT (issue_id, url, tag) DO NOTHING
 RETURNING *;
 
 -- name: ItemByID :one
