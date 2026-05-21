@@ -125,7 +125,6 @@ func TestHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
-
 	t.Run("Invalid signature is rejected", func(t *testing.T) {
 		a, _, _ := newApp(t, webhookSecret)
 		r := signedPOST(t, webhookSecret, "{}")
