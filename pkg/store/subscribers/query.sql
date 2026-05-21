@@ -49,11 +49,6 @@ UPDATE subscribers
 SET complained_at = CURRENT_TIMESTAMP
 WHERE email = ? AND complained_at IS NULL;
 
--- name: SubscriberMarkUnsubscribed :exec
-UPDATE subscribers
-SET unsubscribed_at = CURRENT_TIMESTAMP
-WHERE email = ? AND unsubscribed_at IS NULL;
-
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL

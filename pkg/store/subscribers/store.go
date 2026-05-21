@@ -163,10 +163,6 @@ func (s Store) MarkComplained(ctx context.Context, email string) error {
 	return s.sqlc.SubscriberMarkComplained(ctx, strings.ToLower(strings.TrimSpace(email)))
 }
 
-func (s Store) MarkUnsubscribed(ctx context.Context, email string) error {
-	return s.sqlc.SubscriberMarkUnsubscribed(ctx, strings.ToLower(strings.TrimSpace(email)))
-}
-
 func (s Store) CountActive(ctx context.Context) (int64, error) {
 	return s.sqlc.SubscriberCountActive(ctx)
 }

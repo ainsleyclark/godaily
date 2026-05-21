@@ -35,7 +35,6 @@ import (
 type SubscriberHealth interface {
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
-	MarkUnsubscribed(ctx context.Context, email string) error
 }
 
 // Service stores email events and applies their subscriber-health effects.
@@ -60,9 +59,6 @@ var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, 
 	},
 	engagement.EmailEventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkComplained(ctx, addr)
-	},
-	engagement.EmailEventTypeUnsubscribed: func(ctx context.Context, s *Service, addr string) error {
-		return s.subscribers.MarkUnsubscribed(ctx, addr)
 	},
 }
 

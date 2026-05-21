@@ -50,18 +50,14 @@ const (
 
 	// EmailEventTypeComplained marks a spam complaint.
 	EmailEventTypeComplained EmailEventType = "complained"
-	// EmailEventTypeUnsubscribed marks a one-click List-Unsubscribe triggered
-	// from the recipient's mail client via the RFC 8058 header.
-	EmailEventTypeUnsubscribed EmailEventType = "unsubscribed"
 )
 
 var validEmailEventTypes = map[EmailEventType]bool{
-	EmailEventTypeDelivered:    true,
-	EmailEventTypeOpened:       true,
-	EmailEventTypeClicked:      true,
-	EmailEventTypeBounced:      true,
-	EmailEventTypeComplained:   true,
-	EmailEventTypeUnsubscribed: true,
+	EmailEventTypeDelivered:  true,
+	EmailEventTypeOpened:     true,
+	EmailEventTypeClicked:    true,
+	EmailEventTypeBounced:    true,
+	EmailEventTypeComplained: true,
 }
 
 // String returns the event type as a string.

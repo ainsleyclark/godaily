@@ -83,20 +83,6 @@ func (mr *MockSubscriberMockRecorder) MarkComplained(ctx, email any) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockSubscriber)(nil).MarkComplained), ctx, email)
 }
 
-// MarkUnsubscribed mocks base method.
-func (m *MockSubscriber) MarkUnsubscribed(ctx context.Context, email string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MarkUnsubscribed", ctx, email)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// MarkUnsubscribed indicates an expected call of MarkUnsubscribed.
-func (mr *MockSubscriberMockRecorder) MarkUnsubscribed(ctx, email any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkUnsubscribed", reflect.TypeOf((*MockSubscriber)(nil).MarkUnsubscribed), ctx, email)
-}
-
 // Subscribe mocks base method.
 func (m *MockSubscriber) Subscribe(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()

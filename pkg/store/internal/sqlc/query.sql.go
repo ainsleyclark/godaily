@@ -926,17 +926,6 @@ func (q *Queries) SubscriberMarkComplained(ctx context.Context, email string) er
 	return err
 }
 
-const subscriberMarkUnsubscribed = `-- name: SubscriberMarkUnsubscribed :exec
-UPDATE subscribers
-SET unsubscribed_at = CURRENT_TIMESTAMP
-WHERE email = ? AND unsubscribed_at IS NULL
-`
-
-func (q *Queries) SubscriberMarkUnsubscribed(ctx context.Context, email string) error {
-	_, err := q.db.ExecContext(ctx, subscriberMarkUnsubscribed, email)
-	return err
-}
-
 const subscriberReactivate = `-- name: SubscriberReactivate :one
 UPDATE subscribers
 SET unsubscribed_at = NULL,
