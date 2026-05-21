@@ -27,6 +27,8 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
@@ -77,9 +79,18 @@ func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, 
 	return transform(row), nil
 }
 
-// ListForIssue returns all posts associated with an issue, oldest first.
-func (s Store) ListForIssue(ctx context.Context, issueID int64) ([]news.SocialPost, error) {
-	rows, err := s.sqlc.SocialPostListByIssue(ctx, issueID)
+// List returns social posts filtered by opts.
+func (s Store) List(ctx context.Context, opts news.SocialPostListOptions) ([]news.SocialPost, error) {
+	var rows []sqlc.SocialPost
+	var err error
+	switch {
+	case opts.IssueID != nil:
+		rows, err = s.sqlc.SocialPostListByIssue(ctx, *opts.IssueID)
+	case opts.Since != nil:
+		rows, err = s.sqlc.SocialPostListSince(ctx, *opts.Since)
+	default:
+		return nil, errors.New("List requires at least one option (IssueID or Since)")
+	}
 	if err != nil {
 		return nil, err
 	}

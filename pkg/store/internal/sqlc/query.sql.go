@@ -507,6 +507,78 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID sql.NullInt64) ([
 	return items, nil
 }
 
+const socialMetricListBySocialPostID = `-- name: SocialMetricListBySocialPostID :many
+SELECT id, social_post_id, platform, likes, reposts, comments, impressions, fetched_at FROM social_metrics
+WHERE social_post_id = ?
+ORDER BY fetched_at DESC
+`
+
+func (q *Queries) SocialMetricListBySocialPostID(ctx context.Context, socialPostID int64) ([]SocialMetric, error) {
+	rows, err := q.db.QueryContext(ctx, socialMetricListBySocialPostID, socialPostID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SocialMetric{}
+	for rows.Next() {
+		var i SocialMetric
+		if err := rows.Scan(
+			&i.ID,
+			&i.SocialPostID,
+			&i.Platform,
+			&i.Likes,
+			&i.Reposts,
+			&i.Comments,
+			&i.Impressions,
+			&i.FetchedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const socialMetricUpsert = `-- name: SocialMetricUpsert :exec
+INSERT INTO social_metrics (social_post_id, platform, likes, reposts, comments, impressions, fetched_at)
+VALUES (?, ?, ?, ?, ?, ?, ?)
+ON CONFLICT(social_post_id, platform) DO UPDATE SET
+    likes        = excluded.likes,
+    reposts      = excluded.reposts,
+    comments     = excluded.comments,
+    impressions  = excluded.impressions,
+    fetched_at   = excluded.fetched_at
+`
+
+type SocialMetricUpsertParams struct {
+	SocialPostID int64     `json:"social_post_id"`
+	Platform     string    `json:"platform"`
+	Likes        int64     `json:"likes"`
+	Reposts      int64     `json:"reposts"`
+	Comments     int64     `json:"comments"`
+	Impressions  int64     `json:"impressions"`
+	FetchedAt    time.Time `json:"fetched_at"`
+}
+
+func (q *Queries) SocialMetricUpsert(ctx context.Context, arg SocialMetricUpsertParams) error {
+	_, err := q.db.ExecContext(ctx, socialMetricUpsert,
+		arg.SocialPostID,
+		arg.Platform,
+		arg.Likes,
+		arg.Reposts,
+		arg.Comments,
+		arg.Impressions,
+		arg.FetchedAt,
+	)
+	return err
+}
+
 const socialPostCreate = `-- name: SocialPostCreate :one
 INSERT INTO social_posts (
     issue_id, platform, text, post_url, posted_at
@@ -571,6 +643,42 @@ ORDER BY posted_at ASC
 
 func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]SocialPost, error) {
 	rows, err := q.db.QueryContext(ctx, socialPostListByIssue, issueID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SocialPost{}
+	for rows.Next() {
+		var i SocialPost
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Platform,
+			&i.Text,
+			&i.PostUrl,
+			&i.PostedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const socialPostListSince = `-- name: SocialPostListSince :many
+SELECT id, issue_id, platform, text, post_url, posted_at FROM social_posts
+WHERE posted_at >= ?
+ORDER BY posted_at DESC
+`
+
+func (q *Queries) SocialPostListSince(ctx context.Context, postedAt time.Time) ([]SocialPost, error) {
+	rows, err := q.db.QueryContext(ctx, socialPostListSince, postedAt)
 	if err != nil {
 		return nil, err
 	}

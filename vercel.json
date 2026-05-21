@@ -13,10 +13,11 @@
 		{ "source": "/api/items/:id",    "destination": "/api/items/id?id=:id" }
 	],
 	"crons": [
-		{ "path": "/api/collect/", "schedule": "0 1 * * *"                 },
-		{ "path": "/api/build/",   "schedule": "0 2 * * 1-5"               },
-		{ "path": "/api/send/",    "schedule": "0 8 * * 1-5"               },
-		{ "path": "/api/social/",  "schedule": "0,10,20,30,40,50 11 * * 1-5" }
+		{ "path": "/api/collect/",         "schedule": "0 1 * * *"                 },
+		{ "path": "/api/build/",           "schedule": "0 2 * * 1-5"               },
+		{ "path": "/api/send/",            "schedule": "0 8 * * 1-5"               },
+		{ "path": "/api/social/",          "schedule": "0,10,20,30,40,50 11 * * 1-5" },
+		{ "path": "/api/social/metrics/",   "schedule": "0 3 * * *"                 }
 	],
 	"functions": {
 		"api/**/*.go": {
