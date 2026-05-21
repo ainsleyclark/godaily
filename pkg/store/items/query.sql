@@ -8,6 +8,7 @@ INSERT INTO items (
     ?, ?, ?, ?,
     ?, ?, ?, ?
 )
+ON CONFLICT (url, tag) DO NOTHING
 RETURNING *;
 
 -- name: ItemByID :one

@@ -342,6 +342,7 @@ INSERT INTO items (
     ?, ?, ?, ?,
     ?, ?, ?, ?
 )
+ON CONFLICT (url, tag) DO NOTHING
 RETURNING id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published
 `
 

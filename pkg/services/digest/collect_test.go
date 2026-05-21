@@ -78,12 +78,11 @@ func TestAggregator_Collect(t *testing.T) {
 				assert.Empty(t, items)
 			},
 		},
-		"Filters Out Of Window Items": {
+		"Filters Before-Window Items": {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{
 					items: []news.Item{
 						{Title: "before", Published: beforeWindow},
-						{Title: "after", Published: afterWindow},
 					},
 				},
 			},
@@ -92,6 +91,28 @@ func TestAggregator_Collect(t *testing.T) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
+			},
+		},
+		"Clamps Future-Published Items Into Window": {
+			// Sources like meetup set Published: time.Now(), which lands after
+			// the window's end (today midnight). The pipeline clamps these to
+			// start+1h so they are stored in the correct window without the
+			// source needing to know the pipeline's date expectations.
+			registry: map[news.Source]news.Fetcher{
+				news.SourceDevTo: mockFetcher{
+					items: []news.Item{
+						{Title: "after", Published: afterWindow},
+					},
+				},
+			},
+			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, items []news.SourceItems, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				require.Len(t, items[0].Items, 1)
+				assert.Equal(t, "after", items[0].Items[0].Title)
+				assert.Equal(t, start.Add(time.Hour), items[0].Items[0].Published)
 			},
 		},
 		"Sorts Items By Score Desc": {

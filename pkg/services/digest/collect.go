@@ -76,7 +76,14 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 				slog.ErrorContext(ctx, "Item has zero published date", "source", src, "title", item.Title)
 				continue
 			}
-			if item.Published.After(start) && item.Published.Before(end) {
+			// Sources that set Published: time.Now() (e.g. meetup) produce a
+			// timestamp that is always >= end (today midnight). Clamp those to
+			// start+1h so they land inside this window without the source needing
+			// to know anything about the pipeline's date expectations.
+			if !item.Published.Before(end) {
+				item.Published = start.Add(time.Hour)
+			}
+			if item.Published.After(start) {
 				si.Items = append(si.Items, item)
 			}
 		}
