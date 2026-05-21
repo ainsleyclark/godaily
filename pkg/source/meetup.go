@@ -24,7 +24,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -32,35 +31,12 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
-// meetupGroups is the curated list of Meetup.com group slugs for Go communities.
-// Add a slug here to include a new group; remove one to stop fetching it.
-// All groups are verified Go communities; no keyword filtering is needed.
-var meetupGroups = []string{
-	// UK
-	"londongophers",
-	// USA East
-	"golang-nyc",
-	"boston-golang",
-	// USA West
-	"golangsf",
-	// USA Central
-	"golang-chicago",
-	// Canada
-	"golang-toronto",
-	// Europe
-	"golang-berlin",
-	"golang-paris",
-	"golangamsterdam",
-	// Asia-Pacific
-	"golangsg",
-	"golang-bangalore",
-}
+const meetupProURL = "https://www.meetup.com/pro/go/"
 
-const meetupBaseURL = "https://www.meetup.com/"
-
-// Meetup fetches upcoming Go meetup events from a curated set of Meetup.com groups.
+// Meetup fetches upcoming Go events from the official Go Developers Network Pro page.
+// All 81 GDN-verified Go groups are covered from a single fetch.
 type Meetup struct {
-	groupURLs []string // full page URLs, one per group
+	proURL string
 }
 
 var _ news.Fetcher = &Meetup{}
@@ -69,114 +45,61 @@ func init() {
 	news.Register(news.SourceMeetup, func(cfg env.Config) news.Fetcher { return NewMeetup(cfg) })
 }
 
-// NewMeetup creates a Meetup source using the curated group list.
+// NewMeetup creates a Meetup source using the Go Developers Network Pro page.
 func NewMeetup(_ env.Config) *Meetup {
-	urls := make([]string, len(meetupGroups))
-	for i, slug := range meetupGroups {
-		urls[i] = meetupBaseURL + slug + "/"
-	}
-	return &Meetup{groupURLs: urls}
+	return &Meetup{proURL: meetupProURL}
 }
 
-// Fetch retrieves upcoming events from all configured Go meetup groups concurrently.
-// Groups that fail to load are skipped so one bad group does not block the rest.
+// Fetch retrieves upcoming Go events from the Go Developers Network Pro page.
 func (m *Meetup) Fetch(ctx context.Context) ([]news.Item, error) {
-	results := make(chan []meetupEventItem, len(m.groupURLs))
-
-	sem := make(chan struct{}, 5)
-	var wg sync.WaitGroup
-
-	for _, u := range m.groupURLs {
-		wg.Add(1)
-		go func(u string) {
-			defer wg.Done()
-			sem <- struct{}{}
-			defer func() { <-sem }()
-			items, err := m.fetchGroup(ctx, u)
-			if err != nil {
-				results <- nil
-				return
-			}
-			results <- items
-		}(u)
-	}
-
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
-
-	var all []meetupEventItem
-	for batch := range results {
-		all = append(all, batch...)
-	}
-
-	return ingest.TransformAll(ctx, all), nil
-}
-
-// fetchGroup fetches and parses upcoming events from a single Meetup.com group page URL.
-func (m *Meetup) fetchGroup(ctx context.Context, groupURL string) ([]meetupEventItem, error) {
-	doc, err := ingest.FetchHTML(ctx, groupURL, "meetup")
+	doc, err := ingest.FetchHTML(ctx, m.proURL, "meetup")
 	if err != nil {
 		return nil, err
 	}
 
 	script := doc.Find(`script#__NEXT_DATA__`).Text()
 	if script == "" {
-		return nil, fmt.Errorf("meetup: no __NEXT_DATA__ at %s", groupURL)
+		return nil, fmt.Errorf("meetup: no __NEXT_DATA__ at %s", m.proURL)
 	}
 
-	var nd meetupNextData
+	var nd meetupProNextData
 	if err := json.Unmarshal([]byte(script), &nd); err != nil {
-		return nil, fmt.Errorf("meetup: unmarshal %s: %w", groupURL, err)
+		return nil, fmt.Errorf("meetup: unmarshal: %w", err)
 	}
 
-	state := nd.Props.PageProps.ApolloState
-
-	var items []meetupEventItem
-	for key, raw := range state {
-		if !strings.HasPrefix(key, "Event:") {
-			continue
-		}
-		var evt meetupEvent
-		if err := json.Unmarshal(raw, &evt); err != nil {
-			continue
-		}
-		var venue meetupVenue
-		if ref := evt.Venue.Ref; ref != "" {
-			if vRaw, ok := state[ref]; ok {
-				_ = json.Unmarshal(vRaw, &venue)
-			}
-		}
-		var photo meetupPhotoInfo
-		if ref := evt.DisplayPhoto.Ref; ref != "" {
-			if pRaw, ok := state[ref]; ok {
-				_ = json.Unmarshal(pRaw, &photo)
-			}
-		}
-		items = append(items, meetupEventItem{evt: evt, venue: venue, photo: photo})
+	events := nd.Props.PageProps.SEOData.Events
+	items := make([]meetupProEventItem, len(events))
+	for i, e := range events {
+		items[i] = meetupProEventItem{evt: e}
 	}
 
-	return items, nil
+	return ingest.TransformAll(ctx, items), nil
 }
 
-type meetupEventItem struct {
-	evt   meetupEvent
-	venue meetupVenue
-	photo meetupPhotoInfo
+type meetupProEventItem struct {
+	evt meetupProEvent
 }
 
-func (i meetupEventItem) ShouldInclude() bool {
-	return i.evt.Status == "ACTIVE" && !strings.HasPrefix(i.evt.Title, "[Outside Event]")
+func (i meetupProEventItem) ShouldInclude() bool {
+	return !strings.HasPrefix(i.evt.Title, "[Outside Event]")
 }
-func (i meetupEventItem) EnrichmentURL() string { return "" }
 
-func (i meetupEventItem) Transform() news.Item {
-	loc := i.venue.City
-	if i.venue.Country != "" {
-		loc += ", " + strings.ToUpper(i.venue.Country)
+func (i meetupProEventItem) EnrichmentURL() string { return "" }
+
+func (i meetupProEventItem) Transform() news.Item {
+	// Prefer event venue city/country; fall back to the group city/country.
+	city := i.evt.Group.City
+	country := i.evt.Group.Country
+	if i.evt.Venue != nil && i.evt.Venue.City != "" {
+		city = i.evt.Venue.City
+		country = i.evt.Venue.Country
 	}
-	if i.evt.IsOnline || strings.TrimSpace(loc) == "" || loc == ", " {
+
+	loc := city
+	if country != "" {
+		loc += ", " + strings.ToUpper(country)
+	}
+	if i.evt.IsOnline || strings.TrimSpace(loc) == "" {
 		loc = "Online"
 	}
 
@@ -187,57 +110,59 @@ func (i meetupEventItem) Transform() news.Item {
 	if loc != "" {
 		parts = append(parts, loc)
 	}
-	if i.evt.Going.TotalCount > 0 {
-		parts = append(parts, fmt.Sprintf("%d RSVPs", i.evt.Going.TotalCount))
+	if i.evt.RSVPs.TotalCount > 0 {
+		parts = append(parts, fmt.Sprintf("%d RSVPs", i.evt.RSVPs.TotalCount))
 	}
 
 	return news.Item{
 		Source:    news.SourceMeetup,
 		Title:     i.evt.Title,
 		URL:       i.evt.EventURL,
-		ImageURL:  i.photo.HighResURL,
+		ImageURL:  i.evt.DisplayPhoto.HighResURL,
 		Snippet:   strings.Join(parts, " · "),
 		Tag:       news.TagEvent,
 		Published: time.Now().UTC(),
 	}
 }
 
-// meetupNextData mirrors the shape of the __NEXT_DATA__ JSON embedded in
-// Meetup.com group pages (Next.js + Apollo Client SSR).
-type meetupNextData struct {
+// meetupProNextData mirrors the __NEXT_DATA__ JSON embedded in the Meetup Pro
+// network page (meetup.com/pro/go/).
+type meetupProNextData struct {
 	Props struct {
 		PageProps struct {
-			ApolloState map[string]json.RawMessage `json:"__APOLLO_STATE__"`
+			SEOData struct {
+				Events []meetupProEvent `json:"events"`
+			} `json:"SEOData"`
 		} `json:"pageProps"`
 	} `json:"props"`
 }
 
-// apolloRef represents an Apollo Client normalised cache reference.
-type apolloRef struct {
-	Ref string `json:"__ref"`
+type meetupProEvent struct {
+	Title        string          `json:"title"`
+	EventURL     string          `json:"eventUrl"`
+	DateTime     time.Time       `json:"dateTime"`
+	IsOnline     bool            `json:"isOnline"`
+	DisplayPhoto meetupProPhoto  `json:"displayPhoto"`
+	Group        meetupProGroup  `json:"group"`
+	Venue        *meetupProVenue `json:"venue"`
+	RSVPs        meetupProRSVPs  `json:"rsvps"`
 }
 
-type meetupEvent struct {
-	Title       string    `json:"title"`
-	EventURL    string    `json:"eventUrl"`
-	Description string    `json:"description"`
-	DateTime    time.Time `json:"dateTime"`
-	// Status is "ACTIVE" for upcoming events, "PAST" for past events.
-	Status string `json:"status"`
-	Going  struct {
-		TotalCount int `json:"totalCount"`
-	} `json:"going"`
-	Venue        apolloRef `json:"venue"`
-	DisplayPhoto apolloRef `json:"displayPhoto"`
-	IsOnline     bool      `json:"isOnline"`
+type meetupProPhoto struct {
+	HighResURL string `json:"highResUrl"`
 }
 
-type meetupVenue struct {
+type meetupProGroup struct {
 	Name    string `json:"name"`
 	City    string `json:"city"`
 	Country string `json:"country"`
 }
 
-type meetupPhotoInfo struct {
-	HighResURL string `json:"highResUrl"`
+type meetupProVenue struct {
+	City    string `json:"city"`
+	Country string `json:"country"`
+}
+
+type meetupProRSVPs struct {
+	TotalCount int `json:"totalCount"`
 }

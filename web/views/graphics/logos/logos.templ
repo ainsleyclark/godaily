@@ -34,6 +34,8 @@ templ SourceLogo(s news.Source, size int) {
 			@Medium(size)
 		case news.SourceGolangBridge:
 			@GolangBridge(size)
+		case news.SourceMeetup:
+			@Meetup(size)
 		case news.SourceGoPodcast, news.SourceArdanLabs, news.SourceFallthrough:
 			@Podcast(size)
 		default:
@@ -69,6 +71,8 @@ func Background(s news.Source) string {
 		return "#000000"
 	case news.SourceGolangBridge:
 		return "#00acd7"
+	case news.SourceMeetup:
+		return "#ff4a79"
 	case news.SourceGoPodcast, news.SourceArdanLabs, news.SourceFallthrough:
 		return "#7b5ea7"
 	default:
@@ -177,5 +181,11 @@ templ Feed(size int) {
 		<circle cx="5" cy="15" r="1.5"></circle>
 		<path d="M3 9a8 8 0 018 8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
 		<path d="M3 5a12 12 0 0112 12" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+	</svg>
+}
+
+templ Meetup(size int) {
+	<svg width={ sizeAttr(size) } height={ sizeAttr(size) } viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+		<text x="1" y="15" font-family="Georgia, serif" font-size="16" font-weight="900" fill="#ff4a79">m</text>
 	</svg>
 }

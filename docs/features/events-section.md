@@ -4,9 +4,10 @@ Surfaces upcoming Go meetups and conferences in the newsletter digest under a de
 
 ## Current State (PR #124)
 
-- Source: `pkg/source/meetup.go` — fetches a curated list of Meetup.com group pages
-- Parses the embedded `__NEXT_DATA__` Apollo GraphQL JSON blob (no paid API required)
-- Only `ACTIVE` (upcoming) events are included; `PAST` and `[Outside Event]` prefixed events are dropped
+- Source: `pkg/source/meetup.go` — single fetch from `https://www.meetup.com/pro/go/`
+- Parses `props.pageProps.SEOData.events` from the `__NEXT_DATA__` JSON blob (no paid API required)
+- The Go Developers Network Pro page covers all 81 GDN-verified Go groups automatically
+- `[Outside Event]` prefixed events are dropped; `[Paid]` events are kept
 - Tag: `news.TagEvent`
 - Section appears after Discussions in the digest
 
@@ -60,17 +61,16 @@ digest; silently dropping the duplicate is the right behaviour.
 A plain URL constraint prevents storing both the announcement and the recap for the same
 event. The `(url, tag)` pair is the correct granularity.
 
-## Curated Group List
-
-Groups are defined in `var meetupGroups` at the top of `pkg/source/meetup.go`. Adding a
-group is one line. The official Meetup Pro network for Go (`meetup.com/pro/go`) lists 81
-verified Go groups and is a good source for expanding coverage.
-
 ## Filtering
 
 `ShouldInclude()` currently drops:
-- `status != "ACTIVE"` — past events
 - Title prefix `[Outside Event]` — cross-posted non-Go content posted by group admins
 
 `[Paid]` events are kept — paid events at Go groups (conferences, workshops) are still
 Go content.
+
+## Adding Coverage
+
+The Pro network page (`meetup.com/pro/go`) automatically includes all 81 GDN-verified Go
+groups. No code changes are needed to add new groups — when Meetup adds a group to the
+network, its events will appear in the next fetch.

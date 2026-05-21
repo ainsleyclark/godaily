@@ -48,9 +48,8 @@ func TestMeetup_Fetch(t *testing.T) {
 			},
 			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
-				// Failed groups are skipped; Fetch returns empty slice without error.
-				assert.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Error(t, err)
+				assert.Nil(t, items)
 			},
 		},
 		"OK": {
@@ -64,6 +63,7 @@ func TestMeetup_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				require.NoError(t, err)
+				// [Outside Event] is filtered; only the London Gophers event remains.
 				require.Len(t, items, 1)
 				first := items[0]
 				assert.Equal(t, "May Gophers @ Muzz!", first.Title)
@@ -85,9 +85,8 @@ func TestMeetup_Fetch(t *testing.T) {
 			},
 			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
-				// Missing script tag: group skipped, empty result.
-				assert.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Error(t, err)
+				assert.Nil(t, items)
 			},
 		},
 	}
@@ -102,57 +101,73 @@ func TestMeetup_Fetch(t *testing.T) {
 			defer s.Close()
 			serverURL = s.URL
 
-			got, err := (&Meetup{groupURLs: []string{s.URL + "/"}}).Fetch(t.Context())
+			got, err := (&Meetup{proURL: s.URL + "/"}).Fetch(t.Context())
 			test.want(t, got, err, s.URL)
 		})
 	}
 }
 
-func TestMeetupEventItem_ShouldInclude(t *testing.T) {
+func TestMeetupProEventItem_ShouldInclude(t *testing.T) {
 	t.Parallel()
 
-	assert.True(t, meetupEventItem{evt: meetupEvent{Status: "ACTIVE"}}.ShouldInclude())
-	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "PAST"}}.ShouldInclude())
-	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "DRAFT"}}.ShouldInclude())
-	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "ACTIVE", Title: "[Outside Event] AI Summit 2026"}}.ShouldInclude())
+	assert.True(t, meetupProEventItem{evt: meetupProEvent{Title: "Go Meetup London"}}.ShouldInclude())
+	assert.True(t, meetupProEventItem{evt: meetupProEvent{Title: "[Paid] GopherCon Singapore 2026"}}.ShouldInclude())
+	assert.False(t, meetupProEventItem{evt: meetupProEvent{Title: "[Outside Event] AI Summit 2026"}}.ShouldInclude())
 }
 
-func TestMeetupEventItem_Transform(t *testing.T) {
+func TestMeetupProEventItem_Transform(t *testing.T) {
 	t.Parallel()
 
-	item := meetupEventItem{
-		evt: meetupEvent{
-			Title:    "Go Meetup",
-			EventURL: "https://www.meetup.com/londongophers/events/123/",
-			Status:   "ACTIVE",
-			Going:    struct{ TotalCount int `json:"totalCount"` }{TotalCount: 42},
+	venue := meetupProVenue{City: "Berlin", Country: "de"}
+	item := meetupProEventItem{
+		evt: meetupProEvent{
+			Title:        "Go Meetup",
+			EventURL:     "https://www.meetup.com/golang-berlin/events/123/",
+			DisplayPhoto: meetupProPhoto{HighResURL: "https://example.com/photo.jpg"},
+			RSVPs:        meetupProRSVPs{TotalCount: 42},
+			Group:        meetupProGroup{City: "Berlin", Country: "de"},
+			Venue:        &venue,
 		},
-		venue: meetupVenue{City: "Berlin", Country: "de"},
-		photo: meetupPhotoInfo{HighResURL: "https://example.com/photo.jpg"},
 	}
 
 	got := item.Transform()
 
 	assert.Equal(t, news.SourceMeetup, got.Source)
 	assert.Equal(t, "Go Meetup", got.Title)
-	assert.Equal(t, "https://www.meetup.com/londongophers/events/123/", got.URL)
+	assert.Equal(t, "https://www.meetup.com/golang-berlin/events/123/", got.URL)
 	assert.Equal(t, "https://example.com/photo.jpg", got.ImageURL)
 	assert.Equal(t, news.TagEvent, got.Tag)
 	assert.Contains(t, got.Snippet, "Berlin, DE")
 	assert.Contains(t, got.Snippet, "42 RSVPs")
 }
 
-func TestMeetupEventItem_Transform_Online(t *testing.T) {
+func TestMeetupProEventItem_Transform_Online(t *testing.T) {
 	t.Parallel()
 
-	item := meetupEventItem{
-		evt: meetupEvent{
+	item := meetupProEventItem{
+		evt: meetupProEvent{
 			Title:    "Online Gophers",
 			EventURL: "https://www.meetup.com/group/events/456/",
-			Status:   "ACTIVE",
 			IsOnline: true,
+			Group:    meetupProGroup{City: "New York", Country: "us"},
 		},
 	}
 	got := item.Transform()
 	assert.Contains(t, got.Snippet, "Online")
+}
+
+func TestMeetupProEventItem_Transform_FallbackToGroup(t *testing.T) {
+	t.Parallel()
+
+	// When venue is nil, location falls back to the group's city/country.
+	item := meetupProEventItem{
+		evt: meetupProEvent{
+			Title:    "Go Minneapolis",
+			EventURL: "https://www.meetup.com/golangmn/events/789/",
+			Group:    meetupProGroup{City: "Minneapolis", Country: "us"},
+			Venue:    nil,
+		},
+	}
+	got := item.Transform()
+	assert.Contains(t, got.Snippet, "Minneapolis, US")
 }
