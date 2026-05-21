@@ -58,6 +58,14 @@ func (s *CachingStore) List(ctx context.Context, opts news.ListOptions) ([]news.
 	return s.repo.List(ctx, opts)
 }
 
+func (s *CachingStore) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+	return s.repo.ListByStatus(ctx, status, opts)
+}
+
+func (s *CachingStore) CountByStatus(ctx context.Context, status news.IssueStatus) (int64, error) {
+	return s.repo.CountByStatus(ctx, status)
+}
+
 func (s *CachingStore) Latest(ctx context.Context, limit int) ([]news.Issue, error) {
 	return s.repo.Latest(ctx, limit)
 }

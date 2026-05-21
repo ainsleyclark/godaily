@@ -147,6 +147,36 @@ func (mr *MockIssueRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIssueRepository)(nil).List), ctx, opts)
 }
 
+// ListByStatus mocks base method.
+func (m *MockIssueRepository) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListByStatus", ctx, status, opts)
+	ret0, _ := ret[0].([]news.Issue)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListByStatus indicates an expected call of ListByStatus.
+func (mr *MockIssueRepositoryMockRecorder) ListByStatus(ctx, status, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByStatus", reflect.TypeOf((*MockIssueRepository)(nil).ListByStatus), ctx, status, opts)
+}
+
+// CountByStatus mocks base method.
+func (m *MockIssueRepository) CountByStatus(ctx context.Context, status news.IssueStatus) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountByStatus", ctx, status)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountByStatus indicates an expected call of CountByStatus.
+func (mr *MockIssueRepositoryMockRecorder) CountByStatus(ctx, status any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountByStatus", reflect.TypeOf((*MockIssueRepository)(nil).CountByStatus), ctx, status)
+}
+
 // UpdateStatus mocks base method.
 func (m *MockIssueRepository) UpdateStatus(ctx context.Context, id int64, status news.IssueStatus, sentAt time.Time) (news.Issue, error) {
 	m.ctrl.T.Helper()

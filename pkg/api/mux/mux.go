@@ -41,6 +41,8 @@ func Handler(app *godaily.App) http.Handler {
 	mux.HandleFunc("/unsubscribe", apihandlers.HandleUnsubscribe)
 	mux.HandleFunc("GET /collect", apihandlers.HandleCollect)
 	mux.HandleFunc("GET /send", apihandlers.HandleSend)
+	mux.HandleFunc("GET /issues", apihandlers.HandleIssues)
+	mux.HandleFunc("GET /subscribers", apihandlers.HandleSubscribers)
 	mux.HandleFunc("GET /social", apihandlers.HandleSocial)
 	mux.HandleFunc("GET /healthz", apihandlers.HandleHealthz)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

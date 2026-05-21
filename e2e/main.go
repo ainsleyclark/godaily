@@ -26,7 +26,6 @@ import (
 	"context"
 	"crypto/hmac"
 	"crypto/sha256"
-	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"log"
@@ -189,16 +188,6 @@ func main() {
 			defer spy.mu.Unlock()
 			writeJSON(w, spy.sent)
 
-		// ── E2E debug: raw DB state ───────────────────────────────────────────
-		case "/api/e2e/db/items/count":
-			handleDBItemCount(w, conn)
-		case "/api/e2e/db/issues":
-			handleDBIssues(w, conn)
-		case "/api/e2e/db/subscribers":
-			handleDBSubscribers(w, conn)
-		case "/api/e2e/db/events/count":
-			handleDBEventCount(w, conn)
-
 		// ── E2E pipeline: bypass weekend guard, call runner directly ──────────
 		case "/api/e2e/pipeline/collect":
 			if _, err := app.Runner.Collect(r.Context(), digest.CollectOptions{}); err != nil {
@@ -227,8 +216,6 @@ func main() {
 		// ── Routes that are Vercel functions (not in mux.go) ─────────────────
 		case "/api/build":
 			apihandlers.HandleBuild(w, withApp(r, app))
-		case "/api/issues":
-			apihandlers.HandleIssues(w, withApp(r, app))
 
 		default:
 			switch {
@@ -271,113 +258,6 @@ func withApp(r *http.Request, app *godaily.App) *http.Request {
 func writeJSON(w http.ResponseWriter, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(v)
-}
-
-// handleDBItemCount returns the count of orphan items (not yet linked to an issue).
-func handleDBItemCount(w http.ResponseWriter, conn *sql.DB) {
-	var count int64
-	if err := conn.QueryRow("SELECT COUNT(*) FROM items WHERE issue_id IS NULL").Scan(&count); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	writeJSON(w, map[string]int64{"count": count})
-}
-
-// handleDBIssues returns all issues regardless of status (public /api/issues filters to 'sent').
-func handleDBIssues(w http.ResponseWriter, conn *sql.DB) {
-	rows, err := conn.Query("SELECT id, slug, status, subject, COALESCE(summary,''), sent_at FROM issues ORDER BY id")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
-
-	type issueRow struct {
-		ID      int64  `json:"id"`
-		Slug    string `json:"slug"`
-		Status  string `json:"status"`
-		Subject string `json:"subject"`
-		Summary string `json:"summary"`
-		SentAt  string `json:"sent_at"`
-	}
-
-	var result []issueRow
-	for rows.Next() {
-		var row issueRow
-		var sentAt time.Time
-		if err := rows.Scan(&row.ID, &row.Slug, &row.Status, &row.Subject, &row.Summary, &sentAt); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		row.SentAt = sentAt.Format(time.RFC3339)
-		result = append(result, row)
-	}
-	if err := rows.Err(); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if result == nil {
-		result = []issueRow{}
-	}
-	writeJSON(w, result)
-}
-
-// handleDBSubscribers returns all subscribers with their lifecycle timestamps.
-func handleDBSubscribers(w http.ResponseWriter, conn *sql.DB) {
-	rows, err := conn.Query("SELECT id, email, confirmed_at, unsubscribed_at, bounced_at FROM subscribers ORDER BY id")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
-
-	type subRow struct {
-		ID             int64  `json:"id"`
-		Email          string `json:"email"`
-		ConfirmedAt    string `json:"confirmed_at"`
-		UnsubscribedAt string `json:"unsubscribed_at"`
-		BouncedAt      string `json:"bounced_at"`
-	}
-
-	var result []subRow
-	for rows.Next() {
-		var row subRow
-		var confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
-		if err := rows.Scan(&row.ID, &row.Email, &confirmedAt, &unsubscribedAt, &bouncedAt); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if confirmedAt.Valid {
-			row.ConfirmedAt = confirmedAt.Time.Format(time.RFC3339)
-		}
-		if unsubscribedAt.Valid {
-			row.UnsubscribedAt = unsubscribedAt.Time.Format(time.RFC3339)
-		}
-		if bouncedAt.Valid {
-			row.BouncedAt = bouncedAt.Time.Format(time.RFC3339)
-		}
-		result = append(result, row)
-	}
-	if err := rows.Err(); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if result == nil {
-		result = []subRow{}
-	}
-	writeJSON(w, result)
-}
-
-// handleDBEventCount returns the total number of stored email events.
-func handleDBEventCount(w http.ResponseWriter, conn *sql.DB) {
-	var count int64
-	if err := conn.QueryRow("SELECT COUNT(*) FROM email_events").Scan(&count); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	writeJSON(w, map[string]int64{"count": count})
 }
 
 // handleSign generates a valid Svix-style webhook signature so Playwright tests

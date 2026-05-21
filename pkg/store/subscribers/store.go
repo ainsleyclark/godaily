@@ -167,6 +167,50 @@ func (s Store) CountActive(ctx context.Context) (int64, error) {
 	return s.sqlc.SubscriberCountActive(ctx)
 }
 
+func (s Store) CountAll(ctx context.Context) (int64, error) {
+	var count int64
+	if err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM subscribers").Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscriber, error) {
+	rows, err := s.db.QueryContext(ctx,
+		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
+		opts.Limit(), opts.Offset(),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []news.Subscriber
+	for rows.Next() {
+		var (
+			sub                              news.Subscriber
+			confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
+		)
+		if err := rows.Scan(
+			&sub.ID, &sub.Email, &sub.UnsubscribeToken, &sub.ConfirmToken,
+			&confirmedAt, &unsubscribedAt, &bouncedAt, &sub.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		if confirmedAt.Valid {
+			sub.ConfirmedAt = &confirmedAt.Time
+		}
+		if unsubscribedAt.Valid {
+			sub.UnsubscribedAt = &unsubscribedAt.Time
+		}
+		if bouncedAt.Valid {
+			sub.BouncedAt = &bouncedAt.Time
+		}
+		out = append(out, sub)
+	}
+	return out, rows.Err()
+}
+
 func (s Store) ListActive(ctx context.Context) ([]news.Subscriber, error) {
 	rows, err := s.sqlc.SubscriberListActive(ctx)
 	if err != nil {

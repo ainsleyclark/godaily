@@ -28,9 +28,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
-// HandleIssues is the Vercel serverless function entry point for GET /api/issues.
-// An optional ?status= query parameter filters by issue status (e.g. "draft", "sent").
-func HandleIssues(w http.ResponseWriter, r *http.Request) {
+// HandleSubscribers is the Vercel serverless function entry point for GET /api/subscribers.
+func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		page := api.QueryInt(r, "page", api.DefaultPage)
 		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
@@ -42,42 +41,20 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 			perPage = api.DefaultPerPage
 		}
 
-		opts := news.ListOptions{Page: page, PerPage: perPage}
-		statusParam := r.URL.Query().Get("status")
-
-		var (
-			total  int64
-			issues []news.Issue
-			err    error
-		)
-
-		if statusParam != "" {
-			status := news.IssueStatus(statusParam)
-			total, err = a.Repository.Issues.CountByStatus(ctx, status)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to count issues")
-				return
-			}
-			issues, err = a.Repository.Issues.ListByStatus(ctx, status, opts)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to list issues")
-				return
-			}
-		} else {
-			total, err = a.Repository.Issues.Count(ctx)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to count issues")
-				return
-			}
-			issues, err = a.Repository.Issues.List(ctx, opts)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to list issues")
-				return
-			}
+		total, err := a.Repository.Subscribers.CountAll(ctx)
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to count subscribers")
+			return
 		}
 
-		api.JSON(w, http.StatusOK, api.PaginatedResponse[news.Issue]{
-			Data:    issues,
+		subs, err := a.Repository.Subscribers.List(ctx, news.ListOptions{Page: page, PerPage: perPage})
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to list subscribers")
+			return
+		}
+
+		api.JSON(w, http.StatusOK, api.PaginatedResponse[news.Subscriber]{
+			Data:    subs,
 			Page:    page,
 			PerPage: perPage,
 			Total:   total,

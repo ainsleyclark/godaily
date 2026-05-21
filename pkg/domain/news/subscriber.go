@@ -48,7 +48,9 @@ type SubscriberRepository interface {
 	Reactivate(ctx context.Context, email string) (Subscriber, error)
 	Confirm(ctx context.Context, token string) (Subscriber, error)
 	Unsubscribe(ctx context.Context, token string) error
+	List(ctx context.Context, opts ListOptions) ([]Subscriber, error)
 	ListActive(ctx context.Context) ([]Subscriber, error)
+	CountAll(ctx context.Context) (int64, error)
 	CountActive(ctx context.Context) (int64, error)
 
 	// MarkBounced flags the subscriber with the given email as having a
