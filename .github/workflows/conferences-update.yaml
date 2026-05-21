@@ -1,0 +1,67 @@
+name: Conferences Update
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Monday 09:00 UTC
+  workflow_dispatch:       # manual trigger for testing
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run conferences-update
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet pkg/source/conferences.yaml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create draft PR
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          BRANCH="conferences/auto-${DATE}"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git checkout -b "$BRANCH"
+          git add pkg/source/conferences.yaml
+          git commit -m "chore: add conferences found in Go wiki (${DATE})"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --draft \
+            --title "chore: auto-update conferences from Go wiki (${DATE})" \
+            --body "$(cat <<'EOF'
+## Automated conference update
+
+This PR was opened automatically by the weekly conferences-update workflow.
+
+The [Go wiki Conferences page](https://go.dev/wiki/Conferences) was checked for URLs not present in \`pkg/source/conferences.yaml\`. Each missing conference website was fetched and processed by Claude to extract structured data.
+
+**Review before merging:**
+- [ ] Conference dates are correct
+- [ ] \`notify_dates\` match your preferred schedule (announcement, reminder, alert)
+- [ ] \`slug\` is unique and follows the \`name-year\` convention
+- [ ] \`location\` and \`description\` are accurate
+- [ ] Add \`image_url\` if desired (left empty by default)
+EOF
+)" \
+            --base main
