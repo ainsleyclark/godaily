@@ -145,8 +145,10 @@ test.describe('resend webhooks', () => {
 
   test('bounced event marks subscriber as bounced', async ({ request }) => {
     const bounceEmail = `bounce-${Date.now()}@e2e.test`;
-    await request.post('/api/subscribe', { data: { email: bounceEmail } });
+    const subRes = await request.post('/api/subscribe', { data: { email: bounceEmail } });
+    expect(subRes.status()).toBe(200);
 
+    // Confirm the subscriber so they are active.
     const allEmails = await (await request.get('/api/e2e/emails')).json();
     const confirmEmail = allEmails.find(
       (e: { to: string[] }) => Array.isArray(e.to) && e.to.includes(bounceEmail),
@@ -154,7 +156,13 @@ test.describe('resend webhooks', () => {
     expect(confirmEmail).toBeTruthy();
     const tokenMatch = (confirmEmail.text as string).match(/token=([^\s&]+)/);
     expect(tokenMatch).toBeTruthy();
-    await request.get(`/api/confirm?token=${tokenMatch![1]}`);
+    const confirmRes = await request.get(`/api/confirm?token=${tokenMatch![1]}`);
+    // Playwright follows the redirect; the final URL should be /confirmed/.
+    expect(confirmRes.url()).toContain('/confirmed/');
+
+    // Verify subscriber exists and is confirmed before bouncing.
+    const beforeRaw = await (await request.get(`/api/e2e/db/subscriber?email=${encodeURIComponent(bounceEmail)}`)).json();
+    expect(beforeRaw.confirmed_at).toBeTruthy();
 
     const body = JSON.stringify({
       type: 'email.bounced',
@@ -170,11 +178,9 @@ test.describe('resend webhooks', () => {
     const res = await request.post('/api/webhooks/resend', { data: body, headers });
     expect(res.status()).toBe(200);
 
-    const subsRes = await request.get('/api/subscribers', { headers: AUTH });
-    const subsData = await subsRes.json();
-    const sub = subsData.data.find((s: { email: string }) => s.email === bounceEmail);
-    expect(sub).toBeTruthy();
-    expect(sub.bounced_at).toBeTruthy();
+    // Use the raw DB endpoint to verify bounced_at was set.
+    const afterRaw = await (await request.get(`/api/e2e/db/subscriber?email=${encodeURIComponent(bounceEmail)}`)).json();
+    expect(afterRaw.bounced_at).toBeTruthy();
   });
 
   test('duplicate event is idempotent', async ({ request }) => {

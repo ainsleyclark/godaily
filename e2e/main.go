@@ -215,6 +215,29 @@ func main() {
 			}
 			w.WriteHeader(http.StatusOK)
 
+		// ── E2E debug: raw DB subscriber lookup ──────────────────────────────
+		case "/api/e2e/db/subscriber":
+			email := r.URL.Query().Get("email")
+			if email == "" {
+				http.Error(w, "email query param required", http.StatusBadRequest)
+				return
+			}
+			row := conn.QueryRowContext(r.Context(),
+				"SELECT id, email, confirmed_at, unsubscribed_at, bounced_at FROM subscribers WHERE email = ? LIMIT 1",
+				email)
+			var sub struct {
+				ID             int64   `json:"id"`
+				Email          string  `json:"email"`
+				ConfirmedAt    *string `json:"confirmed_at"`
+				UnsubscribedAt *string `json:"unsubscribed_at"`
+				BouncedAt      *string `json:"bounced_at"`
+			}
+			if err := row.Scan(&sub.ID, &sub.Email, &sub.ConfirmedAt, &sub.UnsubscribedAt, &sub.BouncedAt); err != nil {
+				http.Error(w, "subscriber not found: "+err.Error(), http.StatusNotFound)
+				return
+			}
+			writeJSON(w, sub)
+
 		// ── E2E webhook signing helper ────────────────────────────────────────
 		case "/api/e2e/sign":
 			handleSign(w, r)
