@@ -96,10 +96,10 @@ const (
 // section is keyed by one of these tags; other tags fold into one of them via
 // Tag.Section().
 var SectionTags = []Tag{
-	TagEvent,
 	TagRelease,
 	TagProposal,
 	TagDiscussion,
+	TagEvent,
 	TagArticle,
 	TagVideo,
 	TagTrending,
