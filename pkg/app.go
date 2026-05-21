@@ -44,6 +44,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
+	"github.com/ainsleyclark/godaily/pkg/store/socialmetrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	"github.com/ainsleydev/webkit/pkg/cache"
@@ -52,24 +53,26 @@ import (
 
 // App defines a global state for godaily.
 type App struct {
-	Config      *env.Config
-	DB          *sql.DB
-	Repository  *Repository
-	Runner      digest.Runner
-	Social      *social.Service
-	Cache       cache.Store
-	Subscribers subscriber.Subscriber
-	EmailEvents *emailevent.Service
-	Slack       slack.Sender
+	Config       *env.Config
+	DB           *sql.DB
+	Repository   *Repository
+	Runner       digest.Runner
+	Social       *social.Service
+	Cache        cache.Store
+	Subscribers  subscriber.Subscriber
+	EmailEvents  *emailevent.Service
+	Slack        slack.Sender
+	StatFetchers map[socialgw.Platform]socialgw.StatFetcher
 }
 
 // Repository defines the datastore for the application.
 type Repository struct {
-	Issues      news.IssueRepository
-	Items       news.ItemRepository
-	Subscribers news.SubscriberRepository
-	SocialPosts news.SocialPostRepository
-	EmailEvents engagement.EmailEventRepository
+	Issues        news.IssueRepository
+	Items         news.ItemRepository
+	Subscribers   news.SubscriberRepository
+	SocialPosts   news.SocialPostRepository
+	EmailEvents   engagement.EmailEventRepository
+	SocialMetrics engagement.SocialMetricRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -110,11 +113,12 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	socialPostsStore := socialposts.New(conn)
 
 	repo := &Repository{
-		Issues:      issueStore,
-		Items:       items.New(conn),
-		Subscribers: subsStore,
-		SocialPosts: socialPostsStore,
-		EmailEvents: emailevents.New(conn),
+		Issues:        issueStore,
+		Items:         items.New(conn),
+		Subscribers:   subsStore,
+		SocialPosts:   socialPostsStore,
+		EmailEvents:   emailevents.New(conn),
+		SocialMetrics: socialmetrics.New(conn),
 	}
 
 	emailSender := email.New(config.ResendToken)
@@ -141,15 +145,16 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
 
 	return &App{
-		Config:      &config,
-		DB:          conn,
-		Repository:  repo,
-		Runner:      aggregator,
-		Social:      socialSvc,
-		Cache:       store,
-		Subscribers: subscriberSvc,
-		EmailEvents: emailevent.New(repo.EmailEvents, subscriberSvc),
-		Slack:       slackClient,
+		Config:       &config,
+		DB:           conn,
+		Repository:   repo,
+		Runner:       aggregator,
+		Social:       socialSvc,
+		Cache:        store,
+		Subscribers:  subscriberSvc,
+		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc),
+		Slack:        slackClient,
+		StatFetchers: buildStatFetchers(config),
 	}, teardown, nil
 }
 
@@ -166,6 +171,22 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
+	}
+	return out
+}
+
+// buildStatFetchers returns a map of platform → StatFetcher for platforms
+// whose credentials are present in the config.
+func buildStatFetchers(c env.Config) map[socialgw.Platform]socialgw.StatFetcher {
+	out := make(map[socialgw.Platform]socialgw.StatFetcher)
+	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
+		out[socialgw.PlatformBluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+	}
+	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
+		out[socialgw.PlatformLinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+	}
+	if c.MastodonServer != "" && c.MastodonAppToken != "" {
+		out[socialgw.PlatformMastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 	return out
 }

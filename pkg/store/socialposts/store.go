@@ -90,6 +90,19 @@ func (s Store) ListForIssue(ctx context.Context, issueID int64) ([]news.SocialPo
 	return out, nil
 }
 
+// ListSince returns all posts published on or after since, newest first.
+func (s Store) ListSince(ctx context.Context, since time.Time) ([]news.SocialPost, error) {
+	rows, err := s.sqlc.SocialPostListSince(ctx, since)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]news.SocialPost, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, transform(r))
+	}
+	return out, nil
+}
+
 func transform(r sqlc.SocialPost) news.SocialPost {
 	return news.SocialPost{
 		ID:       r.ID,

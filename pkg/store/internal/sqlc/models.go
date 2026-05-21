@@ -49,6 +49,17 @@ type Item struct {
 	Published        *time.Time      `json:"published"`
 }
 
+type SocialMetric struct {
+	ID           int64     `json:"id"`
+	SocialPostID int64     `json:"social_post_id"`
+	Platform     string    `json:"platform"`
+	Likes        int64     `json:"likes"`
+	Reposts      int64     `json:"reposts"`
+	Comments     int64     `json:"comments"`
+	Impressions  int64     `json:"impressions"`
+	FetchedAt    time.Time `json:"fetched_at"`
+}
+
 type SocialPost struct {
 	ID       int64          `json:"id"`
 	IssueID  int64          `json:"issue_id"`

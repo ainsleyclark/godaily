@@ -12,6 +12,7 @@ package mocknews
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	gomock "go.uber.org/mock/gomock"
@@ -84,4 +85,19 @@ func (m *MockSocialPostRepository) ListForIssue(ctx context.Context, issueID int
 func (mr *MockSocialPostRepositoryMockRecorder) ListForIssue(ctx, issueID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListForIssue", reflect.TypeOf((*MockSocialPostRepository)(nil).ListForIssue), ctx, issueID)
+}
+
+// ListSince mocks base method.
+func (m *MockSocialPostRepository) ListSince(ctx context.Context, since time.Time) ([]news.SocialPost, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListSince", ctx, since)
+	ret0, _ := ret[0].([]news.SocialPost)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListSince indicates an expected call of ListSince.
+func (mr *MockSocialPostRepositoryMockRecorder) ListSince(ctx, since any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSince", reflect.TypeOf((*MockSocialPostRepository)(nil).ListSince), ctx, since)
 }

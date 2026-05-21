@@ -49,4 +49,7 @@ type SocialPostRepository interface {
 
 	// ListForIssue returns all posts associated with an issue, oldest first.
 	ListForIssue(ctx context.Context, issueID int64) ([]SocialPost, error)
+
+	// ListSince returns all posts published on or after since, newest first.
+	ListSince(ctx context.Context, since time.Time) ([]SocialPost, error)
 }

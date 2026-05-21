@@ -29,6 +29,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
@@ -139,6 +140,91 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 
 	urn := resp.Header.Get("x-restli-id")
 	return social.Result{PostURL: feedURL(urn)}, nil
+}
+
+// GetStats fetches engagement counts for a LinkedIn organisation post.
+// postURL must be the canonical feed URL stored in social_posts.post_url,
+// e.g. https://www.linkedin.com/feed/update/urn:li:share:7234567890/.
+// Requires the token to carry r_organization_social scope.
+func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, error) {
+	shareURN, err := urnFromPostURL(postURL)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "extracting share URN from post URL")
+	}
+
+	endpoint := fmt.Sprintf(
+		"%s/rest/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=%s&shares[0]=%s",
+		c.baseURL,
+		url.QueryEscape(c.authorURN),
+		url.QueryEscape(shareURN),
+	)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "building request")
+	}
+	req.Header.Set("Authorization", "Bearer "+c.token)
+	req.Header.Set("LinkedIn-Version", c.apiVersion)
+	req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "sending request")
+	}
+	defer resp.Body.Close()
+
+	if !httputil.Is2xx(resp.StatusCode) {
+		buf := new(bytes.Buffer)
+		_, _ = buf.ReadFrom(resp.Body)
+		return social.Stats{}, fmt.Errorf("linkedin share statistics: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+	}
+
+	var out struct {
+		Elements []struct {
+			TotalShareStatistics struct {
+				LikeCount        int64 `json:"likeCount"`
+				CommentCount     int64 `json:"commentCount"`
+				ShareCount       int64 `json:"shareCount"`
+				ImpressionCount  int64 `json:"impressionCount"`
+				ClickCount       int64 `json:"clickCount"`
+			} `json:"totalShareStatistics"`
+		} `json:"elements"`
+	}
+	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return social.Stats{}, errors.Wrap(err, "decoding response")
+	}
+	if len(out.Elements) == 0 {
+		return social.Stats{}, nil
+	}
+	s := out.Elements[0].TotalShareStatistics
+	return social.Stats{
+		Likes:       s.LikeCount,
+		Reposts:     s.ShareCount,
+		Comments:    s.CommentCount,
+		Impressions: s.ImpressionCount,
+	}, nil
+}
+
+// urnFromPostURL extracts the share URN from a LinkedIn feed update URL.
+// URL form: https://www.linkedin.com/feed/update/urn:li:share:7234567890/
+func urnFromPostURL(postURL string) (string, error) {
+	u, err := url.Parse(postURL)
+	if err != nil {
+		return "", errors.Wrap(err, "parsing post URL")
+	}
+	// Path: /feed/update/<urn>/
+	parts := strings.Split(strings.Trim(u.Path, "/"), "/")
+	if len(parts) < 3 {
+		return "", fmt.Errorf("unexpected LinkedIn feed URL format: %s", postURL)
+	}
+	urn, err := url.PathUnescape(parts[len(parts)-1])
+	if err != nil {
+		return "", errors.Wrap(err, "unescaping URN")
+	}
+	if !strings.HasPrefix(urn, "urn:li:") {
+		return "", fmt.Errorf("extracted value is not a LinkedIn URN: %q", urn)
+	}
+	return urn, nil
 }
 
 // feedURL builds the public URL for a published post. urn looks like

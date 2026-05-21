@@ -29,6 +29,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -209,6 +210,72 @@ func buildFacets(text string) []facet {
 		})
 	}
 	return out
+}
+
+// GetStats fetches engagement counts for a Bluesky post via the public AppView
+// API. postURL must be a bsky.app URL of the form
+// https://bsky.app/profile/<handle>/post/<rkey>.
+func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, error) {
+	atURI, err := c.atURIFromPostURL(postURL)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "deriving AT URI from post URL")
+	}
+
+	endpoint := "https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?uris[]=" + url.QueryEscape(atURI)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "building request")
+	}
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return social.Stats{}, errors.Wrap(err, "sending request")
+	}
+	defer resp.Body.Close()
+
+	if !httputil.Is2xx(resp.StatusCode) {
+		buf := new(bytes.Buffer)
+		_, _ = buf.ReadFrom(resp.Body)
+		return social.Stats{}, fmt.Errorf("bsky.feed.getPosts: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+	}
+
+	var out struct {
+		Posts []struct {
+			LikeCount   int64 `json:"likeCount"`
+			RepostCount int64 `json:"repostCount"`
+			ReplyCount  int64 `json:"replyCount"`
+		} `json:"posts"`
+	}
+	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return social.Stats{}, errors.Wrap(err, "decoding response")
+	}
+	if len(out.Posts) == 0 {
+		return social.Stats{}, nil
+	}
+	p := out.Posts[0]
+	return social.Stats{
+		Likes:   p.LikeCount,
+		Reposts: p.RepostCount,
+		Comments: p.ReplyCount,
+	}, nil
+}
+
+// atURIFromPostURL converts a bsky.app post URL to an at:// URI using the
+// client's handle. URL form: https://bsky.app/profile/<handle>/post/<rkey>.
+func (c *Client) atURIFromPostURL(postURL string) (string, error) {
+	u, err := url.Parse(postURL)
+	if err != nil {
+		return "", err
+	}
+	// Path: /profile/<handle>/post/<rkey>
+	parts := strings.Split(strings.Trim(u.Path, "/"), "/")
+	if len(parts) != 4 || parts[0] != "profile" || parts[2] != "post" {
+		return "", fmt.Errorf("unexpected bsky.app post URL format: %s", postURL)
+	}
+	handle := parts[1]
+	rKey := parts[3]
+	return fmt.Sprintf("at://%s/app.bsky.feed.post/%s", handle, rKey), nil
 }
 
 // postURLFromURI converts an at:// URI ("at://did:plc:xxx/app.bsky.feed.post/<rkey>")
