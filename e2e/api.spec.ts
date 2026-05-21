@@ -147,6 +147,15 @@ test.describe('resend webhooks', () => {
     const bounceEmail = `bounce-${Date.now()}@e2e.test`;
     await request.post('/api/subscribe', { data: { email: bounceEmail } });
 
+    const allEmails = await (await request.get('/api/e2e/emails')).json();
+    const confirmEmail = allEmails.find(
+      (e: { to: string[] }) => Array.isArray(e.to) && e.to.includes(bounceEmail),
+    );
+    expect(confirmEmail).toBeTruthy();
+    const tokenMatch = (confirmEmail.text as string).match(/token=([^\s&]+)/);
+    expect(tokenMatch).toBeTruthy();
+    await request.get(`/api/confirm?token=${tokenMatch![1]}`);
+
     const body = JSON.stringify({
       type: 'email.bounced',
       created_at: '2026-01-01T00:00:00Z',
