@@ -95,10 +95,22 @@ func TestItems_Store(t *testing.T) {
 	})
 
 	t.Run("Create without issue", func(t *testing.T) {
-		got, err := s.Create(ctx, nil, 2, itemWithAuthor)
+		fresh := news.Item{
+			Source:    news.SourceGoBlog,
+			Title:     "Go 1.31 released",
+			URL:       "https://go.dev/blog/go1.31",
+			Published: published,
+		}
+		got, err := s.Create(ctx, nil, 2, fresh)
 		require.NoError(t, err)
 		assert.NotZero(t, got.ID)
-		assert.Equal(t, itemWithAuthor.Title, got.Title)
+		assert.Equal(t, fresh.Title, got.Title)
+	})
+
+	t.Run("Create duplicate url+tag returns empty item without error", func(t *testing.T) {
+		got, err := s.Create(ctx, nil, 3, itemWithAuthor) // itemWithAuthor already stored above
+		require.NoError(t, err)
+		assert.Zero(t, got.ID)
 	})
 
 	t.Run("Find", func(t *testing.T) {

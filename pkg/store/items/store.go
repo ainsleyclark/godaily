@@ -128,6 +128,9 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 		Position:         int64(position),
 		Published:        published,
 	})
+	if errors.Is(err, sql.ErrNoRows) {
+		return news.Item{}, nil // duplicate (url, tag) — row already exists, silently skip
+	}
 	if err != nil {
 		return news.Item{}, err
 	}
