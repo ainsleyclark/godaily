@@ -166,7 +166,9 @@ type meetupEventItem struct {
 	photo meetupPhotoInfo
 }
 
-func (i meetupEventItem) ShouldInclude() bool   { return i.evt.Status == "ACTIVE" }
+func (i meetupEventItem) ShouldInclude() bool {
+	return i.evt.Status == "ACTIVE" && !strings.HasPrefix(i.evt.Title, "[Outside Event]")
+}
 func (i meetupEventItem) EnrichmentURL() string { return "" }
 
 func (i meetupEventItem) Transform() news.Item {

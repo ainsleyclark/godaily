@@ -114,6 +114,7 @@ func TestMeetupEventItem_ShouldInclude(t *testing.T) {
 	assert.True(t, meetupEventItem{evt: meetupEvent{Status: "ACTIVE"}}.ShouldInclude())
 	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "PAST"}}.ShouldInclude())
 	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "DRAFT"}}.ShouldInclude())
+	assert.False(t, meetupEventItem{evt: meetupEvent{Status: "ACTIVE", Title: "[Outside Event] AI Summit 2026"}}.ShouldInclude())
 }
 
 func TestMeetupEventItem_Transform(t *testing.T) {
