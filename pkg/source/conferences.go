@@ -31,7 +31,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 )
 
-//go:embed conferences.yaml
+//go:embed data/conferences.yaml
 var conferencesYAML []byte
 
 // conferencePhaseTags maps notify_date index to the corresponding Tag.

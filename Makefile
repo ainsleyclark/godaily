@@ -55,8 +55,12 @@ sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
 .PHONY: sqlc
 
 conferences-check: # Fetch go.dev/wiki/Conferences and print any conferences not in conferences.yaml
-	go run ./cmd/conferences-check/... -yaml pkg/source/conferences.yaml
+	go run ./cmd/conferences-check/... -yaml pkg/source/data/conferences.yaml
 .PHONY: conferences-check
+
+conferences-update: # Check conferences-watch.yaml against conferences.yaml, extract missing entries via Claude
+	go run ./cmd/conferences-update/... -yaml pkg/source/data/conferences.yaml -watch pkg/source/data/conferences-watch.yaml
+.PHONY: conferences-update
 
 db-backup: # Dump the remote Turso database to godaily.db on the local filesystem
 	@command -v turso >/dev/null 2>&1 || { echo "turso CLI is required (curl -sSfL https://get.tur.so/install.sh | bash)"; exit 1; }
