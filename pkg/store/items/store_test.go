@@ -159,6 +159,40 @@ func TestItems_Store(t *testing.T) {
 		assert.Error(t, err)
 	})
 
+	t.Run("Create upserts issue_id on conflict", func(t *testing.T) {
+		// Regression: collect inserts items with issue_id=nil; build then re-inserts
+		// with a real issue_id. The ON CONFLICT clause must update issue_id so the
+		// social service can find items by issue.
+		unlinked := news.Item{
+			Source:    news.SourceHN,
+			Title:     "Upsert test item",
+			URL:       "https://news.ycombinator.com/item?id=upsert",
+			Score:     0.8,
+			Published: published,
+		}
+		// First insert: no issue (simulates collect).
+		got, err := s.Create(ctx, nil, 10, unlinked)
+		require.NoError(t, err)
+		assert.Nil(t, got.Author) // sanity
+
+		// Second insert: same URL+tag, now with an issue (simulates build).
+		got2, err := s.Create(ctx, &issue.ID, 10, unlinked)
+		require.NoError(t, err)
+		assert.Equal(t, got.ID, got2.ID, "upsert must not create a new row")
+
+		// List by issue must now find the item.
+		byIssue, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
+		require.NoError(t, err)
+		found := false
+		for _, it := range byIssue {
+			if it.ID == got.ID {
+				found = true
+				break
+			}
+		}
+		assert.True(t, found, "item must be linked to the issue after upsert")
+	})
+
 	t.Run("DeleteByIssue", func(t *testing.T) {
 		require.NoError(t, s.DeleteByIssue(ctx, issue.ID))
 		got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
