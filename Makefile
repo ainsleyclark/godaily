@@ -58,8 +58,8 @@ conferences-check: # Fetch go.dev/wiki/Conferences and print any conferences not
 	go run ./cmd/conferences-check/... -yaml pkg/source/conferences.yaml
 .PHONY: conferences-check
 
-conferences-update: # Fetch go.dev/wiki/Conferences, extract missing entries via Claude, append to conferences.yaml
-	go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml
+conferences-update: # Check conferences-watch.yaml against conferences.yaml, extract missing entries via Claude
+	go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml -watch pkg/source/conferences-watch.yaml
 .PHONY: conferences-update
 
 db-backup: # Dump the remote Turso database to godaily.db on the local filesystem

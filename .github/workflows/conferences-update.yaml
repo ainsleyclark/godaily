@@ -22,7 +22,7 @@ jobs:
       - name: Run conferences-update
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml
+        run: go run ./cmd/conferences-update/... -yaml pkg/source/conferences.yaml -watch pkg/source/conferences-watch.yaml
 
       - name: Check for changes
         id: diff

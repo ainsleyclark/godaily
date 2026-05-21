@@ -17,15 +17,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// conferences-update fetches the Go wiki Conferences page, identifies any
-// conference URLs not already in conferences.yaml, fetches each conference
-// website, and uses the Claude API to extract a structured YAML entry for
-// each one. New entries are appended to conferences.yaml for human review.
+// conferences-update reads pkg/source/conferences-watch.yaml (a curated list of
+// conference websites) and checks each URL against conferences.yaml. If a URL has
+// no entry with a start_date in the current or future year, the conference website
+// is fetched and Claude extracts a structured YAML entry which is appended for
+// human review.
 // Run via: make conferences-update
 package main
 
 import (
-	"bufio"
 	"context"
 	"flag"
 	"fmt"
@@ -33,7 +33,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -42,15 +42,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const (
-	wikiURL      = "https://raw.githubusercontent.com/golang/wiki/master/Conferences.md"
-	maxHTMLBytes = 16_000
-)
-
-var mdLinkRe = regexp.MustCompile(`\[.*?\]\((https?://[^\)]+)\)`)
+const maxHTMLBytes = 16_000
 
 func main() {
-	yamlPath := flag.String("yaml", "pkg/source/conferences.yaml", "path to conferences.yaml (relative to repo root)")
+	yamlPath := flag.String("yaml", "pkg/source/conferences.yaml", "path to conferences.yaml")
+	watchPath := flag.String("watch", "pkg/source/conferences-watch.yaml", "path to conferences-watch.yaml")
 	flag.Parse()
 
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")
@@ -58,33 +54,40 @@ func main() {
 		log.Fatal("conferences-update: ANTHROPIC_API_KEY is not set")
 	}
 
+	watchURLs, err := loadWatchList(*watchPath)
+	if err != nil {
+		log.Fatalf("conferences-update: read watch list: %v", err)
+	}
+
 	localYAML, err := os.ReadFile(*yamlPath)
 	if err != nil {
 		log.Fatalf("conferences-update: read %s: %v", *yamlPath, err)
 	}
+	existing, err := parseExistingConferences(localYAML)
+	if err != nil {
+		log.Fatalf("conferences-update: parse conferences.yaml: %v", err)
+	}
 
-	wikiURLs := fetchWikiURLs()
-	localURLs := localConferenceURLs(localYAML)
-
-	var missing []string
-	for _, u := range wikiURLs {
-		if !localURLs[u] {
-			missing = append(missing, u)
+	thisYear := time.Now().UTC().Year()
+	var stale []string
+	for _, u := range watchURLs {
+		if needsEntry(u, existing, thisYear) {
+			stale = append(stale, u)
 		}
 	}
 
-	if len(missing) == 0 {
-		log.Println("conferences-update: all wiki conferences are already in conferences.yaml")
+	if len(stale) == 0 {
+		log.Println("conferences-update: all watched conferences have a current-year entry")
 		return
 	}
 
-	log.Printf("conferences-update: %d URL(s) not in conferences.yaml — fetching and extracting\n", len(missing))
+	log.Printf("conferences-update: %d URL(s) need a %d entry — fetching and extracting\n", len(stale), thisYear)
 
 	client := anthropic.NewClient(option.WithAPIKey(apiKey))
 	var added int
 
-	for _, u := range missing {
-		entry, err := extractEntry(context.Background(), client, u)
+	for _, u := range stale {
+		entry, err := extractEntry(context.Background(), client, u, thisYear)
 		if err != nil {
 			log.Printf("conferences-update: skipping %s: %v\n", u, err)
 			continue
@@ -100,73 +103,65 @@ func main() {
 	log.Printf("conferences-update: done — %d new conference(s) added\n", added)
 }
 
-func fetchWikiURLs() []string {
-	resp, err := http.Get(wikiURL) //nolint:noctx
+func loadWatchList(path string) ([]string, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
-		log.Fatalf("conferences-update: fetch wiki: %v", err)
+		return nil, err
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("conferences-update: wiki returned %d", resp.StatusCode)
+	var urls []string
+	if err := yaml.Unmarshal(data, &urls); err != nil {
+		return nil, err
 	}
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalf("conferences-update: read wiki body: %v", err)
-	}
-	return extractURLs(string(body))
+	return urls, nil
 }
 
-func extractURLs(md string) []string {
-	seen := map[string]bool{}
-	var out []string
-	scanner := bufio.NewScanner(strings.NewReader(md))
-	for scanner.Scan() {
-		for _, m := range mdLinkRe.FindAllStringSubmatch(scanner.Text(), -1) {
-			u := strings.TrimSpace(m[1])
-			if !seen[u] {
-				seen[u] = true
-				out = append(out, u)
+// confEntry holds only the fields needed to check for existing entries.
+type confEntry struct {
+	URL       string `yaml:"url"`
+	StartDate string `yaml:"start_date"`
+}
+
+func parseExistingConferences(data []byte) ([]confEntry, error) {
+	var entries []confEntry
+	if err := yaml.Unmarshal(data, &entries); err != nil {
+		return nil, err
+	}
+	return entries, nil
+}
+
+// needsEntry returns true if the watch URL has no entry in conferences.yaml
+// with a start_date year >= thisYear.
+func needsEntry(url string, existing []confEntry, thisYear int) bool {
+	norm := strings.TrimRight(url, "/")
+	for _, e := range existing {
+		if strings.TrimRight(e.URL, "/") != norm {
+			continue
+		}
+		if len(e.StartDate) >= 4 {
+			year, err := strconv.Atoi(e.StartDate[:4])
+			if err == nil && year >= thisYear {
+				return false
 			}
 		}
 	}
-	return out
+	return true
 }
 
-type confEntry struct {
-	URL string `yaml:"url"`
-}
-
-func localConferenceURLs(data []byte) map[string]bool {
-	var entries []confEntry
-	if err := yaml.Unmarshal(data, &entries); err != nil {
-		log.Fatalf("conferences-update: parse conferences.yaml: %v", err)
-	}
-	out := make(map[string]bool, len(entries))
-	for _, e := range entries {
-		u := strings.TrimRight(e.URL, "/")
-		out[u] = true
-		out[u+"/"] = true
-	}
-	return out
-}
-
-func extractEntry(ctx context.Context, client anthropic.Client, url string) (string, error) {
+func extractEntry(ctx context.Context, client anthropic.Client, url string, year int) (string, error) {
 	html, err := fetchHTML(url)
 	if err != nil {
 		return "", fmt.Errorf("fetch website: %w", err)
 	}
 
-	year := time.Now().UTC().Year()
-
 	const system = `You are a data extraction assistant. Extract Go conference information from a conference website's HTML and return exactly one YAML entry. Return only the raw YAML — no markdown fences, no prose, no explanation.`
 
 	user := fmt.Sprintf(`URL: %s
-Year hint: %d
+Year: %d
 
 HTML (may be truncated):
 %s
 
-Return a single YAML list entry in this exact format (preserve indentation, use 2 spaces):
+Return a single YAML list entry in this exact format (2-space indentation):
 - slug: <conference-name-year>
   name: <Full Conference Name Year>
   url: %s
@@ -181,10 +176,9 @@ Return a single YAML list entry in this exact format (preserve indentation, use 
     - <YYYY-MM-DD>  # alert (~1 week before start_date)
 
 Rules:
-- slug must be unique, lowercase, hyphen-separated, include the year (e.g. gophercon-eu-2026)
+- slug must be lowercase, hyphen-separated, end with the year (e.g. gophercon-eu-2026)
 - url must be exactly: %s
-- If exact dates are unavailable, estimate from any partial date information on the page
-- Dates must be YYYY-MM-DD`, url, year, html, url, url)
+- Dates must be YYYY-MM-DD; estimate from any partial information on the page if exact dates are unavailable`, url, year, html, url, url)
 
 	resp, err := client.Messages.New(ctx, anthropic.MessageNewParams{
 		Model:       anthropic.ModelClaudeSonnet4_6,
@@ -207,13 +201,11 @@ Rules:
 	}
 
 	yamlText := strings.TrimSpace(sb.String())
-	// Strip markdown fences if Claude included them despite instructions.
 	yamlText = strings.TrimPrefix(yamlText, "```yaml")
 	yamlText = strings.TrimPrefix(yamlText, "```")
 	yamlText = strings.TrimSuffix(yamlText, "```")
 	yamlText = strings.TrimSpace(yamlText)
 
-	// Validate it parses as a YAML list.
 	var check []any
 	if err := yaml.Unmarshal([]byte(yamlText), &check); err != nil {
 		return "", fmt.Errorf("claude returned invalid YAML: %w", err)
