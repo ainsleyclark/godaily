@@ -63,15 +63,15 @@ func TestMeetup_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				require.NoError(t, err)
-				// [Outside Event] is filtered; only the London Gophers event remains.
-				require.Len(t, items, 1)
+				// [Outside Event] is filtered; two events remain (London + Online).
+				require.Len(t, items, 2)
 				first := items[0]
 				assert.Equal(t, "May Gophers @ Muzz!", first.Title)
 				assert.Equal(t, "https://www.meetup.com/londongophers/events/314847774/", first.URL)
 				assert.Equal(t, news.SourceMeetup, first.Source)
 				assert.Equal(t, news.TagEvent, first.Tag)
-				assert.Contains(t, first.Snippet, "London, GB")
-				assert.Contains(t, first.Snippet, "80 RSVPs")
+				// Snippet is derived from the description's first paragraph.
+				assert.Contains(t, first.Snippet, "Welcome to our May Gophers event")
 				assert.Equal(t, "https://secure.meetupstatic.com/photos/event/5/b/0/f/highres_511523311.jpeg", first.ImageURL)
 			},
 		},
@@ -115,7 +115,7 @@ func TestMeetupProEventItem_ShouldInclude(t *testing.T) {
 	assert.False(t, meetupProEventItem{evt: meetupProEvent{Title: "[Outside Event] AI Summit 2026"}}.ShouldInclude())
 }
 
-func TestMeetupProEventItem_Transform(t *testing.T) {
+func TestMeetupProEventItem_Transform_WithDescription(t *testing.T) {
 	t.Parallel()
 
 	venue := meetupProVenue{City: "Berlin", Country: "de"}
@@ -123,9 +123,10 @@ func TestMeetupProEventItem_Transform(t *testing.T) {
 		evt: meetupProEvent{
 			Title:        "Go Meetup",
 			EventURL:     "https://www.meetup.com/golang-berlin/events/123/",
+			Description:  "Join us for an evening of Go talks.\n\nSecond paragraph here.",
 			DisplayPhoto: meetupProPhoto{HighResURL: "https://example.com/photo.jpg"},
 			RSVPs:        meetupProRSVPs{TotalCount: 42},
-			Group:        meetupProGroup{City: "Berlin", Country: "de"},
+			Group:        meetupProGroup{Name: "golang-berlin", City: "Berlin", Country: "de"},
 			Venue:        &venue,
 		},
 	}
@@ -137,8 +138,27 @@ func TestMeetupProEventItem_Transform(t *testing.T) {
 	assert.Equal(t, "https://www.meetup.com/golang-berlin/events/123/", got.URL)
 	assert.Equal(t, "https://example.com/photo.jpg", got.ImageURL)
 	assert.Equal(t, news.TagEvent, got.Tag)
+	// Snippet is the first paragraph only, not the second.
+	assert.Equal(t, "Join us for an evening of Go talks.", got.Snippet)
+}
+
+func TestMeetupProEventItem_Transform_FallbackSnippet(t *testing.T) {
+	t.Parallel()
+
+	// No description → fallback template, deterministic via URL hash.
+	item := meetupProEventItem{
+		evt: meetupProEvent{
+			Title:    "Go Meetup",
+			EventURL: "https://www.meetup.com/golang-berlin/events/123/",
+			Group:    meetupProGroup{Name: "Berlin Gophers", City: "Berlin", Country: "de"},
+			Venue:    &meetupProVenue{City: "Berlin", Country: "de"},
+		},
+	}
+
+	got := item.Transform()
+	assert.NotEmpty(t, got.Snippet)
+	assert.Contains(t, got.Snippet, "Berlin Gophers")
 	assert.Contains(t, got.Snippet, "Berlin, DE")
-	assert.Contains(t, got.Snippet, "42 RSVPs")
 }
 
 func TestMeetupProEventItem_Transform_Online(t *testing.T) {

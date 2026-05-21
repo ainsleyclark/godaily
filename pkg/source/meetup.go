@@ -23,13 +23,28 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
+
+// meetupSnippetMaxLen is the maximum rune length for a description-derived snippet.
+const meetupSnippetMaxLen = 200
+
+// meetupFallbacks are used when an event has no description.
+// The index is chosen deterministically by hashing the event URL.
+var meetupFallbacks = []string{
+	"Join %s for an upcoming Go event in %s.",
+	"Hosted by %s in %s — all are welcome.",
+	"An upcoming Go community event from %s in %s.",
+	"Come together with %s in %s.",
+	"%s is hosting a Go meetup in %s.",
+}
 
 const meetupProURL = "https://www.meetup.com/pro/go/"
 
@@ -103,26 +118,45 @@ func (i meetupProEventItem) Transform() news.Item {
 		loc = "Online"
 	}
 
-	var parts []string
-	if !i.evt.DateTime.IsZero() {
-		parts = append(parts, i.evt.DateTime.Format("Mon Jan 2"))
-	}
-	if loc != "" {
-		parts = append(parts, loc)
-	}
-	if i.evt.RSVPs.TotalCount > 0 {
-		parts = append(parts, fmt.Sprintf("%d RSVPs", i.evt.RSVPs.TotalCount))
-	}
-
 	return news.Item{
 		Source:    news.SourceMeetup,
 		Title:     i.evt.Title,
 		URL:       i.evt.EventURL,
 		ImageURL:  i.evt.DisplayPhoto.HighResURL,
-		Snippet:   strings.Join(parts, " · "),
+		Snippet:   meetupSnippet(i.evt, loc),
 		Tag:       news.TagEvent,
 		Published: time.Now().UTC(),
 	}
+}
+
+// meetupSnippet returns the best available snippet for an event. It prefers
+// the first paragraph of the event description (truncated). When the
+// description is blank it generates a varied fallback phrase.
+func meetupSnippet(evt meetupProEvent, loc string) string {
+	desc := strings.TrimSpace(evt.Description)
+	if desc != "" {
+		// Take the first paragraph (up to the first blank line).
+		if idx := strings.Index(desc, "\n\n"); idx >= 0 {
+			desc = strings.TrimSpace(desc[:idx])
+		}
+		// Flatten any remaining newlines.
+		desc = strings.ReplaceAll(desc, "\n", " ")
+		// Truncate at a word boundary.
+		if utf8.RuneCountInString(desc) > meetupSnippetMaxLen {
+			runes := []rune(desc)[:meetupSnippetMaxLen]
+			for len(runes) > 0 && runes[len(runes)-1] != ' ' {
+				runes = runes[:len(runes)-1]
+			}
+			desc = strings.TrimRight(string(runes), " ") + "…"
+		}
+		return desc
+	}
+
+	// No description — generate a varied fallback keyed on the event URL.
+	h := fnv.New32a()
+	_, _ = h.Write([]byte(evt.EventURL))
+	tmpl := meetupFallbacks[h.Sum32()%uint32(len(meetupFallbacks))]
+	return fmt.Sprintf(tmpl, evt.Group.Name, loc)
 }
 
 // meetupProNextData mirrors the __NEXT_DATA__ JSON embedded in the Meetup Pro
@@ -140,6 +174,7 @@ type meetupProNextData struct {
 type meetupProEvent struct {
 	Title        string          `json:"title"`
 	EventURL     string          `json:"eventUrl"`
+	Description  string          `json:"description"`
 	DateTime     time.Time       `json:"dateTime"`
 	IsOnline     bool            `json:"isOnline"`
 	DisplayPhoto meetupProPhoto  `json:"displayPhoto"`
