@@ -1,9 +1,12 @@
-GoDaily Suggested Post - {{ .Date.Format "January 2, 2006" }}
+{{ define "email-body-text" }}GoDaily Suggested Posts - {{ .Date.Format "January 2, 2006" }}
 
-{{ .Post }}
+Three drafts from today's digest — pick one to share.
+{{ range .Posts }}
+Post {{ .Num }}
+---
+{{ .Text }}
 {{ if .References }}
 References
----
 {{ range .References }}• {{ .Title }} ({{ .Source }})
   {{ .URL }}
-{{ end }}{{ end }}
+{{ end }}{{ end }}{{ end }}{{ end }}

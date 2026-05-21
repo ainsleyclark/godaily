@@ -41,9 +41,25 @@ var suggestDay = time.Date(2026, time.April, 26, 0, 0, 0, 0, time.UTC)
 func sampleSuggestion() prompts.Suggestion {
 	return prompts.Suggestion{
 		Date: suggestDay,
-		Post: "Go 1.24 is out — range-over-func is now stable.",
-		References: []prompts.Ref{
-			{Title: "Go 1.24 Release Notes", URL: "https://go.dev/doc/go1.24", Source: news.SourceGoBlog},
+		Posts: []prompts.Post{
+			{
+				Text: "Go 1.24 is out — range-over-func is now stable.",
+				References: []prompts.Ref{
+					{Title: "Go 1.24 Release Notes", URL: "https://go.dev/doc/go1.24", Source: news.SourceGoBlog},
+				},
+			},
+			{
+				Text: "A new proposal lands for structured logging in the standard library.",
+				References: []prompts.Ref{
+					{Title: "slog proposal", URL: "https://go.dev/issue/56345", Source: news.SourceHN},
+				},
+			},
+			{
+				Text: "Sharp write-up on profiling allocation hot paths in production Go services.",
+				References: []prompts.Ref{
+					{Title: "Profiling Go allocations", URL: "https://example.com/profiling", Source: news.SourceDevTo},
+				},
+			},
 		},
 	}
 }
@@ -54,14 +70,19 @@ func TestRenderSuggestion(t *testing.T) {
 		require.NoError(t, err)
 		assert.Contains(t, html, "Go 1.24 is out")
 		assert.Contains(t, html, "Go 1.24 Release Notes")
+		assert.Contains(t, html, "Post 3")
+		assert.Contains(t, html, "Profiling Go allocations")
+		assert.Contains(t, html, "Sent by")    // shared layout footer
+		assert.NotContains(t, html, "&mdash;") // no em-dash in the header
 		assert.Contains(t, text, "Go 1.24 is out")
 		assert.Contains(t, text, "Go 1.24 Release Notes")
+		assert.Contains(t, text, "Post 3")
 	})
 
 	// Template subtests mutate package-level vars and must run sequentially.
 	t.Run("HTML Template Error", func(t *testing.T) {
 		orig := suggestHTMLTmpl
-		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
+		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest-html").Parse(`{{ define "email-layout" }}{{ .Missing.NotAField }}{{ end }}`))
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
 		_, _, err := renderSuggestion(sampleSuggestion())
@@ -70,7 +91,7 @@ func TestRenderSuggestion(t *testing.T) {
 
 	t.Run("Text Template Error", func(t *testing.T) {
 		orig := suggestTextTmpl
-		suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
+		suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest-text").Parse(`{{ define "email-layout-text" }}{{ .Missing.NotAField }}{{ end }}`))
 		t.Cleanup(func() { suggestTextTmpl = orig })
 
 		_, _, err := renderSuggestion(sampleSuggestion())
@@ -86,8 +107,12 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		return d
 	}
 
-	validJSON := func(post string) []byte {
-		raw, _ := json.Marshal(map[string]any{"post": post, "references": []any{}})
+	validJSON := func(posts ...string) []byte {
+		arr := make([]map[string]any, len(posts))
+		for i, post := range posts {
+			arr[i] = map[string]any{"post": post, "references": []any{}}
+		}
+		raw, _ := json.Marshal(map[string]any{"posts": arr})
 		return raw
 	}
 
@@ -111,15 +136,17 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("punchy-post"), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Return(validJSON("first-post", "second-post", "third-post"), nil)
 		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
 		assert.True(t, m.called)
 		assert.Contains(t, m.req.Subject, "Synth")
-		assert.Contains(t, m.req.Html, "punchy-post")
-		assert.Contains(t, m.req.Text, "punchy-post")
+		assert.Contains(t, m.req.Html, "first-post")
+		assert.Contains(t, m.req.Html, "third-post")
+		assert.Contains(t, m.req.Text, "first-post")
 		assert.Equal(t, []string{"to@example.com"}, m.req.To)
 	})
 
@@ -220,7 +247,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		orig := suggestHTMLTmpl
-		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(`{{ .Missing.NotAField }}`))
+		suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest-html").Parse(`{{ define "email-layout" }}{{ .Missing.NotAField }}{{ end }}`))
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))

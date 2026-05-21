@@ -36,25 +36,34 @@ import (
 
 const maxPostChars = 280
 
-const systemIntro = `You write a single short social media post about the
-Go programming language community in the voice of Ainsley Clark.
+const systemIntro = `You write short social media posts about the Go
+programming language community in the voice of Ainsley Clark.
 
 You will receive a JSON list of items aggregated from Go news sources for
-a single day, already ranked by relevance. Pick the SINGLE most notable
-item (the one with the most technical substance) and write one short,
-punchy post about that one topic. Go deep on one thing, do not summarise
-the day, do not list multiple items, do not produce a checklist or
-roundup.
+a single day, already ranked by relevance. Pick the THREE most notable,
+DISTINCT stories of the day — three different topics (e.g. a release, a
+proposal, a project, a discussion), NOT three angles on the same item —
+and write one short, punchy post about each. Go deep on one thing per
+post; do not summarise the day or produce a checklist or roundup.
 
-If a small cluster of items is clearly the same topic (same release,
-same proposal, same project), treat them as one and reference both. The
-"references" array should contain only the item(s) the post is actually
-about (usually one, occasionally two).
+If a small cluster of items is clearly the same story (same release,
+same proposal, same project), treat them as one and reference both. Each
+post's "references" array should contain only the item(s) that post is
+actually about (usually one, occasionally two).
+
+Return exactly three posts when three distinct stories exist. If the day
+genuinely offers fewer distinct stories, return as many as there are
+(never fewer than one) — do not pad with weak or duplicate items.
 
 Output strict JSON, schema:
 {
-  "post":       string  // <= 280 chars, one topic
-  "references": [{"title": string, "url": string, "source": string}, ...]
+  "posts": [
+    {
+      "post":       string  // <= 280 chars, one topic
+      "references": [{"title": string, "url": string, "source": string}, ...]
+    }
+    // ... up to 3 posts
+  ]
 }
 
 Output the JSON object alone. No prose, no markdown fences, no commentary.`
@@ -90,17 +99,21 @@ func parseSuggestionBytes(raw []byte) (Suggestion, error) {
 		return Suggestion{}, errors.New("empty response body")
 	}
 	var out struct {
-		Post       string `json:"post"`
-		References []Ref  `json:"references"`
+		Posts []Post `json:"posts"`
 	}
 	if err := json.Unmarshal([]byte(body), &out); err != nil {
 		return Suggestion{}, fmt.Errorf("parse (raw=%q): %w", body, err)
 	}
-	if out.Post == "" {
-		return Suggestion{}, errors.New("missing post field")
+	if len(out.Posts) == 0 {
+		return Suggestion{}, errors.New("missing posts field")
 	}
-	if n := utf8.RuneCountInString(out.Post); n > maxPostChars {
-		slog.Warn("Post exceeded char limit", "chars", n, "max", maxPostChars)
+	for i, p := range out.Posts {
+		if p.Text == "" {
+			return Suggestion{}, fmt.Errorf("post %d: missing post field", i+1)
+		}
+		if n := utf8.RuneCountInString(p.Text); n > maxPostChars {
+			slog.Warn("Post exceeded char limit", "post", i+1, "chars", n, "max", maxPostChars)
+		}
 	}
-	return Suggestion{Post: out.Post, References: out.References}, nil
+	return Suggestion{Posts: out.Posts}, nil
 }
