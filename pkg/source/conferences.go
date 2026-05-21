@@ -85,7 +85,7 @@ func (c *Conferences) Fetch(_ context.Context) ([]news.Item, error) {
 	var items []news.Item
 	for _, conf := range c.conferences {
 		for i, nd := range conf.NotifyDates {
-			if nd.UTC().Truncate(24*time.Hour).Equal(today) {
+			if nd.UTC().Truncate(24 * time.Hour).Equal(today) {
 				items = append(items, conf.toItem(i, publishedAt))
 				break
 			}
@@ -96,14 +96,14 @@ func (c *Conferences) Fetch(_ context.Context) ([]news.Item, error) {
 
 // conferenceEntry mirrors a single entry in conferences.yaml.
 type conferenceEntry struct {
-	Slug        string      `yaml:"slug"`
-	Name        string      `yaml:"name"`
-	URL         string      `yaml:"url"`
-	Location    string      `yaml:"location"`
-	StartDate   conferenceDate `yaml:"start_date"`
-	EndDate     conferenceDate `yaml:"end_date"`
-	Description string      `yaml:"description"`
-	ImageURL    string      `yaml:"image_url"`
+	Slug        string           `yaml:"slug"`
+	Name        string           `yaml:"name"`
+	URL         string           `yaml:"url"`
+	Location    string           `yaml:"location"`
+	StartDate   conferenceDate   `yaml:"start_date"`
+	EndDate     conferenceDate   `yaml:"end_date"`
+	Description string           `yaml:"description"`
+	ImageURL    string           `yaml:"image_url"`
 	NotifyDates []conferenceDate `yaml:"notify_dates"`
 }
 

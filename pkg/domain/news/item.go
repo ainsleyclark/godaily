@@ -80,19 +80,19 @@ func (a *Author) String() string {
 type Tag string
 
 const (
-	TagArticle              Tag = "article"
-	TagProposal             Tag = "proposal"
-	TagProposalAccepted     Tag = "proposal_accepted"
-	TagProposalShipped      Tag = "proposal_shipped"
-	TagVideo                Tag = "video"
-	TagPodcast              Tag = "podcast"
-	TagRelease              Tag = "release"
-	TagDiscussion           Tag = "discussion"
-	TagTrending             Tag = "trending"
-	TagEvent                Tag = "event"
-	TagConference           Tag = "conference"          // major Go conference announcement
-	TagConferenceReminder   Tag = "conference_reminder" // ~3 months before
-	TagConferenceAlert      Tag = "conference_alert"    // ~1 week before
+	TagArticle            Tag = "article"
+	TagProposal           Tag = "proposal"
+	TagProposalAccepted   Tag = "proposal_accepted"
+	TagProposalShipped    Tag = "proposal_shipped"
+	TagVideo              Tag = "video"
+	TagPodcast            Tag = "podcast"
+	TagRelease            Tag = "release"
+	TagDiscussion         Tag = "discussion"
+	TagTrending           Tag = "trending"
+	TagEvent              Tag = "event"
+	TagConference         Tag = "conference"          // major Go conference announcement
+	TagConferenceReminder Tag = "conference_reminder" // ~3 months before
+	TagConferenceAlert    Tag = "conference_alert"    // ~1 week before
 )
 
 // SectionTags lists the canonical section tags in display order. Each digest
