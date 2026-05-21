@@ -128,10 +128,6 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 		Position:         int64(position),
 		Published:        published,
 	})
-	if errors.Is(err, sql.ErrNoRows) {
-		// INSERT OR IGNORE skipped a duplicate (url, tag) pair — treat as success.
-		return news.Item{}, nil
-	}
 	if err != nil {
 		return news.Item{}, err
 	}

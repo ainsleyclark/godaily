@@ -333,7 +333,7 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 }
 
 const itemCreate = `-- name: ItemCreate :one
-INSERT OR IGNORE INTO items (
+INSERT INTO items (
     issue_id, source, tag, title, url, original_url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position, published
@@ -342,7 +342,9 @@ INSERT OR IGNORE INTO items (
     ?, ?, ?, ?,
     ?, ?, ?, ?
 )
-ON CONFLICT (url, tag) DO NOTHING
+ON CONFLICT (url, tag) DO UPDATE SET
+    issue_id = COALESCE(excluded.issue_id, items.issue_id),
+    position = excluded.position
 RETURNING id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published
 `
 
