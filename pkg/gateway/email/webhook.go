@@ -126,6 +126,12 @@ func ToEmailEvent(evt WebhookEvent, eventID string) (engagement.EmailEvent, bool
 	out.IssueID = tagInt(tags, TagIssueID)
 	out.SubscriberID = tagInt(tags, TagSubscriberID)
 
+	// Only track events that are associated with a digest issue. Auxiliary
+	// emails (subscribe confirmations, etc.) carry no issue_id tag.
+	if out.IssueID == nil {
+		return engagement.EmailEvent{}, false, nil
+	}
+
 	return out, true, nil
 }
 
