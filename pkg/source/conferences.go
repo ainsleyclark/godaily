@@ -47,7 +47,7 @@ var conferencePhaseTags = []news.Tag{
 var conferencePhaseSuffixes = []string{"#announce", "#reminder", "#alert"}
 
 func init() {
-	news.Register(news.SourceConferences, func(cfg env.Config) news.Fetcher {
+	news.Register(news.SourceConferences, func(_ env.Config) news.Fetcher {
 		return NewConferences(conferencesYAML)
 	})
 }
