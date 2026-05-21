@@ -31,18 +31,23 @@ import (
 // EmailEventType identifies an email lifecycle event that GoDaily tracks.
 type EmailEventType string
 
+// Event type constants.
 const (
 	// EmailEventTypeDelivered marks an email accepted by the recipient's
 	// server. It is the denominator for open and click rates.
 	EmailEventTypeDelivered EmailEventType = "delivered"
+
 	// EmailEventTypeOpened marks an email open. Treated as unreliable — Apple
 	// Mail Privacy Protection pre-fetches images and inflates opens.
 	EmailEventTypeOpened EmailEventType = "opened"
+
 	// EmailEventTypeClicked marks a link click. This is the primary
 	// engagement signal.
 	EmailEventTypeClicked EmailEventType = "clicked"
+
 	// EmailEventTypeBounced marks a hard delivery failure.
 	EmailEventTypeBounced EmailEventType = "bounced"
+
 	// EmailEventTypeComplained marks a spam complaint.
 	EmailEventTypeComplained EmailEventType = "complained"
 )

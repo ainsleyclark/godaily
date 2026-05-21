@@ -40,7 +40,7 @@ type SourceItems struct {
 	Items  []Item `json:"items"`
 }
 
-// Source constants
+// Source constants.
 const (
 	SourceDevTo          Source = "dev_to"
 	SourceGoBlog         Source = "go_blog"

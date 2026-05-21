@@ -43,7 +43,7 @@ func sendCmd(a *godaily.App) *cli.Command {
 			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			date := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
+			date := time.Now()
 			if raw := cmd.String("date"); raw != "" {
 				d, err := time.Parse("2006-01-02", raw)
 				if err != nil {
