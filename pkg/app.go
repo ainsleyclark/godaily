@@ -80,7 +80,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, func() {}, err
 	}
 
-	if err := news.Materialise(config); err != nil {
+	if err = news.Materialise(config); err != nil {
 		return nil, func() {}, errors.Wrap(err, "materialising sources")
 	}
 
@@ -106,13 +106,11 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		store = osCache
 	}
 
-	cachedIssues := issues.NewCaching(issueStore, store)
-
 	subsStore := subscribers.New(conn)
 	socialPostsStore := socialposts.New(conn)
 
 	repo := &Repository{
-		Issues:      cachedIssues,
+		Issues:      issueStore,
 		Items:       items.New(conn),
 		Subscribers: subsStore,
 		SocialPosts: socialPostsStore,
@@ -121,7 +119,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
-
 	aiClient := ai.New(config, slackClient)
 
 	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
@@ -141,7 +138,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
-	subscriberSvc := subscriber.New(subsStore, cachedIssues, emailSender)
+	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
 
 	return &App{
 		Config:      &config,
