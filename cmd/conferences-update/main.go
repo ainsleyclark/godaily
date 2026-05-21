@@ -104,7 +104,17 @@ func main() {
 }
 
 func loadWatchList(path string) ([]string, error) {
-	data, err := os.ReadFile(path)
+	root, err := os.OpenRoot(".")
+	if err != nil {
+		return nil, err
+	}
+	defer root.Close()
+	f, err := root.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	data, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}
@@ -240,7 +250,12 @@ func fetchHTML(url string) (string, error) {
 }
 
 func appendEntry(path, entry string) error {
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0o644)
+	root, err := os.OpenRoot(".")
+	if err != nil {
+		return err
+	}
+	defer root.Close()
+	f, err := root.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0o600)
 	if err != nil {
 		return err
 	}
