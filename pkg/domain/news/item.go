@@ -89,6 +89,7 @@ const (
 	TagRelease          Tag = "release"
 	TagDiscussion       Tag = "discussion"
 	TagTrending         Tag = "trending"
+	TagEvent            Tag = "event"
 )
 
 // SectionTags lists the canonical section tags in display order. Each digest
@@ -98,6 +99,7 @@ var SectionTags = []Tag{
 	TagRelease,
 	TagProposal,
 	TagDiscussion,
+	TagEvent,
 	TagArticle,
 	TagVideo,
 	TagTrending,
@@ -109,6 +111,7 @@ const NoLimit = 0
 // SectionLimits caps the number of items shown per section in a digest.
 // Use NoLimit (0) for unlimited. Adjust these to tune digest density.
 var SectionLimits = map[Tag]int{
+	TagEvent:      5,
 	TagRelease:    5,
 	TagProposal:   NoLimit,
 	TagArticle:    5,
@@ -131,6 +134,7 @@ func (t Tag) Section() Tag {
 }
 
 var sectionTitles = map[Tag]string{
+	TagEvent:      "Events",
 	TagRelease:    "Releases",
 	TagProposal:   "Proposals",
 	TagArticle:    "Articles",
