@@ -333,7 +333,7 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 }
 
 const itemCreate = `-- name: ItemCreate :one
-INSERT INTO items (
+INSERT OR IGNORE INTO items (
     issue_id, source, tag, title, url, original_url,
     author_name, author_username, author_avatar_url, author_profile_url,
     score, summary, position, published

@@ -62,6 +62,7 @@ const (
 	SourceGolangNuts     Source = "golang_nuts"
 	SourcePlanetGolang   Source = "planet_golang"
 	SourceMeetup         Source = "meetup"
+	SourceConferences    Source = "conferences"
 )
 
 // Sources defines a list of all source types.
@@ -86,6 +87,7 @@ var Sources = []Source{
 	SourceGolangNuts,
 	SourcePlanetGolang,
 	SourceMeetup,
+	SourceConferences,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -110,6 +112,7 @@ var FeaturedSources = []Source{
 	SourceAwesomeGo,
 	SourceGolangNuts,
 	SourceMeetup,
+	SourceConferences,
 }
 
 // String implements fmt.Stringer on source.
@@ -128,6 +131,7 @@ var sourcePriorities = map[Source]int{
 	SourceJetBrains:      13,
 	SourceDevTo:          12,
 	SourceGolangBridge:   11,
+	SourceConferences:    21,
 	SourceMeetup:         10,
 	SourceGoPodcast:      9,
 	SourceFallthrough:    8,
@@ -168,6 +172,7 @@ var sourceNiceNames = map[Source]string{
 	SourceGolangNuts:     "Golang Nuts",
 	SourcePlanetGolang:   "Planet Golang",
 	SourceMeetup:         "Meetup",
+	SourceConferences:    "Go Conferences",
 }
 
 // NiceName returns a formatted string of the source.
@@ -200,6 +205,7 @@ var sourceEmojis = map[Source]string{
 	SourceGolangNuts:     "📬",
 	SourcePlanetGolang:   "🌐",
 	SourceMeetup:         "📅",
+	SourceConferences:    "🎤",
 }
 
 // Emoji returns the display emoji for the source.
@@ -260,6 +266,7 @@ var sourceShortLabels = map[Source]string{
 	SourceGolangNuts:     "GN",
 	SourcePlanetGolang:   "PG",
 	SourceMeetup:         "MT",
+	SourceConferences:    "GC",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,

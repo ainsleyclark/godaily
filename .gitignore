@@ -33,6 +33,7 @@ go.work.sum
 
 # Binaries
 /godaily
+/conferences-check
 e2e/server
 
 # Database & Cache

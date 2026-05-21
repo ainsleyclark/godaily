@@ -80,16 +80,19 @@ func (a *Author) String() string {
 type Tag string
 
 const (
-	TagArticle          Tag = "article"
-	TagProposal         Tag = "proposal"
-	TagProposalAccepted Tag = "proposal_accepted"
-	TagProposalShipped  Tag = "proposal_shipped"
-	TagVideo            Tag = "video"
-	TagPodcast          Tag = "podcast"
-	TagRelease          Tag = "release"
-	TagDiscussion       Tag = "discussion"
-	TagTrending         Tag = "trending"
-	TagEvent            Tag = "event"
+	TagArticle            Tag = "article"
+	TagProposal           Tag = "proposal"
+	TagProposalAccepted   Tag = "proposal_accepted"
+	TagProposalShipped    Tag = "proposal_shipped"
+	TagVideo              Tag = "video"
+	TagPodcast            Tag = "podcast"
+	TagRelease            Tag = "release"
+	TagDiscussion         Tag = "discussion"
+	TagTrending           Tag = "trending"
+	TagEvent              Tag = "event"
+	TagConference         Tag = "conference"          // major Go conference announcement
+	TagConferenceReminder Tag = "conference_reminder" // ~3 months before
+	TagConferenceAlert    Tag = "conference_alert"    // ~1 week before
 )
 
 // SectionTags lists the canonical section tags in display order. Each digest
@@ -98,6 +101,7 @@ const (
 var SectionTags = []Tag{
 	TagRelease,
 	TagProposal,
+	TagConference,
 	TagDiscussion,
 	TagEvent,
 	TagArticle,
@@ -112,6 +116,7 @@ const NoLimit = 0
 // Use NoLimit (0) for unlimited. Adjust these to tune digest density.
 var SectionLimits = map[Tag]int{
 	TagEvent:      5,
+	TagConference: NoLimit,
 	TagRelease:    5,
 	TagProposal:   NoLimit,
 	TagArticle:    5,
@@ -122,19 +127,23 @@ var SectionLimits = map[Tag]int{
 
 // Section returns the canonical section tag this tag renders under.
 // TagPodcast folds into TagVideo; the proposal-lifecycle tags fold into
-// TagProposal. Other tags return themselves.
+// TagProposal; conference reminder/alert tags fold into TagConference.
+// Other tags return themselves.
 func (t Tag) Section() Tag {
 	switch t {
 	case TagPodcast:
 		return TagVideo
 	case TagProposalAccepted, TagProposalShipped:
 		return TagProposal
+	case TagConferenceReminder, TagConferenceAlert:
+		return TagConference
 	}
 	return t
 }
 
 var sectionTitles = map[Tag]string{
 	TagEvent:      "Events",
+	TagConference: "Conferences",
 	TagRelease:    "Releases",
 	TagProposal:   "Proposals",
 	TagArticle:    "Articles",

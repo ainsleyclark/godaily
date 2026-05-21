@@ -1,0 +1,117 @@
+# Go conferences curated list.
+#
+# Each entry defines a major Go conference and the dates on which GoDaily should
+# publish a notification. notify_dates are the days on which the item should
+# appear in the digest — the source emits items whose notify_date matches today.
+#
+# Phase ordering (by index in notify_dates):
+#   0 → announcement     (TagConference)
+#   1 → reminder         (TagConferenceReminder, typically ~3 months before)
+#   2 → alert            (TagConferenceAlert, typically ~1 week before)
+#
+# Adding a new conference:
+#   1. Add an entry below (slug must be unique).
+#   2. Set notify_dates to the days you want notifications to appear.
+#   3. Commit the change — it takes effect on the next daily collect run.
+#
+# Updating dates for a recurring conference:
+#   Duplicate the entry with the new year's slug and dates.
+#   The old entry can be removed once all its notify_dates have passed.
+#
+# Reference: https://go.dev/wiki/Conferences
+
+- slug: gophercon-eu-2026
+  name: GopherCon Europe 2026
+  url: https://gophercon.eu/
+  location: Berlin, Germany
+  start_date: 2026-06-15
+  end_date: 2026-06-18
+  description: "The European Go conference, bringing together Gophers from across the continent for workshops, talks, and networking."
+  notify_dates:
+    - 2026-02-09  # announcement
+    - 2026-03-16  # ~3 months out
+    - 2026-06-08  # 1 week before
+
+- slug: gophercon-uk-2026
+  name: GopherCon UK 2026
+  url: https://www.gophercon.co.uk/
+  location: London, UK
+  start_date: 2026-08-12
+  end_date: 2026-08-13
+  description: "The UK's annual Go conference at The Brewery, London. Workshops on August 11th."
+  notify_dates:
+    - 2026-03-02  # announcement
+    - 2026-05-12  # ~3 months out
+    - 2026-08-05  # 1 week before
+
+- slug: gophercon-us-2026
+  name: GopherCon 2026
+  url: https://www.gophercon.com/
+  location: Seattle, WA, USA
+  start_date: 2026-08-03
+  end_date: 2026-08-06
+  description: "The flagship GopherCon conference, North America's largest gathering of Go developers."
+  notify_dates:
+    - 2026-02-16  # announcement
+    - 2026-05-04  # ~3 months out
+    - 2026-07-27  # 1 week before
+
+- slug: golab-2026
+  name: GoLab 2026
+  url: https://golab.io/
+  location: Bologna, Italy
+  start_date: 2026-11-01
+  end_date: 2026-11-03
+  description: "Italy's Go conference, co-located with RustLab in Bologna."
+  notify_dates:
+    - 2026-05-04  # announcement
+    - 2026-08-03  # ~3 months out
+    - 2026-10-25  # 1 week before
+
+- slug: gophercon-israel-2026
+  name: GopherCon Israel 2026
+  url: https://gophercon.org.il/
+  location: Israel
+  start_date: 2026-02-18
+  end_date: 2026-02-18
+  description: "GopherCon Israel — the Go community conference in Israel."
+  notify_dates:
+    - 2025-11-17  # announcement
+    - 2026-01-19  # ~1 month out
+    - 2026-02-11  # 1 week before
+
+- slug: gophercon-africa-2026
+  name: GopherCon Africa 2026
+  url: https://gophercon.africa/
+  location: Lagos, Nigeria
+  start_date: 2026-10-23
+  end_date: 2026-10-24
+  description: "Africa's Go conference, celebrating the growing Go community across the continent."
+  notify_dates:
+    - 2026-05-25  # announcement
+    - 2026-07-27  # ~3 months out
+    - 2026-10-16  # 1 week before
+
+- slug: gophercon-korea-2026
+  name: GopherCon Korea 2026
+  url: https://gopherconkorea.com/
+  location: Seoul, South Korea
+  start_date: 2026-11-08
+  end_date: 2026-11-08
+  description: "GopherCon Korea — South Korea's annual Go conference."
+  notify_dates:
+    - 2026-06-01  # announcement
+    - 2026-08-10  # ~3 months out
+    - 2026-11-01  # 1 week before
+
+- slug: gowest-2026
+  name: GoWest 2026
+  url: https://www.gowestconf.com/
+  location: Lehi, UT, USA
+  start_date: 2026-10-23
+  end_date: 2026-10-23
+  description: "GoWest — a community-driven single-day Go conference in Utah."
+  notify_dates:
+    - 2026-05-25  # announcement
+    - 2026-07-27  # ~3 months out
+    - 2026-10-16  # 1 week before
