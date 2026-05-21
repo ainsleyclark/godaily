@@ -62,7 +62,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			Timestamp: r.Header.Get("svix-timestamp"),
 			Signature: r.Header.Get("svix-signature"),
 		}
-		if err := email.VerifyWebhook(string(body), headers, secret); err != nil {
+		if err = email.VerifyWebhook(string(body), headers, secret); err != nil {
 			slog.WarnContext(ctx, "Rejected Resend webhook with invalid signature", "err", err)
 			api.Error(w, http.StatusUnauthorized, "invalid signature")
 			return
@@ -82,11 +82,12 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		if !tracked {
 			// An event type GoDaily does not record — acknowledge it so
 			// Resend stops retrying.
+			slog.WarnContext(ctx, "Rejected Resend webhook with invalid event", "evt", evt)
 			api.OK(w)
 			return
 		}
 
-		if err := a.EmailEvents.Process(ctx, domainEvt); err != nil {
+		if err = a.EmailEvents.Process(ctx, domainEvt); err != nil {
 			slog.ErrorContext(ctx, "Failed to process Resend webhook event", "type", domainEvt.Type, "err", err)
 			api.Error(w, http.StatusInternalServerError, "failed to process event")
 			return

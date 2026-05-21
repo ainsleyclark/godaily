@@ -30,31 +30,31 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// WebhookHeaders carries the Svix-style signature headers Resend sends with
-// every webhook request.
-type WebhookHeaders struct {
-	ID        string
-	Timestamp string
-	Signature string
-}
-
-// WebhookEvent is the JSON body Resend POSTs to the webhook endpoint.
-type WebhookEvent struct {
-	Type      string      `json:"type"`
-	CreatedAt string      `json:"created_at"`
-	Data      WebhookData `json:"data"`
-}
-
-// WebhookData is the per-event payload nested inside a WebhookEvent.
-type WebhookData struct {
-	EmailID string          `json:"email_id"`
-	To      []string        `json:"to"`
-	Subject string          `json:"subject"`
-	Tags    json.RawMessage `json:"tags"`
-	Click   *struct {
-		Link string `json:"link"`
-	} `json:"click"`
-}
+type (
+	// WebhookHeaders carries the Svix-style signature headers Resend sends with
+	// every webhook request.
+	WebhookHeaders struct {
+		ID        string
+		Timestamp string
+		Signature string
+	}
+	// WebhookEvent is the JSON body Resend POSTs to the webhook endpoint.
+	WebhookEvent struct {
+		Type      string      `json:"type"`
+		CreatedAt string      `json:"created_at"`
+		Data      WebhookData `json:"data"`
+	}
+	// WebhookData is the per-event payload nested inside a WebhookEvent.
+	WebhookData struct {
+		EmailID string          `json:"email_id"`
+		To      []string        `json:"to"`
+		Subject string          `json:"subject"`
+		Tags    json.RawMessage `json:"tags"`
+		Click   *struct {
+			Link string `json:"link"`
+		} `json:"click"`
+	}
+)
 
 // webhookEventTypes maps Resend's wire event names to GoDaily's canonical
 // event types. Types absent from this map are not tracked.
