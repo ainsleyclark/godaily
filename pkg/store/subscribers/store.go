@@ -176,7 +176,8 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 }
 
 func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscriber, error) {
-	rows, err := s.db.QueryContext(ctx,
+	rows, err := s.db.QueryContext(
+		ctx,
 		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
 		opts.Limit(), opts.Offset(),
 	)
@@ -188,7 +189,7 @@ func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscrib
 	var out []news.Subscriber
 	for rows.Next() {
 		var (
-			sub                              news.Subscriber
+			sub                                    news.Subscriber
 			confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
 		)
 		if err := rows.Scan(

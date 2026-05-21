@@ -154,7 +154,8 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStat
 }
 
 func (s Store) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
-	rows, err := s.db.QueryContext(ctx,
+	rows, err := s.db.QueryContext(
+		ctx,
 		"SELECT id, slug, sent_at, subject, COALESCE(summary,''), status FROM issues WHERE status = ? ORDER BY sent_at DESC LIMIT ? OFFSET ?",
 		status.String(), opts.Limit(), opts.Offset(),
 	)

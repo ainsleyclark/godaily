@@ -96,7 +96,7 @@ type seedRunner struct {
 
 func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]news.SourceItems, error) {
 	// Items are published yesterday so they fall within buildWindow's [yesterday, today) range.
-	yesterday := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, -1)
+	yesterday := time.Now().UTC().Truncate(24*time.Hour).AddDate(0, 0, -1)
 	seeds := []news.Item{
 		{Source: news.SourceHN, Title: "E2E: Understanding Go Channels", URL: "https://e2e.test/go-channels", Tag: news.TagArticle, Score: 0.8, Published: yesterday},
 		{Source: news.SourceDevTo, Title: "E2E: Go Interfaces Deep Dive", URL: "https://e2e.test/go-interfaces", Tag: news.TagArticle, Score: 0.6, Published: yesterday},
