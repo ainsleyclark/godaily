@@ -72,8 +72,8 @@ func TestRenderSuggestion(t *testing.T) {
 		assert.Contains(t, html, "Go 1.24 Release Notes")
 		assert.Contains(t, html, "Post 3")
 		assert.Contains(t, html, "Profiling Go allocations")
-		assert.Contains(t, html, "Sent by")          // shared layout footer
-		assert.NotContains(t, html, "&mdash;")        // no em-dash in the header
+		assert.Contains(t, html, "Sent by")    // shared layout footer
+		assert.NotContains(t, html, "&mdash;") // no em-dash in the header
 		assert.Contains(t, text, "Go 1.24 is out")
 		assert.Contains(t, text, "Go 1.24 Release Notes")
 		assert.Contains(t, text, "Post 3")
