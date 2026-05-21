@@ -66,10 +66,10 @@ func (c *Client) Platform() social.Platform {
 	return social.PlatformMastodon
 }
 
-// GetStats fetches engagement counts for a Mastodon status. postURL must be
+// Stats fetches engagement counts for a Mastodon status. postURL must be
 // the canonical status URL (e.g. https://mastodon.social/@handle/113456789).
 // The status ID is extracted from the URL path's last segment.
-func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
 	id, err := statusIDFromURL(postURL)
 	if err != nil {
 		return social.Stats{}, errors.Wrap(err, "extracting status ID from post URL")

@@ -63,7 +63,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			stats, err := fetcher.GetStats(ctx, post.PostURL)
+			stats, err := fetcher.Stats(ctx, post.PostURL)
 			if err != nil {
 				slog.ErrorContext(ctx, "Failed to fetch social stats",
 					"platform", post.Platform, "post_id", post.ID, "err", err)

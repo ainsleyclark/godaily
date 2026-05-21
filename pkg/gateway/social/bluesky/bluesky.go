@@ -212,10 +212,10 @@ func buildFacets(text string) []facet {
 	return out
 }
 
-// GetStats fetches engagement counts for a Bluesky post via the public AppView
+// Stats fetches engagement counts for a Bluesky post via the public AppView
 // API. postURL must be a bsky.app URL of the form
 // https://bsky.app/profile/<handle>/post/<rkey>.
-func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
 	atURI, err := c.atURIFromPostURL(postURL)
 	if err != nil {
 		return social.Stats{}, errors.Wrap(err, "deriving AT URI from post URL")
@@ -255,8 +255,8 @@ func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, er
 	}
 	p := out.Posts[0]
 	return social.Stats{
-		Likes:   p.LikeCount,
-		Reposts: p.RepostCount,
+		Likes:    p.LikeCount,
+		Reposts:  p.RepostCount,
 		Comments: p.ReplyCount,
 	}, nil
 }

@@ -36,7 +36,7 @@ type StatFetcher interface {
 	// Platform identifies the platform this fetcher targets.
 	Platform() Platform
 
-	// GetStats returns the current engagement counts for the post at postURL.
+	// Stats returns the current engagement counts for the post at postURL.
 	// postURL is the canonical web URL stored in social_posts.post_url.
-	GetStats(ctx context.Context, postURL string) (Stats, error)
+	Stats(ctx context.Context, postURL string) (Stats, error)
 }

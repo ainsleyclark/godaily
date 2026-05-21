@@ -142,11 +142,11 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 	return social.Result{PostURL: feedURL(urn)}, nil
 }
 
-// GetStats fetches engagement counts for a LinkedIn organisation post.
+// Stats fetches engagement counts for a LinkedIn organisation post.
 // postURL must be the canonical feed URL stored in social_posts.post_url,
 // e.g. https://www.linkedin.com/feed/update/urn:li:share:7234567890/.
 // Requires the token to carry r_organization_social scope.
-func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
 	shareURN, err := urnFromPostURL(postURL)
 	if err != nil {
 		return social.Stats{}, errors.Wrap(err, "extracting share URN from post URL")
@@ -182,11 +182,11 @@ func (c *Client) GetStats(ctx context.Context, postURL string) (social.Stats, er
 	var out struct {
 		Elements []struct {
 			TotalShareStatistics struct {
-				LikeCount        int64 `json:"likeCount"`
-				CommentCount     int64 `json:"commentCount"`
-				ShareCount       int64 `json:"shareCount"`
-				ImpressionCount  int64 `json:"impressionCount"`
-				ClickCount       int64 `json:"clickCount"`
+				LikeCount       int64 `json:"likeCount"`
+				CommentCount    int64 `json:"commentCount"`
+				ShareCount      int64 `json:"shareCount"`
+				ImpressionCount int64 `json:"impressionCount"`
+				ClickCount      int64 `json:"clickCount"`
 			} `json:"totalShareStatistics"`
 		} `json:"elements"`
 	}
