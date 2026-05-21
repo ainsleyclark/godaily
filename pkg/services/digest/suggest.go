@@ -37,8 +37,31 @@ import (
 )
 
 var (
-	suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest").Parse(templates.SuggestHTML))
-	suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest").Parse(templates.SuggestText))
+	suggestHTMLTmpl = htmltemplate.Must(htmltemplate.New("suggest-html").Parse(templates.EmailLayout + templates.SuggestHTML))
+	suggestTextTmpl = texttemplate.Must(texttemplate.New("suggest-text").Parse(templates.EmailLayoutText + templates.SuggestText))
+)
+
+type (
+	// suggestPost is the per-post view model: the prompts.Post fields plus
+	// a 1-based number for display.
+	suggestPost struct {
+		Num        int
+		Text       string
+		References []prompts.Ref
+	}
+	// suggestData feeds the shared email layout. The CanonicalURL/share/
+	// unsubscribe fields are referenced by the "email-layout" block and
+	// stay empty — the synth email is owner-only, so the footer just
+	// reads "Sent by GoDaily".
+	suggestData struct {
+		Date           time.Time
+		Posts          []suggestPost
+		CanonicalURL   string
+		UnsubscribeURL string
+		ShareLinkedIn  string
+		ShareBluesky   string
+		ShareTwitter   string
+	}
 )
 
 // SendSuggestion generates an AI post suggestion from the stored digest
@@ -98,13 +121,22 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 }
 
 func renderSuggestion(s prompts.Suggestion) (html, text string, err error) {
+	data := suggestData{Date: s.Date}
+	for i, p := range s.Posts {
+		data.Posts = append(data.Posts, suggestPost{
+			Num:        i + 1,
+			Text:       p.Text,
+			References: p.References,
+		})
+	}
+
 	var htmlBuf bytes.Buffer
-	if err = suggestHTMLTmpl.Execute(&htmlBuf, s); err != nil {
+	if err = suggestHTMLTmpl.ExecuteTemplate(&htmlBuf, "email-layout", data); err != nil {
 		return "", "", errors.Wrap(err, "rendering suggest html")
 	}
 
 	var textBuf bytes.Buffer
-	if err = suggestTextTmpl.Execute(&textBuf, s); err != nil {
+	if err = suggestTextTmpl.ExecuteTemplate(&textBuf, "email-layout-text", data); err != nil {
 		return "", "", errors.Wrap(err, "rendering suggest text")
 	}
 

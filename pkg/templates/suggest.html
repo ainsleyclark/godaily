@@ -1,15 +1,35 @@
-<!DOCTYPE html>
-<html>
-<body>
-	<h2>GoDaily Suggested Post &mdash; {{ .Date.Format "January 2, 2006" }}</h2>
-	<pre style="white-space: pre-wrap; font-family: inherit;">{{ .Post }}</pre>
-	{{ if .References }}
-	<h3>References</h3>
-	<ul>
-		{{ range .References }}
-		<li><a href="{{ .URL }}">{{ .Title }}</a> ({{ .Source }})</li>
-		{{ end }}
-	</ul>
-	{{ end }}
-</body>
-</html>
+{{ define "email-body" }}
+<!-- Header -->
+<tr>
+  <td style="padding:28px 32px 24px;border-bottom:1px solid #d0e8f5;">
+    <div style="font-size:16px;font-weight:600;color:#0d2236;">🐿️ GoDaily Suggested Posts - {{ .Date.Format "January 2, 2006" }}</div>
+    <p style="font-size:14px;color:#3a6880;line-height:1.6;margin:12px 0 0;">Three drafts from today's digest — pick one to share.</p>
+  </td>
+</tr>
+
+<!-- Posts -->
+{{ range .Posts }}
+<tr>
+  <td style="padding:0 32px 16px;">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin:24px 0 8px;">
+      <tr>
+        <td width="4" style="background:#2aa8d8;width:4px;"></td>
+        <td style="padding:6px 12px;background:#f5fbff;">
+          <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2aa8d8;">Post {{ .Num }}</span>
+        </td>
+      </tr>
+    </table>
+    <div style="padding:14px 16px;background:#f5fbff;border:1px solid #d0e8f5;font-size:15px;line-height:1.55;color:#0d2236;white-space:pre-wrap;">{{ .Text }}</div>
+    {{ if .References }}
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#6b9ab8;margin:14px 0 6px;">References</div>
+    {{ range .References }}
+    <div style="font-size:13px;line-height:1.55;margin-bottom:4px;">
+      <a href="{{ .URL }}" style="color:#1a7fa8;text-decoration:none;">{{ .Title }}</a>
+      <span style="color:#6b9ab8;">({{ .Source }})</span>
+    </div>
+    {{ end }}
+    {{ end }}
+  </td>
+</tr>
+{{ end }}
+{{ end }}

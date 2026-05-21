@@ -32,11 +32,18 @@ import (
 )
 
 type (
-	// Suggestion is the structured output from Suggest.
+	// Suggestion is the structured output from Suggest: a small set of
+	// candidate posts, each about a different story, for the owner to
+	// choose between.
 	Suggestion struct {
-		Date       time.Time `json:"date"`
-		Post       string    `json:"post"`
-		References []Ref     `json:"references"`
+		Date  time.Time `json:"date"`
+		Posts []Post    `json:"posts"`
+	}
+	// Post is a single drafted social-media post about one story, along
+	// with the item(s) it is based on.
+	Post struct {
+		Text       string `json:"post"`
+		References []Ref  `json:"references"`
 	}
 	// Ref is a single item the model cited when drafting the post.
 	Ref struct {
@@ -59,15 +66,19 @@ var ErrNoItems = errors.New("prompts: no items to summarise")
 func (s Suggestion) Markdown() string {
 	var b strings.Builder
 
-	fmt.Fprintf(&b, "## Suggested post: %s\n\n", s.Date.Format("2006-01-02"))
+	fmt.Fprintf(&b, "## Suggested posts: %s\n\n", s.Date.Format("2006-01-02"))
 
-	b.WriteString(s.Post)
-	b.WriteString("\n\n")
+	for i, p := range s.Posts {
+		fmt.Fprintf(&b, "### Post %d\n\n", i+1)
+		b.WriteString(p.Text)
+		b.WriteString("\n\n")
 
-	if len(s.References) > 0 {
-		b.WriteString("### References\n\n")
-		for _, r := range s.References {
-			fmt.Fprintf(&b, "- [%s](%s) (%s)\n", r.Title, r.URL, r.Source)
+		if len(p.References) > 0 {
+			b.WriteString("#### References\n\n")
+			for _, r := range p.References {
+				fmt.Fprintf(&b, "- [%s](%s) (%s)\n", r.Title, r.URL, r.Source)
+			}
+			b.WriteString("\n")
 		}
 	}
 

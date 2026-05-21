@@ -47,15 +47,19 @@ func sampleSections() []news.SourceItems {
 	}}
 }
 
-func validSuggestJSON(post string) []byte {
-	raw, _ := json.Marshal(map[string]any{
-		"post": post,
-		"references": []map[string]string{{
-			"title":  "Go 1.24 ships",
-			"url":    "https://go.dev/blog/go1.24",
-			"source": "go_blog",
-		}},
-	})
+func validSuggestJSON(posts ...string) []byte {
+	arr := make([]map[string]any, len(posts))
+	for i, post := range posts {
+		arr[i] = map[string]any{
+			"post": post,
+			"references": []map[string]string{{
+				"title":  "Go 1.24 ships",
+				"url":    "https://go.dev/blog/go1.24",
+				"source": "go_blog",
+			}},
+		}
+	}
+	raw, _ := json.Marshal(map[string]any{"posts": arr})
 	return raw
 }
 
@@ -87,14 +91,15 @@ func TestSuggest(t *testing.T) {
 			wantErr:  "parse (raw=",
 		},
 		"OK Populates Date": {
-			raw:      validSuggestJSON("great post"),
+			raw:      validSuggestJSON("first post", "second post", "third post"),
 			sections: sampleSections(),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "great post", s.Post)
+				require.Len(t, s.Posts, 3)
+				assert.Equal(t, "first post", s.Posts[0].Text)
 				assert.Equal(t, day, s.Date)
-				require.Len(t, s.References, 1)
-				assert.Equal(t, news.SourceGoBlog, s.References[0].Source)
+				require.Len(t, s.Posts[0].References, 1)
+				assert.Equal(t, news.SourceGoBlog, s.Posts[0].References[0].Source)
 			},
 		},
 	}
@@ -122,7 +127,7 @@ func TestSuggest(t *testing.T) {
 func TestParseSuggestionBytes(t *testing.T) {
 	t.Parallel()
 
-	validJSON := `{"post":"hello","references":[{"title":"t","url":"u","source":"hacker_news"}]}`
+	validJSON := `{"posts":[{"post":"hello","references":[{"title":"t","url":"u","source":"hacker_news"}]}]}`
 
 	tt := map[string]struct {
 		raw     []byte
@@ -137,34 +142,43 @@ func TestParseSuggestionBytes(t *testing.T) {
 			raw:     []byte("not json"),
 			wantErr: "parse (raw=",
 		},
-		"Missing Post": {
-			raw:     []byte(`{"post":""}`),
-			wantErr: "missing post field",
+		"No Posts": {
+			raw:     []byte(`{"posts":[]}`),
+			wantErr: "missing posts field",
+		},
+		"Empty Post Text": {
+			raw:     []byte(`{"posts":[{"post":"ok"},{"post":""}]}`),
+			wantErr: "post 2: missing post field",
 		},
 		"Post Too Long Warns But Returns Post": {
 			raw: func() []byte {
-				b, _ := json.Marshal(map[string]any{"post": strings.Repeat("a", 281), "references": []any{}})
+				b, _ := json.Marshal(map[string]any{
+					"posts": []map[string]any{{"post": strings.Repeat("a", 281), "references": []any{}}},
+				})
 				return b
 			}(),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, 281, utf8.RuneCountInString(s.Post), "post must be returned unmodified")
+				require.Len(t, s.Posts, 1)
+				assert.Equal(t, 281, utf8.RuneCountInString(s.Posts[0].Text), "post must be returned unmodified")
 			},
 		},
 		"Valid": {
 			raw: []byte(validJSON),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "hello", s.Post)
-				require.Len(t, s.References, 1)
-				assert.Equal(t, news.SourceHN, s.References[0].Source)
+				require.Len(t, s.Posts, 1)
+				assert.Equal(t, "hello", s.Posts[0].Text)
+				require.Len(t, s.Posts[0].References, 1)
+				assert.Equal(t, news.SourceHN, s.Posts[0].References[0].Source)
 			},
 		},
 		"Valid With Fenced JSON": {
 			raw: []byte("```json\n" + validJSON + "\n```"),
 			check: func(t *testing.T, s Suggestion) {
 				t.Helper()
-				assert.Equal(t, "hello", s.Post)
+				require.Len(t, s.Posts, 1)
+				assert.Equal(t, "hello", s.Posts[0].Text)
 			},
 		},
 	}
@@ -190,11 +204,13 @@ func TestSuggestion_Markdown(t *testing.T) {
 
 	s := Suggestion{
 		Date: time.Date(2026, 4, 27, 0, 0, 0, 0, time.UTC),
-		Post: "post text",
-		References: []Ref{{
-			Title:  "Go 1.24 ships",
-			URL:    "https://go.dev/blog/go1.24",
-			Source: news.SourceGoBlog,
+		Posts: []Post{{
+			Text: "post text",
+			References: []Ref{{
+				Title:  "Go 1.24 ships",
+				URL:    "https://go.dev/blog/go1.24",
+				Source: news.SourceGoBlog,
+			}},
 		}},
 	}
 
@@ -202,19 +218,19 @@ func TestSuggestion_Markdown(t *testing.T) {
 		t.Parallel()
 
 		md := s.Markdown()
-		assert.Contains(t, md, "## Suggested post: 2026-04-27")
+		assert.Contains(t, md, "## Suggested posts: 2026-04-27")
+		assert.Contains(t, md, "### Post 1")
 		assert.Contains(t, md, "post text")
-		assert.Contains(t, md, "### References")
+		assert.Contains(t, md, "#### References")
 		assert.Contains(t, md, "[Go 1.24 ships](https://go.dev/blog/go1.24) (go_blog)")
 	})
 
 	t.Run("Without References", func(t *testing.T) {
 		t.Parallel()
 
-		noRef := s
-		noRef.References = nil
+		noRef := Suggestion{Date: s.Date, Posts: []Post{{Text: "post text"}}}
 		md := noRef.Markdown()
-		assert.NotContains(t, md, "### References")
+		assert.NotContains(t, md, "#### References")
 	})
 }
 
@@ -223,11 +239,13 @@ func TestSuggestion_JSON(t *testing.T) {
 
 	s := Suggestion{
 		Date: time.Date(2026, 4, 27, 0, 0, 0, 0, time.UTC),
-		Post: "post text",
-		References: []Ref{{
-			Title:  "Go 1.24 ships",
-			URL:    "https://go.dev/blog/go1.24",
-			Source: news.SourceGoBlog,
+		Posts: []Post{{
+			Text: "post text",
+			References: []Ref{{
+				Title:  "Go 1.24 ships",
+				URL:    "https://go.dev/blog/go1.24",
+				Source: news.SourceGoBlog,
+			}},
 		}},
 	}
 
