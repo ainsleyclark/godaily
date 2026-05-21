@@ -11,11 +11,12 @@
 // copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 // e2e/main.go starts a combined web+API server on :4000 for Playwright tests.
 // Run with: go run ./e2e
@@ -23,6 +24,10 @@ package main
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"log"
 	"net"
@@ -36,20 +41,30 @@ import (
 	"syscall"
 	"time"
 
+	apihandlers "github.com/ainsleyclark/godaily/api"
+	webhookhandler "github.com/ainsleyclark/godaily/api/webhooks"
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
+	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all source fetchers via init()
+	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 	webserver "github.com/ainsleyclark/godaily/web/server"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
+
+// e2eWebhookSecret is the test Resend webhook secret used for all webhook E2E
+// tests. It is base64(test-webhook-secret-key) with the whsec_ prefix.
+const e2eWebhookSecret = "whsec_dGVzdC13ZWJob29rLXNlY3JldC1rZXk="
 
 // spyEmail captures every email.Send call; used so Playwright tests can assert
 // against sent emails without making real external API calls.
@@ -71,15 +86,39 @@ type noopSlack struct{}
 func (noopSlack) Send(_ context.Context, _ string) error { return nil }
 func (noopSlack) MustSend(_ context.Context, _ string)   {}
 
-// stubRunner satisfies digest.Runner without performing any work.
-type stubRunner struct{}
+// seedRunner satisfies digest.Runner for E2E tests. Collect inserts fixed fake
+// items directly into the DB (bypassing real HTTP sources). Build and
+// SendDigest delegate to the real digest.Aggregator so the full pipeline logic
+// is exercised with the spy email sender.
+type seedRunner struct {
+	items      news.ItemRepository
+	aggregator *digest.Aggregator
+}
 
-func (stubRunner) Collect(_ context.Context, _ digest.CollectOptions) ([]news.SourceItems, error) {
+func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]news.SourceItems, error) {
+	// Items are published yesterday so they fall within buildWindow's [yesterday, today) range.
+	yesterday := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, -1)
+	seeds := []news.Item{
+		{Source: news.SourceHN, Title: "E2E: Understanding Go Channels", URL: "https://e2e.test/go-channels", Tag: news.TagArticle, Score: 0.8, Published: yesterday},
+		{Source: news.SourceDevTo, Title: "E2E: Go Interfaces Deep Dive", URL: "https://e2e.test/go-interfaces", Tag: news.TagArticle, Score: 0.6, Published: yesterday},
+	}
+	for i, item := range seeds {
+		if _, err := r.items.Create(ctx, nil, i+1, item); err != nil {
+			return nil, err
+		}
+	}
 	return nil, nil
 }
-func (stubRunner) Build(_ context.Context, _ time.Time) error              { return nil }
-func (stubRunner) SendDigest(_ context.Context, _ time.Time, _ bool) error { return nil }
-func (stubRunner) SendSuggestion(_ context.Context, _ time.Time) error     { return nil }
+
+func (r seedRunner) Build(ctx context.Context, date time.Time) error {
+	return r.aggregator.Build(ctx, date)
+}
+
+func (r seedRunner) SendDigest(ctx context.Context, date time.Time, force bool) error {
+	return r.aggregator.SendDigest(ctx, date, force)
+}
+
+func (r seedRunner) SendSuggestion(_ context.Context, _ time.Time) error { return nil }
 
 func main() {
 	// Resolve repo root so relative paths (web/dist/, migrations/) are correct.
@@ -108,39 +147,98 @@ func main() {
 	}
 
 	issueStore := issues.New(conn)
+	itemStore := items.New(conn)
 	subsStore := subscribers.New(conn)
+	eventsStore := emailevents.New(conn)
 	store := cache.NewInMemory(24 * time.Hour)
 	cached := issues.NewCaching(issueStore, store)
 
 	spy := &spyEmail{}
 
+	// The aggregator uses the non-cached issueStore so SendDigest can find a
+	// freshly-built draft without a cache miss. nil prompter → static subject.
+	aggregator, err := digest.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore)
+	if err != nil {
+		log.Fatalf("create aggregator: %v", err)
+	}
+
+	subscriberSvc := subscriber.New(subsStore, cached, spy)
+
 	app := &godaily.App{
-		Config:      &env.Config{APISecret: "e2e-test-secret"},
+		Config: &env.Config{
+			APISecret:           "e2e-test-secret",
+			ResendWebhookSecret: e2eWebhookSecret,
+		},
 		DB:          conn,
-		Repository:  &godaily.Repository{Issues: cached, Items: items.New(conn), Subscribers: subsStore},
-		Runner:      stubRunner{},
+		Repository:  &godaily.Repository{Issues: cached, Items: itemStore, Subscribers: subsStore, EmailEvents: eventsStore},
+		Runner:      seedRunner{items: itemStore, aggregator: aggregator},
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cached, spy),
+		Subscribers: subscriberSvc,
+		EmailEvents: emailevent.New(eventsStore, subscriberSvc),
 		Slack:       noopSlack{},
 	}
 
 	webH := webserver.Handler(app)
-
 	apiH := http.StripPrefix("/api", mux.Handler(app))
 
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch {
-		case r.URL.Path == "/api/e2e/emails":
-			// Debug endpoint — exposes captured emails so Playwright tests can read
-			// the unsubscribe/confirm token without needing a real email provider.
+		switch r.URL.Path {
+		// ── E2E debug: email spy ──────────────────────────────────────────────
+		case "/api/e2e/emails":
 			spy.mu.Lock()
 			defer spy.mu.Unlock()
-			w.Header().Set("Content-Type", "application/json")
-			_ = json.NewEncoder(w).Encode(spy.sent)
-		case strings.HasPrefix(r.URL.Path, "/api/"):
-			apiH.ServeHTTP(w, r)
+			writeJSON(w, spy.sent)
+
+		// ── E2E debug: raw DB state ───────────────────────────────────────────
+		case "/api/e2e/db/items/count":
+			handleDBItemCount(w, conn)
+		case "/api/e2e/db/issues":
+			handleDBIssues(w, conn)
+		case "/api/e2e/db/subscribers":
+			handleDBSubscribers(w, conn)
+		case "/api/e2e/db/events/count":
+			handleDBEventCount(w, conn)
+
+		// ── E2E pipeline: bypass weekend guard, call runner directly ──────────
+		case "/api/e2e/pipeline/collect":
+			if _, err := app.Runner.Collect(r.Context(), digest.CollectOptions{}); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		case "/api/e2e/pipeline/build":
+			if err := app.Runner.Build(r.Context(), time.Now().UTC()); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		case "/api/e2e/pipeline/send":
+			// force=true bypasses the draft-status guard so tests aren't order-sensitive.
+			if err := app.Runner.SendDigest(r.Context(), time.Now().UTC(), true); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+
+		// ── E2E webhook signing helper ────────────────────────────────────────
+		case "/api/e2e/sign":
+			handleSign(w, r, e2eWebhookSecret)
+
+		// ── Routes that are Vercel functions (not in mux.go) ─────────────────
+		case "/api/build":
+			apihandlers.HandleBuild(w, withApp(r, app))
+		case "/api/issues":
+			apihandlers.HandleIssues(w, withApp(r, app))
+
 		default:
-			webH.ServeHTTP(w, r)
+			switch {
+			case strings.HasPrefix(r.URL.Path, "/api/webhooks/"):
+				webhookhandler.Handler(w, withApp(r, app))
+			case strings.HasPrefix(r.URL.Path, "/api/"):
+				apiH.ServeHTTP(w, r)
+			default:
+				webH.ServeHTTP(w, r)
+			}
 		}
 	})
 
@@ -163,4 +261,148 @@ func main() {
 	<-sigCh
 
 	_ = srv.Shutdown(context.Background())
+}
+
+// withApp injects app into the request context for handlers that read it via pkgapi.GetApp.
+func withApp(r *http.Request, app *godaily.App) *http.Request {
+	return r.WithContext(pkgapi.WithApp(r.Context(), app))
+}
+
+func writeJSON(w http.ResponseWriter, v any) {
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(v)
+}
+
+// handleDBItemCount returns the count of orphan items (not yet linked to an issue).
+func handleDBItemCount(w http.ResponseWriter, conn *sql.DB) {
+	var count int64
+	if err := conn.QueryRow("SELECT COUNT(*) FROM items WHERE issue_id IS NULL").Scan(&count); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, map[string]int64{"count": count})
+}
+
+// handleDBIssues returns all issues regardless of status (public /api/issues filters to 'sent').
+func handleDBIssues(w http.ResponseWriter, conn *sql.DB) {
+	rows, err := conn.Query("SELECT id, slug, status, subject, COALESCE(summary,''), sent_at FROM issues ORDER BY id")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type issueRow struct {
+		ID      int64  `json:"id"`
+		Slug    string `json:"slug"`
+		Status  string `json:"status"`
+		Subject string `json:"subject"`
+		Summary string `json:"summary"`
+		SentAt  string `json:"sent_at"`
+	}
+
+	var result []issueRow
+	for rows.Next() {
+		var row issueRow
+		var sentAt time.Time
+		if err := rows.Scan(&row.ID, &row.Slug, &row.Status, &row.Subject, &row.Summary, &sentAt); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		row.SentAt = sentAt.Format(time.RFC3339)
+		result = append(result, row)
+	}
+	if err := rows.Err(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if result == nil {
+		result = []issueRow{}
+	}
+	writeJSON(w, result)
+}
+
+// handleDBSubscribers returns all subscribers with their lifecycle timestamps.
+func handleDBSubscribers(w http.ResponseWriter, conn *sql.DB) {
+	rows, err := conn.Query("SELECT id, email, confirmed_at, unsubscribed_at, bounced_at FROM subscribers ORDER BY id")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type subRow struct {
+		ID             int64  `json:"id"`
+		Email          string `json:"email"`
+		ConfirmedAt    string `json:"confirmed_at"`
+		UnsubscribedAt string `json:"unsubscribed_at"`
+		BouncedAt      string `json:"bounced_at"`
+	}
+
+	var result []subRow
+	for rows.Next() {
+		var row subRow
+		var confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
+		if err := rows.Scan(&row.ID, &row.Email, &confirmedAt, &unsubscribedAt, &bouncedAt); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if confirmedAt.Valid {
+			row.ConfirmedAt = confirmedAt.Time.Format(time.RFC3339)
+		}
+		if unsubscribedAt.Valid {
+			row.UnsubscribedAt = unsubscribedAt.Time.Format(time.RFC3339)
+		}
+		if bouncedAt.Valid {
+			row.BouncedAt = bouncedAt.Time.Format(time.RFC3339)
+		}
+		result = append(result, row)
+	}
+	if err := rows.Err(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if result == nil {
+		result = []subRow{}
+	}
+	writeJSON(w, result)
+}
+
+// handleDBEventCount returns the total number of stored email events.
+func handleDBEventCount(w http.ResponseWriter, conn *sql.DB) {
+	var count int64
+	if err := conn.QueryRow("SELECT COUNT(*) FROM email_events").Scan(&count); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, map[string]int64{"count": count})
+}
+
+// handleSign generates a valid Svix-style webhook signature so Playwright tests
+// can POST signed payloads to /api/webhooks/resend without implementing HMAC in TS.
+func handleSign(w http.ResponseWriter, r *http.Request, secret string) {
+	var req struct {
+		Body      string `json:"body"`
+		ID        string `json:"id"`
+		Timestamp string `json:"timestamp"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	key, err := base64.StdEncoding.DecodeString(strings.TrimPrefix(secret, "whsec_"))
+	if err != nil {
+		http.Error(w, "invalid secret: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	mac := hmac.New(sha256.New, key)
+	mac.Write([]byte(req.ID + "." + req.Timestamp + "." + req.Body))
+	sig := "v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil))
+	writeJSON(w, map[string]string{
+		"svix-id":        req.ID,
+		"svix-timestamp": req.Timestamp,
+		"svix-signature": sig,
+	})
 }
