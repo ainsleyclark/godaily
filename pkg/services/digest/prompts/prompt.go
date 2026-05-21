@@ -26,7 +26,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 // styleMD is the embedded voice guide that the model must follow when

@@ -26,8 +26,8 @@ import (
 	"testing"
 	"time"
 
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	"github.com/ainsleydev/webkit/pkg/cache"
 	"github.com/ainsleydev/webkit/pkg/cache/cachefakes"
 	"github.com/stretchr/testify/assert"

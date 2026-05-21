@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
@@ -210,6 +210,58 @@ func TestSubscribers_Store(t *testing.T) {
 		}
 	})
 
+	t.Run("MarkBounced", func(t *testing.T) {
+		bouncer, err := s.Create(ctx, "bounce@example.com")
+		require.NoError(t, err)
+		_, err = s.Confirm(ctx, bouncer.ConfirmToken)
+		require.NoError(t, err)
+
+		t.Log("Sets bounced_at")
+		{
+			require.NoError(t, s.MarkBounced(ctx, "bounce@example.com"))
+			got, err := s.FindByEmail(ctx, "bounce@example.com")
+			require.NoError(t, err)
+			assert.NotNil(t, got.BouncedAt)
+		}
+
+		t.Log("Idempotent on an already-bounced address")
+		{
+			require.NoError(t, s.MarkBounced(ctx, "bounce@example.com"))
+		}
+
+		t.Log("Excluded from ListActive")
+		{
+			active, err := s.ListActive(ctx)
+			require.NoError(t, err)
+			assert.Empty(t, active)
+		}
+
+		t.Log("Unknown email is a no-op")
+		{
+			require.NoError(t, s.MarkBounced(ctx, "ghost@example.com"))
+		}
+	})
+
+	t.Run("MarkComplained", func(t *testing.T) {
+		complainer, err := s.Create(ctx, "spam@example.com")
+		require.NoError(t, err)
+		_, err = s.Confirm(ctx, complainer.ConfirmToken)
+		require.NoError(t, err)
+
+		t.Log("Sets unsubscribed_at")
+		{
+			require.NoError(t, s.MarkComplained(ctx, "spam@example.com"))
+			got, err := s.FindByEmail(ctx, "spam@example.com")
+			require.NoError(t, err)
+			assert.NotNil(t, got.UnsubscribedAt)
+		}
+
+		t.Log("Idempotent on an already-unsubscribed address")
+		{
+			require.NoError(t, s.MarkComplained(ctx, "spam@example.com"))
+		}
+	})
+
 	// MUST be last: closing the DB makes every subsequent query fail.
 	t.Run("Query Error On Closed DB", func(t *testing.T) {
 		require.NoError(t, db.Close())
@@ -254,6 +306,16 @@ func TestSubscribers_Store(t *testing.T) {
 		t.Log("Unsubscribe")
 		{
 			assert.Error(t, s.Unsubscribe(ctx, "x"))
+		}
+
+		t.Log("MarkBounced")
+		{
+			assert.Error(t, s.MarkBounced(ctx, "x@example.com"))
+		}
+
+		t.Log("MarkComplained")
+		{
+			assert.Error(t, s.MarkComplained(ctx, "x@example.com"))
 		}
 
 		t.Log("ListActive")

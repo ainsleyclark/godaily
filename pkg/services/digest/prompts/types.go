@@ -28,7 +28,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 type (

@@ -28,9 +28,9 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 )
@@ -46,13 +46,15 @@ func (m mockFetcher) Fetch(_ context.Context) ([]news.Item, error) {
 
 type mockEmail struct {
 	called bool
-	req    email.SendEmailRequest
+	req    email.SendEmailRequest   // the most recent request
+	reqs   []email.SendEmailRequest // every request, in send order
 	err    error
 }
 
 func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	m.called = true
 	m.req = req
+	m.reqs = append(m.reqs, req)
 	return m.err
 }
 

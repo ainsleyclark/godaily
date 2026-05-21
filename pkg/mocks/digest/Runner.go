@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 	time "time"
 
-	news "github.com/ainsleyclark/godaily/pkg/news"
+	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	digest "github.com/ainsleyclark/godaily/pkg/services/digest"
 	gomock "go.uber.org/mock/gomock"
 )

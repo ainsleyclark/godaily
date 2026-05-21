@@ -28,11 +28,11 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"

@@ -1,0 +1,15 @@
+{
+  "type": "email.delivered",
+  "created_at": "2026-05-19T08:05:30.000Z",
+  "data": {
+    "created_at": "2026-05-19T08:05:29.894Z",
+    "email_id": "re_delivered_abc123",
+    "from": "GoDaily <digest@godaily.dev>",
+    "to": ["reader@example.com"],
+    "subject": "GoDaily — May 19, 2026",
+    "tags": [
+      { "name": "issue_id", "value": "128" },
+      { "name": "subscriber_id", "value": "42" }
+    ]
+  }
+}

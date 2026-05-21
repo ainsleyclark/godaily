@@ -26,7 +26,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var schemaTables = []string{"issues", "items", "subscribers"}
+var schemaTables = []string{"issues", "items", "subscribers", "social_posts", "email_events"}
 
 func TestUp(t *testing.T) {
 	t.Run("Creates Tables", func(t *testing.T) {
@@ -72,7 +72,7 @@ func TestDown(t *testing.T) {
 
 		var count int
 		err = conn.QueryRowContext(t.Context(),
-			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','items','subscribers')",
+			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','items','subscribers','social_posts','email_events')",
 		).Scan(&count)
 		require.NoError(t, err)
 		assert.Equal(t, 0, count, "all schema tables should be gone after Down")

@@ -36,7 +36,7 @@ type SocialPost struct {
 	PostedAt time.Time `json:"posted_at"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../mocks/news/SocialPostRepository.go . SocialPostRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/SocialPostRepository.go . SocialPostRepository
 
 // SocialPostRepository defines the methods for interacting with the
 // social_posts store.

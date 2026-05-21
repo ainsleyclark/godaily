@@ -9,6 +9,19 @@ import (
 	"time"
 )
 
+type EmailEvent struct {
+	ID           int64          `json:"id"`
+	IssueID      sql.NullInt64  `json:"issue_id"`
+	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	Email        string         `json:"email"`
+	EventType    string         `json:"event_type"`
+	Url          sql.NullString `json:"url"`
+	ProviderID   sql.NullString `json:"provider_id"`
+	EventID      string         `json:"event_id"`
+	OccurredAt   time.Time      `json:"occurred_at"`
+	CreatedAt    time.Time      `json:"created_at"`
+}
+
 type Issue struct {
 	ID      int64          `json:"id"`
 	Slug    string         `json:"slug"`
@@ -53,4 +66,5 @@ type Subscriber struct {
 	CreatedAt        time.Time      `json:"created_at"`
 	ConfirmToken     sql.NullString `json:"confirm_token"`
 	ConfirmedAt      *time.Time     `json:"confirmed_at"`
+	BouncedAt        *time.Time     `json:"bounced_at"`
 }

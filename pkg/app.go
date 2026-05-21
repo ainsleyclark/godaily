@@ -27,6 +27,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -34,11 +36,12 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
+	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
@@ -56,6 +59,7 @@ type App struct {
 	Social      *social.Service
 	Cache       cache.Store
 	Subscribers subscriber.Subscriber
+	EmailEvents *emailevent.Service
 	Slack       slack.Sender
 }
 
@@ -65,6 +69,7 @@ type Repository struct {
 	Items       news.ItemRepository
 	Subscribers news.SubscriberRepository
 	SocialPosts news.SocialPostRepository
+	EmailEvents engagement.EmailEventRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -111,6 +116,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Items:       items.New(conn),
 		Subscribers: subsStore,
 		SocialPosts: socialPostsStore,
+		EmailEvents: emailevents.New(conn),
 	}
 
 	emailSender := email.New(config.ResendToken)
@@ -135,6 +141,8 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
+	subscriberSvc := subscriber.New(subsStore, cachedIssues, emailSender)
+
 	return &App{
 		Config:      &config,
 		DB:          conn,
@@ -142,7 +150,8 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Runner:      aggregator,
 		Social:      socialSvc,
 		Cache:       store,
-		Subscribers: subscriber.New(subsStore, cachedIssues, emailSender),
+		Subscribers: subscriberSvc,
+		EmailEvents: emailevent.New(repo.EmailEvents, subscriberSvc),
 		Slack:       slackClient,
 	}, teardown, nil
 }

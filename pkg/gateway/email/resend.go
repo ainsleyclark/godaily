@@ -50,6 +50,20 @@ func New(token string) *Client {
 // Alias for resend.SendEmailRequest.
 type SendEmailRequest = resend.SendEmailRequest
 
+// Tag is a custom key/value label attached to an outbound email. Resend
+// echoes tags back on the webhook events for that email, so they are how
+// GoDaily correlates an event to its issue and subscriber.
+// Alias for resend.Tag.
+type Tag = resend.Tag
+
+// Tag names attached to outbound digest emails. Resend echoes these back on
+// every webhook event for the email, so they are the single contract shared
+// by the send path and the webhook reader — define them once, here.
+const (
+	TagIssueID      = "issue_id"
+	TagSubscriberID = "subscriber_id"
+)
+
 // Send dispatches req via Resend and logs the resulting message ID on success.
 func (c Client) Send(ctx context.Context, req SendEmailRequest) error {
 	sent, err := c.resend.Emails.Send(&req)

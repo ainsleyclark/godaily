@@ -11,6 +11,150 @@ import (
 	"time"
 )
 
+const emailEventCreate = `-- name: EmailEventCreate :one
+INSERT INTO email_events (
+    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+) VALUES (
+    ?, ?, ?, ?, ?, ?, ?, ?
+)
+RETURNING id, issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at, created_at
+`
+
+type EmailEventCreateParams struct {
+	IssueID      sql.NullInt64  `json:"issue_id"`
+	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	Email        string         `json:"email"`
+	EventType    string         `json:"event_type"`
+	Url          sql.NullString `json:"url"`
+	ProviderID   sql.NullString `json:"provider_id"`
+	EventID      string         `json:"event_id"`
+	OccurredAt   time.Time      `json:"occurred_at"`
+}
+
+func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreateParams) (EmailEvent, error) {
+	row := q.db.QueryRowContext(ctx, emailEventCreate,
+		arg.IssueID,
+		arg.SubscriberID,
+		arg.Email,
+		arg.EventType,
+		arg.Url,
+		arg.ProviderID,
+		arg.EventID,
+		arg.OccurredAt,
+	)
+	var i EmailEvent
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.SubscriberID,
+		&i.Email,
+		&i.EventType,
+		&i.Url,
+		&i.ProviderID,
+		&i.EventID,
+		&i.OccurredAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const emailEventExistsByEventID = `-- name: EmailEventExistsByEventID :one
+SELECT EXISTS (
+    SELECT 1 FROM email_events
+    WHERE event_id = ?
+) AS exists_flag
+`
+
+func (q *Queries) EmailEventExistsByEventID(ctx context.Context, eventID string) (bool, error) {
+	row := q.db.QueryRowContext(ctx, emailEventExistsByEventID, eventID)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
+const emailEventIssueStats = `-- name: EmailEventIssueStats :one
+SELECT
+    COUNT(CASE WHEN event_type = 'delivered' THEN 1 END)                    AS delivered,
+    COUNT(DISTINCT CASE WHEN event_type = 'opened' THEN subscriber_id END)  AS unique_opens,
+    COUNT(CASE WHEN event_type = 'opened' THEN 1 END)                       AS total_opens,
+    COUNT(DISTINCT CASE WHEN event_type = 'clicked' THEN subscriber_id END) AS unique_clicks,
+    COUNT(CASE WHEN event_type = 'clicked' THEN 1 END)                      AS total_clicks,
+    COUNT(CASE WHEN event_type = 'bounced' THEN 1 END)                      AS bounced,
+    COUNT(CASE WHEN event_type = 'complained' THEN 1 END)                   AS complained
+FROM email_events
+WHERE issue_id = ?
+`
+
+type EmailEventIssueStatsRow struct {
+	Delivered    int64 `json:"delivered"`
+	UniqueOpens  int64 `json:"unique_opens"`
+	TotalOpens   int64 `json:"total_opens"`
+	UniqueClicks int64 `json:"unique_clicks"`
+	TotalClicks  int64 `json:"total_clicks"`
+	Bounced      int64 `json:"bounced"`
+	Complained   int64 `json:"complained"`
+}
+
+func (q *Queries) EmailEventIssueStats(ctx context.Context, issueID sql.NullInt64) (EmailEventIssueStatsRow, error) {
+	row := q.db.QueryRowContext(ctx, emailEventIssueStats, issueID)
+	var i EmailEventIssueStatsRow
+	err := row.Scan(
+		&i.Delivered,
+		&i.UniqueOpens,
+		&i.TotalOpens,
+		&i.UniqueClicks,
+		&i.TotalClicks,
+		&i.Bounced,
+		&i.Complained,
+	)
+	return i, err
+}
+
+const emailEventTopLinks = `-- name: EmailEventTopLinks :many
+SELECT url, COUNT(*) AS clicks
+FROM email_events
+WHERE issue_id = ?
+  AND event_type = 'clicked'
+  AND url IS NOT NULL
+  AND url != ''
+GROUP BY url
+ORDER BY clicks DESC
+LIMIT ?
+`
+
+type EmailEventTopLinksParams struct {
+	IssueID sql.NullInt64 `json:"issue_id"`
+	Limit   int64         `json:"limit"`
+}
+
+type EmailEventTopLinksRow struct {
+	Url    sql.NullString `json:"url"`
+	Clicks int64          `json:"clicks"`
+}
+
+func (q *Queries) EmailEventTopLinks(ctx context.Context, arg EmailEventTopLinksParams) ([]EmailEventTopLinksRow, error) {
+	rows, err := q.db.QueryContext(ctx, emailEventTopLinks, arg.IssueID, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []EmailEventTopLinksRow{}
+	for rows.Next() {
+		var i EmailEventTopLinksRow
+		if err := rows.Scan(&i.Url, &i.Clicks); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const issueByID = `-- name: IssueByID :one
 SELECT id, slug, sent_at, subject, summary, status FROM issues WHERE id = ? LIMIT 1
 `
@@ -453,7 +597,7 @@ func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]S
 }
 
 const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE confirm_token = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers WHERE confirm_token = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken sql.NullString) (Subscriber, error) {
@@ -467,12 +611,13 @@ func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken sql
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
 
 const subscriberByEmail = `-- name: SubscriberByEmail :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE email = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers WHERE email = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscriber, error) {
@@ -486,12 +631,13 @@ func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscrib
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
 
 const subscriberByID = `-- name: SubscriberByID :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE id = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, error) {
@@ -505,12 +651,13 @@ func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, err
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
 
 const subscriberByUnsubscribeToken = `-- name: SubscriberByUnsubscribeToken :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeToken string) (Subscriber, error) {
@@ -524,6 +671,7 @@ func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeT
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
@@ -533,7 +681,7 @@ UPDATE subscribers
 SET confirmed_at = CURRENT_TIMESTAMP,
     confirm_token = NULL
 WHERE confirm_token = ? AND confirmed_at IS NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at
 `
 
 func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken sql.NullString) (Subscriber, error) {
@@ -547,12 +695,15 @@ func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken sql.NullSt
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
 
 const subscriberCountActive = `-- name: SubscriberCountActive :one
-SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL
+SELECT COUNT(*) FROM subscribers
+WHERE unsubscribed_at IS NULL
+  AND bounced_at IS NULL
 `
 
 func (q *Queries) SubscriberCountActive(ctx context.Context) (int64, error) {
@@ -568,7 +719,7 @@ INSERT INTO subscribers (
 ) VALUES (
     ?, ?, ?
 )
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at
 `
 
 type SubscriberCreateParams struct {
@@ -588,14 +739,16 @@ func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreatePara
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }
 
 const subscriberListActive = `-- name: SubscriberListActive :many
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at FROM subscribers
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at FROM subscribers
 WHERE unsubscribed_at IS NULL
   AND confirmed_at IS NOT NULL
+  AND bounced_at IS NULL
 ORDER BY id ASC
 `
 
@@ -616,6 +769,7 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 			&i.CreatedAt,
 			&i.ConfirmToken,
 			&i.ConfirmedAt,
+			&i.BouncedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -630,6 +784,28 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 	return items, nil
 }
 
+const subscriberMarkBounced = `-- name: SubscriberMarkBounced :exec
+UPDATE subscribers
+SET bounced_at = CURRENT_TIMESTAMP
+WHERE email = ? AND bounced_at IS NULL
+`
+
+func (q *Queries) SubscriberMarkBounced(ctx context.Context, email string) error {
+	_, err := q.db.ExecContext(ctx, subscriberMarkBounced, email)
+	return err
+}
+
+const subscriberMarkComplained = `-- name: SubscriberMarkComplained :exec
+UPDATE subscribers
+SET unsubscribed_at = CURRENT_TIMESTAMP
+WHERE email = ? AND unsubscribed_at IS NULL
+`
+
+func (q *Queries) SubscriberMarkComplained(ctx context.Context, email string) error {
+	_, err := q.db.ExecContext(ctx, subscriberMarkComplained, email)
+	return err
+}
+
 const subscriberReactivate = `-- name: SubscriberReactivate :one
 UPDATE subscribers
 SET unsubscribed_at = NULL,
@@ -637,7 +813,7 @@ SET unsubscribed_at = NULL,
     confirm_token = ?,
     unsubscribe_token = ?
 WHERE email = ? AND unsubscribed_at IS NOT NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at
 `
 
 type SubscriberReactivateParams struct {
@@ -657,6 +833,7 @@ func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReacti
 		&i.CreatedAt,
 		&i.ConfirmToken,
 		&i.ConfirmedAt,
+		&i.BouncedAt,
 	)
 	return i, err
 }

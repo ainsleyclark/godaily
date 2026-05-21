@@ -28,7 +28,7 @@ import (
 
 	lingua "github.com/pemistahl/lingua-go"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 var (

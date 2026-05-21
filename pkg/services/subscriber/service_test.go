@@ -29,9 +29,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -259,6 +259,54 @@ func TestService_Unsubscribe(t *testing.T) {
 		repo.EXPECT().Unsubscribe(gomock.Any(), "tok123").Return(errBoom)
 
 		err := New(repo, issues, sender).Unsubscribe(t.Context(), "tok123")
+		assert.ErrorIs(t, err, errBoom)
+	})
+}
+
+func TestService_MarkBounced(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkBounced(gomock.Any(), "user@example.com").Return(nil)
+
+		err := New(repo, issues, sender).MarkBounced(t.Context(), "user@example.com")
+		require.NoError(t, err)
+	})
+
+	t.Run("Error", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkBounced(gomock.Any(), "user@example.com").Return(errBoom)
+
+		err := New(repo, issues, sender).MarkBounced(t.Context(), "user@example.com")
+		assert.ErrorIs(t, err, errBoom)
+	})
+}
+
+func TestService_MarkComplained(t *testing.T) {
+	t.Parallel()
+
+	t.Run("OK", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkComplained(gomock.Any(), "user@example.com").Return(nil)
+
+		err := New(repo, issues, sender).MarkComplained(t.Context(), "user@example.com")
+		require.NoError(t, err)
+	})
+
+	t.Run("Error", func(t *testing.T) {
+		t.Parallel()
+
+		repo, issues, sender := setup(t)
+		repo.EXPECT().MarkComplained(gomock.Any(), "user@example.com").Return(errBoom)
+
+		err := New(repo, issues, sender).MarkComplained(t.Context(), "user@example.com")
 		assert.ErrorIs(t, err, errBoom)
 	})
 }

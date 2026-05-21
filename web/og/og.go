@@ -29,7 +29,7 @@ import (
 	"image/color"
 	"image/png"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	webpkg "github.com/ainsleyclark/godaily/web"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"

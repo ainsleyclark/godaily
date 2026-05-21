@@ -30,12 +30,12 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
-	"github.com/ainsleyclark/godaily/pkg/news"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )

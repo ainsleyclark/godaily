@@ -39,11 +39,24 @@ SET unsubscribed_at = NULL,
 WHERE email = ? AND unsubscribed_at IS NOT NULL
 RETURNING *;
 
+-- name: SubscriberMarkBounced :exec
+UPDATE subscribers
+SET bounced_at = CURRENT_TIMESTAMP
+WHERE email = ? AND bounced_at IS NULL;
+
+-- name: SubscriberMarkComplained :exec
+UPDATE subscribers
+SET unsubscribed_at = CURRENT_TIMESTAMP
+WHERE email = ? AND unsubscribed_at IS NULL;
+
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL
   AND confirmed_at IS NOT NULL
+  AND bounced_at IS NULL
 ORDER BY id ASC;
 
 -- name: SubscriberCountActive :one
-SELECT COUNT(*) FROM subscribers WHERE unsubscribed_at IS NULL;
+SELECT COUNT(*) FROM subscribers
+WHERE unsubscribed_at IS NULL
+  AND bounced_at IS NULL;

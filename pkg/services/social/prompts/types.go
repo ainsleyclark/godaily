@@ -25,7 +25,7 @@ package prompts
 import (
 	"errors"
 
-	"github.com/ainsleyclark/godaily/pkg/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 // Featured is the one item picked from the day's news to anchor every
