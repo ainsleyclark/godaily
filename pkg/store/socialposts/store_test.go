@@ -112,8 +112,8 @@ func TestSocialPosts_Store(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("ListForIssue returns inserted rows", func(t *testing.T) {
-		got, err := s.ListForIssue(ctx, issue.ID)
+	t.Run("List by issue returns inserted rows", func(t *testing.T) {
+		got, err := s.List(ctx, news.SocialPostListOptions{IssueID: &issue.ID})
 		require.NoError(t, err)
 		require.Len(t, got, 2)
 		platforms := []string{got[0].Platform, got[1].Platform}
@@ -136,9 +136,9 @@ func TestSocialPosts_Store(t *testing.T) {
 			assert.Error(t, err)
 		}
 
-		t.Log("ListForIssue")
+		t.Log("List")
 		{
-			_, err := s.ListForIssue(ctx, issue.ID)
+			_, err := s.List(ctx, news.SocialPostListOptions{IssueID: &issue.ID})
 			assert.Error(t, err)
 		}
 	})

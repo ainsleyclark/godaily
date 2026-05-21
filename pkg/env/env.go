@@ -59,7 +59,6 @@ type Config struct {
 	LinkedInOrgURN                 string          `env:"LINKEDIN_ORG_URN,unset"`
 	MastodonServer                 string          `env:"MASTODON_SERVER,unset"`
 	MastodonAppToken               string          `env:"MASTODON_APP_TOKEN,unset"`
-	LinkedInWebhookSecret          string          `env:"LINKEDIN_WEBHOOK_SECRET,unset"`
 }
 
 // New parses Config from the environment, overlaying values from a .env file

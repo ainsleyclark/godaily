@@ -36,6 +36,14 @@ type SocialPost struct {
 	PostedAt time.Time `json:"posted_at"`
 }
 
+// SocialPostListOptions filters a List query. At least one field must be set.
+type SocialPostListOptions struct {
+	// IssueID restricts results to posts for a specific issue, oldest first.
+	IssueID *int64
+	// Since restricts results to posts with posted_at >= Since, newest first.
+	Since *time.Time
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/SocialPostRepository.go . SocialPostRepository
 
 // SocialPostRepository defines the methods for interacting with the
@@ -47,9 +55,6 @@ type SocialPostRepository interface {
 	// Create persists a new social post record.
 	Create(ctx context.Context, p SocialPost) (SocialPost, error)
 
-	// ListForIssue returns all posts associated with an issue, oldest first.
-	ListForIssue(ctx context.Context, issueID int64) ([]SocialPost, error)
-
-	// ListSince returns all posts published on or after since, newest first.
-	ListSince(ctx context.Context, since time.Time) ([]SocialPost, error)
+	// List returns social posts filtered by opts. At least one option must be set.
+	List(ctx context.Context, opts SocialPostListOptions) ([]SocialPost, error)
 }

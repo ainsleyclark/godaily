@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package social
 
 import (
 	"context"
@@ -28,27 +28,24 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
 // metricsSince is the look-back window for fetching social post stats.
 const metricsSince = 30 * 24 * time.Hour
 
-// HandleSocialMetrics is the Vercel serverless function entry point for
-// GET /api/social-metrics.
+// Handler is the Vercel serverless function entry point for
+// GET /api/social/metrics.
 //
 // vercel.json schedules this once daily at 03:00 UTC. For every social post
 // published in the last 30 days it fetches the current engagement counts from
 // the originating platform and upserts them into social_metrics.
-//
-// LinkedIn engagement is handled separately via the webhook at
-// POST /api/webhooks/linkedin. Bluesky and Mastodon both use polling because
-// neither platform exposes a push webhook for post-level engagement events.
-func HandleSocialMetrics(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		since := time.Now().UTC().Add(-metricsSince)
 
-		posts, err := a.Repository.SocialPosts.ListSince(ctx, since)
+		posts, err := a.Repository.SocialPosts.List(ctx, news.SocialPostListOptions{Since: &since})
 		if err != nil {
 			slog.ErrorContext(ctx, "Failed to list recent social posts", "err", err)
 			api.Error(w, http.StatusInternalServerError, "failed to list posts")
@@ -61,15 +58,7 @@ func HandleSocialMetrics(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			platform := socialgw.Platform(post.Platform)
-
-			// LinkedIn is handled via webhook — skip here to avoid double-counting
-			// rate-limit quota on the stats API.
-			if platform == socialgw.PlatformLinkedIn {
-				continue
-			}
-
-			fetcher, ok := a.StatFetchers[platform]
+			fetcher, ok := a.StatFetchers[socialgw.Platform(post.Platform)]
 			if !ok {
 				continue
 			}

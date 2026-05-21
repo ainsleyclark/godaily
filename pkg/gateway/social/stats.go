@@ -29,6 +29,8 @@ type Stats struct {
 	Impressions int64
 }
 
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/StatFetcher.go github.com/ainsleyclark/godaily/pkg/gateway/social StatFetcher
+
 // StatFetcher fetches engagement stats for a published post by its URL.
 type StatFetcher interface {
 	// Platform identifies the platform this fetcher targets.
