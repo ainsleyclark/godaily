@@ -63,7 +63,7 @@ import (
 
 // e2eWebhookSecret is the test Resend webhook secret used for all webhook E2E
 // tests. It is base64(test-webhook-secret-key) with the whsec_ prefix.
-const e2eWebhookSecret = "whsec_dGVzdC13ZWJob29rLXNlY3JldC1rZXk="
+const e2eWebhookSecret = "whsec_dGVzdC13ZWJob29rLXNlY3JldC1rZXk=" // #nosec G101 -- intentional test credential
 
 // spyEmail captures every email.Send call; used so Playwright tests can assert
 // against sent emails without making real external API calls.
@@ -180,6 +180,12 @@ func main() {
 	webH := webserver.Handler(app)
 	apiH := http.StripPrefix("/api", mux.Handler(app))
 
+	// withApp injects app into the request context for Vercel function handlers
+	// that are not registered in the mux (e.g. HandleBuild).
+	withApp := func(r *http.Request) *http.Request {
+		return r.WithContext(pkgapi.WithApp(r.Context(), app))
+	}
+
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		// ── E2E debug: email spy ──────────────────────────────────────────────
@@ -211,16 +217,16 @@ func main() {
 
 		// ── E2E webhook signing helper ────────────────────────────────────────
 		case "/api/e2e/sign":
-			handleSign(w, r, e2eWebhookSecret)
+			handleSign(w, r)
 
 		// ── Routes that are Vercel functions (not in mux.go) ─────────────────
 		case "/api/build":
-			apihandlers.HandleBuild(w, withApp(r, app))
+			apihandlers.HandleBuild(w, withApp(r))
 
 		default:
 			switch {
 			case strings.HasPrefix(r.URL.Path, "/api/webhooks/"):
-				webhookhandler.Handler(w, withApp(r, app))
+				webhookhandler.Handler(w, withApp(r))
 			case strings.HasPrefix(r.URL.Path, "/api/"):
 				apiH.ServeHTTP(w, r)
 			default:
@@ -250,11 +256,6 @@ func main() {
 	_ = srv.Shutdown(context.Background())
 }
 
-// withApp injects app into the request context for handlers that read it via pkgapi.GetApp.
-func withApp(r *http.Request, app *godaily.App) *http.Request {
-	return r.WithContext(pkgapi.WithApp(r.Context(), app))
-}
-
 func writeJSON(w http.ResponseWriter, v any) {
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(v)
@@ -262,7 +263,7 @@ func writeJSON(w http.ResponseWriter, v any) {
 
 // handleSign generates a valid Svix-style webhook signature so Playwright tests
 // can POST signed payloads to /api/webhooks/resend without implementing HMAC in TS.
-func handleSign(w http.ResponseWriter, r *http.Request, secret string) {
+func handleSign(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Body      string `json:"body"`
 		ID        string `json:"id"`
@@ -272,7 +273,7 @@ func handleSign(w http.ResponseWriter, r *http.Request, secret string) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	key, err := base64.StdEncoding.DecodeString(strings.TrimPrefix(secret, "whsec_"))
+	key, err := base64.StdEncoding.DecodeString(strings.TrimPrefix(e2eWebhookSecret, "whsec_"))
 	if err != nil {
 		http.Error(w, "invalid secret: "+err.Error(), http.StatusInternalServerError)
 		return
