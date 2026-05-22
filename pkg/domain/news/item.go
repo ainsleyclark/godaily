@@ -120,7 +120,7 @@ var SectionLimits = map[Tag]int{
 	TagEvent:      5,
 	TagConference: NoLimit,
 	TagRelease:    5,
-	TagSecurity:   5,
+	TagSecurity:   3,
 	TagProposal:   NoLimit,
 	TagArticle:    5,
 	TagDiscussion: 8,
