@@ -96,6 +96,9 @@ func (s Store) IssueStats(ctx context.Context, issueID int64) (engagement.IssueS
 		TotalClicks:  row.TotalClicks,
 		Bounced:      row.Bounced,
 		Complained:   row.Complained,
+		Delayed:      row.Delayed,
+		Failed:       row.Failed,
+		Suppressed:   row.Suppressed,
 	}
 	if stats.Delivered > 0 {
 		stats.OpenRate = float64(stats.UniqueOpens) / float64(stats.Delivered)

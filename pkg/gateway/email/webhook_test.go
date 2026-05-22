@@ -63,7 +63,10 @@ func TestParseWebhook(t *testing.T) {
 
 	t.Run("Decodes every fixture", func(t *testing.T) {
 		t.Parallel()
-		for _, name := range []string{"delivered.json", "opened.json", "clicked.json", "bounced.json", "complained.json"} {
+		for _, name := range []string{
+			"delivered.json", "opened.json", "clicked.json", "bounced.json", "complained.json",
+			"suppressed.json", "delivery_delayed.json", "failed.json",
+		} {
 			evt, err := email.ParseWebhook(loadFixture(t, name))
 			require.NoError(t, err, name)
 			assert.NotEmpty(t, evt.Type, name)
@@ -120,6 +123,27 @@ func TestToEmailEvent(t *testing.T) {
 		require.True(t, tracked)
 		assert.Equal(t, engagement.EmailEventTypeComplained, gotComplained.Type)
 		assert.Equal(t, "unhappy@example.com", gotComplained.Email)
+	})
+
+	t.Run("Maps suppressed, delivery_delayed, and failed events", func(t *testing.T) {
+		t.Parallel()
+
+		cases := []struct {
+			fixture  string
+			wantType engagement.EmailEventType
+		}{
+			{"suppressed.json", engagement.EmailEventTypeSuppressed},
+			{"delivery_delayed.json", engagement.EmailEventTypeDeliveryDelayed},
+			{"failed.json", engagement.EmailEventTypeFailed},
+		}
+		for _, tc := range cases {
+			evt, err := email.ParseWebhook(loadFixture(t, tc.fixture))
+			require.NoError(t, err, tc.fixture)
+			got, tracked, err := email.ToEmailEvent(evt, "msg_"+tc.fixture)
+			require.NoError(t, err, tc.fixture)
+			require.True(t, tracked, tc.fixture)
+			assert.Equal(t, tc.wantType, got.Type, tc.fixture)
+		}
 	})
 
 	t.Run("Untracked event type is not tracked", func(t *testing.T) {

@@ -33,6 +33,7 @@ type Subscriber struct {
 	ConfirmedAt      *time.Time `json:"confirmed_at,omitempty"`
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at,omitempty"`
 	BouncedAt        *time.Time `json:"bounced_at,omitempty"`
+	SuppressedAt     *time.Time `json:"suppressed_at,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
@@ -52,4 +53,5 @@ type SubscriberRepository interface {
 	CountActive(ctx context.Context) (int64, error)
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }

@@ -59,11 +59,14 @@ type (
 // webhookEventTypes maps Resend's wire event names to GoDaily's canonical
 // event types. Types absent from this map are not tracked.
 var webhookEventTypes = map[string]engagement.EmailEventType{
-	resend.EventEmailDelivered:  engagement.EmailEventTypeDelivered,
-	resend.EventEmailOpened:     engagement.EmailEventTypeOpened,
-	resend.EventEmailClicked:    engagement.EmailEventTypeClicked,
-	resend.EventEmailBounced:    engagement.EmailEventTypeBounced,
-	resend.EventEmailComplained: engagement.EmailEventTypeComplained,
+	resend.EventEmailDelivered:       engagement.EmailEventTypeDelivered,
+	resend.EventEmailOpened:          engagement.EmailEventTypeOpened,
+	resend.EventEmailClicked:         engagement.EmailEventTypeClicked,
+	resend.EventEmailBounced:         engagement.EmailEventTypeBounced,
+	resend.EventEmailComplained:      engagement.EmailEventTypeComplained,
+	resend.EventEmailSuppressed:      engagement.EmailEventTypeSuppressed,
+	resend.EventEmailDeliveryDelayed: engagement.EmailEventTypeDeliveryDelayed,
+	resend.EventEmailFailed:          engagement.EmailEventTypeFailed,
 }
 
 // VerifyWebhook checks the Svix-style signature on a Resend webhook request.

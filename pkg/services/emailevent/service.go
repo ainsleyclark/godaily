@@ -37,6 +37,7 @@ import (
 type SubscriberHealth interface {
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }
 
 // ItemFinder resolves a clicked URL back to the item it points at, scoped to
@@ -75,12 +76,21 @@ func (s *Service) isInternalEmail(addr string) bool {
 
 // sideEffects maps an event type to the subscriber-health action it triggers.
 // Event types without an entry are stored but carry no side effect.
+//
+// email.failed is intentionally absent: it fires when Resend cannot attempt
+// delivery at all (quota, API key, domain config) rather than when the
+// recipient's address is bad. Recipient-specific permanent failures produce
+// email.bounced instead. Calling MarkBounced on failed events would silently
+// deactivate valid subscribers during send-side outages.
 var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, string) error{
 	engagement.EmailEventTypeBounced: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkBounced(ctx, addr)
 	},
 	engagement.EmailEventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkComplained(ctx, addr)
+	},
+	engagement.EmailEventTypeSuppressed: func(ctx context.Context, s *Service, addr string) error {
+		return s.subscribers.MarkSuppressed(ctx, addr)
 	},
 }
 

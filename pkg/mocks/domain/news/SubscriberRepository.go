@@ -174,6 +174,20 @@ func (mr *MockSubscriberRepositoryMockRecorder) MarkComplained(ctx, email any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkComplained), ctx, email)
 }
 
+// MarkSuppressed mocks base method.
+func (m *MockSubscriberRepository) MarkSuppressed(ctx context.Context, email string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkSuppressed", ctx, email)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkSuppressed indicates an expected call of MarkSuppressed.
+func (mr *MockSubscriberRepositoryMockRecorder) MarkSuppressed(ctx, email any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkSuppressed", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkSuppressed), ctx, email)
+}
+
 // Reactivate mocks base method.
 func (m *MockSubscriberRepository) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
 	m.ctrl.T.Helper()
