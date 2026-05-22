@@ -16,3 +16,8 @@ SELECT EXISTS (
 SELECT * FROM social_posts
 WHERE issue_id = ?
 ORDER BY posted_at ASC;
+
+-- name: SocialPostListSince :many
+SELECT * FROM social_posts
+WHERE posted_at >= ?
+ORDER BY posted_at DESC;

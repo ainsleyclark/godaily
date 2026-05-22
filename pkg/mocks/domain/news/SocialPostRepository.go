@@ -71,17 +71,17 @@ func (mr *MockSocialPostRepositoryMockRecorder) HasPosted(ctx, issueID, platform
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPosted", reflect.TypeOf((*MockSocialPostRepository)(nil).HasPosted), ctx, issueID, platform)
 }
 
-// ListForIssue mocks base method.
-func (m *MockSocialPostRepository) ListForIssue(ctx context.Context, issueID int64) ([]news.SocialPost, error) {
+// List mocks base method.
+func (m *MockSocialPostRepository) List(ctx context.Context, opts news.SocialPostListOptions) ([]news.SocialPost, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListForIssue", ctx, issueID)
+	ret := m.ctrl.Call(m, "List", ctx, opts)
 	ret0, _ := ret[0].([]news.SocialPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ListForIssue indicates an expected call of ListForIssue.
-func (mr *MockSocialPostRepositoryMockRecorder) ListForIssue(ctx, issueID any) *gomock.Call {
+// List indicates an expected call of List.
+func (mr *MockSocialPostRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListForIssue", reflect.TypeOf((*MockSocialPostRepository)(nil).ListForIssue), ctx, issueID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockSocialPostRepository)(nil).List), ctx, opts)
 }

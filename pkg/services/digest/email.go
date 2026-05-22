@@ -47,6 +47,7 @@ var (
 // most email clients strip <style> blocks, so colour is passed through the
 // template rather than driven from a CSS class.
 var sectionAccents = map[news.Tag]string{
+	news.TagEvent:      "#16a34a",
 	news.TagRelease:    "#9333ea",
 	news.TagProposal:   "#6366f1",
 	news.TagArticle:    "#1a7fa8",
@@ -211,11 +212,11 @@ func toEmailItem(item news.Item) emailItem {
 	}
 }
 
-// sendRendered ships a rendered digest to a single recipient. tags are
-// attached to the outbound email so the provider's webhook events can be
-// correlated back to the issue and subscriber they belong to.
-func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest, tags []email.Tag) error {
-	req := email.SendEmailRequest{
+// buildEmailRequest constructs the outbound email payload for a single
+// rendered digest. tags are attached so webhook events can be correlated
+// back to the issue and subscriber they belong to.
+func buildEmailRequest(to string, d renderedDigest, tags []email.Tag) *email.SendEmailRequest {
+	req := &email.SendEmailRequest{
 		From:    "GoDaily <digest@godaily.dev>",
 		To:      []string{to},
 		Subject: d.Subject,
@@ -229,5 +230,11 @@ func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDiges
 			"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
 		}
 	}
-	return a.email.Send(ctx, req)
+	return req
+}
+
+// sendRendered ships a rendered digest to a single recipient. Used by the
+// admin preview path where batching is not needed.
+func (a Aggregator) sendRendered(ctx context.Context, to string, d renderedDigest, tags []email.Tag) error {
+	return a.email.Send(ctx, *buildEmailRequest(to, d, tags))
 }

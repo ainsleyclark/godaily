@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
+	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
@@ -59,6 +59,7 @@ func (s Store) Create(ctx context.Context, e engagement.EmailEvent) (engagement.
 	row, err := s.sqlc.EmailEventCreate(ctx, sqlc.EmailEventCreateParams{
 		IssueID:      nullInt64(e.IssueID),
 		SubscriberID: nullInt64(e.SubscriberID),
+		ItemID:       nullInt64(e.ItemID),
 		Email:        e.Email,
 		EventType:    e.Type.String(),
 		Url:          dbtypes.NullString(e.URL),
@@ -95,6 +96,9 @@ func (s Store) IssueStats(ctx context.Context, issueID int64) (engagement.IssueS
 		TotalClicks:  row.TotalClicks,
 		Bounced:      row.Bounced,
 		Complained:   row.Complained,
+		Delayed:      row.Delayed,
+		Failed:       row.Failed,
+		Suppressed:   row.Suppressed,
 	}
 	if stats.Delivered > 0 {
 		stats.OpenRate = float64(stats.UniqueOpens) / float64(stats.Delivered)
@@ -125,6 +129,7 @@ func transform(r sqlc.EmailEvent) engagement.EmailEvent {
 		ID:           r.ID,
 		IssueID:      int64Ptr(r.IssueID),
 		SubscriberID: int64Ptr(r.SubscriberID),
+		ItemID:       int64Ptr(r.ItemID),
 		Email:        r.Email,
 		Type:         engagement.EmailEventType(r.EventType),
 		URL:          r.Url.String,

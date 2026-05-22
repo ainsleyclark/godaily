@@ -31,28 +31,48 @@ import (
 // EmailEventType identifies an email lifecycle event that GoDaily tracks.
 type EmailEventType string
 
+// Event type constants.
 const (
 	// EmailEventTypeDelivered marks an email accepted by the recipient's
 	// server. It is the denominator for open and click rates.
 	EmailEventTypeDelivered EmailEventType = "delivered"
+
 	// EmailEventTypeOpened marks an email open. Treated as unreliable — Apple
 	// Mail Privacy Protection pre-fetches images and inflates opens.
 	EmailEventTypeOpened EmailEventType = "opened"
+
 	// EmailEventTypeClicked marks a link click. This is the primary
 	// engagement signal.
 	EmailEventTypeClicked EmailEventType = "clicked"
+
 	// EmailEventTypeBounced marks a hard delivery failure.
 	EmailEventTypeBounced EmailEventType = "bounced"
+
 	// EmailEventTypeComplained marks a spam complaint.
 	EmailEventTypeComplained EmailEventType = "complained"
+
+	// EmailEventTypeSuppressed marks an address on Resend's global suppression
+	// list — delivery was refused before it was attempted.
+	EmailEventTypeSuppressed EmailEventType = "suppressed"
+
+	// EmailEventTypeDeliveryDelayed marks a temporary delivery delay. Resend
+	// retries automatically; no subscriber health action is needed.
+	EmailEventTypeDeliveryDelayed EmailEventType = "delivery_delayed"
+
+	// EmailEventTypeFailed marks a permanent send failure (e.g. invalid MX
+	// record). Unlike a bounce, this occurs before delivery is attempted.
+	EmailEventTypeFailed EmailEventType = "failed"
 )
 
 var validEmailEventTypes = map[EmailEventType]bool{
-	EmailEventTypeDelivered:  true,
-	EmailEventTypeOpened:     true,
-	EmailEventTypeClicked:    true,
-	EmailEventTypeBounced:    true,
-	EmailEventTypeComplained: true,
+	EmailEventTypeDelivered:       true,
+	EmailEventTypeOpened:          true,
+	EmailEventTypeClicked:         true,
+	EmailEventTypeBounced:         true,
+	EmailEventTypeComplained:      true,
+	EmailEventTypeSuppressed:      true,
+	EmailEventTypeDeliveryDelayed: true,
+	EmailEventTypeFailed:          true,
 }
 
 // String returns the event type as a string.
@@ -65,14 +85,16 @@ func (t EmailEventType) Valid() bool {
 	return validEmailEventTypes[t]
 }
 
-// EmailEvent is a single email lifecycle event. IssueID and SubscriberID are
-// optional: events for non-digest mail (such as confirmation emails), or for
-// recipients that aren't tracked subscribers, still record — with the unknown
-// identifier left nil.
+// EmailEvent is a single email lifecycle event. IssueID, SubscriberID and
+// ItemID are optional: events for non-digest mail (such as confirmation
+// emails), or for recipients that aren't tracked subscribers, still record —
+// with the unknown identifier left nil. ItemID is best-effort: it is set only
+// when a click resolves to a known item, and stays nil otherwise.
 type EmailEvent struct {
 	ID           int64          `json:"id"`
 	IssueID      *int64         `json:"issue_id,omitempty"`
 	SubscriberID *int64         `json:"subscriber_id,omitempty"`
+	ItemID       *int64         `json:"item_id,omitempty"`
 	Email        string         `json:"email"`
 	Type         EmailEventType `json:"type"`
 	URL          string         `json:"url,omitempty"`
@@ -94,6 +116,9 @@ type IssueStats struct {
 	TotalClicks  int64   `json:"total_clicks"`
 	Bounced      int64   `json:"bounced"`
 	Complained   int64   `json:"complained"`
+	Delayed      int64   `json:"delayed"`
+	Failed       int64   `json:"failed"`
+	Suppressed   int64   `json:"suppressed"`
 	OpenRate     float64 `json:"open_rate"`
 	ClickRate    float64 `json:"click_rate"`
 }

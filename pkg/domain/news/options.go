@@ -26,6 +26,7 @@ const defaultPerPage int64 = 20
 type ListOptions struct {
 	// Page is 1-based. Zero means no pagination.
 	Page int64
+
 	// PerPage is the number of items per page. Zero uses defaultPerPage.
 	PerPage int64
 }

@@ -167,7 +167,7 @@ test.describe('resend webhooks', () => {
         email_id: `bounce-evt-${Date.now()}`,
         to: [bounceEmail],
         subject: 'GoDaily',
-        tags: {},
+        tags: { issue_id: '1' },
       },
     });
     const headers = await signedHeaders(request, body);

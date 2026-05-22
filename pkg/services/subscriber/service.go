@@ -47,6 +47,7 @@ type Subscriber interface {
 	Unsubscribe(ctx context.Context, token string) error
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }
 
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
@@ -140,6 +141,12 @@ func (s Service) MarkBounced(ctx context.Context, email string) error {
 // MarkComplained unsubscribes a subscriber who reported the digest as spam.
 func (s Service) MarkComplained(ctx context.Context, email string) error {
 	return s.repo.MarkComplained(ctx, email)
+}
+
+// MarkSuppressed flags a subscriber whose address is on Resend's global
+// suppression list, meaning delivery will be silently refused.
+func (s Service) MarkSuppressed(ctx context.Context, email string) error {
+	return s.repo.MarkSuppressed(ctx, email)
 }
 
 func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscribeURL string) error {

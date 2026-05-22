@@ -13,6 +13,7 @@ type EmailEvent struct {
 	ID           int64          `json:"id"`
 	IssueID      sql.NullInt64  `json:"issue_id"`
 	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	ItemID       sql.NullInt64  `json:"item_id"`
 	Email        string         `json:"email"`
 	EventType    string         `json:"event_type"`
 	Url          sql.NullString `json:"url"`
@@ -49,6 +50,17 @@ type Item struct {
 	Published        *time.Time      `json:"published"`
 }
 
+type SocialMetric struct {
+	ID           int64     `json:"id"`
+	SocialPostID int64     `json:"social_post_id"`
+	Platform     string    `json:"platform"`
+	Likes        int64     `json:"likes"`
+	Reposts      int64     `json:"reposts"`
+	Comments     int64     `json:"comments"`
+	Impressions  int64     `json:"impressions"`
+	FetchedAt    time.Time `json:"fetched_at"`
+}
+
 type SocialPost struct {
 	ID       int64          `json:"id"`
 	IssueID  int64          `json:"issue_id"`
@@ -67,4 +79,5 @@ type Subscriber struct {
 	ConfirmToken     sql.NullString `json:"confirm_token"`
 	ConfirmedAt      *time.Time     `json:"confirmed_at"`
 	BouncedAt        *time.Time     `json:"bounced_at"`
+	SuppressedAt     *time.Time     `json:"suppressed_at"`
 }

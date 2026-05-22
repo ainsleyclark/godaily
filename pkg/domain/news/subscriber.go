@@ -33,6 +33,7 @@ type Subscriber struct {
 	ConfirmedAt      *time.Time `json:"confirmed_at,omitempty"`
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at,omitempty"`
 	BouncedAt        *time.Time `json:"bounced_at,omitempty"`
+	SuppressedAt     *time.Time `json:"suppressed_at,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
@@ -52,12 +53,7 @@ type SubscriberRepository interface {
 	ListActive(ctx context.Context) ([]Subscriber, error)
 	CountAll(ctx context.Context) (int64, error)
 	CountActive(ctx context.Context) (int64, error)
-
-	// MarkBounced flags the subscriber with the given email as having a
-	// hard-bouncing address so the digest is no longer sent to it.
 	MarkBounced(ctx context.Context, email string) error
-
-	// MarkComplained unsubscribes the subscriber with the given email after a
-	// spam complaint.
 	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }

@@ -28,7 +28,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
+	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
@@ -137,6 +137,23 @@ func (s Store) Create(ctx context.Context, issueID *int64, position int, item ne
 
 func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 	return s.sqlc.ItemDeleteByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
+}
+
+// FindByURLInIssue resolves a clicked URL back to an item within an issue,
+// matching against either the canonical or the original URL. It is a
+// best-effort lookup: a missing row returns (0, false, nil), not an error.
+func (s Store) FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error) {
+	id, err := s.sqlc.ItemFindByURLInIssue(ctx, sqlc.ItemFindByURLInIssueParams{
+		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
+		Url:     url,
+	})
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, false, nil
+	}
+	if err != nil {
+		return 0, false, err
+	}
+	return id, true, nil
 }
 
 func transformItem(i sqlc.Item) news.Item {

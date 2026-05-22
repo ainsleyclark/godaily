@@ -1,0 +1,16 @@
+# Conference websites to monitor for new editions.
+#
+# The conferences-update command checks each URL against conferences.yaml.
+# If no entry exists with a start_date in the current or future year, the
+# website is fetched and Claude extracts a new YAML entry for review.
+#
+# Add a URL here when you discover a new recurring conference to track.
+
+- https://gophercon.eu/
+- https://www.gophercon.co.uk/
+- https://www.gophercon.com/
+- https://golab.io/
+- https://gophercon.org.il/
+- https://gophercon.africa/
+- https://gopherconkorea.com/
+- https://www.gowestconf.com/

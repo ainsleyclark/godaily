@@ -1,8 +1,8 @@
 -- name: EmailEventCreate :one
 INSERT INTO email_events (
-    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+    issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING *;
 
@@ -14,13 +14,16 @@ SELECT EXISTS (
 
 -- name: EmailEventIssueStats :one
 SELECT
-    COUNT(CASE WHEN event_type = 'delivered' THEN 1 END)                    AS delivered,
-    COUNT(DISTINCT CASE WHEN event_type = 'opened' THEN subscriber_id END)  AS unique_opens,
-    COUNT(CASE WHEN event_type = 'opened' THEN 1 END)                       AS total_opens,
-    COUNT(DISTINCT CASE WHEN event_type = 'clicked' THEN subscriber_id END) AS unique_clicks,
-    COUNT(CASE WHEN event_type = 'clicked' THEN 1 END)                      AS total_clicks,
-    COUNT(CASE WHEN event_type = 'bounced' THEN 1 END)                      AS bounced,
-    COUNT(CASE WHEN event_type = 'complained' THEN 1 END)                   AS complained
+    COUNT(CASE WHEN event_type = 'delivered' THEN 1 END)                      AS delivered,
+    COUNT(DISTINCT CASE WHEN event_type = 'opened' THEN subscriber_id END)    AS unique_opens,
+    COUNT(CASE WHEN event_type = 'opened' THEN 1 END)                         AS total_opens,
+    COUNT(DISTINCT CASE WHEN event_type = 'clicked' THEN subscriber_id END)   AS unique_clicks,
+    COUNT(CASE WHEN event_type = 'clicked' THEN 1 END)                        AS total_clicks,
+    COUNT(CASE WHEN event_type = 'bounced' THEN 1 END)                        AS bounced,
+    COUNT(CASE WHEN event_type = 'complained' THEN 1 END)                     AS complained,
+    COUNT(CASE WHEN event_type = 'delivery_delayed' THEN 1 END)               AS delayed,
+    COUNT(CASE WHEN event_type = 'failed' THEN 1 END)                         AS failed,
+    COUNT(CASE WHEN event_type = 'suppressed' THEN 1 END)                     AS suppressed
 FROM email_events
 WHERE issue_id = ?;
 

@@ -115,17 +115,20 @@ func buildWindow(today time.Time) (start, end time.Time) {
 }
 
 // groupIntoSections groups a flat item list into SourceItems slices,
-// preserving per-source score ordering and deduplicating by URL.
+// preserving per-source score ordering and deduplicating by (URL, tag).
+// Using (URL, tag) rather than URL alone allows both a TagEvent announcement
+// and a future TagEventRecap to appear in the same digest for the same URL.
 func groupIntoSections(items []news.Item) []news.SourceItems {
 	seen := make(map[string]struct{})
 	order := make([]news.Source, 0)
 	bySource := make(map[news.Source]*news.SourceItems)
 
 	for _, item := range items {
-		if _, dup := seen[item.URL]; dup {
+		key := item.URL + "\x00" + string(item.Tag)
+		if _, dup := seen[key]; dup {
 			continue
 		}
-		seen[item.URL] = struct{}{}
+		seen[key] = struct{}{}
 
 		if _, ok := bySource[item.Source]; !ok {
 			bySource[item.Source] = &news.SourceItems{Source: item.Source}

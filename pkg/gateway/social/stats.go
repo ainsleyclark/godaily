@@ -17,33 +17,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package dbtypes_test
+package social
 
-import (
-	"database/sql"
-	"testing"
+import "context"
 
-	"github.com/stretchr/testify/assert"
+// Stats holds the engagement counts returned by a platform for a single post.
+type Stats struct {
+	Likes       int64
+	Reposts     int64
+	Comments    int64
+	Impressions int64
+}
 
-	"github.com/ainsleyclark/godaily/pkg/store/dbtypes"
-)
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/StatFetcher.go github.com/ainsleyclark/godaily/pkg/gateway/social StatFetcher
 
-func TestNullString(t *testing.T) {
-	t.Parallel()
+// StatFetcher fetches engagement stats for a published post by its URL.
+type StatFetcher interface {
+	// Platform identifies the platform this fetcher targets.
+	Platform() Platform
 
-	tt := map[string]struct {
-		in   string
-		want sql.NullString
-	}{
-		"Empty":     {in: "", want: sql.NullString{}},
-		"Non-empty": {in: "hello", want: sql.NullString{String: "hello", Valid: true}},
-		"Spaces":    {in: "  ", want: sql.NullString{String: "  ", Valid: true}},
-	}
-
-	for name, tc := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, tc.want, dbtypes.NullString(tc.in))
-		})
-	}
+	// Stats returns the current engagement counts for the post at postURL.
+	// postURL is the canonical web URL stored in social_posts.post_url.
+	Stats(ctx context.Context, postURL string) (Stats, error)
 }

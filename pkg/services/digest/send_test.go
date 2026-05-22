@@ -44,7 +44,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		return d
 	}
 
-	t.Run("Sends Email And Updates Status To Sent", func(t *testing.T) {
+	t.Run("Sends Email To Subscribers And Updates Status To Sent", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-26")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -55,8 +55,13 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
+		subs := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]news.Subscriber{
+			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
+		}, nil)
+
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
@@ -68,7 +73,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		assert.Equal(t, news.IssueStatusSent, updated.Status)
 	})
 
-	t.Run("Email Error Updates Status To Error", func(t *testing.T) {
+	t.Run("Subscriber Email Error Still Updates Status To Sent", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-27")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -80,13 +85,13 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{err: errors.New("send boom")}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusError, updated.Status)
+		assert.Equal(t, news.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
@@ -117,7 +122,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Force Skips Status Check", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-30")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), news.Issue{
 			Slug:    "2026-04-30",
 			Subject: "GoDaily - 2026-04-30",
 			Status:  news.IssueStatusSent,
@@ -125,11 +130,13 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Aggregator{email: &mockEmail{}, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, true))
-		assert.True(t, m.called)
+
+		updated, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Returns Error When Loading Sections Fails", func(t *testing.T) {
@@ -151,7 +158,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		assert.Contains(t, err.Error(), "loading sections")
 	})
 
-	t.Run("Returns Error When Rendering Fails", func(t *testing.T) {
+	t.Run("Subscriber Render Error Is Skipped", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-03")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -173,13 +180,24 @@ func TestAggregator_SendDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
-		err = agg.SendDigest(t.Context(), date, false)
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "rendering digest")
+		subs := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]news.Subscriber{
+			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
+		}, nil)
+
+		m := &mockEmail{}
+		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+
+		// Subscriber rendering errors are non-fatal; the digest is still marked sent.
+		require.NoError(t, agg.SendDigest(t.Context(), date, false))
+		assert.False(t, m.called)
+
+		updated, err := issueRepo.Find(t.Context(), stored.ID)
+		require.NoError(t, err)
+		assert.Equal(t, news.IssueStatusSent, updated.Status)
 	})
 
-	t.Run("Tags Each Email With Issue And Subscriber IDs", func(t *testing.T) {
+	t.Run("Tags Subscriber Email With Issue And Subscriber IDs", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
 		stored, err := issueRepo.Create(t.Context(), news.Issue{
@@ -196,18 +214,15 @@ func TestAggregator_SendDigest(t *testing.T) {
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com", issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
-		require.Len(t, m.reqs, 2)
+		require.Len(t, m.reqs, 1)
 
 		issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(stored.ID, 10)}
 
-		t.Log("Admin email carries only the issue tag")
-		assert.Equal(t, []email.Tag{issueTag}, m.reqs[0].Tags)
-
 		t.Log("Subscriber email carries issue and subscriber tags")
-		assert.Equal(t, []email.Tag{issueTag, {Name: email.TagSubscriberID, Value: "99"}}, m.reqs[1].Tags)
+		assert.Equal(t, []email.Tag{issueTag, {Name: email.TagSubscriberID, Value: "99"}}, m.reqs[0].Tags)
 	})
 
 	t.Run("Prompter Never Called During Send", func(t *testing.T) {
@@ -228,12 +243,17 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
+		subs := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]news.Subscriber{
+			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
+		}, nil)
+
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		// No expectations set on p — any call to the prompter would fail the test.
+		agg := Aggregator{email: m, prompter: p, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
-
 		assert.True(t, m.called)
 	})
 }

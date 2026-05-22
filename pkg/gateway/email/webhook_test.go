@@ -63,7 +63,10 @@ func TestParseWebhook(t *testing.T) {
 
 	t.Run("Decodes every fixture", func(t *testing.T) {
 		t.Parallel()
-		for _, name := range []string{"delivered.json", "opened.json", "clicked.json", "bounced.json", "complained.json"} {
+		for _, name := range []string{
+			"delivered.json", "opened.json", "clicked.json", "bounced.json", "complained.json",
+			"suppressed.json", "delivery_delayed.json", "failed.json",
+		} {
 			evt, err := email.ParseWebhook(loadFixture(t, name))
 			require.NoError(t, err, name)
 			assert.NotEmpty(t, evt.Type, name)
@@ -122,6 +125,27 @@ func TestToEmailEvent(t *testing.T) {
 		assert.Equal(t, "unhappy@example.com", gotComplained.Email)
 	})
 
+	t.Run("Maps suppressed, delivery_delayed, and failed events", func(t *testing.T) {
+		t.Parallel()
+
+		cases := []struct {
+			fixture  string
+			wantType engagement.EmailEventType
+		}{
+			{"suppressed.json", engagement.EmailEventTypeSuppressed},
+			{"delivery_delayed.json", engagement.EmailEventTypeDeliveryDelayed},
+			{"failed.json", engagement.EmailEventTypeFailed},
+		}
+		for _, tc := range cases {
+			evt, err := email.ParseWebhook(loadFixture(t, tc.fixture))
+			require.NoError(t, err, tc.fixture)
+			got, tracked, err := email.ToEmailEvent(evt, "msg_"+tc.fixture)
+			require.NoError(t, err, tc.fixture)
+			require.True(t, tracked, tc.fixture)
+			assert.Equal(t, tc.wantType, got.Type, tc.fixture)
+		}
+	})
+
 	t.Run("Untracked event type is not tracked", func(t *testing.T) {
 		t.Parallel()
 		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.sent"}, "msg")
@@ -145,23 +169,24 @@ func TestToEmailEvent(t *testing.T) {
 		assert.Equal(t, int64(9), *got.SubscriberID)
 	})
 
-	t.Run("Missing tags leave IDs nil", func(t *testing.T) {
+	t.Run("Missing tags are not tracked", func(t *testing.T) {
 		t.Parallel()
-		got, _, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m")
+		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m")
 		require.NoError(t, err)
-		assert.Nil(t, got.IssueID)
-		assert.Nil(t, got.SubscriberID)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
 	})
 
-	t.Run("Non-numeric tag value leaves the ID nil", func(t *testing.T) {
+	t.Run("Non-numeric issue_id tag is not tracked", func(t *testing.T) {
 		t.Parallel()
 		evt := email.WebhookEvent{
 			Type: "email.opened",
 			Data: email.WebhookData{Tags: json.RawMessage(`{"issue_id":"not-a-number"}`)},
 		}
-		got, _, err := email.ToEmailEvent(evt, "m")
+		got, tracked, err := email.ToEmailEvent(evt, "m")
 		require.NoError(t, err)
-		assert.Nil(t, got.IssueID)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
 	})
 
 	t.Run("Malformed timestamp falls back to zero", func(t *testing.T) {

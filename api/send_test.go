@@ -47,20 +47,12 @@ func TestHandleSend(t *testing.T) {
 		"OK": {
 			mock: func(r *mockdigest.MockRunner) {
 				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Send Digest Error": {
 			mock: func(r *mockdigest.MockRunner) {
 				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Send Suggestion Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
-				r.EXPECT().SendSuggestion(gomock.Any(), gomock.Any()).Return(errors.New("synth failed"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},

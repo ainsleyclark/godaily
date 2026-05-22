@@ -79,6 +79,17 @@ func (s *spyEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	return nil
 }
 
+func (s *spyEmail) SendBatch(_ context.Context, reqs []*email.SendEmailRequest) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, r := range reqs {
+		if r != nil {
+			s.sent = append(s.sent, *r)
+		}
+	}
+	return nil
+}
+
 // noopSlack satisfies slack.Sender without making any API calls.
 type noopSlack struct{}
 
@@ -108,10 +119,11 @@ func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]new
 	}
 	return nil, nil
 }
-
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {
 	return r.aggregator.Build(ctx, date)
 }
+
+func (r seedRunner) SendPreview(_ context.Context, _ time.Time) error { return nil }
 
 func (r seedRunner) SendDigest(ctx context.Context, date time.Time, force bool) error {
 	return r.aggregator.SendDigest(ctx, date, force)
@@ -173,7 +185,7 @@ func main() {
 		Runner:      seedRunner{items: itemStore, aggregator: aggregator},
 		Cache:       store,
 		Subscribers: subscriberSvc,
-		EmailEvents: emailevent.New(eventsStore, subscriberSvc),
+		EmailEvents: emailevent.New(eventsStore, subscriberSvc, itemStore, "admin@e2e.test"),
 		Slack:       noopSlack{},
 	}
 

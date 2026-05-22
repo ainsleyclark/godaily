@@ -58,6 +58,15 @@ func (m *mockEmail) Send(_ context.Context, req email.SendEmailRequest) error {
 	return m.err
 }
 
+func (m *mockEmail) SendBatch(_ context.Context, reqs []*email.SendEmailRequest) error {
+	for _, r := range reqs {
+		m.called = true
+		m.req = *r
+		m.reqs = append(m.reqs, *r)
+	}
+	return m.err
+}
+
 type mockSlack struct {
 	msgs []string
 }

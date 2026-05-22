@@ -95,10 +95,18 @@ func TestItems_Store(t *testing.T) {
 	})
 
 	t.Run("Create without issue", func(t *testing.T) {
-		got, err := s.Create(ctx, nil, 2, itemWithAuthor)
+		unlinked := news.Item{
+			Source:    news.SourceGoBlog,
+			Title:     "Go proposal accepted",
+			URL:       "https://go.dev/blog/proposal-accepted",
+			Snippet:   "An unlinked item",
+			Score:     0.7,
+			Published: published,
+		}
+		got, err := s.Create(ctx, nil, 2, unlinked)
 		require.NoError(t, err)
 		assert.NotZero(t, got.ID)
-		assert.Equal(t, itemWithAuthor.Title, got.Title)
+		assert.Equal(t, unlinked.Title, got.Title)
 	})
 
 	t.Run("Find", func(t *testing.T) {
@@ -151,6 +159,84 @@ func TestItems_Store(t *testing.T) {
 		assert.Error(t, err)
 	})
 
+	t.Run("Create upserts issue_id on conflict", func(t *testing.T) {
+		// Regression: collect inserts items with issue_id=nil; build then re-inserts
+		// with a real issue_id. The ON CONFLICT clause must update issue_id so the
+		// social service can find items by issue.
+		unlinked := news.Item{
+			Source:    news.SourceHN,
+			Title:     "Upsert test item",
+			URL:       "https://news.ycombinator.com/item?id=upsert",
+			Score:     0.8,
+			Published: published,
+		}
+		// First insert: no issue (simulates collect).
+		got, err := s.Create(ctx, nil, 10, unlinked)
+		require.NoError(t, err)
+		assert.Nil(t, got.Author) // sanity
+
+		// Second insert: same URL+tag, now with an issue (simulates build).
+		got2, err := s.Create(ctx, &issue.ID, 10, unlinked)
+		require.NoError(t, err)
+		assert.Equal(t, got.ID, got2.ID, "upsert must not create a new row")
+
+		// List by issue must now find the item.
+		byIssue, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
+		require.NoError(t, err)
+		found := false
+		for _, it := range byIssue {
+			if it.ID == got.ID {
+				found = true
+				break
+			}
+		}
+		assert.True(t, found, "item must be linked to the issue after upsert")
+	})
+
+	t.Run("FindByURLInIssue", func(t *testing.T) {
+		t.Log("Matches the canonical URL")
+		{
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, itemWithAuthor.URL)
+			require.NoError(t, err)
+			assert.True(t, ok)
+			assert.Equal(t, firstID, id)
+		}
+
+		t.Log("Matches the original URL")
+		{
+			withOriginal := news.Item{
+				Source:      news.SourceHN,
+				Title:       "Linked discussion",
+				URL:         "https://example.com/canonical",
+				OriginalURL: "https://news.ycombinator.com/item?id=orig",
+				Score:       0.6,
+				Published:   published,
+			}
+			created, err := s.Create(ctx, &issue.ID, 20, withOriginal)
+			require.NoError(t, err)
+
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, withOriginal.OriginalURL)
+			require.NoError(t, err)
+			assert.True(t, ok)
+			assert.Equal(t, created.ID, id)
+		}
+
+		t.Log("A miss returns ok=false without an error")
+		{
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, "https://nowhere.example.com")
+			require.NoError(t, err)
+			assert.False(t, ok)
+			assert.Zero(t, id)
+		}
+
+		t.Log("Lookup is scoped to the issue")
+		{
+			_, ok, err := s.FindByURLInIssue(ctx, 999_999, itemWithAuthor.URL)
+			require.NoError(t, err)
+			assert.False(t, ok)
+		}
+	})
+
 	t.Run("DeleteByIssue", func(t *testing.T) {
 		require.NoError(t, s.DeleteByIssue(ctx, issue.ID))
 		got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
@@ -185,6 +271,13 @@ func TestItems_Store(t *testing.T) {
 		t.Log("DeleteByIssue")
 		{
 			assert.Error(t, s.DeleteByIssue(ctx, 1))
+		}
+
+		t.Log("FindByURLInIssue")
+		{
+			_, ok, err := s.FindByURLInIssue(ctx, 1, "https://go.dev")
+			assert.Error(t, err)
+			assert.False(t, ok)
 		}
 	})
 }

@@ -126,15 +126,18 @@ func isEnglishTitle(s string) bool {
 	clean = hashtagRe.ReplaceAllString(clean, " ")
 	clean = techTokenRe.ReplaceAllString(clean, " ")
 	clean = strings.Join(strings.Fields(clean), " ")
+
 	// A single character from a non-Latin script is conclusive — reject before
 	// the probabilistic detector runs. This catches mixed titles like
 	// "Go: Потоки, Sysmon и GC #shorts" where Latin tech terms outvote Cyrillic.
 	if hasNonLatinScript(clean) {
 		return false
 	}
+
 	if len([]rune(clean)) < 8 {
 		return true
 	}
+
 	lang, exists := langDetector.DetectLanguageOf(clean)
 	return !exists || lang == lingua.English
 }

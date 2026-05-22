@@ -45,6 +45,7 @@ func Run() {
 		Commands: []*cli.Command{
 			buildCmd(app),
 			collectCmd(app),
+			previewCmd(app),
 			sendCmd(app),
 			socialCmd(app),
 			runCmd(app),
@@ -54,6 +55,7 @@ func Run() {
 			migrateCmd(app),
 			fetchCmd(app),
 			generateCmd(app),
+			emailCmd(app),
 		},
 	}
 

@@ -33,6 +33,19 @@ type Sender interface {
 	Send(ctx context.Context, req SendEmailRequest) error
 }
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockemail -destination=../../mocks/email/BatchSender.go . BatchSender
+
+// BatchSender extends Sender with the ability to send multiple emails in a
+// single API call. The digest send path uses this to stay within Resend's
+// 5 req/s rate limit.
+type BatchSender interface {
+	Sender
+	SendBatch(ctx context.Context, reqs []*SendEmailRequest) error
+}
+
+// BatchSize is the maximum number of emails per Resend batch request.
+const BatchSize = 100
+
 // Client wraps the Resend API client and exposes a minimal surface for
 // dispatching transactional emails from godaily.
 type Client struct {
@@ -71,5 +84,22 @@ func (c Client) Send(ctx context.Context, req SendEmailRequest) error {
 		return err
 	}
 	slog.InfoContext(ctx, "Successfully sent email", "id", sent.Id, "subject", req.Subject)
+	return nil
+}
+
+// SendBatch dispatches up to BatchSize emails in a single Resend API call.
+// Permissive validation is used so a single invalid address does not abort
+// the whole batch; partial failures are logged as warnings.
+func (c Client) SendBatch(ctx context.Context, reqs []*SendEmailRequest) error {
+	resp, err := c.resend.Batch.SendWithOptions(ctx, reqs, &resend.BatchSendEmailOptions{
+		BatchValidation: resend.BatchValidationPermissive,
+	})
+	if err != nil {
+		return err
+	}
+	for _, batchErr := range resp.Errors {
+		slog.WarnContext(ctx, "Batch email partial failure", "index", batchErr.Index, "err", batchErr.Message)
+	}
+	slog.InfoContext(ctx, "Successfully sent email batch", "count", len(resp.Data))
 	return nil
 }
