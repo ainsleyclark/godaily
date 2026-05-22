@@ -139,11 +139,11 @@ func TestEmailEvents_Store(t *testing.T) {
 		assert.Zero(t, got.OpenRate)
 	})
 
-	t.Run("ListLinks ranks clicks", func(t *testing.T) {
+	t.Run("TopLinks ranks clicks", func(t *testing.T) {
 		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://go.dev", EventID: "evt_click_b1"})
 		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://pkg.go.dev", EventID: "evt_click_a2"})
 
-		got, err := s.ListLinks(ctx, issue.ID, 10)
+		got, err := s.TopLinks(ctx, issue.ID, 10)
 		require.NoError(t, err)
 		require.Len(t, got, 2)
 		assert.Equal(t, "https://go.dev", got[0].URL)
@@ -151,8 +151,8 @@ func TestEmailEvents_Store(t *testing.T) {
 		assert.Equal(t, int64(1), got[1].Clicks)
 	})
 
-	t.Run("ListLinks respects the limit", func(t *testing.T) {
-		got, err := s.ListLinks(ctx, issue.ID, 1)
+	t.Run("TopLinks respects the limit", func(t *testing.T) {
+		got, err := s.TopLinks(ctx, issue.ID, 1)
 		require.NoError(t, err)
 		assert.Len(t, got, 1)
 	})

@@ -107,9 +107,9 @@ func (s Store) IssueStats(ctx context.Context, issueID int64) (engagement.IssueS
 	return stats, nil
 }
 
-// ListLinks returns the most-clicked links for an issue, most clicks first.
-func (s Store) ListLinks(ctx context.Context, issueID int64, limit int64) ([]engagement.LinkClicks, error) {
-	rows, err := s.sqlc.EmailEventListLinks(ctx, sqlc.EmailEventListLinksParams{
+// TopLinks returns the most-clicked links for an issue, most clicks first.
+func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]engagement.LinkClicks, error) {
+	rows, err := s.sqlc.EmailEventTopLinks(ctx, sqlc.EmailEventTopLinksParams{
 		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
 		Limit:   limit,
 	})
@@ -120,53 +120,6 @@ func (s Store) ListLinks(ctx context.Context, issueID int64, limit int64) ([]eng
 	out := make([]engagement.LinkClicks, 0, len(rows))
 	for _, r := range rows {
 		out = append(out, engagement.LinkClicks{URL: r.Url.String, Clicks: r.Clicks})
-	}
-	return out, nil
-}
-
-// ListIssueStats returns aggregate engagement for all issues that have events,
-// ordered by issue ID descending.
-func (s Store) ListIssueStats(ctx context.Context) ([]engagement.IssueStats, error) {
-	rows, err := s.sqlc.EmailEventListIssueStats(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	out := make([]engagement.IssueStats, 0, len(rows))
-	for _, r := range rows {
-		stats := engagement.IssueStats{
-			IssueID:      r.IssueID.Int64,
-			Delivered:    r.Delivered,
-			UniqueOpens:  r.UniqueOpens,
-			TotalOpens:   r.TotalOpens,
-			UniqueClicks: r.UniqueClicks,
-			TotalClicks:  r.TotalClicks,
-			Bounced:      r.Bounced,
-			Complained:   r.Complained,
-			Delayed:      r.Delayed,
-			Failed:       r.Failed,
-			Suppressed:   r.Suppressed,
-		}
-		if stats.Delivered > 0 {
-			stats.OpenRate = float64(stats.UniqueOpens) / float64(stats.Delivered)
-			stats.ClickRate = float64(stats.UniqueClicks) / float64(stats.Delivered)
-		}
-		out = append(out, stats)
-	}
-	return out, nil
-}
-
-// ListItemStats returns click counts for all items that have been clicked,
-// ordered by clicks descending.
-func (s Store) ListItemStats(ctx context.Context) ([]engagement.ItemStats, error) {
-	rows, err := s.sqlc.EmailEventListItemStats(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	out := make([]engagement.ItemStats, 0, len(rows))
-	for _, r := range rows {
-		out = append(out, engagement.ItemStats{ItemID: r.ItemID.Int64, Clicks: r.Clicks})
 	}
 	return out, nil
 }
