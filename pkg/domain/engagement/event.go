@@ -129,6 +129,12 @@ type LinkClicks struct {
 	Clicks int64  `json:"clicks"`
 }
 
+// ItemStats aggregates click engagement for a single news item across all issues.
+type ItemStats struct {
+	ItemID int64 `json:"item_id"`
+	Clicks int64 `json:"clicks"`
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/EmailEventRepository.go . EmailEventRepository
 
 // EmailEventRepository persists email events and answers engagement
@@ -144,6 +150,14 @@ type EmailEventRepository interface {
 	// IssueStats returns aggregate engagement for a single issue.
 	IssueStats(ctx context.Context, issueID int64) (IssueStats, error)
 
-	// TopLinks returns the most-clicked links for an issue, most clicks first.
-	TopLinks(ctx context.Context, issueID int64, limit int64) ([]LinkClicks, error)
+	// ListLinks returns the most-clicked links for an issue, most clicks first.
+	ListLinks(ctx context.Context, issueID int64, limit int64) ([]LinkClicks, error)
+
+	// ListIssueStats returns aggregate engagement for all issues that have events,
+	// ordered by issue ID descending.
+	ListIssueStats(ctx context.Context) ([]IssueStats, error)
+
+	// ListItemStats returns click counts for all items that have been clicked,
+	// ordered by clicks descending.
+	ListItemStats(ctx context.Context) ([]ItemStats, error)
 }
