@@ -57,8 +57,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
 
-	// Send personalized digests to active subscribers.
-	// Subscriber errors are non-fatal; the issue is marked sent once dispatched.
+	// Build a personalized request for each active subscriber, skipping any
+	// that fail to render. Subscriber errors are non-fatal; the issue is
+	// marked sent once all batches are dispatched.
+	var batch []*email.SendEmailRequest
 	for _, sub := range subs {
 		if sub.UnsubscribeToken == "" {
 			slog.ErrorContext(ctx, "Skipping subscriber with missing unsubscribe token", "email", sub.Email)
@@ -81,8 +83,13 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 			continue
 		}
 		tags := []email.Tag{issueTag, {Name: email.TagSubscriberID, Value: strconv.FormatInt(sub.ID, 10)}}
-		if sendErr := a.sendRendered(ctx, sub.Email, subRendered, tags); sendErr != nil {
-			slog.ErrorContext(ctx, "Failed to send digest to subscriber", "email", sub.Email, "err", sendErr)
+		batch = append(batch, buildEmailRequest(sub.Email, subRendered, tags))
+	}
+
+	for i := 0; i < len(batch); i += email.BatchSize {
+		chunk := batch[i:min(i+email.BatchSize, len(batch))]
+		if sendErr := a.email.SendBatch(ctx, chunk); sendErr != nil {
+			slog.ErrorContext(ctx, "Failed to send digest batch", "start", i, "end", i+len(chunk), "err", sendErr)
 		}
 	}
 

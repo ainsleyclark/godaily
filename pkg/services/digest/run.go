@@ -50,7 +50,7 @@ type slackNotifier interface {
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Aggregator struct {
-	email             email.Sender
+	email             email.BatchSender
 	adminEmailAddress string
 	prompter          ai.Prompter
 	issues            news.IssueRepository
@@ -63,7 +63,7 @@ type Aggregator struct {
 // registered fetchers. Pass a non-nil prompter to enable AI synthesis
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
-func New(emailSender email.Sender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
 	if err := news.Validate(); err != nil {
 		return nil, err
 	}
