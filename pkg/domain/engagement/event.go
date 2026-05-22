@@ -111,17 +111,6 @@ type LinkClicks struct {
 	Clicks int64  `json:"clicks"`
 }
 
-// ItemClicks counts clicks for a single item within an issue, resolved from
-// the clicked URL back to the item it points at.
-type ItemClicks struct {
-	ItemID int64  `json:"item_id"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
-	Source string `json:"source"`
-	Tag    string `json:"tag"`
-	Clicks int64  `json:"clicks"`
-}
-
 //go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/EmailEventRepository.go . EmailEventRepository
 
 // EmailEventRepository persists email events and answers engagement
@@ -139,8 +128,4 @@ type EmailEventRepository interface {
 
 	// TopLinks returns the most-clicked links for an issue, most clicks first.
 	TopLinks(ctx context.Context, issueID int64, limit int64) ([]LinkClicks, error)
-
-	// TopItems returns the most-clicked items for an issue, most clicks first.
-	// Only clicks that resolved to a known item are counted.
-	TopItems(ctx context.Context, issueID int64, limit int64) ([]ItemClicks, error)
 }

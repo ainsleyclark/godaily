@@ -32,7 +32,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
-	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 )
 
@@ -156,48 +155,6 @@ func TestEmailEvents_Store(t *testing.T) {
 		got, err := s.TopLinks(ctx, issue.ID, 1)
 		require.NoError(t, err)
 		assert.Len(t, got, 1)
-	})
-
-	t.Run("TopItems ranks clicks by item", func(t *testing.T) {
-		itemStore := items.New(db)
-		itemA, err := itemStore.Create(ctx, &issue.ID, 0, news.Item{
-			Source: news.SourceGoBlog,
-			Title:  "Top article",
-			URL:    "https://go.dev/blog/top",
-		})
-		require.NoError(t, err)
-		itemB, err := itemStore.Create(ctx, &issue.ID, 1, news.Item{
-			Source: news.SourceHN,
-			Title:  "Runner-up",
-			URL:    "https://news.ycombinator.com/item?id=top",
-		})
-		require.NoError(t, err)
-
-		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, ItemID: &itemA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: itemA.URL, EventID: "evt_item_a1"})
-		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subB.ID, ItemID: &itemA.ID, Email: "b@example.com", Type: engagement.EmailEventTypeClicked, URL: itemA.URL, EventID: "evt_item_a2"})
-		mustCreate(t, ctx, s, engagement.EmailEvent{IssueID: &issue.ID, SubscriberID: &subA.ID, ItemID: &itemB.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: itemB.URL, EventID: "evt_item_b1"})
-
-		got, err := s.TopItems(ctx, issue.ID, 10)
-		require.NoError(t, err)
-		require.Len(t, got, 2)
-		assert.Equal(t, itemA.ID, got[0].ItemID)
-		assert.Equal(t, "Top article", got[0].Title)
-		assert.Equal(t, news.SourceGoBlog.String(), got[0].Source)
-		assert.Equal(t, int64(2), got[0].Clicks)
-		assert.Equal(t, itemB.ID, got[1].ItemID)
-		assert.Equal(t, int64(1), got[1].Clicks)
-	})
-
-	t.Run("TopItems respects the limit", func(t *testing.T) {
-		got, err := s.TopItems(ctx, issue.ID, 1)
-		require.NoError(t, err)
-		assert.Len(t, got, 1)
-	})
-
-	t.Run("TopItems is empty for an unknown issue", func(t *testing.T) {
-		got, err := s.TopItems(ctx, 9999, 10)
-		require.NoError(t, err)
-		assert.Empty(t, got)
 	})
 
 	// MUST be last: closing the DB makes every subsequent query fail.

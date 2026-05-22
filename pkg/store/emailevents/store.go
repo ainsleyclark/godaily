@@ -121,30 +121,6 @@ func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]enga
 	return out, nil
 }
 
-// TopItems returns the most-clicked items for an issue, most clicks first.
-func (s Store) TopItems(ctx context.Context, issueID int64, limit int64) ([]engagement.ItemClicks, error) {
-	rows, err := s.sqlc.EmailEventTopItems(ctx, sqlc.EmailEventTopItemsParams{
-		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
-		Limit:   limit,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	out := make([]engagement.ItemClicks, 0, len(rows))
-	for _, r := range rows {
-		out = append(out, engagement.ItemClicks{
-			ItemID: r.ItemID,
-			Title:  r.Title,
-			URL:    r.Url,
-			Source: r.Source,
-			Tag:    r.Tag,
-			Clicks: r.Clicks,
-		})
-	}
-	return out, nil
-}
-
 func transform(r sqlc.EmailEvent) engagement.EmailEvent {
 	return engagement.EmailEvent{
 		ID:           r.ID,

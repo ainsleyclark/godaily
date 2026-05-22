@@ -113,61 +113,6 @@ func (q *Queries) EmailEventIssueStats(ctx context.Context, issueID sql.NullInt6
 	return i, err
 }
 
-const emailEventTopItems = `-- name: EmailEventTopItems :many
-SELECT i.id AS item_id, i.title, i.url, i.source, i.tag, COUNT(*) AS clicks
-FROM email_events ee
-JOIN items i ON i.id = ee.item_id
-WHERE ee.event_type = 'clicked'
-  AND ee.issue_id = ?
-GROUP BY i.id
-ORDER BY clicks DESC
-LIMIT ?
-`
-
-type EmailEventTopItemsParams struct {
-	IssueID sql.NullInt64 `json:"issue_id"`
-	Limit   int64         `json:"limit"`
-}
-
-type EmailEventTopItemsRow struct {
-	ItemID int64  `json:"item_id"`
-	Title  string `json:"title"`
-	Url    string `json:"url"`
-	Source string `json:"source"`
-	Tag    string `json:"tag"`
-	Clicks int64  `json:"clicks"`
-}
-
-func (q *Queries) EmailEventTopItems(ctx context.Context, arg EmailEventTopItemsParams) ([]EmailEventTopItemsRow, error) {
-	rows, err := q.db.QueryContext(ctx, emailEventTopItems, arg.IssueID, arg.Limit)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []EmailEventTopItemsRow{}
-	for rows.Next() {
-		var i EmailEventTopItemsRow
-		if err := rows.Scan(
-			&i.ItemID,
-			&i.Title,
-			&i.Url,
-			&i.Source,
-			&i.Tag,
-			&i.Clicks,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const emailEventTopLinks = `-- name: EmailEventTopLinks :many
 SELECT url, COUNT(*) AS clicks
 FROM email_events

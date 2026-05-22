@@ -86,21 +86,6 @@ func (mr *MockEmailEventRepositoryMockRecorder) IssueStats(ctx, issueID any) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IssueStats", reflect.TypeOf((*MockEmailEventRepository)(nil).IssueStats), ctx, issueID)
 }
 
-// TopItems mocks base method.
-func (m *MockEmailEventRepository) TopItems(ctx context.Context, issueID, limit int64) ([]engagement.ItemClicks, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TopItems", ctx, issueID, limit)
-	ret0, _ := ret[0].([]engagement.ItemClicks)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// TopItems indicates an expected call of TopItems.
-func (mr *MockEmailEventRepositoryMockRecorder) TopItems(ctx, issueID, limit any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopItems", reflect.TypeOf((*MockEmailEventRepository)(nil).TopItems), ctx, issueID, limit)
-}
-
 // TopLinks mocks base method.
 func (m *MockEmailEventRepository) TopLinks(ctx context.Context, issueID, limit int64) ([]engagement.LinkClicks, error) {
 	m.ctrl.T.Helper()
