@@ -107,14 +107,15 @@ func TestService_Process(t *testing.T) {
 		require.NoError(t, svc.Process(t.Context(), suppressed))
 	})
 
-	t.Run("Failed event marks the subscriber bounced", func(t *testing.T) {
+	t.Run("Failed event is stored with no side effect", func(t *testing.T) {
 		t.Parallel()
 
+		// email.failed is a send-side failure (quota, API key, domain config), not
+		// a recipient-side failure. Subscriber health must not be touched.
 		failed := engagement.EmailEvent{Type: engagement.EmailEventTypeFailed, EventID: "evt_failed", Email: "nomail@example.com"}
-		events, subs, svc := setup(t)
+		events, _, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_failed").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), failed).Return(failed, nil)
-		subs.EXPECT().MarkBounced(gomock.Any(), "nomail@example.com").Return(nil)
 
 		require.NoError(t, svc.Process(t.Context(), failed))
 	})
