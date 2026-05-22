@@ -1,8 +1,8 @@
 -- name: EmailEventCreate :one
 INSERT INTO email_events (
-    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+    issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING *;
 
@@ -32,5 +32,15 @@ WHERE issue_id = ?
   AND url IS NOT NULL
   AND url != ''
 GROUP BY url
+ORDER BY clicks DESC
+LIMIT ?;
+
+-- name: EmailEventTopItems :many
+SELECT i.id AS item_id, i.title, i.url, i.source, i.tag, COUNT(*) AS clicks
+FROM email_events ee
+JOIN items i ON i.id = ee.item_id
+WHERE ee.event_type = 'clicked'
+  AND ee.issue_id = ?
+GROUP BY i.id
 ORDER BY clicks DESC
 LIMIT ?;

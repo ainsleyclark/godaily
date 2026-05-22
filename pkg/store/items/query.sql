@@ -16,6 +16,12 @@ RETURNING *;
 -- name: ItemByID :one
 SELECT * FROM items WHERE id = ? LIMIT 1;
 
+-- name: ItemFindByURLInIssue :one
+SELECT id FROM items
+WHERE issue_id = @issue_id
+  AND (url = @url OR (original_url IS NOT NULL AND original_url = @url))
+LIMIT 1;
+
 -- name: ItemListByIssue :many
 SELECT * FROM items
 WHERE issue_id = ?

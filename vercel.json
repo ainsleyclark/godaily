@@ -8,9 +8,10 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"rewrites": [
-		{ "source": "/healthz",          "destination": "/api/healthz" },
-		{ "source": "/api/issues/:slug", "destination": "/api/issues/slug?slug=:slug" },
-		{ "source": "/api/items/:id",    "destination": "/api/items/id?id=:id" }
+		{ "source": "/healthz",                     "destination": "/api/healthz" },
+		{ "source": "/api/issues/:slug/engagement", "destination": "/api/issues/slug/engagement?slug=:slug" },
+		{ "source": "/api/issues/:slug",            "destination": "/api/issues/slug?slug=:slug" },
+		{ "source": "/api/items/:id",               "destination": "/api/items/id?id=:id" }
 	],
 	"crons": [
 		{ "path": "/api/collect/",         "schedule": "0 1 * * *"                 },

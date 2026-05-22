@@ -20,6 +20,7 @@
 package emailevent_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -35,12 +36,24 @@ import (
 
 var errBoom = errors.New("boom")
 
+// stubItemFinder is a controllable emailevent.ItemFinder for tests. The zero
+// value resolves nothing, mirroring a click that matches no item.
+type stubItemFinder struct {
+	id  int64
+	ok  bool
+	err error
+}
+
+func (s stubItemFinder) FindByURLInIssue(context.Context, int64, string) (int64, bool, error) {
+	return s.id, s.ok, s.err
+}
+
 func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockSubscriber, *emailevent.Service) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
-	return events, subs, emailevent.New(events, subs, "admin@example.com")
+	return events, subs, emailevent.New(events, subs, stubItemFinder{}, "admin@example.com")
 }
 
 func TestService_Process(t *testing.T) {
@@ -147,5 +160,60 @@ func TestService_Process(t *testing.T) {
 		_, _, svc := setup(t)
 
 		require.NoError(t, svc.Process(t.Context(), evt))
+	})
+}
+
+func TestService_Process_ClickItemResolution(t *testing.T) {
+	t.Parallel()
+
+	issueID := int64(7)
+	itemID := int64(42)
+	click := engagement.EmailEvent{
+		Type:    engagement.EmailEventTypeClicked,
+		EventID: "evt_click",
+		Email:   "reader@example.com",
+		IssueID: &issueID,
+		URL:     "https://example.com/article",
+	}
+
+	newSvc := func(t *testing.T, finder emailevent.ItemFinder) (*mockengagement.MockEmailEventRepository, *emailevent.Service) {
+		t.Helper()
+		ctrl := gomock.NewController(t)
+		events := mockengagement.NewMockEmailEventRepository(ctrl)
+		subs := mocksubscriber.NewMockSubscriber(ctrl)
+		return events, emailevent.New(events, subs, finder, "admin@example.com")
+	}
+
+	t.Run("Resolved item is stored on the event", func(t *testing.T) {
+		t.Parallel()
+
+		events, svc := newSvc(t, stubItemFinder{id: itemID, ok: true})
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_click").Return(false, nil)
+
+		want := click
+		want.ItemID = &itemID
+		events.EXPECT().Create(gomock.Any(), want).Return(want, nil)
+
+		require.NoError(t, svc.Process(t.Context(), click))
+	})
+
+	t.Run("Click matching no item stores a nil item", func(t *testing.T) {
+		t.Parallel()
+
+		events, svc := newSvc(t, stubItemFinder{})
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_click").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), click).Return(click, nil)
+
+		require.NoError(t, svc.Process(t.Context(), click))
+	})
+
+	t.Run("Lookup error does not fail the event", func(t *testing.T) {
+		t.Parallel()
+
+		events, svc := newSvc(t, stubItemFinder{err: errBoom})
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_click").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), click).Return(click, nil)
+
+		require.NoError(t, svc.Process(t.Context(), click))
 	})
 }

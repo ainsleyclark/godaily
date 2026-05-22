@@ -70,14 +70,16 @@ func (t EmailEventType) Valid() bool {
 	return validEmailEventTypes[t]
 }
 
-// EmailEvent is a single email lifecycle event. IssueID and SubscriberID are
-// optional: events for non-digest mail (such as confirmation emails), or for
-// recipients that aren't tracked subscribers, still record — with the unknown
-// identifier left nil.
+// EmailEvent is a single email lifecycle event. IssueID, SubscriberID and
+// ItemID are optional: events for non-digest mail (such as confirmation
+// emails), or for recipients that aren't tracked subscribers, still record —
+// with the unknown identifier left nil. ItemID is best-effort: it is set only
+// when a click resolves to a known item, and stays nil otherwise.
 type EmailEvent struct {
 	ID           int64          `json:"id"`
 	IssueID      *int64         `json:"issue_id,omitempty"`
 	SubscriberID *int64         `json:"subscriber_id,omitempty"`
+	ItemID       *int64         `json:"item_id,omitempty"`
 	Email        string         `json:"email"`
 	Type         EmailEventType `json:"type"`
 	URL          string         `json:"url,omitempty"`
@@ -109,6 +111,17 @@ type LinkClicks struct {
 	Clicks int64  `json:"clicks"`
 }
 
+// ItemClicks counts clicks for a single item within an issue, resolved from
+// the clicked URL back to the item it points at.
+type ItemClicks struct {
+	ItemID int64  `json:"item_id"`
+	Title  string `json:"title"`
+	URL    string `json:"url"`
+	Source string `json:"source"`
+	Tag    string `json:"tag"`
+	Clicks int64  `json:"clicks"`
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/EmailEventRepository.go . EmailEventRepository
 
 // EmailEventRepository persists email events and answers engagement
@@ -126,4 +139,8 @@ type EmailEventRepository interface {
 
 	// TopLinks returns the most-clicked links for an issue, most clicks first.
 	TopLinks(ctx context.Context, issueID int64, limit int64) ([]LinkClicks, error)
+
+	// TopItems returns the most-clicked items for an issue, most clicks first.
+	// Only clicks that resolved to a known item are counted.
+	TopItems(ctx context.Context, issueID int64, limit int64) ([]ItemClicks, error)
 }

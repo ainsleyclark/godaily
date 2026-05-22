@@ -13,16 +13,17 @@ import (
 
 const emailEventCreate = `-- name: EmailEventCreate :one
 INSERT INTO email_events (
-    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+    issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at, created_at
+RETURNING id, issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at, created_at
 `
 
 type EmailEventCreateParams struct {
 	IssueID      sql.NullInt64  `json:"issue_id"`
 	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	ItemID       sql.NullInt64  `json:"item_id"`
 	Email        string         `json:"email"`
 	EventType    string         `json:"event_type"`
 	Url          sql.NullString `json:"url"`
@@ -35,6 +36,7 @@ func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreatePara
 	row := q.db.QueryRowContext(ctx, emailEventCreate,
 		arg.IssueID,
 		arg.SubscriberID,
+		arg.ItemID,
 		arg.Email,
 		arg.EventType,
 		arg.Url,
@@ -47,6 +49,7 @@ func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreatePara
 		&i.ID,
 		&i.IssueID,
 		&i.SubscriberID,
+		&i.ItemID,
 		&i.Email,
 		&i.EventType,
 		&i.Url,
@@ -108,6 +111,61 @@ func (q *Queries) EmailEventIssueStats(ctx context.Context, issueID sql.NullInt6
 		&i.Complained,
 	)
 	return i, err
+}
+
+const emailEventTopItems = `-- name: EmailEventTopItems :many
+SELECT i.id AS item_id, i.title, i.url, i.source, i.tag, COUNT(*) AS clicks
+FROM email_events ee
+JOIN items i ON i.id = ee.item_id
+WHERE ee.event_type = 'clicked'
+  AND ee.issue_id = ?
+GROUP BY i.id
+ORDER BY clicks DESC
+LIMIT ?
+`
+
+type EmailEventTopItemsParams struct {
+	IssueID sql.NullInt64 `json:"issue_id"`
+	Limit   int64         `json:"limit"`
+}
+
+type EmailEventTopItemsRow struct {
+	ItemID int64  `json:"item_id"`
+	Title  string `json:"title"`
+	Url    string `json:"url"`
+	Source string `json:"source"`
+	Tag    string `json:"tag"`
+	Clicks int64  `json:"clicks"`
+}
+
+func (q *Queries) EmailEventTopItems(ctx context.Context, arg EmailEventTopItemsParams) ([]EmailEventTopItemsRow, error) {
+	rows, err := q.db.QueryContext(ctx, emailEventTopItems, arg.IssueID, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []EmailEventTopItemsRow{}
+	for rows.Next() {
+		var i EmailEventTopItemsRow
+		if err := rows.Scan(
+			&i.ItemID,
+			&i.Title,
+			&i.Url,
+			&i.Source,
+			&i.Tag,
+			&i.Clicks,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const emailEventTopLinks = `-- name: EmailEventTopLinks :many
@@ -410,6 +468,25 @@ DELETE FROM items WHERE issue_id = ?
 func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID sql.NullInt64) error {
 	_, err := q.db.ExecContext(ctx, itemDeleteByIssue, issueID)
 	return err
+}
+
+const itemFindByURLInIssue = `-- name: ItemFindByURLInIssue :one
+SELECT id FROM items
+WHERE issue_id = ?1
+  AND (url = ?2 OR (original_url IS NOT NULL AND original_url = ?2))
+LIMIT 1
+`
+
+type ItemFindByURLInIssueParams struct {
+	IssueID sql.NullInt64 `json:"issue_id"`
+	Url     string        `json:"url"`
+}
+
+func (q *Queries) ItemFindByURLInIssue(ctx context.Context, arg ItemFindByURLInIssueParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, itemFindByURLInIssue, arg.IssueID, arg.Url)
+	var id int64
+	err := row.Scan(&id)
+	return id, err
 }
 
 const itemListByDateRange = `-- name: ItemListByDateRange :many
