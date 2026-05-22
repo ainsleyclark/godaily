@@ -34,6 +34,7 @@ const (
 	golangBridgeViewsSaturation   = 5000.0
 	mastodonFavouritesSaturation  = 20.0
 	youtubeViewsSaturation        = 5000.0
+	goVulnCVSSSaturation          = 10.0
 )
 
 // Engagement floors. The GitHub floor is higher so the tag-driven source weight
@@ -121,6 +122,8 @@ func saturationFor(s Source) float64 {
 		return mastodonFavouritesSaturation
 	case SourceYouTube:
 		return youtubeViewsSaturation
+	case SourceGoVuln:
+		return goVulnCVSSSaturation
 	default:
 		return 0
 	}
