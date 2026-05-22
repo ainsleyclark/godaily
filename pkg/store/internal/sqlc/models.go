@@ -79,4 +79,5 @@ type Subscriber struct {
 	ConfirmToken     sql.NullString `json:"confirm_token"`
 	ConfirmedAt      *time.Time     `json:"confirmed_at"`
 	BouncedAt        *time.Time     `json:"bounced_at"`
+	SuppressedAt     *time.Time     `json:"suppressed_at"`
 }

@@ -95,6 +95,41 @@ func TestService_Process(t *testing.T) {
 		require.NoError(t, svc.Process(t.Context(), complained))
 	})
 
+	t.Run("Suppressed event marks the subscriber suppressed", func(t *testing.T) {
+		t.Parallel()
+
+		suppressed := engagement.EmailEvent{Type: engagement.EmailEventTypeSuppressed, EventID: "evt_suppressed", Email: "suppressed@example.com"}
+		events, subs, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_suppressed").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), suppressed).Return(suppressed, nil)
+		subs.EXPECT().MarkSuppressed(gomock.Any(), "suppressed@example.com").Return(nil)
+
+		require.NoError(t, svc.Process(t.Context(), suppressed))
+	})
+
+	t.Run("Failed event marks the subscriber bounced", func(t *testing.T) {
+		t.Parallel()
+
+		failed := engagement.EmailEvent{Type: engagement.EmailEventTypeFailed, EventID: "evt_failed", Email: "nomail@example.com"}
+		events, subs, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_failed").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), failed).Return(failed, nil)
+		subs.EXPECT().MarkBounced(gomock.Any(), "nomail@example.com").Return(nil)
+
+		require.NoError(t, svc.Process(t.Context(), failed))
+	})
+
+	t.Run("Delivery delayed event is stored with no side effect", func(t *testing.T) {
+		t.Parallel()
+
+		delayed := engagement.EmailEvent{Type: engagement.EmailEventTypeDeliveryDelayed, EventID: "evt_delayed", Email: "slow@example.com"}
+		events, _, svc := setup(t)
+		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_delayed").Return(false, nil)
+		events.EXPECT().Create(gomock.Any(), delayed).Return(delayed, nil)
+
+		require.NoError(t, svc.Process(t.Context(), delayed))
+	})
+
 	t.Run("Duplicate event is skipped", func(t *testing.T) {
 		t.Parallel()
 

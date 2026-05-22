@@ -37,6 +37,7 @@ import (
 type SubscriberHealth interface {
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }
 
 // ItemFinder resolves a clicked URL back to the item it points at, scoped to
@@ -81,6 +82,12 @@ var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, 
 	},
 	engagement.EmailEventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
 		return s.subscribers.MarkComplained(ctx, addr)
+	},
+	engagement.EmailEventTypeSuppressed: func(ctx context.Context, s *Service, addr string) error {
+		return s.subscribers.MarkSuppressed(ctx, addr)
+	},
+	engagement.EmailEventTypeFailed: func(ctx context.Context, s *Service, addr string) error {
+		return s.subscribers.MarkBounced(ctx, addr)
 	},
 }
 

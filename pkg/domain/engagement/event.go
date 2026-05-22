@@ -50,14 +50,29 @@ const (
 
 	// EmailEventTypeComplained marks a spam complaint.
 	EmailEventTypeComplained EmailEventType = "complained"
+
+	// EmailEventTypeSuppressed marks an address on Resend's global suppression
+	// list — delivery was refused before it was attempted.
+	EmailEventTypeSuppressed EmailEventType = "suppressed"
+
+	// EmailEventTypeDeliveryDelayed marks a temporary delivery delay. Resend
+	// retries automatically; no subscriber health action is needed.
+	EmailEventTypeDeliveryDelayed EmailEventType = "delivery_delayed"
+
+	// EmailEventTypeFailed marks a permanent send failure (e.g. invalid MX
+	// record). Unlike a bounce, this occurs before delivery is attempted.
+	EmailEventTypeFailed EmailEventType = "failed"
 )
 
 var validEmailEventTypes = map[EmailEventType]bool{
-	EmailEventTypeDelivered:  true,
-	EmailEventTypeOpened:     true,
-	EmailEventTypeClicked:    true,
-	EmailEventTypeBounced:    true,
-	EmailEventTypeComplained: true,
+	EmailEventTypeDelivered:       true,
+	EmailEventTypeOpened:          true,
+	EmailEventTypeClicked:         true,
+	EmailEventTypeBounced:         true,
+	EmailEventTypeComplained:      true,
+	EmailEventTypeSuppressed:      true,
+	EmailEventTypeDeliveryDelayed: true,
+	EmailEventTypeFailed:          true,
 }
 
 // String returns the event type as a string.
@@ -101,6 +116,9 @@ type IssueStats struct {
 	TotalClicks  int64   `json:"total_clicks"`
 	Bounced      int64   `json:"bounced"`
 	Complained   int64   `json:"complained"`
+	Delayed      int64   `json:"delayed"`
+	Failed       int64   `json:"failed"`
+	Suppressed   int64   `json:"suppressed"`
 	OpenRate     float64 `json:"open_rate"`
 	ClickRate    float64 `json:"click_rate"`
 }

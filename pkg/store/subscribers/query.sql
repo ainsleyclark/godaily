@@ -49,14 +49,21 @@ UPDATE subscribers
 SET unsubscribed_at = CURRENT_TIMESTAMP
 WHERE email = ? AND unsubscribed_at IS NULL;
 
+-- name: SubscriberMarkSuppressed :exec
+UPDATE subscribers
+SET suppressed_at = CURRENT_TIMESTAMP
+WHERE email = ? AND suppressed_at IS NULL;
+
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL
   AND confirmed_at IS NOT NULL
   AND bounced_at IS NULL
+  AND suppressed_at IS NULL
 ORDER BY id ASC;
 
 -- name: SubscriberCountActive :one
 SELECT COUNT(*) FROM subscribers
 WHERE unsubscribed_at IS NULL
-  AND bounced_at IS NULL;
+  AND bounced_at IS NULL
+  AND suppressed_at IS NULL;
