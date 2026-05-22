@@ -40,7 +40,7 @@ func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscri
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
-	return events, subs, emailevent.New(events, subs)
+	return events, subs, emailevent.New(events, subs, "admin@example.com")
 }
 
 func TestService_Process(t *testing.T) {
@@ -120,5 +120,32 @@ func TestService_Process(t *testing.T) {
 		subs.EXPECT().MarkBounced(gomock.Any(), "dead@example.com").Return(errBoom)
 
 		assert.ErrorIs(t, svc.Process(t.Context(), bounced), errBoom)
+	})
+
+	t.Run("Admin email is silently ignored", func(t *testing.T) {
+		t.Parallel()
+
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "admin@example.com"}
+		_, _, svc := setup(t)
+
+		require.NoError(t, svc.Process(t.Context(), evt))
+	})
+
+	t.Run("Admin email matching is case-insensitive", func(t *testing.T) {
+		t.Parallel()
+
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "Admin@Example.com"}
+		_, _, svc := setup(t)
+
+		require.NoError(t, svc.Process(t.Context(), evt))
+	})
+
+	t.Run("godaily.dev address is silently ignored", func(t *testing.T) {
+		t.Parallel()
+
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_internal", Email: "hello@godaily.dev"}
+		_, _, svc := setup(t)
+
+		require.NoError(t, svc.Process(t.Context(), evt))
 	})
 }

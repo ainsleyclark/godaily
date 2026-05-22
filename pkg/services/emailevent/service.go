@@ -24,6 +24,7 @@ package emailevent
 
 import (
 	"context"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -41,14 +42,26 @@ type SubscriberHealth interface {
 type Service struct {
 	events      engagement.EmailEventRepository
 	subscribers SubscriberHealth
+	adminEmail  string
 }
 
 // New returns a Service wired to the event store and subscriber health.
-func New(events engagement.EmailEventRepository, subscribers SubscriberHealth) *Service {
+// adminEmail is the operator address (EMAIL_SEND_ADDRESS); events for it
+// and any @godaily.dev address are silently ignored.
+func New(events engagement.EmailEventRepository, subscribers SubscriberHealth, adminEmail string) *Service {
 	return &Service{
 		events:      events,
 		subscribers: subscribers,
+		adminEmail:  adminEmail,
 	}
+}
+
+// isInternalEmail reports whether addr belongs to the operator or the
+// @godaily.dev domain and should be excluded from engagement tracking.
+func (s *Service) isInternalEmail(addr string) bool {
+	lower := strings.ToLower(strings.TrimSpace(addr))
+	return (s.adminEmail != "" && lower == strings.ToLower(strings.TrimSpace(s.adminEmail))) ||
+		strings.HasSuffix(lower, "@godaily.dev")
 }
 
 // sideEffects maps an event type to the subscriber-health action it triggers.
@@ -65,7 +78,13 @@ var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, 
 // Process stores an email event and applies any subscriber-health side
 // effect. Events whose EventID has already been stored are treated as
 // duplicate webhook deliveries and skipped, making Process idempotent.
+// Events addressed to the admin or any @godaily.dev address are silently
+// dropped so internal traffic does not skew engagement stats.
 func (s *Service) Process(ctx context.Context, e engagement.EmailEvent) error {
+	if s.isInternalEmail(e.Email) {
+		return nil
+	}
+
 	exists, err := s.events.ExistsByEventID(ctx, e.EventID)
 	if err != nil {
 		return errors.Wrap(err, "checking for duplicate event")
