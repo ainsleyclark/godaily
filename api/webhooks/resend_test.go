@@ -71,8 +71,8 @@ func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmai
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return &godaily.App{
-		Config:      &env.Config{ResendWebhookSecret: secret, EmailSendAddress: "admin@example.com"},
-		EmailEvents: emailevent.New(events, subs),
+		Config:      &env.Config{ResendWebhookSecret: secret},
+		EmailEvents: emailevent.New(events, subs, "admin@example.com"),
 	}, events, subs
 }
 

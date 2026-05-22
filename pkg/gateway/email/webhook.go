@@ -22,7 +22,6 @@ package email
 import (
 	"encoding/json"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -95,11 +94,9 @@ func ParseWebhook(body []byte) (WebhookEvent, error) {
 
 // ToEmailEvent maps a Resend webhook event to GoDaily's provider-agnostic
 // domain event. eventID is the Svix message ID, used as the idempotency key.
-// adminEmail is the operator address; events addressed to it or to any
-// @godaily.dev address are acknowledged but not stored.
 // The returned bool reports whether the event type is one GoDaily tracks;
 // when false the event should be acknowledged and ignored.
-func ToEmailEvent(evt WebhookEvent, eventID, adminEmail string) (engagement.EmailEvent, bool, error) {
+func ToEmailEvent(evt WebhookEvent, eventID string) (engagement.EmailEvent, bool, error) {
 	eventType, tracked := webhookEventTypes[evt.Type]
 	if !tracked {
 		return engagement.EmailEvent{}, false, nil
@@ -120,9 +117,6 @@ func ToEmailEvent(evt WebhookEvent, eventID, adminEmail string) (engagement.Emai
 	}
 	if len(evt.Data.To) > 0 {
 		out.Email = evt.Data.To[0]
-	}
-	if isInternalEmail(out.Email, adminEmail) {
-		return engagement.EmailEvent{}, false, nil
 	}
 	if evt.Data.Click != nil {
 		out.URL = evt.Data.Click.Link
@@ -164,15 +158,6 @@ func parseTags(raw json.RawMessage) map[string]string {
 	}
 
 	return nil
-}
-
-// isInternalEmail reports whether addr should be excluded from engagement
-// tracking. It matches the configured admin address (case-insensitively) and
-// any address in the @godaily.dev domain.
-func isInternalEmail(addr, adminEmail string) bool {
-	lower := strings.ToLower(strings.TrimSpace(addr))
-	return (adminEmail != "" && lower == strings.ToLower(strings.TrimSpace(adminEmail))) ||
-		strings.HasSuffix(lower, "@godaily.dev")
 }
 
 // tagInt parses a numeric tag value into an optional ID. A missing or

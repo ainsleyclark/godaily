@@ -152,7 +152,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Social:       socialSvc,
 		Cache:        store,
 		Subscribers:  subscriberSvc,
-		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc),
+		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc, config.EmailSendAddress),
 		Slack:        slackClient,
 		StatFetchers: buildStatFetchers(config),
 	}, teardown, nil
