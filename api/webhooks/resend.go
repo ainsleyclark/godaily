@@ -74,7 +74,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID)
+		domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID, a.Config.EmailSendAddress)
 		if err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid payload")
 			return

@@ -87,7 +87,7 @@ func TestToEmailEvent(t *testing.T) {
 		evt, err := email.ParseWebhook(loadFixture(t, "clicked.json"))
 		require.NoError(t, err)
 
-		got, tracked, err := email.ToEmailEvent(evt, "msg_click")
+		got, tracked, err := email.ToEmailEvent(evt, "msg_click", "admin@example.com")
 		require.NoError(t, err)
 		require.True(t, tracked)
 		assert.Equal(t, engagement.EmailEventTypeClicked, got.Type)
@@ -107,7 +107,7 @@ func TestToEmailEvent(t *testing.T) {
 
 		bounced, err := email.ParseWebhook(loadFixture(t, "bounced.json"))
 		require.NoError(t, err)
-		gotBounced, tracked, err := email.ToEmailEvent(bounced, "msg_b")
+		gotBounced, tracked, err := email.ToEmailEvent(bounced, "msg_b", "")
 		require.NoError(t, err)
 		require.True(t, tracked)
 		assert.Equal(t, engagement.EmailEventTypeBounced, gotBounced.Type)
@@ -115,7 +115,7 @@ func TestToEmailEvent(t *testing.T) {
 
 		complained, err := email.ParseWebhook(loadFixture(t, "complained.json"))
 		require.NoError(t, err)
-		gotComplained, tracked, err := email.ToEmailEvent(complained, "msg_c")
+		gotComplained, tracked, err := email.ToEmailEvent(complained, "msg_c", "")
 		require.NoError(t, err)
 		require.True(t, tracked)
 		assert.Equal(t, engagement.EmailEventTypeComplained, gotComplained.Type)
@@ -124,7 +124,7 @@ func TestToEmailEvent(t *testing.T) {
 
 	t.Run("Untracked event type is not tracked", func(t *testing.T) {
 		t.Parallel()
-		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.sent"}, "msg")
+		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.sent"}, "msg", "")
 		require.NoError(t, err)
 		assert.False(t, tracked)
 		assert.Zero(t, got)
@@ -136,7 +136,7 @@ func TestToEmailEvent(t *testing.T) {
 			Type: "email.opened",
 			Data: email.WebhookData{Tags: json.RawMessage(`{"issue_id":"5","subscriber_id":"9"}`)},
 		}
-		got, tracked, err := email.ToEmailEvent(evt, "m")
+		got, tracked, err := email.ToEmailEvent(evt, "m", "")
 		require.NoError(t, err)
 		require.True(t, tracked)
 		require.NotNil(t, got.IssueID)
@@ -147,7 +147,7 @@ func TestToEmailEvent(t *testing.T) {
 
 	t.Run("Missing tags are not tracked", func(t *testing.T) {
 		t.Parallel()
-		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m")
+		got, tracked, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened"}, "m", "")
 		require.NoError(t, err)
 		assert.False(t, tracked)
 		assert.Zero(t, got)
@@ -159,7 +159,7 @@ func TestToEmailEvent(t *testing.T) {
 			Type: "email.opened",
 			Data: email.WebhookData{Tags: json.RawMessage(`{"issue_id":"not-a-number"}`)},
 		}
-		got, tracked, err := email.ToEmailEvent(evt, "m")
+		got, tracked, err := email.ToEmailEvent(evt, "m", "")
 		require.NoError(t, err)
 		assert.False(t, tracked)
 		assert.Zero(t, got)
@@ -167,9 +167,54 @@ func TestToEmailEvent(t *testing.T) {
 
 	t.Run("Malformed timestamp falls back to zero", func(t *testing.T) {
 		t.Parallel()
-		got, _, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened", CreatedAt: "nonsense"}, "m")
+		got, _, err := email.ToEmailEvent(email.WebhookEvent{Type: "email.opened", CreatedAt: "nonsense"}, "m", "")
 		require.NoError(t, err)
 		assert.True(t, got.OccurredAt.IsZero())
+	})
+
+	t.Run("Admin email address is not tracked", func(t *testing.T) {
+		t.Parallel()
+		evt := email.WebhookEvent{
+			Type: "email.opened",
+			Data: email.WebhookData{
+				To:   []string{"admin@example.com"},
+				Tags: json.RawMessage(`{"issue_id":"1"}`),
+			},
+		}
+		got, tracked, err := email.ToEmailEvent(evt, "m", "admin@example.com")
+		require.NoError(t, err)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
+	})
+
+	t.Run("Admin email matching is case-insensitive", func(t *testing.T) {
+		t.Parallel()
+		evt := email.WebhookEvent{
+			Type: "email.opened",
+			Data: email.WebhookData{
+				To:   []string{"Admin@Example.com"},
+				Tags: json.RawMessage(`{"issue_id":"1"}`),
+			},
+		}
+		got, tracked, err := email.ToEmailEvent(evt, "m", "admin@example.com")
+		require.NoError(t, err)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
+	})
+
+	t.Run("godaily.dev domain is not tracked", func(t *testing.T) {
+		t.Parallel()
+		evt := email.WebhookEvent{
+			Type: "email.opened",
+			Data: email.WebhookData{
+				To:   []string{"hello@godaily.dev"},
+				Tags: json.RawMessage(`{"issue_id":"1"}`),
+			},
+		}
+		got, tracked, err := email.ToEmailEvent(evt, "m", "")
+		require.NoError(t, err)
+		assert.False(t, tracked)
+		assert.Zero(t, got)
 	})
 }
 

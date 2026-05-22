@@ -71,7 +71,7 @@ func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmai
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return &godaily.App{
-		Config:      &env.Config{ResendWebhookSecret: secret},
+		Config:      &env.Config{ResendWebhookSecret: secret, EmailSendAddress: "admin@example.com"},
 		EmailEvents: emailevent.New(events, subs),
 	}, events, subs
 }
@@ -154,6 +154,20 @@ func TestHandler(t *testing.T) {
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(true, nil)
 
 		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+
+	t.Run("Event for admin address is acknowledged without processing", func(t *testing.T) {
+		a, _, _ := newApp(t, webhookSecret)
+		body := `{"type":"email.delivered","created_at":"2026-05-19T08:05:30.000Z","data":{"email_id":"re_admin","to":["admin@example.com"],"tags":[{"name":"issue_id","value":"1"},{"name":"subscriber_id","value":"1"}]}}`
+		w := do(t, a, signedPOST(t, webhookSecret, body))
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+
+	t.Run("Event for godaily.dev address is acknowledged without processing", func(t *testing.T) {
+		a, _, _ := newApp(t, webhookSecret)
+		body := `{"type":"email.delivered","created_at":"2026-05-19T08:05:30.000Z","data":{"email_id":"re_internal","to":["hello@godaily.dev"],"tags":[{"name":"issue_id","value":"1"},{"name":"subscriber_id","value":"1"}]}}`
+		w := do(t, a, signedPOST(t, webhookSecret, body))
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
