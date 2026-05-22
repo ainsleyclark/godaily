@@ -33,8 +33,7 @@ type EmailEventCreateParams struct {
 }
 
 func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreateParams) (EmailEvent, error) {
-	row := q.db.QueryRowContext(
-		ctx, emailEventCreate,
+	row := q.db.QueryRowContext(ctx, emailEventCreate,
 		arg.IssueID,
 		arg.SubscriberID,
 		arg.ItemID,
@@ -233,8 +232,7 @@ type IssueCreateParams struct {
 }
 
 func (q *Queries) IssueCreate(ctx context.Context, arg IssueCreateParams) (Issue, error) {
-	row := q.db.QueryRowContext(
-		ctx, issueCreate,
+	row := q.db.QueryRowContext(ctx, issueCreate,
 		arg.Slug,
 		arg.SentAt,
 		arg.Subject,
@@ -380,8 +378,7 @@ type ItemCreateParams struct {
 }
 
 func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, error) {
-	row := q.db.QueryRowContext(
-		ctx, itemCreate,
+	row := q.db.QueryRowContext(ctx, itemCreate,
 		arg.IssueID,
 		arg.Source,
 		arg.Tag,
@@ -601,8 +598,7 @@ type SocialMetricUpsertParams struct {
 }
 
 func (q *Queries) SocialMetricUpsert(ctx context.Context, arg SocialMetricUpsertParams) error {
-	_, err := q.db.ExecContext(
-		ctx, socialMetricUpsert,
+	_, err := q.db.ExecContext(ctx, socialMetricUpsert,
 		arg.SocialPostID,
 		arg.Platform,
 		arg.Likes,
@@ -632,8 +628,7 @@ type SocialPostCreateParams struct {
 }
 
 func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreateParams) (SocialPost, error) {
-	row := q.db.QueryRowContext(
-		ctx, socialPostCreate,
+	row := q.db.QueryRowContext(ctx, socialPostCreate,
 		arg.IssueID,
 		arg.Platform,
 		arg.Text,
