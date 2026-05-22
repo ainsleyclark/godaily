@@ -21,17 +21,14 @@ package digest
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // SendPreview loads the draft digest for the given date, sends it to the
@@ -42,18 +39,9 @@ func (a Aggregator) SendPreview(ctx context.Context, date time.Time) error {
 
 	slog.InfoContext(ctx, "Preparing to send preview digest", "slug", slug)
 
-	issue, err := a.issues.FindBySlug(ctx, slug)
-	if errors.Is(err, store.ErrNotFound) {
-		return fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
-	} else if err != nil {
-		return errors.Wrap(err, "loading digest")
-	} else if issue.Status != news.IssueStatusDraft {
-		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
-	}
-
-	sections, err := loadSections(ctx, a.items, issue.ID)
+	issue, sections, err := a.loadDraftDigest(ctx, slug, false)
 	if err != nil {
-		return errors.Wrap(err, "loading sections")
+		return err
 	}
 
 	canonicalURL := env.AppURL + "/issues/" + issue.Slug + "/"
