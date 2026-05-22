@@ -223,16 +223,17 @@ func main() {
 				return
 			}
 			row := conn.QueryRowContext(r.Context(),
-				"SELECT id, email, confirmed_at, unsubscribed_at, bounced_at FROM subscribers WHERE email = ? LIMIT 1",
+				"SELECT id, email, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at FROM subscribers WHERE email = ? LIMIT 1",
 				email)
 			var sub struct {
 				ID             int64   `json:"id"`
 				Email          string  `json:"email"`
+				ConfirmToken   string  `json:"confirm_token"`
 				ConfirmedAt    *string `json:"confirmed_at"`
 				UnsubscribedAt *string `json:"unsubscribed_at"`
 				BouncedAt      *string `json:"bounced_at"`
 			}
-			if err := row.Scan(&sub.ID, &sub.Email, &sub.ConfirmedAt, &sub.UnsubscribedAt, &sub.BouncedAt); err != nil {
+			if err := row.Scan(&sub.ID, &sub.Email, &sub.ConfirmToken, &sub.ConfirmedAt, &sub.UnsubscribedAt, &sub.BouncedAt); err != nil {
 				http.Error(w, "subscriber not found: "+err.Error(), http.StatusNotFound)
 				return
 			}
