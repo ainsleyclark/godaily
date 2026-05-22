@@ -101,7 +101,6 @@ const (
 // Tag.Section().
 var SectionTags = []Tag{
 	TagRelease,
-	TagSecurity,
 	TagProposal,
 	TagConference,
 	TagDiscussion,
@@ -109,6 +108,7 @@ var SectionTags = []Tag{
 	TagArticle,
 	TagVideo,
 	TagTrending,
+	TagSecurity,
 }
 
 // NoLimit disables the per-section item cap when used in SectionLimits.

@@ -1,0 +1,16 @@
+[
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Improper certificate validation in crypto/tls",
+		"url": "https://pkg.go.dev/vuln/GO-2024-3109",
+		"original_url": "",
+		"image_url": "",
+		"author": null,
+		"snippet": "The TLS client in crypto/tls did not properly validate the server certificate chain consistency. An attacker who controls a network could intercept TLS-protected communications.",
+		"tag": "security",
+		"comments": 0,
+		"score": 1.0,
+		"published": "2024-11-15T00:00:00Z"
+	}
+]
