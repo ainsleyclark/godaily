@@ -36,7 +36,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSend(t *testing.T) {
+func TestHandlePreview(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockRunner)
 		weekend    bool
@@ -46,13 +46,13 @@ func TestHandleSend(t *testing.T) {
 	}{
 		"OK": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(nil)
+				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
-		"Send Digest Error": {
+		"Send Preview Error": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().SendDigest(gomock.Any(), gomock.Any(), false).Return(errors.New("send failed"))
+				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(errors.New("preview failed"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -87,8 +87,8 @@ func TestHandleSend(t *testing.T) {
 				api.SetApp(a)
 
 				w := httptest.NewRecorder()
-				r := httptest.NewRequest(http.MethodGet, "/api/send", nil)
-				HandleSend(w, r)
+				r := httptest.NewRequest(http.MethodGet, "/api/preview", nil)
+				HandlePreview(w, r)
 				assert.Equal(t, test.wantStatus, w.Code)
 			})
 		})

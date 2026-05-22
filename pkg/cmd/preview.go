@@ -21,51 +21,33 @@ package cmd
 
 import (
 	"context"
-	"log/slog"
-	"os"
+	"fmt"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
 	"github.com/urfave/cli/v3"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
-
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
-
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			previewCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
+func previewCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "preview",
+		Usage: "Send the draft digest and AI synth suggestion to the owner for early review.",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "date",
+				Usage: "Date of the draft to preview (YYYY-MM-DD). Defaults to today.",
+			},
 		},
-	}
-
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
-
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			date := time.Now().UTC().Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
+				if err != nil {
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				}
+				date = d
+			}
+			return a.Runner.SendPreview(ctx, date)
+		},
 	}
 }

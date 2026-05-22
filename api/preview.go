@@ -17,55 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package cmd
+package api
 
 import (
 	"context"
 	"log/slog"
-	"os"
+	"net/http"
+	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/urfave/cli/v3"
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Run executes the cli command and runs the program.
-func Run() {
-	ctx := context.Background()
+// HandlePreview is the Vercel serverless function entry point for GET /api/preview.
+// It runs at 6 AM UTC on weekdays, sending the draft digest and AI synth suggestion
+// to the owner before the full subscriber send at 8 AM.
+func HandlePreview(w http.ResponseWriter, r *http.Request) {
+	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
+		now := time.Now().UTC()
+		if api.IsWeekend(now) {
+			slog.InfoContext(ctx, "Skipping preview — weekend")
+			hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
+			api.OK(w)
+			return
+		}
 
-	app, teardown, err := godaily.Bootstrap(ctx)
-	defer teardown()
-	if err != nil {
-		exit(ctx, err)
-	}
+		today := now.Truncate(24 * time.Hour)
 
-	cmd := &cli.Command{
-		Name:  "godaily",
-		Usage: "Daily Go news, straight to your inbox",
-		Commands: []*cli.Command{
-			buildCmd(app),
-			collectCmd(app),
-			previewCmd(app),
-			sendCmd(app),
-			socialCmd(app),
-			runCmd(app),
-			serveCmd(app),
-			sourcesCmd(app),
-			synthCmd(app),
-			migrateCmd(app),
-			fetchCmd(app),
-			generateCmd(app),
-		},
-	}
+		if err := a.Runner.SendPreview(ctx, today); err != nil {
+			a.Slack.MustSend(ctx, "Send preview failed: "+err.Error())
+			api.Error(w, http.StatusInternalServerError, "send preview failed: "+err.Error())
+			return
+		}
 
-	if err = cmd.Run(context.Background(), os.Args); err != nil {
-		exit(ctx, err)
-	}
-}
+		hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
 
-func exit(ctx context.Context, err error) {
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
-		os.Exit(1)
-	}
+		api.OK(w)
+	})(w, r)
 }

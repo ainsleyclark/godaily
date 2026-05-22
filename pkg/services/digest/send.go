@@ -35,25 +35,17 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// SendDigest loads the draft digest for the given date, sends it to the
-// admin address and all active subscribers, then updates the stored issue status.
+// SendDigest loads the draft digest for the given date, sends it to all
+// active subscribers, then updates the stored issue status to sent.
+// The admin preview (digest + synth) is sent separately via SendPreview.
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) error {
 	slug := date.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Preparing to send digest", "slug", slug)
 
-	issue, err := a.issues.FindBySlug(ctx, slug)
-	if errors.Is(err, store.ErrNotFound) {
-		return fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
-	} else if err != nil {
-		return errors.Wrap(err, "loading digest")
-	} else if !force && issue.Status != news.IssueStatusDraft {
-		return fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
-	}
-
-	sections, err := loadSections(ctx, a.items, issue.ID)
+	issue, sections, err := a.loadDraftDigest(ctx, slug, force)
 	if err != nil {
-		return errors.Wrap(err, "loading sections")
+		return err
 	}
 
 	subs, err := a.subscribers.ListActive(ctx)
@@ -63,27 +55,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	canonicalURL := env.AppURL + "/issues/" + issue.Slug + "/"
 
-	// Render and send to admin (no unsubscribe link).
-	adminRendered, err := renderDigest(digestOptions{
-		Day:          date,
-		Subject:      issue.Subject,
-		Intro:        issue.Summary,
-		Sources:      sections,
-		CanonicalURL: canonicalURL,
-	})
-	if err != nil {
-		return errors.Wrap(err, "rendering digest")
-	}
-
 	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
 
-	status := news.IssueStatusSent
-	if err = a.sendRendered(ctx, a.adminEmailAddress, adminRendered, []email.Tag{issueTag}); err != nil {
-		slog.ErrorContext(ctx, "Failed to send digest email to admin", "err", err)
-		status = news.IssueStatusError
-	}
-
 	// Send personalized digests to active subscribers.
+	// Subscriber errors are non-fatal; the issue is marked sent once dispatched.
 	for _, sub := range subs {
 		if sub.UnsubscribeToken == "" {
 			slog.ErrorContext(ctx, "Skipping subscriber with missing unsubscribe token", "email", sub.Email)
@@ -111,11 +86,32 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		}
 	}
 
-	if _, err = a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
+	if _, err = a.issues.UpdateStatus(ctx, issue.ID, news.IssueStatusSent, time.Now().UTC()); err != nil {
 		slog.ErrorContext(ctx, "Failed to update issue status", "err", err)
 	}
 
 	return nil
+}
+
+// loadDraftDigest finds the issue for slug, validates its status, and returns
+// the issue along with its grouped sections. Pass force=true to skip the
+// draft-status guard (used by SendDigest --force).
+func (a Aggregator) loadDraftDigest(ctx context.Context, slug string, force bool) (news.Issue, []news.SourceItems, error) {
+	issue, err := a.issues.FindBySlug(ctx, slug)
+	if errors.Is(err, store.ErrNotFound) {
+		return news.Issue{}, nil, fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
+	} else if err != nil {
+		return news.Issue{}, nil, errors.Wrap(err, "loading digest")
+	} else if !force && issue.Status != news.IssueStatusDraft {
+		return news.Issue{}, nil, fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
+	}
+
+	sections, err := loadSections(ctx, a.items, issue.ID)
+	if err != nil {
+		return news.Issue{}, nil, errors.Wrap(err, "loading sections")
+	}
+
+	return issue, sections, nil
 }
 
 // loadSections fetches stored items for an issue and groups them into
