@@ -33,6 +33,8 @@ type Sender interface {
 	Send(ctx context.Context, req SendEmailRequest) error
 }
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockemail -destination=../../mocks/email/BatchSender.go . BatchSender
+
 // BatchSender extends Sender with the ability to send multiple emails in a
 // single API call. The digest send path uses this to stay within Resend's
 // 5 req/s rate limit.
