@@ -70,14 +70,16 @@ func (t EmailEventType) Valid() bool {
 	return validEmailEventTypes[t]
 }
 
-// EmailEvent is a single email lifecycle event. IssueID and SubscriberID are
-// optional: events for non-digest mail (such as confirmation emails), or for
-// recipients that aren't tracked subscribers, still record — with the unknown
-// identifier left nil.
+// EmailEvent is a single email lifecycle event. IssueID, SubscriberID and
+// ItemID are optional: events for non-digest mail (such as confirmation
+// emails), or for recipients that aren't tracked subscribers, still record —
+// with the unknown identifier left nil. ItemID is best-effort: it is set only
+// when a click resolves to a known item, and stays nil otherwise.
 type EmailEvent struct {
 	ID           int64          `json:"id"`
 	IssueID      *int64         `json:"issue_id,omitempty"`
 	SubscriberID *int64         `json:"subscriber_id,omitempty"`
+	ItemID       *int64         `json:"item_id,omitempty"`
 	Email        string         `json:"email"`
 	Type         EmailEventType `json:"type"`
 	URL          string         `json:"url,omitempty"`

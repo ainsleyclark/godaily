@@ -20,6 +20,7 @@
 package handler
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
@@ -48,6 +49,14 @@ import (
 
 var webhookSecret = "whsec_" + base64.StdEncoding.EncodeToString([]byte("godaily-handler-test-secret-key!"))
 
+// noopItemFinder satisfies emailevent.ItemFinder, resolving no items. The
+// webhook fixtures exercised here carry no click events, so it is never hit.
+type noopItemFinder struct{}
+
+func (noopItemFinder) FindByURLInIssue(context.Context, int64, string) (int64, bool, error) {
+	return 0, false, nil
+}
+
 func loadFixture(t *testing.T, name string) string {
 	t.Helper()
 	b, err := os.ReadFile(filepath.Join("..", "..", "examples", "webhooks", "resend", name))
@@ -72,7 +81,7 @@ func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmai
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return &godaily.App{
 		Config:      &env.Config{ResendWebhookSecret: secret},
-		EmailEvents: emailevent.New(events, subs, ""),
+		EmailEvents: emailevent.New(events, subs, noopItemFinder{}, ""),
 	}, events, subs
 }
 

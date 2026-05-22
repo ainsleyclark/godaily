@@ -13,16 +13,17 @@ import (
 
 const emailEventCreate = `-- name: EmailEventCreate :one
 INSERT INTO email_events (
-    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+    issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at, created_at
+RETURNING id, issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at, created_at
 `
 
 type EmailEventCreateParams struct {
 	IssueID      sql.NullInt64  `json:"issue_id"`
 	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	ItemID       sql.NullInt64  `json:"item_id"`
 	Email        string         `json:"email"`
 	EventType    string         `json:"event_type"`
 	Url          sql.NullString `json:"url"`
@@ -35,6 +36,7 @@ func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreatePara
 	row := q.db.QueryRowContext(ctx, emailEventCreate,
 		arg.IssueID,
 		arg.SubscriberID,
+		arg.ItemID,
 		arg.Email,
 		arg.EventType,
 		arg.Url,
@@ -47,6 +49,7 @@ func (q *Queries) EmailEventCreate(ctx context.Context, arg EmailEventCreatePara
 		&i.ID,
 		&i.IssueID,
 		&i.SubscriberID,
+		&i.ItemID,
 		&i.Email,
 		&i.EventType,
 		&i.Url,
@@ -410,6 +413,25 @@ DELETE FROM items WHERE issue_id = ?
 func (q *Queries) ItemDeleteByIssue(ctx context.Context, issueID sql.NullInt64) error {
 	_, err := q.db.ExecContext(ctx, itemDeleteByIssue, issueID)
 	return err
+}
+
+const itemFindByURLInIssue = `-- name: ItemFindByURLInIssue :one
+SELECT id FROM items
+WHERE issue_id = ?1
+  AND (url = ?2 OR (original_url IS NOT NULL AND original_url = ?2))
+LIMIT 1
+`
+
+type ItemFindByURLInIssueParams struct {
+	IssueID sql.NullInt64 `json:"issue_id"`
+	Url     string        `json:"url"`
+}
+
+func (q *Queries) ItemFindByURLInIssue(ctx context.Context, arg ItemFindByURLInIssueParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, itemFindByURLInIssue, arg.IssueID, arg.Url)
+	var id int64
+	err := row.Scan(&id)
+	return id, err
 }
 
 const itemListByDateRange = `-- name: ItemListByDateRange :many

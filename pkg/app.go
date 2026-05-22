@@ -111,10 +111,11 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	subsStore := subscribers.New(conn)
 	socialPostsStore := socialposts.New(conn)
+	itemStore := items.New(conn)
 
 	repo := &Repository{
 		Issues:        issueStore,
-		Items:         items.New(conn),
+		Items:         itemStore,
 		Subscribers:   subsStore,
 		SocialPosts:   socialPostsStore,
 		EmailEvents:   emailevents.New(conn),
@@ -152,7 +153,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Social:       socialSvc,
 		Cache:        store,
 		Subscribers:  subscriberSvc,
-		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc, config.EmailSendAddress),
+		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
 		Slack:        slackClient,
 		StatFetchers: buildStatFetchers(config),
 	}, teardown, nil

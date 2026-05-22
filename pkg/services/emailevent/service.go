@@ -24,6 +24,7 @@ package emailevent
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -38,20 +39,28 @@ type SubscriberHealth interface {
 	MarkComplained(ctx context.Context, email string) error
 }
 
+// ItemFinder resolves a clicked URL back to the item it points at, scoped to
+// an issue. It is satisfied by the items store.
+type ItemFinder interface {
+	FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error)
+}
+
 // Service stores email events and applies their subscriber-health effects.
 type Service struct {
 	events      engagement.EmailEventRepository
 	subscribers SubscriberHealth
+	items       ItemFinder
 	adminEmail  string
 }
 
-// New returns a Service wired to the event store and subscriber health.
-// adminEmail is the operator address (EMAIL_SEND_ADDRESS); events for it
-// and any @godaily.dev address are silently ignored.
-func New(events engagement.EmailEventRepository, subscribers SubscriberHealth, adminEmail string) *Service {
+// New returns a Service wired to the event store, subscriber health and item
+// lookup. adminEmail is the operator address (EMAIL_SEND_ADDRESS); events for
+// it and any @godaily.dev address are silently ignored.
+func New(events engagement.EmailEventRepository, subscribers SubscriberHealth, items ItemFinder, adminEmail string) *Service {
 	return &Service{
 		events:      events,
 		subscribers: subscribers,
+		items:       items,
 		adminEmail:  adminEmail,
 	}
 }
@@ -91,6 +100,14 @@ func (s *Service) Process(ctx context.Context, e engagement.EmailEvent) error {
 	}
 	if exists {
 		return nil
+	}
+
+	if e.Type == engagement.EmailEventTypeClicked && e.IssueID != nil && e.URL != "" {
+		if id, ok, err := s.items.FindByURLInIssue(ctx, *e.IssueID, e.URL); err != nil {
+			slog.WarnContext(ctx, "Item lookup for click event failed", "url", e.URL, "err", err)
+		} else if ok {
+			e.ItemID = &id
+		}
 	}
 
 	if _, err := s.events.Create(ctx, e); err != nil {

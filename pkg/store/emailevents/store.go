@@ -59,6 +59,7 @@ func (s Store) Create(ctx context.Context, e engagement.EmailEvent) (engagement.
 	row, err := s.sqlc.EmailEventCreate(ctx, sqlc.EmailEventCreateParams{
 		IssueID:      nullInt64(e.IssueID),
 		SubscriberID: nullInt64(e.SubscriberID),
+		ItemID:       nullInt64(e.ItemID),
 		Email:        e.Email,
 		EventType:    e.Type.String(),
 		Url:          dbtypes.NullString(e.URL),
@@ -125,6 +126,7 @@ func transform(r sqlc.EmailEvent) engagement.EmailEvent {
 		ID:           r.ID,
 		IssueID:      int64Ptr(r.IssueID),
 		SubscriberID: int64Ptr(r.SubscriberID),
+		ItemID:       int64Ptr(r.ItemID),
 		Email:        r.Email,
 		Type:         engagement.EmailEventType(r.EventType),
 		URL:          r.Url.String,

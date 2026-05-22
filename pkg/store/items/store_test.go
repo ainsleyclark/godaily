@@ -193,6 +193,50 @@ func TestItems_Store(t *testing.T) {
 		assert.True(t, found, "item must be linked to the issue after upsert")
 	})
 
+	t.Run("FindByURLInIssue", func(t *testing.T) {
+		t.Log("Matches the canonical URL")
+		{
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, itemWithAuthor.URL)
+			require.NoError(t, err)
+			assert.True(t, ok)
+			assert.Equal(t, firstID, id)
+		}
+
+		t.Log("Matches the original URL")
+		{
+			withOriginal := news.Item{
+				Source:      news.SourceHN,
+				Title:       "Linked discussion",
+				URL:         "https://example.com/canonical",
+				OriginalURL: "https://news.ycombinator.com/item?id=orig",
+				Score:       0.6,
+				Published:   published,
+			}
+			created, err := s.Create(ctx, &issue.ID, 20, withOriginal)
+			require.NoError(t, err)
+
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, withOriginal.OriginalURL)
+			require.NoError(t, err)
+			assert.True(t, ok)
+			assert.Equal(t, created.ID, id)
+		}
+
+		t.Log("A miss returns ok=false without an error")
+		{
+			id, ok, err := s.FindByURLInIssue(ctx, issue.ID, "https://nowhere.example.com")
+			require.NoError(t, err)
+			assert.False(t, ok)
+			assert.Zero(t, id)
+		}
+
+		t.Log("Lookup is scoped to the issue")
+		{
+			_, ok, err := s.FindByURLInIssue(ctx, 999_999, itemWithAuthor.URL)
+			require.NoError(t, err)
+			assert.False(t, ok)
+		}
+	})
+
 	t.Run("DeleteByIssue", func(t *testing.T) {
 		require.NoError(t, s.DeleteByIssue(ctx, issue.ID))
 		got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
@@ -227,6 +271,13 @@ func TestItems_Store(t *testing.T) {
 		t.Log("DeleteByIssue")
 		{
 			assert.Error(t, s.DeleteByIssue(ctx, 1))
+		}
+
+		t.Log("FindByURLInIssue")
+		{
+			_, ok, err := s.FindByURLInIssue(ctx, 1, "https://go.dev")
+			assert.Error(t, err)
+			assert.False(t, ok)
 		}
 	})
 }

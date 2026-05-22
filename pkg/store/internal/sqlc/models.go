@@ -13,6 +13,7 @@ type EmailEvent struct {
 	ID           int64          `json:"id"`
 	IssueID      sql.NullInt64  `json:"issue_id"`
 	SubscriberID sql.NullInt64  `json:"subscriber_id"`
+	ItemID       sql.NullInt64  `json:"item_id"`
 	Email        string         `json:"email"`
 	EventType    string         `json:"event_type"`
 	Url          sql.NullString `json:"url"`

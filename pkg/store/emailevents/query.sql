@@ -1,8 +1,8 @@
 -- name: EmailEventCreate :one
 INSERT INTO email_events (
-    issue_id, subscriber_id, email, event_type, url, provider_id, event_id, occurred_at
+    issue_id, subscriber_id, item_id, email, event_type, url, provider_id, event_id, occurred_at
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING *;
 
