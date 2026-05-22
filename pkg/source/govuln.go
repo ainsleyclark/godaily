@@ -111,7 +111,7 @@ func (v vulnEntry) Transform() news.Item {
 		Snippet:   v.Details,
 		Tag:       news.TagSecurity,
 		Score:     news.ScoreOf(news.SourceGoVuln, news.TagSecurity, 0, false),
-		Published: v.Published,
+		Published: v.Modified,
 	}
 }
 
@@ -124,6 +124,7 @@ type (
 	vulnEntry struct {
 		ID        string         `json:"id"`
 		Published time.Time      `json:"published"`
+		Modified  time.Time      `json:"modified"`
 		Summary   string         `json:"summary"`
 		Details   string         `json:"details"`
 		Affected  []vulnAffected `json:"affected"`

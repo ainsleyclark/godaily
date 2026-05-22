@@ -104,7 +104,7 @@ func TestGoVuln_Fetch(t *testing.T) {
 					Snippet:   fixture.Details,
 					Tag:       news.TagSecurity,
 					Score:     1.0, // SourceWeight 2.0 * constantNoSignal 0.5
-					Published: fixture.Published,
+					Published: fixture.Modified,
 				}, items[0])
 			},
 		},
