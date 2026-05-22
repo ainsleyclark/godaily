@@ -49,9 +49,7 @@ const (
 // Tag is consulted only for GitHub; other sources ignore it.
 func SourceWeight(s Source, t Tag) float64 {
 	switch s {
-	case SourceGoRelease:
-		return 2.0
-	case SourceGoBlog:
+	case SourceGoRelease, SourceGoBlog, SourceGoVuln:
 		return 2.0
 	case SourceGitHub:
 		switch t {

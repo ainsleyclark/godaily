@@ -4,6 +4,7 @@
 	--section-accent: var(--accent);
 
 	&--release    { --section-accent: var(--section-release); }
+	&--security   { --section-accent: var(--section-security); }
 	&--proposal   { --section-accent: var(--section-proposal); }
 	&--article    { --section-accent: var(--section-article); }
 	&--discussion { --section-accent: var(--section-discussion); }

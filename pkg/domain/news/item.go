@@ -87,6 +87,7 @@ const (
 	TagVideo              Tag = "video"
 	TagPodcast            Tag = "podcast"
 	TagRelease            Tag = "release"
+	TagSecurity           Tag = "security"
 	TagDiscussion         Tag = "discussion"
 	TagTrending           Tag = "trending"
 	TagEvent              Tag = "event"
@@ -100,6 +101,7 @@ const (
 // Tag.Section().
 var SectionTags = []Tag{
 	TagRelease,
+	TagSecurity,
 	TagProposal,
 	TagConference,
 	TagDiscussion,
@@ -118,6 +120,7 @@ var SectionLimits = map[Tag]int{
 	TagEvent:      5,
 	TagConference: NoLimit,
 	TagRelease:    5,
+	TagSecurity:   5,
 	TagProposal:   NoLimit,
 	TagArticle:    5,
 	TagDiscussion: 8,
@@ -145,6 +148,7 @@ var sectionTitles = map[Tag]string{
 	TagEvent:      "Events",
 	TagConference: "Conferences",
 	TagRelease:    "Releases",
+	TagSecurity:   "Security",
 	TagProposal:   "Proposals",
 	TagArticle:    "Articles",
 	TagDiscussion: "Discussions",
