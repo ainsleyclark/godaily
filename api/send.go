@@ -49,12 +49,6 @@ func HandleSend(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err := a.Runner.SendSuggestion(ctx, today); err != nil {
-			a.Slack.MustSend(ctx, "Send suggestion failed: "+err.Error())
-			api.Error(w, http.StatusInternalServerError, "send suggestion failed: "+err.Error())
-			return
-		}
-
 		hook.Deploy(ctx, a.Config.VercelDeployHookURL)
 		hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
 

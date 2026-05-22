@@ -35,8 +35,10 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// SendDigest loads the draft digest for the given date, sends it to the
-// admin address and all active subscribers, then updates the stored issue status.
+// SendDigest loads the draft digest for the given date, sends it to all
+// active subscribers, then updates the stored issue status to sent.
+// The admin preview (digest + synth) is sent separately via SendPreview.
+
 func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) error {
 	slug := date.Format("2006-01-02")
 
@@ -63,27 +65,10 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	canonicalURL := env.AppURL + "/issues/" + issue.Slug + "/"
 
-	// Render and send to admin (no unsubscribe link).
-	adminRendered, err := renderDigest(digestOptions{
-		Day:          date,
-		Subject:      issue.Subject,
-		Intro:        issue.Summary,
-		Sources:      sections,
-		CanonicalURL: canonicalURL,
-	})
-	if err != nil {
-		return errors.Wrap(err, "rendering digest")
-	}
-
 	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
 
-	status := news.IssueStatusSent
-	if err = a.sendRendered(ctx, a.adminEmailAddress, adminRendered, []email.Tag{issueTag}); err != nil {
-		slog.ErrorContext(ctx, "Failed to send digest email to admin", "err", err)
-		status = news.IssueStatusError
-	}
-
 	// Send personalized digests to active subscribers.
+	// Subscriber errors are non-fatal; the issue is marked sent once dispatched.
 	for _, sub := range subs {
 		if sub.UnsubscribeToken == "" {
 			slog.ErrorContext(ctx, "Skipping subscriber with missing unsubscribe token", "email", sub.Email)
@@ -111,7 +96,7 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		}
 	}
 
-	if _, err = a.issues.UpdateStatus(ctx, issue.ID, status, time.Now().UTC()); err != nil {
+	if _, err = a.issues.UpdateStatus(ctx, issue.ID, news.IssueStatusSent, time.Now().UTC()); err != nil {
 		slog.ErrorContext(ctx, "Failed to update issue status", "err", err)
 	}
 
