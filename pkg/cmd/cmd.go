@@ -55,6 +55,7 @@ func Run() {
 			migrateCmd(app),
 			fetchCmd(app),
 			generateCmd(app),
+			emailCmd(app),
 		},
 	}
 

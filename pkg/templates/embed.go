@@ -44,3 +44,6 @@ var SuggestHTML string
 
 //go:embed suggest.txt
 var SuggestText string
+
+//go:embed message.html
+var MessageHTML string
