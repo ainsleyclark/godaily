@@ -26,6 +26,14 @@ import (
 	"net/http"
 
 	apihandlers "github.com/ainsleyclark/godaily/api"
+	metricsissueslug "github.com/ainsleyclark/godaily/api/metrics/issues"
+	metricsissueslugslug "github.com/ainsleyclark/godaily/api/metrics/issues/slug"
+	metricsitems "github.com/ainsleyclark/godaily/api/metrics/items"
+	metricssources "github.com/ainsleyclark/godaily/api/metrics/sources"
+	metricssubscribers "github.com/ainsleyclark/godaily/api/metrics/subscribers"
+	metricssummary "github.com/ainsleyclark/godaily/api/metrics/summary"
+	metricstags "github.com/ainsleyclark/godaily/api/metrics/tags"
+	metricstrend "github.com/ainsleyclark/godaily/api/metrics/trend"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 )
@@ -45,6 +53,14 @@ func Handler(app *godaily.App) http.Handler {
 	mux.HandleFunc("GET /subscribers", apihandlers.HandleSubscribers)
 	mux.HandleFunc("GET /social", apihandlers.HandleSocial)
 	mux.HandleFunc("GET /healthz", apihandlers.HandleHealthz)
+	mux.HandleFunc("GET /metrics/summary", metricssummary.Handler)
+	mux.HandleFunc("GET /metrics/issues", metricsissueslug.Handler)
+	mux.HandleFunc("GET /metrics/issues/slug", metricsissueslugslug.Handler)
+	mux.HandleFunc("GET /metrics/items", metricsitems.Handler)
+	mux.HandleFunc("GET /metrics/tags", metricstags.Handler)
+	mux.HandleFunc("GET /metrics/sources", metricssources.Handler)
+	mux.HandleFunc("GET /metrics/trend", metricstrend.Handler)
+	mux.HandleFunc("GET /metrics/subscribers", metricssubscribers.Handler)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mux.ServeHTTP(w, r.WithContext(pkgapi.WithApp(r.Context(), app)))
 	})
