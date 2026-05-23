@@ -43,9 +43,9 @@ var issueSorts = []string{
 // Returns per-issue engagement stats with optional filtering and sorting.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, httpErr := api.ParseMetricsQuery(r, issueSorts, "sent_at")
-		if httpErr != nil {
-			httpErr.Write(w)
+		q, err := api.ParseMetricsQuery(r, issueSorts, "sent_at")
+		if err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 

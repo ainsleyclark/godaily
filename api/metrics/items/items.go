@@ -31,9 +31,9 @@ import (
 // Returns the top-clicked news items enriched with title, tag, and source metadata.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, httpErr := api.ParseMetricsQuery(r, nil, "")
-		if httpErr != nil {
-			httpErr.Write(w)
+		q, err := api.ParseMetricsQuery(r, nil, "")
+		if err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 

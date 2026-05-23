@@ -38,9 +38,9 @@ var validSubBuckets = map[string]struct{}{
 // Returns subscriber growth and churn bucketed over time.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, httpErr := api.ParseMetricsQuery(r, nil, "")
-		if httpErr != nil {
-			httpErr.Write(w)
+		q, err := api.ParseMetricsQuery(r, nil, "")
+		if err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 

@@ -52,24 +52,26 @@ var queryDecoder = func() *schema.Decoder {
 	return d
 }()
 
-// rawMetricsQuery is the intermediate struct decoded from URL query parameters
-// using gorilla/schema before validation.
-type rawMetricsQuery struct {
-	From   string `schema:"from"`
-	To     string `schema:"to"`
-	Period string `schema:"period"`
-	Sort   string `schema:"sort"`
-	Limit  int    `schema:"limit"`
-}
+type (
+	// rawMetricsQuery is the intermediate struct decoded from URL query parameters
+	// using gorilla/schema before validation.
+	rawMetricsQuery struct {
+		From   string `schema:"from"`
+		To     string `schema:"to"`
+		Period string `schema:"period"`
+		Sort   string `schema:"sort"`
+		Limit  int    `schema:"limit"`
+	}
 
-// MetricsQuery holds the parsed and validated common query parameters accepted
-// by every /api/metrics list endpoint.
-type MetricsQuery struct {
-	From  *time.Time
-	To    *time.Time
-	Sort  string
-	Limit int
-}
+	// MetricsQuery holds the parsed and validated common query parameters accepted
+	// by every /api/metrics list endpoint.
+	MetricsQuery struct {
+		From  *time.Time
+		To    *time.Time
+		Sort  string
+		Limit int
+	}
+)
 
 // ToFilter converts the parsed query into the store-layer MetricsFilter.
 func (q MetricsQuery) ToFilter() engagement.MetricsFilter {
@@ -80,27 +82,13 @@ func (q MetricsQuery) ToFilter() engagement.MetricsFilter {
 	}
 }
 
-// HTTPError is an HTTP error that carries its status code and can write itself
-// to a ResponseWriter as a JSON body {"error": "..."}.
-type HTTPError struct {
-	Status  int
-	Message string
-}
-
-// Write writes the error to w as JSON.
-func (e *HTTPError) Write(w http.ResponseWriter) {
-	Error(w, e.Status, e.Message)
-}
-
 // ParseMetricsQuery decodes and validates the common query parameters for
 // /api/metrics/* endpoints. It uses gorilla/schema to map the query string
 // into rawMetricsQuery, then applies business-rule validation.
-//
-// Validation errors return a non-nil *HTTPError with Status 400.
-func ParseMetricsQuery(r *http.Request, allowedSorts []string, defaultSort string) (MetricsQuery, *HTTPError) {
+func ParseMetricsQuery(r *http.Request, allowedSorts []string, defaultSort string) (MetricsQuery, error) {
 	raw := rawMetricsQuery{Limit: defaultMetricsLimit}
 	if err := queryDecoder.Decode(&raw, r.URL.Query()); err != nil {
-		return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: "invalid query parameters"}
+		return MetricsQuery{}, fmt.Errorf("invalid query parameters")
 	}
 
 	q := MetricsQuery{
@@ -117,28 +105,28 @@ func ParseMetricsQuery(r *http.Request, allowedSorts []string, defaultSort strin
 	if raw.From != "" {
 		t, err := time.Parse("2006-01-02", raw.From)
 		if err != nil {
-			return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("invalid from date: %q", raw.From)}
+			return MetricsQuery{}, fmt.Errorf("invalid from date: %q", raw.From)
 		}
 		q.From = &t
 	}
 	if raw.To != "" {
 		t, err := time.Parse("2006-01-02", raw.To)
 		if err != nil {
-			return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("invalid to date: %q", raw.To)}
+			return MetricsQuery{}, fmt.Errorf("invalid to date: %q", raw.To)
 		}
 		q.To = &t
 	}
 
 	// from must be strictly before to when both are present.
 	if q.From != nil && q.To != nil && !q.From.Before(*q.To) {
-		return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: "from must be before to"}
+		return MetricsQuery{}, fmt.Errorf("from must be before to")
 	}
 
 	// Resolve period only when neither from nor to is set.
 	if raw.Period != "" && q.From == nil && q.To == nil {
 		days, ok := periodDays[raw.Period]
 		if !ok {
-			return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("unknown period: %q", raw.Period)}
+			return MetricsQuery{}, fmt.Errorf("unknown period: %q", raw.Period)
 		}
 		if days > 0 {
 			now := time.Now().UTC()
@@ -148,23 +136,23 @@ func ParseMetricsQuery(r *http.Request, allowedSorts []string, defaultSort strin
 		}
 	} else if raw.Period != "" && !isKnownPeriod(raw.Period) {
 		// period is set alongside from/to; still validate it even though it's ignored.
-		return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("unknown period: %q", raw.Period)}
+		return MetricsQuery{}, fmt.Errorf("unknown period: %q", raw.Period)
 	}
 
 	// Validate sort if explicitly provided.
 	if raw.Sort != "" {
 		if !contains(allowedSorts, raw.Sort) {
-			return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("unknown sort: %q", raw.Sort)}
+			return MetricsQuery{}, fmt.Errorf("unknown sort: %q", raw.Sort)
 		}
 		q.Sort = raw.Sort
 	}
 
 	// Validate limit bounds.
 	if q.Limit < 1 {
-		return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: "limit must be at least 1"}
+		return MetricsQuery{}, fmt.Errorf("limit must be at least 1")
 	}
 	if q.Limit > maxMetricsLimit {
-		return MetricsQuery{}, &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf("limit must be at most %d", maxMetricsLimit)}
+		return MetricsQuery{}, fmt.Errorf("limit must be at most %d", maxMetricsLimit)
 	}
 
 	return q, nil
