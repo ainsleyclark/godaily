@@ -1,0 +1,5 @@
+# GitGuardian configuration
+# Excludes test files with intentional test credentials
+
+paths-to-exclude:
+  - e2e/
