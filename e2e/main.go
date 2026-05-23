@@ -119,6 +119,7 @@ func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]new
 	}
 	return nil, nil
 }
+
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {
 	return r.aggregator.Build(ctx, date)
 }
