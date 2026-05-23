@@ -23,37 +23,54 @@ import (
 	"context"
 	"net/http"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// validSubBuckets is the allowlist of subscriber growth bucket values.
-var validSubBuckets = map[string]struct{}{
-	"day":   {},
-	"week":  {},
-	"month": {},
+type subscribersRequest struct {
+	From   string `schema:"from"`
+	To     string `schema:"to"`
+	Period string `schema:"period"`
+	Bucket string `schema:"bucket"`
+}
+
+func (req subscribersRequest) validate() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Bucket, validation.When(req.Bucket != "",
+			validation.In("day", "week", "month").
+				Error("invalid bucket: use day, week, or month"),
+		)),
+	)
 }
 
 // Handler is the Vercel serverless function entry point for GET /api/metrics/subscribers.
 // Returns subscriber growth and churn bucketed over time.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, err := api.ParseMetricsQuery(r, nil, "")
+		var req subscribersRequest
+		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid query parameters")
+			return
+		}
+		if err := req.validate(); err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
 		if err != nil {
 			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		bucket := r.URL.Query().Get("bucket")
+		bucket := req.Bucket
 		if bucket == "" {
 			bucket = "day"
 		}
-		if _, ok := validSubBuckets[bucket]; !ok {
-			api.Error(w, http.StatusBadRequest, "invalid bucket: use day, week, or month")
-			return
-		}
 
-		data, err := a.Repository.Metrics.SubscriberGrowth(ctx, q.ToFilter(), bucket)
+		data, err := a.Repository.Metrics.SubscriberGrowth(ctx, engagement.MetricsFilter{From: from, To: to}, bucket)
 		if err != nil {
 			api.Error(w, http.StatusInternalServerError, "failed to fetch subscriber data")
 			return

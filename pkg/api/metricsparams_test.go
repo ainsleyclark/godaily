@@ -20,7 +20,6 @@
 package api
 
 import (
-	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -28,161 +27,95 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestParseMetricsQuery(t *testing.T) {
+func TestParseDateWindow(t *testing.T) {
 	t.Parallel()
 
-	allowedSorts := []string{"click_rate", "open_rate", "sent_at"}
-
-	t.Run("Default limit and sort", func(t *testing.T) {
+	t.Run("Empty inputs leave bounds nil", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("", "", "")
 		require.NoError(t, err)
-		assert.Equal(t, 10, got.Limit)
-		assert.Equal(t, "sent_at", got.Sort)
-		assert.Nil(t, got.From)
-		assert.Nil(t, got.To)
-	})
-
-	t.Run("Explicit limit", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?limit=25", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.NoError(t, err)
-		assert.Equal(t, 25, got.Limit)
+		assert.Nil(t, from)
+		assert.Nil(t, to)
 	})
 
 	t.Run("Valid from and to", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?from=2026-01-01&to=2026-02-01", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("2026-01-01", "2026-02-01", "")
 		require.NoError(t, err)
-		require.NotNil(t, got.From)
-		require.NotNil(t, got.To)
-		assert.Equal(t, "2026-01-01", got.From.Format("2006-01-02"))
-		assert.Equal(t, "2026-02-01", got.To.Format("2006-01-02"))
+		require.NotNil(t, from)
+		require.NotNil(t, to)
+		assert.Equal(t, "2026-01-01", from.Format("2006-01-02"))
+		assert.Equal(t, "2026-02-01", to.Format("2006-01-02"))
 	})
 
 	t.Run("Invalid from date", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?from=not-a-date", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("not-a-date", "", "")
 		require.Error(t, err)
 	})
 
 	t.Run("Invalid to date", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?to=2026/01/01", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("", "2026/01/01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("From equal to to", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?from=2026-01-01&to=2026-01-01", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("2026-01-01", "2026-01-01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("From after to", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?from=2026-02-01&to=2026-01-01", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("2026-02-01", "2026-01-01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("Period day sets from and to", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?period=day", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("", "", "day")
 		require.NoError(t, err)
-		require.NotNil(t, got.From)
-		require.NotNil(t, got.To)
-		diff := got.To.Sub(*got.From)
+		require.NotNil(t, from)
+		require.NotNil(t, to)
+		diff := to.Sub(*from)
 		assert.InDelta(t, float64(24*time.Hour), float64(diff), float64(time.Minute))
 	})
 
 	t.Run("Period week sets 7-day window", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?period=week", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("", "", "week")
 		require.NoError(t, err)
-		require.NotNil(t, got.From)
-		diff := got.To.Sub(*got.From)
+		require.NotNil(t, from)
+		diff := to.Sub(*from)
 		assert.InDelta(t, float64(7*24*time.Hour), float64(diff), float64(time.Minute))
 	})
 
 	t.Run("Period all leaves bounds nil", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?period=all", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("", "", "all")
 		require.NoError(t, err)
-		assert.Nil(t, got.From)
-		assert.Nil(t, got.To)
+		assert.Nil(t, from)
+		assert.Nil(t, to)
 	})
 
 	t.Run("Unknown period", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?period=quarter", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("", "", "quarter")
 		require.Error(t, err)
 	})
 
 	t.Run("Period ignored when from is set", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?from=2026-01-01&period=week", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		from, to, err := ParseDateWindow("2026-01-01", "", "week")
 		require.NoError(t, err)
-		// from is set, period is ignored, to stays nil
-		require.NotNil(t, got.From)
-		assert.Nil(t, got.To)
+		require.NotNil(t, from)
+		assert.Nil(t, to)
 	})
 
-	t.Run("Valid sort", func(t *testing.T) {
+	t.Run("Unknown period still rejected when from is set", func(t *testing.T) {
 		t.Parallel()
-		r := httptest.NewRequest("GET", "/?sort=click_rate", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.NoError(t, err)
-		assert.Equal(t, "click_rate", got.Sort)
-	})
-
-	t.Run("Unknown sort", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?sort=nonsense", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
+		_, _, err := ParseDateWindow("2026-01-01", "", "quarter")
 		require.Error(t, err)
-	})
-
-	t.Run("Limit too low", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?limit=-1", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.Error(t, err)
-	})
-
-	t.Run("Limit too high", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?limit=101", nil)
-		_, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.Error(t, err)
-	})
-
-	t.Run("Limit at max boundary", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?limit=100", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.NoError(t, err)
-		assert.Equal(t, 100, got.Limit)
-	})
-
-	t.Run("ToFilter conversion", func(t *testing.T) {
-		t.Parallel()
-		r := httptest.NewRequest("GET", "/?limit=20", nil)
-		got, err := ParseMetricsQuery(r, allowedSorts, "sent_at")
-		require.NoError(t, err)
-		f := got.ToFilter()
-		assert.Equal(t, 20, f.Limit)
-		assert.Nil(t, f.From)
-		assert.Nil(t, f.To)
 	})
 }

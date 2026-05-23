@@ -23,33 +23,60 @@ import (
 	"context"
 	"net/http"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// issueSorts is the allowlist of sort fields for the issues list endpoint.
-var issueSorts = []string{
-	"click_rate",
-	"open_rate",
-	"total_clicks",
-	"unique_clicks",
-	"total_opens",
-	"unique_opens",
-	"delivered",
-	"sent_at",
+type issuesRequest struct {
+	From   string `schema:"from"`
+	To     string `schema:"to"`
+	Period string `schema:"period"`
+	Limit  int    `schema:"limit"`
+	Sort   string `schema:"sort"`
+}
+
+func (req issuesRequest) validate() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Sort, validation.When(req.Sort != "",
+			validation.In("click_rate", "open_rate", "total_clicks", "unique_clicks", "total_opens", "unique_opens", "delivered", "sent_at").
+				Error("invalid sort: use click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, or sent_at"),
+		)),
+		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
+	)
 }
 
 // Handler is the Vercel serverless function entry point for GET /api/metrics/issues.
 // Returns per-issue engagement stats with optional filtering and sorting.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, err := api.ParseMetricsQuery(r, issueSorts, "sent_at")
+		var req issuesRequest
+		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid query parameters")
+			return
+		}
+		if err := req.validate(); err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
 		if err != nil {
 			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		rows, err := a.Repository.Metrics.IssueList(ctx, q.ToFilter(), q.Sort)
+		sort := req.Sort
+		if sort == "" {
+			sort = "sent_at"
+		}
+		limit := req.Limit
+		if limit == 0 {
+			limit = api.DefaultMetricsLimit
+		}
+
+		rows, err := a.Repository.Metrics.IssueList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
 		if err != nil {
 			api.Error(w, http.StatusInternalServerError, "failed to fetch issue metrics")
 			return

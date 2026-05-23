@@ -25,19 +25,32 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
+
+type summaryRequest struct {
+	From   string `schema:"from"`
+	To     string `schema:"to"`
+	Period string `schema:"period"`
+}
 
 // Handler is the Vercel serverless function entry point for GET /api/metrics/summary.
 // Returns headline engagement numbers for a period.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, err := api.ParseMetricsQuery(r, nil, "")
+		var req summaryRequest
+		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid query parameters")
+			return
+		}
+
+		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
 		if err != nil {
 			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		stats, err := a.Repository.Metrics.Summary(ctx, q.ToFilter())
+		stats, err := a.Repository.Metrics.Summary(ctx, engagement.MetricsFilter{From: from, To: to})
 		if err != nil {
 			api.Error(w, http.StatusInternalServerError, "failed to fetch summary stats")
 			return

@@ -21,16 +21,14 @@ package api
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/gorilla/schema"
 )
 
 const (
-	defaultMetricsLimit = 10
-	maxMetricsLimit     = 100
+	DefaultMetricsLimit = 10
+	MaxMetricsLimit     = 100
 )
 
 // periodDays maps period shorthand values to rolling day counts.
@@ -43,132 +41,57 @@ var periodDays = map[string]int{
 	"all":   0,
 }
 
-// queryDecoder is the shared gorilla/schema decoder for query parameters.
-// IgnoreUnknownKeys allows endpoint-specific params (e.g. bucket, metric) to be
-// present in the query string without causing decode errors in the shared parser.
-var queryDecoder = func() *schema.Decoder {
+// Decoder is the shared gorilla/schema decoder for metrics query parameters.
+// IgnoreUnknownKeys is set so endpoint-specific params (bucket, metric, etc.)
+// do not cause decode errors when processed by handlers that don't declare them.
+var Decoder = func() *schema.Decoder {
 	d := schema.NewDecoder()
 	d.IgnoreUnknownKeys(true)
 	return d
 }()
 
-type (
-	// rawMetricsQuery is the intermediate struct decoded from URL query parameters
-	// using gorilla/schema before validation.
-	rawMetricsQuery struct {
-		From   string `schema:"from"`
-		To     string `schema:"to"`
-		Period string `schema:"period"`
-		Sort   string `schema:"sort"`
-		Limit  int    `schema:"limit"`
-	}
-
-	// MetricsQuery holds the parsed and validated common query parameters accepted
-	// by every /api/metrics list endpoint.
-	MetricsQuery struct {
-		From  *time.Time
-		To    *time.Time
-		Sort  string
-		Limit int
-	}
-)
-
-// ToFilter converts the parsed query into the store-layer MetricsFilter.
-func (q MetricsQuery) ToFilter() engagement.MetricsFilter {
-	return engagement.MetricsFilter{
-		From:  q.From,
-		To:    q.To,
-		Limit: q.Limit,
-	}
-}
-
-// ParseMetricsQuery decodes and validates the common query parameters for
-// /api/metrics/* endpoints. It uses gorilla/schema to map the query string
-// into rawMetricsQuery, then applies business-rule validation.
-func ParseMetricsQuery(r *http.Request, allowedSorts []string, defaultSort string) (MetricsQuery, error) {
-	raw := rawMetricsQuery{Limit: defaultMetricsLimit}
-	if err := queryDecoder.Decode(&raw, r.URL.Query()); err != nil {
-		return MetricsQuery{}, fmt.Errorf("invalid query parameters")
-	}
-
-	q := MetricsQuery{
-		Sort:  defaultSort,
-		Limit: raw.Limit,
-	}
-
-	// Zero limit means the param was absent; keep the default.
-	if q.Limit == 0 {
-		q.Limit = defaultMetricsLimit
-	}
-
-	// Parse from/to dates.
-	if raw.From != "" {
-		t, err := time.Parse("2006-01-02", raw.From)
-		if err != nil {
-			return MetricsQuery{}, fmt.Errorf("invalid from date: %q", raw.From)
+// ParseDateWindow resolves optional from/to time bounds from raw query string values
+// and a period shorthand. It enforces cross-field rules that cannot be expressed as
+// single-field ozzo rules:
+//   - from and to must parse as YYYY-MM-DD
+//   - from must be strictly before to when both are present
+//   - period is resolved only when neither from nor to is set
+//   - an unrecognised period is always rejected, even when from/to are also set
+func ParseDateWindow(rawFrom, rawTo, period string) (from, to *time.Time, err error) {
+	if rawFrom != "" {
+		t, parseErr := time.Parse("2006-01-02", rawFrom)
+		if parseErr != nil {
+			return nil, nil, fmt.Errorf("invalid from date: %q", rawFrom)
 		}
-		q.From = &t
+		from = &t
 	}
-	if raw.To != "" {
-		t, err := time.Parse("2006-01-02", raw.To)
-		if err != nil {
-			return MetricsQuery{}, fmt.Errorf("invalid to date: %q", raw.To)
+	if rawTo != "" {
+		t, parseErr := time.Parse("2006-01-02", rawTo)
+		if parseErr != nil {
+			return nil, nil, fmt.Errorf("invalid to date: %q", rawTo)
 		}
-		q.To = &t
+		to = &t
 	}
-
-	// from must be strictly before to when both are present.
-	if q.From != nil && q.To != nil && !q.From.Before(*q.To) {
-		return MetricsQuery{}, fmt.Errorf("from must be before to")
+	if from != nil && to != nil && !from.Before(*to) {
+		return nil, nil, fmt.Errorf("from must be before to")
 	}
-
-	// Resolve period only when neither from nor to is set.
-	if raw.Period != "" && q.From == nil && q.To == nil {
-		days, ok := periodDays[raw.Period]
+	if period != "" && from == nil && to == nil {
+		days, ok := periodDays[period]
 		if !ok {
-			return MetricsQuery{}, fmt.Errorf("unknown period: %q", raw.Period)
+			return nil, nil, fmt.Errorf("unknown period: %q", period)
 		}
 		if days > 0 {
 			now := time.Now().UTC()
-			from := now.AddDate(0, 0, -days)
-			q.From = &from
-			q.To = &now
+			f := now.AddDate(0, 0, -days)
+			from = &f
+			to = &now
 		}
-	} else if raw.Period != "" && !isKnownPeriod(raw.Period) {
-		// period is set alongside from/to; still validate it even though it's ignored.
-		return MetricsQuery{}, fmt.Errorf("unknown period: %q", raw.Period)
+	} else if period != "" && !isKnownPeriod(period) {
+		return nil, nil, fmt.Errorf("unknown period: %q", period)
 	}
-
-	// Validate sort if explicitly provided.
-	if raw.Sort != "" {
-		if !contains(allowedSorts, raw.Sort) {
-			return MetricsQuery{}, fmt.Errorf("unknown sort: %q", raw.Sort)
-		}
-		q.Sort = raw.Sort
-	}
-
-	// Validate limit bounds.
-	if q.Limit < 1 {
-		return MetricsQuery{}, fmt.Errorf("limit must be at least 1")
-	}
-	if q.Limit > maxMetricsLimit {
-		return MetricsQuery{}, fmt.Errorf("limit must be at most %d", maxMetricsLimit)
-	}
-
-	return q, nil
+	return from, to, nil
 }
 
-// contains reports whether s is in the slice.
-func contains(slice []string, s string) bool {
-	for _, v := range slice {
-		if v == s {
-			return true
-		}
-	}
-	return false
-}
-
-// isKnownPeriod reports whether period is a recognised period shorthand.
 func isKnownPeriod(period string) bool {
 	_, ok := periodDays[period]
 	return ok

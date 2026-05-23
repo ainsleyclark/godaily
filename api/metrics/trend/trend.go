@@ -23,56 +23,63 @@ import (
 	"context"
 	"net/http"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// validMetrics is the allowlist of trend metric values.
-var validMetrics = map[string]struct{}{
-	"delivered":     {},
-	"unique_opens":  {},
-	"total_opens":   {},
-	"unique_clicks": {},
-	"total_clicks":  {},
-	"open_rate":     {},
-	"click_rate":    {},
+type trendRequest struct {
+	From   string `schema:"from"`
+	To     string `schema:"to"`
+	Period string `schema:"period"`
+	Metric string `schema:"metric"`
+	Bucket string `schema:"bucket"`
 }
 
-// validBuckets is the allowlist of trend bucket values.
-var validBuckets = map[string]struct{}{
-	"day":  {},
-	"week": {},
+func (req trendRequest) validate() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Metric, validation.When(req.Metric != "",
+			validation.In("delivered", "unique_opens", "total_opens", "unique_clicks", "total_clicks", "open_rate", "click_rate").
+				Error("invalid metric: use delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, or click_rate"),
+		)),
+		validation.Field(&req.Bucket, validation.When(req.Bucket != "",
+			validation.In("day", "week").
+				Error("invalid bucket: use day or week"),
+		)),
+	)
 }
 
 // Handler is the Vercel serverless function entry point for GET /api/metrics/trend.
 // Returns a time series for a chosen engagement metric, bucketed by day or week.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		q, err := api.ParseMetricsQuery(r, nil, "")
+		var req trendRequest
+		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid query parameters")
+			return
+		}
+		if err := req.validate(); err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
 		if err != nil {
 			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		metric := r.URL.Query().Get("metric")
+		metric := req.Metric
 		if metric == "" {
 			metric = "click_rate"
 		}
-		if _, ok := validMetrics[metric]; !ok {
-			api.Error(w, http.StatusBadRequest, "invalid metric: use delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, or click_rate")
-			return
-		}
-
-		bucket := r.URL.Query().Get("bucket")
+		bucket := req.Bucket
 		if bucket == "" {
 			bucket = "day"
 		}
-		if _, ok := validBuckets[bucket]; !ok {
-			api.Error(w, http.StatusBadRequest, "invalid bucket: use day or week")
-			return
-		}
 
-		data, err := a.Repository.Metrics.Trend(ctx, q.ToFilter(), metric, bucket)
+		data, err := a.Repository.Metrics.Trend(ctx, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
 		if err != nil {
 			api.Error(w, http.StatusInternalServerError, "failed to fetch trend data")
 			return

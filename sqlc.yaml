@@ -9,6 +9,7 @@ sql:
       - "pkg/store/socialposts/query.sql"
       - "pkg/store/emailevents/query.sql"
       - "pkg/store/socialmetrics/query.sql"
+      - "pkg/store/metrics/query.sql"
     gen:
       go:
         package: "sqlc"

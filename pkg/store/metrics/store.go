@@ -29,82 +29,68 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
 
 // New creates a new metrics Store.
 func New(db *sql.DB) *Store {
-	return &Store{db: db}
+	return &Store{
+		sqlc: sqlc.New(db),
+		db:   db,
+	}
 }
 
-// Store implements engagement.MetricsRepository using raw SQL.
+// Store implements engagement.MetricsRepository.
 type Store struct {
-	db *sql.DB
+	sqlc *sqlc.Queries
+	db   *sql.DB
 }
 
 var _ engagement.MetricsRepository = (*Store)(nil)
 
+// nullableTime converts an optional time to the interface{} that sqlc.narg expects:
+// nil when absent, RFC3339 string when present.
+func nullableTime(t *time.Time) interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.Format(time.RFC3339)
+}
+
 // Summary returns headline engagement numbers for the given filter window.
 func (s *Store) Summary(ctx context.Context, f engagement.MetricsFilter) (engagement.SummaryStats, error) {
-	conds, args := timeConditions(f, "e.occurred_at")
-
-	query := `
-SELECT
-    COUNT(DISTINCT CASE WHEN e.event_type = 'delivered'           THEN e.issue_id      END) AS issues_sent,
-    COUNT(CASE          WHEN e.event_type = 'delivered'           THEN 1               END) AS delivered,
-    COUNT(DISTINCT CASE WHEN e.event_type = 'opened'              THEN e.subscriber_id END) AS unique_opens,
-    COUNT(CASE          WHEN e.event_type = 'opened'              THEN 1               END) AS total_opens,
-    COUNT(DISTINCT CASE WHEN e.event_type = 'clicked'             THEN e.subscriber_id END) AS unique_clicks,
-    COUNT(CASE          WHEN e.event_type = 'clicked'             THEN 1               END) AS total_clicks,
-    COUNT(CASE          WHEN e.event_type = 'bounced'             THEN 1               END) AS bounced,
-    COUNT(CASE          WHEN e.event_type = 'complained'          THEN 1               END) AS complained,
-    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
-FROM email_events e
-WHERE e.issue_id IS NOT NULL` + conds
-
-	row := s.db.QueryRowContext(ctx, query, args...)
-
-	var r struct {
-		issuesSent    int64
-		delivered     int64
-		uniqueOpens   int64
-		totalOpens    int64
-		uniqueClicks  int64
-		totalClicks   int64
-		bounced       int64
-		complained    int64
-		uniqueEngaged int64
-	}
-	if err := row.Scan(
-		&r.issuesSent, &r.delivered,
-		&r.uniqueOpens, &r.totalOpens,
-		&r.uniqueClicks, &r.totalClicks,
-		&r.bounced, &r.complained, &r.uniqueEngaged,
-	); err != nil {
+	r, err := s.sqlc.MetricsSummary(ctx, sqlc.MetricsSummaryParams{
+		From: nullableTime(f.From),
+		To:   nullableTime(f.To),
+	})
+	if err != nil {
 		return engagement.SummaryStats{}, err
 	}
 
 	stats := engagement.SummaryStats{
 		From:                     formatDate(f.From),
 		To:                       formatDate(f.To),
-		IssuesSent:               r.issuesSent,
-		Delivered:                r.delivered,
-		UniqueOpens:              r.uniqueOpens,
-		TotalOpens:               r.totalOpens,
-		UniqueClicks:             r.uniqueClicks,
-		TotalClicks:              r.totalClicks,
-		Bounced:                  r.bounced,
-		Complained:               r.complained,
-		UniqueSubscribersEngaged: r.uniqueEngaged,
+		IssuesSent:               r.IssuesSent,
+		Delivered:                r.Delivered,
+		UniqueOpens:              r.UniqueOpens,
+		TotalOpens:               r.TotalOpens,
+		UniqueClicks:             r.UniqueClicks,
+		TotalClicks:              r.TotalClicks,
+		Bounced:                  r.Bounced,
+		Complained:               r.Complained,
+		UniqueSubscribersEngaged: r.UniqueEngaged,
 	}
-	if r.delivered > 0 {
-		stats.OpenRate = float64(r.uniqueOpens) / float64(r.delivered)
-		stats.ClickRate = float64(r.uniqueClicks) / float64(r.delivered)
+	if r.Delivered > 0 {
+		stats.OpenRate = float64(r.UniqueOpens) / float64(r.Delivered)
+		stats.ClickRate = float64(r.UniqueClicks) / float64(r.Delivered)
 	}
 	return stats, nil
 }
 
-// issueSortExprs maps sort-key names to SQL ORDER BY expressions.
-// Only keys present here are accepted; this map is the sole injection guard.
+// issueSortExprs maps validated sort-key names to their SQL ORDER BY expressions.
+// Raw SQL is required here because sqlc cannot parameterise ORDER BY expressions —
+// only scalar values can be bound as parameters, not SQL fragments. The map is the
+// sole injection guard: only keys present here are ever interpolated into the query.
 var issueSortExprs = map[string]string{
 	"click_rate":    "CAST(COUNT(DISTINCT CASE WHEN e.event_type='clicked' THEN e.subscriber_id END) AS REAL) / NULLIF(COUNT(CASE WHEN e.event_type='delivered' THEN 1 END), 0)",
 	"open_rate":     "CAST(COUNT(DISTINCT CASE WHEN e.event_type='opened' THEN e.subscriber_id END) AS REAL) / NULLIF(COUNT(CASE WHEN e.event_type='delivered' THEN 1 END), 0)",
@@ -117,7 +103,11 @@ var issueSortExprs = map[string]string{
 }
 
 // IssueList returns per-issue engagement stats ordered by the given sort key descending.
-// Per the spec, date filtering is applied to issues.sent_at, not occurred_at.
+//
+// Raw SQL is required because the ORDER BY clause must contain a full aggregate
+// expression (e.g. "CAST(COUNT(...) AS REAL) / NULLIF(...)") that is chosen at
+// runtime. sqlc only supports binding scalar values as parameters — SQL fragments
+// in ORDER BY are not parameterisable in any dialect.
 func (s *Store) IssueList(ctx context.Context, f engagement.MetricsFilter, sortKey string) ([]engagement.IssueEngagement, error) {
 	conds, args := timeConditions(f, "i.sent_at")
 
@@ -179,108 +169,63 @@ LIMIT ?`, conds, orderExpr)
 
 // ItemList returns the top-clicked news items enriched with item metadata.
 func (s *Store) ItemList(ctx context.Context, f engagement.MetricsFilter) ([]engagement.ItemMetrics, error) {
-	conds, args := timeConditions(f, "e.occurred_at")
-	args = append(args, int64(f.Limit))
-
-	query := `
-SELECT
-    it.id,
-    it.title,
-    it.url,
-    it.tag,
-    it.source,
-    COUNT(*) AS clicks
-FROM email_events e
-JOIN items it ON it.id = e.item_id
-WHERE e.event_type = 'clicked'
-  AND e.item_id IS NOT NULL` + conds + `
-GROUP BY it.id, it.title, it.url, it.tag, it.source
-ORDER BY clicks DESC
-LIMIT ?`
-
-	rows, err := s.db.QueryContext(ctx, query, args...)
+	rows, err := s.sqlc.MetricsItemList(ctx, sqlc.MetricsItemListParams{
+		From:  nullableTime(f.From),
+		To:    nullableTime(f.To),
+		Limit: int64(f.Limit),
+	})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var out []engagement.ItemMetrics
-	for rows.Next() {
-		var row engagement.ItemMetrics
-		if err = rows.Scan(&row.ItemID, &row.Title, &row.URL, &row.Tag, &row.Source, &row.Clicks); err != nil {
-			return nil, err
+	out := make([]engagement.ItemMetrics, len(rows))
+	for i, r := range rows {
+		out[i] = engagement.ItemMetrics{
+			ItemID: r.ID,
+			Title:  r.Title,
+			URL:    r.Url,
+			Tag:    r.Tag,
+			Source: r.Source,
+			Clicks: r.Clicks,
 		}
-		out = append(out, row)
 	}
-	return out, rows.Err()
+	return out, nil
 }
 
 // TagList returns clicks aggregated by item tag, ordered by clicks descending.
 func (s *Store) TagList(ctx context.Context, f engagement.MetricsFilter) ([]engagement.TagMetrics, error) {
-	conds, args := timeConditions(f, "e.occurred_at")
-	args = append(args, int64(f.Limit))
-
-	query := `
-SELECT
-    it.tag,
-    COUNT(*) AS clicks
-FROM email_events e
-JOIN items it ON it.id = e.item_id
-WHERE e.event_type = 'clicked'
-  AND e.item_id IS NOT NULL` + conds + `
-GROUP BY it.tag
-ORDER BY clicks DESC
-LIMIT ?`
-
-	rows, err := s.db.QueryContext(ctx, query, args...)
+	rows, err := s.sqlc.MetricsTagList(ctx, sqlc.MetricsTagListParams{
+		From:  nullableTime(f.From),
+		To:    nullableTime(f.To),
+		Limit: int64(f.Limit),
+	})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var out []engagement.TagMetrics
-	for rows.Next() {
-		var row engagement.TagMetrics
-		if err = rows.Scan(&row.Tag, &row.Clicks); err != nil {
-			return nil, err
-		}
-		out = append(out, row)
+	out := make([]engagement.TagMetrics, len(rows))
+	for i, r := range rows {
+		out[i] = engagement.TagMetrics{Tag: r.Tag, Clicks: r.Clicks}
 	}
-	return out, rows.Err()
+	return out, nil
 }
 
 // SourceList returns clicks aggregated by item source, ordered by clicks descending.
 func (s *Store) SourceList(ctx context.Context, f engagement.MetricsFilter) ([]engagement.SourceMetrics, error) {
-	conds, args := timeConditions(f, "e.occurred_at")
-	args = append(args, int64(f.Limit))
-
-	query := `
-SELECT
-    it.source,
-    COUNT(*) AS clicks
-FROM email_events e
-JOIN items it ON it.id = e.item_id
-WHERE e.event_type = 'clicked'
-  AND e.item_id IS NOT NULL` + conds + `
-GROUP BY it.source
-ORDER BY clicks DESC
-LIMIT ?`
-
-	rows, err := s.db.QueryContext(ctx, query, args...)
+	rows, err := s.sqlc.MetricsSourceList(ctx, sqlc.MetricsSourceListParams{
+		From:  nullableTime(f.From),
+		To:    nullableTime(f.To),
+		Limit: int64(f.Limit),
+	})
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
-	var out []engagement.SourceMetrics
-	for rows.Next() {
-		var row engagement.SourceMetrics
-		if err = rows.Scan(&row.Source, &row.Clicks); err != nil {
-			return nil, err
-		}
-		out = append(out, row)
+	out := make([]engagement.SourceMetrics, len(rows))
+	for i, r := range rows {
+		out[i] = engagement.SourceMetrics{Source: r.Source, Clicks: r.Clicks}
 	}
-	return out, rows.Err()
+	return out, nil
 }
 
 // trendBucket holds raw aggregated counts for a single time-series bucket.
@@ -294,6 +239,11 @@ type trendBucket struct {
 }
 
 // Trend returns a zero-filled time-series for the requested metric.
+//
+// Raw SQL is required because the GROUP BY and SELECT clauses both contain a
+// date-bucketing expression (strftime or a week-start calculation) that is chosen
+// at runtime based on the bucket parameter. sqlc cannot parameterise SQL fragments
+// in SELECT or GROUP BY — only scalar values can be bound as query parameters.
 func (s *Store) Trend(ctx context.Context, f engagement.MetricsFilter, metric, bucket string) (engagement.TrendData, error) {
 	bucketExpr := trendBucketSQL(bucket)
 	conds, args := timeConditions(f, "e.occurred_at")
@@ -346,9 +296,14 @@ type subscriberBucket struct {
 }
 
 // SubscriberGrowth returns subscriber growth and churn bucketed over time.
-// Each subscriber event type is tracked via its own timestamp column using UNION ALL,
-// so confirmed_at, unsubscribed_at, bounced_at, and suppressed_at are bucketed
-// independently from created_at.
+//
+// Raw SQL is required for two reasons:
+//  1. The bucket expression (day/week/month) is a runtime-chosen SQL fragment used
+//     in both SELECT and GROUP BY — sqlc cannot parameterise SQL expressions.
+//  2. The query uses UNION ALL across five distinct timestamp columns
+//     (created_at, confirmed_at, unsubscribed_at, bounced_at, suppressed_at), each
+//     with its own WHERE filter. sqlc has no mechanism to repeat a SQL fragment
+//     across UNION branches at runtime.
 func (s *Store) SubscriberGrowth(ctx context.Context, f engagement.MetricsFilter, bucket string) (engagement.SubscriberData, error) {
 	bucketExpr := subsBucketExpr(bucket, "event_time")
 
@@ -458,9 +413,7 @@ WHERE confirmed_at IS NOT NULL
 	return engagement.SubscriberData{Bucket: bucket, Points: points}, nil
 }
 
-// timeConditions returns an AND fragment ("\n  AND col >= ?\n  AND col < ?") and
-// positional args for optional from/to bounds on the given SQL column.
-// Returns ("", nil) when f has no bounds.
+// timeConditions returns an AND fragment and positional args for optional from/to bounds.
 func timeConditions(f engagement.MetricsFilter, col string) (string, []any) {
 	var parts []string
 	var args []any
@@ -478,7 +431,7 @@ func timeConditions(f engagement.MetricsFilter, col string) (string, []any) {
 	return "\n  AND " + strings.Join(parts, "\n  AND "), args
 }
 
-// trendBucketSQL returns the SQLite date expression that maps e.occurred_at to a bucket key.
+// trendBucketSQL returns the SQLite expression that maps e.occurred_at to a bucket key.
 func trendBucketSQL(bucket string) string {
 	if bucket == "week" {
 		return `date(e.occurred_at, '-' || CAST(((strftime('%w', e.occurred_at) + 6) % 7) AS TEXT) || ' days')`
@@ -486,8 +439,7 @@ func trendBucketSQL(bucket string) string {
 	return `strftime('%Y-%m-%d', e.occurred_at)`
 }
 
-// subsBucketExpr returns the full SQLite date expression for bucketing the given column
-// in the subscriber growth query.
+// subsBucketExpr returns the full SQLite date expression for bucketing the given column.
 func subsBucketExpr(bucket, col string) string {
 	switch bucket {
 	case "week":
@@ -518,7 +470,6 @@ func buildTrendPoints(f engagement.MetricsFilter, bucket string, byDate map[stri
 	step := bucketStep(bucket)
 	for cur := f.From.UTC().Truncate(24 * time.Hour); cur.Before(*f.To); cur = cur.Add(step) {
 		key := bucketKey(cur, bucket)
-		// Skip duplicates that arise when iterating by 24 h over week/month spans.
 		if len(pts) > 0 && pts[len(pts)-1].BucketStart == key {
 			continue
 		}
@@ -532,7 +483,6 @@ func buildTrendPoints(f engagement.MetricsFilter, bucket string, byDate map[stri
 	return pts
 }
 
-// trendValue selects the appropriate float64 value for the requested metric from a bucket.
 func trendValue(metric string, tb trendBucket) float64 {
 	switch metric {
 	case "delivered":
@@ -558,7 +508,6 @@ func trendValue(metric string, tb trendBucket) float64 {
 	}
 }
 
-// bucketStep returns the loop stride used to zero-fill trend buckets.
 func bucketStep(bucket string) time.Duration {
 	if bucket == "week" {
 		return 7 * 24 * time.Hour
@@ -566,7 +515,6 @@ func bucketStep(bucket string) time.Duration {
 	return 24 * time.Hour
 }
 
-// bucketKey formats t as the canonical key string produced by trendBucketSQL.
 func bucketKey(t time.Time, bucket string) string {
 	if bucket == "week" {
 		wd := int(t.Weekday())
@@ -578,7 +526,6 @@ func bucketKey(t time.Time, bucket string) string {
 	return t.Format("2006-01-02")
 }
 
-// formatDate formats a *time.Time as "YYYY-MM-DD". Returns "" for nil.
 func formatDate(t *time.Time) string {
 	if t == nil {
 		return ""
