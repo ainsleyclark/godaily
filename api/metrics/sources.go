@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
@@ -29,35 +29,25 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type trendRequest struct {
+type sourcesRequest struct {
 	From   string `schema:"from"`
 	To     string `schema:"to"`
 	Period string `schema:"period"`
-	Metric string `schema:"metric"`
-	Bucket string `schema:"bucket"`
+	Limit  int    `schema:"limit"`
 }
 
-func (req trendRequest) validate() error {
+func (req sourcesRequest) validate() error {
 	return validation.ValidateStruct(
 		&req,
-		validation.Field(&req.Metric, validation.When(
-			req.Metric != "",
-			validation.In("delivered", "unique_opens", "total_opens", "unique_clicks", "total_clicks", "open_rate", "click_rate").
-				Error("invalid metric: use delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, or click_rate"),
-		)),
-		validation.Field(&req.Bucket, validation.When(
-			req.Bucket != "",
-			validation.In("day", "week").
-				Error("invalid bucket: use day or week"),
-		)),
+		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
 	)
 }
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/trend.
-// Returns a time series for a chosen engagement metric, bucketed by day or week.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleSources is the Vercel serverless function entry point for GET /api/metrics/sources.
+// Returns total clicks aggregated by item source.
+func HandleSources(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req trendRequest
+		var req sourcesRequest
 		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid query parameters")
 			return
@@ -73,21 +63,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		metric := req.Metric
-		if metric == "" {
-			metric = "click_rate"
-		}
-		bucket := req.Bucket
-		if bucket == "" {
-			bucket = "day"
+		limit := req.Limit
+		if limit == 0 {
+			limit = api.DefaultMetricsLimit
 		}
 
-		data, err := a.Repository.Metrics.Trend(ctx, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
+		rows, err := a.Repository.Metrics.SourceList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch trend data")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch source metrics")
 			return
 		}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": data})
+		api.JSON(w, http.StatusOK, map[string]any{"data": rows})
 	})(w, r)
 }

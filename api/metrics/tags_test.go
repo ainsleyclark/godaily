@@ -17,13 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
@@ -35,12 +34,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestMain(m *testing.M) {
-	api.Limiter = api.NewRateLimiter(1000, 1000)
-	os.Exit(m.Run())
-}
-
-func TestHandler(t *testing.T) {
+func TestHandleTags(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(m *mockengagement.MockMetricsRepository)
 		query      string
@@ -48,21 +42,21 @@ func TestHandler(t *testing.T) {
 	}{
 		"OK": {
 			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return([]engagement.SourceMetrics{
-					{Source: "hn", Clicks: 220},
+				m.EXPECT().TagList(gomock.Any(), gomock.Any()).Return([]engagement.TagMetrics{
+					{Tag: "release", Clicks: 142},
 				}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Store error": {
 			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
+				m.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"Invalid query params": {
 			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "to=bad-date",
+			query:      "from=not-a-date",
 			wantStatus: http.StatusBadRequest,
 		},
 	}
@@ -81,7 +75,7 @@ func TestHandler(t *testing.T) {
 			}
 			api.SetApp(a)
 
-			target := "/api/metrics/sources"
+			target := "/api/metrics/tags"
 			if test.query != "" {
 				target += "?" + test.query
 			}
@@ -90,7 +84,7 @@ func TestHandler(t *testing.T) {
 			r := httptest.NewRequest(http.MethodGet, target, nil)
 			r.RemoteAddr = "1.2.3.4:1234"
 
-			Handler(w, r)
+			HandleTags(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
@@ -26,21 +26,44 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type summaryRequest struct {
+type trendRequest struct {
 	From   string `schema:"from"`
 	To     string `schema:"to"`
 	Period string `schema:"period"`
+	Metric string `schema:"metric"`
+	Bucket string `schema:"bucket"`
 }
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/summary.
-// Returns headline engagement numbers for a period.
-func Handler(w http.ResponseWriter, r *http.Request) {
+func (req trendRequest) validate() error {
+	return validation.ValidateStruct(
+		&req,
+		validation.Field(&req.Metric, validation.When(
+			req.Metric != "",
+			validation.In("delivered", "unique_opens", "total_opens", "unique_clicks", "total_clicks", "open_rate", "click_rate").
+				Error("invalid metric: use delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, or click_rate"),
+		)),
+		validation.Field(&req.Bucket, validation.When(
+			req.Bucket != "",
+			validation.In("day", "week").
+				Error("invalid bucket: use day or week"),
+		)),
+	)
+}
+
+// HandleTrend is the Vercel serverless function entry point for GET /api/metrics/trend.
+// Returns a time series for a chosen engagement metric, bucketed by day or week.
+func HandleTrend(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req summaryRequest
+		var req trendRequest
 		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid query parameters")
+			return
+		}
+		if err := req.validate(); err != nil {
+			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
@@ -50,12 +73,21 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		stats, err := a.Repository.Metrics.Summary(ctx, engagement.MetricsFilter{From: from, To: to})
+		metric := req.Metric
+		if metric == "" {
+			metric = "click_rate"
+		}
+		bucket := req.Bucket
+		if bucket == "" {
+			bucket = "day"
+		}
+
+		data, err := a.Repository.Metrics.Trend(ctx, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch summary stats")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch trend data")
 			return
 		}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": stats})
+		api.JSON(w, http.StatusOK, map[string]any{"data": data})
 	})(w, r)
 }

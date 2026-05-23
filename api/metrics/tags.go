@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
@@ -29,25 +29,25 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type sourcesRequest struct {
+type tagsRequest struct {
 	From   string `schema:"from"`
 	To     string `schema:"to"`
 	Period string `schema:"period"`
 	Limit  int    `schema:"limit"`
 }
 
-func (req sourcesRequest) validate() error {
+func (req tagsRequest) validate() error {
 	return validation.ValidateStruct(
 		&req,
 		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
 	)
 }
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/sources.
-// Returns total clicks aggregated by item source.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleTags is the Vercel serverless function entry point for GET /api/metrics/tags.
+// Returns total clicks aggregated by item tag.
+func HandleTags(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req sourcesRequest
+		var req tagsRequest
 		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid query parameters")
 			return
@@ -68,9 +68,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			limit = api.DefaultMetricsLimit
 		}
 
-		rows, err := a.Repository.Metrics.SourceList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
+		rows, err := a.Repository.Metrics.TagList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch source metrics")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch tag metrics")
 			return
 		}
 

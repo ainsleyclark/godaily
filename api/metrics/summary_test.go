@@ -17,13 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
@@ -35,12 +34,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestMain(m *testing.M) {
-	api.Limiter = api.NewRateLimiter(1000, 1000)
-	os.Exit(m.Run())
-}
-
-func TestHandler(t *testing.T) {
+func TestHandleSummary(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(m *mockengagement.MockMetricsRepository)
 		query      string
@@ -91,7 +85,7 @@ func TestHandler(t *testing.T) {
 			r := httptest.NewRequest(http.MethodGet, target, nil)
 			r.RemoteAddr = "1.2.3.4:1234"
 
-			Handler(w, r)
+			HandleSummary(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
@@ -29,31 +29,29 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type issuesRequest struct {
+type subscribersRequest struct {
 	From   string `schema:"from"`
 	To     string `schema:"to"`
 	Period string `schema:"period"`
-	Limit  int    `schema:"limit"`
-	Sort   string `schema:"sort"`
+	Bucket string `schema:"bucket"`
 }
 
-func (req issuesRequest) validate() error {
+func (req subscribersRequest) validate() error {
 	return validation.ValidateStruct(
 		&req,
-		validation.Field(&req.Sort, validation.When(
-			req.Sort != "",
-			validation.In("click_rate", "open_rate", "total_clicks", "unique_clicks", "total_opens", "unique_opens", "delivered", "sent_at").
-				Error("invalid sort: use click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, or sent_at"),
+		validation.Field(&req.Bucket, validation.When(
+			req.Bucket != "",
+			validation.In("day", "week", "month").
+				Error("invalid bucket: use day, week, or month"),
 		)),
-		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
 	)
 }
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/issues.
-// Returns per-issue engagement stats with optional filtering and sorting.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleSubscribers is the Vercel serverless function entry point for GET /api/metrics/subscribers.
+// Returns subscriber growth and churn bucketed over time.
+func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req issuesRequest
+		var req subscribersRequest
 		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid query parameters")
 			return
@@ -69,21 +67,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		sort := req.Sort
-		if sort == "" {
-			sort = "sent_at"
-		}
-		limit := req.Limit
-		if limit == 0 {
-			limit = api.DefaultMetricsLimit
+		bucket := req.Bucket
+		if bucket == "" {
+			bucket = "day"
 		}
 
-		rows, err := a.Repository.Metrics.IssueList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
+		data, err := a.Repository.Metrics.SubscriberGrowth(ctx, engagement.MetricsFilter{From: from, To: to}, bucket)
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch issue metrics")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch subscriber data")
 			return
 		}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": rows})
+		api.JSON(w, http.StatusOK, map[string]any{"data": data})
 	})(w, r)
 }

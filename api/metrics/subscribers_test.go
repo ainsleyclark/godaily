@@ -17,13 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
@@ -35,12 +34,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestMain(m *testing.M) {
-	api.Limiter = api.NewRateLimiter(1000, 1000)
-	os.Exit(m.Run())
-}
-
-func TestHandler(t *testing.T) {
+func TestHandleSubscribers(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(m *mockengagement.MockMetricsRepository)
 		query      string
@@ -48,33 +42,36 @@ func TestHandler(t *testing.T) {
 	}{
 		"OK defaults": {
 			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().Trend(gomock.Any(), gomock.Any(), "click_rate", "day").Return(engagement.TrendData{
-					Metric: "click_rate",
+				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{
 					Bucket: "day",
-					Points: []engagement.TrendPoint{},
+					Points: []engagement.SubscriberPoint{},
 				}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
-		"OK with metric and bucket": {
+		"OK with week bucket": {
 			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().Trend(gomock.Any(), gomock.Any(), "unique_opens", "week").Return(engagement.TrendData{
-					Metric: "unique_opens",
+				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{
 					Bucket: "week",
-					Points: []engagement.TrendPoint{},
+					Points: []engagement.SubscriberPoint{},
 				}, nil)
 			},
-			query:      "metric=unique_opens&bucket=week",
+			query:      "bucket=week",
 			wantStatus: http.StatusOK,
 		},
-		"Invalid metric": {
-			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "metric=bad_metric",
-			wantStatus: http.StatusBadRequest,
+		"OK with month bucket": {
+			mock: func(m *mockengagement.MockMetricsRepository) {
+				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "month").Return(engagement.SubscriberData{
+					Bucket: "month",
+					Points: []engagement.SubscriberPoint{},
+				}, nil)
+			},
+			query:      "bucket=month",
+			wantStatus: http.StatusOK,
 		},
 		"Invalid bucket": {
 			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "bucket=month",
+			query:      "bucket=year",
 			wantStatus: http.StatusBadRequest,
 		},
 		"Invalid query params": {
@@ -84,7 +81,7 @@ func TestHandler(t *testing.T) {
 		},
 		"Store error": {
 			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().Trend(gomock.Any(), gomock.Any(), "click_rate", "day").Return(engagement.TrendData{}, errors.New("db error"))
+				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{}, errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -104,7 +101,7 @@ func TestHandler(t *testing.T) {
 			}
 			api.SetApp(a)
 
-			target := "/api/metrics/trend"
+			target := "/api/metrics/subscribers"
 			if test.query != "" {
 				target += "?" + test.query
 			}
@@ -113,7 +110,7 @@ func TestHandler(t *testing.T) {
 			r := httptest.NewRequest(http.MethodGet, target, nil)
 			r.RemoteAddr = "1.2.3.4:1234"
 
-			Handler(w, r)
+			HandleSubscribers(w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

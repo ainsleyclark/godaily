@@ -17,67 +17,56 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package issues
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-type subscribersRequest struct {
-	From   string `schema:"from"`
-	To     string `schema:"to"`
-	Period string `schema:"period"`
-	Bucket string `schema:"bucket"`
-}
+// topLinksLimit is the maximum number of top-clicked links returned for an issue.
+const topLinksLimit = 10
 
-func (req subscribersRequest) validate() error {
-	return validation.ValidateStruct(
-		&req,
-		validation.Field(&req.Bucket, validation.When(
-			req.Bucket != "",
-			validation.In("day", "week", "month").
-				Error("invalid bucket: use day, week, or month"),
-		)),
-	)
-}
-
-// Handler is the Vercel serverless function entry point for GET /api/metrics/subscribers.
-// Returns subscriber growth and churn bucketed over time.
+// Handler is the Vercel serverless function entry point for GET /api/metrics/issues/:slug.
+// The slug path segment is injected by Vercel as the "slug" query parameter.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req subscribersRequest
-		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid query parameters")
-			return
-		}
-		if err := req.validate(); err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
+		slug := r.URL.Query().Get("slug")
+		if slug == "" {
+			api.Error(w, http.StatusBadRequest, "slug is required")
 			return
 		}
 
-		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+		issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
 		if err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
+			if errors.Is(err, store.ErrNotFound) {
+				api.Error(w, http.StatusNotFound, "issue not found")
+				return
+			}
+			api.Error(w, http.StatusInternalServerError, "failed to fetch issue")
 			return
 		}
 
-		bucket := req.Bucket
-		if bucket == "" {
-			bucket = "day"
-		}
-
-		data, err := a.Repository.Metrics.SubscriberGrowth(ctx, engagement.MetricsFilter{From: from, To: to}, bucket)
+		stats, err := a.Repository.EmailEvents.IssueStats(ctx, issue.ID)
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch subscriber data")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch issue stats")
 			return
 		}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": data})
+		links, err := a.Repository.EmailEvents.TopLinks(ctx, issue.ID, topLinksLimit)
+		if err != nil {
+			api.Error(w, http.StatusInternalServerError, "failed to fetch top links")
+			return
+		}
+
+		api.JSON(w, http.StatusOK, map[string]any{
+			"stats": stats,
+			"links": links,
+		})
 	})(w, r)
 }

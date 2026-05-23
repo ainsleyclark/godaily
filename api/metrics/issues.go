@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
@@ -29,25 +29,31 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type itemsRequest struct {
+type issuesRequest struct {
 	From   string `schema:"from"`
 	To     string `schema:"to"`
 	Period string `schema:"period"`
 	Limit  int    `schema:"limit"`
+	Sort   string `schema:"sort"`
 }
 
-func (req itemsRequest) validate() error {
+func (req issuesRequest) validate() error {
 	return validation.ValidateStruct(
 		&req,
+		validation.Field(&req.Sort, validation.When(
+			req.Sort != "",
+			validation.In("click_rate", "open_rate", "total_clicks", "unique_clicks", "total_opens", "unique_opens", "delivered", "sent_at").
+				Error("invalid sort: use click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, or sent_at"),
+		)),
 		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
 	)
 }
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/items.
-// Returns the top-clicked news items enriched with title, tag, and source metadata.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleIssues is the Vercel serverless function entry point for GET /api/metrics/issues.
+// Returns per-issue engagement stats with optional filtering and sorting.
+func HandleIssues(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req itemsRequest
+		var req issuesRequest
 		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
 			api.Error(w, http.StatusBadRequest, "invalid query parameters")
 			return
@@ -63,14 +69,18 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		sort := req.Sort
+		if sort == "" {
+			sort = "sent_at"
+		}
 		limit := req.Limit
 		if limit == 0 {
 			limit = api.DefaultMetricsLimit
 		}
 
-		rows, err := a.Repository.Metrics.ItemList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
+		rows, err := a.Repository.Metrics.IssueList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch item metrics")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch issue metrics")
 			return
 		}
 

@@ -245,7 +245,7 @@ Use this for one-glance "how are we doing?" requests.
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/summary?period=month" | jq .
+  "$BASE/api/metrics/summary/?period=month" | jq .
 ```
 
 Returns a single object with `issues_sent`, `delivered`, `unique_opens`, `total_opens`,
@@ -258,7 +258,7 @@ Returns a single object with `issues_sent`, `delivered`, `unique_opens`, `total_
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/issues?period=week&sort=click_rate&limit=10" | jq .
+  "$BASE/api/metrics/issues/?period=week&sort=click_rate&limit=10" | jq .
 ```
 
 Sort allowlist: `click_rate` (default for "best"), `open_rate`, `total_clicks`, `unique_clicks`,
@@ -275,7 +275,7 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 SLUG="2026-05-22"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/issues/$SLUG" | jq .
+  "$BASE/api/metrics/issues/$SLUG/" | jq .
 ```
 
 Returns `{ "stats": {...}, "links": [{ "url": "...", "clicks": N }] }`. `links` is top 10.
@@ -286,7 +286,7 @@ Returns `{ "stats": {...}, "links": [{ "url": "...", "clicks": N }] }`. `links` 
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/items?period=month&limit=10" | jq .
+  "$BASE/api/metrics/items/?period=month&limit=10" | jq .
 ```
 
 Each row has `item_id`, `title`, `url`, `tag`, `source`, `clicks` — directly human-presentable.
@@ -297,7 +297,7 @@ Each row has `item_id`, `title`, `url`, `tag`, `source`, `clicks` — directly h
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/tags?period=week&limit=10" | jq .
+  "$BASE/api/metrics/tags/?period=week&limit=10" | jq .
 ```
 
 Returns `[{ "tag": "release", "clicks": 142 }, ...]`.
@@ -308,7 +308,7 @@ Returns `[{ "tag": "release", "clicks": 142 }, ...]`.
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/sources?period=month&limit=10" | jq .
+  "$BASE/api/metrics/sources/?period=month&limit=10" | jq .
 ```
 
 Returns `[{ "source": "hn", "clicks": 220 }, ...]`.
@@ -319,7 +319,7 @@ Returns `[{ "source": "hn", "clicks": 220 }, ...]`.
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/trend?period=month&metric=click_rate&bucket=day" | jq .
+  "$BASE/api/metrics/trend/?period=month&metric=click_rate&bucket=day" | jq .
 ```
 
 `metric` allowlist: `delivered`, `unique_opens`, `total_opens`, `unique_clicks`, `total_clicks`,
@@ -332,7 +332,7 @@ Response includes every bucket in the window even if zero, so charts don't break
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/metrics/subscribers?period=month&bucket=day" | jq .
+  "$BASE/api/metrics/subscribers/?period=month&bucket=day" | jq .
 ```
 
 `bucket` is `day`, `week`, or `month` (default `day`). Each point has `new`, `confirmed`,
@@ -342,15 +342,15 @@ curl -sf \
 
 | Question | Request |
 |---|---|
-| "How are we doing this month?" | `GET /api/metrics/summary?period=month` |
-| "Top performing links in the last month" | `GET /api/metrics/items?period=month&limit=10` |
-| "Best issue in the last week" | `GET /api/metrics/issues?period=week&sort=click_rate&limit=1` |
-| "Most popular tag last week" | `GET /api/metrics/tags?period=week&limit=1` |
-| "Which source drove the most clicks this year" | `GET /api/metrics/sources?period=year&limit=1` |
-| "How did the 2026-05-22 issue perform" | `GET /api/metrics/issues/2026-05-22` |
-| "Top 5 links between May 1 and May 15" | `GET /api/metrics/items?from=2026-05-01&to=2026-05-15&limit=5` |
-| "Show me click-rate trend over the past month" | `GET /api/metrics/trend?period=month&metric=click_rate&bucket=day` |
-| "How many subscribers did we gain last week" | `GET /api/metrics/subscribers?period=week&bucket=day` |
+| "How are we doing this month?" | `GET /api/metrics/summary/?period=month` |
+| "Top performing links in the last month" | `GET /api/metrics/items/?period=month&limit=10` |
+| "Best issue in the last week" | `GET /api/metrics/issues/?period=week&sort=click_rate&limit=1` |
+| "Most popular tag last week" | `GET /api/metrics/tags/?period=week&limit=1` |
+| "Which source drove the most clicks this year" | `GET /api/metrics/sources/?period=year&limit=1` |
+| "How did the 2026-05-22 issue perform" | `GET /api/metrics/issues/2026-05-22/` |
+| "Top 5 links between May 1 and May 15" | `GET /api/metrics/items/?from=2026-05-01&to=2026-05-15&limit=5` |
+| "Show me click-rate trend over the past month" | `GET /api/metrics/trend/?period=month&metric=click_rate&bucket=day` |
+| "How many subscribers did we gain last week" | `GET /api/metrics/subscribers/?period=week&bucket=day` |
 
 ---
 

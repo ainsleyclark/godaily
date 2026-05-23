@@ -17,56 +17,45 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handler
+package metrics
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// topLinksLimit is the maximum number of top-clicked links returned for an issue.
-const topLinksLimit = 10
+type summaryRequest struct {
+	From   string `schema:"from"`
+	To     string `schema:"to"`
+	Period string `schema:"period"`
+}
 
-// Handler is the Vercel serverless function entry point for GET /api/metrics/issues/:slug.
-// The slug path segment is injected by Vercel as the "slug" query parameter.
-func Handler(w http.ResponseWriter, r *http.Request) {
+// HandleSummary is the Vercel serverless function entry point for GET /api/metrics/summary.
+// Returns headline engagement numbers for a period.
+func HandleSummary(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		slug := r.URL.Query().Get("slug")
-		if slug == "" {
-			api.Error(w, http.StatusBadRequest, "slug is required")
+		var req summaryRequest
+		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
+			api.Error(w, http.StatusBadRequest, "invalid query parameters")
 			return
 		}
 
-		issue, err := a.Repository.Issues.FindBySlug(ctx, slug)
+		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
 		if err != nil {
-			if errors.Is(err, store.ErrNotFound) {
-				api.Error(w, http.StatusNotFound, "issue not found")
-				return
-			}
-			api.Error(w, http.StatusInternalServerError, "failed to fetch issue")
+			api.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		stats, err := a.Repository.EmailEvents.IssueStats(ctx, issue.ID)
+		stats, err := a.Repository.Metrics.Summary(ctx, engagement.MetricsFilter{From: from, To: to})
 		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch issue stats")
+			api.Error(w, http.StatusInternalServerError, "failed to fetch summary stats")
 			return
 		}
 
-		links, err := a.Repository.EmailEvents.TopLinks(ctx, issue.ID, topLinksLimit)
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch top links")
-			return
-		}
-
-		api.JSON(w, http.StatusOK, map[string]any{
-			"stats": stats,
-			"links": links,
-		})
+		api.JSON(w, http.StatusOK, map[string]any{"data": stats})
 	})(w, r)
 }

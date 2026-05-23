@@ -8,17 +8,10 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"rewrites": [
-		{ "source": "/healthz",                        "destination": "/api/healthz" },
-		{ "source": "/api/issues/:slug",               "destination": "/api/issues/slug?slug=:slug" },
-		{ "source": "/api/items/:id",                  "destination": "/api/items/id?id=:id" },
-		{ "source": "/api/metrics/summary",            "destination": "/api/metrics/summary/summary" },
-		{ "source": "/api/metrics/issues",             "destination": "/api/metrics/issues/issues" },
-		{ "source": "/api/metrics/issues/:slug",       "destination": "/api/metrics/issues/slug/slug?slug=:slug" },
-		{ "source": "/api/metrics/items",              "destination": "/api/metrics/items/items" },
-		{ "source": "/api/metrics/tags",               "destination": "/api/metrics/tags/tags" },
-		{ "source": "/api/metrics/sources",            "destination": "/api/metrics/sources/sources" },
-		{ "source": "/api/metrics/trend",              "destination": "/api/metrics/trend/trend" },
-		{ "source": "/api/metrics/subscribers",        "destination": "/api/metrics/subscribers/subscribers" }
+		{ "source": "/healthz",                    "destination": "/api/healthz" },
+		{ "source": "/api/issues/:slug",           "destination": "/api/issues/slug?slug=:slug" },
+		{ "source": "/api/items/:id",              "destination": "/api/items/id?id=:id" },
+		{ "source": "/api/metrics/issues/:slug",   "destination": "/api/metrics/issues/slug?slug=:slug" }
 	],
 	"crons": [
 		{ "path": "/api/collect/",         "schedule": "0 1 * * *"                 },
