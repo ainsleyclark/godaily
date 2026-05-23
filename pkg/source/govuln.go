@@ -22,10 +22,11 @@ package source
 import (
 	"context"
 	"encoding/json"
-	"math"
 	"sort"
-	"strings"
 	"time"
+
+	cvss30 "github.com/pandatix/go-cvss/30"
+	cvss31 "github.com/pandatix/go-cvss/31"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
@@ -118,133 +119,19 @@ func (v vulnEntry) Transform() news.Item {
 	}
 }
 
-// cvssScore returns the highest CVSS v3 base score found in the advisory's
-// severity list. Returns (0, false) when no parseable CVSS v3 entry is present.
+// cvssScore returns the CVSS v3 base score for the advisory, trying v3.1
+// then v3.0. Returns (0, false) when no parseable CVSS v3 entry is present.
 func (v vulnEntry) cvssScore() (float64, bool) {
 	for _, s := range v.Severity {
-		if s.Type == "CVSS_V3" {
-			if score, ok := parseCVSSv3(s.Score); ok {
-				return score, true
-			}
+		if s.Type != "CVSS_V3" {
+			continue
 		}
-	}
-	return 0, false
-}
-
-// parseCVSSv3 parses a CVSS v3.x vector string (e.g.
-// "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H") and returns the base
-// score in [0, 10] using the standard CVSS v3 formula.
-func parseCVSSv3(vector string) (float64, bool) {
-	const prefix = "CVSS:3."
-	if !strings.HasPrefix(vector, prefix) {
-		return 0, false
-	}
-	slash := strings.Index(vector[len(prefix):], "/")
-	if slash < 0 {
-		return 0, false
-	}
-	m := make(map[string]string, 8)
-	for _, part := range strings.Split(vector[len(prefix)+slash+1:], "/") {
-		k, val, ok := strings.Cut(part, ":")
-		if !ok {
-			return 0, false
+		if cvss, err := cvss31.ParseVector(s.Score); err == nil {
+			return cvss.BaseScore(), true
 		}
-		m[k] = val
-	}
-
-	scope := m["S"]
-	av, ok1 := cvssAV(m["AV"])
-	ac, ok2 := cvssAC(m["AC"])
-	pr, ok3 := cvssPR(m["PR"], scope)
-	ui, ok4 := cvssUI(m["UI"])
-	c, ok5 := cvssImpact(m["C"])
-	i, ok6 := cvssImpact(m["I"])
-	a, ok7 := cvssImpact(m["A"])
-	if !(ok1 && ok2 && ok3 && ok4 && ok5 && ok6 && ok7) {
-		return 0, false
-	}
-
-	iscBase := 1.0 - (1.0-c)*(1.0-i)*(1.0-a)
-	var isc float64
-	if scope == "U" {
-		isc = 6.42 * iscBase
-	} else {
-		isc = 7.52*(iscBase-0.029) - 3.25*math.Pow(iscBase-0.02, 15)
-	}
-	if isc <= 0 {
-		return 0, true
-	}
-
-	exploitability := 8.22 * av * ac * pr * ui
-	var base float64
-	if scope == "U" {
-		base = math.Min(isc+exploitability, 10)
-	} else {
-		base = math.Min(1.08*(isc+exploitability), 10)
-	}
-	return math.Ceil(base*10) / 10, true
-}
-
-func cvssAV(v string) (float64, bool) {
-	switch v {
-	case "N":
-		return 0.85, true
-	case "A":
-		return 0.62, true
-	case "L":
-		return 0.55, true
-	case "P":
-		return 0.20, true
-	}
-	return 0, false
-}
-
-func cvssAC(v string) (float64, bool) {
-	switch v {
-	case "L":
-		return 0.77, true
-	case "H":
-		return 0.44, true
-	}
-	return 0, false
-}
-
-func cvssPR(v, scope string) (float64, bool) {
-	switch v {
-	case "N":
-		return 0.85, true
-	case "L":
-		if scope == "C" {
-			return 0.68, true
+		if cvss, err := cvss30.ParseVector(s.Score); err == nil {
+			return cvss.BaseScore(), true
 		}
-		return 0.62, true
-	case "H":
-		if scope == "C" {
-			return 0.50, true
-		}
-		return 0.27, true
-	}
-	return 0, false
-}
-
-func cvssUI(v string) (float64, bool) {
-	switch v {
-	case "N":
-		return 0.85, true
-	case "R":
-		return 0.62, true
-	}
-	return 0, false
-}
-
-func cvssImpact(v string) (float64, bool) {
-	switch v {
-	case "N":
-		return 0.00, true
-	case "L":
-		return 0.22, true
-	case "H":
-		return 0.56, true
 	}
 	return 0, false
 }
