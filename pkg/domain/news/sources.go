@@ -63,6 +63,7 @@ const (
 	SourcePlanetGolang   Source = "planet_golang"
 	SourceMeetup         Source = "meetup"
 	SourceConferences    Source = "conferences"
+	SourceGoVuln         Source = "go_vuln"
 )
 
 // Sources defines a list of all source types.
@@ -88,6 +89,7 @@ var Sources = []Source{
 	SourcePlanetGolang,
 	SourceMeetup,
 	SourceConferences,
+	SourceGoVuln,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -113,6 +115,7 @@ var FeaturedSources = []Source{
 	SourceGolangNuts,
 	SourceMeetup,
 	SourceConferences,
+	SourceGoVuln,
 }
 
 // String implements fmt.Stringer on source.
@@ -142,6 +145,7 @@ var sourcePriorities = map[Source]int{
 	SourceMedium:         3,
 	SourceGolangNuts:     2,
 	SourcePlanetGolang:   1,
+	SourceGoVuln:         22,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -173,6 +177,7 @@ var sourceNiceNames = map[Source]string{
 	SourcePlanetGolang:   "Planet Golang",
 	SourceMeetup:         "Meetup",
 	SourceConferences:    "Go Conferences",
+	SourceGoVuln:         "Go Vulnerabilities",
 }
 
 // NiceName returns a formatted string of the source.
@@ -206,6 +211,7 @@ var sourceEmojis = map[Source]string{
 	SourcePlanetGolang:   "🌐",
 	SourceMeetup:         "📅",
 	SourceConferences:    "🎤",
+	SourceGoVuln:         "🔒",
 }
 
 // Emoji returns the display emoji for the source.
@@ -237,6 +243,7 @@ var sourceMarkURLs = map[Source]string{
 	SourceYouTube:      "/assets/images/marks/youtube.svg",
 	SourceGolangNuts:   "/assets/images/marks/golang_nuts.svg",
 	SourceMeetup:       "/assets/images/marks/meetup.svg",
+	SourceGoVuln:       "/assets/images/marks/go_vuln.svg",
 }
 
 // MarkURL returns the public path of the source's mark/logo asset, or ""
@@ -267,6 +274,7 @@ var sourceShortLabels = map[Source]string{
 	SourcePlanetGolang:   "PG",
 	SourceMeetup:         "MT",
 	SourceConferences:    "GC",
+	SourceGoVuln:         "SEC",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,

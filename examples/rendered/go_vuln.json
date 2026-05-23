@@ -1,0 +1,112 @@
+[
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5024",
+		"snippet": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T18:28:47Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking incorrect handling of namespaced elements in foreign content in golang.org/x/net/html",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5025",
+		"snippet": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML befor",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking duplicate attributes can cause XSS in golang.org/x/net/html",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5030",
+		"snippet": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML befor",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking incorrect handling of character references in DOCTYPE nodes in golang.org/x/net/html",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5029",
+		"snippet": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML befor",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking denial of service when parsing arbitrary HTML in golang.org/x/net/html",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5028",
+		"snippet": "Parsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service.",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking incorrect handling of HTML elements in foreign content in golang.org/x/net/html",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5027",
+		"snippet": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML befor",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking failure to reject ASCII-only Punycode-encoded labels in golang.org/x/net/idna",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5026",
+		"snippet": "The ToASCII and ToUnicode functions incorrectly accept Punycode-encoded labels that decode to an ASCII-only label. For example, ToUnicode(\"xn--example-.com\") incorrectly returns the name \"example.com\"",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking auth bypass via unenforced @revoked status in golang.org/x/crypto/ssh/knownhosts",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5021",
+		"snippet": "Previously, a revoked 'SignatureKey' belonging to a CA was not correctly checked for revocation. Now, both the 'key' and 'key.SignatureKey' are checked for @revoked.",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:08:34Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking server panic during CheckHostKey/Authenticate in golang.org/x/crypto/ssh",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5015",
+		"snippet": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an ",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:08:34Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking VerifiedPublicKeyCallback permissions skip enforcement in golang.org/x/crypto/ssh",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5023",
+		"snippet": "Previously, CVE-2024-45337 fixed an authorization bypass for misused ssh server configurations; if any other type of callback is passed other than public key, then the source-address validation would ",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:08:34Z"
+	}
+]
