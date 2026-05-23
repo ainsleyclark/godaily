@@ -2,13 +2,13 @@
 	{
 		"id": 0,
 		"source": "go_vuln",
-		"title": "Invoking failure to reject ASCII-only Punycode-encoded labels in golang.org/x/net/idna",
-		"url": "https://pkg.go.dev/vuln/GO-2026-5026",
-		"snippet": "The ToASCII and ToUnicode functions incorrectly accept Punycode-encoded labels that decode to an ASCII-only label. For example, ToUnicode(\"xn--example-.com\") incorrectly returns the name \"example.com\"",
+		"title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5024",
+		"snippet": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string",
 		"tag": "security",
 		"comments": 0,
 		"score": 1,
-		"published": "2026-05-22T02:46:43Z"
+		"published": "2026-05-22T18:28:47Z"
 	},
 	{
 		"id": 0,
@@ -68,9 +68,20 @@
 	{
 		"id": 0,
 		"source": "go_vuln",
-		"title": "Invoking infinite loop on large channel writes in golang.org/x/crypto/ssh",
-		"url": "https://pkg.go.dev/vuln/GO-2026-5020",
-		"snippet": "When writing data larger than 4GB in a single Write call on an SSH channel, an integer overflow in the internal payload size calculation caused the write loop to spin indefinitely, sending empty packe",
+		"title": "Invoking failure to reject ASCII-only Punycode-encoded labels in golang.org/x/net/idna",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5026",
+		"snippet": "The ToASCII and ToUnicode functions incorrectly accept Punycode-encoded labels that decode to an ASCII-only label. For example, ToUnicode(\"xn--example-.com\") incorrectly returns the name \"example.com\"",
+		"tag": "security",
+		"comments": 0,
+		"score": 1,
+		"published": "2026-05-22T02:46:43Z"
+	},
+	{
+		"id": 0,
+		"source": "go_vuln",
+		"title": "Invoking auth bypass via unenforced @revoked status in golang.org/x/crypto/ssh/knownhosts",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5021",
+		"snippet": "Previously, a revoked 'SignatureKey' belonging to a CA was not correctly checked for revocation. Now, both the 'key' and 'key.SignatureKey' are checked for @revoked.",
 		"tag": "security",
 		"comments": 0,
 		"score": 1,
@@ -79,9 +90,9 @@
 	{
 		"id": 0,
 		"source": "go_vuln",
-		"title": "Invoking pathological RSA/DSA parameters may cause DoS in golang.org/x/crypto/ssh",
-		"url": "https://pkg.go.dev/vuln/GO-2026-5018",
-		"snippet": "The RSA and DSA public key parsers did not enforce size limits on key parameters. A crafted public key with an excessively large modulus or DSA parameter could cause several minutes of CPU consumption",
+		"title": "Invoking server panic during CheckHostKey/Authenticate in golang.org/x/crypto/ssh",
+		"url": "https://pkg.go.dev/vuln/GO-2026-5015",
+		"snippet": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an ",
 		"tag": "security",
 		"comments": 0,
 		"score": 1,
@@ -93,17 +104,6 @@
 		"title": "Invoking VerifiedPublicKeyCallback permissions skip enforcement in golang.org/x/crypto/ssh",
 		"url": "https://pkg.go.dev/vuln/GO-2026-5023",
 		"snippet": "Previously, CVE-2024-45337 fixed an authorization bypass for misused ssh server configurations; if any other type of callback is passed other than public key, then the source-address validation would ",
-		"tag": "security",
-		"comments": 0,
-		"score": 1,
-		"published": "2026-05-22T02:08:34Z"
-	},
-	{
-		"id": 0,
-		"source": "go_vuln",
-		"title": "Invoking auth bypass via unenforced @revoked status in golang.org/x/crypto/ssh/knownhosts",
-		"url": "https://pkg.go.dev/vuln/GO-2026-5021",
-		"snippet": "Previously, a revoked 'SignatureKey' belonging to a CA was not correctly checked for revocation. Now, both the 'key' and 'key.SignatureKey' are checked for @revoked.",
 		"tag": "security",
 		"comments": 0,
 		"score": 1,
