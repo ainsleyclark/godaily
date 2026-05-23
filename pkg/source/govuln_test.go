@@ -223,4 +223,3 @@ func TestGoVuln_WindowFiltersOldEntries(t *testing.T) {
 	assert.Empty(t, got)
 	assert.False(t, detailCalled, "detail endpoint must not be hit for out-of-window entries")
 }
-
