@@ -23,10 +23,10 @@ import (
 	"context"
 	"net/http"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type issuesRequest struct {
@@ -38,8 +38,10 @@ type issuesRequest struct {
 }
 
 func (req issuesRequest) validate() error {
-	return validation.ValidateStruct(&req,
-		validation.Field(&req.Sort, validation.When(req.Sort != "",
+	return validation.ValidateStruct(
+		&req,
+		validation.Field(&req.Sort, validation.When(
+			req.Sort != "",
 			validation.In("click_rate", "open_rate", "total_clicks", "unique_clicks", "total_opens", "unique_opens", "delivered", "sent_at").
 				Error("invalid sort: use click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, or sent_at"),
 		)),

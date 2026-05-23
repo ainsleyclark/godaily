@@ -23,10 +23,10 @@ import (
 	"context"
 	"net/http"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type subscribersRequest struct {
@@ -37,8 +37,10 @@ type subscribersRequest struct {
 }
 
 func (req subscribersRequest) validate() error {
-	return validation.ValidateStruct(&req,
-		validation.Field(&req.Bucket, validation.When(req.Bucket != "",
+	return validation.ValidateStruct(
+		&req,
+		validation.Field(&req.Bucket, validation.When(
+			req.Bucket != "",
 			validation.In("day", "week", "month").
 				Error("invalid bucket: use day, week, or month"),
 		)),

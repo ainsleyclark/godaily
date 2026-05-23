@@ -117,7 +117,8 @@ func (s *Store) IssueList(ctx context.Context, f engagement.MetricsFilter, sortK
 	}
 	args = append(args, int64(f.Limit))
 
-	query := fmt.Sprintf(`
+	query := fmt.Sprintf( /* #nosec G201 -- ORDER BY expression comes from issueSortExprs allowlist, not user input */
+		`
 SELECT
     i.id,
     i.slug,
@@ -248,7 +249,7 @@ func (s *Store) Trend(ctx context.Context, f engagement.MetricsFilter, metric, b
 	bucketExpr := trendBucketSQL(bucket)
 	conds, args := timeConditions(f, "e.occurred_at")
 
-	query := `
+	query := /* #nosec G202 -- bucketExpr is a hard-coded string from trendBucketSQL, conds uses only ? placeholders */ `
 SELECT
     ` + bucketExpr + ` AS bucket_start,
     COUNT(CASE          WHEN e.event_type = 'delivered' THEN 1               END) AS delivered,
@@ -329,7 +330,8 @@ func (s *Store) SubscriberGrowth(ctx context.Context, f engagement.MetricsFilter
 		allArgs = append(allArgs, singleArgs...)
 	}
 
-	query := fmt.Sprintf(`
+	query := fmt.Sprintf( /* #nosec G201 -- bucketExpr is from subsBucketExpr (hard-coded), outerWhere uses only ? placeholders */
+		`
 SELECT
     %s                                                                      AS bucket_start,
     SUM(CASE WHEN event_type = 'new'          THEN 1 ELSE 0 END)           AS new,
@@ -379,7 +381,8 @@ ORDER BY bucket_start ASC`,
 	// Seed running total from confirmed-minus-lost before the window.
 	var baseline int64
 	if f.From != nil {
-		baseRow := s.db.QueryRowContext(ctx, `
+		baseRow := s.db.QueryRowContext(
+			ctx, `
 SELECT COUNT(*) FROM subscribers
 WHERE confirmed_at IS NOT NULL
   AND confirmed_at < ?

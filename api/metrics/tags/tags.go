@@ -23,10 +23,10 @@ import (
 	"context"
 	"net/http"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type tagsRequest struct {
@@ -37,7 +37,8 @@ type tagsRequest struct {
 }
 
 func (req tagsRequest) validate() error {
-	return validation.ValidateStruct(&req,
+	return validation.ValidateStruct(
+		&req,
 		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
 	)
 }

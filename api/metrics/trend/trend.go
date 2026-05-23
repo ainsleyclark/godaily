@@ -23,10 +23,10 @@ import (
 	"context"
 	"net/http"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type trendRequest struct {
@@ -38,12 +38,15 @@ type trendRequest struct {
 }
 
 func (req trendRequest) validate() error {
-	return validation.ValidateStruct(&req,
-		validation.Field(&req.Metric, validation.When(req.Metric != "",
+	return validation.ValidateStruct(
+		&req,
+		validation.Field(&req.Metric, validation.When(
+			req.Metric != "",
 			validation.In("delivered", "unique_opens", "total_opens", "unique_clicks", "total_clicks", "open_rate", "click_rate").
 				Error("invalid metric: use delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, or click_rate"),
 		)),
-		validation.Field(&req.Bucket, validation.When(req.Bucket != "",
+		validation.Field(&req.Bucket, validation.When(
+			req.Bucket != "",
 			validation.In("day", "week").
 				Error("invalid bucket: use day or week"),
 		)),
