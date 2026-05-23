@@ -538,6 +538,219 @@ func (q *Queries) ItemListByIssue(ctx context.Context, issueID sql.NullInt64) ([
 	return items, nil
 }
 
+const metricsItemList = `-- name: MetricsItemList :many
+SELECT
+    it.id,
+    it.title,
+    it.url,
+    it.tag,
+    it.source,
+    COUNT(*) AS clicks
+FROM email_events e
+JOIN items it ON it.id = e.item_id
+WHERE e.event_type = 'clicked'
+  AND e.item_id IS NOT NULL
+  AND (?1 IS NULL OR e.occurred_at >= ?1)
+  AND (?2   IS NULL OR e.occurred_at <  ?2)
+GROUP BY it.id, it.title, it.url, it.tag, it.source
+ORDER BY clicks DESC
+LIMIT ?3
+`
+
+type MetricsItemListParams struct {
+	From  interface{} `json:"from"`
+	To    interface{} `json:"to"`
+	Limit int64       `json:"limit"`
+}
+
+type MetricsItemListRow struct {
+	ID     int64  `json:"id"`
+	Title  string `json:"title"`
+	Url    string `json:"url"`
+	Tag    string `json:"tag"`
+	Source string `json:"source"`
+	Clicks int64  `json:"clicks"`
+}
+
+func (q *Queries) MetricsItemList(ctx context.Context, arg MetricsItemListParams) ([]MetricsItemListRow, error) {
+	rows, err := q.db.QueryContext(ctx, metricsItemList, arg.From, arg.To, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []MetricsItemListRow{}
+	for rows.Next() {
+		var i MetricsItemListRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Url,
+			&i.Tag,
+			&i.Source,
+			&i.Clicks,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const metricsSourceList = `-- name: MetricsSourceList :many
+SELECT
+    it.source,
+    COUNT(*) AS clicks
+FROM email_events e
+JOIN items it ON it.id = e.item_id
+WHERE e.event_type = 'clicked'
+  AND e.item_id IS NOT NULL
+  AND (?1 IS NULL OR e.occurred_at >= ?1)
+  AND (?2   IS NULL OR e.occurred_at <  ?2)
+GROUP BY it.source
+ORDER BY clicks DESC
+LIMIT ?3
+`
+
+type MetricsSourceListParams struct {
+	From  interface{} `json:"from"`
+	To    interface{} `json:"to"`
+	Limit int64       `json:"limit"`
+}
+
+type MetricsSourceListRow struct {
+	Source string `json:"source"`
+	Clicks int64  `json:"clicks"`
+}
+
+func (q *Queries) MetricsSourceList(ctx context.Context, arg MetricsSourceListParams) ([]MetricsSourceListRow, error) {
+	rows, err := q.db.QueryContext(ctx, metricsSourceList, arg.From, arg.To, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []MetricsSourceListRow{}
+	for rows.Next() {
+		var i MetricsSourceListRow
+		if err := rows.Scan(&i.Source, &i.Clicks); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const metricsSummary = `-- name: MetricsSummary :one
+SELECT
+    COUNT(DISTINCT CASE WHEN e.event_type = 'delivered'           THEN e.issue_id      END) AS issues_sent,
+    COUNT(CASE          WHEN e.event_type = 'delivered'           THEN 1               END) AS delivered,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'opened'              THEN e.subscriber_id END) AS unique_opens,
+    COUNT(CASE          WHEN e.event_type = 'opened'              THEN 1               END) AS total_opens,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'clicked'             THEN e.subscriber_id END) AS unique_clicks,
+    COUNT(CASE          WHEN e.event_type = 'clicked'             THEN 1               END) AS total_clicks,
+    COUNT(CASE          WHEN e.event_type = 'bounced'             THEN 1               END) AS bounced,
+    COUNT(CASE          WHEN e.event_type = 'complained'          THEN 1               END) AS complained,
+    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
+FROM email_events e
+WHERE e.issue_id IS NOT NULL
+  AND (?1 IS NULL OR e.occurred_at >= ?1)
+  AND (?2   IS NULL OR e.occurred_at <  ?2)
+`
+
+type MetricsSummaryParams struct {
+	From interface{} `json:"from"`
+	To   interface{} `json:"to"`
+}
+
+type MetricsSummaryRow struct {
+	IssuesSent    int64 `json:"issues_sent"`
+	Delivered     int64 `json:"delivered"`
+	UniqueOpens   int64 `json:"unique_opens"`
+	TotalOpens    int64 `json:"total_opens"`
+	UniqueClicks  int64 `json:"unique_clicks"`
+	TotalClicks   int64 `json:"total_clicks"`
+	Bounced       int64 `json:"bounced"`
+	Complained    int64 `json:"complained"`
+	UniqueEngaged int64 `json:"unique_engaged"`
+}
+
+func (q *Queries) MetricsSummary(ctx context.Context, arg MetricsSummaryParams) (MetricsSummaryRow, error) {
+	row := q.db.QueryRowContext(ctx, metricsSummary, arg.From, arg.To)
+	var i MetricsSummaryRow
+	err := row.Scan(
+		&i.IssuesSent,
+		&i.Delivered,
+		&i.UniqueOpens,
+		&i.TotalOpens,
+		&i.UniqueClicks,
+		&i.TotalClicks,
+		&i.Bounced,
+		&i.Complained,
+		&i.UniqueEngaged,
+	)
+	return i, err
+}
+
+const metricsTagList = `-- name: MetricsTagList :many
+SELECT
+    it.tag,
+    COUNT(*) AS clicks
+FROM email_events e
+JOIN items it ON it.id = e.item_id
+WHERE e.event_type = 'clicked'
+  AND e.item_id IS NOT NULL
+  AND (?1 IS NULL OR e.occurred_at >= ?1)
+  AND (?2   IS NULL OR e.occurred_at <  ?2)
+GROUP BY it.tag
+ORDER BY clicks DESC
+LIMIT ?3
+`
+
+type MetricsTagListParams struct {
+	From  interface{} `json:"from"`
+	To    interface{} `json:"to"`
+	Limit int64       `json:"limit"`
+}
+
+type MetricsTagListRow struct {
+	Tag    string `json:"tag"`
+	Clicks int64  `json:"clicks"`
+}
+
+func (q *Queries) MetricsTagList(ctx context.Context, arg MetricsTagListParams) ([]MetricsTagListRow, error) {
+	rows, err := q.db.QueryContext(ctx, metricsTagList, arg.From, arg.To, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []MetricsTagListRow{}
+	for rows.Next() {
+		var i MetricsTagListRow
+		if err := rows.Scan(&i.Tag, &i.Clicks); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const socialMetricListBySocialPostID = `-- name: SocialMetricListBySocialPostID :many
 SELECT id, social_post_id, platform, likes, reposts, comments, impressions, fetched_at FROM social_metrics
 WHERE social_post_id = ?

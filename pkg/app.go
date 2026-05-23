@@ -44,6 +44,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
+	metricsstore "github.com/ainsleyclark/godaily/pkg/store/metrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialmetrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
@@ -73,6 +74,7 @@ type Repository struct {
 	SocialPosts   news.SocialPostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
+	Metrics       engagement.MetricsRepository
 }
 
 // Bootstrap ties all the app dependencies together
@@ -120,6 +122,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		SocialPosts:   socialPostsStore,
 		EmailEvents:   emailevents.New(conn),
 		SocialMetrics: socialmetrics.New(conn),
+		Metrics:       metricsstore.New(conn),
 	}
 
 	emailSender := email.New(config.ResendToken)
