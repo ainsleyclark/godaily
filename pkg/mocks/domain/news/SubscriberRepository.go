@@ -203,6 +203,36 @@ func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
+// List mocks base method.
+func (m *MockSubscriberRepository) List(ctx context.Context, opts news.ListOptions) ([]news.Subscriber, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx, opts)
+	ret0, _ := ret[0].([]news.Subscriber)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockSubscriberRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockSubscriberRepository)(nil).List), ctx, opts)
+}
+
+// CountAll mocks base method.
+func (m *MockSubscriberRepository) CountAll(ctx context.Context) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountAll", ctx)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountAll indicates an expected call of CountAll.
+func (mr *MockSubscriberRepositoryMockRecorder) CountAll(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAll", reflect.TypeOf((*MockSubscriberRepository)(nil).CountAll), ctx)
+}
+
 // Unsubscribe mocks base method.
 func (m *MockSubscriberRepository) Unsubscribe(ctx context.Context, token string) error {
 	m.ctrl.T.Helper()

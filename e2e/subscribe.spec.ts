@@ -52,8 +52,12 @@ test('unsubscribe link lands on unsubscribed page', async ({ page }) => {
   await expect(page).toHaveURL(/\/thank-you\//);
 
   const res = await page.request.get('/api/e2e/emails');
-  const emails = await res.json();
-  const raw: string = emails[emails.length - 1].headers['List-Unsubscribe'].replace(/[<>]/g, '');
+  const allEmails = await res.json();
+  const confirmEmail = allEmails.find(
+    (e: { to: string[] }) => Array.isArray(e.to) && e.to.includes(email),
+  );
+  expect(confirmEmail).toBeTruthy();
+  const raw: string = confirmEmail.headers['List-Unsubscribe'].replace(/[<>]/g, '');
   const token = new URL(raw).searchParams.get('token');
 
   await page.goto(`/api/unsubscribe?token=${token}`);
@@ -70,8 +74,12 @@ test('re-subscribe after unsubscribe redirects to thank-you', async ({ page }) =
   await expect(page).toHaveURL(/\/thank-you\//);
 
   const res = await page.request.get('/api/e2e/emails');
-  const emails = await res.json();
-  const raw: string = emails[emails.length - 1].headers['List-Unsubscribe'].replace(/[<>]/g, '');
+  const allEmails = await res.json();
+  const confirmEmail = allEmails.find(
+    (e: { to: string[] }) => Array.isArray(e.to) && e.to.includes(email),
+  );
+  expect(confirmEmail).toBeTruthy();
+  const raw: string = confirmEmail.headers['List-Unsubscribe'].replace(/[<>]/g, '');
   const token = new URL(raw).searchParams.get('token');
 
   await page.goto(`/api/unsubscribe?token=${token}`);

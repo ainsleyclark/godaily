@@ -43,11 +43,13 @@ type IssueRepository interface {
 	Find(ctx context.Context, id int64) (Issue, error)
 	FindBySlug(ctx context.Context, slug string) (Issue, error)
 	List(ctx context.Context, opts ListOptions) ([]Issue, error)
+	ListByStatus(ctx context.Context, status IssueStatus, opts ListOptions) ([]Issue, error)
 	Latest(ctx context.Context, limit int) ([]Issue, error)
 	Create(ctx context.Context, issue Issue) (Issue, error)
 	Delete(ctx context.Context, id int64) (Issue, error)
 	UpdateStatus(ctx context.Context, id int64, status IssueStatus, sentAt time.Time) (Issue, error)
 	Count(ctx context.Context) (int64, error)
+	CountByStatus(ctx context.Context, status IssueStatus) (int64, error)
 }
 
 // IssueStatus defines the state of an issue.
