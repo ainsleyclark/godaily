@@ -53,3 +53,18 @@ golangci-lint run ./... --fix --config=.golangci.yaml
 ```
 
 The formatter is `gofumpt` (stricter than `gofmt`). The lint step applies it automatically with `--fix`.
+
+## Commit style
+
+Use conventional commits with the following format:
+
+```
+<type>: <description>
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+
+**Rules:**
+- Capitalize the first letter of the description
+- Keep it concise and descriptive
+- Examples: `feat: Add user authentication`, `docs: Update API documentation`, `fix: Resolve memory leak in cache`
