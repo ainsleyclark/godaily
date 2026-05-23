@@ -4,9 +4,12 @@ description: >
   Interact with the GoDaily production API (https://godaily.dev).
   Use when the user wants to: check API health, list or fetch digest issues,
   trigger news collection, send the digest, subscribe or unsubscribe emails,
-  or inspect individual news items. Trigger on phrases like "show me the latest
-  issue", "trigger collection", "send the digest", "subscribe X to GoDaily",
-  "check if the API is up", or "list recent issues".
+  inspect individual news items, or query engagement metrics (top links, best
+  issues, most popular tags or sources over a time window). Trigger on phrases
+  like "show me the latest issue", "trigger collection", "send the digest",
+  "subscribe X to GoDaily", "check if the API is up", "list recent issues",
+  "top links last month", "best issue last week", "most popular tag", or
+  "which source drives the most clicks".
 ---
 
 # GoDaily API Skill
@@ -47,6 +50,14 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 | POST | `/api/subscribe` | No | Subscribe an email address |
 | GET | `/api/confirm` | No | Confirm a subscription via token |
 | GET / POST | `/api/unsubscribe/` | No | Unsubscribe via token (POST is RFC 8058 one-click) |
+| GET | `/api/metrics/summary` | **Yes** | Headline rollup for a period |
+| GET | `/api/metrics/issues` | **Yes** | Per-issue engagement stats with date/sort filters |
+| GET | `/api/metrics/issues/{slug}` | **Yes** | Single-issue stats + top clicked links |
+| GET | `/api/metrics/items` | **Yes** | Top clicked news items, enriched with title/tag/source |
+| GET | `/api/metrics/tags` | **Yes** | Clicks aggregated by item tag |
+| GET | `/api/metrics/sources` | **Yes** | Clicks aggregated by item source |
+| GET | `/api/metrics/trend` | **Yes** | Time series for a chosen metric, bucketed daily/weekly |
+| GET | `/api/metrics/subscribers` | **Yes** | Subscriber growth and churn over time |
 
 ## Operations
 
@@ -192,6 +203,154 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 TOKEN="the-unsubscribe-token"
 curl -sfL "$BASE/api/unsubscribe/?token=$TOKEN"
 ```
+
+---
+
+## Metrics
+
+All `/api/metrics/...` endpoints **require auth**. Full reference: `docs/metrics-routes.md`.
+
+### Common query parameters
+
+Every list endpoint accepts:
+
+| Param | Values | Notes |
+|---|---|---|
+| `period` | `day`, `week`, `month`, `year`, `all` | Rolling window from now (`week`=last 7 days, `month`=last 30, `year`=last 365). Default `all`. |
+| `from`, `to` | `YYYY-MM-DD` | Explicit range, overrides `period`. `from` inclusive, `to` exclusive. |
+| `limit` | int, max `100` | Default `10`. |
+| `sort` | per-endpoint allowlist | Only `/api/metrics/issues` accepts `sort`. Always descending. |
+
+### Mapping natural-language time phrases
+
+Translate consistently before building the curl:
+
+| User says... | Use |
+|---|---|
+| "today" / "yesterday" / "in the last day" | `period=day` |
+| "this week" / "last week" / "past week" | `period=week` |
+| "this month" / "last month" / "past month" | `period=month` |
+| "this year" / "last year" / "past year" | `period=year` |
+| "of all time" / "ever" / no time mentioned | `period=all` (or omit) |
+| "between 2026-05-01 and 2026-05-15" / "in May" | `from=YYYY-MM-DD&to=YYYY-MM-DD` |
+
+If the user gives a vague phrase you can't map (e.g. "recently"), default to `period=week` and
+mention the assumption in your reply.
+
+### Period summary
+
+Use this for one-glance "how are we doing?" requests.
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/summary?period=month" | jq .
+```
+
+Returns a single object with `issues_sent`, `delivered`, `unique_opens`, `total_opens`,
+`unique_clicks`, `total_clicks`, `bounced`, `complained`, `open_rate`, `click_rate`, and
+`unique_subscribers_engaged`.
+
+### Per-issue engagement stats
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/issues?period=week&sort=click_rate&limit=10" | jq .
+```
+
+Sort allowlist: `click_rate` (default for "best"), `open_rate`, `total_clicks`, `unique_clicks`,
+`total_opens`, `unique_opens`, `delivered`, `sent_at` (default if omitted).
+
+Each row includes `issue_id`, `slug`, `sent_at`, raw counters (`delivered`, `unique_opens`,
+`total_opens`, `unique_clicks`, `total_clicks`, `bounced`, `complained`, `delayed`, `failed`,
+`suppressed`), and computed `open_rate` / `click_rate`.
+
+### Single issue stats + top links
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+SLUG="2026-05-22"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/issues/$SLUG" | jq .
+```
+
+Returns `{ "stats": {...}, "links": [{ "url": "...", "clicks": N }] }`. `links` is top 10.
+
+### Top clicked items
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/items?period=month&limit=10" | jq .
+```
+
+Each row has `item_id`, `title`, `url`, `tag`, `source`, `clicks` — directly human-presentable.
+
+### Clicks by tag
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/tags?period=week&limit=10" | jq .
+```
+
+Returns `[{ "tag": "release", "clicks": 142 }, ...]`.
+
+### Clicks by source
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/sources?period=month&limit=10" | jq .
+```
+
+Returns `[{ "source": "hn", "clicks": 220 }, ...]`.
+
+### Engagement trend (time series)
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/trend?period=month&metric=click_rate&bucket=day" | jq .
+```
+
+`metric` allowlist: `delivered`, `unique_opens`, `total_opens`, `unique_clicks`, `total_clicks`,
+`open_rate`, `click_rate` (default `click_rate`). `bucket` is `day` or `week` (default `day`).
+Response includes every bucket in the window even if zero, so charts don't break.
+
+### Subscriber growth and churn
+
+```bash
+BASE="${GODAILY_API_URL:-https://godaily.dev}"
+curl -sf \
+  -H "Authorization: Bearer $GODAILY_API_KEY" \
+  "$BASE/api/metrics/subscribers?period=month&bucket=day" | jq .
+```
+
+`bucket` is `day`, `week`, or `month` (default `day`). Each point has `new`, `confirmed`,
+`unsubscribed`, `lost`, `net_change`, `active_at_end`.
+
+### Worked examples
+
+| Question | Request |
+|---|---|
+| "How are we doing this month?" | `GET /api/metrics/summary?period=month` |
+| "Top performing links in the last month" | `GET /api/metrics/items?period=month&limit=10` |
+| "Best issue in the last week" | `GET /api/metrics/issues?period=week&sort=click_rate&limit=1` |
+| "Most popular tag last week" | `GET /api/metrics/tags?period=week&limit=1` |
+| "Which source drove the most clicks this year" | `GET /api/metrics/sources?period=year&limit=1` |
+| "How did the 2026-05-22 issue perform" | `GET /api/metrics/issues/2026-05-22` |
+| "Top 5 links between May 1 and May 15" | `GET /api/metrics/items?from=2026-05-01&to=2026-05-15&limit=5` |
+| "Show me click-rate trend over the past month" | `GET /api/metrics/trend?period=month&metric=click_rate&bucket=day` |
+| "How many subscribers did we gain last week" | `GET /api/metrics/subscribers?period=week&bucket=day` |
 
 ---
 

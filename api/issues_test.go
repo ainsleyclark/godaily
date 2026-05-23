@@ -87,6 +87,31 @@ func TestHandleIssues(t *testing.T) {
 			query:      "?per_page=999",
 			wantStatus: http.StatusOK,
 		},
+		"OK with status filter": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().CountByStatus(gomock.Any(), news.IssueStatus("draft")).Return(int64(1), nil)
+				issues.EXPECT().ListByStatus(gomock.Any(), news.IssueStatus("draft"), news.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{
+					{ID: 1, Slug: "2026-01-01", Status: "draft"},
+				}, nil)
+			},
+			query:      "?status=draft",
+			wantStatus: http.StatusOK,
+		},
+		"CountByStatus error": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().CountByStatus(gomock.Any(), news.IssueStatus("draft")).Return(int64(0), errors.New("db error"))
+			},
+			query:      "?status=draft",
+			wantStatus: http.StatusInternalServerError,
+		},
+		"ListByStatus error": {
+			mock: func(issues *mocknews.MockIssueRepository) {
+				issues.EXPECT().CountByStatus(gomock.Any(), news.IssueStatus("draft")).Return(int64(1), nil)
+				issues.EXPECT().ListByStatus(gomock.Any(), news.IssueStatus("draft"), gomock.Any()).Return(nil, errors.New("db error"))
+			},
+			query:      "?status=draft",
+			wantStatus: http.StatusInternalServerError,
+		},
 	}
 
 	for name, test := range tt {

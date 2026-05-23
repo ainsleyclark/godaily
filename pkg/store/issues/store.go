@@ -156,6 +156,42 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStat
 	return issueFromRows(i, nil), nil
 }
 
+func (s Store) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+	rows, err := s.db.QueryContext(
+		ctx,
+		"SELECT id, slug, sent_at, subject, COALESCE(summary,''), status FROM issues WHERE status = ? ORDER BY sent_at DESC LIMIT ? OFFSET ?",
+		status.String(), opts.Limit(), opts.Offset(),
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []news.Issue
+	for rows.Next() {
+		var (
+			i      news.Issue
+			sentAt time.Time
+		)
+		if err := rows.Scan(&i.ID, &i.Slug, &sentAt, &i.Subject, &i.Summary, &i.Status); err != nil {
+			return nil, err
+		}
+		i.SentAt = sentAt
+		i.Items = []news.Item{}
+		out = append(out, i)
+	}
+	return out, rows.Err()
+}
+
+func (s Store) CountByStatus(ctx context.Context, status news.IssueStatus) (int64, error) {
+	var count int64
+	err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM issues WHERE status = ?", status.String()).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (s Store) Count(ctx context.Context) (int64, error) {
 	count, err := s.sqlc.IssueCount(ctx)
 
