@@ -47,12 +47,26 @@ ALTER TABLE ...;
 
 ## Testing & linting
 
+Always run these commands locally before committing:
+
 ```
 go test ./...
 golangci-lint run ./... --fix --config=.golangci.yaml
 ```
 
-The formatter is `gofumpt` (stricter than `gofmt`). The lint step applies it automatically with `--fix`.
+**Important:** The `--fix` flag auto-corrects formatting and most linting issues. If the linter fails in CI, it's usually because formatting wasn't applied locally.
+
+### Formatting details
+
+- The formatter is `gofumpt` (stricter than `gofmt`). Running `golangci-lint run ./... --fix` applies it automatically.
+- gofumpt enforces strict spacing and line breaking rules. Always run the lint command with `--fix` to apply corrections before pushing.
+- If linting fails in CI on formatting (e.g. "File is not properly formatted (gofumpt)"), run the lint command locally with `--fix` and commit the changes.
+
+### Troubleshooting lint failures
+
+**Go version mismatch**: If golangci-lint complains about Go version, ensure your local Go version matches `go.mod` (currently 1.26.3).
+
+**File formatting issues**: Run `golangci-lint run ./... --fix --config=.golangci.yaml` — this corrects formatting in-place. Always do this before committing.
 
 ## Commit style
 
