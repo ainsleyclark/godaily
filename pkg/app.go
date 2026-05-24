@@ -38,6 +38,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
+	"github.com/ainsleyclark/godaily/pkg/services/metrics"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
@@ -54,16 +55,17 @@ import (
 
 // App defines a global state for godaily.
 type App struct {
-	Config       *env.Config
-	DB           *sql.DB
-	Repository   *Repository
-	Runner       digest.Runner
-	Social       *social.Service
-	Cache        cache.Store
-	Subscribers  subscriber.Subscriber
-	EmailEvents  *emailevent.Service
-	Slack        slack.Sender
-	StatFetchers map[socialgw.Platform]socialgw.StatFetcher
+	Config         *env.Config
+	DB             *sql.DB
+	Repository     *Repository
+	Runner         digest.Runner
+	Social         *social.Service
+	Cache          cache.Store
+	Subscribers    subscriber.Subscriber
+	EmailEvents    *emailevent.Service
+	Slack          slack.Sender
+	MetricsService engagement.MetricsReporter
+	StatFetchers   map[socialgw.Platform]socialgw.StatFetcher
 }
 
 // Repository defines the datastore for the application.
@@ -149,16 +151,17 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
 
 	return &App{
-		Config:       &config,
-		DB:           conn,
-		Repository:   repo,
-		Runner:       aggregator,
-		Social:       socialSvc,
-		Cache:        store,
-		Subscribers:  subscriberSvc,
-		EmailEvents:  emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
-		Slack:        slackClient,
-		StatFetchers: buildStatFetchers(config),
+		Config:         &config,
+		DB:             conn,
+		Repository:     repo,
+		Runner:         aggregator,
+		Social:         socialSvc,
+		Cache:          store,
+		Subscribers:    subscriberSvc,
+		EmailEvents:    emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
+		Slack:          slackClient,
+		MetricsService: metrics.New(repo.Metrics, slackClient),
+		StatFetchers:   buildStatFetchers(config),
 	}, teardown, nil
 }
 
