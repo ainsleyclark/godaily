@@ -1,0 +1,199 @@
+// Copyright (c) 2026 godaily (Ainsley Clark)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+package news
+
+// SocialProfile carries the social-media metadata for a news source. It is
+// the source-of-truth for spotlight posts (which need a hand-written blurb
+// and the right per-platform mention syntax) and new-source announcements
+// (which need a display name and source URL). Mentions keys are platform
+// strings ("bluesky", "linkedin", "mastodon") rather than typed Platforms
+// to keep the news package free of any social-gateway dependency.
+type SocialProfile struct {
+	Source         Source
+	DisplayName    string
+	SourceURL      string
+	SpotlightBlurb string
+	Mentions       map[string]string
+	// Announceable controls whether NewSource posts about this source.
+	// Aggregator / community sources (HN, Reddit, Mastodon) leave this
+	// false because there's nothing distinctive to shout about — they
+	// just feed items into the same digest as everything else.
+	Announceable bool
+}
+
+// Mention returns the platform-specific handle for a source, or the
+// DisplayName when no mention is configured for that platform.
+func (p SocialProfile) Mention(platform string) string {
+	if m, ok := p.Mentions[platform]; ok && m != "" {
+		return m
+	}
+	return p.DisplayName
+}
+
+// SocialProfiles is the curated metadata for every source GoDaily knows
+// about. Adding a row here makes that source eligible for spotlights, and
+// (if Announceable) for new-source announcements when first added.
+//
+// Sources not in this map are skipped silently — useful for aggregator
+// sources where there's no creator to tag and nothing distinctive to say.
+var SocialProfiles = map[Source]SocialProfile{
+	SourceArdanLabs: {
+		Source:      SourceArdanLabs,
+		DisplayName: "Ardan Labs",
+		Mentions: map[string]string{
+			"bluesky":  "@ardanlabs.com",
+			"mastodon": "@ardanlabs@hachyderm.io",
+		},
+		SpotlightBlurb: "Bill Kennedy's writing, courses and podcast are essential Go reading. If you want depth, start here.",
+		SourceURL:      "https://www.ardanlabs.com/",
+		Announceable:   true,
+	},
+	SourceGoBlog: {
+		Source:      SourceGoBlog,
+		DisplayName: "the Go team",
+		Mentions: map[string]string{
+			"bluesky":  "@golang.org",
+			"mastodon": "@golang@hachyderm.io",
+		},
+		SpotlightBlurb: "Release notes, design rationale and deep dives straight from the people who build Go.",
+		SourceURL:      "https://go.dev/blog/",
+		Announceable:   true,
+	},
+	SourceJetBrains: {
+		Source:      SourceJetBrains,
+		DisplayName: "JetBrains GoLand",
+		Mentions: map[string]string{
+			"bluesky":  "@jetbrains.com",
+			"mastodon": "@jetbrains@mastodon.social",
+		},
+		SpotlightBlurb: "GoLand's blog is one of the few places consistently writing about Go tooling in depth.",
+		SourceURL:      "https://blog.jetbrains.com/go/",
+		Announceable:   true,
+	},
+	SourceGoPodcast: {
+		Source:      SourceGoPodcast,
+		DisplayName: "go podcast()",
+		Mentions: map[string]string{
+			"mastodon": "@dmitshur@hachyderm.io",
+		},
+		SpotlightBlurb: "Short, focused interviews on what's happening in the Go ecosystem.",
+		SourceURL:      "https://gopodcast.dev/",
+		Announceable:   true,
+	},
+	SourceFallthrough: {
+		Source:      SourceFallthrough,
+		DisplayName: "Fallthrough Podcast",
+		Mentions: map[string]string{
+			"bluesky": "@fallthrough.fm",
+		},
+		SpotlightBlurb: "The Go team's own podcast — language design discussions you won't get anywhere else.",
+		SourceURL:      "https://fallthrough.fm/",
+		Announceable:   true,
+	},
+	SourceLobsters: {
+		Source:         SourceLobsters,
+		DisplayName:    "Lobsters",
+		SpotlightBlurb: "Smaller, more technical than HN. The /go feed surfaces things you'd otherwise miss.",
+		SourceURL:      "https://lobste.rs/t/go",
+		Announceable:   true,
+	},
+	SourceGoVuln: {
+		Source:         SourceGoVuln,
+		DisplayName:    "the Go security team",
+		SpotlightBlurb: "If you ship Go code, you should be watching the vuln database. govulncheck is a one-liner.",
+		SourceURL:      "https://pkg.go.dev/vuln/",
+		Announceable:   true,
+	},
+	SourceAwesomeGo: {
+		Source:         SourceAwesomeGo,
+		DisplayName:    "Awesome Go",
+		SpotlightBlurb: "The closest thing the Go ecosystem has to a curated package index. Worth a regular browse.",
+		SourceURL:      "https://github.com/avelino/awesome-go",
+		Announceable:   true,
+	},
+	SourceGoRelease: {
+		Source:         SourceGoRelease,
+		DisplayName:    "Go Releases",
+		SpotlightBlurb: "Every stable, RC and beta release of the Go toolchain, pulled straight from the source.",
+		SourceURL:      "https://go.dev/doc/devel/release",
+		Announceable:   true,
+	},
+	SourceDevTo: {
+		Source:      SourceDevTo,
+		DisplayName: "DEV's #go community",
+		Mentions: map[string]string{
+			"bluesky":  "@thepracticaldev.bsky.social",
+			"mastodon": "@thepracticaldev@mas.to",
+		},
+		SpotlightBlurb: "DEV's #go tag is one of the friendliest places to read and write about Go publicly.",
+		SourceURL:      "https://dev.to/t/go",
+		Announceable:   true,
+	},
+	SourceGitHubTrending: {
+		Source:         SourceGitHubTrending,
+		DisplayName:    "GitHub Trending (Go)",
+		SpotlightBlurb: "The fastest-growing Go repos on GitHub — a useful pulse on what the community is building.",
+		SourceURL:      "https://github.com/trending/go",
+		Announceable:   true,
+	},
+	SourceGitHub: {
+		Source:         SourceGitHub,
+		DisplayName:    "the Go proposals tracker",
+		SpotlightBlurb: "Every active language proposal — what's being argued about and what's about to ship.",
+		SourceURL:      "https://github.com/golang/go/issues?q=is:issue+label:Proposal",
+		Announceable:   true,
+	},
+	SourceConferences: {
+		Source:         SourceConferences,
+		DisplayName:    "Go Conferences",
+		SpotlightBlurb: "Upcoming Go conferences worldwide, surfaced as they get close so you don't miss tickets.",
+		SourceURL:      "https://go.dev/wiki/Conferences",
+		Announceable:   true,
+	},
+	SourceMeetup: {
+		Source:         SourceMeetup,
+		DisplayName:    "Go Meetups",
+		SpotlightBlurb: "Local Go user groups on Meetup — the best way to find Gophers near you.",
+		SourceURL:      "https://www.meetup.com/topics/golang/",
+		Announceable:   true,
+	},
+	SourceGolangBridge: {
+		Source:         SourceGolangBridge,
+		DisplayName:    "GolangBridge",
+		SpotlightBlurb: "A long-running Go Q&A forum — slower than Discord, more searchable than Reddit.",
+		SourceURL:      "https://forum.golangbridge.org/",
+		Announceable:   true,
+	},
+	SourceYouTube: {
+		Source:         SourceYouTube,
+		DisplayName:    "Go talks on YouTube",
+		SpotlightBlurb: "Curated channel of GopherCon, GoLab and community talks — depth beyond a blog post.",
+		SourceURL:      "https://www.youtube.com/results?search_query=golang",
+		Announceable:   true,
+	},
+}
+
+// SocialProfileFor returns the profile for a source, or the zero value
+// when no profile is registered. Use the boolean to distinguish "missing"
+// from "registered but minimal".
+func SocialProfileFor(s Source) (SocialProfile, bool) {
+	p, ok := SocialProfiles[s]
+	return p, ok
+}

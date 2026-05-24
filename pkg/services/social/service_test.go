@@ -227,7 +227,9 @@ func TestService_Post_HappyPath(t *testing.T) {
 	f.posts.EXPECT().
 		Create(gomock.Any(), gomock.Any()).
 		DoAndReturn(func(_ context.Context, p news.SocialPost) (news.SocialPost, error) {
-			assert.Equal(t, int64(42), p.IssueID)
+			require.NotNil(t, p.IssueID)
+			assert.Equal(t, int64(42), *p.IssueID)
+			assert.Equal(t, news.SocialPostKindFeatured, p.Kind)
 			assert.Equal(t, "bluesky", p.Platform)
 			assert.Contains(t, p.Text, "Go 1.30")
 			assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", p.PostURL)

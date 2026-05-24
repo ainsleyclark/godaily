@@ -28,6 +28,7 @@ import (
 	apihandlers "github.com/ainsleyclark/godaily/api"
 	apimetrics "github.com/ainsleyclark/godaily/api/metrics"
 	metricsissueslug "github.com/ainsleyclark/godaily/api/metrics/issues"
+	apisocial "github.com/ainsleyclark/godaily/api/social"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 )
@@ -45,7 +46,9 @@ func Handler(app *godaily.App) http.Handler {
 	mux.HandleFunc("GET /send", apihandlers.HandleSend)
 	mux.HandleFunc("GET /issues", apihandlers.HandleIssues)
 	mux.HandleFunc("GET /subscribers", apihandlers.HandleSubscribers)
-	mux.HandleFunc("GET /social", apihandlers.HandleSocial)
+	mux.HandleFunc("GET /social/featured", apisocial.HandleFeatured)
+	mux.HandleFunc("GET /social/rotation", apisocial.HandleRotation)
+	mux.HandleFunc("GET /social/metrics", apisocial.Handler)
 	mux.HandleFunc("GET /healthz", apihandlers.HandleHealthz)
 	mux.HandleFunc("GET /metrics/summary", apimetrics.HandleSummary)
 	mux.HandleFunc("GET /metrics/issues", apimetrics.HandleIssues)

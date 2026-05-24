@@ -87,7 +87,8 @@ func TestNew(t *testing.T) {
 		t.Setenv("LINKEDIN_ORG_URN", "urn:li:organization:12345")
 		t.Setenv("MASTODON_SERVER", "https://mastodon.social")
 		t.Setenv("MASTODON_APP_TOKEN", "mastodon_token")
-		t.Setenv("BETTERSTACK_SOCIAL_HEARTBEAT_URL", "https://uptime.betterstack.com/social")
+		t.Setenv("BETTERSTACK_SOCIAL_FEATURED_HEARTBEAT_URL", "https://uptime.betterstack.com/social-featured")
+		t.Setenv("BETTERSTACK_SOCIAL_ROTATION_HEARTBEAT_URL", "https://uptime.betterstack.com/social-rotation")
 
 		cfg, err := New(t.Context())
 
@@ -106,7 +107,8 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "urn:li:organization:12345", cfg.LinkedInOrgURN)
 		assert.Equal(t, "https://mastodon.social", cfg.MastodonServer)
 		assert.Equal(t, "mastodon_token", cfg.MastodonAppToken)
-		assert.Equal(t, "https://uptime.betterstack.com/social", cfg.BetterStackSocialHeartbeatURL)
+		assert.Equal(t, "https://uptime.betterstack.com/social-featured", cfg.BetterStackSocialFeaturedHeartbeatURL)
+		assert.Equal(t, "https://uptime.betterstack.com/social-rotation", cfg.BetterStackSocialRotationHeartbeatURL)
 	})
 
 	t.Run("Error", func(t *testing.T) {

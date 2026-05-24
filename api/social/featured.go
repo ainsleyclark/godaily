@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package social
 
 import (
 	"context"
@@ -31,8 +31,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
-// HandleSocial is the Vercel serverless function entry point for
-// GET /api/social.
+// HandleFeatured is the Vercel serverless function entry point for
+// GET /api/social/featured.
 //
 // vercel.json schedules six cron firings per day (every 10 minutes between
 // 11:00 and 11:50 UTC, weekdays). For each firing this handler:
@@ -44,12 +44,12 @@ import (
 //
 // Net effect: posts go out at a different (deterministic) minute each
 // weekday between 11:00 and 11:50 UTC, with no in-handler sleeping.
-func HandleSocial(w http.ResponseWriter, r *http.Request) {
+func HandleFeatured(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		now := time.Now().UTC()
 		if api.IsWeekend(now) {
-			slog.InfoContext(ctx, "Skipping social — weekend")
-			hook.Heartbeat(ctx, a.Config.BetterStackSocialHeartbeatURL)
+			slog.InfoContext(ctx, "Skipping featured — weekend")
+			hook.Heartbeat(ctx, a.Config.BetterStackSocialFeaturedHeartbeatURL)
 			api.OK(w)
 			return
 		}
@@ -58,7 +58,7 @@ func HandleSocial(w http.ResponseWriter, r *http.Request) {
 
 		if !social.ShouldRun(now, today) {
 			slog.InfoContext(
-				ctx, "Skipping social — wrong slot",
+				ctx, "Skipping featured — wrong slot",
 				"minute", now.Minute(), "picked", social.PickSlot(today),
 			)
 			api.OK(w)
@@ -66,21 +66,21 @@ func HandleSocial(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if a.Social == nil || !a.Social.HasPosters() {
-			slog.InfoContext(ctx, "Skipping social — no posters configured")
-			hook.Heartbeat(ctx, a.Config.BetterStackSocialHeartbeatURL)
+			slog.InfoContext(ctx, "Skipping featured — no posters configured")
+			hook.Heartbeat(ctx, a.Config.BetterStackSocialFeaturedHeartbeatURL)
 			api.OK(w)
 			return
 		}
 
 		results, err := a.Social.Post(ctx, social.PostOptions{Date: today})
 		if err != nil {
-			a.Slack.MustSend(ctx, "Social post failed: "+err.Error())
-			api.Error(w, http.StatusInternalServerError, "social post failed: "+err.Error())
+			a.Slack.MustSend(ctx, "Featured post failed: "+err.Error())
+			api.Error(w, http.StatusInternalServerError, "featured post failed: "+err.Error())
 			return
 		}
 
-		slog.InfoContext(ctx, "Social post run complete", "platforms", len(results))
-		hook.Heartbeat(ctx, a.Config.BetterStackSocialHeartbeatURL)
+		slog.InfoContext(ctx, "Featured run complete", "platforms", len(results))
+		hook.Heartbeat(ctx, a.Config.BetterStackSocialFeaturedHeartbeatURL)
 		api.OK(w)
 	})(w, r)
 }

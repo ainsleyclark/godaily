@@ -12,6 +12,7 @@ package mocknews
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	gomock "go.uber.org/mock/gomock"
@@ -69,6 +70,36 @@ func (m *MockSocialPostRepository) HasPosted(ctx context.Context, issueID int64,
 func (mr *MockSocialPostRepositoryMockRecorder) HasPosted(ctx, issueID, platform any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPosted", reflect.TypeOf((*MockSocialPostRepository)(nil).HasPosted), ctx, issueID, platform)
+}
+
+// HasPostedBySubject mocks base method.
+func (m *MockSocialPostRepository) HasPostedBySubject(ctx context.Context, subject, platform string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPostedBySubject", ctx, subject, platform)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HasPostedBySubject indicates an expected call of HasPostedBySubject.
+func (mr *MockSocialPostRepositoryMockRecorder) HasPostedBySubject(ctx, subject, platform any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedBySubject", reflect.TypeOf((*MockSocialPostRepository)(nil).HasPostedBySubject), ctx, subject, platform)
+}
+
+// HasPostedKindSince mocks base method.
+func (m *MockSocialPostRepository) HasPostedKindSince(ctx context.Context, kind news.SocialPostKind, platform string, since time.Time) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPostedKindSince", ctx, kind, platform, since)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HasPostedKindSince indicates an expected call of HasPostedKindSince.
+func (mr *MockSocialPostRepositoryMockRecorder) HasPostedKindSince(ctx, kind, platform, since any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedKindSince", reflect.TypeOf((*MockSocialPostRepository)(nil).HasPostedKindSince), ctx, kind, platform, since)
 }
 
 // List mocks base method.

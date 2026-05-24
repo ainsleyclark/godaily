@@ -63,7 +63,9 @@ type SocialMetric struct {
 
 type SocialPost struct {
 	ID       int64          `json:"id"`
-	IssueID  int64          `json:"issue_id"`
+	IssueID  *int64         `json:"issue_id"`
+	Kind     string         `json:"kind"`
+	Subject  sql.NullString `json:"subject"`
 	Platform string         `json:"platform"`
 	Text     string         `json:"text"`
 	PostUrl  sql.NullString `json:"post_url"`

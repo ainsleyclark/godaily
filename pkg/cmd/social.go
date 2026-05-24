@@ -30,6 +30,7 @@ import (
 	"github.com/urfave/cli/v3"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
@@ -44,6 +45,7 @@ func socialCmd(a *godaily.App) *cli.Command {
 		Commands: []*cli.Command{
 			socialPostCmd(a),
 			socialPublishCmd(a),
+			socialRotationCmd(a),
 		},
 	}
 }
@@ -134,6 +136,64 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 			})
 			if err != nil {
 				a.Slack.MustSend(ctx, "Social publish CLI failed: "+err.Error())
+				printResults(results)
+				return err
+			}
+
+			printResults(results)
+			return nil
+		},
+	}
+}
+
+// socialRotationCmd drives the Tue/Fri rotation slot manually. --kind
+// forces a specific candidate (skipping the day-aware routing) which is
+// the main reason this CLI exists: testing each path end-to-end.
+func socialRotationCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:  "rotation",
+		Usage: "Run the Tue/Fri rotation slot (new_source|spotlight|cta|recap).",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "dry-run",
+				Usage: "Run the full pipeline (eligibility + AI) but skip platform HTTP and DB writes.",
+			},
+			&cli.StringSliceFlag{
+				Name:  "platform",
+				Usage: "Only post to the named platforms (bluesky, linkedin, mastodon).",
+			},
+			&cli.StringFlag{
+				Name:  "kind",
+				Usage: "Force a specific candidate kind (new_source, spotlight, cta, recap). Bypasses day-of-week routing.",
+			},
+			&cli.StringFlag{
+				Name:  "now",
+				Usage: "Override the wall clock (RFC3339). Useful to test Tue/Fri routing on other days.",
+			},
+		},
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			platforms, err := parsePlatforms(cmd.StringSlice("platform"))
+			if err != nil {
+				return err
+			}
+
+			now := time.Now().UTC()
+			if raw := cmd.String("now"); raw != "" {
+				parsed, err := time.Parse(time.RFC3339, raw)
+				if err != nil {
+					return fmt.Errorf("invalid --now (RFC3339 expected): %w", err)
+				}
+				now = parsed.UTC()
+			}
+
+			results, err := a.Social.Rotate(ctx, social.RotateOptions{
+				Now:       now,
+				DryRun:    cmd.Bool("dry-run"),
+				Platforms: platforms,
+				ForceKind: news.SocialPostKind(strings.TrimSpace(cmd.String("kind"))),
+			})
+			if err != nil {
+				a.Slack.MustSend(ctx, "Social rotation CLI failed: "+err.Error())
 				printResults(results)
 				return err
 			}

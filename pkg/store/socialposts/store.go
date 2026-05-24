@@ -17,9 +17,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package socialposts persists social media posts that have been published
-// for a given digest issue. It provides idempotency for the social cron via
-// HasPosted, and an audit log via ListForIssue.
+// Package socialposts persists social media posts and their idempotency
+// keys. Featured posts (kind='featured') are scoped per (issue_id, platform);
+// rotation posts (recap, spotlight, cta, self_release) leave issue_id null
+// and use a free-text Subject as their idempotency key.
 package socialposts
 
 import (
@@ -50,24 +51,50 @@ type Store struct {
 
 var _ news.SocialPostRepository = (*Store)(nil)
 
-// HasPosted reports whether a row exists for the given issue and platform.
+// HasPosted reports whether a featured row exists for the given issue and platform.
 func (s Store) HasPosted(ctx context.Context, issueID int64, platform string) (bool, error) {
+	id := issueID
 	return s.sqlc.SocialPostExists(ctx, sqlc.SocialPostExistsParams{
-		IssueID:  issueID,
+		IssueID:  &id,
 		Platform: platform,
 	})
 }
 
+// HasPostedBySubject reports whether any row exists with the given subject and platform.
+func (s Store) HasPostedBySubject(ctx context.Context, subject, platform string) (bool, error) {
+	return s.sqlc.SocialPostExistsBySubject(ctx, sqlc.SocialPostExistsBySubjectParams{
+		Subject:  dbtypes.NullString(subject),
+		Platform: platform,
+	})
+}
+
+// HasPostedKindSince reports whether any row of the given kind on the given
+// platform was posted at or after since.
+func (s Store) HasPostedKindSince(ctx context.Context, kind news.SocialPostKind, platform string, since time.Time) (bool, error) {
+	return s.sqlc.SocialPostExistsKindSince(ctx, sqlc.SocialPostExistsKindSinceParams{
+		Kind:     string(kind),
+		Platform: platform,
+		PostedAt: since,
+	})
+}
+
 // Create persists a new social post record. When PostedAt is the zero value
-// it defaults to time.Now().UTC() so callers don't need to set it.
+// it defaults to time.Now().UTC() so callers don't need to set it. Kind
+// defaults to SocialPostKindFeatured to preserve the historical row shape.
 func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, error) {
 	postedAt := p.PostedAt
 	if postedAt.IsZero() {
 		postedAt = time.Now().UTC()
 	}
+	kind := p.Kind
+	if kind == "" {
+		kind = news.SocialPostKindFeatured
+	}
 
 	row, err := s.sqlc.SocialPostCreate(ctx, sqlc.SocialPostCreateParams{
 		IssueID:  p.IssueID,
+		Kind:     string(kind),
+		Subject:  dbtypes.NullString(p.Subject),
 		Platform: p.Platform,
 		Text:     p.Text,
 		PostUrl:  dbtypes.NullString(p.PostURL),
@@ -85,7 +112,8 @@ func (s Store) List(ctx context.Context, opts news.SocialPostListOptions) ([]new
 	var err error
 	switch {
 	case opts.IssueID != nil:
-		rows, err = s.sqlc.SocialPostListByIssue(ctx, *opts.IssueID)
+		id := *opts.IssueID
+		rows, err = s.sqlc.SocialPostListByIssue(ctx, &id)
 	case opts.Since != nil:
 		rows, err = s.sqlc.SocialPostListSince(ctx, *opts.Since)
 	default:
@@ -105,6 +133,8 @@ func transform(r sqlc.SocialPost) news.SocialPost {
 	return news.SocialPost{
 		ID:       r.ID,
 		IssueID:  r.IssueID,
+		Kind:     news.SocialPostKind(r.Kind),
+		Subject:  r.Subject.String,
 		Platform: r.Platform,
 		Text:     r.Text,
 		PostURL:  r.PostUrl.String,

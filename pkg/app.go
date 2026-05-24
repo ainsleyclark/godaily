@@ -39,7 +39,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
 	"github.com/ainsleyclark/godaily/pkg/services/metrics"
+	"github.com/ainsleyclark/godaily/pkg/services/recap"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
@@ -147,6 +149,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	if err != nil {
 		return nil, teardown, err
 	}
+	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
 	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
 
@@ -178,6 +181,25 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
+	}
+	return out
+}
+
+// buildRotationCandidates wires the four kinds the Tue/Fri rotation
+// chooses from. The recap candidate is skipped if metrics aren't wired
+// (would never happen in production but keeps tests/no-DB bootstraps
+// from blowing up).
+func buildRotationCandidates(_ env.Config, repo *Repository, posts news.SocialPostRepository) []social.Candidate {
+	out := make([]social.Candidate, 0, 4)
+
+	out = append(out, candidates.NewNewSource(news.SocialProfiles, posts))
+	out = append(out, candidates.NewSpotlight(news.SocialProfiles, posts))
+	out = append(out, candidates.NewCTA(posts))
+
+	if repo != nil && repo.Metrics != nil {
+		if recapSvc, err := recap.New(repo.Metrics); err == nil {
+			out = append(out, candidates.NewRecap(recapSvc, posts))
+		}
 	}
 	return out
 }

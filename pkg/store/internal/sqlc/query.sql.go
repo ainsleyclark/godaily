@@ -825,15 +825,17 @@ func (q *Queries) SocialMetricUpsert(ctx context.Context, arg SocialMetricUpsert
 
 const socialPostCreate = `-- name: SocialPostCreate :one
 INSERT INTO social_posts (
-    issue_id, platform, text, post_url, posted_at
+    issue_id, kind, subject, platform, text, post_url, posted_at
 ) VALUES (
-    ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, issue_id, platform, text, post_url, posted_at
+RETURNING id, issue_id, kind, subject, platform, text, post_url, posted_at
 `
 
 type SocialPostCreateParams struct {
-	IssueID  int64          `json:"issue_id"`
+	IssueID  *int64         `json:"issue_id"`
+	Kind     string         `json:"kind"`
+	Subject  sql.NullString `json:"subject"`
 	Platform string         `json:"platform"`
 	Text     string         `json:"text"`
 	PostUrl  sql.NullString `json:"post_url"`
@@ -843,6 +845,8 @@ type SocialPostCreateParams struct {
 func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreateParams) (SocialPost, error) {
 	row := q.db.QueryRowContext(ctx, socialPostCreate,
 		arg.IssueID,
+		arg.Kind,
+		arg.Subject,
 		arg.Platform,
 		arg.Text,
 		arg.PostUrl,
@@ -852,6 +856,8 @@ func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreatePara
 	err := row.Scan(
 		&i.ID,
 		&i.IssueID,
+		&i.Kind,
+		&i.Subject,
 		&i.Platform,
 		&i.Text,
 		&i.PostUrl,
@@ -863,12 +869,12 @@ func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreatePara
 const socialPostExists = `-- name: SocialPostExists :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
-    WHERE issue_id = ? AND platform = ?
+    WHERE issue_id = ? AND platform = ? AND kind = 'featured'
 ) AS exists_flag
 `
 
 type SocialPostExistsParams struct {
-	IssueID  int64  `json:"issue_id"`
+	IssueID  *int64 `json:"issue_id"`
 	Platform string `json:"platform"`
 }
 
@@ -879,13 +885,52 @@ func (q *Queries) SocialPostExists(ctx context.Context, arg SocialPostExistsPara
 	return exists_flag, err
 }
 
+const socialPostExistsBySubject = `-- name: SocialPostExistsBySubject :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE subject = ? AND platform = ?
+) AS exists_flag
+`
+
+type SocialPostExistsBySubjectParams struct {
+	Subject  sql.NullString `json:"subject"`
+	Platform string         `json:"platform"`
+}
+
+func (q *Queries) SocialPostExistsBySubject(ctx context.Context, arg SocialPostExistsBySubjectParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, socialPostExistsBySubject, arg.Subject, arg.Platform)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
+const socialPostExistsKindSince = `-- name: SocialPostExistsKindSince :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE kind = ? AND platform = ? AND posted_at >= ?
+) AS exists_flag
+`
+
+type SocialPostExistsKindSinceParams struct {
+	Kind     string    `json:"kind"`
+	Platform string    `json:"platform"`
+	PostedAt time.Time `json:"posted_at"`
+}
+
+func (q *Queries) SocialPostExistsKindSince(ctx context.Context, arg SocialPostExistsKindSinceParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, socialPostExistsKindSince, arg.Kind, arg.Platform, arg.PostedAt)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
 const socialPostListByIssue = `-- name: SocialPostListByIssue :many
-SELECT id, issue_id, platform, text, post_url, posted_at FROM social_posts
+SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at FROM social_posts
 WHERE issue_id = ?
 ORDER BY posted_at ASC
 `
 
-func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]SocialPost, error) {
+func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID *int64) ([]SocialPost, error) {
 	rows, err := q.db.QueryContext(ctx, socialPostListByIssue, issueID)
 	if err != nil {
 		return nil, err
@@ -897,6 +942,8 @@ func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]S
 		if err := rows.Scan(
 			&i.ID,
 			&i.IssueID,
+			&i.Kind,
+			&i.Subject,
 			&i.Platform,
 			&i.Text,
 			&i.PostUrl,
@@ -916,7 +963,7 @@ func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID int64) ([]S
 }
 
 const socialPostListSince = `-- name: SocialPostListSince :many
-SELECT id, issue_id, platform, text, post_url, posted_at FROM social_posts
+SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at FROM social_posts
 WHERE posted_at >= ?
 ORDER BY posted_at DESC
 `
@@ -933,6 +980,8 @@ func (q *Queries) SocialPostListSince(ctx context.Context, postedAt time.Time) (
 		if err := rows.Scan(
 			&i.ID,
 			&i.IssueID,
+			&i.Kind,
+			&i.Subject,
 			&i.Platform,
 			&i.Text,
 			&i.PostUrl,
