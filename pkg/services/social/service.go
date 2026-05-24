@@ -171,7 +171,8 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 		return nil, errors.Wrap(err, "feature")
 	}
 
-	slog.InfoContext(ctx, "Selected featured item",
+	slog.InfoContext(
+		ctx, "Selected featured item",
 		"title", featured.Title, "url", featured.URL, "tag", string(featured.Tag),
 	)
 
@@ -215,7 +216,8 @@ func (s *Service) postOne(
 		}
 		if posted {
 			res.Skipped = true
-			slog.InfoContext(ctx, "Skipping platform — already posted today",
+			slog.InfoContext(
+				ctx, "Skipping platform — already posted today",
 				"platform", platform, "issue", issueID,
 			)
 			return res
@@ -236,7 +238,8 @@ func (s *Service) postOne(
 	res.Text = text
 
 	if dryRun {
-		slog.InfoContext(ctx, "Dry-run: skipping post + DB write",
+		slog.InfoContext(
+			ctx, "Dry-run: skipping post + DB write",
 			"platform", platform, "chars", len(text),
 		)
 		return res
@@ -261,7 +264,8 @@ func (s *Service) postOne(
 		return res
 	}
 
-	slog.InfoContext(ctx, "Social post published",
+	slog.InfoContext(
+		ctx, "Social post published",
 		"platform", platform, "url", result.PostURL, "issue", issueID,
 	)
 	return res

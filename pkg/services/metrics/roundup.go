@@ -37,9 +37,6 @@ import (
 )
 
 const (
-	// roundupWindow is how far back the weekly roundup looks.
-	roundupWindow = 7 * 24 * time.Hour
-
 	// topItemsLimit is the number of top-clicked links shown in the roundup.
 	topItemsLimit = 5
 	// topTagsLimit is the number of top tags shown in the roundup.

@@ -67,7 +67,7 @@ func TestCachingStore_Find(t *testing.T) {
 				c.EXPECT().
 					Get(gomock.Any(), "issue:id:1", gomock.Any()).
 					DoAndReturn(func(_ context.Context, _ string, out any) error {
-						*(out.(*[]byte)) = encoded
+						*out.(*[]byte) = encoded
 						return nil
 					})
 			},
@@ -130,7 +130,7 @@ func TestCachingStore_FindBySlug(t *testing.T) {
 				c.EXPECT().
 					Get(gomock.Any(), "issue:slug:"+testSlug, gomock.Any()).
 					DoAndReturn(func(_ context.Context, _ string, out any) error {
-						*(out.(*[]byte)) = encoded
+						*out.(*[]byte) = encoded
 						return nil
 					})
 			},

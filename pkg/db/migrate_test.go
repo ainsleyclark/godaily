@@ -38,7 +38,8 @@ func TestUp(t *testing.T) {
 
 		for _, table := range schemaTables {
 			var name string
-			err := conn.QueryRowContext(t.Context(),
+			err := conn.QueryRowContext(
+				t.Context(),
 				"SELECT name FROM sqlite_master WHERE type='table' AND name=?", table,
 			).Scan(&name)
 			require.NoError(t, err, "table %q missing after Up", table)
@@ -71,7 +72,8 @@ func TestDown(t *testing.T) {
 		}
 
 		var count int
-		err = conn.QueryRowContext(t.Context(),
+		err = conn.QueryRowContext(
+			t.Context(),
 			"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('issues','items','subscribers','social_posts','email_events')",
 		).Scan(&count)
 		require.NoError(t, err)

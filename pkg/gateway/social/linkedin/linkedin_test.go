@@ -73,7 +73,8 @@ func TestClient_Post(t *testing.T) {
 
 		res, err := c.Post(context.Background(), "Hello, Go community")
 		require.NoError(t, err)
-		assert.Equal(t,
+		assert.Equal(
+			t,
 			"https://www.linkedin.com/feed/update/urn:li:share:7234567890123456789/",
 			res.PostURL,
 		)

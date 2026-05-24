@@ -51,7 +51,8 @@ func New(apiKey string, opts ...option.RequestOption) *Client {
 // Prompt sends system as a single TextBlockParam and user as the user message.
 // Returns the concatenated text content bytes of the response.
 func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	slog.InfoContext(ctx, "Calling Anthropic",
+	slog.InfoContext(
+		ctx, "Calling Anthropic",
 		"model", model,
 		"max_tokens", maxTokens,
 	)
@@ -67,7 +68,8 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 	if err != nil {
 		return nil, errors.Wrap(err, "anthropic")
 	}
-	slog.InfoContext(ctx, "Anthropic response",
+	slog.InfoContext(
+		ctx, "Anthropic response",
 		"model", resp.Model,
 		"input_tokens", resp.Usage.InputTokens,
 		"output_tokens", resp.Usage.OutputTokens,
