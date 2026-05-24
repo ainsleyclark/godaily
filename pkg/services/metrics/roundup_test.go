@@ -115,8 +115,9 @@ func TestService_Roundup(t *testing.T) {
 
 	fixedNow := time.Date(2026, 5, 24, 15, 0, 0, 0, time.UTC)
 	wantTo := fixedNow
-	wantCurrFrom := fixedNow.Add(-roundupWindow)
-	wantPrevFrom := wantCurrFrom.Add(-roundupWindow)
+	today := time.Date(fixedNow.Year(), fixedNow.Month(), fixedNow.Day(), 0, 0, 0, 0, time.UTC)
+	wantCurrFrom := today.AddDate(0, 0, -7)
+	wantPrevFrom := wantCurrFrom.AddDate(0, 0, -7)
 
 	t.Run("Formats message and sends to Slack", func(t *testing.T) {
 		t.Parallel()

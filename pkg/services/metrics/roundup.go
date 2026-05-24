@@ -141,8 +141,11 @@ func (s *Service) Gather(ctx context.Context, from, to time.Time) (Snapshot, err
 // comparison, formats them as a Slack message and sends it.
 func (s *Service) Roundup(ctx context.Context) error {
 	now := s.now()
-	currFrom := now.Add(-roundupWindow)
-	prevFrom := currFrom.Add(-roundupWindow)
+	// Anchor to midnight UTC so digests sent earlier in the day (08:00 UTC)
+	// are always inside the window regardless of when the cron fires.
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	currFrom := today.AddDate(0, 0, -7)
+	prevFrom := currFrom.AddDate(0, 0, -7)
 
 	curr, err := s.Gather(ctx, currFrom, now)
 	if err != nil {
