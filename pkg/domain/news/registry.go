@@ -57,6 +57,15 @@ func Get(s Source) (Fetcher, error) {
 	return b(env.Config{}), nil
 }
 
+// HasSources reports whether any source builders have been registered via
+// init(). Bootstrap uses this to skip Materialise on Lambda functions that do
+// not import pkg/source (i.e. every handler except /api/collect).
+func HasSources() bool {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
+	return len(registry) > 0
+}
+
 // Materialise builds every registered Source against cfg and replaces each
 // Builder with a closure returning the prebuilt instance. Called from
 // Bootstrap after env.New so .env values reach source constructors.

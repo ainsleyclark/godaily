@@ -29,6 +29,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	// Register all news-source fetchers (lingua-go + scrapers) for this
+	// Lambda only. All other Lambda functions must NOT import this package.
+	_ "github.com/ainsleyclark/godaily/pkg/source"
 )
 
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
