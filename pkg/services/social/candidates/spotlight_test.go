@@ -31,25 +31,24 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 )
 
 var (
 	spotNow = time.Date(2026, 5, 19, 15, 0, 0, 0, time.UTC)
 
-	// Two stub source profiles. Names are deliberately ordered so we know
+	// Two stub profiles. Names are deliberately ordered so we know
 	// alphabetical iteration picks "alpha_source" first.
-	alphaProfile = social.SourceProfile{
+	alphaProfile = news.SocialProfile{
 		Source:         news.Source("alpha_source"),
 		DisplayName:    "Alpha",
 		SourceURL:      "https://alpha.example",
 		SpotlightBlurb: "alpha blurb",
-		Mentions: map[socialgw.Platform]string{
-			socialgw.PlatformBluesky: "@alpha.example",
+		Mentions: map[string]string{
+			"bluesky": "@alpha.example",
 		},
 	}
-	bravoProfile = social.SourceProfile{
+	bravoProfile = news.SocialProfile{
 		Source:         news.Source("bravo_source"),
 		DisplayName:    "Bravo",
 		SourceURL:      "https://bravo.example",
@@ -62,92 +61,80 @@ func TestSpotlight_Kind(t *testing.T) {
 	assert.Equal(t, news.SocialPostKindSpotlight, c.Kind())
 }
 
-func TestSpotlight_NoProfilesIsNotEligible(t *testing.T) {
-	c := candidates.NewSpotlight(map[news.Source]social.SourceProfile{}, nil)
-	_, ok, err := c.Eligible(context.Background(), spotNow)
-	require.NoError(t, err)
-	assert.False(t, ok)
-}
+func TestSpotlight_Eligible(t *testing.T) {
+	t.Run("Empty profile map is not eligible", func(t *testing.T) {
+		c := candidates.NewSpotlight(map[news.Source]news.SocialProfile{}, nil)
+		_, ok, err := c.Eligible(context.Background(), spotNow)
+		require.NoError(t, err)
+		assert.False(t, ok)
+	})
 
-func TestSpotlight_PicksFirstUnpostedSource(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	t.Run("Picks first unposted source alphabetically", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	profiles := map[news.Source]social.SourceProfile{
-		alphaProfile.Source: alphaProfile,
-		bravoProfile.Source: bravoProfile,
-	}
+		profiles := map[news.Source]news.SocialProfile{
+			alphaProfile.Source: alphaProfile,
+			bravoProfile.Source: bravoProfile,
+		}
 
-	// Iteration is alphabetical by source name → alpha_source is probed first.
-	// HasPostedKindSince is called as a pre-step but its result is not used.
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindSpotlight, "bluesky", gomock.Any()).
-		Return(false, nil).AnyTimes()
+		posts.EXPECT().
+			HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
+			Return(false, nil)
 
-	posts.EXPECT().
-		HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
-		Return(false, nil)
+		c := candidates.NewSpotlight(profiles, posts)
+		cctx, ok, err := c.Eligible(context.Background(), spotNow)
+		require.NoError(t, err)
+		require.True(t, ok)
 
-	c := candidates.NewSpotlight(profiles, posts)
-	cctx, ok, err := c.Eligible(context.Background(), spotNow)
-	require.NoError(t, err)
-	require.True(t, ok)
+		assert.Equal(t, news.SocialPostKindSpotlight, cctx.Kind)
+		assert.Equal(t, "spotlight:alpha_source", cctx.Subject)
+		assert.Equal(t, "https://alpha.example", cctx.URL)
 
-	assert.Equal(t, news.SocialPostKindSpotlight, cctx.Kind)
-	assert.Equal(t, "spotlight:alpha_source", cctx.Subject)
-	assert.Equal(t, "https://alpha.example", cctx.URL)
+		profile, ok := cctx.Payload.(news.SocialProfile)
+		require.True(t, ok, "Payload must be a SocialProfile")
+		assert.Equal(t, "Alpha", profile.DisplayName)
+		assert.Equal(t, "@alpha.example", cctx.Mentions[socialgw.PlatformBluesky])
+	})
 
-	profile, ok := cctx.Payload.(social.SourceProfile)
-	require.True(t, ok, "Payload must be a SourceProfile")
-	assert.Equal(t, "Alpha", profile.DisplayName)
-	assert.Equal(t, "@alpha.example", cctx.Mentions[socialgw.PlatformBluesky])
-}
+	t.Run("Rotates past already-covered source", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-func TestSpotlight_RotatesPastAlreadyCoveredSource(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+		profiles := map[news.Source]news.SocialProfile{
+			alphaProfile.Source: alphaProfile,
+			bravoProfile.Source: bravoProfile,
+		}
 
-	profiles := map[news.Source]social.SourceProfile{
-		alphaProfile.Source: alphaProfile,
-		bravoProfile.Source: bravoProfile,
-	}
+		posts.EXPECT().
+			HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
+			Return(true, nil)
+		posts.EXPECT().
+			HasPostedBySubject(gomock.Any(), "spotlight:bravo_source", "bluesky").
+			Return(false, nil)
 
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindSpotlight, "bluesky", gomock.Any()).
-		Return(false, nil).AnyTimes()
+		c := candidates.NewSpotlight(profiles, posts)
+		cctx, ok, err := c.Eligible(context.Background(), spotNow)
+		require.NoError(t, err)
+		require.True(t, ok)
+		assert.Equal(t, "spotlight:bravo_source", cctx.Subject)
+	})
 
-	// alpha has already been covered → move on to bravo.
-	posts.EXPECT().
-		HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
-		Return(true, nil)
-	posts.EXPECT().
-		HasPostedBySubject(gomock.Any(), "spotlight:bravo_source", "bluesky").
-		Return(false, nil)
+	t.Run("All sources covered is not eligible", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	c := candidates.NewSpotlight(profiles, posts)
-	cctx, ok, err := c.Eligible(context.Background(), spotNow)
-	require.NoError(t, err)
-	require.True(t, ok)
-	assert.Equal(t, "spotlight:bravo_source", cctx.Subject)
-}
+		profiles := map[news.Source]news.SocialProfile{
+			alphaProfile.Source: alphaProfile,
+		}
 
-func TestSpotlight_AllCoveredIsNotEligible(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts.EXPECT().
+			HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
+			Return(true, nil)
 
-	profiles := map[news.Source]social.SourceProfile{
-		alphaProfile.Source: alphaProfile,
-	}
-
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindSpotlight, "bluesky", gomock.Any()).
-		Return(false, nil)
-	posts.EXPECT().
-		HasPostedBySubject(gomock.Any(), "spotlight:alpha_source", "bluesky").
-		Return(true, nil)
-
-	c := candidates.NewSpotlight(profiles, posts)
-	_, ok, err := c.Eligible(context.Background(), spotNow)
-	require.NoError(t, err)
-	assert.False(t, ok)
+		c := candidates.NewSpotlight(profiles, posts)
+		_, ok, err := c.Eligible(context.Background(), spotNow)
+		require.NoError(t, err)
+		assert.False(t, ok)
+	})
 }

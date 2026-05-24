@@ -28,42 +28,42 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
-// CandidateContext is the unit of work the rotation pipeline hands from a
-// Candidate's Eligible check to the per-platform Generate step. Different
-// candidate kinds populate different fields:
-//
-//   - self_release/recap/spotlight/cta all set Subject for idempotency.
-//   - spotlight sets Mentions (per-platform handle, already formatted).
-//   - recap puts the recap.Top into Payload so its generator can render it
-//     without a second DB hit.
-type CandidateContext struct {
-	Kind     news.SocialPostKind
-	Hook     string
-	URL      string
-	Subject  string
-	Mentions map[social.Platform]string
-	Payload  any
-}
-
-// Generator produces post text for one platform from a CandidateContext.
-// Returning a non-nil error aborts the publish for that platform only.
-type Generator func(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
-
-// Candidate is one possible rotation post. Eligible looks at the world
-// (DB, GitHub, click metrics) and either returns a populated context or
-// reports the candidate is not ready.
-type Candidate interface {
-	// Kind reports the SocialPostKind this candidate produces.
-	Kind() news.SocialPostKind
-
-	// Eligible reports whether the candidate can post right now. The bool
-	// is the source of truth; the context is only meaningful when true.
-	Eligible(ctx context.Context, now time.Time) (CandidateContext, bool, error)
-
-	// Generate returns the post text for one platform given the context
-	// from Eligible.
-	Generate(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
-}
+type (
+	// CandidateContext is the unit of work the rotation pipeline hands
+	// from a Candidate's Eligible check to the per-platform Generate
+	// step. Different candidate kinds populate different fields:
+	//
+	//   - new_source/recap/spotlight/cta all set Subject for idempotency.
+	//   - spotlight + new_source set Mentions (per-platform handle).
+	//   - recap puts the recap.Top into Payload so its generator can
+	//     render it without a second DB hit.
+	CandidateContext struct {
+		Kind     news.SocialPostKind
+		Hook     string
+		URL      string
+		Subject  string
+		Mentions map[social.Platform]string
+		Payload  any
+	}
+	// Generator produces post text for one platform from a
+	// CandidateContext. Returning a non-nil error aborts the publish
+	// for that platform only.
+	Generator func(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
+	// Candidate is one possible rotation post. Eligible looks at the
+	// world (DB, click metrics) and either returns a populated context
+	// or reports the candidate is not ready.
+	Candidate interface {
+		// Kind reports the SocialPostKind this candidate produces.
+		Kind() news.SocialPostKind
+		// Eligible reports whether the candidate can post right now.
+		// The bool is the source of truth; the context is only
+		// meaningful when true.
+		Eligible(ctx context.Context, now time.Time) (CandidateContext, bool, error)
+		// Generate returns the post text for one platform given the
+		// context from Eligible.
+		Generate(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
+	}
+)
 
 // CandidateByKind returns the candidate with the given Kind, or nil if
 // none is registered. Used by the CLI to drive a single kind for testing.

@@ -33,12 +33,17 @@ type SocialPostKind string
 const (
 	// SocialPostKindFeatured is the daily AI-picked post anchored to an issue.
 	SocialPostKindFeatured SocialPostKind = "featured"
-	// SocialPostKindSelfRelease announces a new GoDaily GitHub release.
-	SocialPostKindSelfRelease SocialPostKind = "self_release"
+
+	// SocialPostKindNewSource announces that GoDaily started pulling from a
+	// new source. Subject is "new_source:<source>".
+	SocialPostKindNewSource SocialPostKind = "new_source"
+
 	// SocialPostKindRecap is the Friday weekly top-clicks post.
 	SocialPostKindRecap SocialPostKind = "recap"
+
 	// SocialPostKindSpotlight tags and boosts a curated source.
 	SocialPostKindSpotlight SocialPostKind = "spotlight"
+
 	// SocialPostKindCTA is a "sign up to GoDaily" rotation post.
 	SocialPostKindCTA SocialPostKind = "cta"
 )

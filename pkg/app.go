@@ -31,7 +31,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	githubgw "github.com/ainsleyclark/godaily/pkg/gateway/github"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
@@ -187,12 +186,11 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 // chooses from. The recap candidate is skipped if metrics aren't wired
 // (would never happen in production but keeps tests/no-DB bootstraps
 // from blowing up).
-func buildRotationCandidates(c env.Config, repo *Repository, posts news.SocialPostRepository) []social.Candidate {
+func buildRotationCandidates(_ env.Config, repo *Repository, posts news.SocialPostRepository) []social.Candidate {
 	out := make([]social.Candidate, 0, 4)
 
-	selfReleaseFetcher := githubgw.NewReleases("ainsleyclark", "godaily", c.GitHubToken)
-	out = append(out, candidates.NewSelfRelease(selfReleaseFetcher, posts))
-	out = append(out, candidates.NewSpotlight(social.SourceProfiles, posts))
+	out = append(out, candidates.NewNewSource(news.SocialProfiles, posts))
+	out = append(out, candidates.NewSpotlight(news.SocialProfiles, posts))
 	out = append(out, candidates.NewCTA(posts))
 
 	if repo != nil && repo.Metrics != nil {

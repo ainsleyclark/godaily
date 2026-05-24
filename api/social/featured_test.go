@@ -65,7 +65,7 @@ func newAppNoPosters(t *testing.T, secret string) *godaily.App {
 }
 
 func TestHandleFeatured(t *testing.T) {
-	t.Run("Unauthorized", func(t *testing.T) {
+	t.Run("Unauthorized request is rejected", func(t *testing.T) {
 		a := newAppNoPosters(t, "supersecret")
 		api.SetApp(a)
 
@@ -78,10 +78,10 @@ func TestHandleFeatured(t *testing.T) {
 	})
 
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
-		// HasPosters is false, so the handler must return OK without invoking
-		// Post. Real wall clock is fine here — both the weekend path and the
-		// no-posters path return OK, and the slot check is bypassed by the
-		// no-posters branch.
+		// HasPosters is false, so the handler must return OK without
+		// invoking Post. Real wall clock is fine — both the weekend
+		// path and the no-posters path return OK, and the slot check is
+		// bypassed by the no-posters branch.
 		a := newAppNoPosters(t, "")
 		api.SetApp(a)
 
@@ -94,7 +94,7 @@ func TestHandleFeatured(t *testing.T) {
 }
 
 func TestHandleRotation(t *testing.T) {
-	t.Run("Unauthorized", func(t *testing.T) {
+	t.Run("Unauthorized request is rejected", func(t *testing.T) {
 		a := newAppNoPosters(t, "supersecret")
 		api.SetApp(a)
 

@@ -53,7 +53,7 @@ type RotateOptions struct {
 // Rotate walks the day's candidate list (or just ForceKind), picks the
 // first eligible one, and publishes it across the configured platforms.
 //
-//   - Tuesday: self_release → spotlight → cta → no-op.
+//   - Tuesday: new_source → spotlight → cta → no-op.
 //   - Friday: recap (only). No fallback — Friday is recap day; if there's
 //     no click data, the slot stays quiet.
 //   - Other days: no-op unless ForceKind is set.
@@ -126,7 +126,7 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 	case time.Tuesday:
 		return orderedByKinds(
 			s.candidates,
-			news.SocialPostKindSelfRelease,
+			news.SocialPostKindNewSource,
 			news.SocialPostKindSpotlight,
 			news.SocialPostKindCTA,
 		), nil

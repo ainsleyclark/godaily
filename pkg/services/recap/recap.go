@@ -41,42 +41,42 @@ import (
 // that want more (e.g. an email outro) can override.
 const defaultLimit = 3
 
-// Period describes the [Start, End) window covered by a recap.
-type Period struct {
-	Start time.Time
-	End   time.Time
-	// Label is an ISO-week style identifier used for idempotency keys,
-	// e.g. "2026-W21". Stable across reruns within the same week.
-	Label string
-}
-
-// RankedItem is one entry in a recap, paired with its click count.
-type RankedItem struct {
-	engagement.ItemMetrics
-}
-
-// Top is the recap dataset.
-type Top struct {
-	Period Period
-	Items  []RankedItem
-}
+type (
+	// Period describes the [Start, End) window covered by a recap.
+	Period struct {
+		Start time.Time
+		End   time.Time
+		// Label is an ISO-week style identifier used for idempotency
+		// keys, e.g. "2026-W21". Stable across reruns within the same
+		// week.
+		Label string
+	}
+	// RankedItem is one entry in a recap, paired with its click count.
+	RankedItem struct {
+		engagement.ItemMetrics
+	}
+	// Top is the recap dataset.
+	Top struct {
+		Period Period
+		Items  []RankedItem
+	}
+	// TopOptions tunes a Top call.
+	TopOptions struct {
+		// N caps the returned items. Zero means defaultLimit (3).
+		N int
+		// Window is the lookback duration ending at "now". Zero means
+		// "since Monday 00:00 UTC of now's week" — the natural Mon→Fri
+		// recap window.
+		Window time.Duration
+		// MinItems is the floor below which Top returns its zero value
+		// (so the caller can no-op cleanly). Defaults to 0 — every
+		// result kept.
+		MinItems int
+	}
+)
 
 // HasItems reports whether the recap has any ranked items at all.
 func (t Top) HasItems() bool { return len(t.Items) > 0 }
-
-// TopOptions tunes a Top call.
-type TopOptions struct {
-	// N caps the returned items. Zero means defaultLimit (3).
-	N int
-
-	// Window is the lookback duration ending at "now". Zero means "since
-	// Monday 00:00 UTC of now's week" — the natural Mon→Fri recap window.
-	Window time.Duration
-
-	// MinItems is the floor below which Top returns its zero value (so
-	// the caller can no-op cleanly). Defaults to 0 — every result kept.
-	MinItems int
-}
 
 // Service computes recap datasets from the metrics repository.
 type Service struct {

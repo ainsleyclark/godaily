@@ -45,86 +45,88 @@ func TestRecap_Kind(t *testing.T) {
 	assert.Equal(t, news.SocialPostKindRecap, c.Kind())
 }
 
-func TestRecap_NilServiceIsNotEligible(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
-	c := candidates.NewRecap(nil, posts)
+func TestRecap_Eligible(t *testing.T) {
+	t.Run("Nil recap service is not eligible", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	_, ok, err := c.Eligible(context.Background(), recapNow)
-	require.NoError(t, err)
-	assert.False(t, ok)
-}
+		c := candidates.NewRecap(nil, posts)
+		_, ok, err := c.Eligible(context.Background(), recapNow)
+		require.NoError(t, err)
+		assert.False(t, ok)
+	})
 
-func TestRecap_EligibleWithEnoughItems(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	metrics := mockengagement.NewMockMetricsRepository(ctrl)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	t.Run("Eligible with enough items", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		metrics := mockengagement.NewMockMetricsRepository(ctrl)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
-		Return(false, nil)
-	metrics.EXPECT().
-		ItemList(gomock.Any(), gomock.Any()).
-		Return([]engagement.ItemMetrics{
-			{ItemID: 1, Title: "A", URL: "https://a", Source: "go_blog", Clicks: 30},
-			{ItemID: 2, Title: "B", URL: "https://b", Source: "github", Clicks: 20},
-			{ItemID: 3, Title: "C", URL: "https://c", Source: "hn", Clicks: 10},
-		}, nil)
+		posts.EXPECT().
+			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			Return(false, nil)
+		metrics.EXPECT().
+			ItemList(gomock.Any(), gomock.Any()).
+			Return([]engagement.ItemMetrics{
+				{ItemID: 1, Title: "A", URL: "https://a", Source: "go_blog", Clicks: 30},
+				{ItemID: 2, Title: "B", URL: "https://b", Source: "github", Clicks: 20},
+				{ItemID: 3, Title: "C", URL: "https://c", Source: "hn", Clicks: 10},
+			}, nil)
 
-	svc, err := recap.New(metrics)
-	require.NoError(t, err)
+		svc, err := recap.New(metrics)
+		require.NoError(t, err)
 
-	c := candidates.NewRecap(svc, posts)
-	cctx, ok, err := c.Eligible(context.Background(), recapNow)
-	require.NoError(t, err)
-	require.True(t, ok)
+		c := candidates.NewRecap(svc, posts)
+		cctx, ok, err := c.Eligible(context.Background(), recapNow)
+		require.NoError(t, err)
+		require.True(t, ok)
 
-	assert.Equal(t, news.SocialPostKindRecap, cctx.Kind)
-	assert.Equal(t, "recap:2026-W21", cctx.Subject)
+		assert.Equal(t, news.SocialPostKindRecap, cctx.Kind)
+		assert.Equal(t, "recap:2026-W21", cctx.Subject)
 
-	payload, ok := cctx.Payload.(rotation.RecapPayload)
-	require.True(t, ok, "Payload must be a RecapPayload")
-	assert.Equal(t, "2026-W21", payload.WeekLabel)
-	require.Len(t, payload.Items, 3)
-	assert.Equal(t, "A", payload.Items[0].Title)
-	assert.Equal(t, int64(30), payload.Items[0].Clicks)
-}
+		payload, ok := cctx.Payload.(rotation.RecapPayload)
+		require.True(t, ok, "Payload must be a RecapPayload")
+		assert.Equal(t, "2026-W21", payload.WeekLabel)
+		require.Len(t, payload.Items, 3)
+		assert.Equal(t, "A", payload.Items[0].Title)
+		assert.Equal(t, int64(30), payload.Items[0].Clicks)
+	})
 
-func TestRecap_BlockedByCooldown(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	metrics := mockengagement.NewMockMetricsRepository(ctrl)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	t.Run("Blocked by cooldown", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		metrics := mockengagement.NewMockMetricsRepository(ctrl)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
-		Return(true, nil)
-	// metrics.ItemList must NOT be called when cooldown blocks.
+		posts.EXPECT().
+			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			Return(true, nil)
+		// metrics.ItemList must NOT be called when cooldown blocks.
 
-	svc, _ := recap.New(metrics)
-	c := candidates.NewRecap(svc, posts)
-	_, ok, err := c.Eligible(context.Background(), recapNow)
-	require.NoError(t, err)
-	assert.False(t, ok)
-}
+		svc, _ := recap.New(metrics)
+		c := candidates.NewRecap(svc, posts)
+		_, ok, err := c.Eligible(context.Background(), recapNow)
+		require.NoError(t, err)
+		assert.False(t, ok)
+	})
 
-func TestRecap_TooFewItemsIsNotEligible(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	metrics := mockengagement.NewMockMetricsRepository(ctrl)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	t.Run("Too few items is not eligible", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		metrics := mockengagement.NewMockMetricsRepository(ctrl)
+		posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	posts.EXPECT().
-		HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
-		Return(false, nil)
-	metrics.EXPECT().
-		ItemList(gomock.Any(), gomock.Any()).
-		Return([]engagement.ItemMetrics{
-			{ItemID: 1, Title: "A", URL: "https://a", Clicks: 5},
-			{ItemID: 2, Title: "B", URL: "https://b", Clicks: 2},
-		}, nil)
+		posts.EXPECT().
+			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			Return(false, nil)
+		metrics.EXPECT().
+			ItemList(gomock.Any(), gomock.Any()).
+			Return([]engagement.ItemMetrics{
+				{ItemID: 1, Title: "A", URL: "https://a", Clicks: 5},
+				{ItemID: 2, Title: "B", URL: "https://b", Clicks: 2},
+			}, nil)
 
-	svc, _ := recap.New(metrics)
-	c := candidates.NewRecap(svc, posts)
-	_, ok, err := c.Eligible(context.Background(), recapNow)
-	require.NoError(t, err)
-	assert.False(t, ok, "fewer than 3 items must no-op")
+		svc, _ := recap.New(metrics)
+		c := candidates.NewRecap(svc, posts)
+		_, ok, err := c.Eligible(context.Background(), recapNow)
+		require.NoError(t, err)
+		assert.False(t, ok, "fewer than 3 items must no-op")
+	})
 }

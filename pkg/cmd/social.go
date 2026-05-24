@@ -152,7 +152,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 func socialRotationCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "rotation",
-		Usage: "Run the Tue/Fri rotation slot (self_release|spotlight|cta|recap).",
+		Usage: "Run the Tue/Fri rotation slot (new_source|spotlight|cta|recap).",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "dry-run",
@@ -164,7 +164,7 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:  "kind",
-				Usage: "Force a specific candidate kind (self_release, spotlight, cta, recap). Bypasses day-of-week routing.",
+				Usage: "Force a specific candidate kind (new_source, spotlight, cta, recap). Bypasses day-of-week routing.",
 			},
 			&cli.StringFlag{
 				Name:  "now",

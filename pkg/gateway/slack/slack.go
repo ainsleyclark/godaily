@@ -77,7 +77,8 @@ func (c *Client) Send(ctx context.Context, message string) error {
 	}
 	id, timestamp, err := c.slackSendFunc(ctx, c.channel, slack.MsgOptionAttachments(attachment))
 	if err != nil {
-		return errors.Wrapf(err,
+		return errors.Wrapf(
+			err,
 			"failed to send message to Slack channel '%s' at time '%s'",
 			id,
 			timestamp,

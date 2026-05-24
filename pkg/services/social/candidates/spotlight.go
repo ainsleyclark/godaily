@@ -33,55 +33,43 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
-// spotlightCooldown is the minimum gap between two spotlight posts for
-// the same source. With ~8 eligible sources, this gives each one a turn
-// roughly every 8 weeks — frequent enough to keep the rotation alive,
-// rare enough not to feel like spam.
-const spotlightCooldown = 30 * 24 * time.Hour
+// platformAnchor is the platform used as the "have I covered this
+// already?" probe. Any consistently-configured platform works; bluesky
+// is always wired up in practice. The actual post still goes to every
+// configured platform via the publish loop.
+const platformAnchor = "bluesky"
 
-// Spotlight thanks a curated source and points followers their way. Rotates
-// through SourceProfiles in stable name order, skipping any source whose
-// last spotlight was inside the cooldown window.
+// Spotlight thanks a curated source and points followers their way. It
+// iterates news.SocialProfiles in stable source-name order, skipping any
+// source already covered on the anchor platform.
 type Spotlight struct {
-	profiles map[news.Source]socialsvc.SourceProfile
+	profiles map[news.Source]news.SocialProfile
 	posts    news.SocialPostRepository
 }
 
 // NewSpotlight constructs the candidate.
-func NewSpotlight(profiles map[news.Source]socialsvc.SourceProfile, posts news.SocialPostRepository) *Spotlight {
+func NewSpotlight(profiles map[news.Source]news.SocialProfile, posts news.SocialPostRepository) *Spotlight {
 	return &Spotlight{profiles: profiles, posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
 func (c *Spotlight) Kind() news.SocialPostKind { return news.SocialPostKindSpotlight }
 
-// Eligible walks SourceProfiles in stable name order, returning the first
-// source whose last spotlight is older than the cooldown.
-func (c *Spotlight) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateContext, bool, error) {
+// Eligible walks SocialProfiles in stable name order, returning the first
+// source not yet covered on the anchor platform. Once every source has
+// been covered the candidate goes silent until rows are manually pruned.
+func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (socialsvc.CandidateContext, bool, error) {
 	if len(c.profiles) == 0 {
 		return socialsvc.CandidateContext{}, false, nil
 	}
 
-	sources := sortedSources(c.profiles)
-	since := now.UTC().Add(-spotlightCooldown)
-
-	for _, src := range sources {
+	for _, src := range sortedSources(c.profiles) {
 		subject := "spotlight:" + string(src)
-		posted, err := c.posts.HasPostedKindSince(ctx, c.Kind(), platformAnchor, since)
-		if err != nil {
-			return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking spotlight cooldown")
-		}
-		_ = posted // The kind-level check throttles "is rotation talking too often" overall.
-
-		recent, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
+		posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
 		if err != nil {
 			return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking spotlight subject")
 		}
-		if recent {
-			// Already posted about this source on the anchor platform — the
-			// subject-level check is permanent rather than time-windowed,
-			// so the rotation moves on until we've covered everyone, then
-			// we'll need a manual reset (rare and intentional).
+		if posted {
 			continue
 		}
 
@@ -90,7 +78,7 @@ func (c *Spotlight) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 			Kind:     c.Kind(),
 			Subject:  subject,
 			URL:      profile.SourceURL,
-			Mentions: cloneMentions(profile.Mentions),
+			Mentions: socialMentionsFor(profile),
 			Payload:  profile,
 		}, true, nil
 	}
@@ -98,43 +86,26 @@ func (c *Spotlight) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 	return socialsvc.CandidateContext{}, false, nil
 }
 
-// Generate dispatches to the spotlight prompt with the correct
-// per-platform mention.
+// Generate dispatches to the spotlight prompt with the right per-platform
+// mention.
 func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
-	profile, ok := cctx.Payload.(socialsvc.SourceProfile)
+	profile, ok := cctx.Payload.(news.SocialProfile)
 	if !ok {
 		return "", errors.New("spotlight: profile payload missing")
 	}
 	return rotation.Spotlight(ctx, p, platform, rotation.SpotlightPayload{
 		DisplayName: profile.DisplayName,
-		Mention:     profile.Mention(platform),
+		Mention:     profile.Mention(platform.String()),
 		Blurb:       profile.SpotlightBlurb,
 		URL:         profile.SourceURL,
 	})
 }
 
-// platformAnchor is the platform used as the "have I covered this
-// already?" probe. Any consistently-configured platform works; bluesky
-// is always wired up in practice. The actual post still goes to every
-// configured platform via the publish loop.
-const platformAnchor = "bluesky"
-
-func sortedSources(profiles map[news.Source]socialsvc.SourceProfile) []news.Source {
+func sortedSources(profiles map[news.Source]news.SocialProfile) []news.Source {
 	out := make([]news.Source, 0, len(profiles))
 	for s := range profiles {
 		out = append(out, s)
 	}
 	sort.Slice(out, func(i, j int) bool { return string(out[i]) < string(out[j]) })
-	return out
-}
-
-func cloneMentions(in map[socialgw.Platform]string) map[socialgw.Platform]string {
-	if in == nil {
-		return nil
-	}
-	out := make(map[socialgw.Platform]string, len(in))
-	for k, v := range in {
-		out[k] = v
-	}
 	return out
 }
