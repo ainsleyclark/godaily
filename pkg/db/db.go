@@ -34,7 +34,6 @@ import (
 	// https://docs.turso.tech/sdk/go/quickstart
 	//_ "turso.tech/database/tursogo"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
-
 )
 
 // New opens a *sql.DB against the given URL.
