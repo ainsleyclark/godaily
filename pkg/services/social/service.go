@@ -32,6 +32,7 @@ import (
 	stderrors "errors"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -268,6 +269,10 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]PostResult, err
 		}
 	}
 
+	if !pc.dryRun {
+		s.notifySuccess(ctx, pc, results)
+	}
+
 	if len(errs) > 0 {
 		return results, stderrors.Join(errs...)
 	}
@@ -361,5 +366,49 @@ func selectPosters(all []social.Poster, wanted []social.Platform) []social.Poste
 func (s *Service) notifyFailure(ctx context.Context, msg string) {
 	if s.slack != nil {
 		s.slack.MustSend(ctx, msg)
+	}
+}
+
+// notifySuccess pings Slack once per publish run with a clickable link to
+// every platform that posted successfully. Skipped (idempotent) and
+// failed platforms are omitted; failures are already covered by
+// notifyFailure inside the loop. A no-op when no platform succeeded or
+// when the slack sender is not configured.
+func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []PostResult) {
+	if s.slack == nil {
+		return
+	}
+
+	lines := make([]string, 0, len(results))
+	for _, r := range results {
+		if r.Err != nil || r.Skipped || r.PostURL == "" {
+			continue
+		}
+		lines = append(lines, fmt.Sprintf("• %s: <%s|view post>", platformLabel(r.Platform), r.PostURL))
+	}
+	if len(lines) == 0 {
+		return
+	}
+
+	header := fmt.Sprintf("Social post published — %s", pc.kind)
+	if pc.subject != "" {
+		header += fmt.Sprintf(" (%s)", pc.subject)
+	}
+
+	s.slack.MustSend(ctx, header+"\n"+strings.Join(lines, "\n"))
+}
+
+// platformLabel returns the human-friendly name for a platform used in
+// Slack notifications.
+func platformLabel(p social.Platform) string {
+	switch p {
+	case social.PlatformBluesky:
+		return "Bluesky"
+	case social.PlatformLinkedIn:
+		return "LinkedIn"
+	case social.PlatformMastodon:
+		return "Mastodon"
+	default:
+		return string(p)
 	}
 }
