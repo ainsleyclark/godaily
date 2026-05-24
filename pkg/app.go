@@ -38,7 +38,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
-	metricssvc "github.com/ainsleyclark/godaily/pkg/services/metrics"
+	"github.com/ainsleyclark/godaily/pkg/services/metrics"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
@@ -64,7 +64,7 @@ type App struct {
 	Subscribers    subscriber.Subscriber
 	EmailEvents    *emailevent.Service
 	Slack          slack.Sender
-	MetricsService *metricssvc.Service
+	MetricsService engagement.MetricsReporter
 	StatFetchers   map[socialgw.Platform]socialgw.StatFetcher
 }
 
@@ -160,7 +160,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers:    subscriberSvc,
 		EmailEvents:    emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
 		Slack:          slackClient,
-		MetricsService: metricssvc.New(repo.Metrics, slackClient),
+		MetricsService: metrics.New(repo.Metrics, slackClient),
 		StatFetchers:   buildStatFetchers(config),
 	}, teardown, nil
 }

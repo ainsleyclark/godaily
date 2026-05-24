@@ -27,47 +27,26 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	metricssvc "github.com/ainsleyclark/godaily/pkg/services/metrics"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func TestHandleRoundup(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(m *mockengagement.MockMetricsRepository, s *mockslack.MockSender)
+		mock       func(r *mockengagement.MockMetricsReporter)
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(m *mockengagement.MockMetricsRepository, s *mockslack.MockSender) {
-				m.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, nil).Times(2)
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{}, nil).Times(2)
-				m.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return(nil, nil).Times(2)
-				s.EXPECT().Send(gomock.Any(), gomock.Any()).Return(nil)
+			mock: func(r *mockengagement.MockMetricsReporter) {
+				r.EXPECT().Roundup(gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
-		"Gather error": {
-			mock: func(m *mockengagement.MockMetricsRepository, _ *mockslack.MockSender) {
-				m.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, errors.New("db error"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Slack error": {
-			mock: func(m *mockengagement.MockMetricsRepository, s *mockslack.MockSender) {
-				m.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, nil).Times(2)
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{}, nil).Times(2)
-				m.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return(nil, nil).Times(2)
-				m.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return(nil, nil).Times(2)
-				s.EXPECT().Send(gomock.Any(), gomock.Any()).Return(errors.New("slack down"))
+		"Roundup error": {
+			mock: func(r *mockengagement.MockMetricsReporter) {
+				r.EXPECT().Roundup(gomock.Any()).Return(errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -76,14 +55,12 @@ func TestHandleRoundup(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
-			slackMock := mockslack.NewMockSender(ctrl)
-			test.mock(metricsMock, slackMock)
+			reporter := mockengagement.NewMockMetricsReporter(ctrl)
+			test.mock(reporter)
 
 			a := &godaily.App{
 				Config:         &env.Config{},
-				Repository:     &godaily.Repository{Metrics: metricsMock},
-				MetricsService: metricssvc.New(metricsMock, slackMock),
+				MetricsService: reporter,
 			}
 			api.SetApp(a)
 
