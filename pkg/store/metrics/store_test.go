@@ -51,7 +51,8 @@ func insertSubscriberAt(t *testing.T, ctx context.Context, db *sql.DB, email str
 		return tp.Format(time.RFC3339)
 	}
 
-	_, err := db.ExecContext(ctx,
+	_, err := db.ExecContext(
+		ctx,
 		`INSERT INTO subscribers
 		    (email, unsubscribe_token, created_at, confirmed_at, unsubscribed_at, bounced_at, suppressed_at)
 		 VALUES (?, ?, ?, ?, ?, ?, ?)`,

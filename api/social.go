@@ -57,7 +57,8 @@ func HandleSocial(w http.ResponseWriter, r *http.Request) {
 		today := now.Truncate(24 * time.Hour)
 
 		if !social.ShouldRun(now, today) {
-			slog.InfoContext(ctx, "Skipping social — wrong slot",
+			slog.InfoContext(
+				ctx, "Skipping social — wrong slot",
 				"minute", now.Minute(), "picked", social.PickSlot(today),
 			)
 			api.OK(w)

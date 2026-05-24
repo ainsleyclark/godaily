@@ -138,7 +138,8 @@ JOIN issues i ON i.id = e.issue_id
 WHERE e.issue_id IS NOT NULL%s
 GROUP BY i.id, i.slug, i.sent_at
 ORDER BY %s DESC
-LIMIT ?`, conds, orderExpr)
+LIMIT ?`, conds, orderExpr,
+	)
 
 	rows, err := s.db.QueryContext(ctx, query, args...)
 	if err != nil {
