@@ -43,7 +43,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
-	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
@@ -89,8 +88,10 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, func() {}, err
 	}
 
-	if err = news.Materialise(config); err != nil {
-		return nil, func() {}, errors.Wrap(err, "materialising sources")
+	if news.HasSources() {
+		if err = news.Materialise(config); err != nil {
+			return nil, func() {}, errors.Wrap(err, "materialising sources")
+		}
 	}
 
 	conn, err := db.New(ctx, config.TursoURL, config.TursoAuthToken)

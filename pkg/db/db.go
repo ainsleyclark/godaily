@@ -34,11 +34,6 @@ import (
 	// https://docs.turso.tech/sdk/go/quickstart
 	//_ "turso.tech/database/tursogo"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
-
-	// Pure-Go SQLite driver, registered as "sqlite". Used directly for
-	// file-backed URLs (local dev, tests) and as the underlying file
-	// connector for libsql when given a file: URL.
-	_ "modernc.org/sqlite"
 )
 
 // New opens a *sql.DB against the given URL.
