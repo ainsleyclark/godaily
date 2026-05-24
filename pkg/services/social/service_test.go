@@ -237,8 +237,11 @@ func TestService_Post_HappyPath(t *testing.T) {
 			return p, nil
 		})
 
-	// No Slack notification expected on the happy path; mockslack with no
-	// EXPECT() will fail the test if MustSend is called.
+	// One success Slack notification expected, carrying the post URL.
+	var successMsg string
+	f.slack.EXPECT().
+		MustSend(gomock.Any(), gomock.Any()).
+		Do(func(_ context.Context, m string) { successMsg = m })
 
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
@@ -247,6 +250,9 @@ func TestService_Post_HappyPath(t *testing.T) {
 	assert.Equal(t, socialgw.PlatformBluesky, res[0].Platform)
 	assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", res[0].PostURL)
 	assert.False(t, res[0].Skipped)
+	assert.Contains(t, successMsg, "featured")
+	assert.Contains(t, successMsg, "Bluesky")
+	assert.Contains(t, successMsg, "https://bsky.app/profile/godaily/post/abc")
 }
 
 func TestService_Post_SkipsAlreadyPosted(t *testing.T) {
@@ -347,6 +353,9 @@ func TestService_Post_PlatformsFilter(t *testing.T) {
 		Return(featureJSON(), nil)
 	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), "mastodon").Return(false, nil)
 	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(news.SocialPost{}, nil)
+
+	// Wet run posts a single platform — one success Slack notification.
+	f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())
 
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	res, err := f.service().Post(t.Context(), PostOptions{
