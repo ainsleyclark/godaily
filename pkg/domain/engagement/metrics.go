@@ -123,6 +123,17 @@ type (
 	}
 )
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsReporter.go . MetricsReporter
+
+// MetricsReporter produces higher-level engagement reports composed from
+// MetricsRepository queries. It is the interface API handlers depend on so
+// they can be tested without orchestrating every underlying query.
+type MetricsReporter interface {
+	// Roundup gathers the last seven days of metrics (with a week-over-week
+	// comparison) and posts a formatted summary to the configured Slack channel.
+	Roundup(ctx context.Context) error
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsRepository.go . MetricsRepository
 
 // MetricsRepository answers engagement analytics queries.

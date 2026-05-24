@@ -325,12 +325,9 @@ func (s *Store) SubscriberGrowth(ctx context.Context, f engagement.MetricsFilter
 		outerWhere = "AND " + strings.Join(timeParts, " AND ")
 	}
 
-	// Repeat singleArgs 5× for the five UNION branches.
-	allArgs := make([]any, 0, len(singleArgs)*5)
-	for i := 0; i < 5; i++ {
-		allArgs = append(allArgs, singleArgs...)
-	}
-
+	// outerWhere references event_time, which is only a valid column name on the
+	// derived-table alias ("events"), not on the subscribers table itself. Filter
+	// in the outer WHERE so the reference is always valid.
 	query := fmt.Sprintf( /* #nosec G201 -- bucketExpr is from subsBucketExpr (hard-coded), outerWhere uses only ? placeholders */
 		`
 SELECT
@@ -341,27 +338,28 @@ SELECT
     SUM(CASE WHEN event_type = 'lost'         THEN 1 ELSE 0 END)           AS lost
 FROM (
     SELECT created_at AS event_time, 'new' AS event_type
-      FROM subscribers WHERE 1=1 %s
+      FROM subscribers
     UNION ALL
     SELECT confirmed_at, 'confirmed'
-      FROM subscribers WHERE confirmed_at IS NOT NULL %s
+      FROM subscribers WHERE confirmed_at IS NOT NULL
     UNION ALL
     SELECT unsubscribed_at, 'unsubscribed'
-      FROM subscribers WHERE unsubscribed_at IS NOT NULL %s
+      FROM subscribers WHERE unsubscribed_at IS NOT NULL
     UNION ALL
     SELECT bounced_at, 'lost'
-      FROM subscribers WHERE bounced_at IS NOT NULL %s
+      FROM subscribers WHERE bounced_at IS NOT NULL
     UNION ALL
     SELECT suppressed_at, 'lost'
-      FROM subscribers WHERE suppressed_at IS NOT NULL %s
+      FROM subscribers WHERE suppressed_at IS NOT NULL
 ) events
+WHERE 1=1 %s
 GROUP BY bucket_start
 ORDER BY bucket_start ASC`,
 		bucketExpr,
-		outerWhere, outerWhere, outerWhere, outerWhere, outerWhere,
+		outerWhere,
 	)
 
-	rows, err := s.db.QueryContext(ctx, query, allArgs...)
+	rows, err := s.db.QueryContext(ctx, query, singleArgs...)
 	if err != nil {
 		return engagement.SubscriberData{}, err
 	}
