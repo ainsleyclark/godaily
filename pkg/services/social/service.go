@@ -17,10 +17,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package social orchestrates social media posting for a digest issue:
-// picks the day's featured news item via the AI prompter, reframes it for
-// each enabled platform, publishes to each platform's Poster, and records
-// the result for idempotency and audit.
+// Package social orchestrates social media posting. Two entry points share
+// the per-platform publish loop:
+//
+//   - Post: the daily "featured" path. Loads the digest for a date, picks
+//     the featured item via AI, reframes for each enabled platform.
+//   - Rotate: the Tue/Fri "rotation" path. Walks a kind-specific candidate
+//     list (self-release, spotlight, cta, recap) and publishes the first
+//     eligible one.
 package social
 
 import (
@@ -42,15 +46,17 @@ import (
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocialservice -destination=../../mocks/socialservice/Service.go github.com/ainsleyclark/godaily/pkg/services/social Poster
 
-// Service publishes social media posts for the day's digest.
+// Service publishes social media posts for both the daily featured slot
+// and the Tue/Fri rotation slot.
 type Service struct {
-	posters   []social.Poster
-	prompter  ai.Prompter
-	issues    news.IssueRepository
-	items     news.ItemRepository
-	posts     news.SocialPostRepository
-	slack     slack.Sender
-	reframers map[social.Platform]reframer
+	posters    []social.Poster
+	prompter   ai.Prompter
+	issues     news.IssueRepository
+	items      news.ItemRepository
+	posts      news.SocialPostRepository
+	slack      slack.Sender
+	reframers  map[social.Platform]reframer
+	candidates []Candidate
 }
 
 // reframer reframes a featured item for one platform. Function-typed so
@@ -68,7 +74,8 @@ func defaultReframers() map[social.Platform]reframer {
 
 // New creates a new social Service. posters may be empty (nothing to post);
 // the service errors if prompter, issues, items, or posts are nil.
-// slackSender may be nil to disable Slack notifications.
+// slackSender may be nil to disable Slack notifications. Rotation candidates
+// must be wired separately via WithCandidates if Rotate will be called.
 func New(
 	posters []social.Poster,
 	prompter ai.Prompter,
@@ -97,6 +104,32 @@ func New(
 	}, nil
 }
 
+// WithCandidates registers the rotation candidates the service offers when
+// Rotate is called. Order matters per-day but final selection is by the
+// day-aware logic in rotation.go.
+func (s *Service) WithCandidates(cs ...Candidate) *Service {
+	s.candidates = cs
+	return s
+}
+
+// Candidates returns the registered rotation candidates. Useful for the CLI
+// to look up a specific candidate by Kind for --kind=<x> dry-runs.
+func (s *Service) Candidates() []Candidate {
+	return s.candidates
+}
+
+// Posts exposes the underlying social post repository for candidates that
+// need to do their own idempotency lookups (e.g. spotlight rotation needs
+// to read the "last spotlight per source" history).
+func (s *Service) Posts() news.SocialPostRepository {
+	return s.posts
+}
+
+// Prompter exposes the AI client for candidate-side generators.
+func (s *Service) Prompter() ai.Prompter {
+	return s.prompter
+}
+
 // HasPosters reports whether the service has any platforms configured.
 // Useful for callers that want to short-circuit when no creds are set.
 func (s *Service) HasPosters() bool {
@@ -121,24 +154,23 @@ type PostOptions struct {
 // PostResult summarises one platform's outcome.
 type PostResult struct {
 	Platform social.Platform
+	Kind     news.SocialPostKind
 	Text     string
 	PostURL  string
 	Err      error
 
-	// Skipped is true when this platform was already posted today.
+	// Skipped is true when this platform was already posted for the same
+	// idempotency key (issue or subject) on this run.
 	Skipped bool
 }
 
-// Post is the main entry point. It:
+// Post is the entry point for the daily featured slot. It:
 //  1. Loads the issue for Date (returns store.ErrNotFound if there is none).
 //  2. Loads the issue's items.
 //  3. Picks the day's featured item via the AI prompter.
 //  4. For each enabled poster: skips if already posted today; otherwise
 //     reframes the featured item for that platform, publishes it, and
 //     records the result.
-//
-// On a per-platform error the loop continues and the caller receives a
-// joined error. The slack notifier is pinged on any failure.
 func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, error) {
 	if len(s.posters) == 0 {
 		slog.InfoContext(ctx, "Skipping social — no posters configured")
@@ -171,21 +203,68 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 		return nil, errors.Wrap(err, "feature")
 	}
 
-	slog.InfoContext(ctx, "Selected featured item",
+	slog.InfoContext(
+		ctx, "Selected featured item",
 		"title", featured.Title, "url", featured.URL, "tag", string(featured.Tag),
 	)
 
 	wanted := selectPosters(s.posters, opts.Platforms)
+	issueID := issue.ID
 
-	results := make([]PostResult, 0, len(wanted))
+	return s.publish(ctx, publishCtx{
+		platforms: wanted,
+		dryRun:    opts.DryRun,
+		kind:      news.SocialPostKindFeatured,
+		issueID:   &issueID,
+		generate: func(_ context.Context, platform social.Platform) (string, error) {
+			reframe, ok := s.reframers[platform]
+			if !ok {
+				return "", fmt.Errorf("no reframer registered for platform %s", platform)
+			}
+			return reframe(ctx, s.prompter, featured)
+		},
+		// Featured posts use (issue_id, platform) for idempotency.
+		skipIfPosted: func(ctx context.Context, platform string) (bool, error) {
+			return s.posts.HasPosted(ctx, issueID, platform)
+		},
+	})
+}
+
+// publishCtx bundles the inputs of one publish() loop. Each rotation
+// candidate produces one of these on its way through Rotate; the featured
+// path constructs one inline.
+type publishCtx struct {
+	platforms []social.Poster
+	dryRun    bool
+	kind      news.SocialPostKind
+	issueID   *int64
+	subject   string
+
+	// generate returns the post text for a given platform. Candidates may
+	// ignore the platform and return identical text everywhere; the
+	// featured path uses the platform reframers.
+	generate func(ctx context.Context, platform social.Platform) (string, error)
+
+	// skipIfPosted is the per-row idempotency check. Returning true skips
+	// the platform without an error.
+	skipIfPosted func(ctx context.Context, platform string) (bool, error)
+}
+
+// publish runs the per-platform reframe → post → persist loop. It is the
+// shared core of both the featured (Post) and rotation (Rotate) paths.
+//
+// Per-platform errors are accumulated, not fatal. The slack notifier is
+// pinged on any failure.
+func (s *Service) publish(ctx context.Context, pc publishCtx) ([]PostResult, error) {
+	results := make([]PostResult, 0, len(pc.platforms))
 	var errs []error
 
-	for _, poster := range wanted {
-		res := s.postOne(ctx, issue.ID, poster, featured, opts.DryRun)
+	for _, poster := range pc.platforms {
+		res := s.publishOne(ctx, poster, pc)
 		results = append(results, res)
 		if res.Err != nil {
 			errs = append(errs, fmt.Errorf("%s: %w", res.Platform, res.Err))
-			s.notifyFailure(ctx, fmt.Sprintf("Social post to %s failed: %s", res.Platform, res.Err))
+			s.notifyFailure(ctx, fmt.Sprintf("Social %s post to %s failed: %s", pc.kind, res.Platform, res.Err))
 		}
 	}
 
@@ -195,49 +274,37 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 	return results, nil
 }
 
-// postOne handles one platform end-to-end. It is internal so the loop in
-// Post can keep tallying results even when a platform fails.
-func (s *Service) postOne(
-	ctx context.Context,
-	issueID int64,
-	poster social.Poster,
-	featured prompts.Featured,
-	dryRun bool,
-) PostResult {
+func (s *Service) publishOne(ctx context.Context, poster social.Poster, pc publishCtx) PostResult {
 	platform := poster.Platform()
-	res := PostResult{Platform: platform}
+	res := PostResult{Platform: platform, Kind: pc.kind}
 
-	if !dryRun {
-		posted, err := s.posts.HasPosted(ctx, issueID, platform.String())
+	if !pc.dryRun && pc.skipIfPosted != nil {
+		posted, err := pc.skipIfPosted(ctx, platform.String())
 		if err != nil {
-			res.Err = errors.Wrap(err, "checking HasPosted")
+			res.Err = errors.Wrap(err, "checking idempotency")
 			return res
 		}
 		if posted {
 			res.Skipped = true
-			slog.InfoContext(ctx, "Skipping platform — already posted today",
-				"platform", platform, "issue", issueID,
+			slog.InfoContext(
+				ctx, "Skipping platform — already posted",
+				"platform", platform, "kind", string(pc.kind),
 			)
 			return res
 		}
 	}
 
-	reframe, ok := s.reframers[platform]
-	if !ok {
-		res.Err = fmt.Errorf("no reframer registered for platform %s", platform)
-		return res
-	}
-
-	text, err := reframe(ctx, s.prompter, featured)
+	text, err := pc.generate(ctx, platform)
 	if err != nil {
-		res.Err = errors.Wrap(err, "reframe")
+		res.Err = errors.Wrap(err, "generate")
 		return res
 	}
 	res.Text = text
 
-	if dryRun {
-		slog.InfoContext(ctx, "Dry-run: skipping post + DB write",
-			"platform", platform, "chars", len(text),
+	if pc.dryRun {
+		slog.InfoContext(
+			ctx, "Dry-run: skipping post + DB write",
+			"platform", platform, "kind", string(pc.kind), "chars", len(text),
 		)
 		return res
 	}
@@ -250,19 +317,22 @@ func (s *Service) postOne(
 	res.PostURL = result.PostURL
 
 	if _, err := s.posts.Create(ctx, news.SocialPost{
-		IssueID:  issueID,
+		IssueID:  pc.issueID,
+		Kind:     pc.kind,
+		Subject:  pc.subject,
 		Platform: platform.String(),
 		Text:     text,
 		PostURL:  result.PostURL,
 	}); err != nil {
-		// The platform post already succeeded — failing the DB write
-		// is bad but not fatal (we'll notify Slack so we can backfill).
+		// The platform post already succeeded — failing the DB write is
+		// bad but not fatal (we'll notify Slack so we can backfill).
 		res.Err = errors.Wrap(err, "recording social_post")
 		return res
 	}
 
-	slog.InfoContext(ctx, "Social post published",
-		"platform", platform, "url", result.PostURL, "issue", issueID,
+	slog.InfoContext(
+		ctx, "Social post published",
+		"platform", platform, "kind", string(pc.kind), "url", result.PostURL,
 	)
 	return res
 }

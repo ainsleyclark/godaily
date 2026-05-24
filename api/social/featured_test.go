@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package social
 
 import (
 	"net/http"
@@ -34,13 +34,13 @@ import (
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
-// newSocialAppNoPosters builds a real social.Service with no posters
-// configured. This is the most stable path to test through HandleSocial
+// newAppNoPosters builds a real social.Service with no posters configured.
+// This is the most stable path to test through the featured handler
 // without standing up a full integration harness.
-func newSocialAppNoPosters(t *testing.T, secret string) *godaily.App {
+func newAppNoPosters(t *testing.T, secret string) *godaily.App {
 	t.Helper()
 
 	ctrl := gomock.NewController(t)
@@ -54,7 +54,7 @@ func newSocialAppNoPosters(t *testing.T, secret string) *godaily.App {
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocknews.NewMockSocialPostRepository(ctrl)
 
-	svc, err := social.New(nil, prompter, issues, items, posts, slack)
+	svc, err := socialsvc.New(nil, prompter, issues, items, posts, slack)
 	require.NoError(t, err)
 
 	return &godaily.App{
@@ -64,15 +64,15 @@ func newSocialAppNoPosters(t *testing.T, secret string) *godaily.App {
 	}
 }
 
-func TestHandleSocial(t *testing.T) {
+func TestHandleFeatured(t *testing.T) {
 	t.Run("Unauthorized", func(t *testing.T) {
-		a := newSocialAppNoPosters(t, "supersecret")
+		a := newAppNoPosters(t, "supersecret")
 		api.SetApp(a)
 
 		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/api/social", nil)
+		r := httptest.NewRequest(http.MethodGet, "/api/social/featured", nil)
 		r.Header.Set("Authorization", "Bearer wrong")
-		HandleSocial(w, r)
+		HandleFeatured(w, r)
 
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
 	})
@@ -82,12 +82,37 @@ func TestHandleSocial(t *testing.T) {
 		// Post. Real wall clock is fine here — both the weekend path and the
 		// no-posters path return OK, and the slot check is bypassed by the
 		// no-posters branch.
-		a := newSocialAppNoPosters(t, "")
+		a := newAppNoPosters(t, "")
 		api.SetApp(a)
 
 		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/api/social", nil)
-		HandleSocial(w, r)
+		r := httptest.NewRequest(http.MethodGet, "/api/social/featured", nil)
+		HandleFeatured(w, r)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+}
+
+func TestHandleRotation(t *testing.T) {
+	t.Run("Unauthorized", func(t *testing.T) {
+		a := newAppNoPosters(t, "supersecret")
+		api.SetApp(a)
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodGet, "/api/social/rotation", nil)
+		r.Header.Set("Authorization", "Bearer wrong")
+		HandleRotation(w, r)
+
+		assert.Equal(t, http.StatusUnauthorized, w.Code)
+	})
+
+	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
+		a := newAppNoPosters(t, "")
+		api.SetApp(a)
+
+		w := httptest.NewRecorder()
+		r := httptest.NewRequest(http.MethodGet, "/api/social/rotation", nil)
+		HandleRotation(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
