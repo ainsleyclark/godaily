@@ -30,10 +30,11 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
@@ -44,14 +45,14 @@ import (
 // we don't gomock-generate the candidate because the surface is small
 // and the literal-struct usage is clearer at the test site.
 type fakeCandidate struct {
-	kind     news.SocialPostKind
+	kind     domainsocial.PostKind
 	eligible bool
 	ctx      social.CandidateContext
 	err      error
 	text     string
 }
 
-func (f *fakeCandidate) Kind() news.SocialPostKind { return f.kind }
+func (f *fakeCandidate) Kind() domainsocial.PostKind { return f.kind }
 
 func (f *fakeCandidate) Eligible(_ context.Context, _ time.Time) (social.CandidateContext, bool, error) {
 	if f.err != nil {
@@ -73,7 +74,7 @@ func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ socialgw.Pl
 // accepts any call so candidate errors don't fail the test on Slack.
 type rotationFixture struct {
 	svc      *social.Service
-	posts    *mocknews.MockSocialPostRepository
+	posts    *mockdomsocial.MockPostRepository
 	prompter *mockai.MockPrompter
 	poster   *mocksocial.MockPoster
 }
@@ -89,7 +90,7 @@ func newRotationFixture(t *testing.T, candidates ...social.Candidate) rotationFi
 	prompter := mockai.NewMockPrompter(ctrl)
 	issues := mocknews.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 	bluesky := mocksocial.NewMockPoster(ctrl)
 	bluesky.EXPECT().Platform().Return(socialgw.PlatformBluesky).AnyTimes()
@@ -112,28 +113,28 @@ var (
 
 func TestService_Rotate(t *testing.T) {
 	t.Run("Tuesday dry-run picks first eligible candidate", func(t *testing.T) {
-		newSrc := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: false}
+		newSrc := &fakeCandidate{kind: domainsocial.PostKindNewSource, eligible: false}
 		spot := &fakeCandidate{
-			kind:     news.SocialPostKindSpotlight,
+			kind:     domainsocial.PostKindSpotlight,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "Follow @ardanlabs for great Go content.",
 		}
-		cta := &fakeCandidate{kind: news.SocialPostKindCTA, eligible: true}
+		cta := &fakeCandidate{kind: domainsocial.PostKindCTA, eligible: true}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindSpotlight, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindSpotlight, res[0].Kind)
 		assert.Equal(t, "Follow @ardanlabs for great Go content.", res[0].Text)
 	})
 
 	t.Run("Tuesday falls through to CTA when others ineligible", func(t *testing.T) {
-		newSrc := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: false}
-		spot := &fakeCandidate{kind: news.SocialPostKindSpotlight, eligible: false}
+		newSrc := &fakeCandidate{kind: domainsocial.PostKindNewSource, eligible: false}
+		spot := &fakeCandidate{kind: domainsocial.PostKindSpotlight, eligible: false}
 		cta := &fakeCandidate{
-			kind:     news.SocialPostKindCTA,
+			kind:     domainsocial.PostKindCTA,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "cta:angle-0"},
 			text:     "Sign up to GoDaily.",
@@ -143,13 +144,13 @@ func TestService_Rotate(t *testing.T) {
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindCTA, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindCTA, res[0].Kind)
 	})
 
 	t.Run("Tuesday with no eligible candidates is a no-op", func(t *testing.T) {
-		newSrc := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: false}
-		spot := &fakeCandidate{kind: news.SocialPostKindSpotlight, eligible: false}
-		cta := &fakeCandidate{kind: news.SocialPostKindCTA, eligible: false}
+		newSrc := &fakeCandidate{kind: domainsocial.PostKindNewSource, eligible: false}
+		spot := &fakeCandidate{kind: domainsocial.PostKindSpotlight, eligible: false}
+		cta := &fakeCandidate{kind: domainsocial.PostKindCTA, eligible: false}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
@@ -161,9 +162,9 @@ func TestService_Rotate(t *testing.T) {
 		// Even though all three Tuesday candidates are eligible, Friday
 		// must ignore them. With no recap candidate registered, this is
 		// a no-op.
-		newSrc := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: true, text: "x"}
-		spot := &fakeCandidate{kind: news.SocialPostKindSpotlight, eligible: true, text: "y"}
-		cta := &fakeCandidate{kind: news.SocialPostKindCTA, eligible: true, text: "z"}
+		newSrc := &fakeCandidate{kind: domainsocial.PostKindNewSource, eligible: true, text: "x"}
+		spot := &fakeCandidate{kind: domainsocial.PostKindSpotlight, eligible: true, text: "y"}
+		cta := &fakeCandidate{kind: domainsocial.PostKindCTA, eligible: true, text: "z"}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
@@ -173,7 +174,7 @@ func TestService_Rotate(t *testing.T) {
 
 	t.Run("Friday runs recap when eligible", func(t *testing.T) {
 		rec := &fakeCandidate{
-			kind:     news.SocialPostKindRecap,
+			kind:     domainsocial.PostKindRecap,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "recap:2026-W21"},
 			text:     "Top stories this week …",
@@ -183,11 +184,11 @@ func TestService_Rotate(t *testing.T) {
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindRecap, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindRecap, res[0].Kind)
 	})
 
 	t.Run("Non-rotation day is a no-op", func(t *testing.T) {
-		always := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: true, text: "x"}
+		always := &fakeCandidate{kind: domainsocial.PostKindNewSource, eligible: true, text: "x"}
 		f := newRotationFixture(t, always)
 
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: thuAt15, DryRun: true})
@@ -197,7 +198,7 @@ func TestService_Rotate(t *testing.T) {
 
 	t.Run("Wednesday runs the community candidate", func(t *testing.T) {
 		community := &fakeCandidate{
-			kind:     news.SocialPostKindCommunity,
+			kind:     domainsocial.PostKindCommunity,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "community:golang-london:2026"},
 			text:     "shout-out to Golang London",
@@ -207,12 +208,12 @@ func TestService_Rotate(t *testing.T) {
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: wedAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindCommunity, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindCommunity, res[0].Kind)
 	})
 
 	t.Run("ForceKind bypasses day-of-week routing", func(t *testing.T) {
 		cta := &fakeCandidate{
-			kind:     news.SocialPostKindCTA,
+			kind:     domainsocial.PostKindCTA,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "cta:forced"},
 			text:     "subscribe please",
@@ -222,15 +223,15 @@ func TestService_Rotate(t *testing.T) {
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       wedAt15, // not a rotation day, but ForceKind overrides
 			DryRun:    true,
-			ForceKind: news.SocialPostKindCTA,
+			ForceKind: domainsocial.PostKindCTA,
 		})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindCTA, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindCTA, res[0].Kind)
 	})
 
 	t.Run("Unknown ForceKind returns an error", func(t *testing.T) {
-		f := newRotationFixture(t, &fakeCandidate{kind: news.SocialPostKindCTA, eligible: true})
+		f := newRotationFixture(t, &fakeCandidate{kind: domainsocial.PostKindCTA, eligible: true})
 
 		_, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       wedAt15,
@@ -241,14 +242,14 @@ func TestService_Rotate(t *testing.T) {
 
 	t.Run("Eligibility error is propagated", func(t *testing.T) {
 		broken := &fakeCandidate{
-			kind: news.SocialPostKindNewSource,
+			kind: domainsocial.PostKindNewSource,
 			err:  errors.New("db down"),
 		}
 		f := newRotationFixture(t, broken)
 
 		_, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       tueAt15,
-			ForceKind: news.SocialPostKindNewSource,
+			ForceKind: domainsocial.PostKindNewSource,
 		})
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "db down")
@@ -262,11 +263,11 @@ func TestService_Rotate(t *testing.T) {
 		prompter := mockai.NewMockPrompter(ctrl)
 		issues := mocknews.NewMockIssueRepository(ctrl)
 		items := mocknews.NewMockItemRepository(ctrl)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		svc, err := social.New(nil, prompter, issues, items, posts, slk)
 		require.NoError(t, err)
-		svc.WithCandidates(&fakeCandidate{kind: news.SocialPostKindCTA, eligible: true})
+		svc.WithCandidates(&fakeCandidate{kind: domainsocial.PostKindCTA, eligible: true})
 
 		res, err := svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
@@ -275,7 +276,7 @@ func TestService_Rotate(t *testing.T) {
 
 	t.Run("Wet run records the social post with kind and subject", func(t *testing.T) {
 		spot := &fakeCandidate{
-			kind:     news.SocialPostKindSpotlight,
+			kind:     domainsocial.PostKindSpotlight,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "Follow @ardanlabs for great Go content.",
@@ -290,8 +291,8 @@ func TestService_Rotate(t *testing.T) {
 			Return(socialgw.Result{PostURL: "https://bsky.app/x"}, nil)
 		f.posts.EXPECT().
 			Create(gomock.Any(), gomock.Any()).
-			DoAndReturn(func(_ context.Context, p news.SocialPost) (news.SocialPost, error) {
-				assert.Equal(t, news.SocialPostKindSpotlight, p.Kind)
+			DoAndReturn(func(_ context.Context, p domainsocial.Post) (domainsocial.Post, error) {
+				assert.Equal(t, domainsocial.PostKindSpotlight, p.Kind)
 				assert.Equal(t, "spotlight:ardanlabs", p.Subject)
 				assert.Nil(t, p.IssueID, "rotation rows must not carry an issue_id")
 				assert.Equal(t, "https://bsky.app/x", p.PostURL)
@@ -302,13 +303,13 @@ func TestService_Rotate(t *testing.T) {
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
-		assert.Equal(t, news.SocialPostKindSpotlight, res[0].Kind)
+		assert.Equal(t, domainsocial.PostKindSpotlight, res[0].Kind)
 		assert.Equal(t, "https://bsky.app/x", res[0].PostURL)
 	})
 
 	t.Run("Wet run skips when subject already posted", func(t *testing.T) {
 		spot := &fakeCandidate{
-			kind:     news.SocialPostKindSpotlight,
+			kind:     domainsocial.PostKindSpotlight,
 			eligible: true,
 			ctx:      social.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "x",

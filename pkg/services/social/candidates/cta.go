@@ -28,7 +28,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
@@ -54,16 +54,16 @@ var ctaAngles = []string{
 // CTA posts a "sign up to GoDaily" call to action, rotating through a
 // fixed set of angles so the feed reads differently each time.
 type CTA struct {
-	posts news.SocialPostRepository
+	posts social.PostRepository
 }
 
 // NewCTA constructs the candidate.
-func NewCTA(posts news.SocialPostRepository) *CTA {
+func NewCTA(posts social.PostRepository) *CTA {
 	return &CTA{posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *CTA) Kind() news.SocialPostKind { return news.SocialPostKindCTA }
+func (c *CTA) Kind() social.PostKind { return social.PostKindCTA }
 
 // Eligible blocks if a CTA was posted to bluesky within the cooldown.
 // The angle for this run is derived from the week number so the rotation

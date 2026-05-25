@@ -30,7 +30,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
@@ -119,13 +119,13 @@ func (e communityEntry) mentions() map[socialgw.Platform]string {
 type Community struct {
 	conferences []communityEntry
 	meetups     []communityEntry
-	posts       news.SocialPostRepository
+	posts       social.PostRepository
 }
 
 // NewCommunity parses the two embedded YAMLs and constructs the
 // candidate. Panics on YAML parse error — these are compile-time-checked
 // static assets, so a runtime error is the right escape hatch.
-func NewCommunity(conferencesYAML, meetupsYAML []byte, posts news.SocialPostRepository) *Community {
+func NewCommunity(conferencesYAML, meetupsYAML []byte, posts social.PostRepository) *Community {
 	return &Community{
 		conferences: mustParseCommunityYAML(conferencesYAML, "conferences"),
 		meetups:     mustParseCommunityYAML(meetupsYAML, "meetups"),
@@ -143,7 +143,7 @@ func mustParseCommunityYAML(b []byte, label string) []communityEntry {
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *Community) Kind() news.SocialPostKind { return news.SocialPostKindCommunity }
+func (c *Community) Kind() social.PostKind { return social.PostKindCommunity }
 
 // Eligible picks the right pool for this Wednesday and returns the first
 // entry not yet promoted this year. Falls through to the other pool when

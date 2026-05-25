@@ -30,6 +30,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
+	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -74,8 +76,8 @@ type App struct {
 type Repository struct {
 	Issues        news.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   news.SubscriberRepository
-	SocialPosts   news.SocialPostRepository
+	Subscribers   domainsubscriber.SubscriberRepository
+	SocialPosts   domainsocial.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
 	Metrics       engagement.MetricsRepository
@@ -191,11 +193,11 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 // chooses from. The recap candidate is skipped if metrics aren't wired
 // (would never happen in production but keeps tests/no-DB bootstraps
 // from blowing up).
-func buildRotationCandidates(_ env.Config, repo *Repository, posts news.SocialPostRepository) []social.Candidate {
+func buildRotationCandidates(_ env.Config, repo *Repository, posts domainsocial.PostRepository) []social.Candidate {
 	out := make([]social.Candidate, 0, 4)
 
-	out = append(out, candidates.NewNewSource(news.SocialProfiles, posts))
-	out = append(out, candidates.NewSpotlight(news.SocialProfiles, posts))
+	out = append(out, candidates.NewNewSource(domainsocial.Profiles, posts))
+	out = append(out, candidates.NewSpotlight(domainsocial.Profiles, posts))
 	out = append(out, candidates.NewCTA(posts))
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 

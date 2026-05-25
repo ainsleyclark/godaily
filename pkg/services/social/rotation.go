@@ -26,7 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
@@ -47,7 +47,7 @@ type RotateOptions struct {
 	// ForceKind, when non-empty, bypasses the day-aware routing and runs
 	// the named candidate's Eligible check directly. Used by the CLI to
 	// test a specific kind out-of-band.
-	ForceKind news.SocialPostKind
+	ForceKind domainsocial.PostKind
 }
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the
@@ -128,14 +128,14 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 	case time.Tuesday:
 		return orderedByKinds(
 			s.candidates,
-			news.SocialPostKindNewSource,
-			news.SocialPostKindSpotlight,
-			news.SocialPostKindCTA,
+			domainsocial.PostKindNewSource,
+			domainsocial.PostKindSpotlight,
+			domainsocial.PostKindCTA,
 		), nil
 	case time.Wednesday:
-		return orderedByKinds(s.candidates, news.SocialPostKindCommunity), nil
+		return orderedByKinds(s.candidates, domainsocial.PostKindCommunity), nil
 	case time.Friday:
-		return orderedByKinds(s.candidates, news.SocialPostKindRecap), nil
+		return orderedByKinds(s.candidates, domainsocial.PostKindRecap), nil
 	default:
 		return nil, nil
 	}
@@ -144,7 +144,7 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 // orderedByKinds returns the subset of candidates matching the given
 // kinds, in the requested order. Missing candidates are silently dropped
 // — useful when a deployment hasn't wired every kind.
-func orderedByKinds(all []Candidate, kinds ...news.SocialPostKind) []Candidate {
+func orderedByKinds(all []Candidate, kinds ...domainsocial.PostKind) []Candidate {
 	out := make([]Candidate, 0, len(kinds))
 	for _, k := range kinds {
 		if c := candidateByKind(all, k); c != nil {
@@ -157,7 +157,7 @@ func orderedByKinds(all []Candidate, kinds ...news.SocialPostKind) []Candidate {
 // subjectIdempotency returns a skipIfPosted check keyed off the
 // candidate's Subject. An empty subject disables the check (caller is
 // trusting the candidate's own eligibility logic).
-func subjectIdempotency(posts news.SocialPostRepository, subject string) func(ctx context.Context, platform string) (bool, error) {
+func subjectIdempotency(posts domainsocial.PostRepository, subject string) func(ctx context.Context, platform string) (bool, error) {
 	if subject == "" {
 		return nil
 	}

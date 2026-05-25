@@ -30,8 +30,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -41,17 +41,17 @@ var ctaNow = time.Date(2026, 5, 19, 15, 0, 0, 0, time.UTC)
 
 func TestCTA_Kind(t *testing.T) {
 	c := candidates.NewCTA(nil)
-	assert.Equal(t, news.SocialPostKindCTA, c.Kind())
+	assert.Equal(t, social.PostKindCTA, c.Kind())
 }
 
 func TestCTA_Eligible(t *testing.T) {
 	t.Run("Eligible when cooldown clear", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindCTA, gomock.Any(), gomock.Any()).
-			DoAndReturn(func(_ context.Context, _ news.SocialPostKind, platform string, since time.Time) (bool, error) {
+			HasPostedKindSince(gomock.Any(), social.PostKindCTA, gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ context.Context, _ social.PostKind, platform string, since time.Time) (bool, error) {
 				assert.Equal(t, "bluesky", platform, "anchor platform must be bluesky")
 				assert.True(t, since.Equal(ctaNow.Add(-7*24*time.Hour)),
 					"since must be exactly 7 days before now, got %s", since)
@@ -63,7 +63,7 @@ func TestCTA_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		assert.Equal(t, news.SocialPostKindCTA, cctx.Kind)
+		assert.Equal(t, social.PostKindCTA, cctx.Kind)
 		assert.True(t, strings.HasPrefix(cctx.Subject, "cta:"),
 			"subject should be 'cta:<key>', got %q", cctx.Subject)
 		assert.Equal(t, "https://godaily.dev/", cctx.URL)
@@ -75,9 +75,9 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Blocked by cooldown", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindCTA, "bluesky", gomock.Any()).
+			HasPostedKindSince(gomock.Any(), social.PostKindCTA, "bluesky", gomock.Any()).
 			Return(true, nil)
 
 		c := candidates.NewCTA(posts)
@@ -88,9 +88,9 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Repository error is propagated", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindCTA, "bluesky", gomock.Any()).
+			HasPostedKindSince(gomock.Any(), social.PostKindCTA, "bluesky", gomock.Any()).
 			Return(false, errors.New("db down"))
 
 		c := candidates.NewCTA(posts)
@@ -100,7 +100,7 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Angle is stable within the same ISO week", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(false, nil).Times(2)

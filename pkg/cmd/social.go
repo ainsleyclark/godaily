@@ -30,7 +30,7 @@ import (
 	"github.com/urfave/cli/v3"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
@@ -190,7 +190,7 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 				Now:       now,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
-				ForceKind: news.SocialPostKind(strings.TrimSpace(cmd.String("kind"))),
+				ForceKind: domainsocial.PostKind(strings.TrimSpace(cmd.String("kind"))),
 			})
 			if err != nil {
 				a.Slack.MustSend(ctx, "Social rotation CLI failed: "+err.Error())

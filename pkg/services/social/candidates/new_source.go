@@ -28,6 +28,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
@@ -48,18 +49,18 @@ import (
 // New sources added after that point trigger one announcement each,
 // gated by the same subject check that powers all rotation candidates.
 type NewSource struct {
-	profiles map[news.Source]news.SocialProfile
-	posts    news.SocialPostRepository
+	profiles map[news.Source]social.Profile
+	posts    social.PostRepository
 }
 
 // NewNewSource constructs the candidate. The name reads awkwardly; it
 // matches the Kind convention (NewX returns *X) the other candidates use.
-func NewNewSource(profiles map[news.Source]news.SocialProfile, posts news.SocialPostRepository) *NewSource {
+func NewNewSource(profiles map[news.Source]social.Profile, posts social.PostRepository) *NewSource {
 	return &NewSource{profiles: profiles, posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *NewSource) Kind() news.SocialPostKind { return news.SocialPostKindNewSource }
+func (c *NewSource) Kind() social.PostKind { return social.PostKindNewSource }
 
 // Eligible walks Announceable profiles in stable source-name order and
 // returns the first source we haven't announced on the anchor platform yet.
@@ -95,7 +96,7 @@ func (c *NewSource) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 // Generate dispatches to the new_source prompt with the right per-platform
 // mention.
 func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
-	profile, ok := cctx.Payload.(news.SocialProfile)
+	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("new_source: profile payload missing")
 	}
@@ -107,7 +108,7 @@ func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, platform social
 	})
 }
 
-func sortedAnnounceable(profiles map[news.Source]news.SocialProfile) []news.Source {
+func sortedAnnounceable(profiles map[news.Source]social.Profile) []news.Source {
 	out := make([]news.Source, 0, len(profiles))
 	for s, p := range profiles {
 		if p.Announceable {
@@ -121,7 +122,7 @@ func sortedAnnounceable(profiles map[news.Source]news.SocialProfile) []news.Sour
 // socialMentionsFor translates SocialProfile.Mentions (string-keyed, so
 // the news package stays free of socialgw imports) into the typed map the
 // rotation orchestrator carries around.
-func socialMentionsFor(p news.SocialProfile) map[socialgw.Platform]string {
+func socialMentionsFor(p social.Profile) map[socialgw.Platform]string {
 	if len(p.Mentions) == 0 {
 		return nil
 	}

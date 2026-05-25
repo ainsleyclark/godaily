@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	news "github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -98,10 +98,10 @@ func (mr *MockSubscriberMockRecorder) MarkSuppressed(ctx, email any) *gomock.Cal
 }
 
 // Subscribe mocks base method.
-func (m *MockSubscriber) Subscribe(ctx context.Context, email string) (news.Subscriber, error) {
+func (m *MockSubscriber) Subscribe(ctx context.Context, email string) (domainsubscriber.Subscriber, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Subscribe", ctx, email)
-	ret0, _ := ret[0].(news.Subscriber)
+	ret0, _ := ret[0].(domainsubscriber.Subscriber)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

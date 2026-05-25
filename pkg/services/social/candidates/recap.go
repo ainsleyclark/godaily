@@ -26,7 +26,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/recap"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
@@ -47,16 +47,16 @@ const recapCooldown = 6 * 24 * time.Hour
 // can be reused by email outros, web pages, RSS, etc.
 type Recap struct {
 	recap *recap.Service
-	posts news.SocialPostRepository
+	posts social.PostRepository
 }
 
 // NewRecap constructs the candidate.
-func NewRecap(svc *recap.Service, posts news.SocialPostRepository) *Recap {
+func NewRecap(svc *recap.Service, posts social.PostRepository) *Recap {
 	return &Recap{recap: svc, posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *Recap) Kind() news.SocialPostKind { return news.SocialPostKindRecap }
+func (c *Recap) Kind() social.PostKind { return social.PostKindRecap }
 
 // Eligible blocks if a recap was already posted within the cooldown, and
 // requires the recap dataset to contain at least recapMinItems entries.
@@ -66,7 +66,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 	}
 
 	since := now.UTC().Add(-recapCooldown)
-	posted, err := c.posts.HasPostedKindSince(ctx, c.Kind(), platformAnchor, since)
+	posted, err := c.posts.HasPostedKindSince(ctx, social.PostKindRecap, platformAnchor, since)
 	if err != nil {
 		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking recap cooldown")
 	}

@@ -28,7 +28,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
@@ -53,58 +53,58 @@ type Store struct {
 	RandReader io.Reader
 }
 
-var _ news.SubscriberRepository = (*Store)(nil)
+var _ subscriber.SubscriberRepository = (*Store)(nil)
 
-func (s Store) Find(ctx context.Context, id int64) (news.Subscriber, error) {
+func (s Store) Find(ctx context.Context, id int64) (subscriber.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByID(ctx, id)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
+		return subscriber.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) FindByEmail(ctx context.Context, email string) (news.Subscriber, error) {
+func (s Store) FindByEmail(ctx context.Context, email string) (subscriber.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByEmail(ctx, email)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
+		return subscriber.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) FindByUnsubscribeToken(ctx context.Context, token string) (news.Subscriber, error) {
+func (s Store) FindByUnsubscribeToken(ctx context.Context, token string) (subscriber.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByUnsubscribeToken(ctx, token)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
+		return subscriber.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error) {
+func (s Store) Create(ctx context.Context, email string) (subscriber.Subscriber, error) {
 	email = strings.ToLower(strings.TrimSpace(email))
 	if email == "" {
-		return news.Subscriber{}, errors.New("email is required")
+		return subscriber.Subscriber{}, errors.New("email is required")
 	}
 
 	unsubscribe, err := newToken()
 	if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	confirm, err := newToken()
 	if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	sub, err := s.sqlc.SubscriberCreate(ctx, sqlc.SubscriberCreateParams{
@@ -113,20 +113,20 @@ func (s Store) Create(ctx context.Context, email string) (news.Subscriber, error
 		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
 	})
 	if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Reactivate(ctx context.Context, email string) (news.Subscriber, error) {
+func (s Store) Reactivate(ctx context.Context, email string) (subscriber.Subscriber, error) {
 	unsubscribe, err := newToken()
 	if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 	confirm, err := newToken()
 	if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 	sub, err := s.sqlc.SubscriberReactivate(ctx, sqlc.SubscriberReactivateParams{
 		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
@@ -134,19 +134,19 @@ func (s Store) Reactivate(ctx context.Context, email string) (news.Subscriber, e
 		Email:            email,
 	})
 	if errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
+		return subscriber.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Confirm(ctx context.Context, token string) (news.Subscriber, error) {
+func (s Store) Confirm(ctx context.Context, token string) (subscriber.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberConfirm(ctx, sql.NullString{String: token, Valid: true})
 	if errors.Is(err, sql.ErrNoRows) {
-		return news.Subscriber{}, store.ErrNotFound
+		return subscriber.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 	return transformSubscriber(sub), nil
 }
@@ -179,7 +179,7 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscriber, error) {
+func (s Store) List(ctx context.Context, opts subscriber.ListOptions) ([]subscriber.Subscriber, error) {
 	rows, err := s.db.QueryContext(
 		ctx,
 		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
@@ -190,10 +190,10 @@ func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscrib
 	}
 	defer rows.Close()
 
-	var out []news.Subscriber
+	var out []subscriber.Subscriber
 	for rows.Next() {
 		var (
-			sub                                    news.Subscriber
+			sub                                    subscriber.Subscriber
 			confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
 		)
 		if err := rows.Scan(
@@ -216,21 +216,21 @@ func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Subscrib
 	return out, rows.Err()
 }
 
-func (s Store) ListActive(ctx context.Context) ([]news.Subscriber, error) {
+func (s Store) ListActive(ctx context.Context) ([]subscriber.Subscriber, error) {
 	rows, err := s.sqlc.SubscriberListActive(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	out := make([]news.Subscriber, 0, len(rows))
+	out := make([]subscriber.Subscriber, 0, len(rows))
 	for _, r := range rows {
 		out = append(out, transformSubscriber(r))
 	}
 	return out, nil
 }
 
-func transformSubscriber(s sqlc.Subscriber) news.Subscriber {
-	return news.Subscriber{
+func transformSubscriber(s sqlc.Subscriber) subscriber.Subscriber {
+	return subscriber.Subscriber{
 		ID:               s.ID,
 		Email:            s.Email,
 		UnsubscribeToken: s.UnsubscribeToken,

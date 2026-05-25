@@ -30,9 +30,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 )
 
@@ -132,13 +132,13 @@ var (
 
 func TestCommunity_Kind(t *testing.T) {
 	c := candidates.NewCommunity([]byte("[]"), []byte("[]"), nil)
-	assert.Equal(t, news.SocialPostKindCommunity, c.Kind())
+	assert.Equal(t, social.PostKindCommunity, c.Kind())
 }
 
 func TestCommunity_Eligible(t *testing.T) {
 	t.Run("Meetup week picks first unposted meetup alphabetically", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		posts.EXPECT().
@@ -150,7 +150,7 @@ func TestCommunity_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		assert.Equal(t, news.SocialPostKindCommunity, cctx.Kind)
+		assert.Equal(t, social.PostKindCommunity, cctx.Kind)
 		assert.Equal(t, fmt.Sprintf("community:alpha-meetup:%d", year), cctx.Subject)
 		assert.Equal(t, "https://alpha-meetup.example", cctx.URL)
 		assert.Equal(t, "https://www.linkedin.com/company/alpha-meetup-group", cctx.Mentions[socialgw.PlatformLinkedIn])
@@ -158,7 +158,7 @@ func TestCommunity_Eligible(t *testing.T) {
 
 	t.Run("Conference week picks first unposted upcoming conference", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedConf.Year()
 		// past-conf is filtered out before any DB check; alpha-conf is first
@@ -178,7 +178,7 @@ func TestCommunity_Eligible(t *testing.T) {
 
 	t.Run("Rotates past already-posted entry", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		posts.EXPECT().
@@ -197,7 +197,7 @@ func TestCommunity_Eligible(t *testing.T) {
 
 	t.Run("Exhausted meetup pool falls through to conferences", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		posts.EXPECT().
@@ -220,7 +220,7 @@ func TestCommunity_Eligible(t *testing.T) {
 
 	t.Run("Both pools exhausted returns not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedConf.Year()
 		// Conference week → conferences first, then meetups.
@@ -240,7 +240,7 @@ func TestCommunity_Eligible(t *testing.T) {
 func TestCommunity_Generate(t *testing.T) {
 	t.Run("Splices LinkedIn URL when handle is configured", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		posts.EXPECT().
@@ -261,7 +261,7 @@ func TestCommunity_Generate(t *testing.T) {
 
 	t.Run("Falls back to plain name when platform has no mention", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		// alpha-meetup has no Bluesky handle in the fixture.
@@ -282,7 +282,7 @@ func TestCommunity_Generate(t *testing.T) {
 
 	t.Run("Renders Bluesky mention with @ prefix when handle is set", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedConf.Year()
 		posts.EXPECT().
@@ -301,7 +301,7 @@ func TestCommunity_Generate(t *testing.T) {
 
 	t.Run("Unknown platform returns empty string", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mockdomsocial.NewMockPostRepository(ctrl)
 
 		year := wedMeet.Year()
 		posts.EXPECT().
@@ -327,7 +327,7 @@ func TestCommunity_CycleRatio(t *testing.T) {
 	const weeks = 12
 
 	ctrl := gomock.NewController(t)
-	posts := mocknews.NewMockSocialPostRepository(ctrl)
+	posts := mockdomsocial.NewMockPostRepository(ctrl)
 	// Every check returns false (nothing posted yet), so the picker
 	// always lands on the first entry in the chosen pool.
 	posts.EXPECT().

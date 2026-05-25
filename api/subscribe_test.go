@@ -28,12 +28,12 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	mocksubscriberdomain "github.com/ainsleyclark/godaily/pkg/mocks/domain/subscriber"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
+	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -43,16 +43,16 @@ func TestHandleSubscribe(t *testing.T) {
 		body       string
 		method     string
 		mock       func(s *mocksubscriber.MockSubscriber)
-		repoMock   func(r *mocknews.MockSubscriberRepository)
+		repoMock   func(r *mocksubscriberdomain.MockSubscriberRepository)
 		wantStatus int
 	}{
 		"OK": {
 			body:   `{"email":"test@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(news.Subscriber{}, nil)
+				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(subscriber.Subscriber{}, nil)
 			},
-			repoMock: func(r *mocknews.MockSubscriberRepository) {
+			repoMock: func(r *mocksubscriberdomain.MockSubscriberRepository) {
 				r.EXPECT().CountActive(gomock.Any()).Return(int64(42), nil)
 			},
 			wantStatus: http.StatusOK,
@@ -61,39 +61,39 @@ func TestHandleSubscribe(t *testing.T) {
 			body:       `{"email":"test@example.com"}`,
 			method:     http.MethodGet,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
-			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
+			repoMock:   func(r *mocksubscriberdomain.MockSubscriberRepository) {},
 			wantStatus: http.StatusMethodNotAllowed,
 		},
 		"Missing Email": {
 			body:       `{}`,
 			method:     http.MethodPost,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
-			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
+			repoMock:   func(r *mocksubscriberdomain.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Invalid Email": {
 			body:       `{"email":"notanemail"}`,
 			method:     http.MethodPost,
 			mock:       func(s *mocksubscriber.MockSubscriber) {},
-			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
+			repoMock:   func(r *mocksubscriberdomain.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Already Subscribed": {
 			body:   `{"email":"dupe@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(news.Subscriber{}, subscriber.ErrAlreadySubscribed)
+				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(subscriber.Subscriber{}, subscribersvc.ErrAlreadySubscribed)
 			},
-			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
+			repoMock:   func(r *mocksubscriberdomain.MockSubscriberRepository) {},
 			wantStatus: http.StatusConflict,
 		},
 		"Subscribe Error": {
 			body:   `{"email":"err@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockSubscriber) {
-				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(news.Subscriber{}, errors.New("db error"))
+				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(subscriber.Subscriber{}, errors.New("db error"))
 			},
-			repoMock:   func(r *mocknews.MockSubscriberRepository) {},
+			repoMock:   func(r *mocksubscriberdomain.MockSubscriberRepository) {},
 			wantStatus: http.StatusInternalServerError,
 		},
 	}
@@ -103,7 +103,7 @@ func TestHandleSubscribe(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			svc := mocksubscriber.NewMockSubscriber(ctrl)
 			slack := mockslack.NewMockSender(ctrl)
-			repo := mocknews.NewMockSubscriberRepository(ctrl)
+			repo := mocksubscriberdomain.NewMockSubscriberRepository(ctrl)
 			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 			test.mock(svc)
 			test.repoMock(repo)

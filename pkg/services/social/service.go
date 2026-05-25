@@ -39,6 +39,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
@@ -54,7 +55,7 @@ type Service struct {
 	prompter   ai.Prompter
 	issues     news.IssueRepository
 	items      news.ItemRepository
-	posts      news.SocialPostRepository
+	posts      domainsocial.PostRepository
 	slack      slack.Sender
 	reframers  map[social.Platform]reframer
 	candidates []Candidate
@@ -82,7 +83,7 @@ func New(
 	prompter ai.Prompter,
 	issues news.IssueRepository,
 	items news.ItemRepository,
-	posts news.SocialPostRepository,
+	posts domainsocial.PostRepository,
 	slackSender slack.Sender,
 ) (*Service, error) {
 	if prompter == nil {
@@ -137,7 +138,7 @@ type PostOptions struct {
 // PostResult summarises one platform's outcome.
 type PostResult struct {
 	Platform social.Platform
-	Kind     news.SocialPostKind
+	Kind     domainsocial.PostKind
 	Text     string
 	PostURL  string
 	Err      error
@@ -197,7 +198,7 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 	return s.publish(ctx, publishCtx{
 		platforms: wanted,
 		dryRun:    opts.DryRun,
-		kind:      news.SocialPostKindFeatured,
+		kind:      domainsocial.PostKindFeatured,
 		issueID:   &issueID,
 		generate: func(_ context.Context, platform social.Platform) (string, error) {
 			reframe, ok := s.reframers[platform]
@@ -219,7 +220,7 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 type publishCtx struct {
 	platforms []social.Poster
 	dryRun    bool
-	kind      news.SocialPostKind
+	kind      domainsocial.PostKind
 	issueID   *int64
 	subject   string
 
@@ -303,7 +304,7 @@ func (s *Service) publishOne(ctx context.Context, poster social.Poster, pc publi
 	}
 	res.PostURL = result.PostURL
 
-	if _, err := s.posts.Create(ctx, news.SocialPost{
+	if _, err := s.posts.Create(ctx, domainsocial.Post{
 		IssueID:  pc.issueID,
 		Kind:     pc.kind,
 		Subject:  pc.subject,

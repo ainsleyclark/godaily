@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
@@ -38,7 +38,7 @@ type (
 	//   - recap puts the recap.Top into Payload so its generator can
 	//     render it without a second DB hit.
 	CandidateContext struct {
-		Kind     news.SocialPostKind
+		Kind     domainsocial.PostKind
 		Hook     string
 		URL      string
 		Subject  string
@@ -54,7 +54,7 @@ type (
 	// or reports the candidate is not ready.
 	Candidate interface {
 		// Kind reports the SocialPostKind this candidate produces.
-		Kind() news.SocialPostKind
+		Kind() domainsocial.PostKind
 		// Eligible reports whether the candidate can post right now.
 		// The bool is the source of truth; the context is only
 		// meaningful when true.
@@ -65,7 +65,7 @@ type (
 	}
 )
 
-func candidateByKind(all []Candidate, kind news.SocialPostKind) Candidate {
+func candidateByKind(all []Candidate, kind domainsocial.PostKind) Candidate {
 	for _, c := range all {
 		if c.Kind() == kind {
 			return c

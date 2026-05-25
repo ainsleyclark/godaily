@@ -30,7 +30,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
@@ -49,7 +49,7 @@ type Store struct {
 	db   *sql.DB
 }
 
-var _ news.SocialPostRepository = (*Store)(nil)
+var _ social.PostRepository = (*Store)(nil)
 
 // HasPosted reports whether a featured row exists for the given issue and platform.
 func (s Store) HasPosted(ctx context.Context, issueID int64, platform string) (bool, error) {
@@ -70,7 +70,7 @@ func (s Store) HasPostedBySubject(ctx context.Context, subject, platform string)
 
 // HasPostedKindSince reports whether any row of the given kind on the given
 // platform was posted at or after since.
-func (s Store) HasPostedKindSince(ctx context.Context, kind news.SocialPostKind, platform string, since time.Time) (bool, error) {
+func (s Store) HasPostedKindSince(ctx context.Context, kind social.PostKind, platform string, since time.Time) (bool, error) {
 	return s.sqlc.SocialPostExistsKindSince(ctx, sqlc.SocialPostExistsKindSinceParams{
 		Kind:     string(kind),
 		Platform: platform,
@@ -81,14 +81,14 @@ func (s Store) HasPostedKindSince(ctx context.Context, kind news.SocialPostKind,
 // Create persists a new social post record. When PostedAt is the zero value
 // it defaults to time.Now().UTC() so callers don't need to set it. Kind
 // defaults to SocialPostKindFeatured to preserve the historical row shape.
-func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, error) {
+func (s Store) Create(ctx context.Context, p social.Post) (social.Post, error) {
 	postedAt := p.PostedAt
 	if postedAt.IsZero() {
 		postedAt = time.Now().UTC()
 	}
 	kind := p.Kind
 	if kind == "" {
-		kind = news.SocialPostKindFeatured
+		kind = social.PostKindFeatured
 	}
 
 	row, err := s.sqlc.SocialPostCreate(ctx, sqlc.SocialPostCreateParams{
@@ -101,13 +101,13 @@ func (s Store) Create(ctx context.Context, p news.SocialPost) (news.SocialPost, 
 		PostedAt: postedAt,
 	})
 	if err != nil {
-		return news.SocialPost{}, err
+		return social.Post{}, err
 	}
 	return transform(row), nil
 }
 
 // List returns social posts filtered by opts.
-func (s Store) List(ctx context.Context, opts news.SocialPostListOptions) ([]news.SocialPost, error) {
+func (s Store) List(ctx context.Context, opts social.PostListOptions) ([]social.Post, error) {
 	var rows []sqlc.SocialPost
 	var err error
 	switch {
@@ -122,18 +122,18 @@ func (s Store) List(ctx context.Context, opts news.SocialPostListOptions) ([]new
 	if err != nil {
 		return nil, err
 	}
-	out := make([]news.SocialPost, 0, len(rows))
+	out := make([]social.Post, 0, len(rows))
 	for _, r := range rows {
 		out = append(out, transform(r))
 	}
 	return out, nil
 }
 
-func transform(r sqlc.SocialPost) news.SocialPost {
-	return news.SocialPost{
+func transform(r sqlc.SocialPost) social.Post {
+	return social.Post{
 		ID:       r.ID,
 		IssueID:  r.IssueID,
-		Kind:     news.SocialPostKind(r.Kind),
+		Kind:     social.PostKind(r.Kind),
 		Subject:  r.Subject.String,
 		Platform: r.Platform,
 		Text:     r.Text,

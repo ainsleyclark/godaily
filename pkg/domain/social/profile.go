@@ -17,16 +17,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package news
+package social
 
-// SocialProfile carries the social-media metadata for a news source. It is
+import "github.com/ainsleyclark/godaily/pkg/domain/news"
+
+// Profile carries the social-media metadata for a news source. It is
 // the source-of-truth for spotlight posts (which need a hand-written blurb
 // and the right per-platform mention syntax) and new-source announcements
 // (which need a display name and source URL). Mentions keys are platform
 // strings ("bluesky", "linkedin", "mastodon") rather than typed Platforms
-// to keep the news package free of any social-gateway dependency.
-type SocialProfile struct {
-	Source         Source
+// to keep the social package free of any gateway dependency.
+type Profile struct {
+	Source         news.Source
 	DisplayName    string
 	SourceURL      string
 	SpotlightBlurb string
@@ -40,22 +42,22 @@ type SocialProfile struct {
 
 // Mention returns the platform-specific handle for a source, or the
 // DisplayName when no mention is configured for that platform.
-func (p SocialProfile) Mention(platform string) string {
+func (p Profile) Mention(platform string) string {
 	if m, ok := p.Mentions[platform]; ok && m != "" {
 		return m
 	}
 	return p.DisplayName
 }
 
-// SocialProfiles is the curated metadata for every source GoDaily knows
-// about. Adding a row here makes that source eligible for spotlights, and
-// (if Announceable) for new-source announcements when first added.
+// Profiles is the curated metadata for every source GoDaily knows about.
+// Adding a row here makes that source eligible for spotlights, and (if
+// Announceable) for new-source announcements when first added.
 //
 // Sources not in this map are skipped silently — useful for aggregator
 // sources where there's no creator to tag and nothing distinctive to say.
-var SocialProfiles = map[Source]SocialProfile{
-	SourceArdanLabs: {
-		Source:      SourceArdanLabs,
+var Profiles = map[news.Source]Profile{
+	news.SourceArdanLabs: {
+		Source:      news.SourceArdanLabs,
 		DisplayName: "Ardan Labs",
 		Mentions: map[string]string{
 			"bluesky":  "@ardanlabs.com",
@@ -65,8 +67,8 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://www.ardanlabs.com/",
 		Announceable:   true,
 	},
-	SourceGoBlog: {
-		Source:      SourceGoBlog,
+	news.SourceGoBlog: {
+		Source:      news.SourceGoBlog,
 		DisplayName: "the Go team",
 		Mentions: map[string]string{
 			"bluesky":  "@golang.org",
@@ -76,8 +78,8 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://go.dev/blog/",
 		Announceable:   true,
 	},
-	SourceJetBrains: {
-		Source:      SourceJetBrains,
+	news.SourceJetBrains: {
+		Source:      news.SourceJetBrains,
 		DisplayName: "JetBrains GoLand",
 		Mentions: map[string]string{
 			"bluesky":  "@jetbrains.com",
@@ -87,8 +89,8 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://blog.jetbrains.com/go/",
 		Announceable:   true,
 	},
-	SourceGoPodcast: {
-		Source:      SourceGoPodcast,
+	news.SourceGoPodcast: {
+		Source:      news.SourceGoPodcast,
 		DisplayName: "go podcast()",
 		Mentions: map[string]string{
 			"mastodon": "@dmitshur@hachyderm.io",
@@ -97,8 +99,8 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://gopodcast.dev/",
 		Announceable:   true,
 	},
-	SourceFallthrough: {
-		Source:      SourceFallthrough,
+	news.SourceFallthrough: {
+		Source:      news.SourceFallthrough,
 		DisplayName: "Fallthrough Podcast",
 		Mentions: map[string]string{
 			"bluesky": "@fallthrough.fm",
@@ -107,36 +109,36 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://fallthrough.fm/",
 		Announceable:   true,
 	},
-	SourceLobsters: {
-		Source:         SourceLobsters,
+	news.SourceLobsters: {
+		Source:         news.SourceLobsters,
 		DisplayName:    "Lobsters",
 		SpotlightBlurb: "Smaller, more technical than HN. The /go feed surfaces things you'd otherwise miss.",
 		SourceURL:      "https://lobste.rs/t/go",
 		Announceable:   true,
 	},
-	SourceGoVuln: {
-		Source:         SourceGoVuln,
+	news.SourceGoVuln: {
+		Source:         news.SourceGoVuln,
 		DisplayName:    "the Go security team",
 		SpotlightBlurb: "If you ship Go code, you should be watching the vuln database. govulncheck is a one-liner.",
 		SourceURL:      "https://pkg.go.dev/vuln/",
 		Announceable:   true,
 	},
-	SourceAwesomeGo: {
-		Source:         SourceAwesomeGo,
+	news.SourceAwesomeGo: {
+		Source:         news.SourceAwesomeGo,
 		DisplayName:    "Awesome Go",
 		SpotlightBlurb: "The closest thing the Go ecosystem has to a curated package index. Worth a regular browse.",
 		SourceURL:      "https://github.com/avelino/awesome-go",
 		Announceable:   true,
 	},
-	SourceGoRelease: {
-		Source:         SourceGoRelease,
+	news.SourceGoRelease: {
+		Source:         news.SourceGoRelease,
 		DisplayName:    "Go Releases",
 		SpotlightBlurb: "Every stable, RC and beta release of the Go toolchain, pulled straight from the source.",
 		SourceURL:      "https://go.dev/doc/devel/release",
 		Announceable:   true,
 	},
-	SourceDevTo: {
-		Source:      SourceDevTo,
+	news.SourceDevTo: {
+		Source:      news.SourceDevTo,
 		DisplayName: "DEV's #go community",
 		Mentions: map[string]string{
 			"bluesky":  "@thepracticaldev.bsky.social",
@@ -146,43 +148,43 @@ var SocialProfiles = map[Source]SocialProfile{
 		SourceURL:      "https://dev.to/t/go",
 		Announceable:   true,
 	},
-	SourceGitHubTrending: {
-		Source:         SourceGitHubTrending,
+	news.SourceGitHubTrending: {
+		Source:         news.SourceGitHubTrending,
 		DisplayName:    "GitHub Trending (Go)",
 		SpotlightBlurb: "The fastest-growing Go repos on GitHub — a useful pulse on what the community is building.",
 		SourceURL:      "https://github.com/trending/go",
 		Announceable:   true,
 	},
-	SourceGitHub: {
-		Source:         SourceGitHub,
+	news.SourceGitHub: {
+		Source:         news.SourceGitHub,
 		DisplayName:    "the Go proposals tracker",
 		SpotlightBlurb: "Every active language proposal — what's being argued about and what's about to ship.",
 		SourceURL:      "https://github.com/golang/go/issues?q=is:issue+label:Proposal",
 		Announceable:   true,
 	},
-	SourceConferences: {
-		Source:         SourceConferences,
+	news.SourceConferences: {
+		Source:         news.SourceConferences,
 		DisplayName:    "Go Conferences",
 		SpotlightBlurb: "Upcoming Go conferences worldwide, surfaced as they get close so you don't miss tickets.",
 		SourceURL:      "https://go.dev/wiki/Conferences",
 		Announceable:   true,
 	},
-	SourceMeetup: {
-		Source:         SourceMeetup,
+	news.SourceMeetup: {
+		Source:         news.SourceMeetup,
 		DisplayName:    "Go Meetups",
 		SpotlightBlurb: "Local Go user groups on Meetup — the best way to find Gophers near you.",
 		SourceURL:      "https://www.meetup.com/topics/golang/",
 		Announceable:   true,
 	},
-	SourceGolangBridge: {
-		Source:         SourceGolangBridge,
+	news.SourceGolangBridge: {
+		Source:         news.SourceGolangBridge,
 		DisplayName:    "GolangBridge",
 		SpotlightBlurb: "A long-running Go Q&A forum — slower than Discord, more searchable than Reddit.",
 		SourceURL:      "https://forum.golangbridge.org/",
 		Announceable:   true,
 	},
-	SourceYouTube: {
-		Source:         SourceYouTube,
+	news.SourceYouTube: {
+		Source:         news.SourceYouTube,
 		DisplayName:    "Go talks on YouTube",
 		SpotlightBlurb: "Curated channel of GopherCon, GoLab and community talks — depth beyond a blog post.",
 		SourceURL:      "https://www.youtube.com/results?search_query=golang",
@@ -190,10 +192,10 @@ var SocialProfiles = map[Source]SocialProfile{
 	},
 }
 
-// SocialProfileFor returns the profile for a source, or the zero value
-// when no profile is registered. Use the boolean to distinguish "missing"
-// from "registered but minimal".
-func SocialProfileFor(s Source) (SocialProfile, bool) {
-	p, ok := SocialProfiles[s]
+// ProfileFor returns the profile for a source, or the zero value when no
+// profile is registered. Use the boolean to distinguish "missing" from
+// "registered but minimal".
+func ProfileFor(s news.Source) (Profile, bool) {
+	p, ok := Profiles[s]
 	return p, ok
 }
