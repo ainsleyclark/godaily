@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// conferences-update reads pkg/source/conferences-watch.yaml (a curated list of
+// conferences-update reads pkg/data/conferences-watch.yaml (a curated list of
 // conference websites) and checks each URL against conferences.yaml. If a URL has
 // no entry with a start_date in the current or future year, the conference website
 // is fetched and Claude extracts a structured YAML entry which is appended for
@@ -45,8 +45,8 @@ import (
 const maxHTMLBytes = 16_000
 
 func main() {
-	yamlPath := flag.String("yaml", "pkg/source/data/conferences.yaml", "path to conferences.yaml")
-	watchPath := flag.String("watch", "pkg/source/data/conferences-watch.yaml", "path to conferences-watch.yaml")
+	yamlPath := flag.String("yaml", "pkg/data/conferences.yaml", "path to conferences.yaml")
+	watchPath := flag.String("watch", "pkg/data/conferences-watch.yaml", "path to conferences-watch.yaml")
 	flag.Parse()
 
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")

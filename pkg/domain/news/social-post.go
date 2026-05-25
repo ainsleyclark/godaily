@@ -46,6 +46,11 @@ const (
 
 	// SocialPostKindCTA is a "sign up to GoDaily" rotation post.
 	SocialPostKindCTA SocialPostKind = "cta"
+
+	// SocialPostKindCommunity is the Wednesday community-promo post
+	// that tags a Go conference or meetup. Subject is
+	// "community:<slug>:<year>".
+	SocialPostKindCommunity SocialPostKind = "community"
 )
 
 // SocialPost records a single published social media post. Featured posts

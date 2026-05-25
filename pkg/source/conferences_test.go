@@ -24,6 +24,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -142,7 +143,7 @@ func TestConferences_Fetch_RealYAML(t *testing.T) {
 	t.Parallel()
 
 	// Smoke-test that the committed conferences.yaml parses without error.
-	c := NewConferences(conferencesYAML)
+	c := NewConferences(data.Conferences)
 	assert.NotNil(t, c)
 	assert.NotEmpty(t, c.conferences)
 }

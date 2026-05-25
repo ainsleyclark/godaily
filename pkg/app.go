@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -196,6 +197,7 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts news.SocialPo
 	out = append(out, candidates.NewNewSource(news.SocialProfiles, posts))
 	out = append(out, candidates.NewSpotlight(news.SocialProfiles, posts))
 	out = append(out, candidates.NewCTA(posts))
+	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
 	if repo != nil && repo.Metrics != nil {
 		if recapSvc, err := recap.New(repo.Metrics); err == nil {

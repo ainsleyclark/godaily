@@ -54,6 +54,8 @@ type RotateOptions struct {
 // first eligible one, and publishes it across the configured platforms.
 //
 //   - Tuesday: new_source → spotlight → cta → no-op.
+//   - Wednesday: community (a Go conference or meetup), 2:1 meetup:conf
+//     rotation through the curated lists in pkg/data.
 //   - Friday: recap (only). No fallback — Friday is recap day; if there's
 //     no click data, the slot stays quiet.
 //   - Other days: no-op unless ForceKind is set.
@@ -130,6 +132,8 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 			news.SocialPostKindSpotlight,
 			news.SocialPostKindCTA,
 		), nil
+	case time.Wednesday:
+		return orderedByKinds(s.candidates, news.SocialPostKindCommunity), nil
 	case time.Friday:
 		return orderedByKinds(s.candidates, news.SocialPostKindRecap), nil
 	default:
