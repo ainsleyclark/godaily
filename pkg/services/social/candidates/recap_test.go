@@ -24,15 +24,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -42,13 +42,13 @@ var recapNow = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC)
 
 func TestRecap_Kind(t *testing.T) {
 	c := candidates.NewRecap(nil, nil)
-	assert.Equal(t, news.SocialPostKindRecap, c.Kind())
+	assert.Equal(t, social.PostKindRecap, c.Kind())
 }
 
 func TestRecap_Eligible(t *testing.T) {
 	t.Run("Nil recap service is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		c := candidates.NewRecap(nil, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
@@ -59,10 +59,10 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Eligible with enough items", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
 			Return(false, nil)
 		metrics.EXPECT().
 			ItemList(gomock.Any(), gomock.Any()).
@@ -72,7 +72,7 @@ func TestRecap_Eligible(t *testing.T) {
 				{ItemID: 3, Title: "C", URL: "https://c", Source: "hn", Clicks: 10},
 			}, nil)
 
-		svc, err := recap.New(metrics)
+		svc, err := digest.NewRecapService(metrics)
 		require.NoError(t, err)
 
 		c := candidates.NewRecap(svc, posts)
@@ -80,7 +80,7 @@ func TestRecap_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		assert.Equal(t, news.SocialPostKindRecap, cctx.Kind)
+		assert.Equal(t, social.PostKindRecap, cctx.Kind)
 		assert.Equal(t, "recap:2026-W21", cctx.Subject)
 
 		payload, ok := cctx.Payload.(rotation.RecapPayload)
@@ -94,14 +94,14 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Blocked by cooldown", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
 			Return(true, nil)
 		// metrics.ItemList must NOT be called when cooldown blocks.
 
-		svc, _ := recap.New(metrics)
+		svc, _ := digest.NewRecapService(metrics)
 		c := candidates.NewRecap(svc, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
 		require.NoError(t, err)
@@ -111,10 +111,10 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Too few items is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
-			HasPostedKindSince(gomock.Any(), news.SocialPostKindRecap, "bluesky", gomock.Any()).
+			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
 			Return(false, nil)
 		metrics.EXPECT().
 			ItemList(gomock.Any(), gomock.Any()).
@@ -123,7 +123,7 @@ func TestRecap_Eligible(t *testing.T) {
 				{ItemID: 2, Title: "B", URL: "https://b", Clicks: 2},
 			}, nil)
 
-		svc, _ := recap.New(metrics)
+		svc, _ := digest.NewRecapService(metrics)
 		c := candidates.NewRecap(svc, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
 		require.NoError(t, err)

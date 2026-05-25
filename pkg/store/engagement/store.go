@@ -17,8 +17,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package metrics provides the MetricsRepository implementation backed by a SQL database.
-package metrics
+// Package engagement provides the MetricsRepository implementation backed by a SQL database.
+package engagement
 
 import (
 	"context"

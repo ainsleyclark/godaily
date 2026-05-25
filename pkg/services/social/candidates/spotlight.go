@@ -28,6 +28,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
@@ -37,17 +38,17 @@ import (
 // iterates news.SocialProfiles in stable source-name order, skipping any
 // source already covered on the anchor platform.
 type Spotlight struct {
-	profiles map[news.Source]news.SocialProfile
-	posts    news.SocialPostRepository
+	profiles map[news.Source]social.Profile
+	posts    social.PostRepository
 }
 
 // NewSpotlight constructs the candidate.
-func NewSpotlight(profiles map[news.Source]news.SocialProfile, posts news.SocialPostRepository) *Spotlight {
+func NewSpotlight(profiles map[news.Source]social.Profile, posts social.PostRepository) *Spotlight {
 	return &Spotlight{profiles: profiles, posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *Spotlight) Kind() news.SocialPostKind { return news.SocialPostKindSpotlight }
+func (c *Spotlight) Kind() social.PostKind { return social.PostKindSpotlight }
 
 // Eligible walks SocialProfiles in stable name order, returning the first
 // source not yet covered on the anchor platform. Once every source has
@@ -83,7 +84,7 @@ func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 // Generate dispatches to the spotlight prompt with the right per-platform
 // mention.
 func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
-	profile, ok := cctx.Payload.(news.SocialProfile)
+	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("spotlight: profile payload missing")
 	}
@@ -95,7 +96,7 @@ func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform social
 	})
 }
 
-func sortedSources(profiles map[news.Source]news.SocialProfile) []news.Source {
+func sortedSources(profiles map[news.Source]social.Profile) []news.Source {
 	out := make([]news.Source, 0, len(profiles))
 	for s := range profiles {
 		out = append(out, s)

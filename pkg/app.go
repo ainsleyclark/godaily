@@ -28,8 +28,10 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -38,16 +40,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
-	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
-	"github.com/ainsleyclark/godaily/pkg/services/metrics"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
+	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
+	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
-	metricsstore "github.com/ainsleyclark/godaily/pkg/store/metrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialmetrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
@@ -61,10 +61,10 @@ type App struct {
 	DB             *sql.DB
 	Repository     *Repository
 	Runner         digest.Runner
-	Social         *social.Service
+	Social         *socialsvc.Service
 	Cache          cache.Store
-	Subscribers    subscriber.Subscriber
-	EmailEvents    *emailevent.Service
+	Subscribers    contacts.SubscriberService
+	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
 	StatFetchers   map[socialgw.Platform]socialgw.StatFetcher
@@ -74,8 +74,8 @@ type App struct {
 type Repository struct {
 	Issues        news.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   news.SubscriberRepository
-	SocialPosts   news.SocialPostRepository
+	Subscribers   contacts.SubscriberRepository
+	SocialPosts   social.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
 	Metrics       engagement.MetricsRepository
@@ -140,7 +140,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
-	socialSvc, err := social.New(
+	socialSvc, err := socialsvc.New(
 		buildSocialPosters(config),
 		aiClient,
 		issueStore,
@@ -153,7 +153,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
-	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
+	subscriberSvc := subscribersvc.New(subsStore, issueStore, emailSender)
 
 	return &App{
 		Config:         &config,
@@ -163,9 +163,9 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Social:         socialSvc,
 		Cache:          store,
 		Subscribers:    subscriberSvc,
-		EmailEvents:    emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
+		EmailEvents:    svcengagement.NewEvents(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
 		Slack:          slackClient,
-		MetricsService: metrics.New(repo.Metrics, slackClient),
+		MetricsService: svcengagement.New(repo.Metrics, slackClient),
 		StatFetchers:   buildStatFetchers(config),
 	}, teardown, nil
 }
@@ -191,16 +191,16 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 // chooses from. The recap candidate is skipped if metrics aren't wired
 // (would never happen in production but keeps tests/no-DB bootstraps
 // from blowing up).
-func buildRotationCandidates(_ env.Config, repo *Repository, posts news.SocialPostRepository) []social.Candidate {
-	out := make([]social.Candidate, 0, 4)
+func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRepository) []socialsvc.Candidate {
+	out := make([]socialsvc.Candidate, 0, 4)
 
-	out = append(out, candidates.NewNewSource(news.SocialProfiles, posts))
-	out = append(out, candidates.NewSpotlight(news.SocialProfiles, posts))
+	out = append(out, candidates.NewNewSource(social.Profiles, posts))
+	out = append(out, candidates.NewSpotlight(social.Profiles, posts))
 	out = append(out, candidates.NewCTA(posts))
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
 	if repo != nil && repo.Metrics != nil {
-		if recapSvc, err := recap.New(repo.Metrics); err == nil {
+		if recapSvc, err := digest.NewRecapService(repo.Metrics); err == nil {
 			out = append(out, candidates.NewRecap(recapSvc, posts))
 		}
 	}

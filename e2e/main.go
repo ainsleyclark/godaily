@@ -49,7 +49,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
-	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all source fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
@@ -185,7 +185,7 @@ func main() {
 		Runner:      seedRunner{items: itemStore, aggregator: aggregator},
 		Cache:       store,
 		Subscribers: subscriberSvc,
-		EmailEvents: emailevent.New(eventsStore, subscriberSvc, itemStore, "admin@e2e.test"),
+		EmailEvents: svcengagement.NewEvents(eventsStore, subscriberSvc, itemStore, "admin@e2e.test"),
 		Slack:       noopSlack{},
 	}
 

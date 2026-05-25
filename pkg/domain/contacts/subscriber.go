@@ -17,11 +17,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package news
+package contacts
 
 import (
 	"context"
 	"time"
+
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // Subscriber defines a person who has signed up to receive Go Daily.
@@ -37,10 +39,10 @@ type Subscriber struct {
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/SubscriberRepository.go . SubscriberRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/SubscriberRepository.go . SubscriberRepository
 
 // SubscriberRepository defines the methods for interacting with the
-// Subscriber store.
+// subscriber store.
 type SubscriberRepository interface {
 	Find(ctx context.Context, id int64) (Subscriber, error)
 	FindByEmail(ctx context.Context, email string) (Subscriber, error)
@@ -49,10 +51,23 @@ type SubscriberRepository interface {
 	Reactivate(ctx context.Context, email string) (Subscriber, error)
 	Confirm(ctx context.Context, token string) (Subscriber, error)
 	Unsubscribe(ctx context.Context, token string) error
-	List(ctx context.Context, opts ListOptions) ([]Subscriber, error)
+	List(ctx context.Context, opts store.ListOptions) ([]Subscriber, error)
 	ListActive(ctx context.Context) ([]Subscriber, error)
 	CountAll(ctx context.Context) (int64, error)
 	CountActive(ctx context.Context) (int64, error)
+	MarkBounced(ctx context.Context, email string) error
+	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
+}
+
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Service.go . Service
+
+// SubscriberService defines the subscription lifecycle methods used by HTTP handlers
+// and the email webhook pipeline.
+type SubscriberService interface {
+	Subscribe(ctx context.Context, email string) (Subscriber, error)
+	Confirm(ctx context.Context, token string) error
+	Unsubscribe(ctx context.Context, token string) error
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
 	MarkSuppressed(ctx context.Context, email string) error

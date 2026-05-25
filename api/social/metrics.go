@@ -28,7 +28,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
@@ -45,7 +45,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		since := time.Now().UTC().Add(-metricsSince)
 
-		posts, err := a.Repository.SocialPosts.List(ctx, news.SocialPostListOptions{Since: &since})
+		posts, err := a.Repository.SocialPosts.List(ctx, social.PostListOptions{Since: &since})
 		if err != nil {
 			slog.ErrorContext(ctx, "Failed to list recent social posts", "err", err)
 			api.Error(w, http.StatusInternalServerError, "failed to list posts")

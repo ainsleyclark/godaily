@@ -27,6 +27,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
@@ -57,7 +58,7 @@ func TestSocialPosts_Store(t *testing.T) {
 		t.Log("With explicit PostedAt")
 		{
 			when := time.Date(2026, time.May, 20, 11, 30, 0, 0, time.UTC)
-			got, err := s.Create(ctx, news.SocialPost{
+			got, err := s.Create(ctx, social.Post{
 				IssueID:  &issue.ID,
 				Platform: "bluesky",
 				Text:     "Go 1.30 released — generics finally land in the standard library",
@@ -69,7 +70,7 @@ func TestSocialPosts_Store(t *testing.T) {
 			require.NotNil(t, got.IssueID)
 			assert.Equal(t, issue.ID, *got.IssueID)
 			assert.Equal(t, "bluesky", got.Platform)
-			assert.Equal(t, news.SocialPostKindFeatured, got.Kind, "Kind defaults to featured when empty")
+			assert.Equal(t, social.PostKindFeatured, got.Kind, "Kind defaults to featured when empty")
 			assert.Equal(t, "https://bsky.app/profile/godaily.bsky.social/post/abc123", got.PostURL)
 			assert.True(t, got.PostedAt.Equal(when))
 		}
@@ -77,7 +78,7 @@ func TestSocialPosts_Store(t *testing.T) {
 		t.Log("Zero PostedAt defaults to now")
 		{
 			before := time.Now().UTC().Add(-time.Second)
-			got, err := s.Create(ctx, news.SocialPost{
+			got, err := s.Create(ctx, social.Post{
 				IssueID:  &issue.ID,
 				Platform: "linkedin",
 				Text:     "professional rendering of the same item",
@@ -116,8 +117,8 @@ func TestSocialPosts_Store(t *testing.T) {
 		t.Log("Create a rotation post and re-check")
 		{
 			when := time.Date(2026, time.May, 20, 15, 0, 0, 0, time.UTC)
-			_, err := s.Create(ctx, news.SocialPost{
-				Kind:     news.SocialPostKindSpotlight,
+			_, err := s.Create(ctx, social.Post{
+				Kind:     social.PostKindSpotlight,
 				Subject:  "spotlight:ardanlabs",
 				Platform: "bluesky",
 				Text:     "shout out to ardanlabs",
@@ -133,18 +134,18 @@ func TestSocialPosts_Store(t *testing.T) {
 			require.NoError(t, err)
 			assert.False(t, gotOther, "different platform must not match")
 
-			gotSince, err := s.HasPostedKindSince(ctx, news.SocialPostKindSpotlight, "bluesky", when.Add(-time.Hour))
+			gotSince, err := s.HasPostedKindSince(ctx, social.PostKindSpotlight, "bluesky", when.Add(-time.Hour))
 			require.NoError(t, err)
 			assert.True(t, gotSince)
 
-			gotFuture, err := s.HasPostedKindSince(ctx, news.SocialPostKindSpotlight, "bluesky", when.Add(time.Hour))
+			gotFuture, err := s.HasPostedKindSince(ctx, social.PostKindSpotlight, "bluesky", when.Add(time.Hour))
 			require.NoError(t, err)
 			assert.False(t, gotFuture, "since after the post must miss")
 		}
 	})
 
 	t.Run("List by issue returns inserted rows", func(t *testing.T) {
-		got, err := s.List(ctx, news.SocialPostListOptions{IssueID: &issue.ID})
+		got, err := s.List(ctx, social.PostListOptions{IssueID: &issue.ID})
 		require.NoError(t, err)
 		require.Len(t, got, 2)
 		platforms := []string{got[0].Platform, got[1].Platform}
@@ -163,13 +164,13 @@ func TestSocialPosts_Store(t *testing.T) {
 
 		t.Log("Create")
 		{
-			_, err := s.Create(ctx, news.SocialPost{IssueID: &issue.ID, Platform: "x", Text: "y"})
+			_, err := s.Create(ctx, social.Post{IssueID: &issue.ID, Platform: "x", Text: "y"})
 			assert.Error(t, err)
 		}
 
 		t.Log("List")
 		{
-			_, err := s.List(ctx, news.SocialPostListOptions{IssueID: &issue.ID})
+			_, err := s.List(ctx, social.PostListOptions{IssueID: &issue.ID})
 			assert.Error(t, err)
 		}
 	})

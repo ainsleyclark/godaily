@@ -32,7 +32,6 @@ type (
 		To    *time.Time
 		Limit int
 	}
-
 	// SummaryStats holds headline engagement numbers for a period.
 	SummaryStats struct {
 		From                     string  `json:"from"`
@@ -49,7 +48,6 @@ type (
 		ClickRate                float64 `json:"click_rate"`
 		UniqueSubscribersEngaged int64   `json:"unique_subscribers_engaged"`
 	}
-
 	// IssueEngagement holds aggregate email engagement for a single digest issue.
 	IssueEngagement struct {
 		IssueID      int64     `json:"issue_id"`
@@ -78,33 +76,28 @@ type (
 		Source string `json:"source"`
 		Clicks int64  `json:"clicks"`
 	}
-
 	// TagMetrics holds click counts aggregated by item tag.
 	TagMetrics struct {
 		Tag    string `json:"tag"`
 		Clicks int64  `json:"clicks"`
 	}
-
 	// SourceMetrics holds click counts aggregated by item source.
 	SourceMetrics struct {
 		Source string `json:"source"`
 		Clicks int64  `json:"clicks"`
 	}
-
 	// TrendPoint is a single time-series bucket for an engagement metric.
 	TrendPoint struct {
 		BucketStart string  `json:"bucket_start"`
 		Value       float64 `json:"value"`
 		Delivered   int64   `json:"delivered"`
 	}
-
 	// TrendData is the time-series response for the trend endpoint.
 	TrendData struct {
 		Metric string       `json:"metric"`
 		Bucket string       `json:"bucket"`
 		Points []TrendPoint `json:"points"`
 	}
-
 	// SubscriberPoint is a single time-series bucket for subscriber growth.
 	SubscriberPoint struct {
 		BucketStart  string `json:"bucket_start"`
@@ -115,7 +108,6 @@ type (
 		NetChange    int64  `json:"net_change"`
 		ActiveAtEnd  int64  `json:"active_at_end"`
 	}
-
 	// SubscriberData is the time-series response for the subscriber growth endpoint.
 	SubscriberData struct {
 		Bucket string            `json:"bucket"`
@@ -123,7 +115,7 @@ type (
 	}
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsReporter.go . MetricsReporter
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/MetricsReporter.go . MetricsReporter
 
 // MetricsReporter produces higher-level engagement reports composed from
 // MetricsRepository queries. It is the interface API handlers depend on so
@@ -134,7 +126,7 @@ type MetricsReporter interface {
 	Roundup(ctx context.Context) error
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsRepository.go . MetricsRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/MetricsRepository.go . MetricsRepository
 
 // MetricsRepository answers engagement analytics queries.
 type MetricsRepository interface {

@@ -30,25 +30,13 @@ import (
 	"log/slog"
 	texttemplate "text/template"
 
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
-
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Subscriber.go . Subscriber
-
-// Subscriber defines the subscription lifecycle methods used by HTTP handlers
-// and the email webhook pipeline.
-type Subscriber interface {
-	Subscribe(ctx context.Context, email string) (news.Subscriber, error)
-	Confirm(ctx context.Context, token string) error
-	Unsubscribe(ctx context.Context, token string) error
-	MarkBounced(ctx context.Context, email string) error
-	MarkComplained(ctx context.Context, email string) error
-	MarkSuppressed(ctx context.Context, email string) error
-}
 
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
 // already registered as an active subscriber.
@@ -65,15 +53,17 @@ type confirmData struct {
 	CanonicalURL   string
 }
 
+var _ subscriber.SubscriberService = (*Service)(nil)
+
 // Service owns the full subscriber lifecycle.
 type Service struct {
-	repo   news.SubscriberRepository
+	repo   subscriber.SubscriberRepository
 	issues news.IssueRepository
 	email  email.Sender
 }
 
 // New returns a Service wired to the provided dependencies.
-func New(repo news.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
+func New(repo subscriber.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
 	return &Service{
 		repo:   repo,
 		issues: issues,
@@ -85,29 +75,29 @@ func New(repo news.SubscriberRepository, issues news.IssueRepository, sender ema
 // It returns ErrAlreadySubscribed if the email is already registered as active.
 // Previously unsubscribed addresses are reactivated with a fresh token.
 // Confirmation email failures are logged but do not fail the subscription.
-func (s Service) Subscribe(ctx context.Context, emailAddr string) (news.Subscriber, error) {
-	var sub news.Subscriber
+func (s Service) Subscribe(ctx context.Context, emailAddr string) (subscriber.Subscriber, error) {
+	var sub subscriber.Subscriber
 
 	existing, err := s.repo.FindByEmail(ctx, emailAddr)
 	switch {
 	case err == nil && existing.UnsubscribedAt == nil:
-		return news.Subscriber{}, ErrAlreadySubscribed
+		return subscriber.Subscriber{}, ErrAlreadySubscribed
 	case err == nil:
 		sub, err = s.repo.Reactivate(ctx, emailAddr)
 		if err != nil {
-			return news.Subscriber{}, err
+			return subscriber.Subscriber{}, err
 		}
 	case errors.Is(err, store.ErrNotFound):
 		sub, err = s.repo.Create(ctx, emailAddr)
 		if err != nil {
-			return news.Subscriber{}, err
+			return subscriber.Subscriber{}, err
 		}
 	default:
-		return news.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	if sub.ConfirmToken == "" {
-		return news.Subscriber{}, errors.New("subscriber created without confirmation token")
+		return subscriber.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
 	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
 	unsubscribeURL := env.AppURL + "/api/unsubscribe/?token=" + sub.UnsubscribeToken

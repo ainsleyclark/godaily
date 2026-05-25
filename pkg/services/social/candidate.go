@@ -24,8 +24,8 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
 type (
@@ -38,34 +38,34 @@ type (
 	//   - recap puts the recap.Top into Payload so its generator can
 	//     render it without a second DB hit.
 	CandidateContext struct {
-		Kind     news.SocialPostKind
+		Kind     social.PostKind
 		Hook     string
 		URL      string
 		Subject  string
-		Mentions map[social.Platform]string
+		Mentions map[socialgw.Platform]string
 		Payload  any
 	}
 	// Generator produces post text for one platform from a
 	// CandidateContext. Returning a non-nil error aborts the publish
 	// for that platform only.
-	Generator func(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
+	Generator func(ctx context.Context, p ai.Prompter, platform socialgw.Platform, c CandidateContext) (string, error)
 	// Candidate is one possible rotation post. Eligible looks at the
 	// world (DB, click metrics) and either returns a populated context
 	// or reports the candidate is not ready.
 	Candidate interface {
 		// Kind reports the SocialPostKind this candidate produces.
-		Kind() news.SocialPostKind
+		Kind() social.PostKind
 		// Eligible reports whether the candidate can post right now.
 		// The bool is the source of truth; the context is only
 		// meaningful when true.
 		Eligible(ctx context.Context, now time.Time) (CandidateContext, bool, error)
 		// Generate returns the post text for one platform given the
 		// context from Eligible.
-		Generate(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
+		Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, c CandidateContext) (string, error)
 	}
 )
 
-func candidateByKind(all []Candidate, kind news.SocialPostKind) Candidate {
+func candidateByKind(all []Candidate, kind social.PostKind) Candidate {
 	for _, c := range all {
 		if c.Kind() == kind {
 			return c

@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package emailevent_test
+package engagement_test
 
 import (
 	"context"
@@ -29,14 +29,14 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
-	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
+	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	engagementsvc "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )
 
 var errBoom = errors.New("boom")
 
-// stubItemFinder is a controllable emailevent.ItemFinder for tests. The zero
+// stubItemFinder is a controllable engagement.ItemFinder for tests. The zero
 // value resolves nothing, mirroring a click that matches no item.
 type stubItemFinder struct {
 	id  int64
@@ -48,12 +48,12 @@ func (s stubItemFinder) FindByURLInIssue(context.Context, int64, string) (int64,
 	return s.id, s.ok, s.err
 }
 
-func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockSubscriber, *emailevent.Service) {
+func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockService, *engagementsvc.EventService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
-	subs := mocksubscriber.NewMockSubscriber(ctrl)
-	return events, subs, emailevent.New(events, subs, stubItemFinder{}, "admin@example.com")
+	subs := mocksubscriber.NewMockService(ctrl)
+	return events, subs, engagementsvc.NewEvents(events, subs, stubItemFinder{}, "admin@example.com")
 }
 
 func TestService_Process(t *testing.T) {
@@ -212,12 +212,12 @@ func TestService_Process_ClickItemResolution(t *testing.T) {
 		URL:     "https://example.com/article",
 	}
 
-	newSvc := func(t *testing.T, finder emailevent.ItemFinder) (*mockengagement.MockEmailEventRepository, *emailevent.Service) {
+	newSvc := func(t *testing.T, finder engagementsvc.ItemFinder) (*mockengagement.MockEmailEventRepository, *engagementsvc.EventService) {
 		t.Helper()
 		ctrl := gomock.NewController(t)
 		events := mockengagement.NewMockEmailEventRepository(ctrl)
-		subs := mocksubscriber.NewMockSubscriber(ctrl)
-		return events, emailevent.New(events, subs, finder, "admin@example.com")
+		subs := mocksubscriber.NewMockService(ctrl)
+		return events, engagementsvc.NewEvents(events, subs, finder, "admin@example.com")
 	}
 
 	t.Run("Resolved item is stored on the event", func(t *testing.T) {

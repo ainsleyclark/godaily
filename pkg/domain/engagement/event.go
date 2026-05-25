@@ -129,7 +129,7 @@ type LinkClicks struct {
 	Clicks int64  `json:"clicks"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/EmailEventRepository.go . EmailEventRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/EmailEventRepository.go . EmailEventRepository
 
 // EmailEventRepository persists email events and answers engagement
 // aggregates.

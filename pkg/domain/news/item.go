@@ -40,7 +40,7 @@ type Item struct {
 	Published   time.Time `json:"published"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/ItemRepository.go . ItemRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/news/ItemRepository.go . ItemRepository
 
 // ItemListOptions filters for List queries.
 type ItemListOptions struct {

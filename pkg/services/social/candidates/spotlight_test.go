@@ -24,13 +24,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 )
 
@@ -39,7 +40,7 @@ var (
 
 	// Two stub profiles. Names are deliberately ordered so we know
 	// alphabetical iteration picks "alpha_source" first.
-	alphaProfile = news.SocialProfile{
+	alphaProfile = social.Profile{
 		Source:         news.Source("alpha_source"),
 		DisplayName:    "Alpha",
 		SourceURL:      "https://alpha.example",
@@ -48,7 +49,7 @@ var (
 			"bluesky": "@alpha.example",
 		},
 	}
-	bravoProfile = news.SocialProfile{
+	bravoProfile = social.Profile{
 		Source:         news.Source("bravo_source"),
 		DisplayName:    "Bravo",
 		SourceURL:      "https://bravo.example",
@@ -58,12 +59,12 @@ var (
 
 func TestSpotlight_Kind(t *testing.T) {
 	c := candidates.NewSpotlight(nil, nil)
-	assert.Equal(t, news.SocialPostKindSpotlight, c.Kind())
+	assert.Equal(t, social.PostKindSpotlight, c.Kind())
 }
 
 func TestSpotlight_Eligible(t *testing.T) {
 	t.Run("Empty profile map is not eligible", func(t *testing.T) {
-		c := candidates.NewSpotlight(map[news.Source]news.SocialProfile{}, nil)
+		c := candidates.NewSpotlight(map[news.Source]social.Profile{}, nil)
 		_, ok, err := c.Eligible(context.Background(), spotNow)
 		require.NoError(t, err)
 		assert.False(t, ok)
@@ -71,9 +72,9 @@ func TestSpotlight_Eligible(t *testing.T) {
 
 	t.Run("Picks first unposted source alphabetically", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
-		profiles := map[news.Source]news.SocialProfile{
+		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,
 			bravoProfile.Source: bravoProfile,
 		}
@@ -87,21 +88,21 @@ func TestSpotlight_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		assert.Equal(t, news.SocialPostKindSpotlight, cctx.Kind)
+		assert.Equal(t, social.PostKindSpotlight, cctx.Kind)
 		assert.Equal(t, "spotlight:alpha_source", cctx.Subject)
 		assert.Equal(t, "https://alpha.example", cctx.URL)
 
-		profile, ok := cctx.Payload.(news.SocialProfile)
-		require.True(t, ok, "Payload must be a SocialProfile")
+		profile, ok := cctx.Payload.(social.Profile)
+		require.True(t, ok, "Payload must be a social.Profile")
 		assert.Equal(t, "Alpha", profile.DisplayName)
 		assert.Equal(t, "@alpha.example", cctx.Mentions[socialgw.PlatformBluesky])
 	})
 
 	t.Run("Rotates past already-covered source", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
-		profiles := map[news.Source]news.SocialProfile{
+		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,
 			bravoProfile.Source: bravoProfile,
 		}
@@ -122,9 +123,9 @@ func TestSpotlight_Eligible(t *testing.T) {
 
 	t.Run("All sources covered is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mocknews.NewMockSocialPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
-		profiles := map[news.Source]news.SocialProfile{
+		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,
 		}
 

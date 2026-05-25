@@ -39,24 +39,23 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksocialservice -destination=../../mocks/socialservice/Service.go github.com/ainsleyclark/godaily/pkg/services/social Poster
-
 // Service publishes social media posts for both the daily featured slot
 // and the Tue/Fri rotation slot.
 type Service struct {
-	posters    []social.Poster
+	posters    []socialgw.Poster
 	prompter   ai.Prompter
 	issues     news.IssueRepository
 	items      news.ItemRepository
-	posts      news.SocialPostRepository
+	posts      social.PostRepository
 	slack      slack.Sender
-	reframers  map[social.Platform]reframer
+	reframers  map[socialgw.Platform]reframer
 	candidates []Candidate
 }
 
@@ -65,11 +64,11 @@ type Service struct {
 type reframer func(ctx context.Context, p ai.Prompter, f featured.Featured) (string, error)
 
 // defaultReframers maps each Platform to its production reframing prompt.
-func defaultReframers() map[social.Platform]reframer {
-	return map[social.Platform]reframer{
-		social.PlatformBluesky:  featured.Bluesky,
-		social.PlatformLinkedIn: featured.LinkedIn,
-		social.PlatformMastodon: featured.Mastodon,
+func defaultReframers() map[socialgw.Platform]reframer {
+	return map[socialgw.Platform]reframer{
+		socialgw.PlatformBluesky:  featured.Bluesky,
+		socialgw.PlatformLinkedIn: featured.LinkedIn,
+		socialgw.PlatformMastodon: featured.Mastodon,
 	}
 }
 
@@ -78,11 +77,11 @@ func defaultReframers() map[social.Platform]reframer {
 // slackSender may be nil to disable Slack notifications. Rotation candidates
 // must be wired separately via WithCandidates if Rotate will be called.
 func New(
-	posters []social.Poster,
+	posters []socialgw.Poster,
 	prompter ai.Prompter,
 	issues news.IssueRepository,
 	items news.ItemRepository,
-	posts news.SocialPostRepository,
+	posts social.PostRepository,
 	slackSender slack.Sender,
 ) (*Service, error) {
 	if prompter == nil {
@@ -131,13 +130,13 @@ type PostOptions struct {
 	// Platforms optionally restricts which configured posters run. When
 	// empty, every configured poster runs. Unknown platforms are ignored
 	// with a log line.
-	Platforms []social.Platform
+	Platforms []socialgw.Platform
 }
 
 // PostResult summarises one platform's outcome.
 type PostResult struct {
-	Platform social.Platform
-	Kind     news.SocialPostKind
+	Platform socialgw.Platform
+	Kind     social.PostKind
 	Text     string
 	PostURL  string
 	Err      error
@@ -197,9 +196,9 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 	return s.publish(ctx, publishCtx{
 		platforms: wanted,
 		dryRun:    opts.DryRun,
-		kind:      news.SocialPostKindFeatured,
+		kind:      social.PostKindFeatured,
 		issueID:   &issueID,
-		generate: func(_ context.Context, platform social.Platform) (string, error) {
+		generate: func(_ context.Context, platform socialgw.Platform) (string, error) {
 			reframe, ok := s.reframers[platform]
 			if !ok {
 				return "", fmt.Errorf("no reframer registered for platform %s", platform)
@@ -217,16 +216,16 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 // candidate produces one of these on its way through Rotate; the featured
 // path constructs one inline.
 type publishCtx struct {
-	platforms []social.Poster
+	platforms []socialgw.Poster
 	dryRun    bool
-	kind      news.SocialPostKind
+	kind      social.PostKind
 	issueID   *int64
 	subject   string
 
 	// generate returns the post text for a given platform. Candidates may
 	// ignore the platform and return identical text everywhere; the
 	// featured path uses the platform reframers.
-	generate func(ctx context.Context, platform social.Platform) (string, error)
+	generate func(ctx context.Context, platform socialgw.Platform) (string, error)
 
 	// skipIfPosted is the per-row idempotency check. Returning true skips
 	// the platform without an error.
@@ -261,7 +260,7 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]PostResult, err
 	return results, nil
 }
 
-func (s *Service) publishOne(ctx context.Context, poster social.Poster, pc publishCtx) PostResult {
+func (s *Service) publishOne(ctx context.Context, poster socialgw.Poster, pc publishCtx) PostResult {
 	platform := poster.Platform()
 	res := PostResult{Platform: platform, Kind: pc.kind}
 
@@ -303,7 +302,7 @@ func (s *Service) publishOne(ctx context.Context, poster social.Poster, pc publi
 	}
 	res.PostURL = result.PostURL
 
-	if _, err := s.posts.Create(ctx, news.SocialPost{
+	if _, err := s.posts.Create(ctx, social.Post{
 		IssueID:  pc.issueID,
 		Kind:     pc.kind,
 		Subject:  pc.subject,
@@ -326,17 +325,17 @@ func (s *Service) publishOne(ctx context.Context, poster social.Poster, pc publi
 
 // selectPosters narrows the configured posters to those requested in opts.
 // When wanted is empty the full slice is returned unchanged.
-func selectPosters(all []social.Poster, wanted []social.Platform) []social.Poster {
+func selectPosters(all []socialgw.Poster, wanted []socialgw.Platform) []socialgw.Poster {
 	if len(wanted) == 0 {
 		return all
 	}
 
-	wantedSet := make(map[social.Platform]bool, len(wanted))
+	wantedSet := make(map[socialgw.Platform]bool, len(wanted))
 	for _, p := range wanted {
 		wantedSet[p] = true
 	}
 
-	out := make([]social.Poster, 0, len(all))
+	out := make([]socialgw.Poster, 0, len(all))
 	for _, p := range all {
 		if wantedSet[p.Platform()] {
 			out = append(out, p)
@@ -382,13 +381,13 @@ func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []Po
 
 // platformLabel returns the human-friendly name for a platform used in
 // Slack notifications.
-func platformLabel(p social.Platform) string {
+func platformLabel(p socialgw.Platform) string {
 	switch p {
-	case social.PlatformBluesky:
+	case socialgw.PlatformBluesky:
 		return "Bluesky"
-	case social.PlatformLinkedIn:
+	case socialgw.PlatformLinkedIn:
 		return "LinkedIn"
-	case social.PlatformMastodon:
+	case socialgw.PlatformMastodon:
 		return "Mastodon"
 	default:
 		return string(p)

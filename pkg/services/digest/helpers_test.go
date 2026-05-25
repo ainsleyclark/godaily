@@ -30,7 +30,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 )
@@ -87,9 +87,9 @@ func allRegistered() map[news.Source]news.Fetcher {
 
 // newSubsMock returns a MockSubscriberRepository whose ListActive returns an empty list.
 // AnyTimes allows tests that return early before ListActive is called to pass without failure.
-func newSubsMock(t *testing.T) *mocknews.MockSubscriberRepository {
+func newSubsMock(t *testing.T) *mocksubscriber.MockSubscriberRepository {
 	t.Helper()
-	m := mocknews.NewMockSubscriberRepository(gomock.NewController(t))
+	m := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
 	m.EXPECT().ListActive(gomock.Any()).Return(nil, nil).AnyTimes()
 	return m
 }

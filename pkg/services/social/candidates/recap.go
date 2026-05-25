@@ -26,9 +26,9 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -43,20 +43,20 @@ const recapMinItems = 3
 const recapCooldown = 6 * 24 * time.Hour
 
 // Recap posts the top-clicked items of the current ISO week. Delegates
-// all dataset computation to pkg/services/recap so the same machinery
+// all dataset computation to pkg/services/digest so the same machinery
 // can be reused by email outros, web pages, RSS, etc.
 type Recap struct {
-	recap *recap.Service
-	posts news.SocialPostRepository
+	recap *digest.RecapService
+	posts social.PostRepository
 }
 
 // NewRecap constructs the candidate.
-func NewRecap(svc *recap.Service, posts news.SocialPostRepository) *Recap {
+func NewRecap(svc *digest.RecapService, posts social.PostRepository) *Recap {
 	return &Recap{recap: svc, posts: posts}
 }
 
 // Kind reports the candidate's SocialPostKind.
-func (c *Recap) Kind() news.SocialPostKind { return news.SocialPostKindRecap }
+func (c *Recap) Kind() social.PostKind { return social.PostKindRecap }
 
 // Eligible blocks if a recap was already posted within the cooldown, and
 // requires the recap dataset to contain at least recapMinItems entries.
@@ -66,7 +66,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 	}
 
 	since := now.UTC().Add(-recapCooldown)
-	posted, err := c.posts.HasPostedKindSince(ctx, c.Kind(), platformAnchor, since)
+	posted, err := c.posts.HasPostedKindSince(ctx, social.PostKindRecap, platformAnchor, since)
 	if err != nil {
 		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking recap cooldown")
 	}
@@ -74,7 +74,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 		return socialsvc.CandidateContext{}, false, nil
 	}
 
-	top, err := c.recap.Top(ctx, now, recap.TopOptions{MinItems: recapMinItems})
+	top, err := c.recap.Top(ctx, now, digest.TopOptions{MinItems: recapMinItems})
 	if err != nil {
 		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "computing recap")
 	}

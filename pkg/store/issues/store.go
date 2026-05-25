@@ -77,7 +77,7 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (news.Issue, error) 
 	return issueFromRows(i, items), nil
 }
 
-func (s Store) List(ctx context.Context, opts news.ListOptions) ([]news.Issue, error) {
+func (s Store) List(ctx context.Context, opts store.ListOptions) ([]news.Issue, error) {
 	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{Limit: opts.Limit(), Offset: opts.Offset()})
 	if err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status news.IssueStat
 	return issueFromRows(i, nil), nil
 }
 
-func (s Store) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+func (s Store) ListByStatus(ctx context.Context, status news.IssueStatus, opts store.ListOptions) ([]news.Issue, error) {
 	rows, err := s.db.QueryContext(
 		ctx,
 		"SELECT id, slug, sent_at, subject, COALESCE(summary,''), status FROM issues WHERE status = ? ORDER BY sent_at DESC LIMIT ? OFFSET ?",

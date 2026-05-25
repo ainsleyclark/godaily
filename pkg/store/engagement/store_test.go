@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package metrics_test
+package engagement_test
 
 import (
 	"context"
@@ -31,10 +31,10 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
+	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
-	metricsstore "github.com/ainsleyclark/godaily/pkg/store/metrics"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 )
 

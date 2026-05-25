@@ -17,12 +17,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package metrics composes engagement queries into higher-level reports.
+// Package engagement composes engagement queries into higher-level reports.
 //
 // Today it powers the Friday Slack roundup; it is the natural home for any
 // future AI-driven analysis that needs a single struct of "everything we know
 // about a window" without re-orchestrating the underlying queries.
-package metrics
+package engagement
 
 import (
 	"context"
@@ -32,7 +32,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 

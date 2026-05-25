@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package news_test
+package social_test
 
 import (
 	"testing"
@@ -25,11 +25,12 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
-func TestSocialProfile_Mention(t *testing.T) {
+func TestProfile_Mention(t *testing.T) {
 	t.Run("Returns the platform-specific handle when present", func(t *testing.T) {
-		p := news.SocialProfile{
+		p := social.Profile{
 			DisplayName: "Ardan Labs",
 			Mentions: map[string]string{
 				"bluesky": "@ardanlabs.com",
@@ -39,7 +40,7 @@ func TestSocialProfile_Mention(t *testing.T) {
 	})
 
 	t.Run("Falls back to DisplayName when the platform has no handle", func(t *testing.T) {
-		p := news.SocialProfile{
+		p := social.Profile{
 			DisplayName: "Ardan Labs",
 			Mentions: map[string]string{
 				"bluesky": "@ardanlabs.com",
@@ -49,7 +50,7 @@ func TestSocialProfile_Mention(t *testing.T) {
 	})
 
 	t.Run("Falls back to DisplayName when the handle is empty", func(t *testing.T) {
-		p := news.SocialProfile{
+		p := social.Profile{
 			DisplayName: "Ardan Labs",
 			Mentions:    map[string]string{"mastodon": ""},
 		}
@@ -57,31 +58,28 @@ func TestSocialProfile_Mention(t *testing.T) {
 	})
 
 	t.Run("Empty Mentions map falls back to DisplayName", func(t *testing.T) {
-		p := news.SocialProfile{DisplayName: "Anonymous Coder"}
+		p := social.Profile{DisplayName: "Anonymous Coder"}
 		assert.Equal(t, "Anonymous Coder", p.Mention("bluesky"))
 	})
 }
 
-func TestSocialProfileFor(t *testing.T) {
+func TestProfileFor(t *testing.T) {
 	t.Run("Known source returns a profile", func(t *testing.T) {
-		p, ok := news.SocialProfileFor(news.SourceArdanLabs)
+		p, ok := social.ProfileFor(news.SourceArdanLabs)
 		assert.True(t, ok)
 		assert.Equal(t, news.SourceArdanLabs, p.Source)
 		assert.NotEmpty(t, p.DisplayName)
 	})
 
 	t.Run("Unknown source returns the zero value and false", func(t *testing.T) {
-		p, ok := news.SocialProfileFor(news.Source("nonexistent"))
+		p, ok := social.ProfileFor(news.Source("nonexistent"))
 		assert.False(t, ok)
-		assert.Equal(t, news.SocialProfile{}, p)
+		assert.Equal(t, social.Profile{}, p)
 	})
 }
 
-func TestSocialProfiles_CuratedEntriesAreWellFormed(t *testing.T) {
-	// Every curated profile must be addressable, have a blurb and a
-	// source URL — these are the inputs the AI prompts depend on. The
-	// loop catches typos and missing fields when sources are added.
-	for src, p := range news.SocialProfiles {
+func TestProfiles_CuratedEntriesAreWellFormed(t *testing.T) {
+	for src, p := range social.Profiles {
 		src, p := src, p
 		t.Run(string(src), func(t *testing.T) {
 			assert.NotEmpty(t, p.DisplayName, "DisplayName is required")

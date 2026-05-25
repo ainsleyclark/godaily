@@ -26,8 +26,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 )
 
 // RotateOptions controls a single Rotate invocation.
@@ -42,12 +42,12 @@ type RotateOptions struct {
 	DryRun bool
 
 	// Platforms optionally restricts which configured posters run.
-	Platforms []social.Platform
+	Platforms []socialgw.Platform
 
 	// ForceKind, when non-empty, bypasses the day-aware routing and runs
 	// the named candidate's Eligible check directly. Used by the CLI to
 	// test a specific kind out-of-band.
-	ForceKind news.SocialPostKind
+	ForceKind social.PostKind
 }
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the
@@ -101,7 +101,7 @@ func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult,
 			dryRun:    opts.DryRun,
 			kind:      cand.Kind(),
 			subject:   cctx.Subject,
-			generate: func(ctx context.Context, platform social.Platform) (string, error) {
+			generate: func(ctx context.Context, platform socialgw.Platform) (string, error) {
 				return cand.Generate(ctx, s.prompter, platform, cctx)
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
@@ -128,14 +128,14 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 	case time.Tuesday:
 		return orderedByKinds(
 			s.candidates,
-			news.SocialPostKindNewSource,
-			news.SocialPostKindSpotlight,
-			news.SocialPostKindCTA,
+			social.PostKindNewSource,
+			social.PostKindSpotlight,
+			social.PostKindCTA,
 		), nil
 	case time.Wednesday:
-		return orderedByKinds(s.candidates, news.SocialPostKindCommunity), nil
+		return orderedByKinds(s.candidates, social.PostKindCommunity), nil
 	case time.Friday:
-		return orderedByKinds(s.candidates, news.SocialPostKindRecap), nil
+		return orderedByKinds(s.candidates, social.PostKindRecap), nil
 	default:
 		return nil, nil
 	}
@@ -144,7 +144,7 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 // orderedByKinds returns the subset of candidates matching the given
 // kinds, in the requested order. Missing candidates are silently dropped
 // — useful when a deployment hasn't wired every kind.
-func orderedByKinds(all []Candidate, kinds ...news.SocialPostKind) []Candidate {
+func orderedByKinds(all []Candidate, kinds ...social.PostKind) []Candidate {
 	out := make([]Candidate, 0, len(kinds))
 	for _, k := range kinds {
 		if c := candidateByKind(all, k); c != nil {
@@ -157,7 +157,7 @@ func orderedByKinds(all []Candidate, kinds ...news.SocialPostKind) []Candidate {
 // subjectIdempotency returns a skipIfPosted check keyed off the
 // candidate's Subject. An empty subject disables the check (caller is
 // trusting the candidate's own eligibility logic).
-func subjectIdempotency(posts news.SocialPostRepository, subject string) func(ctx context.Context, platform string) (bool, error) {
+func subjectIdempotency(posts social.PostRepository, subject string) func(ctx context.Context, platform string) (bool, error) {
 	if subject == "" {
 		return nil
 	}

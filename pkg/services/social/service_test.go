@@ -31,11 +31,12 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -53,7 +54,7 @@ type fixture struct {
 	prompter  *mockai.MockPrompter
 	issues    *mocknews.MockIssueRepository
 	items     *mocknews.MockItemRepository
-	posts     *mocknews.MockSocialPostRepository
+	posts     *mocksocial.MockPostRepository
 	slack     *mockslack.MockSender
 	posters   []socialgw.Poster
 	reframers map[socialgw.Platform]reframer
@@ -69,7 +70,7 @@ func newFixture(t *testing.T) *fixture {
 		prompter: mockai.NewMockPrompter(ctrl),
 		issues:   mocknews.NewMockIssueRepository(ctrl),
 		items:    mocknews.NewMockItemRepository(ctrl),
-		posts:    mocknews.NewMockSocialPostRepository(ctrl),
+		posts:    mocksocial.NewMockPostRepository(ctrl),
 		slack:    mockslack.NewMockSender(ctrl),
 	}
 }
@@ -226,10 +227,10 @@ func TestService_Post_HappyPath(t *testing.T) {
 		HasPosted(gomock.Any(), int64(42), "bluesky").Return(false, nil)
 	f.posts.EXPECT().
 		Create(gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ context.Context, p news.SocialPost) (news.SocialPost, error) {
+		DoAndReturn(func(_ context.Context, p social.Post) (social.Post, error) {
 			require.NotNil(t, p.IssueID)
 			assert.Equal(t, int64(42), *p.IssueID)
-			assert.Equal(t, news.SocialPostKindFeatured, p.Kind)
+			assert.Equal(t, social.PostKindFeatured, p.Kind)
 			assert.Equal(t, "bluesky", p.Platform)
 			assert.Contains(t, p.Text, "Go 1.30")
 			assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", p.PostURL)
@@ -352,7 +353,7 @@ func TestService_Post_PlatformsFilter(t *testing.T) {
 	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(featureJSON(), nil)
 	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), "mastodon").Return(false, nil)
-	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(news.SocialPost{}, nil)
+	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(social.Post{}, nil)
 
 	// Wet run posts a single platform — one success Slack notification.
 	f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())

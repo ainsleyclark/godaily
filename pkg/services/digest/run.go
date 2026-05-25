@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 )
@@ -55,7 +56,7 @@ type Aggregator struct {
 	prompter          ai.Prompter
 	issues            news.IssueRepository
 	items             news.ItemRepository
-	subscribers       news.SubscriberRepository
+	subscribers       subscriber.SubscriberRepository
 	slack             slackNotifier
 }
 
@@ -63,7 +64,7 @@ type Aggregator struct {
 // registered fetchers. Pass a non-nil prompter to enable AI synthesis
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
-func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
+func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers subscriber.SubscriberRepository) (*Aggregator, error) {
 	if news.HasSources() {
 		if err := news.Validate(); err != nil {
 			return nil, err

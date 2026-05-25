@@ -101,7 +101,7 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		got, err := s.List(ctx, news.ListOptions{})
+		got, err := s.List(ctx, store.ListOptions{})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
 		assert.Equal(t, mock.Slug, got[0].Slug)

@@ -22,6 +22,8 @@ package news
 import (
 	"context"
 	"time"
+
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // Issue defines an issue of go daily that contains a collection
@@ -36,14 +38,14 @@ type Issue struct {
 	Items   []Item      `json:"items"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/IssueRepository.go . IssueRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/news/IssueRepository.go . IssueRepository
 
 // IssueRepository defines the methods for interacting with the Issue store.
 type IssueRepository interface {
 	Find(ctx context.Context, id int64) (Issue, error)
 	FindBySlug(ctx context.Context, slug string) (Issue, error)
-	List(ctx context.Context, opts ListOptions) ([]Issue, error)
-	ListByStatus(ctx context.Context, status IssueStatus, opts ListOptions) ([]Issue, error)
+	List(ctx context.Context, opts store.ListOptions) ([]Issue, error)
+	ListByStatus(ctx context.Context, status IssueStatus, opts store.ListOptions) ([]Issue, error)
 	Latest(ctx context.Context, limit int) ([]Issue, error)
 	Create(ctx context.Context, issue Issue) (Issue, error)
 	Delete(ctx context.Context, id int64) (Issue, error)
