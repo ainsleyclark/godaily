@@ -28,7 +28,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
@@ -49,7 +49,7 @@ func TestHandleSubscribe(t *testing.T) {
 			body:   `{"email":"test@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockService) {
-				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(subscriber.Subscriber{}, nil)
+				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(contacts.Subscriber{}, nil)
 			},
 			repoMock: func(r *mocksubscriber.MockSubscriberRepository) {
 				r.EXPECT().CountActive(gomock.Any()).Return(int64(42), nil)
@@ -81,7 +81,7 @@ func TestHandleSubscribe(t *testing.T) {
 			body:   `{"email":"dupe@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockService) {
-				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(subscriber.Subscriber{}, subscribersvc.ErrAlreadySubscribed)
+				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(contacts.Subscriber{}, subscribersvc.ErrAlreadySubscribed)
 			},
 			repoMock:   func(r *mocksubscriber.MockSubscriberRepository) {},
 			wantStatus: http.StatusConflict,
@@ -90,7 +90,7 @@ func TestHandleSubscribe(t *testing.T) {
 			body:   `{"email":"err@example.com"}`,
 			method: http.MethodPost,
 			mock: func(s *mocksubscriber.MockService) {
-				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(subscriber.Subscriber{}, errors.New("db error"))
+				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(contacts.Subscriber{}, errors.New("db error"))
 			},
 			repoMock:   func(r *mocksubscriber.MockSubscriberRepository) {},
 			wantStatus: http.StatusInternalServerError,

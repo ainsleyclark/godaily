@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	gomock "go.uber.org/mock/gomock"
 )
 

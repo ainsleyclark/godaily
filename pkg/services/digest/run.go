@@ -26,8 +26,8 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 )
 

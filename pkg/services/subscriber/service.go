@@ -30,8 +30,8 @@ import (
 	"log/slog"
 	texttemplate "text/template"
 
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -53,7 +53,7 @@ type confirmData struct {
 	CanonicalURL   string
 }
 
-var _ subscriber.Service = (*Service)(nil)
+var _ subscriber.SubscriberService = (*Service)(nil)
 
 // Service owns the full subscriber lifecycle.
 type Service struct {

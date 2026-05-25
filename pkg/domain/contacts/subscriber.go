@@ -17,9 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package subscriber defines the types and repository interface for GoDaily
-// newsletter subscribers and their lifecycle.
-package subscriber
+package contacts
 
 import (
 	"context"
@@ -64,9 +62,9 @@ type SubscriberRepository interface {
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Service.go . Service
 
-// Service defines the subscription lifecycle methods used by HTTP handlers
+// SubscriberService defines the subscription lifecycle methods used by HTTP handlers
 // and the email webhook pipeline.
-type Service interface {
+type SubscriberService interface {
 	Subscribe(ctx context.Context, email string) (Subscriber, error)
 	Confirm(ctx context.Context, token string) error
 	Unsubscribe(ctx context.Context, token string) error

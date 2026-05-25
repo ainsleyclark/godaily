@@ -28,10 +28,10 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -63,7 +63,7 @@ type App struct {
 	Runner         digest.Runner
 	Social         *socialsvc.Service
 	Cache          cache.Store
-	Subscribers    subscriber.Service
+	Subscribers    contacts.SubscriberService
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
@@ -74,7 +74,7 @@ type App struct {
 type Repository struct {
 	Issues        news.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   subscriber.SubscriberRepository
+	Subscribers   contacts.SubscriberRepository
 	SocialPosts   social.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
