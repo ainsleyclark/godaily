@@ -10,24 +10,41 @@ jobs:
       startsWith(github.event.deployment.environment, 'Preview')
     runs-on: ubuntu-latest
     steps:
+      - name: Check required secrets
+        id: secrets
+        env:
+          TESTMAIL_API_KEY: ${{ secrets.TESTMAIL_API_KEY }}
+          TESTMAIL_NAMESPACE: ${{ secrets.TESTMAIL_NAMESPACE }}
+        run: |
+          if [ -z "$TESTMAIL_API_KEY" ] || [ -z "$TESTMAIL_NAMESPACE" ]; then
+            echo "::warning::TESTMAIL_API_KEY and TESTMAIL_NAMESPACE secrets are not configured — skipping preview e2e tests. See docs/preview-e2e.md for setup instructions."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.secrets.outputs.skip != 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.skip != 'true'
         with:
           node-version: '20'
 
       - name: Install pnpm
+        if: steps.secrets.outputs.skip != 'true'
         run: npm install -g pnpm
 
       - name: Install e2e dependencies
+        if: steps.secrets.outputs.skip != 'true'
         run: pnpm install
         working-directory: e2e
 
       - name: Install Playwright browsers
+        if: steps.secrets.outputs.skip != 'true'
         run: pnpm exec playwright install --with-deps chromium
         working-directory: e2e
 
       - name: Run preview e2e tests
+        if: steps.secrets.outputs.skip != 'true'
         env:
           BASE_URL: ${{ github.event.deployment_status.environment_url }}
           TESTMAIL_API_KEY: ${{ secrets.TESTMAIL_API_KEY }}
