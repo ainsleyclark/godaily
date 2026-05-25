@@ -44,12 +44,12 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
 	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )
 
 var webhookSecret = "whsec_" + base64.StdEncoding.EncodeToString([]byte("godaily-handler-test-secret-key!"))
 
-// noopItemFinder satisfies emailevent.ItemFinder, resolving no items. The
+// noopItemFinder satisfies engagement.ItemFinder, resolving no items. The
 // webhook fixtures exercised here carry no click events, so it is never hit.
 type noopItemFinder struct{}
 
@@ -81,7 +81,7 @@ func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmai
 	subs := mocksubscriber.NewMockSubscriber(ctrl)
 	return &godaily.App{
 		Config:      &env.Config{ResendWebhookSecret: secret},
-		EmailEvents: emailevent.New(events, subs, noopItemFinder{}, ""),
+		EmailEvents: svcengagement.NewEvents(events, subs, noopItemFinder{}, ""),
 	}, events, subs
 }
 

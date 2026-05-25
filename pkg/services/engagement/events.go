@@ -17,10 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package emailevent applies email lifecycle events: it persists every event
-// and updates subscriber health on bounces and complaints. It is
-// provider-agnostic — Resend specifics live in pkg/gateway/email.
-package emailevent
+package engagement
 
 import (
 	"context"
@@ -29,7 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	domengagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 // SubscriberHealth applies the list-health side effects of email events.
@@ -46,19 +43,19 @@ type ItemFinder interface {
 	FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error)
 }
 
-// Service stores email events and applies their subscriber-health effects.
-type Service struct {
-	events      engagement.EmailEventRepository
+// EventService stores email events and applies their subscriber-health effects.
+type EventService struct {
+	events      domengagement.EmailEventRepository
 	subscribers SubscriberHealth
 	items       ItemFinder
 	adminEmail  string
 }
 
-// New returns a Service wired to the event store, subscriber health and item
-// lookup. adminEmail is the operator address (EMAIL_SEND_ADDRESS); events for
-// it and any @godaily.dev address are silently ignored.
-func New(events engagement.EmailEventRepository, subscribers SubscriberHealth, items ItemFinder, adminEmail string) *Service {
-	return &Service{
+// NewEvents returns an EventService wired to the event store, subscriber health
+// and item lookup. adminEmail is the operator address (EMAIL_SEND_ADDRESS);
+// events for it and any @godaily.dev address are silently ignored.
+func NewEvents(events domengagement.EmailEventRepository, subscribers SubscriberHealth, items ItemFinder, adminEmail string) *EventService {
+	return &EventService{
 		events:      events,
 		subscribers: subscribers,
 		items:       items,
@@ -68,7 +65,7 @@ func New(events engagement.EmailEventRepository, subscribers SubscriberHealth, i
 
 // isInternalEmail reports whether addr belongs to the operator or the
 // @godaily.dev domain and should be excluded from engagement tracking.
-func (s *Service) isInternalEmail(addr string) bool {
+func (s *EventService) isInternalEmail(addr string) bool {
 	lower := strings.ToLower(strings.TrimSpace(addr))
 	return (s.adminEmail != "" && lower == strings.ToLower(strings.TrimSpace(s.adminEmail))) ||
 		strings.HasSuffix(lower, "@godaily.dev")
@@ -82,14 +79,14 @@ func (s *Service) isInternalEmail(addr string) bool {
 // recipient's address is bad. Recipient-specific permanent failures produce
 // email.bounced instead. Calling MarkBounced on failed events would silently
 // deactivate valid subscribers during send-side outages.
-var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, string) error{
-	engagement.EmailEventTypeBounced: func(ctx context.Context, s *Service, addr string) error {
+var sideEffects = map[domengagement.EmailEventType]func(context.Context, *EventService, string) error{
+	domengagement.EmailEventTypeBounced: func(ctx context.Context, s *EventService, addr string) error {
 		return s.subscribers.MarkBounced(ctx, addr)
 	},
-	engagement.EmailEventTypeComplained: func(ctx context.Context, s *Service, addr string) error {
+	domengagement.EmailEventTypeComplained: func(ctx context.Context, s *EventService, addr string) error {
 		return s.subscribers.MarkComplained(ctx, addr)
 	},
-	engagement.EmailEventTypeSuppressed: func(ctx context.Context, s *Service, addr string) error {
+	domengagement.EmailEventTypeSuppressed: func(ctx context.Context, s *EventService, addr string) error {
 		return s.subscribers.MarkSuppressed(ctx, addr)
 	},
 }
@@ -99,7 +96,7 @@ var sideEffects = map[engagement.EmailEventType]func(context.Context, *Service, 
 // duplicate webhook deliveries and skipped, making Process idempotent.
 // Events addressed to the admin or any @godaily.dev address are silently
 // dropped so internal traffic does not skew engagement stats.
-func (s *Service) Process(ctx context.Context, e engagement.EmailEvent) error {
+func (s *EventService) Process(ctx context.Context, e domengagement.EmailEvent) error {
 	if s.isInternalEmail(e.Email) {
 		return nil
 	}
@@ -112,7 +109,7 @@ func (s *Service) Process(ctx context.Context, e engagement.EmailEvent) error {
 		return nil
 	}
 
-	if e.Type == engagement.EmailEventTypeClicked && e.IssueID != nil && e.URL != "" {
+	if e.Type == domengagement.EmailEventTypeClicked && e.IssueID != nil && e.URL != "" {
 		if id, ok, err := s.items.FindByURLInIssue(ctx, *e.IssueID, e.URL); err != nil {
 			slog.WarnContext(ctx, "Item lookup for click event failed", "url", e.URL, "err", err)
 		} else if ok {

@@ -32,7 +32,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	domengagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
@@ -49,23 +49,23 @@ const (
 // reusable for formatting, comparison, or analysis.
 type Snapshot struct {
 	From, To  time.Time
-	Summary   engagement.SummaryStats
-	Subs      engagement.SubscriberData
-	Items     []engagement.ItemMetrics
-	Tags      []engagement.TagMetrics
-	Sources   []engagement.SourceMetrics
-	BestIssue *engagement.IssueEngagement
+	Summary   domengagement.SummaryStats
+	Subs      domengagement.SubscriberData
+	Items     []domengagement.ItemMetrics
+	Tags      []domengagement.TagMetrics
+	Sources   []domengagement.SourceMetrics
+	BestIssue *domengagement.IssueEngagement
 }
 
 // Service composes engagement queries into reports.
 type Service struct {
-	metrics engagement.MetricsRepository
+	metrics domengagement.MetricsRepository
 	slack   slack.Sender
 	now     func() time.Time
 }
 
 // New creates a Service backed by the given repository and Slack sender.
-func New(metrics engagement.MetricsRepository, slack slack.Sender) *Service {
+func New(metrics domengagement.MetricsRepository, slack slack.Sender) *Service {
 	return &Service{
 		metrics: metrics,
 		slack:   slack,
@@ -78,7 +78,7 @@ func New(metrics engagement.MetricsRepository, slack slack.Sender) *Service {
 // limits; callers that need different limits should query the repository
 // directly.
 func (s *Service) Gather(ctx context.Context, from, to time.Time) (Snapshot, error) {
-	filter := engagement.MetricsFilter{From: &from, To: &to}
+	filter := domengagement.MetricsFilter{From: &from, To: &to}
 
 	summary, err := s.metrics.Summary(ctx, filter)
 	if err != nil {
@@ -117,7 +117,7 @@ func (s *Service) Gather(ctx context.Context, from, to time.Time) (Snapshot, err
 	if err != nil {
 		return Snapshot{}, errors.Wrap(err, "issue list")
 	}
-	var best *engagement.IssueEngagement
+	var best *domengagement.IssueEngagement
 	if len(bestList) > 0 {
 		best = &bestList[0]
 	}
@@ -233,9 +233,9 @@ func formatRoundup(curr, prev Snapshot) string {
 }
 
 // lastSubscriberPoint returns the most recent point in the series, if any.
-func lastSubscriberPoint(d engagement.SubscriberData) (engagement.SubscriberPoint, bool) {
+func lastSubscriberPoint(d domengagement.SubscriberData) (domengagement.SubscriberPoint, bool) {
 	if len(d.Points) == 0 {
-		return engagement.SubscriberPoint{}, false
+		return domengagement.SubscriberPoint{}, false
 	}
 	return d.Points[len(d.Points)-1], true
 }
