@@ -110,3 +110,41 @@ error from `a.Runner.Collect` returning zero items is the only signal.
 A more robust long-term design would be to pass sources explicitly through
 `Bootstrap` or `App`, making the dependency visible in the type system rather
 than via side-effectful imports.
+
+## Practical recommendations
+
+Vercel support (Thaer Bashir) confirmed the failure mode: each `api/*.go`
+file is compiled as its own Lambda that statically links the full Go
+dependency graph, and the CLI packages and uploads those binaries in
+parallel while also uploading `out/` — peaking past the 8 GB ceiling on
+the standard build machine. They suggested three remedies, ordered here
+by effort vs. durability:
+
+1. **Enable Enhanced Build Machines (immediate unblock).** Project
+   Settings → Builds → enable the larger build machine. Available on
+   our Pro Plus plan without a plan change. Use this first to confirm
+   the diagnosis and clear any in-flight failing deploy. If a build
+   still fails on the larger runner, capture the deployment URL and
+   reply on the support thread.
+2. **Consolidate `api/*.go` behind a single chi router (durable fix).**
+   We already depend on `go-chi`. Collapse the per-file handlers into
+   one entrypoint (e.g. `api/index.go`) that mounts every route on a
+   single `chi.Router`, with `vercel.json` rewriting `/api/*` to it.
+   This collapses ~15 statically-linked binaries into one, dramatically
+   cutting both the parallel packaging work and the total artifact
+   weight. Keep `api/collect.go` separate so lingua-go stays out of the
+   shared binary (see "lingua-go / collect binary size" above).
+3. **Trim heavy unused dependencies (parallel cleanup).** Audit
+   `go.mod` for libraries that are not on a production Lambda path —
+   Vercel flagged the `charmbracelet/*` packages as likely dev-only.
+   Move dev tooling behind build tags or into `tools/` with a separate
+   module, and verify with `go mod why <pkg>` before removing. Track
+   the result with the binary-size check in the "Adding new heavy
+   dependencies" section.
+
+### Recommended order
+
+Enable Enhanced Build Machines now to unblock deploys, then schedule
+the chi consolidation as the durable fix, and run the dependency audit
+alongside it. Once consolidated, re-measure the totals in the binary-size
+table above and update the "safe ceiling" estimate.
