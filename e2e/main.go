@@ -39,10 +39,9 @@ import (
 	"syscall"
 	"time"
 
-	apihandlers "github.com/ainsleyclark/godaily/api"
-	webhookhandler "github.com/ainsleyclark/godaily/api/webhooks"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
+	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -255,14 +254,12 @@ func main() {
 		case "/api/e2e/sign":
 			handleSign(w, r)
 
-		// ── Routes that are Vercel functions (not in mux.go) ─────────────────
+		// ── Legacy e2e path: Playwright tests still POST to /api/build ──────
 		case "/api/build":
-			apihandlers.HandleBuild(w, withApp(r))
+			digesthandlers.HandleBuild(w, withApp(r))
 
 		default:
 			switch {
-			case strings.HasPrefix(r.URL.Path, "/api/webhooks/"):
-				webhookhandler.Handler(w, withApp(r))
 			case strings.HasPrefix(r.URL.Path, "/api/"):
 				apiH.ServeHTTP(w, r)
 			default:

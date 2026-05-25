@@ -21,58 +21,26 @@ package api
 
 import (
 	"context"
-	"log/slog"
 	"net/http"
-	"os"
-	"sync"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 )
 
 type appContextKey struct{}
 
-var (
-	app   *godaily.App
-	appMu sync.RWMutex
-)
-
-// WithApp stores a into ctx so that GetApp returns it without touching the global.
+// WithApp stores a into ctx so that GetApp returns it.
 // Use this in tests to inject a mock app per request.
 func WithApp(ctx context.Context, a *godaily.App) context.Context {
 	return context.WithValue(ctx, appContextKey{}, a)
 }
 
-// SetApp sets the singleton App used in production.
-func SetApp(a *godaily.App) {
-	appMu.Lock()
-	defer appMu.Unlock()
-	app = a
-}
-
-// GetApp returns the App stored in ctx (injected via WithApp), falling back to
-// the global singleton and bootstrapping it on first call if neither is set.
+// GetApp returns the App stored in ctx. It panics if no App has been injected.
 func GetApp(ctx context.Context) *godaily.App {
-	if a, ok := ctx.Value(appContextKey{}).(*godaily.App); ok && a != nil {
-		return a
+	a, ok := ctx.Value(appContextKey{}).(*godaily.App)
+	if !ok || a == nil {
+		panic("api: no App in request context — handler must be invoked via mux.Handler")
 	}
-	appMu.RLock()
-	a := app
-	appMu.RUnlock()
-	if a != nil {
-		return a
-	}
-	appMu.Lock()
-	defer appMu.Unlock()
-	if app != nil {
-		return app
-	}
-	var err error
-	app, _, err = godaily.Bootstrap(ctx)
-	if err != nil {
-		slog.ErrorContext(ctx, "bootstrapping app", "error", err)
-		os.Exit(0)
-	}
-	return app
+	return a
 }
 
 // AppHandler is an HTTP handler that receives the request context and the

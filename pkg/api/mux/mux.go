@@ -25,12 +25,16 @@ package mux
 import (
 	"net/http"
 
-	apihandlers "github.com/ainsleyclark/godaily/api"
-	apimetrics "github.com/ainsleyclark/godaily/api/metrics"
-	metricsissueslug "github.com/ainsleyclark/godaily/api/metrics/issues"
-	apisocial "github.com/ainsleyclark/godaily/api/social"
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
+	handlers "github.com/ainsleyclark/godaily/pkg/api/handlers"
+	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
+	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
+	itemhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/items"
+	metricshandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/metrics"
+	metricsissues "github.com/ainsleyclark/godaily/pkg/api/handlers/metrics/issues"
+	socialhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/social"
+	webhookhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/webhooks"
 )
 
 // Handler returns an http.Handler for all API routes with app injected into
@@ -38,26 +42,32 @@ import (
 // or strip the /api prefix before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /subscribe", apihandlers.HandleSubscribe)
-	mux.HandleFunc("GET /confirm", apihandlers.HandleConfirm)
+	mux.HandleFunc("GET /healthz", handlers.HandleHealthz)
+	mux.HandleFunc("POST /digest/subscribe", digesthandlers.HandleSubscribe)
+	mux.HandleFunc("GET /digest/confirm", digesthandlers.HandleConfirm)
 	// Accept both GET (link click) and POST (RFC 8058 one-click).
-	mux.HandleFunc("/unsubscribe", apihandlers.HandleUnsubscribe)
-	mux.HandleFunc("GET /collect", apihandlers.HandleCollect)
-	mux.HandleFunc("GET /send", apihandlers.HandleSend)
-	mux.HandleFunc("GET /issues", apihandlers.HandleIssues)
-	mux.HandleFunc("GET /subscribers", apihandlers.HandleSubscribers)
-	mux.HandleFunc("GET /social/featured", apisocial.HandleFeatured)
-	mux.HandleFunc("GET /social/rotation", apisocial.HandleRotation)
-	mux.HandleFunc("GET /social/metrics", apisocial.Handler)
-	mux.HandleFunc("GET /healthz", apihandlers.HandleHealthz)
-	mux.HandleFunc("GET /metrics/summary", apimetrics.HandleSummary)
-	mux.HandleFunc("GET /metrics/issues", apimetrics.HandleIssues)
-	mux.HandleFunc("GET /metrics/issues/slug", metricsissueslug.Handler)
-	mux.HandleFunc("GET /metrics/items", apimetrics.HandleItems)
-	mux.HandleFunc("GET /metrics/tags", apimetrics.HandleTags)
-	mux.HandleFunc("GET /metrics/sources", apimetrics.HandleSources)
-	mux.HandleFunc("GET /metrics/trend", apimetrics.HandleTrend)
-	mux.HandleFunc("GET /metrics/subscribers", apimetrics.HandleSubscribers)
+	mux.HandleFunc("/digest/unsubscribe", digesthandlers.HandleUnsubscribe)
+	mux.HandleFunc("GET /digest/collect", digesthandlers.HandleCollect)
+	mux.HandleFunc("GET /digest/build", digesthandlers.HandleBuild)
+	mux.HandleFunc("GET /digest/send", digesthandlers.HandleSend)
+	mux.HandleFunc("GET /digest/preview", digesthandlers.HandlePreview)
+	mux.HandleFunc("GET /digest/issues", digesthandlers.HandleIssues)
+	mux.HandleFunc("GET /digest/subscribers", digesthandlers.HandleSubscribers)
+	mux.HandleFunc("GET /issues/{slug}", issuehandlers.HandleBySlug)
+	mux.HandleFunc("GET /items/{id}", itemhandlers.HandleByID)
+	mux.HandleFunc("GET /social/featured", socialhandlers.HandleFeatured)
+	mux.HandleFunc("GET /social/rotation", socialhandlers.HandleRotation)
+	mux.HandleFunc("GET /social/metrics", socialhandlers.HandleMetrics)
+	mux.HandleFunc("GET /metrics/summary", metricshandlers.HandleSummary)
+	mux.HandleFunc("GET /metrics/issues", metricshandlers.HandleIssues)
+	mux.HandleFunc("GET /metrics/issues/{slug}", metricsissues.HandleBySlug)
+	mux.HandleFunc("GET /metrics/items", metricshandlers.HandleItems)
+	mux.HandleFunc("GET /metrics/tags", metricshandlers.HandleTags)
+	mux.HandleFunc("GET /metrics/sources", metricshandlers.HandleSources)
+	mux.HandleFunc("GET /metrics/trend", metricshandlers.HandleTrend)
+	mux.HandleFunc("GET /metrics/subscribers", metricshandlers.HandleSubscribers)
+	mux.HandleFunc("GET /metrics/roundup", metricshandlers.HandleRoundup)
+	mux.HandleFunc("POST /webhooks/resend", webhookhandlers.HandleResend)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mux.ServeHTTP(w, r.WithContext(pkgapi.WithApp(r.Context(), app)))
 	})
