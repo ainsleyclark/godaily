@@ -62,11 +62,11 @@ agent's head.
 A weekly run can produce one or more **actions**. They are not
 interchangeable — each gets the lightest gate that is still safe.
 
-| Tier | Action | Gate | Mechanism |
-|------|--------|------|-----------|
-| 1 | Code or prompt change | **Human reviews & merges** a draft PR | `claude/*` branch → draft PR |
-| 2 | Extra social post | **Autonomous, within code-enforced limits** | capped, non-colliding `social_posts` slots — *deferred to Phase 6* |
-| 3 | Metrics report | None — information only | Slack snapshot |
+| Tier | Action                | Gate                                        | Mechanism                                                          |
+|------|-----------------------|---------------------------------------------|--------------------------------------------------------------------|
+| 1    | Code or prompt change | **Human reviews & merges** a draft PR       | `claude/*` branch → draft PR                                       |
+| 2    | Extra social post     | **Autonomous, within code-enforced limits** | capped, non-colliding `social_posts` slots — *deferred to Phase 6* |
+| 3    | Metrics report        | None — information only                     | Slack snapshot                                                     |
 
 Tier 1 is the deliberate lever — anything that changes how GoDaily
 *works*, including prompt edits. Tier 2 is the fast lever (more reach,
