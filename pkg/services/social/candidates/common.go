@@ -17,28 +17,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package prompts builds the AI prompts that drive the social posting
-// pipeline. One Feature call picks the day's most engaging item; per-platform
-// reframing prompts re-voice that item for each target platform.
-package prompts
+package candidates
 
-import (
-	"errors"
-
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-)
-
-// Featured is the one item picked from the day's news to anchor every
-// social post. Hook is the model's one-line reason this item matters,
-// used to seed the per-platform reframing prompts.
-type Featured struct {
-	Title  string      `json:"title"`
-	URL    string      `json:"url"`
-	Source news.Source `json:"source"`
-	Tag    news.Tag    `json:"tag"`
-	Hook   string      `json:"hook"`
-}
-
-// ErrNoCandidates is returned by Feature when the input contains no
-// items suitable for posting.
-var ErrNoCandidates = errors.New("prompts: no candidate items")
+// platformAnchor is the platform used as the "have I covered this already?"
+// probe. Any consistently-configured platform works; bluesky is always wired
+// up in practice. The actual post still goes to every configured platform via
+// the publish loop.
+const platformAnchor = "bluesky"

@@ -57,9 +57,20 @@ func TestNew(t *testing.T) {
 				assert.Empty(t, agg.adminEmailAddress)
 			},
 		},
-		"Validate Error": {
+		"Empty Registry": {
 			registry: map[news.Source]news.Fetcher{},
 			envAddr:  "to@example.com",
+			want: func(t *testing.T, agg *Aggregator, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				require.NotNil(t, agg)
+			},
+		},
+		"Validate Error": {
+			registry: map[news.Source]news.Fetcher{
+				news.SourceGoBlog: mockFetcher{},
+			},
+			envAddr: "to@example.com",
 			want: func(t *testing.T, agg *Aggregator, err error) {
 				t.Helper()
 				require.Error(t, err)

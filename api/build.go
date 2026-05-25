@@ -34,7 +34,8 @@ import (
 func HandleBuild(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		now := time.Now().UTC()
-		if api.IsWeekend(now) {
+		force := r.URL.Query().Get("force") == "true"
+		if !force && api.IsWeekend(now) {
 			slog.InfoContext(ctx, "Skipping build — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackBuildHeartbeatURL)
 			api.OK(w)

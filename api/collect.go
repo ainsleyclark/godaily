@@ -37,14 +37,16 @@ import (
 // HandleCollect is the Vercel serverless function entry point for GET /api/collect.
 func HandleCollect(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if api.IsWeekend(time.Now().UTC()) {
+		force := r.URL.Query().Get("force") == "true"
+		if !force && api.IsWeekend(time.Now().UTC()) {
 			slog.InfoContext(ctx, "Skipping collect — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
 			api.OK(w)
 			return
 		}
 
-		if _, err := a.Runner.Collect(ctx, digest.CollectOptions{}); err != nil {
+		resp, err := a.Runner.Collect(ctx, digest.CollectOptions{})
+		if err != nil {
 			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())
 			return
@@ -52,6 +54,19 @@ func HandleCollect(w http.ResponseWriter, r *http.Request) {
 
 		hook.Heartbeat(ctx, a.Config.BetterStackCollectHeartbeatURL)
 
-		api.OK(w)
+		type sourceResult struct {
+			Count int     `json:"count"`
+			Error *string `json:"error"`
+		}
+		sources := make(map[string]sourceResult, len(resp.Sources))
+		for _, si := range resp.Sources {
+			sources[string(si.Source)] = sourceResult{Count: len(si.Items)}
+		}
+		for src, srcErr := range resp.Errors {
+			msg := srcErr.Error()
+			sources[string(src)] = sourceResult{Error: &msg}
+		}
+
+		api.JSON(w, http.StatusOK, map[string]any{"ok": true, "sources": sources})
 	})(w, r)
 }

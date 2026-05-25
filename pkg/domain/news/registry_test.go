@@ -130,6 +130,43 @@ func TestValidate(t *testing.T) {
 	}
 }
 
+// TestHasSources covers the HasSources() contract that guards both
+// Materialise() in Bootstrap and Validate() in digest.New(). An empty registry
+// (i.e. pkg/source was not imported) must return false so that non-collect
+// Lambda functions can bootstrap without crashing.
+func TestHasSources(t *testing.T) {
+	t.Run("Empty registry returns false", func(t *testing.T) {
+		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+		assert.False(t, HasSources())
+	})
+
+	t.Run("Non-empty registry returns true", func(t *testing.T) {
+		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+		Register(SourceDevTo, func(env.Config) Fetcher { return stubFetcher{} })
+		assert.True(t, HasSources())
+	})
+}
+
+// TestHasSources_ValidateInvariant verifies the invariant that guards against
+// the production crash where /api/social/featured and /api/social/rotation
+// called Bootstrap() without importing pkg/source, causing news.Validate() to
+// fail on SourceDevTo (the first entry in Sources) and os.Exit the process.
+//
+// The contract is: HasSources()==false iff the registry is empty, and callers
+// (digest.New, Bootstrap) must skip Validate/Materialise in that case.
+func TestHasSources_ValidateInvariant(t *testing.T) {
+	t.Cleanup(SwapRegistry(map[Source]Fetcher{}))
+
+	// No sources imported — simulates every Lambda except /api/collect.
+	require.False(t, HasSources(), "empty registry must report HasSources=false")
+
+	// Validate still returns an error for empty registry (its own contract
+	// is unchanged); it is the CALLER's responsibility to check HasSources first.
+	err := Validate()
+	require.Error(t, err, "Validate must still error on empty registry so callers cannot forget the HasSources guard")
+	assert.ErrorContains(t, err, string(SourceDevTo))
+}
+
 func TestMaterialise(t *testing.T) {
 	t.Run("Builds Every Source", func(t *testing.T) {
 		t.Cleanup(SwapRegistry(map[Source]Fetcher{}))

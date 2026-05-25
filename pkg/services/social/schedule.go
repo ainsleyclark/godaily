@@ -24,9 +24,11 @@ import (
 	"time"
 )
 
-// SlotsPerHour is how many 10-minute slots /api/social is invoked per day.
-// vercel.json declares the matching cron: `0,10,20,30,40,50 11 * * 1-5`.
-const SlotsPerHour = 6
+// CronSlotsPerHour is the number of 10-minute cron invocation windows in the
+// 11:00 UTC hour. vercel.json declares the matching cron: `0,10,20,30,40,50 11 * * 1-5`.
+// PickSlot hashes each date to exactly one of these slots so only one
+// invocation per day does real work regardless of which endpoint fires.
+const CronSlotsPerHour = 6
 
 // PickSlot returns the 10-minute slot (0..SlotsPerHour-1) that should
 // actually post for the given date. The result is stable across retries
@@ -38,7 +40,7 @@ const SlotsPerHour = 6
 func PickSlot(date time.Time) int {
 	h := fnv.New32a()
 	_, _ = h.Write([]byte(date.UTC().Format("2006-01-02")))
-	return int(h.Sum32() % SlotsPerHour)
+	return int(h.Sum32() % CronSlotsPerHour)
 }
 
 // ShouldRun reports whether the current minute matches the slot picked for

@@ -17,26 +17,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
-
-import (
-	"testing"
-
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-)
-
-func TestRegisteredSources(t *testing.T) {
-	t.Parallel()
-
-	for _, s := range news.Sources {
-		t.Run(string(s), func(t *testing.T) {
-			t.Parallel()
-
-			got, err := news.Get(s)
-			require.NoError(t, err)
-			assert.NotNil(t, got)
-		})
-	}
-}
+// Package rotation builds AI prompts for the Tue/Wed/Fri rotation slot —
+// the non-featured social posts. Each post kind (CTA, NewSource, Recap,
+// Spotlight, Community) has its own generator file; they all share the
+// platformProfile rules and run() helper defined in rotation.go.
+package rotation

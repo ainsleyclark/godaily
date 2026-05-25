@@ -38,13 +38,13 @@ import (
 	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
+	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // constReframer returns a reframer that always returns text.
 func constReframer(text string) reframer {
-	return func(_ context.Context, _ ai.Prompter, _ prompts.Featured) (string, error) {
+	return func(_ context.Context, _ ai.Prompter, _ featured.Featured) (string, error) {
 		return text, nil
 	}
 }
@@ -105,7 +105,7 @@ func newMockPoster(ctrl *gomock.Controller, p socialgw.Platform) *mocksocial.Moc
 
 const sampleFeatureURL = "https://go.dev/blog/go1.30"
 
-// featureJSON is a canned model response that prompts.Feature accepts.
+// featureJSON is a canned model response that featured.Feature accepts.
 func featureJSON() []byte {
 	return []byte(`{"title":"Go 1.30 released","url":"` + sampleFeatureURL + `","source":"go_release","tag":"release","hook":"Go 1.30 ships generic type inference improvements."}`)
 }

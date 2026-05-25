@@ -35,7 +35,7 @@ import (
 
 // Runner is the interface for the daily news aggregation pipeline.
 type Runner interface {
-	Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error)
+	Collect(ctx context.Context, opts CollectOptions) (CollectResponse, error)
 	Build(ctx context.Context, date time.Time) error
 	SendPreview(ctx context.Context, date time.Time) error
 	SendDigest(ctx context.Context, date time.Time, force bool) error
@@ -65,8 +65,10 @@ type Aggregator struct {
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
 func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers domainsubscriber.SubscriberRepository) (*Aggregator, error) {
-	if err := news.Validate(); err != nil {
-		return nil, err
+	if news.HasSources() {
+		if err := news.Validate(); err != nil {
+			return nil, err
+		}
 	}
 	return &Aggregator{
 		email:             emailSender,

@@ -17,26 +17,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
-
-import (
-	"testing"
-
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-)
-
-func TestRegisteredSources(t *testing.T) {
-	t.Parallel()
-
-	for _, s := range news.Sources {
-		t.Run(string(s), func(t *testing.T) {
-			t.Parallel()
-
-			got, err := news.Get(s)
-			require.NoError(t, err)
-			assert.NotNil(t, got)
-		})
-	}
-}
+// Package featured builds the AI prompts for the daily featured social post.
+// Feature picks the day's most engaging item from the digest; Bluesky,
+// LinkedIn, and Mastodon each reframe that item for their platform's voice
+// and format constraints.
+package featured

@@ -39,7 +39,7 @@ func TestAggregator_Collect(t *testing.T) {
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
 		opts     CollectOptions
-		want     func(t *testing.T, items []news.SourceItems, err error)
+		want     func(t *testing.T, resp CollectResponse, err error)
 	}{
 		"DryRun Returns Items Without Persisting": {
 			registry: map[news.Source]news.Fetcher{
@@ -48,21 +48,21 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 1)
-				assert.Equal(t, news.SourceDevTo, items[0].Source)
-				assert.Len(t, items[0].Items, 1)
+				require.Len(t, resp.Sources, 1)
+				assert.Equal(t, news.SourceDevTo, resp.Sources[0].Source)
+				assert.Len(t, resp.Sources[0].Items, 1)
 			},
 		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
 			opts:     CollectOptions{DryRun: true},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Empty(t, resp.Sources)
 			},
 		},
 		"Filters Zero Published Items": {
@@ -72,10 +72,10 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Empty(t, resp.Sources)
 			},
 		},
 		"Filters Before-Window Items": {
@@ -87,10 +87,10 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Empty(t, resp.Sources)
 			},
 		},
 		"Clamps Future-Published Items Into Window": {
@@ -106,13 +106,13 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 1)
-				require.Len(t, items[0].Items, 1)
-				assert.Equal(t, "after", items[0].Items[0].Title)
-				assert.Equal(t, start.Add(time.Hour), items[0].Items[0].Published)
+				require.Len(t, resp.Sources, 1)
+				require.Len(t, resp.Sources[0].Items, 1)
+				assert.Equal(t, "after", resp.Sources[0].Items[0].Title)
+				assert.Equal(t, start.Add(time.Hour), resp.Sources[0].Items[0].Published)
 			},
 		},
 		"Sorts Items By Score Desc": {
@@ -126,14 +126,14 @@ func TestAggregator_Collect(t *testing.T) {
 				},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 1)
-				require.Len(t, items[0].Items, 3)
-				assert.Equal(t, "high", items[0].Items[0].Title)
-				assert.Equal(t, "mid", items[0].Items[1].Title)
-				assert.Equal(t, "low", items[0].Items[2].Title)
+				require.Len(t, resp.Sources, 1)
+				require.Len(t, resp.Sources[0].Items, 3)
+				assert.Equal(t, "high", resp.Sources[0].Items[0].Title)
+				assert.Equal(t, "mid", resp.Sources[0].Items[1].Title)
+				assert.Equal(t, "low", resp.Sources[0].Items[2].Title)
 			},
 		},
 		"Sorts Sources By Priority": {
@@ -152,13 +152,13 @@ func TestAggregator_Collect(t *testing.T) {
 				DryRun:  true,
 				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
 			},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 3)
-				assert.Equal(t, news.SourceGoBlog, items[0].Source)
-				assert.Equal(t, news.SourceReddit, items[1].Source)
-				assert.Equal(t, news.SourceMedium, items[2].Source)
+				require.Len(t, resp.Sources, 3)
+				assert.Equal(t, news.SourceGoBlog, resp.Sources[0].Source)
+				assert.Equal(t, news.SourceReddit, resp.Sources[1].Source)
+				assert.Equal(t, news.SourceMedium, resp.Sources[2].Source)
 			},
 		},
 		"Continues On Fetch Error": {
@@ -172,11 +172,12 @@ func TestAggregator_Collect(t *testing.T) {
 				DryRun:  true,
 				Sources: []news.Source{news.SourceDevTo, news.SourceLobsters},
 			},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 1)
-				assert.Equal(t, news.SourceLobsters, items[0].Source)
+				require.Len(t, resp.Sources, 1)
+				assert.Equal(t, news.SourceLobsters, resp.Sources[0].Source)
+				assert.ErrorContains(t, resp.Errors[news.SourceDevTo], "boom")
 			},
 		},
 		"Empty Results No Persist": {
@@ -184,10 +185,10 @@ func TestAggregator_Collect(t *testing.T) {
 				news.SourceDevTo: mockFetcher{items: []news.Item{}},
 			},
 			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, items []news.SourceItems, err error) {
+			want: func(t *testing.T, resp CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				assert.Empty(t, items)
+				assert.Empty(t, resp.Sources)
 			},
 		},
 	}
@@ -277,10 +278,11 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, first, 2)
 
-		// Second collect on the same day returns nil (idempotent).
+		// Second collect on the same day returns empty (idempotent).
 		result, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
-		assert.Nil(t, result, "second collect must return nil when items already exist")
+		assert.Empty(t, result.Sources, "second collect must return no sources when items already exist")
+		assert.Empty(t, result.Errors)
 
 		second, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
 		require.NoError(t, err)

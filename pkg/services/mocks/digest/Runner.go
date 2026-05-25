@@ -14,7 +14,6 @@ import (
 	reflect "reflect"
 	time "time"
 
-	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	digest "github.com/ainsleyclark/godaily/pkg/services/digest"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -58,10 +57,10 @@ func (mr *MockRunnerMockRecorder) Build(ctx, date any) *gomock.Call {
 }
 
 // Collect mocks base method.
-func (m *MockRunner) Collect(ctx context.Context, opts digest.CollectOptions) ([]news.SourceItems, error) {
+func (m *MockRunner) Collect(ctx context.Context, opts digest.CollectOptions) (digest.CollectResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Collect", ctx, opts)
-	ret0, _ := ret[0].([]news.SourceItems)
+	ret0, _ := ret[0].(digest.CollectResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

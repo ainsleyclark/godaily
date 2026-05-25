@@ -17,26 +17,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package source
+package featured
 
 import (
-	"testing"
+	"context"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/ainsleyclark/godaily/pkg/ai"
 )
 
-func TestRegisteredSources(t *testing.T) {
-	t.Parallel()
+// MastodonHashtags is the canonical hashtag list appended to every Mastodon
+// status.
+var MastodonHashtags = []string{"#golang", "#go", "#programming"}
 
-	for _, s := range news.Sources {
-		t.Run(string(s), func(t *testing.T) {
-			t.Parallel()
+const mastodonCharLimit = 500
 
-			got, err := news.Get(s)
-			require.NoError(t, err)
-			assert.NotNil(t, got)
-		})
-	}
+const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses hashtags actively for discovery — keep them.
+- Lead with the factual hook (Line 1). One or two short supporting lines for context.
+- Drop the URL on its own line. Mastodon renders it as a clickable link.
+- Strict structure (line breaks matter):
+    Line 1: factual hook
+    Line 2 (optional): one extra detail
+    Line 3: blank
+    Line 4: URL
+    Line 5: hashtags from the list above
+- 280-400 chars is the sweet spot.`
+
+// Mastodon reframes the featured item as a Mastodon status.
+func Mastodon(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
+	return reframe(ctx, p, platformConfig{
+		name:      "Mastodon",
+		charLimit: mastodonCharLimit,
+		hashtags:  MastodonHashtags,
+		guidance:  mastodonGuidance,
+	}, f)
 }

@@ -17,37 +17,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package prompts
+package featured
 
 import (
-	"context"
+	"errors"
 
-	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
-// MastodonHashtags is the canonical hashtag list appended to every Mastodon
-// status.
-var MastodonHashtags = []string{"#golang", "#go", "#programming"}
-
-const mastodonCharLimit = 500
-
-const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses hashtags actively for discovery — keep them.
-- Lead with the factual hook (Line 1). One or two short supporting lines for context.
-- Drop the URL on its own line. Mastodon renders it as a clickable link.
-- Strict structure (line breaks matter):
-    Line 1: factual hook
-    Line 2 (optional): one extra detail
-    Line 3: blank
-    Line 4: URL
-    Line 5: hashtags from the list above
-- 280-400 chars is the sweet spot.`
-
-// Mastodon reframes the featured item as a Mastodon status.
-func Mastodon(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
-	return reframe(ctx, p, platformConfig{
-		name:      "Mastodon",
-		charLimit: mastodonCharLimit,
-		hashtags:  MastodonHashtags,
-		guidance:  mastodonGuidance,
-	}, f)
+// Featured is the one item picked from the day's news to anchor every
+// social post. Hook is the model's one-line reason this item matters,
+// used to seed the per-platform reframing prompts.
+type Featured struct {
+	Title  string      `json:"title"`
+	URL    string      `json:"url"`
+	Source news.Source `json:"source"`
+	Tag    news.Tag    `json:"tag"`
+	Hook   string      `json:"hook"`
 }
+
+// ErrNoCandidates is returned by Feature when the input contains no
+// items suitable for posting.
+var ErrNoCandidates = errors.New("prompts: no candidate items")

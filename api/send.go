@@ -34,7 +34,8 @@ import (
 func HandleSend(w http.ResponseWriter, r *http.Request) {
 	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
 		now := time.Now().UTC()
-		if api.IsWeekend(now) {
+		force := r.URL.Query().Get("force") == "true"
+		if !force && api.IsWeekend(now) {
 			slog.InfoContext(ctx, "Skipping send — weekend")
 			hook.Heartbeat(ctx, a.Config.BetterStackSendHeartbeatURL)
 			api.OK(w)
@@ -43,7 +44,7 @@ func HandleSend(w http.ResponseWriter, r *http.Request) {
 
 		today := now.Truncate(24 * time.Hour)
 
-		if err := a.Runner.SendDigest(ctx, today, false); err != nil {
+		if err := a.Runner.SendDigest(ctx, today, force); err != nil {
 			a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "send digest failed: "+err.Error())
 			return

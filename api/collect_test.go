@@ -32,6 +32,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -44,13 +45,13 @@ func TestHandleCollect(t *testing.T) {
 	}{
 		"OK": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, nil)
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(digest.CollectResponse{}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Collect Error": {
 			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(digest.CollectResponse{}, errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},

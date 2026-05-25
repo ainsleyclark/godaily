@@ -49,7 +49,7 @@ func TestPickSlot(t *testing.T) {
 			d := start.AddDate(0, 0, i)
 			slot := social.PickSlot(d)
 			assert.GreaterOrEqual(t, slot, 0)
-			assert.Less(t, slot, social.SlotsPerHour)
+			assert.Less(t, slot, social.CronSlotsPerHour)
 		}
 	})
 
@@ -91,7 +91,7 @@ func TestShouldRun(t *testing.T) {
 	t.Run("False for other slots", func(t *testing.T) {
 		t.Parallel()
 
-		other := (slot + 1) % social.SlotsPerHour
+		other := (slot + 1) % social.CronSlotsPerHour
 		now := time.Date(2026, time.May, 20, 11, other*10+3, 0, 0, time.UTC)
 		assert.False(t, social.ShouldRun(now, d))
 	})
@@ -100,7 +100,7 @@ func TestShouldRun(t *testing.T) {
 		t.Parallel()
 
 		matches := 0
-		for s := 0; s < social.SlotsPerHour; s++ {
+		for s := 0; s < social.CronSlotsPerHour; s++ {
 			now := time.Date(2026, time.May, 20, 11, s*10, 0, 0, time.UTC)
 			if social.ShouldRun(now, d) {
 				matches++
