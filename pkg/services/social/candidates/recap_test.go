@@ -32,7 +32,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
 	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -72,7 +72,7 @@ func TestRecap_Eligible(t *testing.T) {
 				{ItemID: 3, Title: "C", URL: "https://c", Source: "hn", Clicks: 10},
 			}, nil)
 
-		svc, err := recap.New(metrics)
+		svc, err := digest.NewRecapService(metrics)
 		require.NoError(t, err)
 
 		c := candidates.NewRecap(svc, posts)
@@ -101,7 +101,7 @@ func TestRecap_Eligible(t *testing.T) {
 			Return(true, nil)
 		// metrics.ItemList must NOT be called when cooldown blocks.
 
-		svc, _ := recap.New(metrics)
+		svc, _ := digest.NewRecapService(metrics)
 		c := candidates.NewRecap(svc, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
 		require.NoError(t, err)
@@ -123,7 +123,7 @@ func TestRecap_Eligible(t *testing.T) {
 				{ItemID: 2, Title: "B", URL: "https://b", Clicks: 2},
 			}, nil)
 
-		svc, _ := recap.New(metrics)
+		svc, _ := digest.NewRecapService(metrics)
 		c := candidates.NewRecap(svc, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
 		require.NoError(t, err)

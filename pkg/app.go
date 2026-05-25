@@ -41,7 +41,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
@@ -201,7 +200,7 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts domainsocial.
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
 	if repo != nil && repo.Metrics != nil {
-		if recapSvc, err := recap.New(repo.Metrics); err == nil {
+		if recapSvc, err := digest.NewRecapService(repo.Metrics); err == nil {
 			out = append(out, candidates.NewRecap(recapSvc, posts))
 		}
 	}

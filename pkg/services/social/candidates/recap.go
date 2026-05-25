@@ -28,7 +28,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/services/recap"
+	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -43,15 +43,15 @@ const recapMinItems = 3
 const recapCooldown = 6 * 24 * time.Hour
 
 // Recap posts the top-clicked items of the current ISO week. Delegates
-// all dataset computation to pkg/services/recap so the same machinery
+// all dataset computation to pkg/services/digest so the same machinery
 // can be reused by email outros, web pages, RSS, etc.
 type Recap struct {
-	recap *recap.Service
+	recap *digest.RecapService
 	posts social.PostRepository
 }
 
 // NewRecap constructs the candidate.
-func NewRecap(svc *recap.Service, posts social.PostRepository) *Recap {
+func NewRecap(svc *digest.RecapService, posts social.PostRepository) *Recap {
 	return &Recap{recap: svc, posts: posts}
 }
 
@@ -74,7 +74,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 		return socialsvc.CandidateContext{}, false, nil
 	}
 
-	top, err := c.recap.Top(ctx, now, recap.TopOptions{MinItems: recapMinItems})
+	top, err := c.recap.Top(ctx, now, digest.TopOptions{MinItems: recapMinItems})
 	if err != nil {
 		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "computing recap")
 	}

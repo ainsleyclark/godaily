@@ -17,14 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package recap computes "top items in the last N days" from email click
-// engagement. It is the single source of truth for the weekly recap
-// dataset and is consumed by the social rotation, the email outro, the
-// /this-week web page, and an eventual RSS feed.
-//
-// The package has no dependency on the social stack — it returns a
-// structured Top value and lets callers decide how to render it.
-package recap
+package digest
 
 import (
 	"context"
@@ -78,23 +71,23 @@ type (
 // HasItems reports whether the recap has any ranked items at all.
 func (t Top) HasItems() bool { return len(t.Items) > 0 }
 
-// Service computes recap datasets from the metrics repository.
-type Service struct {
+// RecapService computes recap datasets from the metrics repository.
+type RecapService struct {
 	metrics engagement.MetricsRepository
 }
 
-// New returns a Service backed by the given metrics repository.
-func New(metrics engagement.MetricsRepository) (*Service, error) {
+// NewRecapService returns a RecapService backed by the given metrics repository.
+func NewRecapService(metrics engagement.MetricsRepository) (*RecapService, error) {
 	if metrics == nil {
 		return nil, errors.New("recap: metrics repository is required")
 	}
-	return &Service{metrics: metrics}, nil
+	return &RecapService{metrics: metrics}, nil
 }
 
 // Top returns the most-clicked items in the window ending at now. When
 // the dataset has fewer than opts.MinItems entries, it returns the zero
 // value (and an empty period) — the caller treats that as "skip".
-func (s *Service) Top(ctx context.Context, now time.Time, opts TopOptions) (Top, error) {
+func (s *RecapService) Top(ctx context.Context, now time.Time, opts TopOptions) (Top, error) {
 	limit := opts.N
 	if limit <= 0 {
 		limit = defaultLimit
