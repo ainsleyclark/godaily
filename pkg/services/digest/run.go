@@ -64,8 +64,10 @@ type Aggregator struct {
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
 func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers news.SubscriberRepository) (*Aggregator, error) {
-	if err := news.Validate(); err != nil {
-		return nil, err
+	if news.HasSources() {
+		if err := news.Validate(); err != nil {
+			return nil, err
+		}
 	}
 	return &Aggregator{
 		email:             emailSender,
