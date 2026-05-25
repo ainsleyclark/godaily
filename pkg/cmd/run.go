@@ -70,7 +70,7 @@ func runCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			if !dryRun && len(raw) > 0 {
+			if !dryRun && len(raw.Sources) > 0 {
 				if err = a.Runner.SendDigest(ctx, date, false); err != nil {
 					return err
 				}

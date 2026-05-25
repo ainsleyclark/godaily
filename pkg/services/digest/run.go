@@ -34,7 +34,7 @@ import (
 
 // Runner is the interface for the daily news aggregation pipeline.
 type Runner interface {
-	Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error)
+	Collect(ctx context.Context, opts CollectOptions) (CollectResponse, error)
 	Build(ctx context.Context, date time.Time) error
 	SendPreview(ctx context.Context, date time.Time) error
 	SendDigest(ctx context.Context, date time.Time, force bool) error

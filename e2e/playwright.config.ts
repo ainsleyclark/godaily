@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: '.',
   testMatch: '*.spec.ts',
+  testIgnore: '*.preview.spec.ts',
   workers: 1,
   use: {
     baseURL: 'http://localhost:4000',

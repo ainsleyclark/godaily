@@ -40,10 +40,19 @@ type CollectOptions struct {
 	Sources []news.Source
 }
 
+// CollectResponse is the result of a Collect call. Sources contains the
+// fetched items grouped by source. Errors contains a per-source error for any
+// source that failed to fetch; a source absent from Errors succeeded (even if
+// it returned zero items, which is normal on quiet days).
+type CollectResponse struct {
+	Sources []news.SourceItems
+	Errors  map[news.Source]error
+}
+
 // Collect fetches Go news items from all registered sources within the current
 // collection window, scores and sorts them, and (unless DryRun) persists them
 // as unlinked items in the database (issue_id = nil).
-func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.SourceItems, error) {
+func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (CollectResponse, error) {
 	start, end := collectWindow(time.Now())
 
 	sources := opts.Sources
@@ -54,19 +63,26 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 	if !opts.DryRun && a.items != nil {
 		existing, err := a.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
 		if err != nil {
-			return nil, errors.Wrap(err, "checking existing items")
+			return CollectResponse{}, errors.Wrap(err, "checking existing items")
 		}
 		if len(existing) > 0 {
 			slog.InfoContext(ctx, "Items already collected for window, skipping", "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"), "count", len(existing))
-			return nil, nil
+			return CollectResponse{}, nil
 		}
 	}
 
-	var results []news.SourceItems
+	var (
+		results    []news.SourceItems
+		sourceErrs map[news.Source]error
+	)
 	for _, src := range sources {
 		fetched, err := a.fetchSource(ctx, src)
 		if err != nil {
 			slog.ErrorContext(ctx, "Failed to fetch source", "source", src, "err", err)
+			if sourceErrs == nil {
+				sourceErrs = make(map[news.Source]error)
+			}
+			sourceErrs[src] = err
 			continue
 		}
 		si := news.SourceItems{Source: src}
@@ -101,11 +117,13 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 		return results[i].Source.Priority() > results[j].Source.Priority()
 	})
 
+	resp := CollectResponse{Sources: results, Errors: sourceErrs}
+
 	if opts.DryRun || len(results) == 0 {
 		if !opts.DryRun && a.items != nil {
 			slog.WarnContext(ctx, "No items found for date window", "start", start.Format("2006-01-02"))
 		}
-		return results, nil
+		return resp, nil
 	}
 
 	var position int
@@ -114,14 +132,14 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) ([]news.So
 			position++
 			item.Source = section.Source
 			if _, err := a.items.Create(ctx, nil, position, item); err != nil {
-				return results, errors.Wrap(err, "creating news item")
+				return resp, errors.Wrap(err, "creating news item")
 			}
 		}
 	}
 
 	slog.InfoContext(ctx, "Collected items", "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"), "count", position)
 
-	return results, nil
+	return resp, nil
 }
 
 // collectWindow returns the date range to collect for a given time. The window
