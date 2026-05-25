@@ -37,24 +37,24 @@ import (
 
 func TestHandleBuild(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
+		mock       func(r *mockdigest.MockService)
 		weekend    bool
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
+			mock: func(r *mockdigest.MockService) {
 				r.EXPECT().Build(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Build Error": {
-			mock: func(r *mockdigest.MockRunner) {
+			mock: func(r *mockdigest.MockService) {
 				r.EXPECT().Build(gomock.Any(), gomock.Any()).Return(errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"Weekend": {
-			mock:       func(r *mockdigest.MockRunner) {},
+			mock:       func(r *mockdigest.MockService) {},
 			weekend:    true,
 			wantStatus: http.StatusOK,
 		},
@@ -69,7 +69,7 @@ func TestHandleBuild(t *testing.T) {
 				}
 
 				ctrl := gomock.NewController(t)
-				runner := mockdigest.NewMockRunner(ctrl)
+				runner := mockdigest.NewMockService(ctrl)
 				test.mock(runner)
 
 				a := &godaily.App{Runner: runner, Config: &env.Config{}}

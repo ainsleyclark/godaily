@@ -26,7 +26,7 @@ import (
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/urfave/cli/v3"
 )
 
@@ -62,7 +62,7 @@ func runCmd(a *godaily.App) *cli.Command {
 				date = today.AddDate(0, 0, -2)
 			}
 
-			raw, err := a.Runner.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Runner.Collect(ctx, news.CollectOptions{
 				DryRun:  dryRun,
 				Sources: sources,
 			})

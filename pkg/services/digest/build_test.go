@@ -105,7 +105,7 @@ func TestAggregator_Collect_FutureDatePersistence(t *testing.T) {
 		_, itemRepo := newTestStores(t)
 		agg := Aggregator{items: itemRepo}
 
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), news.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
 		got, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &start, To: &end})
@@ -137,7 +137,7 @@ func TestAggregator_Collect_MultiDayDedup(t *testing.T) {
 
 		_, itemRepo := newTestStores(t)
 		agg := Aggregator{items: itemRepo}
-		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
+		opts := news.CollectOptions{Sources: []news.Source{news.SourceDevTo}}
 
 		// First collect — should store the event.
 		_, err := agg.Collect(t.Context(), opts)
@@ -150,7 +150,7 @@ func TestAggregator_Collect_MultiDayDedup(t *testing.T) {
 		// Second collect (simulating the next day's run with the same event).
 		// The idempotency check won't fire because we're reusing the same window
 		// in this test; the unique constraint is the guard we're exercising.
-		_, err = agg.Collect(t.Context(), CollectOptions{
+		_, err = agg.Collect(t.Context(), news.CollectOptions{
 			Sources: []news.Source{news.SourceDevTo},
 			DryRun:  false,
 		})

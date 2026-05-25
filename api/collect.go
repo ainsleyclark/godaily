@@ -27,8 +27,8 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	// Register all news-source fetchers (lingua-go + scrapers) for this
 	// Lambda only. All other Lambda functions must NOT import this package.
 	_ "github.com/ainsleyclark/godaily/pkg/source"
@@ -45,7 +45,7 @@ func HandleCollect(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		resp, err := a.Runner.Collect(ctx, digest.CollectOptions{})
+		resp, err := a.Runner.Collect(ctx, news.CollectOptions{})
 		if err != nil {
 			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())

@@ -60,7 +60,7 @@ type App struct {
 	Config         *env.Config
 	DB             *sql.DB
 	Repository     *Repository
-	Runner         digest.Runner
+	Runner         news.Service
 	Social         *socialsvc.Service
 	Cache          cache.Store
 	Subscribers    contacts.SubscriberService

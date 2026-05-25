@@ -38,8 +38,8 @@ func TestAggregator_Collect(t *testing.T) {
 
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
-		opts     CollectOptions
-		want     func(t *testing.T, resp CollectResponse, err error)
+		opts     news.CollectOptions
+		want     func(t *testing.T, resp news.CollectResponse, err error)
 	}{
 		"DryRun Returns Items Without Persisting": {
 			registry: map[news.Source]news.Fetcher{
@@ -47,8 +47,8 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "in", Published: inWindow}},
 				},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -58,8 +58,8 @@ func TestAggregator_Collect(t *testing.T) {
 		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
-			opts:     CollectOptions{DryRun: true},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts:     news.CollectOptions{DryRun: true},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -71,8 +71,8 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "zero"}},
 				},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -86,8 +86,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -105,8 +105,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -125,8 +125,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -148,11 +148,11 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "r", Published: inWindow}},
 				},
 			},
-			opts: CollectOptions{
+			opts: news.CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
 			},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 3)
@@ -168,11 +168,11 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "ok", Published: inWindow}},
 				},
 			},
-			opts: CollectOptions{
+			opts: news.CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceDevTo, news.SourceLobsters},
 			},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -184,8 +184,8 @@ func TestAggregator_Collect(t *testing.T) {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{items: []news.Item{}},
 			},
-			opts: CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp CollectResponse, err error) {
+			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp news.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -241,7 +241,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 			items: itemRepo,
 		}
 
-		_, err := agg.Collect(t.Context(), CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), news.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
 		collStart, collEnd := collectWindow(time.Now())
@@ -268,7 +268,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 			items: itemRepo,
 		}
 
-		opts := CollectOptions{Sources: []news.Source{news.SourceDevTo}}
+		opts := news.CollectOptions{Sources: []news.Source{news.SourceDevTo}}
 
 		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
@@ -297,7 +297,7 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 			items: itemRepo,
 		}
 
-		_, err := agg.Collect(t.Context(), CollectOptions{
+		_, err := agg.Collect(t.Context(), news.CollectOptions{
 			Sources: []news.Source{news.SourceDevTo},
 			DryRun:  true,
 		})

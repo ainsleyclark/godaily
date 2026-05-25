@@ -38,32 +38,32 @@ import (
 
 func TestHandlePreview(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
+		mock       func(r *mockdigest.MockService)
 		weekend    bool
 		secret     string
 		authHeader string
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
+			mock: func(r *mockdigest.MockService) {
 				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Send Preview Error": {
-			mock: func(r *mockdigest.MockRunner) {
+			mock: func(r *mockdigest.MockService) {
 				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(errors.New("preview failed"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"Unauthorized": {
-			mock:       func(r *mockdigest.MockRunner) {},
+			mock:       func(r *mockdigest.MockService) {},
 			secret:     "supersecret",
 			authHeader: "Bearer wrongtoken",
 			wantStatus: http.StatusUnauthorized,
 		},
 		"Weekend": {
-			mock:       func(r *mockdigest.MockRunner) {},
+			mock:       func(r *mockdigest.MockService) {},
 			weekend:    true,
 			wantStatus: http.StatusOK,
 		},
@@ -78,7 +78,7 @@ func TestHandlePreview(t *testing.T) {
 				}
 
 				ctrl := gomock.NewController(t)
-				runner := mockdigest.NewMockRunner(ctrl)
+				runner := mockdigest.NewMockService(ctrl)
 				slack := mockslack.NewMockSender(ctrl)
 				slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 				test.mock(runner)

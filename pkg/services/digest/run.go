@@ -23,30 +23,13 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
-
-//go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../mocks/digest/Runner.go github.com/ainsleyclark/godaily/pkg/services/digest Runner
-
-// Runner is the interface for the daily news aggregation pipeline.
-type Runner interface {
-	Collect(ctx context.Context, opts CollectOptions) (CollectResponse, error)
-	Build(ctx context.Context, date time.Time) error
-	SendPreview(ctx context.Context, date time.Time) error
-	SendDigest(ctx context.Context, date time.Time, force bool) error
-	SendSuggestion(ctx context.Context, date time.Time) error
-}
-
-// slackNotifier is a minimal interface satisfied by *slack.Client, kept here
-// to avoid importing the gateway package from the digest package.
-type slackNotifier interface {
-	MustSend(ctx context.Context, message string)
-}
 
 // Aggregator fetches Go news from all registered sources and optionally
 // sends the digest via email.
@@ -57,14 +40,14 @@ type Aggregator struct {
 	issues            news.IssueRepository
 	items             news.ItemRepository
 	subscribers       subscriber.SubscriberRepository
-	slack             slackNotifier
+	slack             slack.Sender
 }
 
 // New creates a new Aggregator, validating that all news sources have
 // registered fetchers. Pass a non-nil prompter to enable AI synthesis
 // and suggestion; nil disables those features gracefully. Pass a non-nil
 // slack to enable Slack notifications on key events; nil disables them.
-func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slackNotifier, issues news.IssueRepository, items news.ItemRepository, subscribers subscriber.SubscriberRepository) (*Aggregator, error) {
+func New(emailSender email.BatchSender, adminEmail string, prompter ai.Prompter, slack slack.Sender, issues news.IssueRepository, items news.ItemRepository, subscribers subscriber.SubscriberRepository) (*Aggregator, error) {
 	if news.HasSources() {
 		if err := news.Validate(); err != nil {
 			return nil, err

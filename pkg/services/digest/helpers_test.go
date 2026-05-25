@@ -71,6 +71,10 @@ type mockSlack struct {
 	msgs []string
 }
 
+func (m *mockSlack) Send(_ context.Context, _ string) error {
+	return nil
+}
+
 func (m *mockSlack) MustSend(_ context.Context, message string) {
 	m.msgs = append(m.msgs, message)
 }

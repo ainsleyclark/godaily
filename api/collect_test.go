@@ -29,34 +29,34 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func TestHandleCollect(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockdigest.MockRunner)
+		mock       func(r *mockdigest.MockService)
 		weekend    bool
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(digest.CollectResponse{}, nil)
+			mock: func(r *mockdigest.MockService) {
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(news.CollectResponse{}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Collect Error": {
-			mock: func(r *mockdigest.MockRunner) {
-				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(digest.CollectResponse{}, errors.New("boom"))
+			mock: func(r *mockdigest.MockService) {
+				r.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(news.CollectResponse{}, errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"Weekend": {
-			mock:       func(r *mockdigest.MockRunner) {},
+			mock:       func(r *mockdigest.MockService) {},
 			weekend:    true,
 			wantStatus: http.StatusOK,
 		},
@@ -71,7 +71,7 @@ func TestHandleCollect(t *testing.T) {
 				}
 
 				ctrl := gomock.NewController(t)
-				runner := mockdigest.NewMockRunner(ctrl)
+				runner := mockdigest.NewMockService(ctrl)
 				slack := mockslack.NewMockSender(ctrl)
 				slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 				test.mock(runner)

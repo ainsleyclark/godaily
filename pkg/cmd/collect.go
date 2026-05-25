@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/urfave/cli/v3"
 )
 
@@ -53,7 +53,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			raw, err := a.Runner.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Runner.Collect(ctx, news.CollectOptions{
 				DryRun:  cmd.Bool("dry-run"),
 				Sources: sources,
 			})
