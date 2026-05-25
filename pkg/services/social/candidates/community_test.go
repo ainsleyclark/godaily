@@ -47,27 +47,30 @@ const (
   location: Berlin
   description: Alpha conference.
   end_date: "2099-01-01"
-  linkedin: alpha-conf
-  bluesky: alpha-conf.example
-  mastodon: ""
+  handles:
+    linkedin: alpha-conf
+    bluesky: alpha-conf.example
+    mastodon: ""
 - slug: bravo-conf
   name: Bravo Conf
   url: https://bravo-conf.example
   location: Tokyo
   description: Bravo conference.
   end_date: "2099-06-01"
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 - slug: past-conf
   name: Past Conf
   url: https://past-conf.example
   location: Nowhere
   description: This conference has already happened.
   end_date: "2000-01-01"
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 `
 
 	meetupsYAML = `
@@ -76,17 +79,19 @@ const (
   url: https://alpha-meetup.example
   location: London
   description: Alpha meetup.
-  linkedin: alpha-meetup-group
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: alpha-meetup-group
+    bluesky: ""
+    mastodon: ""
 - slug: bravo-meetup
   name: Bravo Meetup
   url: https://bravo-meetup.example
   location: Paris
   description: Bravo meetup.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 `
 )
 

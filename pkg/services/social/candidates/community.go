@@ -41,28 +41,34 @@ import (
 // least once a year.
 const promoCycleLen = 3
 
-// communityTemplates is the per-platform pool of message bodies. The
-// {{.Mention}} placeholder resolves to the platform-specific mention
-// (LinkedIn company URL, @-handle on Bluesky/Mastodon) when one is
-// configured; otherwise it falls back to the plain {{.Name}}. Keep the
-// strings short — Bluesky caps at 300 chars and we want headroom for
-// long conference names.
+// communityTemplates is the per-platform pool of message bodies. Every
+// template leads with {{.Mention}} so the tag is the first thing the
+// reader and the platform's auto-tagger both see.
+//
+// {{.Mention}} resolves to:
+//   - Bluesky/Mastodon: "@handle" when configured (auto-tags the
+//     account), or {{.Name}} when not.
+//   - LinkedIn:         the company URL when configured (LinkedIn
+//     renders it as a clickable card and surfaces the share in the
+//     company's mentions feed), or {{.Name}} when not.
+//
+// Keep the strings short — Bluesky caps at 300 chars and we want
+// headroom for long conference names.
 var communityTemplates = map[socialgw.Platform][]string{
 	socialgw.PlatformLinkedIn: {
-		"Mid-week shout-out to the Go community: {{.Mention}}.\n\n{{.Description}}\n\n→ {{.URL}}",
-		"Want to plug into Go beyond your laptop? {{.Mention}} — {{.Description}}\n\n→ {{.URL}}",
-		"Building local Go community: {{.Mention}}.\n{{.Description}}\n\n→ {{.URL}}",
-		"Wednesday community spotlight: {{.Mention}}.\n\n{{.Description}}\n\n→ {{.URL}}",
+		"{{.Mention}} — {{.Description}}\n\n{{.URL}}",
+		"{{.Mention}} ({{.Location}}) — {{.Description}}\n\n{{.URL}}",
+		"{{.Mention}}: {{.Description}}\n\n{{.URL}}",
 	},
 	socialgw.PlatformBluesky: {
-		"Mid-week Go community shout-out: {{.Mention}}. {{.URL}}",
-		"Big up {{.Mention}} — {{.Description}}. {{.URL}}",
-		"Plug into the Go community: {{.Mention}}. {{.URL}}",
+		"{{.Mention}} — {{.Description}} {{.URL}}",
+		"{{.Mention}} ({{.Location}}) — {{.Description}} {{.URL}}",
+		"{{.Mention}}: {{.Description}} {{.URL}}",
 	},
 	socialgw.PlatformMastodon: {
-		"#golang community Wednesday: {{.Mention}} — {{.Description}} {{.URL}}",
-		"Big up the Go community: {{.Mention}}. {{.URL}}",
-		"Mid-week #golang shout-out: {{.Mention}}. {{.URL}}",
+		"{{.Mention}} — {{.Description}} #golang {{.URL}}",
+		"{{.Mention}} ({{.Location}}) — {{.Description}} #golang {{.URL}}",
+		"{{.Mention}}: {{.Description}} #golang {{.URL}}",
 	},
 }
 
@@ -70,15 +76,22 @@ var communityTemplates = map[socialgw.Platform][]string{
 // entries set EndDate ("YYYY-MM-DD") so the candidate can filter out past
 // editions; meetups leave it blank.
 type communityEntry struct {
-	Slug        string `yaml:"slug"`
-	Name        string `yaml:"name"`
-	URL         string `yaml:"url"`
-	Location    string `yaml:"location"`
-	Description string `yaml:"description"`
-	LinkedIn    string `yaml:"linkedin"`
-	Bluesky     string `yaml:"bluesky"`
-	Mastodon    string `yaml:"mastodon"`
-	EndDate     string `yaml:"end_date,omitempty"`
+	Slug        string           `yaml:"slug"`
+	Name        string           `yaml:"name"`
+	URL         string           `yaml:"url"`
+	Location    string           `yaml:"location"`
+	Description string           `yaml:"description"`
+	Handles     communityHandles `yaml:"handles"`
+	EndDate     string           `yaml:"end_date,omitempty"`
+}
+
+// communityHandles groups the social handles per platform. Each field
+// holds the raw identifier (no leading @, no URL prefix); the candidate
+// formats them for the wire when building post text.
+type communityHandles struct {
+	LinkedIn string `yaml:"linkedin"`
+	Bluesky  string `yaml:"bluesky"`
+	Mastodon string `yaml:"mastodon"`
 }
 
 // mentions returns the per-platform string to splice into the post body.
@@ -86,14 +99,14 @@ type communityEntry struct {
 // kicks in.
 func (e communityEntry) mentions() map[socialgw.Platform]string {
 	out := make(map[socialgw.Platform]string)
-	if e.LinkedIn != "" {
-		out[socialgw.PlatformLinkedIn] = "https://www.linkedin.com/company/" + e.LinkedIn
+	if e.Handles.LinkedIn != "" {
+		out[socialgw.PlatformLinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
 	}
-	if e.Bluesky != "" {
-		out[socialgw.PlatformBluesky] = "@" + e.Bluesky
+	if e.Handles.Bluesky != "" {
+		out[socialgw.PlatformBluesky] = "@" + e.Handles.Bluesky
 	}
-	if e.Mastodon != "" {
-		out[socialgw.PlatformMastodon] = "@" + e.Mastodon
+	if e.Handles.Mastodon != "" {
+		out[socialgw.PlatformMastodon] = "@" + e.Handles.Mastodon
 	}
 	return out
 }

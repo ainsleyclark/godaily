@@ -11,9 +11,10 @@
 #   url:         primary group page (Meetup.com, own site, etc.)
 #   location:    city / region — short, free text
 #   description: one sentence shown in the post
-#   linkedin:    company-or-group slug, e.g. "golang-london" → linkedin.com/groups/golang-london
-#   bluesky:     full handle, e.g. "golanglondon.bsky.social"
-#   mastodon:    @user@instance
+#   handles:
+#     linkedin: company-or-group slug, e.g. "golang-london" → linkedin.com/groups/golang-london
+#     bluesky:  full handle, e.g. "golanglondon.bsky.social"
+#     mastodon: user@instance
 #
 # Leave any handle field blank ("") when unknown — the rotation falls
 # back to a no-mention template variant.
@@ -31,267 +32,297 @@
   url: https://www.meetup.com/golang-london/
   location: London, UK
   description: London's Go user group — talks, workshops and pub nights.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-paris
   name: Golang Paris
   url: https://www.meetup.com/Golang-Paris/
   location: Paris, France
   description: Paris Gophers meet to share talks and lightning demos.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: berlin-golang
   name: Berlin Golang
   url: https://www.meetup.com/berlin-golang/
   location: Berlin, Germany
   description: Berlin's Go meetup — one of Europe's largest Gopher communities.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-amsterdam
   name: Golang Amsterdam
   url: https://www.meetup.com/golang-amsterdam/
   location: Amsterdam, Netherlands
   description: Amsterdam Go user group with monthly talks and socials.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: munich-go
   name: Munich Go
   url: https://www.meetup.com/munich-go-programming-language/
   location: Munich, Germany
   description: Munich's Go programming language meetup.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: hamburg-go-user-group
   name: Hamburg Go User Group
   url: https://www.meetup.com/Hamburg-Go-User-Group/
   location: Hamburg, Germany
   description: Hamburg's home for Gophers — talks, lightning sessions and beers.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: stockholm-gophers
   name: Stockholm Gophers
   url: https://www.meetup.com/Stockholm-Gophers/
   location: Stockholm, Sweden
   description: The Stockholm Go community — talks and hack nights.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: helsinki-gophers
   name: Helsinki Gophers
   url: https://www.meetup.com/Helsinki-Gophers/
   location: Helsinki, Finland
   description: Finland's Go meetup — friendly community, deep dives, pizza.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: copenhagen-gophers
   name: Copenhagen Gophers
   url: https://www.meetup.com/Go-Cph/
   location: Copenhagen, Denmark
   description: Copenhagen's Go user group hosted across local engineering offices.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: zurich-gophers
   name: Zurich Gophers
   url: https://www.meetup.com/zurich-gophers/
   location: Zurich, Switzerland
   description: Zurich's Go user group — talks and Swiss Gopher socials.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: vienna-gophers
   name: Vienna Gophers
   url: https://www.meetup.com/vienna-gophers/
   location: Vienna, Austria
   description: Vienna's Go meetup community.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: warsaw-go-meetup
   name: Warsaw Go Meetup
   url: https://www.meetup.com/Warsaw-Go-Meetup/
   location: Warsaw, Poland
   description: The Warsaw Go community — monthly meetups and talks.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: prague-gophers
   name: Prague Gophers
   url: https://www.meetup.com/prague-gophers/
   location: Prague, Czech Republic
   description: Prague's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: lisbon-gophers
   name: Lisbon Gophers
   url: https://www.meetup.com/lisbon-gophers/
   location: Lisbon, Portugal
   description: Lisbon's Go user group — talks and community.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: dublin-gophers
   name: Dublin Gophers
   url: https://www.meetup.com/Dublin-Golang-Meetup/
   location: Dublin, Ireland
   description: Dublin's Go meetup community.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: madrid-golang
   name: Madrid Golang
   url: https://www.meetup.com/Madrid-Golang-Meetup/
   location: Madrid, Spain
   description: Madrid's Go user group — talks in Spanish and English.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-nyc
   name: Golang NYC
   url: https://www.meetup.com/golang-nyc/
   location: New York, NY, USA
   description: New York's Go user group — one of the largest in the US.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: bay-area-go-programmers
   name: Bay Area Go Programmers
   url: https://www.meetup.com/Bay-Area-Go-Programmers/
   location: San Francisco Bay Area, CA, USA
   description: The Bay Area's home for Gophers — talks from working Go engineers.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: toronto-go
   name: Toronto Go
   url: https://www.meetup.com/golangtoronto/
   location: Toronto, Canada
   description: Toronto's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: sydney-golang
   name: Sydney Golang
   url: https://www.meetup.com/golang-syd/
   location: Sydney, Australia
   description: Sydney's Go user group — talks and lightning demos.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: melbourne-go
   name: Melbourne Go
   url: https://www.meetup.com/golang-mel/
   location: Melbourne, Australia
   description: Melbourne's Go programming meetup.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-singapore
   name: Golang Singapore
   url: https://www.meetup.com/golang-singapore/
   location: Singapore
   description: Singapore's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-bangalore
   name: Golang Bangalore
   url: https://www.meetup.com/Golang-Bangalore/
   location: Bangalore, India
   description: India's largest Go user group, based in Bangalore.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-mumbai
   name: Golang Mumbai
   url: https://www.meetup.com/Mumbai-Go-Meetup/
   location: Mumbai, India
   description: Mumbai's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: tel-aviv-gophers
   name: Tel Aviv Gophers
   url: https://www.meetup.com/Tel-Aviv-Gophers/
   location: Tel Aviv, Israel
   description: Tel Aviv's Go community — monthly talks and hack nights.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: tokyo-go
   name: Tokyo Go
   url: https://gocon.connpass.com/
   location: Tokyo, Japan
   description: Tokyo's Go community, hosts of the long-running GoCon conference.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-seoul
   name: Golang Seoul
   url: https://www.meetup.com/golang-korea/
   location: Seoul, South Korea
   description: South Korea's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-shanghai
   name: Golang Shanghai
   url: https://www.meetup.com/Shanghai-Golang-Meetup/
   location: Shanghai, China
   description: Shanghai's Go user group.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-buenos-aires
   name: Golang Buenos Aires
   url: https://www.meetup.com/Golang-Argentina/
   location: Buenos Aires, Argentina
   description: Argentina's Go community.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
 
 - slug: golang-sao-paulo
   name: Golang São Paulo
   url: https://www.meetup.com/golangbr/
   location: São Paulo, Brazil
   description: Brazil's Go user group community.
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""

@@ -16,13 +16,14 @@
 #   1 → reminder         (TagConferenceReminder, typically ~3 months before)
 #   2 → alert            (TagConferenceAlert, typically ~1 week before)
 #
-# Optional handle fields (used by the social rotation, ignored by the
-# digest). Leave blank — empty string — when unknown; the rotation
-# falls back to a no-mention template variant.
+# Optional handles block (used by the social rotation, ignored by the
+# digest). Leave any field blank — empty string — when unknown; the
+# rotation falls back to a no-mention template variant.
 #
-#   linkedin: company-or-group-slug   # e.g. "gophercon-europe" → linkedin.com/company/gophercon-europe
-#   bluesky:  full-handle             # e.g. "gophercon.eu"
-#   mastodon: @user@instance          # e.g. "@gopher@hachyderm.io"
+#   handles:
+#     linkedin: company-or-group-slug   # e.g. "gophercon-europe" → linkedin.com/company/gophercon-europe
+#     bluesky:  full-handle             # e.g. "gophercon.eu"
+#     mastodon: user@instance           # e.g. "gopher@hachyderm.io"
 #
 # Adding a new conference:
 #   1. Add an entry below (slug must be unique).
@@ -42,9 +43,10 @@
   start_date: 2026-06-15
   end_date: 2026-06-18
   description: "The European Go conference, bringing together Gophers from across the continent for workshops, talks, and networking."
-  linkedin: gophercon-europe
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: gophercon-europe
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-02-09  # announcement
     - 2026-03-16  # ~3 months out
@@ -57,9 +59,10 @@
   start_date: 2026-08-12
   end_date: 2026-08-13
   description: "The UK's annual Go conference at The Brewery, London. Workshops on August 11th."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-03-02  # announcement
     - 2026-05-12  # ~3 months out
@@ -72,9 +75,10 @@
   start_date: 2026-08-03
   end_date: 2026-08-06
   description: "The flagship GopherCon conference, North America's largest gathering of Go developers."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-02-16  # announcement
     - 2026-05-04  # ~3 months out
@@ -87,9 +91,10 @@
   start_date: 2026-11-01
   end_date: 2026-11-03
   description: "Italy's Go conference, co-located with RustLab in Bologna."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-05-04  # announcement
     - 2026-08-03  # ~3 months out
@@ -102,9 +107,10 @@
   start_date: 2026-02-18
   end_date: 2026-02-18
   description: "GopherCon Israel — the Go community conference in Israel."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2025-11-17  # announcement
     - 2026-01-19  # ~1 month out
@@ -117,9 +123,10 @@
   start_date: 2026-10-23
   end_date: 2026-10-24
   description: "Africa's Go conference, celebrating the growing Go community across the continent."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-05-25  # announcement
     - 2026-07-27  # ~3 months out
@@ -132,9 +139,10 @@
   start_date: 2026-11-08
   end_date: 2026-11-08
   description: "GopherCon Korea — South Korea's annual Go conference."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-06-01  # announcement
     - 2026-08-10  # ~3 months out
@@ -147,9 +155,10 @@
   start_date: 2026-10-23
   end_date: 2026-10-23
   description: "GoWest — a community-driven single-day Go conference in Utah."
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-05-25  # announcement
     - 2026-07-27  # ~3 months out
@@ -163,9 +172,10 @@
   end_date: 2026-07-16
   description: "GopherCon is the premier annual Go programming language conference featuring talks, workshops, and community events for Go developers."
   image_url: ""
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-01-13  # announcement (~6 months before start_date)
     - 2026-04-13  # reminder (~3 months before start_date)
@@ -179,9 +189,10 @@
   end_date: 2026-07-16
   description: "GopherCon is the premier annual conference for the Go programming language community, featuring talks, workshops, and networking for Go developers."
   image_url: ""
-  linkedin: ""
-  bluesky: ""
-  mastodon: ""
+  handles:
+    linkedin: ""
+    bluesky: ""
+    mastodon: ""
   notify_dates:
     - 2026-01-13  # announcement (~6 months before start_date)
     - 2026-04-13  # reminder (~3 months before start_date)
