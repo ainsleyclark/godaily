@@ -104,7 +104,7 @@ type seedRunner struct {
 	aggregator *digest.Aggregator
 }
 
-func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]news.SourceItems, error) {
+func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) (digest.CollectResponse, error) {
 	// Items are published yesterday so they fall within buildWindow's [yesterday, today) range.
 	yesterday := time.Now().UTC().Truncate(24*time.Hour).AddDate(0, 0, -1)
 	seeds := []news.Item{
@@ -113,10 +113,10 @@ func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) ([]new
 	}
 	for i, item := range seeds {
 		if _, err := r.items.Create(ctx, nil, i+1, item); err != nil {
-			return nil, err
+			return digest.CollectResponse{}, err
 		}
 	}
-	return nil, nil
+	return digest.CollectResponse{}, nil
 }
 
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {

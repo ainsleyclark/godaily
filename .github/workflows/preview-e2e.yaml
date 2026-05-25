@@ -1,0 +1,37 @@
+name: Preview E2E
+
+on:
+  deployment_status:
+
+jobs:
+  preview-e2e:
+    if: |
+      github.event.deployment_status.state == 'success' &&
+      startsWith(github.event.deployment.environment, 'Preview')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install e2e dependencies
+        run: pnpm install
+        working-directory: e2e
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+        working-directory: e2e
+
+      - name: Run preview e2e tests
+        env:
+          BASE_URL: ${{ github.event.deployment_status.environment_url }}
+          TESTMAIL_API_KEY: ${{ secrets.TESTMAIL_API_KEY }}
+          TESTMAIL_NAMESPACE: ${{ secrets.TESTMAIL_NAMESPACE }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+        run: pnpm exec playwright test --config=playwright.preview.config.ts
+        working-directory: e2e
