@@ -33,12 +33,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
-// platformAnchor is the platform used as the "have I covered this
-// already?" probe. Any consistently-configured platform works; bluesky
-// is always wired up in practice. The actual post still goes to every
-// configured platform via the publish loop.
-const platformAnchor = "bluesky"
-
 // Spotlight thanks a curated source and points followers their way. It
 // iterates news.SocialProfiles in stable source-name order, skipping any
 // source already covered on the anchor platform.

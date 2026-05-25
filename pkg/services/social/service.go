@@ -41,7 +41,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
+	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -62,14 +62,14 @@ type Service struct {
 
 // reframer reframes a featured item for one platform. Function-typed so
 // tests can inject deterministic text without going through the AI.
-type reframer func(ctx context.Context, p ai.Prompter, f prompts.Featured) (string, error)
+type reframer func(ctx context.Context, p ai.Prompter, f featured.Featured) (string, error)
 
 // defaultReframers maps each Platform to its production reframing prompt.
 func defaultReframers() map[social.Platform]reframer {
 	return map[social.Platform]reframer{
-		social.PlatformBluesky:  prompts.Bluesky,
-		social.PlatformLinkedIn: prompts.LinkedIn,
-		social.PlatformMastodon: prompts.Mastodon,
+		social.PlatformBluesky:  featured.Bluesky,
+		social.PlatformLinkedIn: featured.LinkedIn,
+		social.PlatformMastodon: featured.Mastodon,
 	}
 }
 
@@ -180,7 +180,7 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 		return nil, nil
 	}
 
-	featured, err := prompts.Feature(ctx, s.prompter, date, rows)
+	featured, err := featured.Feature(ctx, s.prompter, date, rows)
 	if err != nil {
 		s.notifyFailure(ctx, "AI feature pick failed: "+err.Error())
 		return nil, errors.Wrap(err, "feature")
