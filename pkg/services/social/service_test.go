@@ -34,8 +34,7 @@ import (
 	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
@@ -55,7 +54,7 @@ type fixture struct {
 	prompter  *mockai.MockPrompter
 	issues    *mocknews.MockIssueRepository
 	items     *mocknews.MockItemRepository
-	posts     *mockdomsocial.MockPostRepository
+	posts     *mocksocial.MockPostRepository
 	slack     *mockslack.MockSender
 	posters   []socialgw.Poster
 	reframers map[socialgw.Platform]reframer
@@ -71,7 +70,7 @@ func newFixture(t *testing.T) *fixture {
 		prompter: mockai.NewMockPrompter(ctrl),
 		issues:   mocknews.NewMockIssueRepository(ctrl),
 		items:    mocknews.NewMockItemRepository(ctrl),
-		posts:    mockdomsocial.NewMockPostRepository(ctrl),
+		posts:    mocksocial.NewMockPostRepository(ctrl),
 		slack:    mockslack.NewMockSender(ctrl),
 	}
 }

@@ -37,7 +37,7 @@ type SocialMetric struct {
 	FetchedAt    time.Time `json:"fetched_at"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/SocialMetricRepository.go . SocialMetricRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/SocialMetricRepository.go . SocialMetricRepository
 
 // SocialMetricRepository persists social engagement metrics.
 type SocialMetricRepository interface {

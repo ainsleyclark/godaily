@@ -29,9 +29,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -47,7 +47,7 @@ func TestCTA_Kind(t *testing.T) {
 func TestCTA_Eligible(t *testing.T) {
 	t.Run("Eligible when cooldown clear", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindCTA, gomock.Any(), gomock.Any()).
@@ -75,7 +75,7 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Blocked by cooldown", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindCTA, "bluesky", gomock.Any()).
 			Return(true, nil)
@@ -88,7 +88,7 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Repository error is propagated", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindCTA, "bluesky", gomock.Any()).
 			Return(false, errors.New("db down"))
@@ -100,7 +100,7 @@ func TestCTA_Eligible(t *testing.T) {
 
 	t.Run("Angle is stable within the same ISO week", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(false, nil).Times(2)

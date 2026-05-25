@@ -32,8 +32,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )

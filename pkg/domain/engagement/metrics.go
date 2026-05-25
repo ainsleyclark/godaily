@@ -123,7 +123,7 @@ type (
 	}
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsReporter.go . MetricsReporter
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/MetricsReporter.go . MetricsReporter
 
 // MetricsReporter produces higher-level engagement reports composed from
 // MetricsRepository queries. It is the interface API handlers depend on so
@@ -134,7 +134,7 @@ type MetricsReporter interface {
 	Roundup(ctx context.Context) error
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/domain/engagement/MetricsRepository.go . MetricsRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/MetricsRepository.go . MetricsRepository
 
 // MetricsRepository answers engagement analytics queries.
 type MetricsRepository interface {

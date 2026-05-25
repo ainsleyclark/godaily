@@ -29,7 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )

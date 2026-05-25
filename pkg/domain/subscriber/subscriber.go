@@ -71,7 +71,7 @@ type Subscriber struct {
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriberdomain -destination=../../../mocks/domain/subscriber/SubscriberRepository.go . SubscriberRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/SubscriberRepository.go . SubscriberRepository
 
 // SubscriberRepository defines the methods for interacting with the
 // subscriber store.
@@ -87,6 +87,19 @@ type SubscriberRepository interface {
 	ListActive(ctx context.Context) ([]Subscriber, error)
 	CountAll(ctx context.Context) (int64, error)
 	CountActive(ctx context.Context) (int64, error)
+	MarkBounced(ctx context.Context, email string) error
+	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
+}
+
+//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Service.go . Service
+
+// Service defines the subscription lifecycle methods used by HTTP handlers
+// and the email webhook pipeline.
+type Service interface {
+	Subscribe(ctx context.Context, email string) (Subscriber, error)
+	Confirm(ctx context.Context, token string) error
+	Unsubscribe(ctx context.Context, token string) error
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
 	MarkSuppressed(ctx context.Context, email string) error

@@ -27,11 +27,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 )
 
@@ -72,7 +72,7 @@ func TestSpotlight_Eligible(t *testing.T) {
 
 	t.Run("Picks first unposted source alphabetically", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,
@@ -100,7 +100,7 @@ func TestSpotlight_Eligible(t *testing.T) {
 
 	t.Run("Rotates past already-covered source", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,
@@ -123,7 +123,7 @@ func TestSpotlight_Eligible(t *testing.T) {
 
 	t.Run("All sources covered is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			alphaProfile.Source: alphaProfile,

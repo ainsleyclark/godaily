@@ -36,7 +36,7 @@ type Issue struct {
 	Items   []Item      `json:"items"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/domain/news/IssueRepository.go . IssueRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/news/IssueRepository.go . IssueRepository
 
 // IssueRepository defines the methods for interacting with the Issue store.
 type IssueRepository interface {

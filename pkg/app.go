@@ -63,7 +63,7 @@ type App struct {
 	Runner         digest.Runner
 	Social         *social.Service
 	Cache          cache.Store
-	Subscribers    subscriber.Subscriber
+	Subscribers    domainsubscriber.Service
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter

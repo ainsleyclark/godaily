@@ -27,11 +27,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
@@ -48,7 +48,7 @@ func TestRecap_Kind(t *testing.T) {
 func TestRecap_Eligible(t *testing.T) {
 	t.Run("Nil recap service is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		c := candidates.NewRecap(nil, posts)
 		_, ok, err := c.Eligible(context.Background(), recapNow)
@@ -59,7 +59,7 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Eligible with enough items", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
@@ -94,7 +94,7 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Blocked by cooldown", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
@@ -111,7 +111,7 @@ func TestRecap_Eligible(t *testing.T) {
 	t.Run("Too few items is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		posts.EXPECT().
 			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).

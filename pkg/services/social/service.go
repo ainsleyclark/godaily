@@ -46,8 +46,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksocialservice -destination=../../mocks/socialservice/Service.go github.com/ainsleyclark/godaily/pkg/services/social Poster
-
 // Service publishes social media posts for both the daily featured slot
 // and the Tue/Fri rotation slot.
 type Service struct {

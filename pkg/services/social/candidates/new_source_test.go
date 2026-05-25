@@ -27,10 +27,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -65,7 +65,7 @@ func TestNewSource_Eligible(t *testing.T) {
 
 	t.Run("Picks first un-announced Announceable source alphabetically", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			"alpha": nsProfile("alpha", true),
@@ -89,7 +89,7 @@ func TestNewSource_Eligible(t *testing.T) {
 
 	t.Run("Skips already-announced and picks next", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			"alpha": nsProfile("alpha", true),
@@ -112,7 +112,7 @@ func TestNewSource_Eligible(t *testing.T) {
 
 	t.Run("All announceable sources covered is not eligible", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			"alpha": nsProfile("alpha", true),
@@ -130,7 +130,7 @@ func TestNewSource_Eligible(t *testing.T) {
 
 	t.Run("Non-Announceable sources are skipped silently", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		profiles := map[news.Source]social.Profile{
 			"silent": nsProfile("silent", false), // not eligible, no DB call expected
@@ -145,7 +145,7 @@ func TestNewSource_Eligible(t *testing.T) {
 
 func TestNewSource_PayloadShape(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	posts := mockdomsocial.NewMockPostRepository(ctrl)
+	posts := mocksocial.NewMockPostRepository(ctrl)
 
 	profiles := map[news.Source]social.Profile{
 		"alpha": nsProfile("alpha", true),

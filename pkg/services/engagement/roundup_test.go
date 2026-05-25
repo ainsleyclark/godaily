@@ -31,7 +31,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	domengagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/domain/engagement"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 

@@ -38,19 +38,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Subscriber.go . Subscriber
-
-// Subscriber defines the subscription lifecycle methods used by HTTP handlers
-// and the email webhook pipeline.
-type Subscriber interface {
-	Subscribe(ctx context.Context, email string) (domainsubscriber.Subscriber, error)
-	Confirm(ctx context.Context, token string) error
-	Unsubscribe(ctx context.Context, token string) error
-	MarkBounced(ctx context.Context, email string) error
-	MarkComplained(ctx context.Context, email string) error
-	MarkSuppressed(ctx context.Context, email string) error
-}
-
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
 // already registered as an active subscriber.
 var ErrAlreadySubscribed = errors.New("already subscribed")
@@ -65,6 +52,8 @@ type confirmData struct {
 	UnsubscribeURL string
 	CanonicalURL   string
 }
+
+var _ domainsubscriber.Service = (*Service)(nil)
 
 // Service owns the full subscriber lifecycle.
 type Service struct {

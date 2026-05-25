@@ -34,7 +34,7 @@ import (
 	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocksubscriberdomain "github.com/ainsleyclark/godaily/pkg/mocks/domain/subscriber"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 )
 
 func TestAggregator_SendDigest(t *testing.T) {
@@ -56,7 +56,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriberdomain.NewMockSubscriberRepository(gomock.NewController(t))
+		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
 		subs.EXPECT().ListActive(gomock.Any()).Return([]domainsubscriber.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
@@ -181,7 +181,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		subs := mocksubscriberdomain.NewMockSubscriberRepository(gomock.NewController(t))
+		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
 		subs.EXPECT().ListActive(gomock.Any()).Return([]domainsubscriber.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
@@ -209,7 +209,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriberdomain.NewMockSubscriberRepository(gomock.NewController(t))
+		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
 		subs.EXPECT().ListActive(gomock.Any()).Return([]domainsubscriber.Subscriber{
 			{ID: 99, Email: "reader@example.com", UnsubscribeToken: "tok-99"},
 		}, nil)
@@ -244,7 +244,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriberdomain.NewMockSubscriberRepository(gomock.NewController(t))
+		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
 		subs.EXPECT().ListActive(gomock.Any()).Return([]domainsubscriber.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)

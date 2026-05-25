@@ -31,8 +31,8 @@ import (
 
 	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	mocksubscriberdomain "github.com/ainsleyclark/godaily/pkg/mocks/domain/subscriber"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -50,13 +50,13 @@ func (m *mockSender) Send(_ context.Context, req email.SendEmailRequest) error {
 }
 
 func setup(t *testing.T) (
-	*mocksubscriberdomain.MockSubscriberRepository,
+	*mocksubscriber.MockSubscriberRepository,
 	*mocknews.MockIssueRepository,
 	*mockSender,
 ) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
-	return mocksubscriberdomain.NewMockSubscriberRepository(ctrl),
+	return mocksubscriber.NewMockSubscriberRepository(ctrl),
 		mocknews.NewMockIssueRepository(ctrl),
 		&mockSender{}
 }

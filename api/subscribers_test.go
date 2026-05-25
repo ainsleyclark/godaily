@@ -29,19 +29,19 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mocksubscriberdomain "github.com/ainsleyclark/godaily/pkg/mocks/domain/subscriber"
+	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
 func TestHandleSubscribers(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(subs *mocksubscriberdomain.MockSubscriberRepository)
+		mock       func(subs *mocksubscriber.MockSubscriberRepository)
 		query      string
 		wantStatus int
 	}{
 		"OK default pagination": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(3), nil)
 				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{
 					{ID: 1, Email: "a@example.com"},
@@ -51,7 +51,7 @@ func TestHandleSubscribers(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"OK with explicit page params": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(50), nil)
 				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 2, PerPage: 5}).Return([]subscriber.Subscriber{}, nil)
 			},
@@ -59,20 +59,20 @@ func TestHandleSubscribers(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"CountAll error": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(0), errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"List error": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
 				subs.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"Invalid page falls back to default": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
 				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
 			},
@@ -80,7 +80,7 @@ func TestHandleSubscribers(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"per_page exceeds max falls back to default": {
-			mock: func(subs *mocksubscriberdomain.MockSubscriberRepository) {
+			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
 				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
 			},
@@ -88,7 +88,7 @@ func TestHandleSubscribers(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"Unauthorized": {
-			mock:       func(_ *mocksubscriberdomain.MockSubscriberRepository) {},
+			mock:       func(_ *mocksubscriber.MockSubscriberRepository) {},
 			wantStatus: http.StatusUnauthorized,
 		},
 	}
@@ -96,7 +96,7 @@ func TestHandleSubscribers(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			subsMock := mocksubscriberdomain.NewMockSubscriberRepository(ctrl)
+			subsMock := mocksubscriber.NewMockSubscriberRepository(ctrl)
 			test.mock(subsMock)
 
 			a := &godaily.App{

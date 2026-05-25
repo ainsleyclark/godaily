@@ -33,8 +33,7 @@ import (
 	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/domain/news"
-	mockdomsocial "github.com/ainsleyclark/godaily/pkg/mocks/domain/social"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
@@ -74,7 +73,7 @@ func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ socialgw.Pl
 // accepts any call so candidate errors don't fail the test on Slack.
 type rotationFixture struct {
 	svc      *social.Service
-	posts    *mockdomsocial.MockPostRepository
+	posts    *mocksocial.MockPostRepository
 	prompter *mockai.MockPrompter
 	poster   *mocksocial.MockPoster
 }
@@ -90,7 +89,7 @@ func newRotationFixture(t *testing.T, candidates ...social.Candidate) rotationFi
 	prompter := mockai.NewMockPrompter(ctrl)
 	issues := mocknews.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
-	posts := mockdomsocial.NewMockPostRepository(ctrl)
+	posts := mocksocial.NewMockPostRepository(ctrl)
 
 	bluesky := mocksocial.NewMockPoster(ctrl)
 	bluesky.EXPECT().Platform().Return(socialgw.PlatformBluesky).AnyTimes()
@@ -263,7 +262,7 @@ func TestService_Rotate(t *testing.T) {
 		prompter := mockai.NewMockPrompter(ctrl)
 		issues := mocknews.NewMockIssueRepository(ctrl)
 		items := mocknews.NewMockItemRepository(ctrl)
-		posts := mockdomsocial.NewMockPostRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
 
 		svc, err := social.New(nil, prompter, issues, items, posts, slk)
 		require.NoError(t, err)

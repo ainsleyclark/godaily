@@ -77,7 +77,7 @@ type PostListOptions struct {
 	Since *time.Time
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/domain/social/PostRepository.go . PostRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/PostRepository.go . PostRepository
 
 // PostRepository defines the methods for interacting with the social_posts store.
 type PostRepository interface {
