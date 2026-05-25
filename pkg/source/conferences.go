@@ -21,18 +21,15 @@ package source
 
 import (
 	"context"
-	_ "embed"
 	"fmt"
 	"time"
 
 	"gopkg.in/yaml.v3"
 
+	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 )
-
-//go:embed data/conferences.yaml
-var conferencesYAML []byte
 
 // conferencePhaseTags maps notify_date index to the corresponding Tag.
 // Index 0 = announcement, 1 = reminder (~3 months out), 2 = alert (~1 week out).
@@ -48,7 +45,7 @@ var conferencePhaseSuffixes = []string{"#announce", "#reminder", "#alert"}
 
 func init() {
 	news.Register(news.SourceConferences, func(_ env.Config) news.Fetcher {
-		return NewConferences(conferencesYAML)
+		return NewConferences(data.Conferences)
 	})
 }
 

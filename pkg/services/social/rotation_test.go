@@ -105,8 +105,9 @@ var (
 	// Calendar reference points for the day-routing tests. All at 15:00
 	// UTC — the scheduled rotation time.
 	tueAt15 = time.Date(2026, 5, 19, 15, 0, 0, 0, time.UTC) // Tuesday
+	wedAt15 = time.Date(2026, 5, 20, 15, 0, 0, 0, time.UTC) // Wednesday (community)
+	thuAt15 = time.Date(2026, 5, 21, 15, 0, 0, 0, time.UTC) // Thursday (no-op day)
 	friAt15 = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC) // Friday
-	wedAt15 = time.Date(2026, 5, 20, 15, 0, 0, 0, time.UTC) // Wednesday (no-op day)
 )
 
 func TestService_Rotate(t *testing.T) {
@@ -189,9 +190,24 @@ func TestService_Rotate(t *testing.T) {
 		always := &fakeCandidate{kind: news.SocialPostKindNewSource, eligible: true, text: "x"}
 		f := newRotationFixture(t, always)
 
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: thuAt15, DryRun: true})
+		require.NoError(t, err)
+		assert.Empty(t, res, "Thursday is not a rotation day")
+	})
+
+	t.Run("Wednesday runs the community candidate", func(t *testing.T) {
+		community := &fakeCandidate{
+			kind:     news.SocialPostKindCommunity,
+			eligible: true,
+			ctx:      social.CandidateContext{Subject: "community:golang-london:2026"},
+			text:     "shout-out to Golang London",
+		}
+		f := newRotationFixture(t, community)
+
 		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: wedAt15, DryRun: true})
 		require.NoError(t, err)
-		assert.Empty(t, res, "Wednesday is not a rotation day")
+		require.Len(t, res, 1)
+		assert.Equal(t, news.SocialPostKindCommunity, res[0].Kind)
 	})
 
 	t.Run("ForceKind bypasses day-of-week routing", func(t *testing.T) {
