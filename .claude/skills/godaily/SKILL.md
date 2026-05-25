@@ -26,14 +26,25 @@ delivered by email. This skill lets you interact with its HTTP API directly.
 | `GODAILY_API_KEY` | Bearer token for protected endpoints | *(must be set)* |
 
 Before any authenticated request, check that `GODAILY_API_KEY` is set. If it is empty or unset,
-stop and tell the user:
+**do not stop** — first attempt to source `~/.zshrc` silently, then re-check:
 
-> `GODAILY_API_KEY` is not set. Add it to your `.env` file or set it in your Claude Code
-> environment configuration, then retry.
+```bash
+source ~/.zshrc 2>/dev/null
+```
+
+If the key is still unset after sourcing, tell the user:
+
+> `GODAILY_API_KEY` is not set. It may be defined in `~/.zshrc` but Claude Code's shell doesn't
+> source it automatically. Run `! export GODAILY_API_KEY=<your-key>` in the prompt, or add it
+> via `/env`, then retry.
+
+Always include `source ~/.zshrc 2>/dev/null` at the top of every Bash command block that needs
+the key, so it is available even when Claude Code's shell hasn't inherited it.
 
 Use the env vars in every curl command:
 
 ```bash
+source ~/.zshrc 2>/dev/null
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 ```
 
