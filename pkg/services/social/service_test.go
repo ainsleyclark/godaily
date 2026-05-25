@@ -31,12 +31,12 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -227,10 +227,10 @@ func TestService_Post_HappyPath(t *testing.T) {
 		HasPosted(gomock.Any(), int64(42), "bluesky").Return(false, nil)
 	f.posts.EXPECT().
 		Create(gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ context.Context, p domainsocial.Post) (domainsocial.Post, error) {
+		DoAndReturn(func(_ context.Context, p social.Post) (social.Post, error) {
 			require.NotNil(t, p.IssueID)
 			assert.Equal(t, int64(42), *p.IssueID)
-			assert.Equal(t, domainsocial.PostKindFeatured, p.Kind)
+			assert.Equal(t, social.PostKindFeatured, p.Kind)
 			assert.Equal(t, "bluesky", p.Platform)
 			assert.Contains(t, p.Text, "Go 1.30")
 			assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", p.PostURL)
@@ -353,7 +353,7 @@ func TestService_Post_PlatformsFilter(t *testing.T) {
 	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(featureJSON(), nil)
 	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), "mastodon").Return(false, nil)
-	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(domainsocial.Post{}, nil)
+	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(social.Post{}, nil)
 
 	// Wet run posts a single platform — one success Slack notification.
 	f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())

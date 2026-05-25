@@ -30,8 +30,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	domengagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
@@ -56,22 +56,22 @@ func TestService_Gather(t *testing.T) {
 		t.Parallel()
 		svc, repo, _ := newService(t)
 
-		summary := domengagement.SummaryStats{IssuesSent: 7, Delivered: 1000, OpenRate: 0.5}
-		subs := domengagement.SubscriberData{
+		summary := engagement.SummaryStats{IssuesSent: 7, Delivered: 1000, OpenRate: 0.5}
+		subs := engagement.SubscriberData{
 			Bucket: "week",
-			Points: []domengagement.SubscriberPoint{{ActiveAtEnd: 1312, NetChange: 19}},
+			Points: []engagement.SubscriberPoint{{ActiveAtEnd: 1312, NetChange: 19}},
 		}
-		items := []domengagement.ItemMetrics{{ItemID: 1, Title: "Go 1.24", Clicks: 42}}
-		tags := []domengagement.TagMetrics{{Tag: "ai", Clicks: 88}}
-		sources := []domengagement.SourceMetrics{{Source: "HN", Clicks: 120}}
-		bestIssues := []domengagement.IssueEngagement{{Slug: "2026-05-22", ClickRate: 0.173}}
+		items := []engagement.ItemMetrics{{ItemID: 1, Title: "Go 1.24", Clicks: 42}}
+		tags := []engagement.TagMetrics{{Tag: "ai", Clicks: 88}}
+		sources := []engagement.SourceMetrics{{Source: "HN", Clicks: 120}}
+		bestIssues := []engagement.IssueEngagement{{Slug: "2026-05-22", ClickRate: 0.173}}
 
-		repo.EXPECT().Summary(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to}).Return(summary, nil)
-		repo.EXPECT().SubscriberGrowth(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to}, "week").Return(subs, nil)
-		repo.EXPECT().ItemList(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to, Limit: topItemsLimit}).Return(items, nil)
-		repo.EXPECT().TagList(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to, Limit: topTagsLimit}).Return(tags, nil)
-		repo.EXPECT().SourceList(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to, Limit: topSourcesLimit}).Return(sources, nil)
-		repo.EXPECT().IssueList(gomock.Any(), domengagement.MetricsFilter{From: &from, To: &to, Limit: 1}, "click_rate").Return(bestIssues, nil)
+		repo.EXPECT().Summary(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to}).Return(summary, nil)
+		repo.EXPECT().SubscriberGrowth(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to}, "week").Return(subs, nil)
+		repo.EXPECT().ItemList(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to, Limit: topItemsLimit}).Return(items, nil)
+		repo.EXPECT().TagList(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to, Limit: topTagsLimit}).Return(tags, nil)
+		repo.EXPECT().SourceList(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to, Limit: topSourcesLimit}).Return(sources, nil)
+		repo.EXPECT().IssueList(gomock.Any(), engagement.MetricsFilter{From: &from, To: &to, Limit: 1}, "click_rate").Return(bestIssues, nil)
 
 		snap, err := svc.Gather(context.Background(), from, to)
 		require.NoError(t, err)
@@ -88,8 +88,8 @@ func TestService_Gather(t *testing.T) {
 		t.Parallel()
 		svc, repo, _ := newService(t)
 
-		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(domengagement.SummaryStats{}, nil)
-		repo.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(domengagement.SubscriberData{}, nil)
+		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, nil)
+		repo.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{}, nil)
 		repo.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return(nil, nil)
 		repo.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, nil)
 		repo.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return(nil, nil)
@@ -103,7 +103,7 @@ func TestService_Gather(t *testing.T) {
 	t.Run("Summary error propagates", func(t *testing.T) {
 		t.Parallel()
 		svc, repo, _ := newService(t)
-		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(domengagement.SummaryStats{}, errBoom)
+		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, errBoom)
 
 		_, err := svc.Gather(context.Background(), from, to)
 		require.Error(t, err)
@@ -125,27 +125,27 @@ func TestService_Roundup(t *testing.T) {
 		svc.now = func() time.Time { return fixedNow }
 
 		// Current window.
-		repo.EXPECT().Summary(gomock.Any(), domengagement.MetricsFilter{From: &wantCurrFrom, To: &wantTo}).Return(
-			domengagement.SummaryStats{IssuesSent: 7, Delivered: 1243, UniqueOpens: 612, UniqueClicks: 187, OpenRate: 0.492, ClickRate: 0.150}, nil,
+		repo.EXPECT().Summary(gomock.Any(), engagement.MetricsFilter{From: &wantCurrFrom, To: &wantTo}).Return(
+			engagement.SummaryStats{IssuesSent: 7, Delivered: 1243, UniqueOpens: 612, UniqueClicks: 187, OpenRate: 0.492, ClickRate: 0.150}, nil,
 		)
-		repo.EXPECT().SubscriberGrowth(gomock.Any(), domengagement.MetricsFilter{From: &wantCurrFrom, To: &wantTo}, "week").Return(
-			domengagement.SubscriberData{Points: []domengagement.SubscriberPoint{{New: 28, Confirmed: 24, Unsubscribed: 5, NetChange: 19, ActiveAtEnd: 1312}}}, nil,
+		repo.EXPECT().SubscriberGrowth(gomock.Any(), engagement.MetricsFilter{From: &wantCurrFrom, To: &wantTo}, "week").Return(
+			engagement.SubscriberData{Points: []engagement.SubscriberPoint{{New: 28, Confirmed: 24, Unsubscribed: 5, NetChange: 19, ActiveAtEnd: 1312}}}, nil,
 		)
-		repo.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return([]domengagement.ItemMetrics{
+		repo.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return([]engagement.ItemMetrics{
 			{ItemID: 1, Title: "Go 1.24 released", URL: "https://go.dev/blog/go1.24", Source: "go.dev", Clicks: 42},
 		}, nil)
-		repo.EXPECT().TagList(gomock.Any(), gomock.Any()).Return([]domengagement.TagMetrics{{Tag: "ai", Clicks: 88}}, nil)
-		repo.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return([]domengagement.SourceMetrics{{Source: "HN", Clicks: 120}}, nil)
-		repo.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return([]domengagement.IssueEngagement{
+		repo.EXPECT().TagList(gomock.Any(), gomock.Any()).Return([]engagement.TagMetrics{{Tag: "ai", Clicks: 88}}, nil)
+		repo.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return([]engagement.SourceMetrics{{Source: "HN", Clicks: 120}}, nil)
+		repo.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return([]engagement.IssueEngagement{
 			{Slug: "2026-05-22", ClickRate: 0.173, OpenRate: 0.531},
 		}, nil)
 
 		// Prior window — used only for deltas.
-		repo.EXPECT().Summary(gomock.Any(), domengagement.MetricsFilter{From: &wantPrevFrom, To: &wantCurrFrom}).Return(
-			domengagement.SummaryStats{IssuesSent: 7, Delivered: 1200, UniqueOpens: 598, UniqueClicks: 200, OpenRate: 0.480, ClickRate: 0.160}, nil,
+		repo.EXPECT().Summary(gomock.Any(), engagement.MetricsFilter{From: &wantPrevFrom, To: &wantCurrFrom}).Return(
+			engagement.SummaryStats{IssuesSent: 7, Delivered: 1200, UniqueOpens: 598, UniqueClicks: 200, OpenRate: 0.480, ClickRate: 0.160}, nil,
 		)
-		repo.EXPECT().SubscriberGrowth(gomock.Any(), domengagement.MetricsFilter{From: &wantPrevFrom, To: &wantCurrFrom}, "week").Return(
-			domengagement.SubscriberData{Points: []domengagement.SubscriberPoint{{ActiveAtEnd: 1293}}}, nil,
+		repo.EXPECT().SubscriberGrowth(gomock.Any(), engagement.MetricsFilter{From: &wantPrevFrom, To: &wantCurrFrom}, "week").Return(
+			engagement.SubscriberData{Points: []engagement.SubscriberPoint{{ActiveAtEnd: 1293}}}, nil,
 		)
 		repo.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return(nil, nil)
 		repo.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, nil)
@@ -178,8 +178,8 @@ func TestService_Roundup(t *testing.T) {
 		svc.now = func() time.Time { return fixedNow }
 
 		// Both windows empty.
-		empty := domengagement.SummaryStats{}
-		emptySubs := domengagement.SubscriberData{}
+		empty := engagement.SummaryStats{}
+		emptySubs := engagement.SubscriberData{}
 		for i := 0; i < 2; i++ {
 			repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(empty, nil)
 			repo.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(emptySubs, nil)
@@ -207,8 +207,8 @@ func TestService_Roundup(t *testing.T) {
 		svc.now = func() time.Time { return fixedNow }
 
 		for i := 0; i < 2; i++ {
-			repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(domengagement.SummaryStats{}, nil)
-			repo.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(domengagement.SubscriberData{}, nil)
+			repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, nil)
+			repo.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{}, nil)
 			repo.EXPECT().ItemList(gomock.Any(), gomock.Any()).Return(nil, nil)
 			repo.EXPECT().TagList(gomock.Any(), gomock.Any()).Return(nil, nil)
 			repo.EXPECT().SourceList(gomock.Any(), gomock.Any()).Return(nil, nil)
@@ -225,7 +225,7 @@ func TestService_Roundup(t *testing.T) {
 		svc, repo, _ := newService(t)
 		svc.now = func() time.Time { return fixedNow }
 
-		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(domengagement.SummaryStats{}, errBoom)
+		repo.EXPECT().Summary(gomock.Any(), gomock.Any()).Return(engagement.SummaryStats{}, errBoom)
 
 		err := svc.Roundup(context.Background())
 		require.Error(t, err)
@@ -370,26 +370,26 @@ func TestLastSubscriberPoint(t *testing.T) {
 
 	t.Run("Empty series", func(t *testing.T) {
 		t.Parallel()
-		_, ok := lastSubscriberPoint(domengagement.SubscriberData{})
+		_, ok := lastSubscriberPoint(engagement.SubscriberData{})
 		assert.False(t, ok)
 	})
 
 	t.Run("Single point", func(t *testing.T) {
 		t.Parallel()
-		p := domengagement.SubscriberPoint{ActiveAtEnd: 100, NetChange: 5}
-		got, ok := lastSubscriberPoint(domengagement.SubscriberData{Points: []domengagement.SubscriberPoint{p}})
+		p := engagement.SubscriberPoint{ActiveAtEnd: 100, NetChange: 5}
+		got, ok := lastSubscriberPoint(engagement.SubscriberData{Points: []engagement.SubscriberPoint{p}})
 		assert.True(t, ok)
 		assert.Equal(t, p, got)
 	})
 
 	t.Run("Multiple points returns the last", func(t *testing.T) {
 		t.Parallel()
-		points := []domengagement.SubscriberPoint{
+		points := []engagement.SubscriberPoint{
 			{ActiveAtEnd: 100},
 			{ActiveAtEnd: 200},
 			{ActiveAtEnd: 300},
 		}
-		got, ok := lastSubscriberPoint(domengagement.SubscriberData{Points: points})
+		got, ok := lastSubscriberPoint(engagement.SubscriberData{Points: points})
 		assert.True(t, ok)
 		assert.Equal(t, int64(300), got.ActiveAtEnd)
 	})
@@ -401,21 +401,21 @@ func TestFormatRoundup_LengthSanity(t *testing.T) {
 	curr := Snapshot{
 		From: time.Date(2026, 5, 17, 0, 0, 0, 0, time.UTC),
 		To:   time.Date(2026, 5, 24, 0, 0, 0, 0, time.UTC),
-		Summary: domengagement.SummaryStats{
+		Summary: engagement.SummaryStats{
 			IssuesSent: 7, Delivered: 1500, UniqueOpens: 700, UniqueClicks: 200,
 			OpenRate: 0.5, ClickRate: 0.15,
 		},
-		Subs: domengagement.SubscriberData{Points: []domengagement.SubscriberPoint{{ActiveAtEnd: 1500, NetChange: 25, New: 30, Confirmed: 28, Unsubscribed: 5}}},
-		Items: []domengagement.ItemMetrics{
+		Subs: engagement.SubscriberData{Points: []engagement.SubscriberPoint{{ActiveAtEnd: 1500, NetChange: 25, New: 30, Confirmed: 28, Unsubscribed: 5}}},
+		Items: []engagement.ItemMetrics{
 			{Title: strings.Repeat("X", 100), URL: "https://example.com/" + strings.Repeat("y", 80), Source: "src", Clicks: 50},
 			{Title: strings.Repeat("X", 100), URL: "https://example.com/" + strings.Repeat("y", 80), Source: "src", Clicks: 40},
 			{Title: strings.Repeat("X", 100), URL: "https://example.com/" + strings.Repeat("y", 80), Source: "src", Clicks: 30},
 			{Title: strings.Repeat("X", 100), URL: "https://example.com/" + strings.Repeat("y", 80), Source: "src", Clicks: 20},
 			{Title: strings.Repeat("X", 100), URL: "https://example.com/" + strings.Repeat("y", 80), Source: "src", Clicks: 10},
 		},
-		Tags:      []domengagement.TagMetrics{{Tag: "a", Clicks: 1}, {Tag: "b", Clicks: 2}, {Tag: "c", Clicks: 3}},
-		Sources:   []domengagement.SourceMetrics{{Source: "x", Clicks: 1}, {Source: "y", Clicks: 2}, {Source: "z", Clicks: 3}},
-		BestIssue: &domengagement.IssueEngagement{Slug: "2026-05-22", ClickRate: 0.15, OpenRate: 0.5},
+		Tags:      []engagement.TagMetrics{{Tag: "a", Clicks: 1}, {Tag: "b", Clicks: 2}, {Tag: "c", Clicks: 3}},
+		Sources:   []engagement.SourceMetrics{{Source: "x", Clicks: 1}, {Source: "y", Clicks: 2}, {Source: "z", Clicks: 3}},
+		BestIssue: &engagement.IssueEngagement{Slug: "2026-05-22", ClickRate: 0.15, OpenRate: 0.5},
 	}
 	msg := formatRoundup(curr, Snapshot{})
 	assert.Less(t, len(msg), 4000, "message must fit in Slack's 4000-char limit")

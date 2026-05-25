@@ -28,10 +28,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	domengagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
-	"github.com/ainsleyclark/godaily/pkg/services/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	engagementsvc "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )
 
 var errBoom = errors.New("boom")
@@ -48,18 +48,18 @@ func (s stubItemFinder) FindByURLInIssue(context.Context, int64, string) (int64,
 	return s.id, s.ok, s.err
 }
 
-func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockService, *engagement.EventService) {
+func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockService, *engagementsvc.EventService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mocksubscriber.NewMockService(ctrl)
-	return events, subs, engagement.NewEvents(events, subs, stubItemFinder{}, "admin@example.com")
+	return events, subs, engagementsvc.NewEvents(events, subs, stubItemFinder{}, "admin@example.com")
 }
 
 func TestService_Process(t *testing.T) {
 	t.Parallel()
 
-	opened := domengagement.EmailEvent{Type: domengagement.EmailEventTypeOpened, EventID: "evt_opened", Email: "reader@example.com"}
+	opened := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_opened", Email: "reader@example.com"}
 
 	t.Run("Stores event with no side effect", func(t *testing.T) {
 		t.Parallel()
@@ -74,7 +74,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Bounced event marks the subscriber bounced", func(t *testing.T) {
 		t.Parallel()
 
-		bounced := domengagement.EmailEvent{Type: domengagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		bounced := engagement.EmailEvent{Type: engagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)
@@ -86,7 +86,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Complained event unsubscribes the subscriber", func(t *testing.T) {
 		t.Parallel()
 
-		complained := domengagement.EmailEvent{Type: domengagement.EmailEventTypeComplained, EventID: "evt_spam", Email: "angry@example.com"}
+		complained := engagement.EmailEvent{Type: engagement.EmailEventTypeComplained, EventID: "evt_spam", Email: "angry@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_spam").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), complained).Return(complained, nil)
@@ -98,7 +98,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Suppressed event marks the subscriber suppressed", func(t *testing.T) {
 		t.Parallel()
 
-		suppressed := domengagement.EmailEvent{Type: domengagement.EmailEventTypeSuppressed, EventID: "evt_suppressed", Email: "suppressed@example.com"}
+		suppressed := engagement.EmailEvent{Type: engagement.EmailEventTypeSuppressed, EventID: "evt_suppressed", Email: "suppressed@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_suppressed").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), suppressed).Return(suppressed, nil)
@@ -112,7 +112,7 @@ func TestService_Process(t *testing.T) {
 
 		// email.failed is a send-side failure (quota, API key, domain config), not
 		// a recipient-side failure. Subscriber health must not be touched.
-		failed := domengagement.EmailEvent{Type: domengagement.EmailEventTypeFailed, EventID: "evt_failed", Email: "nomail@example.com"}
+		failed := engagement.EmailEvent{Type: engagement.EmailEventTypeFailed, EventID: "evt_failed", Email: "nomail@example.com"}
 		events, _, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_failed").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), failed).Return(failed, nil)
@@ -123,7 +123,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Delivery delayed event is stored with no side effect", func(t *testing.T) {
 		t.Parallel()
 
-		delayed := domengagement.EmailEvent{Type: domengagement.EmailEventTypeDeliveryDelayed, EventID: "evt_delayed", Email: "slow@example.com"}
+		delayed := engagement.EmailEvent{Type: engagement.EmailEventTypeDeliveryDelayed, EventID: "evt_delayed", Email: "slow@example.com"}
 		events, _, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_delayed").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), delayed).Return(delayed, nil)
@@ -154,7 +154,7 @@ func TestService_Process(t *testing.T) {
 
 		events, _, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_opened").Return(false, nil)
-		events.EXPECT().Create(gomock.Any(), opened).Return(domengagement.EmailEvent{}, errBoom)
+		events.EXPECT().Create(gomock.Any(), opened).Return(engagement.EmailEvent{}, errBoom)
 
 		assert.ErrorIs(t, svc.Process(t.Context(), opened), errBoom)
 	})
@@ -162,7 +162,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Side effect error propagates", func(t *testing.T) {
 		t.Parallel()
 
-		bounced := domengagement.EmailEvent{Type: domengagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
+		bounced := engagement.EmailEvent{Type: engagement.EmailEventTypeBounced, EventID: "evt_bounced", Email: "dead@example.com"}
 		events, subs, svc := setup(t)
 		events.EXPECT().ExistsByEventID(gomock.Any(), "evt_bounced").Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), bounced).Return(bounced, nil)
@@ -174,7 +174,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Admin email is silently ignored", func(t *testing.T) {
 		t.Parallel()
 
-		evt := domengagement.EmailEvent{Type: domengagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "admin@example.com"}
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "admin@example.com"}
 		_, _, svc := setup(t)
 
 		require.NoError(t, svc.Process(t.Context(), evt))
@@ -183,7 +183,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("Admin email matching is case-insensitive", func(t *testing.T) {
 		t.Parallel()
 
-		evt := domengagement.EmailEvent{Type: domengagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "Admin@Example.com"}
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_admin", Email: "Admin@Example.com"}
 		_, _, svc := setup(t)
 
 		require.NoError(t, svc.Process(t.Context(), evt))
@@ -192,7 +192,7 @@ func TestService_Process(t *testing.T) {
 	t.Run("godaily.dev address is silently ignored", func(t *testing.T) {
 		t.Parallel()
 
-		evt := domengagement.EmailEvent{Type: domengagement.EmailEventTypeOpened, EventID: "evt_internal", Email: "hello@godaily.dev"}
+		evt := engagement.EmailEvent{Type: engagement.EmailEventTypeOpened, EventID: "evt_internal", Email: "hello@godaily.dev"}
 		_, _, svc := setup(t)
 
 		require.NoError(t, svc.Process(t.Context(), evt))
@@ -204,20 +204,20 @@ func TestService_Process_ClickItemResolution(t *testing.T) {
 
 	issueID := int64(7)
 	itemID := int64(42)
-	click := domengagement.EmailEvent{
-		Type:    domengagement.EmailEventTypeClicked,
+	click := engagement.EmailEvent{
+		Type:    engagement.EmailEventTypeClicked,
 		EventID: "evt_click",
 		Email:   "reader@example.com",
 		IssueID: &issueID,
 		URL:     "https://example.com/article",
 	}
 
-	newSvc := func(t *testing.T, finder engagement.ItemFinder) (*mockengagement.MockEmailEventRepository, *engagement.EventService) {
+	newSvc := func(t *testing.T, finder engagementsvc.ItemFinder) (*mockengagement.MockEmailEventRepository, *engagementsvc.EventService) {
 		t.Helper()
 		ctrl := gomock.NewController(t)
 		events := mockengagement.NewMockEmailEventRepository(ctrl)
 		subs := mocksubscriber.NewMockService(ctrl)
-		return events, engagement.NewEvents(events, subs, finder, "admin@example.com")
+		return events, engagementsvc.NewEvents(events, subs, finder, "admin@example.com")
 	}
 
 	t.Run("Resolved item is stored on the event", func(t *testing.T) {

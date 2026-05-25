@@ -31,7 +31,7 @@ import (
 	texttemplate "text/template"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -53,17 +53,17 @@ type confirmData struct {
 	CanonicalURL   string
 }
 
-var _ domainsubscriber.Service = (*Service)(nil)
+var _ subscriber.Service = (*Service)(nil)
 
 // Service owns the full subscriber lifecycle.
 type Service struct {
-	repo   domainsubscriber.SubscriberRepository
+	repo   subscriber.SubscriberRepository
 	issues news.IssueRepository
 	email  email.Sender
 }
 
 // New returns a Service wired to the provided dependencies.
-func New(repo domainsubscriber.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
+func New(repo subscriber.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
 	return &Service{
 		repo:   repo,
 		issues: issues,
@@ -75,29 +75,29 @@ func New(repo domainsubscriber.SubscriberRepository, issues news.IssueRepository
 // It returns ErrAlreadySubscribed if the email is already registered as active.
 // Previously unsubscribed addresses are reactivated with a fresh token.
 // Confirmation email failures are logged but do not fail the subscription.
-func (s Service) Subscribe(ctx context.Context, emailAddr string) (domainsubscriber.Subscriber, error) {
-	var sub domainsubscriber.Subscriber
+func (s Service) Subscribe(ctx context.Context, emailAddr string) (subscriber.Subscriber, error) {
+	var sub subscriber.Subscriber
 
 	existing, err := s.repo.FindByEmail(ctx, emailAddr)
 	switch {
 	case err == nil && existing.UnsubscribedAt == nil:
-		return domainsubscriber.Subscriber{}, ErrAlreadySubscribed
+		return subscriber.Subscriber{}, ErrAlreadySubscribed
 	case err == nil:
 		sub, err = s.repo.Reactivate(ctx, emailAddr)
 		if err != nil {
-			return domainsubscriber.Subscriber{}, err
+			return subscriber.Subscriber{}, err
 		}
 	case errors.Is(err, store.ErrNotFound):
 		sub, err = s.repo.Create(ctx, emailAddr)
 		if err != nil {
-			return domainsubscriber.Subscriber{}, err
+			return subscriber.Subscriber{}, err
 		}
 	default:
-		return domainsubscriber.Subscriber{}, err
+		return subscriber.Subscriber{}, err
 	}
 
 	if sub.ConfirmToken == "" {
-		return domainsubscriber.Subscriber{}, errors.New("subscriber created without confirmation token")
+		return subscriber.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
 	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
 	unsubscribeURL := env.AppURL + "/api/unsubscribe/?token=" + sub.UnsubscribeToken

@@ -31,7 +31,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"

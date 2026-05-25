@@ -29,10 +29,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	mocksubscriber "github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -66,7 +66,7 @@ var errBoom = errors.New("boom")
 func TestService_Subscribe(t *testing.T) {
 	t.Parallel()
 
-	sub := domainsubscriber.Subscriber{
+	sub := subscriber.Subscriber{
 		ID:               1,
 		Email:            "user@example.com",
 		UnsubscribeToken: "tok123",
@@ -89,7 +89,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, errBoom)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -101,8 +101,8 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, store.ErrNotFound)
-		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{Email: sub.Email}, nil)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(subscriber.Subscriber{Email: sub.Email}, nil)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -115,8 +115,8 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, store.ErrNotFound)
-		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, errBoom)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -128,7 +128,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
@@ -147,7 +147,7 @@ func TestService_Subscribe(t *testing.T) {
 
 		repo, issues, sender := setup(t)
 		sender.err = errBoom
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
@@ -160,13 +160,13 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		now := time.Now()
-		unsubscribed := domainsubscriber.Subscriber{
+		unsubscribed := subscriber.Subscriber{
 			ID:               1,
 			Email:            sub.Email,
 			UnsubscribeToken: "old-token",
 			UnsubscribedAt:   &now,
 		}
-		reactivated := domainsubscriber.Subscriber{
+		reactivated := subscriber.Subscriber{
 			ID:               1,
 			Email:            sub.Email,
 			UnsubscribeToken: "new-token",
@@ -189,7 +189,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		now := time.Now()
-		unsubscribed := domainsubscriber.Subscriber{
+		unsubscribed := subscriber.Subscriber{
 			ID:             1,
 			Email:          sub.Email,
 			UnsubscribedAt: &now,
@@ -197,7 +197,7 @@ func TestService_Subscribe(t *testing.T) {
 
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(unsubscribed, nil)
-		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(domainsubscriber.Subscriber{}, errBoom)
+		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -213,7 +213,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "confirm-tok").Return(domainsubscriber.Subscriber{}, nil)
+		repo.EXPECT().Confirm(gomock.Any(), "confirm-tok").Return(subscriber.Subscriber{}, nil)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "confirm-tok")
 		require.NoError(t, err)
@@ -223,7 +223,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "bad-tok").Return(domainsubscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Confirm(gomock.Any(), "bad-tok").Return(subscriber.Subscriber{}, store.ErrNotFound)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "bad-tok")
 		assert.ErrorIs(t, err, store.ErrNotFound)
@@ -233,7 +233,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "tok").Return(domainsubscriber.Subscriber{}, errBoom)
+		repo.EXPECT().Confirm(gomock.Any(), "tok").Return(subscriber.Subscriber{}, errBoom)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "tok")
 		assert.ErrorIs(t, err, errBoom)

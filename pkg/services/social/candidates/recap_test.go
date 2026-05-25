@@ -27,11 +27,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
-	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"

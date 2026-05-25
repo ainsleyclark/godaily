@@ -31,7 +31,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 

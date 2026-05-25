@@ -30,12 +30,12 @@ import (
 	"github.com/urfave/cli/v3"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
 func socialCmd(a *godaily.App) *cli.Command {
@@ -129,7 +129,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			results, err := a.Social.Post(ctx, social.PostOptions{
+			results, err := a.Social.Post(ctx, socialsvc.PostOptions{
 				Date:      date,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
@@ -186,11 +186,11 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 				now = parsed.UTC()
 			}
 
-			results, err := a.Social.Rotate(ctx, social.RotateOptions{
+			results, err := a.Social.Rotate(ctx, socialsvc.RotateOptions{
 				Now:       now,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
-				ForceKind: domainsocial.PostKind(strings.TrimSpace(cmd.String("kind"))),
+				ForceKind: social.PostKind(strings.TrimSpace(cmd.String("kind"))),
 			})
 			if err != nil {
 				a.Slack.MustSend(ctx, "Social rotation CLI failed: "+err.Error())
@@ -261,7 +261,7 @@ func parsePlatforms(raw []string) ([]socialgw.Platform, error) {
 	return out, nil
 }
 
-func printResults(results []social.PostResult) {
+func printResults(results []socialsvc.PostResult) {
 	if len(results) == 0 {
 		fmt.Fprintln(os.Stdout, "no posts produced")
 		return

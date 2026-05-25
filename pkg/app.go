@@ -30,8 +30,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	domainsocial "github.com/ainsleyclark/godaily/pkg/domain/social"
-	domainsubscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -41,9 +41,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
+	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
@@ -61,9 +61,9 @@ type App struct {
 	DB             *sql.DB
 	Repository     *Repository
 	Runner         digest.Runner
-	Social         *social.Service
+	Social         *socialsvc.Service
 	Cache          cache.Store
-	Subscribers    domainsubscriber.Service
+	Subscribers    subscriber.Service
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
@@ -74,8 +74,8 @@ type App struct {
 type Repository struct {
 	Issues        news.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   domainsubscriber.SubscriberRepository
-	SocialPosts   domainsocial.PostRepository
+	Subscribers   subscriber.SubscriberRepository
+	SocialPosts   social.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
 	Metrics       engagement.MetricsRepository
@@ -140,7 +140,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
-	socialSvc, err := social.New(
+	socialSvc, err := socialsvc.New(
 		buildSocialPosters(config),
 		aiClient,
 		issueStore,
@@ -153,7 +153,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
-	subscriberSvc := subscriber.New(subsStore, issueStore, emailSender)
+	subscriberSvc := subscribersvc.New(subsStore, issueStore, emailSender)
 
 	return &App{
 		Config:         &config,
@@ -191,11 +191,11 @@ func buildSocialPosters(c env.Config) []socialgw.Poster {
 // chooses from. The recap candidate is skipped if metrics aren't wired
 // (would never happen in production but keeps tests/no-DB bootstraps
 // from blowing up).
-func buildRotationCandidates(_ env.Config, repo *Repository, posts domainsocial.PostRepository) []social.Candidate {
-	out := make([]social.Candidate, 0, 4)
+func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRepository) []socialsvc.Candidate {
+	out := make([]socialsvc.Candidate, 0, 4)
 
-	out = append(out, candidates.NewNewSource(domainsocial.Profiles, posts))
-	out = append(out, candidates.NewSpotlight(domainsocial.Profiles, posts))
+	out = append(out, candidates.NewNewSource(social.Profiles, posts))
+	out = append(out, candidates.NewSpotlight(social.Profiles, posts))
 	out = append(out, candidates.NewCTA(posts))
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
