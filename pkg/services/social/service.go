@@ -113,24 +113,6 @@ func (s *Service) WithCandidates(cs ...Candidate) *Service {
 	return s
 }
 
-// Candidates returns the registered rotation candidates. Useful for the CLI
-// to look up a specific candidate by Kind for --kind=<x> dry-runs.
-func (s *Service) Candidates() []Candidate {
-	return s.candidates
-}
-
-// Posts exposes the underlying social post repository for candidates that
-// need to do their own idempotency lookups (e.g. spotlight rotation needs
-// to read the "last spotlight per source" history).
-func (s *Service) Posts() news.SocialPostRepository {
-	return s.posts
-}
-
-// Prompter exposes the AI client for candidate-side generators.
-func (s *Service) Prompter() ai.Prompter {
-	return s.prompter
-}
-
 // HasPosters reports whether the service has any platforms configured.
 // Useful for callers that want to short-circuit when no creds are set.
 func (s *Service) HasPosters() bool {

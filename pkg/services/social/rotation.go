@@ -116,7 +116,7 @@ func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult,
 // ForceKind. Returns nil when the day is not a rotation day.
 func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 	if opts.ForceKind != "" {
-		c := CandidateByKind(s.candidates, opts.ForceKind)
+		c := candidateByKind(s.candidates, opts.ForceKind)
 		if c == nil {
 			return nil, errors.Errorf("no candidate registered for kind %q", opts.ForceKind)
 		}
@@ -147,7 +147,7 @@ func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
 func orderedByKinds(all []Candidate, kinds ...news.SocialPostKind) []Candidate {
 	out := make([]Candidate, 0, len(kinds))
 	for _, k := range kinds {
-		if c := CandidateByKind(all, k); c != nil {
+		if c := candidateByKind(all, k); c != nil {
 			out = append(out, c)
 		}
 	}

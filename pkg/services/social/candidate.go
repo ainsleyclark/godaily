@@ -65,9 +65,7 @@ type (
 	}
 )
 
-// CandidateByKind returns the candidate with the given Kind, or nil if
-// none is registered. Used by the CLI to drive a single kind for testing.
-func CandidateByKind(all []Candidate, kind news.SocialPostKind) Candidate {
+func candidateByKind(all []Candidate, kind news.SocialPostKind) Candidate {
 	for _, c := range all {
 		if c.Kind() == kind {
 			return c
