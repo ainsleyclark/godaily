@@ -31,8 +31,8 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func appWithCreds(cfg env.Config) *godaily.App {
@@ -82,7 +82,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(allApp, []string{"bluesky"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, socialgw.PlatformBluesky, got[0].Platform())
+		assert.Equal(t, platform.Bluesky, got[0].Platform())
 	})
 
 	t.Run("LinkedIn creds", func(t *testing.T) {
@@ -90,7 +90,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(linkedInApp, []string{"linkedin"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, socialgw.PlatformLinkedIn, got[0].Platform())
+		assert.Equal(t, platform.LinkedIn, got[0].Platform())
 	})
 
 	t.Run("Mastodon creds", func(t *testing.T) {
@@ -98,7 +98,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(mastodonApp, []string{"mastodon"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, socialgw.PlatformMastodon, got[0].Platform())
+		assert.Equal(t, platform.Mastodon, got[0].Platform())
 	})
 
 	t.Run("Requesting unconfigured platform errors", func(t *testing.T) {
@@ -139,7 +139,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Error result", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: socialgw.PlatformLinkedIn,
+				Platform: platform.LinkedIn,
 				Err:      errors.New("bad token"),
 			}})
 		})
@@ -150,7 +150,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Skipped result", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: socialgw.PlatformBluesky,
+				Platform: platform.Bluesky,
 				Skipped:  true,
 			}})
 		})
@@ -160,7 +160,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Dry-run result prints text", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: socialgw.PlatformMastodon,
+				Platform: platform.Mastodon,
 				Text:     "Hello world",
 			}})
 		})
@@ -172,7 +172,7 @@ func TestPrintResults(t *testing.T) {
 		url := "https://bsky.app/profile/godaily.bsky.social/post/abc"
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: socialgw.PlatformBluesky,
+				Platform: platform.Bluesky,
 				PostURL:  url,
 			}})
 		})
@@ -195,10 +195,10 @@ func TestParsePlatforms(t *testing.T) {
 		t.Parallel()
 		got, err := parsePlatforms([]string{"bluesky", "linkedin", "mastodon"})
 		require.NoError(t, err)
-		assert.Equal(t, []socialgw.Platform{
-			socialgw.PlatformBluesky,
-			socialgw.PlatformLinkedIn,
-			socialgw.PlatformMastodon,
+		assert.Equal(t, []platform.Name{
+			platform.Bluesky,
+			platform.LinkedIn,
+			platform.Mastodon,
 		}, got)
 	})
 
@@ -206,9 +206,9 @@ func TestParsePlatforms(t *testing.T) {
 		t.Parallel()
 		got, err := parsePlatforms([]string{"  Bluesky  ", "LINKEDIN"})
 		require.NoError(t, err)
-		assert.Equal(t, []socialgw.Platform{
-			socialgw.PlatformBluesky,
-			socialgw.PlatformLinkedIn,
+		assert.Equal(t, []platform.Name{
+			platform.Bluesky,
+			platform.LinkedIn,
 		}, got)
 	})
 

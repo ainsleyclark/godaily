@@ -31,11 +31,11 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
 )
 
 func socialCmd(a *godaily.App) *cli.Command {
@@ -206,31 +206,31 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 
 // postersForFlags returns Poster implementations for the requested platforms,
 // or all configured ones when platforms is empty.
-func postersForFlags(app *godaily.App, platforms []string) ([]socialgw.Poster, error) {
+func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, error) {
 	c := app.Config
 
-	all := map[socialgw.Platform]socialgw.Poster{}
+	all := map[platform.Name]platform.Poster{}
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		all[socialgw.PlatformBluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+		all[platform.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		all[socialgw.PlatformLinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		all[platform.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		all[socialgw.PlatformMastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
+		all[platform.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 
 	if len(platforms) == 0 {
-		out := make([]socialgw.Poster, 0, len(all))
+		out := make([]platform.Poster, 0, len(all))
 		for _, p := range all {
 			out = append(out, p)
 		}
 		return out, nil
 	}
 
-	out := make([]socialgw.Poster, 0, len(platforms))
+	out := make([]platform.Poster, 0, len(platforms))
 	for _, name := range platforms {
-		key := socialgw.Platform(strings.ToLower(strings.TrimSpace(name)))
+		key := platform.Name(strings.ToLower(strings.TrimSpace(name)))
 		p, ok := all[key]
 		if !ok {
 			return nil, fmt.Errorf("platform %q not configured or unknown (expected: bluesky, linkedin, mastodon)", name)
@@ -241,16 +241,16 @@ func postersForFlags(app *godaily.App, platforms []string) ([]socialgw.Poster, e
 }
 
 // parsePlatforms validates and converts --platform flag values.
-func parsePlatforms(raw []string) ([]socialgw.Platform, error) {
+func parsePlatforms(raw []string) ([]platform.Name, error) {
 	if len(raw) == 0 {
 		return nil, nil
 	}
-	known := map[string]socialgw.Platform{
-		"bluesky":  socialgw.PlatformBluesky,
-		"linkedin": socialgw.PlatformLinkedIn,
-		"mastodon": socialgw.PlatformMastodon,
+	known := map[string]platform.Name{
+		"bluesky":  platform.Bluesky,
+		"linkedin": platform.LinkedIn,
+		"mastodon": platform.Mastodon,
 	}
-	out := make([]socialgw.Platform, 0, len(raw))
+	out := make([]platform.Name, 0, len(raw))
 	for _, name := range raw {
 		p, ok := known[strings.ToLower(strings.TrimSpace(name))]
 		if !ok {

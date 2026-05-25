@@ -27,9 +27,9 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -103,7 +103,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 }
 
 // Generate dispatches to the recap prompt.
-func (c *Recap) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Recap) Generate(ctx context.Context, p ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(rotation.RecapPayload)
 	if !ok {
 		return "", errors.New("recap: payload missing")

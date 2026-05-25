@@ -30,14 +30,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func TestClient_Platform(t *testing.T) {
 	t.Parallel()
 
 	c := New("tok", "urn:li:organization:1")
-	assert.Equal(t, social.PlatformLinkedIn, c.Platform())
+	assert.Equal(t, platform.LinkedIn, c.Platform())
 }
 
 func TestClient_Post(t *testing.T) {

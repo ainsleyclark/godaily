@@ -35,8 +35,8 @@ import (
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/gohttp"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
 
 const (
@@ -71,9 +71,9 @@ func New(token, authorURN string) *Client {
 	}
 }
 
-// Platform implements social.Poster.
-func (c *Client) Platform() social.Platform {
-	return social.PlatformLinkedIn
+// Platform implements platform.Poster.
+func (c *Client) Platform() platform.Name {
+	return platform.LinkedIn
 }
 
 type (
@@ -98,7 +98,7 @@ type (
 //
 // The post URL is reconstructed from the x-restli-id response header
 // (LinkedIn's REST convention for newly created resources).
-func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
+func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
 	body := postRequest{
 		Author:         c.authorURN,
 		Commentary:     text,
@@ -113,12 +113,12 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 
 	buf, err := json.Marshal(body)
 	if err != nil {
-		return social.Result{}, errors.Wrap(err, "marshalling post body")
+		return platform.Result{}, errors.Wrap(err, "marshalling post body")
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
 	if err != nil {
-		return social.Result{}, errors.Wrap(err, "building request")
+		return platform.Result{}, errors.Wrap(err, "building request")
 	}
 
 	req.Header.Set("Authorization", "Bearer "+c.token)
@@ -128,28 +128,28 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return social.Result{}, errors.Wrap(err, "sending request")
+		return platform.Result{}, errors.Wrap(err, "sending request")
 	}
 	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		respBuf := new(bytes.Buffer)
 		_, _ = respBuf.ReadFrom(resp.Body)
-		return social.Result{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
+		return platform.Result{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
 	}
 
 	urn := resp.Header.Get("x-restli-id")
-	return social.Result{PostURL: feedURL(urn)}, nil
+	return platform.Result{PostURL: feedURL(urn)}, nil
 }
 
 // Stats fetches engagement counts for a LinkedIn organisation post.
 // postURL must be the canonical feed URL stored in social_posts.post_url,
 // e.g. https://www.linkedin.com/feed/update/urn:li:share:7234567890/.
 // Requires the token to carry r_organization_social scope.
-func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, error) {
 	shareURN, err := urnFromPostURL(postURL)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "extracting share URN from post URL")
+		return platform.Stats{}, errors.Wrap(err, "extracting share URN from post URL")
 	}
 
 	endpoint := fmt.Sprintf(
@@ -161,7 +161,7 @@ func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "building request")
+		return platform.Stats{}, errors.Wrap(err, "building request")
 	}
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	req.Header.Set("LinkedIn-Version", c.apiVersion)
@@ -169,14 +169,14 @@ func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "sending request")
+		return platform.Stats{}, errors.Wrap(err, "sending request")
 	}
 	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		buf := new(bytes.Buffer)
 		_, _ = buf.ReadFrom(resp.Body)
-		return social.Stats{}, fmt.Errorf("linkedin share statistics: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+		return platform.Stats{}, fmt.Errorf("linkedin share statistics: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
 	}
 
 	var out struct {
@@ -191,13 +191,13 @@ func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error
 		} `json:"elements"`
 	}
 	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return social.Stats{}, errors.Wrap(err, "decoding response")
+		return platform.Stats{}, errors.Wrap(err, "decoding response")
 	}
 	if len(out.Elements) == 0 {
-		return social.Stats{}, nil
+		return platform.Stats{}, nil
 	}
 	s := out.Elements[0].TotalShareStatistics
-	return social.Stats{
+	return platform.Stats{
 		Likes:       s.LikeCount,
 		Reposts:     s.ShareCount,
 		Comments:    s.CommentCount,

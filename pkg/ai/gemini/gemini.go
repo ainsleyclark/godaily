@@ -30,9 +30,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 	"github.com/pkg/errors"
-
-	"github.com/ainsleyclark/godaily/pkg/gohttp"
 )
 
 const (

@@ -30,8 +30,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -93,7 +93,7 @@ func (c *CTA) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateC
 }
 
 // Generate dispatches to the cta prompt.
-func (c *CTA) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *CTA) Generate(ctx context.Context, p ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(rotation.CTAPayload)
 	if !ok {
 		return "", errors.New("cta: payload missing")

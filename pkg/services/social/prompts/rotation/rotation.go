@@ -30,7 +30,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
@@ -48,8 +48,8 @@ type platformProfile struct {
 // platformProfiles maps each platform to its rotation rules. Hashtag
 // lists and char limits are copied from the featured-path prompts so a
 // reader can't tell which slot a post came from.
-var platformProfiles = map[social.Platform]platformProfile{
-	social.PlatformBluesky: {
+var platformProfiles = map[platform.Name]platformProfile{
+	platform.Bluesky: {
 		name:      "Bluesky",
 		charLimit: 300,
 		hashtags:  featured.BlueskyHashtags,
@@ -57,14 +57,14 @@ var platformProfiles = map[social.Platform]platformProfile{
 - Drop bare URLs on their own line — Bluesky linkifies them automatically. No markdown.
 - 200-280 chars is the sweet spot.`,
 	},
-	social.PlatformLinkedIn: {
+	platform.LinkedIn: {
 		name:      "LinkedIn",
 		charLimit: 1300,
 		hashtags:  featured.LinkedInHashtags,
 		guidance: `- The audience is engineering leaders and senior developers. Plain prose paragraphs, no bullet lists, no markdown.
 - 300-600 chars is the sweet spot. The hard limit is much higher; do NOT pad.`,
 	},
-	social.PlatformMastodon: {
+	platform.Mastodon: {
 		name:      "Mastodon",
 		charLimit: 500,
 		hashtags:  featured.MastodonHashtags,
@@ -81,7 +81,7 @@ var platformProfiles = map[social.Platform]platformProfile{
 func run(
 	ctx context.Context,
 	p ai.Prompter,
-	platform social.Platform,
+	platform platform.Name,
 	kindSystem string,
 	userPayload any,
 ) (string, error) {

@@ -17,39 +17,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package social defines the platform-agnostic Poster interface implemented
-// by each social-media adapter (Bluesky, LinkedIn, Mastodon). Implementations
-// live in sub-packages.
-package social
+package platform
 
-import (
-	"context"
-)
+import "context"
 
-// Platform identifies a social platform.
-type Platform string
-
-// Platform constants. The string values are used as the persisted
-// platform field on news.SocialPost rows.
-const (
-	PlatformBluesky  Platform = "bluesky"
-	PlatformLinkedIn Platform = "linkedin"
-	PlatformMastodon Platform = "mastodon"
-)
-
-// String implements fmt.Stringer on Platform.
-func (p Platform) String() string {
-	return string(p)
-}
-
-// Result is what a platform returned after a successful post. PostURL is the
-// canonical web URL of the published content when available — implementations
-// leave it empty when the platform does not return one synchronously.
-type Result struct {
-	PostURL string
-}
-
-//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/gateway/social Poster
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/services/social/platform Poster
 
 // Poster publishes a single text post on one social platform.
 //
@@ -58,9 +30,32 @@ type Result struct {
 // transport must respect the supplied context for cancellation.
 type Poster interface {
 	// Platform identifies which platform this poster targets.
-	Platform() Platform
+	Platform() Name
 
 	// Post publishes text to the platform. Implementations are responsible
 	// for any auth dance their API requires.
 	Post(ctx context.Context, text string) (Result, error)
+}
+
+// Name identifies a social platform.
+type Name string
+
+// Platform name constants. The string values are used as the persisted
+// platform field on news.SocialPost rows.
+const (
+	Bluesky  Name = "bluesky"
+	LinkedIn Name = "linkedin"
+	Mastodon Name = "mastodon"
+)
+
+// String implements fmt.Stringer on Name.
+func (p Name) String() string {
+	return string(p)
+}
+
+// Result is what a platform returned after a successful post. PostURL is the
+// canonical web URL of the published content when available — implementations
+// leave it empty when the platform does not return one synchronously.
+type Result struct {
+	PostURL string
 }

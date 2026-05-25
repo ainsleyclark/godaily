@@ -23,7 +23,7 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // RecapItem is one entry in the weekly recap input.
@@ -53,6 +53,6 @@ Write ONE post that:
 End the post body, then a blank line, then the platform's hashtag line.`
 
 // Recap generates a weekly recap post for a single platform.
-func Recap(ctx context.Context, p ai.Prompter, platform social.Platform, payload RecapPayload) (string, error) {
+func Recap(ctx context.Context, p ai.Prompter, platform platform.Name, payload RecapPayload) (string, error) {
 	return run(ctx, p, platform, recapGuidance, payload)
 }

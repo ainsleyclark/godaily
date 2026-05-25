@@ -28,8 +28,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/gohttp"
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
 
 // GoRelease defines the type that implements news.Fetcher for go.dev/dl/.

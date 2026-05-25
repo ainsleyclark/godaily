@@ -145,7 +145,7 @@ third-party platforms (Bluesky, LinkedIn, Mastodon, etc.).
 **Does NOT own.**
 
 - ❌ Platform clients (Bluesky API, LinkedIn API, Mastodon API)
-  → `pkg/gateway/social`. The domain is provider-agnostic.
+  → `pkg/services/social/platform`. The domain is provider-agnostic.
 - ❌ `SocialMetric` (likes/reposts/impressions) → `domain/engagement`.
   Metrics about how a post performed are engagement signals, not
   social-domain types.
@@ -230,7 +230,7 @@ derived from them, and social-platform engagement counters.
 - ❌ `Post`, `Profile` → `domain/social`. We measure posts, we
   don't define them.
 - ❌ Provider webhook DTOs → `pkg/gateway/email`,
-  `pkg/gateway/social`.
+  `pkg/services/social/platform`.
 
 **Service.** `services/engagement` (renamed from `services/metrics`,
 absorbs `services/emailevent`).

@@ -54,7 +54,7 @@ agent's head.
   generic tips.
 - **Reuse existing infrastructure** — the Slack gateway
   (`pkg/gateway/slack`), the AI client (`pkg/ai`), social adapters
-  (`pkg/gateway/social/*`), Resend, Vercel crons, and the sqlc + goose
+  (`pkg/services/social/platform/*`), Resend, Vercel crons, and the sqlc + goose
   migration stack.
 
 ## Action tiers

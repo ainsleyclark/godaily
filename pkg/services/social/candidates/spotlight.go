@@ -29,8 +29,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -83,7 +83,7 @@ func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 
 // Generate dispatches to the spotlight prompt with the right per-platform
 // mention.
-func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
 	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("spotlight: profile payload missing")

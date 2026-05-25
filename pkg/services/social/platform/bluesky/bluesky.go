@@ -37,8 +37,8 @@ import (
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/gohttp"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
 
 // defaultBaseURL is the public Bluesky PDS that user accounts live on by
@@ -67,9 +67,9 @@ func New(handle, appPassword string) *Client {
 	}
 }
 
-// Platform implements social.Poster.
-func (c *Client) Platform() social.Platform {
-	return social.PlatformBluesky
+// Platform implements platform.Poster.
+func (c *Client) Platform() platform.Name {
+	return platform.Bluesky
 }
 
 type (
@@ -86,10 +86,10 @@ type (
 // Post publishes text as a single post on the configured account. URLs in the
 // text are annotated with AT Protocol link facets so they render as clickable
 // hyperlinks in Bluesky clients.
-func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
+func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
 	session, err := c.createSession(ctx)
 	if err != nil {
-		return social.Result{}, errors.Wrap(err, "bluesky createSession")
+		return platform.Result{}, errors.Wrap(err, "bluesky createSession")
 	}
 
 	record := map[string]any{
@@ -110,10 +110,10 @@ func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
 
 	var out createRecordResponse
 	if err := c.doJSON(ctx, "com.atproto.repo.createRecord", session.AccessJWT, body, &out); err != nil {
-		return social.Result{}, errors.Wrap(err, "bluesky createRecord")
+		return platform.Result{}, errors.Wrap(err, "bluesky createRecord")
 	}
 
-	return social.Result{PostURL: c.postURLFromURI(out.URI)}, nil
+	return platform.Result{PostURL: c.postURLFromURI(out.URI)}, nil
 }
 
 func (c *Client) createSession(ctx context.Context) (sessionResponse, error) {
@@ -215,29 +215,29 @@ func buildFacets(text string) []facet {
 // Stats fetches engagement counts for a Bluesky post via the public AppView
 // API. postURL must be a bsky.app URL of the form
 // https://bsky.app/profile/<handle>/post/<rkey>.
-func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, error) {
 	atURI, err := c.atURIFromPostURL(postURL)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "deriving AT URI from post URL")
+		return platform.Stats{}, errors.Wrap(err, "deriving AT URI from post URL")
 	}
 
 	endpoint := "https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?uris[]=" + url.QueryEscape(atURI)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "building request")
+		return platform.Stats{}, errors.Wrap(err, "building request")
 	}
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "sending request")
+		return platform.Stats{}, errors.Wrap(err, "sending request")
 	}
 	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		buf := new(bytes.Buffer)
 		_, _ = buf.ReadFrom(resp.Body)
-		return social.Stats{}, fmt.Errorf("bsky.feed.getPosts: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+		return platform.Stats{}, fmt.Errorf("bsky.feed.getPosts: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
 	}
 
 	var out struct {
@@ -248,13 +248,13 @@ func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error
 		} `json:"posts"`
 	}
 	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return social.Stats{}, errors.Wrap(err, "decoding response")
+		return platform.Stats{}, errors.Wrap(err, "decoding response")
 	}
 	if len(out.Posts) == 0 {
-		return social.Stats{}, nil
+		return platform.Stats{}, nil
 	}
 	p := out.Posts[0]
-	return social.Stats{
+	return platform.Stats{
 		Likes:    p.LikeCount,
 		Reposts:  p.RepostCount,
 		Comments: p.ReplyCount,

@@ -31,8 +31,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // promoCycleLen is the M-M-C pattern length. Two meetups for each
@@ -54,18 +54,18 @@ const promoCycleLen = 3
 //
 // Keep the strings short — Bluesky caps at 300 chars and we want
 // headroom for long conference names.
-var communityTemplates = map[socialgw.Platform][]string{
-	socialgw.PlatformLinkedIn: {
+var communityTemplates = map[platform.Name][]string{
+	platform.LinkedIn: {
 		"{{.Mention}} — {{.Description}}\n\n{{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}}\n\n{{.URL}}",
 		"{{.Mention}}: {{.Description}}\n\n{{.URL}}",
 	},
-	socialgw.PlatformBluesky: {
+	platform.Bluesky: {
 		"{{.Mention}} — {{.Description}} {{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}} {{.URL}}",
 		"{{.Mention}}: {{.Description}} {{.URL}}",
 	},
-	socialgw.PlatformMastodon: {
+	platform.Mastodon: {
 		"{{.Mention}} — {{.Description}} #golang {{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}} #golang {{.URL}}",
 		"{{.Mention}}: {{.Description}} #golang {{.URL}}",
@@ -97,16 +97,16 @@ type communityHandles struct {
 // mentions returns the per-platform string to splice into the post body.
 // Empty platforms are omitted so the template-render fallback (use Name)
 // kicks in.
-func (e communityEntry) mentions() map[socialgw.Platform]string {
-	out := make(map[socialgw.Platform]string)
+func (e communityEntry) mentions() map[platform.Name]string {
+	out := make(map[platform.Name]string)
 	if e.Handles.LinkedIn != "" {
-		out[socialgw.PlatformLinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
+		out[platform.LinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
 	}
 	if e.Handles.Bluesky != "" {
-		out[socialgw.PlatformBluesky] = "@" + e.Handles.Bluesky
+		out[platform.Bluesky] = "@" + e.Handles.Bluesky
 	}
 	if e.Handles.Mastodon != "" {
-		out[socialgw.PlatformMastodon] = "@" + e.Handles.Mastodon
+		out[platform.Mastodon] = "@" + e.Handles.Mastodon
 	}
 	return out
 }
@@ -180,7 +180,7 @@ func (c *Community) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 // Generate renders one of the per-platform templates with the entry's
 // mention spliced in (or its plain name as fallback when no handle is
 // configured for the platform).
-func (c *Community) Generate(_ context.Context, _ ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Community) Generate(_ context.Context, _ ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(communityPayload)
 	if !ok {
 		return "", errors.New("community: payload missing")

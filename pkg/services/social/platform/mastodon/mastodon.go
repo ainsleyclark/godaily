@@ -30,7 +30,7 @@ import (
 	"github.com/mattn/go-mastodon"
 	"github.com/pkg/errors"
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // Client publishes statuses to a Mastodon instance.
@@ -61,27 +61,27 @@ func New(server, accessToken string) *Client {
 	}
 }
 
-// Platform implements social.Poster.
-func (c *Client) Platform() social.Platform {
-	return social.PlatformMastodon
+// Platform implements platform.Poster.
+func (c *Client) Platform() platform.Name {
+	return platform.Mastodon
 }
 
 // Stats fetches engagement counts for a Mastodon status. postURL must be
 // the canonical status URL (e.g. https://mastodon.social/@handle/113456789).
 // The status ID is extracted from the URL path's last segment.
-func (c *Client) Stats(ctx context.Context, postURL string) (social.Stats, error) {
+func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, error) {
 	id, err := statusIDFromURL(postURL)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "extracting status ID from post URL")
+		return platform.Stats{}, errors.Wrap(err, "extracting status ID from post URL")
 	}
 	status, err := c.getStatusFunc(ctx, id)
 	if err != nil {
-		return social.Stats{}, errors.Wrap(err, "mastodon GetStatus")
+		return platform.Stats{}, errors.Wrap(err, "mastodon GetStatus")
 	}
 	if status == nil {
-		return social.Stats{}, nil
+		return platform.Stats{}, nil
 	}
-	return social.Stats{
+	return platform.Stats{
 		Likes:    status.FavouritesCount,
 		Reposts:  status.ReblogsCount,
 		Comments: status.RepliesCount,
@@ -107,18 +107,18 @@ func statusIDFromURL(postURL string) (mastodon.ID, error) {
 }
 
 // Post publishes text as a public status on the configured instance.
-func (c *Client) Post(ctx context.Context, text string) (social.Result, error) {
+func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
 	status, err := c.postStatusFunc(ctx, &mastodon.Toot{
 		Status:     text,
 		Visibility: "public",
 	})
 	if err != nil {
-		return social.Result{}, errors.Wrap(err, "mastodon PostStatus")
+		return platform.Result{}, errors.Wrap(err, "mastodon PostStatus")
 	}
 
 	if status == nil {
-		return social.Result{}, nil
+		return platform.Result{}, nil
 	}
 
-	return social.Result{PostURL: status.URL}, nil
+	return platform.Result{PostURL: status.URL}, nil
 }

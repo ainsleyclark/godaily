@@ -32,11 +32,11 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -56,8 +56,8 @@ type fixture struct {
 	items     *mocknews.MockItemRepository
 	posts     *mocksocial.MockPostRepository
 	slack     *mockslack.MockSender
-	posters   []socialgw.Poster
-	reframers map[socialgw.Platform]reframer
+	posters   []platform.Poster
+	reframers map[platform.Name]reframer
 }
 
 func newFixture(t *testing.T) *fixture {
@@ -88,7 +88,7 @@ func (f *fixture) service() *Service {
 // stubReframer replaces the reframer for one platform on this fixture's
 // service. It does not touch any package-level state, so tests are safe
 // to run in parallel.
-func (f *fixture) stubReframer(p socialgw.Platform, stub reframer) {
+func (f *fixture) stubReframer(p platform.Name, stub reframer) {
 	if f.reframers == nil {
 		f.reframers = defaultReframers()
 	}
@@ -96,7 +96,7 @@ func (f *fixture) stubReframer(p socialgw.Platform, stub reframer) {
 }
 
 // newMockPoster returns a Poster whose Platform() returns p.
-func newMockPoster(ctrl *gomock.Controller, p socialgw.Platform) *mocksocial.MockPoster {
+func newMockPoster(ctrl *gomock.Controller, p platform.Name) *mocksocial.MockPoster {
 	mp := mocksocial.NewMockPoster(ctrl)
 	mp.EXPECT().Platform().Return(p).AnyTimes()
 	return mp
@@ -157,7 +157,7 @@ func TestService_HasPosters(t *testing.T) {
 	f := newFixture(t)
 	assert.False(t, f.service().HasPosters())
 
-	f.posters = []socialgw.Poster{newMockPoster(f.ctrl, socialgw.PlatformBluesky)}
+	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
 	assert.True(t, f.service().HasPosters())
 }
 
@@ -174,7 +174,7 @@ func TestService_Post_IssueNotFound(t *testing.T) {
 	t.Parallel()
 
 	f := newFixture(t)
-	f.posters = []socialgw.Poster{newMockPoster(f.ctrl, socialgw.PlatformBluesky)}
+	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").
 		Return(news.Issue{}, store.ErrNotFound)
@@ -189,7 +189,7 @@ func TestService_Post_NoItemsSkips(t *testing.T) {
 	t.Parallel()
 
 	f := newFixture(t)
-	f.posters = []socialgw.Poster{newMockPoster(f.ctrl, socialgw.PlatformBluesky)}
+	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
 
 	issue := sampleIssue()
 	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(issue, nil)
@@ -207,15 +207,15 @@ func TestService_Post_HappyPath(t *testing.T) {
 	f := newFixture(t)
 	issue := sampleIssue()
 
-	f.stubReframer(socialgw.PlatformBluesky, constReframer(
+	f.stubReframer(platform.Bluesky, constReframer(
 		"Go 1.30 lands generic inference improvements.\n\nhttps://go.dev/blog/go1.30\n#golang",
 	))
 
-	bluesky := newMockPoster(f.ctrl, socialgw.PlatformBluesky)
+	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
 	bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-		socialgw.Result{PostURL: "https://bsky.app/profile/godaily/post/abc"}, nil,
+		platform.Result{PostURL: "https://bsky.app/profile/godaily/post/abc"}, nil,
 	)
-	f.posters = []socialgw.Poster{bluesky}
+	f.posters = []platform.Poster{bluesky}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").Return(issue, nil)
 	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
@@ -248,7 +248,7 @@ func TestService_Post_HappyPath(t *testing.T) {
 	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
 	require.NoError(t, err)
 	require.Len(t, res, 1)
-	assert.Equal(t, socialgw.PlatformBluesky, res[0].Platform)
+	assert.Equal(t, platform.Bluesky, res[0].Platform)
 	assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", res[0].PostURL)
 	assert.False(t, res[0].Skipped)
 	assert.Contains(t, successMsg, "featured")
@@ -260,9 +260,9 @@ func TestService_Post_SkipsAlreadyPosted(t *testing.T) {
 	t.Parallel()
 
 	f := newFixture(t)
-	bluesky := newMockPoster(f.ctrl, socialgw.PlatformBluesky)
+	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
 	// bluesky.Post must NOT be called when HasPosted returns true.
-	f.posters = []socialgw.Poster{bluesky}
+	f.posters = []platform.Poster{bluesky}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
@@ -283,11 +283,11 @@ func TestService_Post_DryRun(t *testing.T) {
 
 	f := newFixture(t)
 
-	f.stubReframer(socialgw.PlatformBluesky, constReframer("dry-run text"))
+	f.stubReframer(platform.Bluesky, constReframer("dry-run text"))
 
-	bluesky := newMockPoster(f.ctrl, socialgw.PlatformBluesky)
+	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
 	// bluesky.Post must NOT be called in dry-run.
-	f.posters = []socialgw.Poster{bluesky}
+	f.posters = []platform.Poster{bluesky}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
@@ -308,11 +308,11 @@ func TestService_Post_PosterErrorNotifiesSlack(t *testing.T) {
 
 	f := newFixture(t)
 
-	f.stubReframer(socialgw.PlatformBluesky, constReframer("ok"))
+	f.stubReframer(platform.Bluesky, constReframer("ok"))
 
-	bluesky := newMockPoster(f.ctrl, socialgw.PlatformBluesky)
-	bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(socialgw.Result{}, errors.New("API down"))
-	f.posters = []socialgw.Poster{bluesky}
+	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
+	bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(platform.Result{}, errors.New("API down"))
+	f.posters = []platform.Poster{bluesky}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
@@ -339,14 +339,14 @@ func TestService_Post_PlatformsFilter(t *testing.T) {
 
 	f := newFixture(t)
 
-	f.stubReframer(socialgw.PlatformMastodon, constReframer("mastodon text"))
+	f.stubReframer(platform.Mastodon, constReframer("mastodon text"))
 
-	bluesky := newMockPoster(f.ctrl, socialgw.PlatformBluesky)
-	mastodon := newMockPoster(f.ctrl, socialgw.PlatformMastodon)
+	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
+	mastodon := newMockPoster(f.ctrl, platform.Mastodon)
 	mastodon.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-		socialgw.Result{PostURL: "https://mastodon.social/@godaily/9"}, nil,
+		platform.Result{PostURL: "https://mastodon.social/@godaily/9"}, nil,
 	)
-	f.posters = []socialgw.Poster{bluesky, mastodon}
+	f.posters = []platform.Poster{bluesky, mastodon}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
@@ -361,11 +361,11 @@ func TestService_Post_PlatformsFilter(t *testing.T) {
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	res, err := f.service().Post(t.Context(), PostOptions{
 		Date:      date,
-		Platforms: []socialgw.Platform{socialgw.PlatformMastodon},
+		Platforms: []platform.Name{platform.Mastodon},
 	})
 	require.NoError(t, err)
 	require.Len(t, res, 1)
-	assert.Equal(t, socialgw.PlatformMastodon, res[0].Platform)
+	assert.Equal(t, platform.Mastodon, res[0].Platform)
 }
 
 func TestSelectPosters(t *testing.T) {
@@ -374,10 +374,10 @@ func TestSelectPosters(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	bluesky := newMockPoster(ctrl, socialgw.PlatformBluesky)
-	linkedin := newMockPoster(ctrl, socialgw.PlatformLinkedIn)
-	mastodon := newMockPoster(ctrl, socialgw.PlatformMastodon)
-	all := []socialgw.Poster{bluesky, linkedin, mastodon}
+	bluesky := newMockPoster(ctrl, platform.Bluesky)
+	linkedin := newMockPoster(ctrl, platform.LinkedIn)
+	mastodon := newMockPoster(ctrl, platform.Mastodon)
+	all := []platform.Poster{bluesky, linkedin, mastodon}
 
 	t.Run("Empty wanted returns all", func(t *testing.T) {
 		t.Parallel()
@@ -387,15 +387,15 @@ func TestSelectPosters(t *testing.T) {
 
 	t.Run("Subset returns only matches", func(t *testing.T) {
 		t.Parallel()
-		got := selectPosters(all, []socialgw.Platform{socialgw.PlatformLinkedIn, socialgw.PlatformMastodon})
+		got := selectPosters(all, []platform.Name{platform.LinkedIn, platform.Mastodon})
 		require.Len(t, got, 2)
-		assert.Equal(t, socialgw.PlatformLinkedIn, got[0].Platform())
-		assert.Equal(t, socialgw.PlatformMastodon, got[1].Platform())
+		assert.Equal(t, platform.LinkedIn, got[0].Platform())
+		assert.Equal(t, platform.Mastodon, got[1].Platform())
 	})
 
 	t.Run("Unknown wanted yields empty", func(t *testing.T) {
 		t.Parallel()
-		got := selectPosters(all, []socialgw.Platform{"twitter"})
+		got := selectPosters(all, []platform.Name{"twitter"})
 		assert.Empty(t, got)
 	})
 }

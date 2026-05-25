@@ -27,7 +27,7 @@ import (
 	"github.com/pkg/errors"
 
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // RotateOptions controls a single Rotate invocation.
@@ -42,7 +42,7 @@ type RotateOptions struct {
 	DryRun bool
 
 	// Platforms optionally restricts which configured posters run.
-	Platforms []socialgw.Platform
+	Platforms []platform.Name
 
 	// ForceKind, when non-empty, bypasses the day-aware routing and runs
 	// the named candidate's Eligible check directly. Used by the CLI to
@@ -101,7 +101,7 @@ func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult,
 			dryRun:    opts.DryRun,
 			kind:      cand.Kind(),
 			subject:   cctx.Subject,
-			generate: func(ctx context.Context, platform socialgw.Platform) (string, error) {
+			generate: func(ctx context.Context, platform platform.Name) (string, error) {
 				return cand.Generate(ctx, s.prompter, platform, cctx)
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),

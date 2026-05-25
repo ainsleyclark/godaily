@@ -35,14 +35,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/bluesky"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/linkedin"
-	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
 	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
@@ -67,7 +67,7 @@ type App struct {
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
-	StatFetchers   map[socialgw.Platform]socialgw.StatFetcher
+	StatFetchers   map[platform.Name]platform.StatFetcher
 }
 
 // Repository defines the datastore for the application.
@@ -173,8 +173,8 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 // buildSocialPosters returns the slice of social.Poster implementations
 // whose credentials are present in the config. Each platform is opt-in:
 // missing creds means the platform is skipped entirely.
-func buildSocialPosters(c env.Config) []socialgw.Poster {
-	var out []socialgw.Poster
+func buildSocialPosters(c env.Config) []platform.Poster {
+	var out []platform.Poster
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
 	}
@@ -209,16 +209,16 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRe
 
 // buildStatFetchers returns a map of platform → StatFetcher for platforms
 // whose credentials are present in the config.
-func buildStatFetchers(c env.Config) map[socialgw.Platform]socialgw.StatFetcher {
-	out := make(map[socialgw.Platform]socialgw.StatFetcher)
+func buildStatFetchers(c env.Config) map[platform.Name]platform.StatFetcher {
+	out := make(map[platform.Name]platform.StatFetcher)
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		out[socialgw.PlatformBluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+		out[platform.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out[socialgw.PlatformLinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		out[platform.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		out[socialgw.PlatformMastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
+		out[platform.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 	return out
 }

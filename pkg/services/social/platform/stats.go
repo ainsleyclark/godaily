@@ -17,32 +17,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package social_test
+package platform
 
-import (
-	"testing"
+import "context"
 
-	"github.com/stretchr/testify/assert"
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/StatFetcher.go github.com/ainsleyclark/godaily/pkg/services/social/platform StatFetcher
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/social"
-)
+// StatFetcher fetches engagement stats for a published post by its URL.
+type StatFetcher interface {
+	// Platform identifies the platform this fetcher targets.
+	Platform() Name
 
-func TestPlatform_String(t *testing.T) {
-	t.Parallel()
+	// Stats returns the current engagement counts for the post at postURL.
+	// postURL is the canonical web URL stored in social_posts.post_url.
+	Stats(ctx context.Context, postURL string) (Stats, error)
+}
 
-	tt := map[string]struct {
-		input social.Platform
-		want  string
-	}{
-		"Bluesky":  {input: social.PlatformBluesky, want: "bluesky"},
-		"LinkedIn": {input: social.PlatformLinkedIn, want: "linkedin"},
-		"Mastodon": {input: social.PlatformMastodon, want: "mastodon"},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, test.input.String())
-		})
-	}
+// Stats holds the engagement counts returned by a platform for a single post.
+type Stats struct {
+	Likes       int64
+	Reposts     int64
+	Comments    int64
+	Impressions int64
 }

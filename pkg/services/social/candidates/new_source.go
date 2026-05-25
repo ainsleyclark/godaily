@@ -29,8 +29,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -95,7 +95,7 @@ func (c *NewSource) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 
 // Generate dispatches to the new_source prompt with the right per-platform
 // mention.
-func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
 	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("new_source: profile payload missing")
@@ -122,13 +122,13 @@ func sortedAnnounceable(profiles map[news.Source]social.Profile) []news.Source {
 // socialMentionsFor translates SocialProfile.Mentions (string-keyed, so
 // the news package stays free of socialgw imports) into the typed map the
 // rotation orchestrator carries around.
-func socialMentionsFor(p social.Profile) map[socialgw.Platform]string {
+func socialMentionsFor(p social.Profile) map[platform.Name]string {
 	if len(p.Mentions) == 0 {
 		return nil
 	}
-	out := make(map[socialgw.Platform]string, len(p.Mentions))
+	out := make(map[platform.Name]string, len(p.Mentions))
 	for k, v := range p.Mentions {
-		out[socialgw.Platform(k)] = v
+		out[platform.Name(k)] = v
 	}
 	return out
 }

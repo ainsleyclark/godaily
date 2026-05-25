@@ -31,8 +31,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 var (
@@ -95,7 +95,7 @@ func TestSpotlight_Eligible(t *testing.T) {
 		profile, ok := cctx.Payload.(social.Profile)
 		require.True(t, ok, "Payload must be a social.Profile")
 		assert.Equal(t, "Alpha", profile.DisplayName)
-		assert.Equal(t, "@alpha.example", cctx.Mentions[socialgw.PlatformBluesky])
+		assert.Equal(t, "@alpha.example", cctx.Mentions[platform.Bluesky])
 	})
 
 	t.Run("Rotates past already-covered source", func(t *testing.T) {

@@ -29,7 +29,7 @@ import (
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/ainsleyclark/godaily/pkg/gohttp"
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 )

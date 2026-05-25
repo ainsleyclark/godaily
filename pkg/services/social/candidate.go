@@ -25,7 +25,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 type (
@@ -42,13 +42,13 @@ type (
 		Hook     string
 		URL      string
 		Subject  string
-		Mentions map[socialgw.Platform]string
+		Mentions map[platform.Name]string
 		Payload  any
 	}
 	// Generator produces post text for one platform from a
 	// CandidateContext. Returning a non-nil error aborts the publish
 	// for that platform only.
-	Generator func(ctx context.Context, p ai.Prompter, platform socialgw.Platform, c CandidateContext) (string, error)
+	Generator func(ctx context.Context, p ai.Prompter, platform platform.Name, c CandidateContext) (string, error)
 	// Candidate is one possible rotation post. Eligible looks at the
 	// world (DB, click metrics) and either returns a populated context
 	// or reports the candidate is not ready.
@@ -61,7 +61,7 @@ type (
 		Eligible(ctx context.Context, now time.Time) (CandidateContext, bool, error)
 		// Generate returns the post text for one platform given the
 		// context from Eligible.
-		Generate(ctx context.Context, p ai.Prompter, platform socialgw.Platform, c CandidateContext) (string, error)
+		Generate(ctx context.Context, p ai.Prompter, platform platform.Name, c CandidateContext) (string, error)
 	}
 )
 

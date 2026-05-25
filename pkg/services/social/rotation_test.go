@@ -31,12 +31,12 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialgw "github.com/ainsleyclark/godaily/pkg/gateway/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // fakeCandidate is a hand-written test stub for the Candidate interface.
@@ -65,7 +65,7 @@ func (f *fakeCandidate) Eligible(_ context.Context, _ time.Time) (socialsvc.Cand
 	return cctx, true, nil
 }
 
-func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ socialgw.Platform, _ socialsvc.CandidateContext) (string, error) {
+func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ platform.Name, _ socialsvc.CandidateContext) (string, error) {
 	return f.text, nil
 }
 
@@ -92,9 +92,9 @@ func newRotationFixture(t *testing.T, candidates ...socialsvc.Candidate) rotatio
 	posts := mocksocial.NewMockPostRepository(ctrl)
 
 	bluesky := mocksocial.NewMockPoster(ctrl)
-	bluesky.EXPECT().Platform().Return(socialgw.PlatformBluesky).AnyTimes()
+	bluesky.EXPECT().Platform().Return(platform.Bluesky).AnyTimes()
 
-	svc, err := socialsvc.New([]socialgw.Poster{bluesky}, prompter, issues, items, posts, slk)
+	svc, err := socialsvc.New([]platform.Poster{bluesky}, prompter, issues, items, posts, slk)
 	require.NoError(t, err)
 	svc.WithCandidates(candidates...)
 
@@ -287,7 +287,7 @@ func TestService_Rotate(t *testing.T) {
 			Return(false, nil)
 		f.poster.EXPECT().
 			Post(gomock.Any(), "Follow @ardanlabs for great Go content.").
-			Return(socialgw.Result{PostURL: "https://bsky.app/x"}, nil)
+			Return(platform.Result{PostURL: "https://bsky.app/x"}, nil)
 		f.posts.EXPECT().
 			Create(gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ context.Context, p social.Post) (social.Post, error) {
