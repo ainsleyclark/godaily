@@ -96,6 +96,48 @@ returns `true` in the consolidated binary. The guard becomes effectively a
 no-op but remains as defence against a future refactor accidentally dropping
 the import.
 
+## pkg/api/app.go simplification
+
+With a single entrypoint that bootstraps the App eagerly and injects it via
+`WithApp` on every request, the singleton/lazy-bootstrap machinery in
+`pkg/api/app.go` becomes dead weight. Strip it back to just context
+injection.
+
+Remove:
+- The `app` / `appMu` globals and `SetApp` — nothing calls it once
+  `index.go` is the only entrypoint.
+- The lazy-bootstrap fallback inside `GetApp` (the branch that calls
+  `godaily.Bootstrap(ctx)` and `os.Exit(0)` on error — also a footgun:
+  silent zero exit on bootstrap failure).
+
+Keep:
+- `WithApp` — still load-bearing. `mux.Handler` uses it in production to
+  attach the bootstrapped App to each request context, and tests use it to
+  inject mocks.
+- The `appContextKey` check in `Handle` that skips rate limiting when a
+  test has pre-injected an App.
+
+Simplified `GetApp` panics if no App is in context — that can only happen
+if a handler is invoked outside the mux, which is a wiring bug worth
+failing loud on.
+
+```go
+func GetApp(ctx context.Context) *godaily.App {
+	a, ok := ctx.Value(appContextKey{}).(*godaily.App)
+	if !ok || a == nil {
+		panic("api: no App in request context — handler must be invoked via mux.Handler")
+	}
+	return a
+}
+```
+
+Drops `log/slog`, `os`, and `sync` imports from `pkg/api/app.go`.
+
+Before deleting `SetApp`, grep for callers: `rg 'SetApp\b'`. If anything
+under `pkg/cmd/` uses it (e.g. the local server), switch that path to
+bootstrap and pass the App directly into `mux.Handler`, same as
+`index.go` does.
+
 ## vercel.json
 
 ```json
@@ -134,11 +176,15 @@ Keep the existing `/api/issues/:slug → /api/issues/slug?slug=:slug` rewrites
 3. Delete every `api/*.go` and `api/*/` directory except the new `index.go`.
 4. Leave `pkg/app.go` untouched. Keep `_ "pkg/source"` in the relocated
    `pkg/api/handlers/collect.go` so the registry still populates.
-5. Update `vercel.json`:
+5. Simplify `pkg/api/app.go`: drop `SetApp`, the `app`/`appMu` globals, and
+   the lazy-bootstrap fallback in `GetApp`. Verify no `SetApp` callers
+   remain with `rg 'SetApp\b'`; migrate any (likely under `pkg/cmd/`) to
+   pass the App into `mux.Handler` directly.
+6. Update `vercel.json`:
    - rewrites: catch-all `/api/(.*) → /api/index`
    - `functions` glob narrowed to `api/index.go`
-6. `go test ./...`
-7. `golangci-lint run ./... --fix --config=.golangci.yaml`
+7. `go test ./...`
+8. `golangci-lint run ./... --fix --config=.golangci.yaml`
 
 ## Build tags
 
