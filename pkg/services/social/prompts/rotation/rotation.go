@@ -17,10 +17,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package rotation builds AI prompts for the Tue/Fri rotation slot — the
-// non-featured social posts (self-release, weekly recap, source spotlight,
-// signup CTA). Each kind has its own generator file in this package and
-// shares platformProfile + JSON output handling defined here.
 package rotation
 
 import (
@@ -35,7 +31,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/gateway/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/prompts"
+	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
@@ -56,7 +52,7 @@ var platformProfiles = map[social.Platform]platformProfile{
 	social.PlatformBluesky: {
 		name:      "Bluesky",
 		charLimit: 300,
-		hashtags:  prompts.BlueskyHashtags,
+		hashtags:  featured.BlueskyHashtags,
 		guidance: `- Bluesky users are heavily developer-focused. Speak like you're posting in a Go channel.
 - Drop bare URLs on their own line — Bluesky linkifies them automatically. No markdown.
 - 200-280 chars is the sweet spot.`,
@@ -64,14 +60,14 @@ var platformProfiles = map[social.Platform]platformProfile{
 	social.PlatformLinkedIn: {
 		name:      "LinkedIn",
 		charLimit: 1300,
-		hashtags:  prompts.LinkedInHashtags,
+		hashtags:  featured.LinkedInHashtags,
 		guidance: `- The audience is engineering leaders and senior developers. Plain prose paragraphs, no bullet lists, no markdown.
 - 300-600 chars is the sweet spot. The hard limit is much higher; do NOT pad.`,
 	},
 	social.PlatformMastodon: {
 		name:      "Mastodon",
 		charLimit: 500,
-		hashtags:  prompts.MastodonHashtags,
+		hashtags:  featured.MastodonHashtags,
 		guidance: `- The fediverse uses hashtags actively for discovery — keep them.
 - Drop the URL on its own line; Mastodon renders it clickably.
 - 280-400 chars is the sweet spot.`,
