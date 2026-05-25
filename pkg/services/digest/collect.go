@@ -72,8 +72,8 @@ func (a Aggregator) Collect(ctx context.Context, opts CollectOptions) (CollectRe
 	}
 
 	var (
-		results     []news.SourceItems
-		sourceErrs  map[news.Source]error
+		results    []news.SourceItems
+		sourceErrs map[news.Source]error
 	)
 	for _, src := range sources {
 		fetched, err := a.fetchSource(ctx, src)
