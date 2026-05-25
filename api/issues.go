@@ -26,6 +26,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // HandleIssues is the Vercel serverless function entry point for GET /api/issues.
@@ -42,7 +43,7 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 			perPage = api.DefaultPerPage
 		}
 
-		opts := news.ListOptions{Page: page, PerPage: perPage}
+		opts := store.ListOptions{Page: page, PerPage: perPage}
 		statusParam := r.URL.Query().Get("status")
 
 		var (

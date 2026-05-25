@@ -15,6 +15,7 @@ import (
 	time "time"
 
 	news "github.com/ainsleyclark/godaily/pkg/domain/news"
+	store "github.com/ainsleyclark/godaily/pkg/store"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -148,7 +149,7 @@ func (mr *MockIssueRepositoryMockRecorder) Latest(ctx, limit any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIssueRepository) List(ctx context.Context, opts news.ListOptions) ([]news.Issue, error) {
+func (m *MockIssueRepository) List(ctx context.Context, opts store.ListOptions) ([]news.Issue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, opts)
 	ret0, _ := ret[0].([]news.Issue)
@@ -163,7 +164,7 @@ func (mr *MockIssueRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 }
 
 // ListByStatus mocks base method.
-func (m *MockIssueRepository) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+func (m *MockIssueRepository) ListByStatus(ctx context.Context, status news.IssueStatus, opts store.ListOptions) ([]news.Issue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListByStatus", ctx, status, opts)
 	ret0, _ := ret[0].([]news.Issue)

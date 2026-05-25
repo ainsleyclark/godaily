@@ -14,6 +14,7 @@ import (
 	reflect "reflect"
 
 	subscriber "github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	store "github.com/ainsleyclark/godaily/pkg/store"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -147,7 +148,7 @@ func (mr *MockSubscriberRepositoryMockRecorder) FindByUnsubscribeToken(ctx, toke
 }
 
 // List mocks base method.
-func (m *MockSubscriberRepository) List(ctx context.Context, opts subscriber.ListOptions) ([]subscriber.Subscriber, error) {
+func (m *MockSubscriberRepository) List(ctx context.Context, opts store.ListOptions) ([]subscriber.Subscriber, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, opts)
 	ret0, _ := ret[0].([]subscriber.Subscriber)

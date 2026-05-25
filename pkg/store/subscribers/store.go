@@ -180,7 +180,7 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-func (s Store) List(ctx context.Context, opts subscriber.ListOptions) ([]subscriber.Subscriber, error) {
+func (s Store) List(ctx context.Context, opts store.ListOptions) ([]subscriber.Subscriber, error) {
 	rows, err := s.db.QueryContext(
 		ctx,
 		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",

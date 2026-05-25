@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
@@ -54,11 +55,11 @@ func (s *CachingStore) FindBySlug(ctx context.Context, slug string) (news.Issue,
 	})
 }
 
-func (s *CachingStore) List(ctx context.Context, opts news.ListOptions) ([]news.Issue, error) {
+func (s *CachingStore) List(ctx context.Context, opts store.ListOptions) ([]news.Issue, error) {
 	return s.repo.List(ctx, opts)
 }
 
-func (s *CachingStore) ListByStatus(ctx context.Context, status news.IssueStatus, opts news.ListOptions) ([]news.Issue, error) {
+func (s *CachingStore) ListByStatus(ctx context.Context, status news.IssueStatus, opts store.ListOptions) ([]news.Issue, error) {
 	return s.repo.ListByStatus(ctx, status, opts)
 }
 

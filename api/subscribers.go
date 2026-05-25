@@ -26,6 +26,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // HandleSubscribers is the Vercel serverless function entry point for GET /api/subscribers.
@@ -47,7 +48,7 @@ func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		subs, err := a.Repository.Subscribers.List(ctx, subscriber.ListOptions{Page: page, PerPage: perPage})
+		subs, err := a.Repository.Subscribers.List(ctx, store.ListOptions{Page: page, PerPage: perPage})
 		if err != nil {
 			api.Error(w, http.StatusInternalServerError, "failed to list subscribers")
 			return

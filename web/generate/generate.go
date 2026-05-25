@@ -28,6 +28,7 @@ import (
 	"path/filepath"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
@@ -47,7 +48,7 @@ func Site(ctx context.Context, repo news.IssueRepository, subscriberCount int64,
 		return errors.Wrap(err, "creating output directory")
 	}
 
-	allIssues, err := repo.List(ctx, news.ListOptions{})
+	allIssues, err := repo.List(ctx, store.ListOptions{})
 	if err != nil {
 		return errors.Wrap(err, "listing issues")
 	}

@@ -30,6 +30,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -43,7 +44,7 @@ func TestHandleIssues(t *testing.T) {
 		"OK default pagination": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().Count(gomock.Any()).Return(int64(2), nil)
-				issues.EXPECT().List(gomock.Any(), news.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{
+				issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{
 					{ID: 1, Slug: "2026-01-01"},
 					{ID: 2, Slug: "2026-01-02"},
 				}, nil)
@@ -53,7 +54,7 @@ func TestHandleIssues(t *testing.T) {
 		"OK with explicit page params": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().Count(gomock.Any()).Return(int64(50), nil)
-				issues.EXPECT().List(gomock.Any(), news.ListOptions{Page: 2, PerPage: 10}).Return([]news.Issue{}, nil)
+				issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 2, PerPage: 10}).Return([]news.Issue{}, nil)
 			},
 			query:      "?page=2&per_page=10",
 			wantStatus: http.StatusOK,
@@ -74,7 +75,7 @@ func TestHandleIssues(t *testing.T) {
 		"Invalid page falls back to default": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().Count(gomock.Any()).Return(int64(1), nil)
-				issues.EXPECT().List(gomock.Any(), news.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{}, nil)
+				issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{}, nil)
 			},
 			query:      "?page=abc",
 			wantStatus: http.StatusOK,
@@ -82,7 +83,7 @@ func TestHandleIssues(t *testing.T) {
 		"per_page exceeds max falls back to default": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().Count(gomock.Any()).Return(int64(1), nil)
-				issues.EXPECT().List(gomock.Any(), news.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{}, nil)
+				issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{}, nil)
 			},
 			query:      "?per_page=999",
 			wantStatus: http.StatusOK,
@@ -90,7 +91,7 @@ func TestHandleIssues(t *testing.T) {
 		"OK with status filter": {
 			mock: func(issues *mocknews.MockIssueRepository) {
 				issues.EXPECT().CountByStatus(gomock.Any(), news.IssueStatus("draft")).Return(int64(1), nil)
-				issues.EXPECT().ListByStatus(gomock.Any(), news.IssueStatus("draft"), news.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{
+				issues.EXPECT().ListByStatus(gomock.Any(), news.IssueStatus("draft"), store.ListOptions{Page: 1, PerPage: 20}).Return([]news.Issue{
 					{ID: 1, Slug: "2026-01-01", Status: "draft"},
 				}, nil)
 			},

@@ -30,6 +30,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -43,7 +44,7 @@ func TestHandleSubscribers(t *testing.T) {
 		"OK default pagination": {
 			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(3), nil)
-				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{
+				subs.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{
 					{ID: 1, Email: "a@example.com"},
 					{ID: 2, Email: "b@example.com"},
 				}, nil)
@@ -53,7 +54,7 @@ func TestHandleSubscribers(t *testing.T) {
 		"OK with explicit page params": {
 			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(50), nil)
-				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 2, PerPage: 5}).Return([]subscriber.Subscriber{}, nil)
+				subs.EXPECT().List(gomock.Any(), store.ListOptions{Page: 2, PerPage: 5}).Return([]subscriber.Subscriber{}, nil)
 			},
 			query:      "?page=2&per_page=5",
 			wantStatus: http.StatusOK,
@@ -74,7 +75,7 @@ func TestHandleSubscribers(t *testing.T) {
 		"Invalid page falls back to default": {
 			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
-				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
+				subs.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
 			},
 			query:      "?page=abc",
 			wantStatus: http.StatusOK,
@@ -82,7 +83,7 @@ func TestHandleSubscribers(t *testing.T) {
 		"per_page exceeds max falls back to default": {
 			mock: func(subs *mocksubscriber.MockSubscriberRepository) {
 				subs.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
-				subs.EXPECT().List(gomock.Any(), subscriber.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
+				subs.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]subscriber.Subscriber{}, nil)
 			},
 			query:      "?per_page=999",
 			wantStatus: http.StatusOK,
