@@ -41,7 +41,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/social/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/emailevent"
-	"github.com/ainsleyclark/godaily/pkg/services/metrics"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	"github.com/ainsleyclark/godaily/pkg/services/recap"
 	"github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
@@ -49,7 +49,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
-	metricsstore "github.com/ainsleyclark/godaily/pkg/store/metrics"
+	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/socialmetrics"
 	"github.com/ainsleyclark/godaily/pkg/store/socialposts"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
@@ -167,7 +167,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		Subscribers:    subscriberSvc,
 		EmailEvents:    emailevent.New(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
 		Slack:          slackClient,
-		MetricsService: metrics.New(repo.Metrics, slackClient),
+		MetricsService: svcengagement.New(repo.Metrics, slackClient),
 		StatFetchers:   buildStatFetchers(config),
 	}, teardown, nil
 }
