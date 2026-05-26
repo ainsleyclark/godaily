@@ -1,13 +1,17 @@
 # Domain Refactor Plan
 
 This document is a follow-on to [architecture.md](./architecture.md). It
-captures two refinements that came out of an architectural review and
+captures three refinements that came out of an architectural review and
 that the existing migration plan does not cover:
 
-1. **Split `domain/news` into `domain/news` (items) and `domain/digest`
+1. **Rename `domain/contacts` to `domain/audience`** (and
+   `services/subscriber` → `services/audience`) — so the package is a
+   bounded-context name, the mirror rule holds, and the `Subscriber`
+   entity does not stutter against its package name.
+2. **Split `domain/news` into `domain/news` (items) and `domain/digest`
    (issues)** — so every service has a same-named domain twin and the
    "one allowed exception" for `services/digest` disappears.
-2. **Move service operation DTOs (`*Options`, `*Result`, etc.) into
+3. **Move service operation DTOs (`*Options`, `*Result`, etc.) into
    their matching `domain/` package** — so adapters (CLI, HTTP
    handlers) only need to import the domain to call the service.
 
@@ -18,6 +22,41 @@ Read [architecture.md](./architecture.md) first — the layering
 principle, the mirror rule, and the per-domain "Owns / Does NOT own"
 lists there are the source of truth. This doc lists the moves; that
 doc explains why each piece lives where it does.
+
+## Why rename `contacts` to `audience`
+
+Every other domain package is named for the **bounded context** it
+covers (`digest`, `social`, `engagement`, `news`), which is broader
+than any single aggregate inside it. That is what makes
+`social.PostRepository` and `engagement.EmailEventRepository` read
+naturally: the package name is not the entity name, so the
+`XRepository` prefix adds information instead of restating it.
+
+The subscriber domain is the one case where the bounded context and
+its only aggregate share a name. Naming the package `subscriber`
+forces a choice between two kinds of stutter:
+
+- `subscriber.Subscriber` plus `subscriber.SubscriberRepository` —
+  double stutter, breaks Go style at both the entity and the
+  interface.
+- `subscriber.Subscriber` plus `subscriber.Repository` — single
+  stutter on the entity, plus a "single-aggregate package gets bare
+  `Repository`" rule that splits the repository convention in two.
+
+The original `contacts` name avoided both, but broke the mirror rule
+against `services/subscriber`.
+
+`audience` is a bounded-context name in the same shape as `digest`,
+`social`, and `engagement`. It names what the package owns (the
+newsletter's audience: who receives it, in what state, with what
+preferences) without naming the entity. The mirror holds
+(`services/audience`), the `XRepository` convention applies uniformly
+(`audience.SubscriberRepository`), and the package is broad enough to
+absorb future audience-shaped concepts (segments, preferences,
+suppression tiers) without a second rename.
+
+Service operations read well at call sites: `audience.Subscribe`,
+`audience.Confirm`, `audience.Unsubscribe`, `audience.Reactivate`.
 
 ## Why split `news` into `news` + `digest`
 
@@ -40,6 +79,7 @@ After the split:
 |---|---|---|
 | `domain/news` | (no service) — read by `digest` and `social` | `store/items` |
 | `domain/digest` | `services/digest` | `store/issues` |
+| `domain/audience` | `services/audience` | `store/subscribers` |
 
 The exception goes away. `services/digest` imports `domain/digest` for
 `Issue`/`IssueRepository` *and* `domain/news` for `Item`/`ItemRepository`
@@ -108,7 +148,53 @@ golangci-lint run ./... --fix --config=.golangci.yaml
 Update [architecture.md](./architecture.md) in the same PR where the
 change lands — keep the per-domain reference in that doc in sync.
 
-### 1. Create `pkg/domain/digest/` and move issue types
+### 1. Rename `contacts` to `audience`
+
+Move:
+
+- `pkg/domain/contacts/` → `pkg/domain/audience/`. Update the package
+  declaration in every file to `package audience`. Keep the
+  `Subscriber` entity name and the `SubscriberRepository` interface
+  name as-is.
+- `pkg/services/subscriber/` → `pkg/services/audience/`. Update the
+  package declaration to `package audience`. The `Service` struct,
+  its constructor, and its methods (`Subscribe`, `Confirm`,
+  `Unsubscribe`, `Reactivate`, etc.) keep their names — the calls
+  read as `audience.Subscribe(...)`.
+- `pkg/store/subscribers/` stays as-is. Store packages are named
+  after their database table (see architecture.md), and the
+  `subscribers` table is unchanged. Update the package comment to
+  name `audience` as the domain it serves.
+
+Update all imports:
+
+- `pkg/app.go` — the field name on the app struct (likely
+  `Subscribers` or similar) can keep its name or be renamed; the
+  service type changes from `subscriber.Service` to
+  `audience.Service`.
+- `pkg/services/digest/` — currently depends on
+  `contacts.SubscriberRepository`; switch to
+  `audience.SubscriberRepository`.
+- `pkg/services/engagement/` — the `SubscriberHealth` interface
+  pattern is unchanged; only the satisfying type's package changes.
+- `pkg/api/`, `web/handlers/`, `pkg/cmd/`.
+
+Regenerate mocks:
+
+```
+go generate ./pkg/domain/... ./pkg/services/...
+```
+
+The mock directory under `pkg/mocks/contacts/` should be deleted
+once the new `pkg/mocks/audience/` is in place (verify the
+`go:generate` destination in `pkg/domain/audience/subscriber.go`
+points at the new path).
+
+This step supersedes step 1 of the existing migration plan in
+architecture.md (which targeted `pkg/domain/subscriber/`). Update
+that doc in step 7 below.
+
+### 2. Create `pkg/domain/digest/` and move issue types
 
 Create the package and move from `pkg/domain/news/`:
 
@@ -145,7 +231,7 @@ go generate ./pkg/domain/...
 Update `sqlc.yaml` if any override path references `domain/news`
 issue types; rerun `sqlc generate` if needed.
 
-### 2. Move social operation DTOs into `domain/social`
+### 3. Move social operation DTOs into `domain/social`
 
 Move:
 
@@ -169,7 +255,7 @@ Update `pkg/api/social/` and any other call sites the same way.
 If `RotateOptions` is referenced from web handlers or tests, update
 those imports too.
 
-### 3. Move `platform.Name` into `domain/social`
+### 4. Move `platform.Name` into `domain/social`
 
 `platform.Name` (`bluesky`, `linkedin`, `mastodon`) is domain
 vocabulary — what platforms GoDaily posts to — not an implementation
@@ -190,7 +276,7 @@ After this step, `RotateOptions.Platforms` is `[]social.Platform` and
 the field lives in `domain/social` with no cross-package dependency
 on `services/social/platform`.
 
-### 4. Move digest recap DTOs into `domain/digest`
+### 5. Move digest recap DTOs into `domain/digest`
 
 Move from `pkg/services/digest/recap.go`:
 
@@ -207,9 +293,9 @@ the DTOs are domain language.
 about referencing other domains by ID applies to entities, not to
 read-side aggregates.
 
-### 5. Sweep the remaining services for orphan DTOs
+### 6. Sweep the remaining services for orphan DTOs
 
-After steps 2 and 4, search for any remaining `Options` / `Result` /
+After steps 3 and 5, search for any remaining `Options` / `Result` /
 `Request` / `Response` types defined under `pkg/services/`:
 
 ```
@@ -227,7 +313,7 @@ Document the call: a type is "internal" only if it never appears in
 the signature of an exported service method. Anything an adapter can
 see crossing the service boundary moves to the domain.
 
-### 6. Update architecture.md
+### 7. Update architecture.md
 
 - Replace the [Package map (target)](./architecture.md#package-map-target)
   table:
@@ -237,21 +323,35 @@ see crossing the service boundary moves to the domain.
   | `news` | — | `items` |
   | `digest` | `digest` | `issues` |
   | `social` | `social` | `socialposts`, `socialmetrics` |
-  | `subscriber` | `subscriber` | `subscribers` |
+  | `audience` | `audience` | `subscribers` |
   | `engagement` | `engagement` | `emailevents`, `engagement` |
 
 - Delete the "one allowed exception to the mirror rule" note — every
   service now matches its domain.
 - Add a new `### domain/digest` section under "Per-domain reference"
   with its own Owns / Does NOT own / Service / Stores / Cross-references.
+- Rename the existing `### domain/subscriber` section (which was a
+  target, never realised) to `### domain/audience`. The Owns /
+  Does NOT own lists carry over verbatim — only the package name
+  changes. Add a one-line note in the Purpose paragraph explaining
+  why the package is named for the bounded context rather than the
+  `Subscriber` entity.
 - Update the existing `### domain/news` section: it no longer owns
   `Issue`, `IssueStatus`, the digest `Service` interface, or the
   collect DTOs. `Item`, `Source`, `Sources`, `Registry`, `Tag`,
   `Author`, `Score` (if item-scoped), and `ItemRepository` remain.
 - Update the layering principle table to list "service interfaces,
   operation DTOs" as something `pkg/domain/X/` owns.
-- Delete the corresponding step from the existing migration plan if
-  it has been completed, or leave it if it has not.
+- In the existing migration plan, mark step 1 (`domain/news` split)
+  as superseded by this plan, and update its `subscriber.go` move to
+  target `pkg/domain/audience/subscriber.go` if it has not already
+  been completed.
+- In the **Naming rules** section, add the bounded-context rule
+  explicitly: *"Domain packages are named for the bounded context
+  they cover, not for any single aggregate inside them. This is what
+  makes `social.PostRepository` and `audience.SubscriberRepository`
+  read without stutter — the package name carries the context, the
+  type name carries the aggregate."*
 
 ## Verification
 
@@ -275,12 +375,12 @@ still needs to move.
 
 ## Scope notes
 
-- This plan does **not** address the `domain/contacts` →
-  `domain/subscriber` rename. That is already covered by step 1 of
-  the existing migration plan in architecture.md and should land
-  before or independently of this work.
+- This plan supersedes step 1 of the existing migration plan in
+  architecture.md for the subscriber rename: the target is
+  `domain/audience`, not `domain/subscriber`. Step 7 above keeps the
+  two docs in sync.
 - This plan does **not** introduce a service interface in
-  `domain/social`, `domain/subscriber`, or `domain/engagement` if
+  `domain/social`, `domain/audience`, or `domain/engagement` if
   none exists today. Add them only when an adapter needs to depend
   on the contract rather than the concrete struct — usually for
   testing. The DTO moves above are valuable independently.
