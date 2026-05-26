@@ -40,8 +40,6 @@ import (
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
-	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -191,12 +189,6 @@ func main() {
 	webH := webserver.Handler(app)
 	apiH := http.StripPrefix("/api", mux.Handler(app))
 
-	// withApp injects app into the request context for Vercel function handlers
-	// that are not registered in the mux (e.g. HandleBuild).
-	withApp := func(r *http.Request) *http.Request {
-		return r.WithContext(pkgapi.WithApp(r.Context(), app))
-	}
-
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		// ── E2E debug: email spy ──────────────────────────────────────────────
@@ -253,10 +245,6 @@ func main() {
 		// ── E2E webhook signing helper ────────────────────────────────────────
 		case "/api/e2e/sign":
 			handleSign(w, r)
-
-		// ── Legacy e2e path: Playwright tests still POST to /api/build ──────
-		case "/api/build":
-			digesthandlers.HandleBuild(w, withApp(r))
 
 		default:
 			switch {

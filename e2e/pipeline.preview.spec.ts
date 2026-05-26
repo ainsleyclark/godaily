@@ -43,7 +43,7 @@ test.describe.serial('full production pipeline', () => {
   });
 
   test('collect fetches items with no source errors', async ({ request }) => {
-    const res = await request.get('/api/collect?force=true', { headers: AUTH });
+    const res = await request.get('/api/digest/collect?force=true', { headers: AUTH });
     expect(res.status()).toBe(200);
     const body = (await res.json()) as {
       sources: Record<string, { count: number; error: string | null }>;
@@ -56,21 +56,21 @@ test.describe.serial('full production pipeline', () => {
   });
 
   test('build creates a draft issue', async ({ request }) => {
-    const res = await request.get('/api/build?force=true', { headers: AUTH });
+    const res = await request.get('/api/digest/build?force=true', { headers: AUTH });
     expect(res.status()).toBe(200);
     const issues = (await (
-      await request.get('/api/issues?status=draft', { headers: AUTH })
+      await request.get('/api/digest/issues?status=draft', { headers: AUTH })
     ).json()) as { data: Array<{ status: string }> };
     expect(issues.data.some((i) => i.status === 'draft')).toBe(true);
   });
 
   test('send delivers digest to subscriber', async ({ request }) => {
-    const res = await request.get('/api/send?force=true', { headers: AUTH });
+    const res = await request.get('/api/digest/send?force=true', { headers: AUTH });
     expect(res.status()).toBe(200);
     const digest = await waitForEmail('GoDaily');
     expect(digest.html.includes('href=')).toBe(true);
     const issues = (await (
-      await request.get('/api/issues', { headers: AUTH })
+      await request.get('/api/digest/issues', { headers: AUTH })
     ).json()) as { data: Array<{ status: string }> };
     expect(issues.data[0].status).toBe('sent');
   });

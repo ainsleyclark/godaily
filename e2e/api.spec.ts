@@ -5,17 +5,17 @@ const AUTH = { Authorization: 'Bearer e2e-test-secret' };
 // ── Existing endpoint smoke tests ─────────────────────────────────────────────
 
 test('collect endpoint returns 200', async ({ request }) => {
-  const res = await request.get('/api/collect', { headers: AUTH });
+  const res = await request.get('/api/digest/collect', { headers: AUTH });
   expect(res.status()).toBe(200);
 });
 
 test('build endpoint returns 200', async ({ request }) => {
-  const res = await request.get('/api/build', { headers: AUTH });
+  const res = await request.get('/api/digest/build', { headers: AUTH });
   expect(res.status()).toBe(200);
 });
 
 test('send endpoint returns 200', async ({ request }) => {
-  const res = await request.get('/api/send', { headers: AUTH });
+  const res = await request.get('/api/digest/send', { headers: AUTH });
   expect(res.status()).toBe(200);
 });
 
@@ -35,7 +35,7 @@ test.describe.serial('pipeline state assertions', () => {
     const res = await request.post('/api/e2e/pipeline/build');
     expect(res.status()).toBe(200);
 
-    const issuesRes = await request.get('/api/issues?status=draft', { headers: AUTH });
+    const issuesRes = await request.get('/api/digest/issues?status=draft', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
     const issuesData = await issuesRes.json();
     expect(issuesData.total).toBeGreaterThan(0);
@@ -64,7 +64,7 @@ test.describe.serial('pipeline state assertions', () => {
     ).toBe(true);
 
     // Public issues API must now return the issue as 'sent'.
-    const issuesRes = await request.get('/api/issues', { headers: AUTH });
+    const issuesRes = await request.get('/api/digest/issues', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
     const issuesData = await issuesRes.json();
     expect(issuesData.total).toBeGreaterThan(0);
