@@ -108,9 +108,9 @@ var SectionTags = []Tag{
 	TagEvent,
 	TagArticle,
 	TagVideo,
-	TagJobs,
 	TagTrending,
 	TagSecurity,
+	TagJobs,
 }
 
 // NoLimit disables the per-section item cap when used in SectionLimits.
@@ -156,8 +156,8 @@ var sectionTitles = map[Tag]string{
 	TagArticle:    "Articles",
 	TagDiscussion: "Discussions",
 	TagVideo:      "Videos",
-	TagJobs:       "Hiring Go developers",
 	TagTrending:   "Trending",
+	TagJobs:       "Jobs",
 }
 
 // Title returns the display heading for a section tag. Defined for the six

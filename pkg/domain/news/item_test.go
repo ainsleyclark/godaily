@@ -68,7 +68,7 @@ func TestTag_Title(t *testing.T) {
 		"Proposal":         {in: TagProposal, want: "Proposals"},
 		"ProposalAccepted": {in: TagProposalAccepted, want: "Proposals"},
 		"Podcast":          {in: TagPodcast, want: "Videos"},
-		"Jobs":             {in: TagJobs, want: "Hiring Go developers"},
+		"Jobs":             {in: TagJobs, want: "Jobs"},
 		"Unknown empty":    {in: Tag("mystery"), want: ""},
 	}
 
