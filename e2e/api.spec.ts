@@ -2,6 +2,11 @@ import { test, expect, type APIRequestContext } from '@playwright/test';
 
 const AUTH = { Authorization: 'Bearer e2e-test-secret' };
 
+// Give the token bucket (1 req/s, burst 10) time to refill between tests.
+test.beforeEach(async () => {
+  await new Promise((r) => setTimeout(r, 1000));
+});
+
 // ── Existing endpoint smoke tests ─────────────────────────────────────────────
 
 test('collect endpoint returns 200', async ({ request }) => {
