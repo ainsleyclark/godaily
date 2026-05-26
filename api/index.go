@@ -29,6 +29,7 @@ import (
 	"sync"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 )
 
@@ -48,7 +49,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			slog.ErrorContext(ctx, "bootstrapping app", "error", err)
 			os.Exit(1)
 		}
-		handler = http.StripPrefix("/api", mux.Handler(app))
+		stripped := http.StripPrefix("/api", mux.Handler(app))
+		handler = pkgapi.Limiter.Limit(stripped.ServeHTTP)
 	})
 	handler.ServeHTTP(w, r)
 }

@@ -20,12 +20,11 @@
 package metrics
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 type summaryRequest struct {
@@ -34,28 +33,23 @@ type summaryRequest struct {
 	Period string `schema:"period"`
 }
 
-// HandleSummary handles GET /metrics/summary.
+// Summary handles GET /metrics/summary.
 // Returns headline engagement numbers for a period.
-func HandleSummary(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req summaryRequest
-		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid query parameters")
-			return
-		}
+func (h *Handler) Summary(c *webkit.Context) error {
+	var req summaryRequest
+	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+	}
 
-		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		stats, err := a.Repository.Metrics.Summary(ctx, engagement.MetricsFilter{From: from, To: to})
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch summary stats")
-			return
-		}
+	stats, err := h.metricsRepo.Summary(c.Context(), engagement.MetricsFilter{From: from, To: to})
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to fetch summary stats")
+	}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": stats})
-	})(w, r)
+	return c.JSON(http.StatusOK, map[string]any{"data": stats})
 }

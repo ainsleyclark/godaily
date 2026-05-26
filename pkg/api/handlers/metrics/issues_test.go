@@ -25,10 +25,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -79,12 +76,7 @@ func TestHandleIssues(t *testing.T) {
 			metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
 			test.mock(metricsMock)
 
-			a := &godaily.App{
-				Config: &env.Config{},
-				Repository: &godaily.Repository{
-					Metrics: metricsMock,
-				},
-			}
+			h := &Handler{metricsRepo: metricsMock}
 
 			target := "/metrics/issues"
 			if test.query != "" {
@@ -93,9 +85,7 @@ func TestHandleIssues(t *testing.T) {
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, target, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleIssues(w, r)
+			invoke(h.Issues, w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

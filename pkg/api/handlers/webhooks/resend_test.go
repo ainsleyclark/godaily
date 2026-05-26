@@ -34,17 +34,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 var webhookSecret = "whsec_" + base64.StdEncoding.EncodeToString([]byte("godaily-handler-test-secret-key!"))
@@ -72,14 +69,14 @@ func sign(t *testing.T, secret, id, timestamp, payload string) string {
 	return "v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmailEventRepository, *mockaudience.MockService) {
+func newHandler(t *testing.T, secret string) (*Handler, *mockengagement.MockEmailEventRepository, *mockaudience.MockService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
 	subs := mockaudience.NewMockService(ctrl)
-	return &godaily.App{
-		Config:      &env.Config{ResendWebhookSecret: secret},
-		EmailEvents: svcengagement.NewEvents(events, subs, noopItemFinder{}, ""),
+	return &Handler{
+		emailEvents: svcengagement.NewEvents(events, subs, noopItemFinder{}, ""),
+		config:      &env.Config{ResendWebhookSecret: secret},
 	}, events, subs
 }
 
@@ -94,81 +91,74 @@ func signedPOST(t *testing.T, secret, body string) *http.Request {
 	return r
 }
 
-func do(t *testing.T, a *godaily.App, r *http.Request) *httptest.ResponseRecorder {
+func do(t *testing.T, h *Handler, r *http.Request) *httptest.ResponseRecorder {
 	t.Helper()
 	w := httptest.NewRecorder()
-	HandleResend(w, r.WithContext(api.WithApp(r.Context(), a)))
+	invoke(h.Resend, w, r)
 	return w
 }
 
 func TestHandleResend(t *testing.T) {
 	t.Run("Valid signed event is processed", func(t *testing.T) {
-		a, events, _ := newApp(t, webhookSecret)
+		h, events, _ := newHandler(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
 
-		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "delivered.json")))
+		w := do(t, h, signedPOST(t, webhookSecret, loadFixture(t, "delivered.json")))
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
 	t.Run("Bounced event marks the subscriber", func(t *testing.T) {
-		a, events, subs := newApp(t, webhookSecret)
+		h, events, subs := newHandler(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, nil)
 		subs.EXPECT().MarkBounced(gomock.Any(), "dead-inbox@example.com").Return(nil)
 
-		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "bounced.json")))
+		w := do(t, h, signedPOST(t, webhookSecret, loadFixture(t, "bounced.json")))
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
 	t.Run("Invalid signature is rejected", func(t *testing.T) {
-		a, _, _ := newApp(t, webhookSecret)
+		h, _, _ := newHandler(t, webhookSecret)
 		r := signedPOST(t, webhookSecret, "{}")
 		r.Header.Set("svix-signature", "v1,not-a-real-signature")
 
-		w := do(t, a, r)
+		w := do(t, h, r)
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
 	})
 
 	t.Run("Malformed body is rejected", func(t *testing.T) {
-		a, _, _ := newApp(t, webhookSecret)
-		w := do(t, a, signedPOST(t, webhookSecret, "{not json"))
+		h, _, _ := newHandler(t, webhookSecret)
+		w := do(t, h, signedPOST(t, webhookSecret, "{not json"))
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
-	t.Run("Non-POST is rejected", func(t *testing.T) {
-		a, _, _ := newApp(t, webhookSecret)
-		r := httptest.NewRequest(http.MethodGet, "/webhooks/resend", nil)
-		w := do(t, a, r)
-		assert.Equal(t, http.StatusMethodNotAllowed, w.Code)
-	})
-
 	t.Run("Missing secret returns a server error", func(t *testing.T) {
-		a, _, _ := newApp(t, "")
-		w := do(t, a, signedPOST(t, webhookSecret, "{}"))
+		h, _, _ := newHandler(t, "")
+		w := do(t, h, signedPOST(t, webhookSecret, "{}"))
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
 
 	t.Run("Untracked event type is acknowledged", func(t *testing.T) {
-		a, _, _ := newApp(t, webhookSecret)
-		w := do(t, a, signedPOST(t, webhookSecret, `{"type":"email.sent","data":{}}`))
+		h, _, _ := newHandler(t, webhookSecret)
+		w := do(t, h, signedPOST(t, webhookSecret, `{"type":"email.sent","data":{}}`))
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
 	t.Run("Duplicate delivery is acknowledged", func(t *testing.T) {
-		a, events, _ := newApp(t, webhookSecret)
+		h, events, _ := newHandler(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(true, nil)
 
-		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
+		w := do(t, h, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 
 	t.Run("Processing failure returns a server error", func(t *testing.T) {
-		a, events, _ := newApp(t, webhookSecret)
+		h, events, _ := newHandler(t, webhookSecret)
 		events.EXPECT().ExistsByEventID(gomock.Any(), gomock.Any()).Return(false, nil)
 		events.EXPECT().Create(gomock.Any(), gomock.Any()).Return(engagement.EmailEvent{}, errors.New("db down"))
 
-		w := do(t, a, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
+		w := do(t, h, signedPOST(t, webhookSecret, loadFixture(t, "opened.json")))
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
 }

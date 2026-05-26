@@ -25,17 +25,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleIssues(t *testing.T) {
+func TestIssues(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(issues *mockdigest.MockIssueRepository)
 		query      string
@@ -121,19 +118,11 @@ func TestHandleIssues(t *testing.T) {
 			issuesMock := mockdigest.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
-			a := &godaily.App{
-				Config: &env.Config{},
-				Repository: &godaily.Repository{
-					Issues: issuesMock,
-				},
-			}
+			h := &Handler{issuesRepo: issuesMock}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/digest/issues"+test.query, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleIssues(w, r)
-
+			invoke(h.Issues, w, r)
 			assert.Equal(t, test.wantStatus, w.Code)
 		})
 	}

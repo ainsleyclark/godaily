@@ -26,10 +26,7 @@ import (
 	"strings"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	audiencesvc "github.com/ainsleyclark/godaily/pkg/services/audience"
@@ -37,17 +34,15 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSubscribe(t *testing.T) {
+func TestSubscribe(t *testing.T) {
 	tt := map[string]struct {
 		body       string
-		method     string
 		mock       func(s *mockaudience.MockService)
 		repoMock   func(r *mockaudience.MockSubscriberRepository)
 		wantStatus int
 	}{
 		"OK": {
-			body:   `{"email":"test@example.com"}`,
-			method: http.MethodPost,
+			body: `{"email":"test@example.com"}`,
 			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(audience.Subscriber{}, nil)
 			},
@@ -56,30 +51,20 @@ func TestHandleSubscribe(t *testing.T) {
 			},
 			wantStatus: http.StatusOK,
 		},
-		"Wrong Method": {
-			body:       `{"email":"test@example.com"}`,
-			method:     http.MethodGet,
-			mock:       func(s *mockaudience.MockService) {},
-			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusMethodNotAllowed,
-		},
 		"Missing Email": {
 			body:       `{}`,
-			method:     http.MethodPost,
 			mock:       func(s *mockaudience.MockService) {},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Invalid Email": {
 			body:       `{"email":"notanemail"}`,
-			method:     http.MethodPost,
 			mock:       func(s *mockaudience.MockService) {},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Already Subscribed": {
-			body:   `{"email":"dupe@example.com"}`,
-			method: http.MethodPost,
+			body: `{"email":"dupe@example.com"}`,
 			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(audience.Subscriber{}, audiencesvc.ErrAlreadySubscribed)
 			},
@@ -87,8 +72,7 @@ func TestHandleSubscribe(t *testing.T) {
 			wantStatus: http.StatusConflict,
 		},
 		"Subscribe Error": {
-			body:   `{"email":"err@example.com"}`,
-			method: http.MethodPost,
+			body: `{"email":"err@example.com"}`,
 			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(audience.Subscriber{}, errors.New("db error"))
 			},
@@ -101,25 +85,21 @@ func TestHandleSubscribe(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			svc := mockaudience.NewMockService(ctrl)
-			slack := mockslack.NewMockSender(ctrl)
+			slackMock := mockslack.NewMockSender(ctrl)
 			repo := mockaudience.NewMockSubscriberRepository(ctrl)
-			slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+			slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 			test.mock(svc)
 			test.repoMock(repo)
 
-			a := &godaily.App{
-				Subscribers: svc,
-				Config:      &env.Config{},
-				Slack:       slack,
-				Repository:  &godaily.Repository{Subscribers: repo},
+			h := &Handler{
+				subscribers:     svc,
+				subscribersRepo: repo,
+				slack:           slackMock,
 			}
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest(test.method, "/digest/subscribe", strings.NewReader(test.body))
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleSubscribe(w, r)
-
+			r := httptest.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(test.body))
+			invoke(h.Subscribe, w, r)
 			assert.Equal(t, test.wantStatus, w.Code)
 		})
 	}

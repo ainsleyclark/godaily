@@ -17,49 +17,47 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package issues
+package digest
 
 import (
-	"errors"
-	"net/http"
-
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	digestdomain "github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Handler holds the narrow dependencies for issues HTTP handlers.
+// Handler holds the narrow dependencies for digest HTTP handlers.
 type Handler struct {
-	issuesRepo digest.IssueRepository
+	runner          digestdomain.Service
+	subscribers     audience.SubscriberService
+	subscribersRepo audience.SubscriberRepository
+	issuesRepo      digestdomain.IssueRepository
+	slack           slack.Sender
+	config          *env.Config
 }
 
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		issuesRepo: a.Repository.Issues,
+		runner:          a.Runner,
+		subscribers:     a.Subscribers,
+		subscribersRepo: a.Repository.Subscribers,
+		issuesRepo:      a.Repository.Issues,
+		slack:           a.Slack,
+		config:          a.Config,
 	}
 }
 
-// Routes registers all issues routes on kit.
+// Routes registers the authenticated digest pipeline routes on kit.
+// Public subscriber lifecycle routes (subscribe, confirm, unsubscribe) are
+// registered at the root level in the mux, not here.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Get("/{slug}", h.BySlug, auth)
-}
-
-// BySlug handles GET /issues/{slug}.
-func (h *Handler) BySlug(c *webkit.Context) error {
-	slug := c.Param("slug")
-	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
-	}
-
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
-		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
-	}
-
-	return c.JSON(http.StatusOK, issue)
+	kit.Get("/collect", h.Collect, auth)
+	kit.Get("/build", h.Build, auth)
+	kit.Get("/send", h.Send, auth)
+	kit.Get("/preview", h.Preview, auth)
+	kit.Get("/issues", h.Issues, auth)
+	kit.Get("/subscribers", h.Subscribers, auth)
 }

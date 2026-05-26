@@ -25,9 +25,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -58,16 +55,11 @@ func TestHandleRoundup(t *testing.T) {
 			reporter := mockengagement.NewMockMetricsReporter(ctrl)
 			test.mock(reporter)
 
-			a := &godaily.App{
-				Config:         &env.Config{},
-				MetricsService: reporter,
-			}
+			h := &Handler{metricsReporter: reporter}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/metrics/roundup", nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleRoundup(w, r)
+			invoke(h.Roundup, w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})

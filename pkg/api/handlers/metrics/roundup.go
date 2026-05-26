@@ -20,25 +20,20 @@
 package metrics
 
 import (
-	"context"
 	"log/slog"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleRoundup handles GET /metrics/roundup. It is scheduled via vercel.json
+// Roundup handles GET /metrics/roundup. It is scheduled via vercel.json
 // to fire every Friday at 15:00 UTC. The handler gathers the last seven days of
 // engagement data (with a week-over-week comparison) and posts a formatted
 // summary to the configured Slack channel.
-func HandleRoundup(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if err := a.MetricsService.Roundup(ctx); err != nil {
-			slog.ErrorContext(ctx, "Weekly roundup failed", "err", err)
-			api.Error(w, http.StatusInternalServerError, "failed to send weekly roundup")
-			return
-		}
-		api.OK(w)
-	})(w, r)
+func (h *Handler) Roundup(c *webkit.Context) error {
+	if err := h.metricsReporter.Roundup(c.Context()); err != nil {
+		slog.ErrorContext(c.Context(), "Weekly roundup failed", "err", err)
+		return webkit.NewError(http.StatusInternalServerError, "failed to send weekly roundup")
+	}
+	return c.NoContent(http.StatusOK)
 }

@@ -20,53 +20,42 @@
 package digest
 
 import (
-	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/mail"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/services/audience"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleSubscribe handles POST /digest/subscribe.
-func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+// Subscribe handles POST /subscribe.
+func (h *Handler) Subscribe(c *webkit.Context) error {
+	ctx := c.Context()
 
-		var body struct {
-			Email string `json:"email"`
-		}
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Email == "" {
-			api.Error(w, http.StatusBadRequest, "email is required")
-			return
-		}
+	var body struct {
+		Email string `json:"email"`
+	}
+	if err := c.BindJSON(&body); err != nil || body.Email == "" {
+		return webkit.NewError(http.StatusBadRequest, "email is required")
+	}
 
-		if _, err := mail.ParseAddress(body.Email); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid email address")
-			return
-		}
+	if _, err := mail.ParseAddress(body.Email); err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid email address")
+	}
 
-		if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
-			if errors.Is(err, audience.ErrAlreadySubscribed) {
-				api.Error(w, http.StatusConflict, "already subscribed")
-				return
-			}
-			api.Error(w, http.StatusInternalServerError, err.Error())
-			return
+	if _, err := h.subscribers.Subscribe(ctx, body.Email); err != nil {
+		if errors.Is(err, audience.ErrAlreadySubscribed) {
+			return webkit.NewError(http.StatusConflict, "already subscribed")
 		}
+		return webkit.NewError(http.StatusInternalServerError, err.Error())
+	}
 
-		msg := "New subscriber: " + body.Email
-		if count, err := a.Repository.Subscribers.CountActive(ctx); err == nil {
-			msg += fmt.Sprintf(" | Total subscribers: %d", count)
-		}
-		a.Slack.MustSend(ctx, msg)
-		api.OK(w)
-	})(w, r)
+	msg := "New subscriber: " + body.Email
+	if count, err := h.subscribersRepo.CountActive(ctx); err == nil {
+		msg += fmt.Sprintf(" | Total subscribers: %d", count)
+	}
+	h.slack.MustSend(ctx, msg)
+
+	return c.NoContent(http.StatusOK)
 }

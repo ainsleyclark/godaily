@@ -20,68 +20,64 @@
 package digest
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleIssues handles GET /digest/issues.
+// Issues handles GET /digest/issues.
 // An optional ?status= query parameter filters by issue status (e.g. "draft", "sent").
-func HandleIssues(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		page := api.QueryInt(r, "page", api.DefaultPage)
-		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
+func (h *Handler) Issues(c *webkit.Context) error {
+	ctx := c.Context()
+	r := c.Request
 
-		if page < 1 {
-			page = api.DefaultPage
+	page := api.QueryInt(r, "page", api.DefaultPage)
+	perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
+
+	if page < 1 {
+		page = api.DefaultPage
+	}
+	if perPage < 1 || perPage > api.MaxPerPage {
+		perPage = api.DefaultPerPage
+	}
+
+	opts := store.ListOptions{Page: page, PerPage: perPage}
+	statusParam := r.URL.Query().Get("status")
+
+	var (
+		total  int64
+		issues []digest.Issue
+		err    error
+	)
+
+	if statusParam != "" {
+		status := digest.IssueStatus(statusParam)
+		total, err = h.issuesRepo.CountByStatus(ctx, status)
+		if err != nil {
+			return webkit.NewError(http.StatusInternalServerError, "failed to count issues")
 		}
-		if perPage < 1 || perPage > api.MaxPerPage {
-			perPage = api.DefaultPerPage
+		issues, err = h.issuesRepo.ListByStatus(ctx, status, opts)
+		if err != nil {
+			return webkit.NewError(http.StatusInternalServerError, "failed to list issues")
 		}
-
-		opts := store.ListOptions{Page: page, PerPage: perPage}
-		statusParam := r.URL.Query().Get("status")
-
-		var (
-			total  int64
-			issues []digest.Issue
-			err    error
-		)
-
-		if statusParam != "" {
-			status := digest.IssueStatus(statusParam)
-			total, err = a.Repository.Issues.CountByStatus(ctx, status)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to count issues")
-				return
-			}
-			issues, err = a.Repository.Issues.ListByStatus(ctx, status, opts)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to list issues")
-				return
-			}
-		} else {
-			total, err = a.Repository.Issues.Count(ctx)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to count issues")
-				return
-			}
-			issues, err = a.Repository.Issues.List(ctx, opts)
-			if err != nil {
-				api.Error(w, http.StatusInternalServerError, "failed to list issues")
-				return
-			}
+	} else {
+		total, err = h.issuesRepo.Count(ctx)
+		if err != nil {
+			return webkit.NewError(http.StatusInternalServerError, "failed to count issues")
 		}
+		issues, err = h.issuesRepo.List(ctx, opts)
+		if err != nil {
+			return webkit.NewError(http.StatusInternalServerError, "failed to list issues")
+		}
+	}
 
-		api.JSON(w, http.StatusOK, api.PaginatedResponse[digest.Issue]{
-			Data:    issues,
-			Page:    page,
-			PerPage: perPage,
-			Total:   total,
-		})
-	})(w, r)
+	return c.JSON(http.StatusOK, api.PaginatedResponse[digest.Issue]{
+		Data:    issues,
+		Page:    page,
+		PerPage: perPage,
+		Total:   total,
+	})
 }

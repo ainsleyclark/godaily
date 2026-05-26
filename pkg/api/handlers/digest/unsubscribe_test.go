@@ -25,15 +25,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleUnsubscribe(t *testing.T) {
+func TestUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
 		token        string
 		mock         func(s *mockaudience.MockService)
@@ -68,18 +65,16 @@ func TestHandleUnsubscribe(t *testing.T) {
 			svc := mockaudience.NewMockService(ctrl)
 			test.mock(svc)
 
-			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			h := &Handler{subscribers: svc}
 
-			url := "/digest/unsubscribe"
+			url := "/unsubscribe"
 			if test.token != "" {
 				url += "?token=" + test.token
 			}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, url, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleUnsubscribe(w, r)
+			invoke(h.Unsubscribe, w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 			if test.wantLocation != "" {
@@ -89,18 +84,16 @@ func TestHandleUnsubscribe(t *testing.T) {
 	}
 }
 
-func TestHandleUnsubscribePost(t *testing.T) {
+func TestUnsubscribePost(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	svc := mockaudience.NewMockService(ctrl)
 	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 
-	a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+	h := &Handler{subscribers: svc}
 
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodPost, "/digest/unsubscribe?token=valid-token", nil)
-	r = r.WithContext(api.WithApp(r.Context(), a))
-
-	HandleUnsubscribe(w, r)
+	r := httptest.NewRequest(http.MethodPost, "/unsubscribe?token=valid-token", nil)
+	invoke(h.Unsubscribe, w, r)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Empty(t, w.Header().Get("Location"))

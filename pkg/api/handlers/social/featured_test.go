@@ -24,12 +24,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
@@ -37,78 +31,55 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
-// newAppNoPosters builds a real social.Service with no posters configured.
-func newAppNoPosters(t *testing.T, secret string) *godaily.App {
+// newHandlerNoPosters builds a Handler with a real social.Service that has no posters configured.
+func newHandlerNoPosters(t *testing.T) *Handler {
 	t.Helper()
 
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
 
-	slack := mockslack.NewMockSender(ctrl)
-	slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+	slackMock := mockslack.NewMockSender(ctrl)
+	slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 
 	prompter := mockai.NewMockPrompter(ctrl)
 	issues := mockdigest.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocksocial.NewMockPostRepository(ctrl)
 
-	svc, err := socialsvc.New(nil, prompter, issues, items, posts, slack)
+	svc, err := socialsvc.New(nil, prompter, issues, items, posts, slackMock)
 	require.NoError(t, err)
 
-	return &godaily.App{
-		Config: &env.Config{APISecret: secret},
-		Slack:  slack,
-		Social: svc,
+	return &Handler{
+		social: svc,
+		slack:  slackMock,
+		config: &env.Config{},
 	}
 }
 
 func TestHandleFeatured(t *testing.T) {
-	t.Run("Unauthorized request is rejected", func(t *testing.T) {
-		a := newAppNoPosters(t, "supersecret")
-
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/social/featured", nil)
-		r.Header.Set("Authorization", "Bearer wrong")
-		r = r.WithContext(api.WithApp(r.Context(), a))
-		HandleFeatured(w, r)
-
-		assert.Equal(t, http.StatusUnauthorized, w.Code)
-	})
-
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
-		a := newAppNoPosters(t, "")
+		h := newHandlerNoPosters(t)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/social/featured", nil)
-		r = r.WithContext(api.WithApp(r.Context(), a))
-		HandleFeatured(w, r)
+		invoke(h.Featured, w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
 }
 
 func TestHandleRotation(t *testing.T) {
-	t.Run("Unauthorized request is rejected", func(t *testing.T) {
-		a := newAppNoPosters(t, "supersecret")
-
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/social/rotation", nil)
-		r.Header.Set("Authorization", "Bearer wrong")
-		r = r.WithContext(api.WithApp(r.Context(), a))
-		HandleRotation(w, r)
-
-		assert.Equal(t, http.StatusUnauthorized, w.Code)
-	})
-
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
-		a := newAppNoPosters(t, "")
+		h := newHandlerNoPosters(t)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "/social/rotation", nil)
-		r = r.WithContext(api.WithApp(r.Context(), a))
-		HandleRotation(w, r)
+		invoke(h.Rotation, w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 	})
