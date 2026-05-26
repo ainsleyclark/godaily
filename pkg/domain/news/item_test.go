@@ -41,6 +41,7 @@ func TestTag_Section(t *testing.T) {
 		"ProposalAccepted folds":      {in: TagProposalAccepted, want: TagProposal},
 		"ProposalShipped folds":       {in: TagProposalShipped, want: TagProposal},
 		"Podcast folds into video":    {in: TagPodcast, want: TagVideo},
+		"Jobs stays jobs":             {in: TagJobs, want: TagJobs},
 		"Unknown tag returns itself":  {in: Tag("mystery"), want: Tag("mystery")},
 	}
 
@@ -67,6 +68,7 @@ func TestTag_Title(t *testing.T) {
 		"Proposal":         {in: TagProposal, want: "Proposals"},
 		"ProposalAccepted": {in: TagProposalAccepted, want: "Proposals"},
 		"Podcast":          {in: TagPodcast, want: "Videos"},
+		"Jobs":             {in: TagJobs, want: "Hiring Go developers"},
 		"Unknown empty":    {in: Tag("mystery"), want: ""},
 	}
 

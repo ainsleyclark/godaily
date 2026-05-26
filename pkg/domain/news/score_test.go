@@ -84,6 +84,8 @@ func TestSourceWeight(t *testing.T) {
 		"GitHub Proposal Shipped":  {source: SourceGitHub, tag: TagProposalShipped, want: 1.7},
 		"GitHub Proposal Open":     {source: SourceGitHub, tag: TagProposal, want: 1.0},
 		"Hacker News":              {source: SourceHN, tag: TagArticle, want: 1.2},
+		"HN Who's Hiring":          {source: SourceHNJobs, tag: TagJobs, want: 1.4},
+		"Remote OK":                {source: SourceRemoteOK, tag: TagJobs, want: 1.0},
 		"Reddit":                   {source: SourceReddit, tag: TagArticle, want: 1.0},
 		"Lobsters":                 {source: SourceLobsters, tag: TagArticle, want: 1.0},
 		"Dev.to":                   {source: SourceDevTo, tag: TagArticle, want: 1.0},
@@ -144,6 +146,52 @@ func TestScoreOf(t *testing.T) {
 			assert.LessOrEqual(t, got, test.wantMax+1e-9, "score %v above expected maximum %v", got, test.wantMax)
 		})
 	}
+}
+
+func TestJobBoost(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Fresh listing with everything", func(t *testing.T) {
+		t.Parallel()
+		// goBoost(1.5) * salaryBoost(1.2) * remoteBoost(1.15) * recency(exp(0)=1) ≈ 2.07
+		got := JobBoost(0, true, true, true)
+		assert.InDelta(t, 1.5*1.2*1.15, got, 1e-9)
+	})
+
+	t.Run("Fresh bare listing", func(t *testing.T) {
+		t.Parallel()
+		// All flags false, age 0: boost is 1.0.
+		assert.InDelta(t, 1.0, JobBoost(0, false, false, false), 1e-9)
+	})
+
+	t.Run("Age decays score", func(t *testing.T) {
+		t.Parallel()
+		fresh := JobBoost(0, true, true, true)
+		week := JobBoost(7, true, true, true)
+		stale := JobBoost(28, true, true, true)
+		assert.Greater(t, fresh, week)
+		assert.Greater(t, week, stale)
+	})
+
+	t.Run("Recency floors out far past", func(t *testing.T) {
+		t.Parallel()
+		// At very large ages the recency factor clamps at 0.1, so the boost
+		// stops collapsing to zero. With all flags on this is 0.1 * 2.07.
+		got := JobBoost(365, true, true, true)
+		assert.InDelta(t, 0.1*1.5*1.2*1.15, got, 1e-9)
+	})
+
+	t.Run("Negative age treated as zero", func(t *testing.T) {
+		t.Parallel()
+		assert.Equal(t, JobBoost(0, false, false, false), JobBoost(-3, false, false, false))
+	})
+
+	t.Run("Go-in-title boost outweighs salary alone", func(t *testing.T) {
+		t.Parallel()
+		// 1.5 (Go) > 1.2 (salary), so a Go-titled bare listing should beat
+		// a non-Go listing that discloses salary.
+		assert.Greater(t, JobBoost(0, true, false, false), JobBoost(0, false, true, false))
+	})
 }
 
 func TestScoreOf_OfficialBeatsNoisy(t *testing.T) {
