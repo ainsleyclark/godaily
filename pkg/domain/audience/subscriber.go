@@ -1,24 +1,7 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
-// Package audience models the newsletter's audience: who receives it, in what
-// state, with what preferences.
 package audience
 
 import (
@@ -26,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/pkg/errors"
 )
 
 // Subscriber defines a person who has signed up to receive Go Daily.
@@ -39,6 +23,23 @@ type Subscriber struct {
 	BouncedAt        *time.Time `json:"bounced_at,omitempty"`
 	SuppressedAt     *time.Time `json:"suppressed_at,omitempty"`
 	CreatedAt        time.Time  `json:"created_at"`
+}
+
+// ErrAlreadySubscribed is returned by Subscribe when the email address is
+// already registered as an active subscriber.
+var ErrAlreadySubscribed = errors.New("already subscribed")
+
+//go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/Service.go . SubscriberService
+
+// SubscriberService defines the subscription lifecycle methods used by HTTP handlers
+// and the email webhook pipeline.
+type SubscriberService interface {
+	Subscribe(ctx context.Context, email string) (Subscriber, error)
+	Confirm(ctx context.Context, token string) error
+	Unsubscribe(ctx context.Context, token string) error
+	MarkBounced(ctx context.Context, email string) error
+	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
 }
 
 //go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/SubscriberRepository.go . SubscriberRepository
@@ -57,19 +58,6 @@ type SubscriberRepository interface {
 	ListActive(ctx context.Context) ([]Subscriber, error)
 	CountAll(ctx context.Context) (int64, error)
 	CountActive(ctx context.Context) (int64, error)
-	MarkBounced(ctx context.Context, email string) error
-	MarkComplained(ctx context.Context, email string) error
-	MarkSuppressed(ctx context.Context, email string) error
-}
-
-//go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/Service.go . SubscriberService
-
-// SubscriberService defines the subscription lifecycle methods used by HTTP handlers
-// and the email webhook pipeline.
-type SubscriberService interface {
-	Subscribe(ctx context.Context, email string) (Subscriber, error)
-	Confirm(ctx context.Context, token string) error
-	Unsubscribe(ctx context.Context, token string) error
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
 	MarkSuppressed(ctx context.Context, email string) error

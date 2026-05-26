@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -34,7 +19,7 @@ import (
 // Collect fetches Go news items from all registered sources within the current
 // collection window, scores and sorts them, and (unless DryRun) persists them
 // as unlinked items in the database (issue_id = nil).
-func (a Aggregator) Collect(ctx context.Context, opts digest.CollectOptions) (digest.CollectResponse, error) {
+func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (digest.CollectResponse, error) {
 	start, end := collectWindow(time.Now())
 
 	sources := opts.Sources
@@ -42,8 +27,8 @@ func (a Aggregator) Collect(ctx context.Context, opts digest.CollectOptions) (di
 		sources = news.Sources
 	}
 
-	if !opts.DryRun && a.items != nil {
-		existing, err := a.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
+	if !opts.DryRun && s.items != nil {
+		existing, err := s.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
 		if err != nil {
 			return digest.CollectResponse{}, errors.Wrap(err, "checking existing items")
 		}
@@ -58,7 +43,7 @@ func (a Aggregator) Collect(ctx context.Context, opts digest.CollectOptions) (di
 		sourceErrs map[news.Source]error
 	)
 	for _, src := range sources {
-		fetched, err := a.fetchSource(ctx, src)
+		fetched, err := s.fetchSource(ctx, src)
 		if err != nil {
 			slog.ErrorContext(ctx, "Failed to fetch source", "source", src, "err", err)
 			if sourceErrs == nil {
@@ -102,7 +87,7 @@ func (a Aggregator) Collect(ctx context.Context, opts digest.CollectOptions) (di
 	resp := digest.CollectResponse{Sources: results, Errors: sourceErrs}
 
 	if opts.DryRun || len(results) == 0 {
-		if !opts.DryRun && a.items != nil {
+		if !opts.DryRun && s.items != nil {
 			slog.WarnContext(ctx, "No items found for date window", "start", start.Format("2006-01-02"))
 		}
 		return resp, nil
@@ -113,7 +98,7 @@ func (a Aggregator) Collect(ctx context.Context, opts digest.CollectOptions) (di
 		for _, item := range section.Items {
 			position++
 			item.Source = section.Source
-			if _, err := a.items.Create(ctx, nil, position, item); err != nil {
+			if _, err := s.items.Create(ctx, nil, position, item); err != nil {
 				return resp, errors.Wrap(err, "creating news item")
 			}
 		}

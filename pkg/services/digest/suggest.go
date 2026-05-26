@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -66,21 +51,21 @@ type (
 
 // SendSuggestion generates an AI post suggestion from the stored digest
 // items for the given date and emails it to the owner address only.
-func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
-	if a.prompter == nil {
+func (s Service) SendSuggestion(ctx context.Context, date time.Time) error {
+	if s.prompter == nil {
 		return errors.New("synth send requires ANTHROPIC_API_KEY")
 	}
-	if a.issues == nil || a.items == nil {
+	if s.issues == nil || s.items == nil {
 		return errors.New("synth send requires persistence (TURSO_URL not set)")
 	}
-	if a.adminEmailAddress == "" {
+	if s.adminEmailAddress == "" {
 		slog.WarnContext(ctx, "EMAIL_SEND_ADDRESS not set, skipping synth send")
 		return nil
 	}
 
 	slug := date.Format("2006-01-02")
 
-	issue, err := a.issues.FindBySlug(ctx, slug)
+	issue, err := s.issues.FindBySlug(ctx, slug)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return fmt.Errorf("no digest found for %s — run `godaily collect` first", slug)
@@ -88,7 +73,7 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 		return errors.Wrap(err, "loading digest")
 	}
 
-	sections, err := loadSections(ctx, a.items, issue.ID)
+	sections, err := loadSections(ctx, s.items, issue.ID)
 	if err != nil {
 		return errors.Wrap(err, "loading items")
 	}
@@ -98,22 +83,22 @@ func (a Aggregator) SendSuggestion(ctx context.Context, date time.Time) error {
 		return nil
 	}
 
-	s, err := prompts.Suggest(ctx, a.prompter, date, sections)
+	sug, err := prompts.Suggest(ctx, s.prompter, date, sections)
 	if err != nil {
-		if a.slack != nil {
-			a.slack.MustSend(ctx, "AI suggestion failed: "+err.Error())
+		if s.slack != nil {
+			s.slack.MustSend(ctx, "AI suggestion failed: "+err.Error())
 		}
 		return errors.Wrap(err, "synth")
 	}
 
-	html, text, err := renderSuggestion(s)
+	html, text, err := renderSuggestion(sug)
 	if err != nil {
 		return err
 	}
 
-	return a.email.Send(ctx, email.SendEmailRequest{
+	return s.email.Send(ctx, email.SendEmailRequest{
 		From:    "GoDaily <digest@godaily.dev>",
-		To:      []string{a.adminEmailAddress},
+		To:      []string{s.adminEmailAddress},
 		Subject: "GoDaily Synth - " + date.Format("2006-01-02"),
 		Html:    html,
 		Text:    text,

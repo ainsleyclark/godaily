@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -29,7 +14,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -39,17 +24,17 @@ import (
 // SendDigest loads the draft digest for the given date, sends it to all
 // active subscribers, then updates the stored issue status to sent.
 // The admin preview (digest + synth) is sent separately via SendPreview.
-func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) error {
+func (s Service) SendDigest(ctx context.Context, date time.Time, force bool) error {
 	slug := date.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Preparing to send digest", "slug", slug)
 
-	issue, sections, err := a.loadDraftDigest(ctx, slug, force)
+	issue, sections, err := s.loadDraftDigest(ctx, slug, force)
 	if err != nil {
 		return err
 	}
 
-	subs, err := a.subscribers.ListActive(ctx)
+	subs, err := s.subscribers.ListActive(ctx)
 	if err != nil {
 		return errors.Wrap(err, "listing active subscribers")
 	}
@@ -89,12 +74,12 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 
 	for i := 0; i < len(batch); i += email.BatchSize {
 		chunk := batch[i:min(i+email.BatchSize, len(batch))]
-		if sendErr := a.email.SendBatch(ctx, chunk); sendErr != nil {
+		if sendErr := s.email.SendBatch(ctx, chunk); sendErr != nil {
 			slog.ErrorContext(ctx, "Failed to send digest batch", "start", i, "end", i+len(chunk), "err", sendErr)
 		}
 	}
 
-	if _, err = a.issues.UpdateStatus(ctx, issue.ID, digest.IssueStatusSent, time.Now().UTC()); err != nil {
+	if _, err = s.issues.UpdateStatus(ctx, issue.ID, digest.IssueStatusSent, time.Now().UTC()); err != nil {
 		slog.ErrorContext(ctx, "Failed to update issue status", "err", err)
 	}
 
@@ -104,8 +89,8 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 // loadDraftDigest finds the issue for slug, validates its status, and returns
 // the issue along with its grouped sections. Pass force=true to skip the
 // draft-status guard (used by SendDigest --force).
-func (a Aggregator) loadDraftDigest(ctx context.Context, slug string, force bool) (digest.Issue, []news.SourceItems, error) {
-	issue, err := a.issues.FindBySlug(ctx, slug)
+func (s Service) loadDraftDigest(ctx context.Context, slug string, force bool) (digest.Issue, []news.SourceItems, error) {
+	issue, err := s.issues.FindBySlug(ctx, slug)
 	if errors.Is(err, store.ErrNotFound) {
 		return digest.Issue{}, nil, fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
 	} else if err != nil {
@@ -114,7 +99,7 @@ func (a Aggregator) loadDraftDigest(ctx context.Context, slug string, force bool
 		return digest.Issue{}, nil, fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, digest.IssueStatusDraft)
 	}
 
-	sections, err := loadSections(ctx, a.items, issue.ID)
+	sections, err := loadSections(ctx, s.items, issue.ID)
 	if err != nil {
 		return digest.Issue{}, nil, errors.Wrap(err, "loading sections")
 	}

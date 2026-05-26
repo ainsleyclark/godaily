@@ -1,24 +1,7 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
-// Package audience owns the subscription lifecycle: creating subscribers,
-// sending confirmation emails, and processing unsubscribes.
 package audience
 
 import (
@@ -38,9 +21,23 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/templates"
 )
 
-// ErrAlreadySubscribed is returned by Subscribe when the email address is
-// already registered as an active subscriber.
-var ErrAlreadySubscribed = errors.New("already subscribed")
+// Service owns the full subscriber lifecycle.
+type Service struct {
+	repo   audience.SubscriberRepository
+	issues digest.IssueRepository
+	email  email.Sender
+}
+
+var _ audience.SubscriberService = (*Service)(nil)
+
+// New returns a Service wired to the provided dependencies.
+func New(repo audience.SubscriberRepository, issues digest.IssueRepository, sender email.Sender) *Service {
+	return &Service{
+		repo:   repo,
+		issues: issues,
+		email:  sender,
+	}
+}
 
 var (
 	htmlTmpl = htmltemplate.Must(htmltemplate.New("confirm-html").Parse(templates.EmailLayout + templates.ConfirmHTML))
@@ -53,24 +50,6 @@ type confirmData struct {
 	CanonicalURL   string
 }
 
-var _ audience.SubscriberService = (*Service)(nil)
-
-// Service owns the full subscriber lifecycle.
-type Service struct {
-	repo   audience.SubscriberRepository
-	issues digest.IssueRepository
-	email  email.Sender
-}
-
-// New returns a Service wired to the provided dependencies.
-func New(repo audience.SubscriberRepository, issues digest.IssueRepository, sender email.Sender) *Service {
-	return &Service{
-		repo:   repo,
-		issues: issues,
-		email:  sender,
-	}
-}
-
 // Subscribe creates a new subscriber and sends a confirmation email.
 // It returns ErrAlreadySubscribed if the email is already registered as active.
 // Previously unsubscribed addresses are reactivated with a fresh token.
@@ -81,7 +60,7 @@ func (s Service) Subscribe(ctx context.Context, emailAddr string) (audience.Subs
 	existing, err := s.repo.FindByEmail(ctx, emailAddr)
 	switch {
 	case err == nil && existing.UnsubscribedAt == nil:
-		return audience.Subscriber{}, ErrAlreadySubscribed
+		return audience.Subscriber{}, audience.ErrAlreadySubscribed
 	case err == nil:
 		sub, err = s.repo.Reactivate(ctx, emailAddr)
 		if err != nil {

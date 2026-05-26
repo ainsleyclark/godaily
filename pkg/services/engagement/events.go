@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package engagement
 
@@ -63,34 +48,6 @@ func NewEvents(events eng.EmailEventRepository, subscribers SubscriberHealth, it
 	}
 }
 
-// isInternalEmail reports whether addr belongs to the operator or the
-// @godaily.dev domain and should be excluded from engagement tracking.
-func (s *EventService) isInternalEmail(addr string) bool {
-	lower := strings.ToLower(strings.TrimSpace(addr))
-	return (s.adminEmail != "" && lower == strings.ToLower(strings.TrimSpace(s.adminEmail))) ||
-		strings.HasSuffix(lower, "@godaily.dev")
-}
-
-// sideEffects maps an event type to the subscriber-health action it triggers.
-// Event types without an entry are stored but carry no side effect.
-//
-// email.failed is intentionally absent: it fires when Resend cannot attempt
-// delivery at all (quota, API key, domain config) rather than when the
-// recipient's address is bad. Recipient-specific permanent failures produce
-// email.bounced instead. Calling MarkBounced on failed events would silently
-// deactivate valid subscribers during send-side outages.
-var sideEffects = map[eng.EmailEventType]func(context.Context, *EventService, string) error{
-	eng.EmailEventTypeBounced: func(ctx context.Context, s *EventService, addr string) error {
-		return s.subscribers.MarkBounced(ctx, addr)
-	},
-	eng.EmailEventTypeComplained: func(ctx context.Context, s *EventService, addr string) error {
-		return s.subscribers.MarkComplained(ctx, addr)
-	},
-	eng.EmailEventTypeSuppressed: func(ctx context.Context, s *EventService, addr string) error {
-		return s.subscribers.MarkSuppressed(ctx, addr)
-	},
-}
-
 // Process stores an email event and applies any subscriber-health side
 // effect. Events whose EventID has already been stored are treated as
 // duplicate webhook deliveries and skipped, making Process idempotent.
@@ -117,14 +74,43 @@ func (s *EventService) Process(ctx context.Context, e eng.EmailEvent) error {
 		}
 	}
 
-	if _, err := s.events.Create(ctx, e); err != nil {
+	if _, err = s.events.Create(ctx, e); err != nil {
 		return errors.Wrap(err, "storing email event")
 	}
 
 	if effect, ok := sideEffects[e.Type]; ok {
-		if err := effect(ctx, s, e.Email); err != nil {
+		if err = effect(ctx, s, e.Email); err != nil {
 			return errors.Wrap(err, "applying subscriber health change")
 		}
 	}
+
 	return nil
+}
+
+// isInternalEmail reports whether addr belongs to the operator or the
+// @godaily.dev domain and should be excluded from engagement tracking.
+func (s *EventService) isInternalEmail(addr string) bool {
+	lower := strings.ToLower(strings.TrimSpace(addr))
+	return (s.adminEmail != "" && lower == strings.ToLower(strings.TrimSpace(s.adminEmail))) ||
+		strings.HasSuffix(lower, "@godaily.dev")
+}
+
+// sideEffects maps an event type to the subscriber-health action it triggers.
+// Event types without an entry are stored but carry no side effect.
+//
+// email.failed is intentionally absent: it fires when Resend cannot attempt
+// delivery at all (quota, API key, domain config) rather than when the
+// recipient's address is bad. Recipient-specific permanent failures produce
+// email.bounced instead. Calling MarkBounced on failed events would silently
+// deactivate valid subscribers during send-side outages.
+var sideEffects = map[eng.EmailEventType]func(context.Context, *EventService, string) error{
+	eng.EmailEventTypeBounced: func(ctx context.Context, s *EventService, addr string) error {
+		return s.subscribers.MarkBounced(ctx, addr)
+	},
+	eng.EmailEventTypeComplained: func(ctx context.Context, s *EventService, addr string) error {
+		return s.subscribers.MarkComplained(ctx, addr)
+	},
+	eng.EmailEventTypeSuppressed: func(ctx context.Context, s *EventService, addr string) error {
+		return s.subscribers.MarkSuppressed(ctx, addr)
+	},
 }

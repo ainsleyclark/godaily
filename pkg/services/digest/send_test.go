@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -63,7 +48,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
@@ -87,7 +72,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{err: errors.New("send boom")}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
@@ -98,7 +83,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		err := agg.SendDigest(t.Context(), day("1999-01-01"), false)
 		require.Error(t, err)
@@ -115,7 +100,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"), false)
 		require.Error(t, sendErr)
 		assert.Contains(t, sendErr.Error(), "expected")
@@ -132,7 +117,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		agg := Aggregator{email: &mockEmail{}, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, true))
 
@@ -153,7 +138,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		require.NoError(t, err)
 
 		badItems := errItemRepo{err: errors.New("db failure")}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: badItems, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: badItems, subscribers: newSubsMock(t)}
 
 		err = agg.SendDigest(t.Context(), date, false)
 		require.Error(t, err)
@@ -188,7 +173,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		// Subscriber rendering errors are non-fatal; the digest is still marked sent.
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
@@ -216,7 +201,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 		require.Len(t, m.reqs, 1)
@@ -253,7 +238,7 @@ func TestAggregator_SendDigest(t *testing.T) {
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		// No expectations set on p — any call to the prompter would fail the test.
-		agg := Aggregator{email: m, prompter: p, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, prompter: p, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 		assert.True(t, m.called)
