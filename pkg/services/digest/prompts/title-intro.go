@@ -42,9 +42,13 @@ You will receive a JSON list of items aggregated from Go news sources for a sing
 
 Output strict JSON, schema:
 {
-  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
-  "intro": string  // 1-2 plain sentences stating the key technical fact(s) from the top item(s), for the top of the email body
+  "title": string  // <=80 chars — punchy email subject line teaser drawn from the headline item (e.g. "Go 1.24 lands, goroutines got faster")
+  "intro": string  // 1-2 plain sentences stating the key technical fact(s) from the headline item(s), for the top of the email body
 }
+
+Picking the headline item:
+- Prefer high-signal Go sources for the headline: releases, security advisories, accepted/shipped/open proposals on golang/go, and the official Go blog. Pick the highest-ranked item from these when one is in the top few.
+- Only headline a discussion thread (Reddit, Hacker News, Lobsters, golang-nuts) when no release, proposal, or official post is present in the top items.
 
 Rules for the intro:
 - FACTUAL ONLY. State the technical substance directly. Never describe a discussion, thread, or conversation — write what the content covers or what shipped.
