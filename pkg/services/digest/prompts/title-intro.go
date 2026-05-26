@@ -43,10 +43,14 @@ You will receive a JSON list of items aggregated from Go news sources for a sing
 Output strict JSON, schema:
 {
   "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
-  "intro": string  // 1-2 plain sentences summarising what mattered most today, for the top of the email body
+  "intro": string  // 1-2 plain sentences stating the key technical fact(s) from the top item(s), for the top of the email body
 }
 
-Do not begin the intro with "Today" or the date. Write in present tense, active voice, no filler.
+Rules for the intro:
+- FACTUAL ONLY. State the technical substance directly. Never describe a discussion, thread, or conversation — write what the content covers or what shipped.
+- Do not use framing like "A post explores...", "A thread discusses...", "The conversation unpacks..." — report the fact itself.
+- Use neutral verbs about the technical content: "covers", "explains", "ships", "proposes", "lands", "walks through".
+- Do not begin with "Today" or the date. Write in present tense, active voice, no filler.
 Output the JSON object alone. No prose, no markdown fences, no commentary.`
 
 func buildDigestSystem() string {
