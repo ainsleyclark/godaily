@@ -54,16 +54,19 @@ func NewRateLimiter(rps float64, burst int) *RateLimiter {
 // token bucket is exhausted.
 func (rl *RateLimiter) Limit(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ip := clientIP(r)
-		if !rl.allow(ip) {
-			Error(w, http.StatusTooManyRequests, "rate limit exceeded")
+		ip := ClientIP(r)
+		if !rl.Allow(ip) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusTooManyRequests)
+			_, _ = w.Write([]byte(`{"error":"rate limit exceeded"}`))
 			return
 		}
 		next(w, r)
 	}
 }
 
-func (rl *RateLimiter) allow(ip string) bool {
+// Allow reports whether the client identified by ip is within the rate limit.
+func (rl *RateLimiter) Allow(ip string) bool {
 	rl.mu.Lock()
 	l, ok := rl.limiters[ip]
 	if !ok {
@@ -74,9 +77,9 @@ func (rl *RateLimiter) allow(ip string) bool {
 	return l.Allow()
 }
 
-// clientIP extracts the client IP from X-Forwarded-For (first entry) or
+// ClientIP extracts the client IP from X-Forwarded-For (first entry) or
 // RemoteAddr, stripping the port if present.
-func clientIP(r *http.Request) string {
+func ClientIP(r *http.Request) string {
 	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
 		// Take only the first address — the originating client.
 		if idx := len(xff); idx > 0 {

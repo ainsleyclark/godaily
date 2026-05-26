@@ -24,18 +24,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandleHealthz(t *testing.T) {
+func TestHealthz(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/healthz", nil)
-	r = r.WithContext(api.WithApp(r.Context(), &godaily.App{Config: &env.Config{}}))
-
-	HandleHealthz(w, r)
-
+	c := webkit.NewContext(w, r)
+	_ = Healthz(c)
 	assert.Equal(t, http.StatusOK, w.Code)
 }

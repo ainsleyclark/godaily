@@ -20,12 +20,11 @@
 package metrics
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -43,37 +42,31 @@ func (req itemsRequest) validate() error {
 	)
 }
 
-// HandleItems handles GET /metrics/items.
+// Items handles GET /metrics/items.
 // Returns the top-clicked news items enriched with title, tag, and source metadata.
-func HandleItems(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req itemsRequest
-		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid query parameters")
-			return
-		}
-		if err := req.validate(); err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+func (h *Handler) Items(c *webkit.Context) error {
+	var req itemsRequest
+	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+	}
+	if err := req.validate(); err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		limit := req.Limit
-		if limit == 0 {
-			limit = api.DefaultMetricsLimit
-		}
+	limit := req.Limit
+	if limit == 0 {
+		limit = api.DefaultMetricsLimit
+	}
 
-		rows, err := a.Repository.Metrics.ItemList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch item metrics")
-			return
-		}
+	rows, err := h.metricsRepo.ItemList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit})
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to fetch item metrics")
+	}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": rows})
-	})(w, r)
+	return c.JSON(http.StatusOK, map[string]any{"data": rows})
 }

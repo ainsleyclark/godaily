@@ -20,45 +20,43 @@
 package digest
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleSubscribers handles GET /digest/subscribers.
-func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		page := api.QueryInt(r, "page", api.DefaultPage)
-		perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
+// Subscribers handles GET /digest/subscribers.
+func (h *Handler) Subscribers(c *webkit.Context) error {
+	ctx := c.Context()
+	r := c.Request
 
-		if page < 1 {
-			page = api.DefaultPage
-		}
-		if perPage < 1 || perPage > api.MaxPerPage {
-			perPage = api.DefaultPerPage
-		}
+	page := api.QueryInt(r, "page", api.DefaultPage)
+	perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
 
-		total, err := a.Repository.Subscribers.CountAll(ctx)
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to count subscribers")
-			return
-		}
+	if page < 1 {
+		page = api.DefaultPage
+	}
+	if perPage < 1 || perPage > api.MaxPerPage {
+		perPage = api.DefaultPerPage
+	}
 
-		subs, err := a.Repository.Subscribers.List(ctx, store.ListOptions{Page: page, PerPage: perPage})
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to list subscribers")
-			return
-		}
+	total, err := h.subscribersRepo.CountAll(ctx)
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to count subscribers")
+	}
 
-		api.JSON(w, http.StatusOK, api.PaginatedResponse[audience.Subscriber]{
-			Data:    subs,
-			Page:    page,
-			PerPage: perPage,
-			Total:   total,
-		})
-	})(w, r)
+	subs, err := h.subscribersRepo.List(ctx, store.ListOptions{Page: page, PerPage: perPage})
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to list subscribers")
+	}
+
+	return c.JSON(http.StatusOK, api.PaginatedResponse[audience.Subscriber]{
+		Data:    subs,
+		Page:    page,
+		PerPage: perPage,
+		Total:   total,
+	})
 }

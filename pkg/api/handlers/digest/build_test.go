@@ -27,15 +27,13 @@ import (
 	"testing/synctest"
 	"time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleBuild(t *testing.T) {
+func TestBuild(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockService)
 		weekend    bool
@@ -72,11 +70,10 @@ func TestHandleBuild(t *testing.T) {
 				runner := mockdigest.NewMockService(ctrl)
 				test.mock(runner)
 
-				a := &godaily.App{Runner: runner, Config: &env.Config{}}
+				h := &Handler{runner: runner, config: &env.Config{}}
 				w := httptest.NewRecorder()
 				r := httptest.NewRequest(http.MethodGet, "/digest/build", nil)
-				r = r.WithContext(api.WithApp(r.Context(), a))
-				HandleBuild(w, r)
+				invoke(h.Build, w, r)
 				assert.Equal(t, test.wantStatus, w.Code)
 			})
 		})

@@ -20,78 +20,80 @@
 package webhooks
 
 import (
-	"context"
 	"io"
 	"log/slog"
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleResend handles POST /webhooks/resend. The endpoint is public but every
-// request is verified against the Svix-style signature Resend includes; unsigned
-// or tampered requests are rejected.
-//
-// Status codes are chosen for Resend's retry behaviour: 2xx acknowledges
-// (stop retrying), 5xx asks Resend to retry, and 4xx reports a permanent
-// rejection.
-func HandleResend(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		if r.Method != http.MethodPost {
-			api.Error(w, http.StatusMethodNotAllowed, "method not allowed")
-			return
-		}
+// Handler holds the narrow dependencies for webhook HTTP handlers.
+type Handler struct {
+	emailEvents *svcengagement.EventService
+	config      *env.Config
+}
 
-		secret := a.Config.ResendWebhookSecret
-		if secret == "" {
-			api.Error(w, http.StatusInternalServerError, "resend webhook secret is not configured")
-			return
-		}
+// New constructs a Handler from the application App.
+func New(a *godaily.App) *Handler {
+	return &Handler{
+		emailEvents: a.EmailEvents,
+		config:      a.Config,
+	}
+}
 
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, "cannot read request body")
-			return
-		}
+// Routes registers all webhook routes on kit.
+func (h *Handler) Routes(kit *webkit.Kit) {
+	kit.Post("/resend", h.Resend)
+}
 
-		headers := email.WebhookHeaders{
-			ID:        r.Header.Get("svix-id"),
-			Timestamp: r.Header.Get("svix-timestamp"),
-			Signature: r.Header.Get("svix-signature"),
-		}
-		if err = email.VerifyWebhook(string(body), headers, secret); err != nil {
-			slog.WarnContext(ctx, "Rejected Resend webhook with invalid signature", "err", err)
-			api.Error(w, http.StatusUnauthorized, "invalid signature")
-			return
-		}
+// Resend handles POST /webhooks/resend.
+// The endpoint is public but every request is verified against the Svix-style
+// signature Resend includes; unsigned or tampered requests are rejected.
+func (h *Handler) Resend(c *webkit.Context) error {
+	ctx := c.Context()
 
-		evt, err := email.ParseWebhook(body)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid payload")
-			return
-		}
+	secret := h.config.ResendWebhookSecret
+	if secret == "" {
+		return webkit.NewError(http.StatusInternalServerError, "resend webhook secret is not configured")
+	}
 
-		domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid payload")
-			return
-		}
-		if !tracked {
-			// An event type GoDaily does not record — acknowledge it so
-			// Resend stops retrying.
-			slog.WarnContext(ctx, "Rejected Resend webhook with invalid event", "evt", evt)
-			api.OK(w)
-			return
-		}
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, "cannot read request body")
+	}
 
-		if err = a.EmailEvents.Process(ctx, domainEvt); err != nil {
-			slog.ErrorContext(ctx, "Failed to process Resend webhook event", "type", domainEvt.Type, "err", err)
-			api.Error(w, http.StatusInternalServerError, "failed to process event")
-			return
-		}
+	headers := email.WebhookHeaders{
+		ID:        c.Request.Header.Get("svix-id"),
+		Timestamp: c.Request.Header.Get("svix-timestamp"),
+		Signature: c.Request.Header.Get("svix-signature"),
+	}
+	if err = email.VerifyWebhook(string(body), headers, secret); err != nil {
+		slog.WarnContext(ctx, "Rejected Resend webhook with invalid signature", "err", err)
+		return webkit.NewError(http.StatusUnauthorized, "invalid signature")
+	}
 
-		api.OK(w)
-	})(w, r)
+	evt, err := email.ParseWebhook(body)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid payload")
+	}
+
+	domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid payload")
+	}
+	if !tracked {
+		slog.WarnContext(ctx, "Rejected Resend webhook with invalid event", "evt", evt)
+		return c.NoContent(http.StatusOK)
+	}
+
+	if err = h.emailEvents.Process(ctx, domainEvt); err != nil {
+		slog.ErrorContext(ctx, "Failed to process Resend webhook event", "type", domainEvt.Type, "err", err)
+		return webkit.NewError(http.StatusInternalServerError, "failed to process event")
+	}
+
+	return c.NoContent(http.StatusOK)
 }

@@ -20,16 +20,12 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleHealthz handles GET /healthz.
-func HandleHealthz(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(_ context.Context, w http.ResponseWriter, _ *http.Request, _ *godaily.App) {
-		api.OK(w)
-	})(w, r)
+// Healthz handles GET /healthz.
+func Healthz(c *webkit.Context) error {
+	return c.NoContent(http.StatusOK)
 }

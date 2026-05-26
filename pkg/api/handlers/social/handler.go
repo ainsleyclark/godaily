@@ -17,49 +17,44 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package issues
+package social
 
 import (
-	"errors"
-	"net/http"
-
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Handler holds the narrow dependencies for issues HTTP handlers.
+// Handler holds the narrow dependencies for social HTTP handlers.
 type Handler struct {
-	issuesRepo digest.IssueRepository
+	social        *socialsvc.Service
+	socialPosts   social.PostRepository
+	socialMetrics engagement.SocialMetricRepository
+	statFetchers  map[social.Platform]platform.StatFetcher
+	slack         slack.Sender
+	config        *env.Config
 }
 
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		issuesRepo: a.Repository.Issues,
+		social:        a.Social,
+		socialPosts:   a.Repository.SocialPosts,
+		socialMetrics: a.Repository.SocialMetrics,
+		statFetchers:  a.StatFetchers,
+		slack:         a.Slack,
+		config:        a.Config,
 	}
 }
 
-// Routes registers all issues routes on kit.
+// Routes registers all social routes on kit.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Get("/{slug}", h.BySlug, auth)
-}
-
-// BySlug handles GET /issues/{slug}.
-func (h *Handler) BySlug(c *webkit.Context) error {
-	slug := c.Param("slug")
-	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
-	}
-
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
-		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
-	}
-
-	return c.JSON(http.StatusOK, issue)
+	kit.Get("/featured", h.Featured, auth)
+	kit.Get("/rotation", h.Rotation, auth)
+	kit.Get("/metrics", h.Metrics, auth)
 }

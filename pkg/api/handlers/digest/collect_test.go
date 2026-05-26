@@ -27,8 +27,6 @@ import (
 	"testing/synctest"
 	"time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
@@ -37,7 +35,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleCollect(t *testing.T) {
+func TestCollect(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(r *mockdigest.MockService)
 		weekend    bool
@@ -72,15 +70,14 @@ func TestHandleCollect(t *testing.T) {
 
 				ctrl := gomock.NewController(t)
 				runner := mockdigest.NewMockService(ctrl)
-				slack := mockslack.NewMockSender(ctrl)
-				slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+				slackMock := mockslack.NewMockSender(ctrl)
+				slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 				test.mock(runner)
 
-				a := &godaily.App{Runner: runner, Config: &env.Config{}, Slack: slack}
+				h := &Handler{runner: runner, config: &env.Config{}, slack: slackMock}
 				w := httptest.NewRecorder()
 				r := httptest.NewRequest(http.MethodGet, "/digest/collect", nil)
-				r = r.WithContext(api.WithApp(r.Context(), a))
-				HandleCollect(w, r)
+				invoke(h.Collect, w, r)
 				assert.Equal(t, test.wantStatus, w.Code)
 			})
 		})

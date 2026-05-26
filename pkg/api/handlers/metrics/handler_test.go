@@ -17,49 +17,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package issues
+package metrics
 
 import (
 	"errors"
 	"net/http"
+	"net/http/httptest"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Handler holds the narrow dependencies for issues HTTP handlers.
-type Handler struct {
-	issuesRepo digest.IssueRepository
-}
-
-// New constructs a Handler from the application App.
-func New(a *godaily.App) *Handler {
-	return &Handler{
-		issuesRepo: a.Repository.Issues,
-	}
-}
-
-// Routes registers all issues routes on kit.
-func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Get("/{slug}", h.BySlug, auth)
-}
-
-// BySlug handles GET /issues/{slug}.
-func (h *Handler) BySlug(c *webkit.Context) error {
-	slug := c.Param("slug")
-	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
-	}
-
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
+func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
+	c := webkit.NewContext(w, r)
+	if err := h(c); err != nil {
+		var e *webkit.Error
+		if errors.As(err, &e) {
+			_ = c.JSON(e.Code, map[string]string{"error": e.Message})
+		} else {
+			_ = c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
 	}
-
-	return c.JSON(http.StatusOK, issue)
 }

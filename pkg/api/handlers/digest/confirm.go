@@ -20,32 +20,27 @@
 package digest
 
 import (
-	"context"
 	"errors"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleConfirm handles GET /digest/confirm.
-func HandleConfirm(w http.ResponseWriter, r *http.Request) {
-	api.Handle(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		token := r.URL.Query().Get("token")
-		if token == "" {
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		}
+// Confirm handles GET /confirm.
+func (h *Handler) Confirm(c *webkit.Context) error {
+	ctx := c.Context()
 
-		if err := a.Subscribers.Confirm(ctx, token); errors.Is(err, store.ErrNotFound) {
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		} else if err != nil {
-			api.Error(w, http.StatusInternalServerError, err.Error())
-			return
-		}
+	token := c.Request.URL.Query().Get("token")
+	if token == "" {
+		return c.Redirect(http.StatusFound, "/")
+	}
 
-		http.Redirect(w, r, "/confirmed/", http.StatusFound)
-	})(w, r)
+	if err := h.subscribers.Confirm(ctx, token); errors.Is(err, store.ErrNotFound) {
+		return c.Redirect(http.StatusFound, "/")
+	} else if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.Redirect(http.StatusFound, "/confirmed/")
 }

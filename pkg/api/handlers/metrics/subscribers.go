@@ -20,12 +20,11 @@
 package metrics
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -47,37 +46,31 @@ func (req subscribersRequest) validate() error {
 	)
 }
 
-// HandleSubscribers handles GET /metrics/subscribers.
+// Subscribers handles GET /metrics/subscribers.
 // Returns subscriber growth and churn bucketed over time.
-func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req subscribersRequest
-		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid query parameters")
-			return
-		}
-		if err := req.validate(); err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+func (h *Handler) Subscribers(c *webkit.Context) error {
+	var req subscribersRequest
+	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+	}
+	if err := req.validate(); err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		bucket := req.Bucket
-		if bucket == "" {
-			bucket = "day"
-		}
+	bucket := req.Bucket
+	if bucket == "" {
+		bucket = "day"
+	}
 
-		data, err := a.Repository.Metrics.SubscriberGrowth(ctx, engagement.MetricsFilter{From: from, To: to}, bucket)
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch subscriber data")
-			return
-		}
+	data, err := h.metricsRepo.SubscriberGrowth(c.Context(), engagement.MetricsFilter{From: from, To: to}, bucket)
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to fetch subscriber data")
+	}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": data})
-	})(w, r)
+	return c.JSON(http.StatusOK, map[string]any{"data": data})
 }

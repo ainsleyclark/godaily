@@ -17,49 +17,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package issues
+package metrics
 
 import (
-	"errors"
-	"net/http"
-
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Handler holds the narrow dependencies for issues HTTP handlers.
+// Handler holds the narrow dependencies for metrics HTTP handlers.
 type Handler struct {
-	issuesRepo digest.IssueRepository
+	metricsRepo     engagement.MetricsRepository
+	issuesRepo      digest.IssueRepository
+	emailEvents     engagement.EmailEventRepository
+	metricsReporter engagement.MetricsReporter
 }
 
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		issuesRepo: a.Repository.Issues,
+		metricsRepo:     a.Repository.Metrics,
+		issuesRepo:      a.Repository.Issues,
+		emailEvents:     a.Repository.EmailEvents,
+		metricsReporter: a.MetricsService,
 	}
 }
 
-// Routes registers all issues routes on kit.
+// Routes registers all metrics routes on kit.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Get("/{slug}", h.BySlug, auth)
-}
-
-// BySlug handles GET /issues/{slug}.
-func (h *Handler) BySlug(c *webkit.Context) error {
-	slug := c.Param("slug")
-	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
-	}
-
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
-		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
-	}
-
-	return c.JSON(http.StatusOK, issue)
+	kit.Get("/summary", h.Summary, auth)
+	kit.Get("/issues", h.Issues, auth)
+	kit.Get("/issues/{slug}", h.IssueBySlug, auth)
+	kit.Get("/items", h.Items, auth)
+	kit.Get("/tags", h.Tags, auth)
+	kit.Get("/sources", h.Sources, auth)
+	kit.Get("/trend", h.Trend, auth)
+	kit.Get("/subscribers", h.Subscribers, auth)
+	kit.Get("/roundup", h.Roundup, auth)
 }

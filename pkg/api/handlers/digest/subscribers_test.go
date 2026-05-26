@@ -25,17 +25,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleSubscribers(t *testing.T) {
+func TestSubscribers(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(subs *mockaudience.MockSubscriberRepository)
 		query      string
@@ -88,10 +85,6 @@ func TestHandleSubscribers(t *testing.T) {
 			query:      "?per_page=999",
 			wantStatus: http.StatusOK,
 		},
-		"Unauthorized": {
-			mock:       func(_ *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusUnauthorized,
-		},
 	}
 
 	for name, test := range tt {
@@ -100,23 +93,11 @@ func TestHandleSubscribers(t *testing.T) {
 			subsMock := mockaudience.NewMockSubscriberRepository(ctrl)
 			test.mock(subsMock)
 
-			a := &godaily.App{
-				Config: &env.Config{APISecret: "test-secret"},
-				Repository: &godaily.Repository{
-					Subscribers: subsMock,
-				},
-			}
+			h := &Handler{subscribersRepo: subsMock}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/digest/subscribers"+test.query, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			if name != "Unauthorized" {
-				r.Header.Set("Authorization", "Bearer test-secret")
-			}
-
-			HandleSubscribers(w, r)
-
+			invoke(h.Subscribers, w, r)
 			assert.Equal(t, test.wantStatus, w.Code)
 		})
 	}

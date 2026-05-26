@@ -20,12 +20,11 @@
 package metrics
 
 import (
-	"context"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
@@ -53,41 +52,35 @@ func (req trendRequest) validate() error {
 	)
 }
 
-// HandleTrend handles GET /metrics/trend.
+// Trend handles GET /metrics/trend.
 // Returns a time series for a chosen engagement metric, bucketed by day or week.
-func HandleTrend(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		var req trendRequest
-		if err := api.Decoder.Decode(&req, r.URL.Query()); err != nil {
-			api.Error(w, http.StatusBadRequest, "invalid query parameters")
-			return
-		}
-		if err := req.validate(); err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+func (h *Handler) Trend(c *webkit.Context) error {
+	var req trendRequest
+	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+	}
+	if err := req.validate(); err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, err.Error())
-			return
-		}
+	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	if err != nil {
+		return webkit.NewError(http.StatusBadRequest, err.Error())
+	}
 
-		metric := req.Metric
-		if metric == "" {
-			metric = "click_rate"
-		}
-		bucket := req.Bucket
-		if bucket == "" {
-			bucket = "day"
-		}
+	metric := req.Metric
+	if metric == "" {
+		metric = "click_rate"
+	}
+	bucket := req.Bucket
+	if bucket == "" {
+		bucket = "day"
+	}
 
-		data, err := a.Repository.Metrics.Trend(ctx, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
-		if err != nil {
-			api.Error(w, http.StatusInternalServerError, "failed to fetch trend data")
-			return
-		}
+	data, err := h.metricsRepo.Trend(c.Context(), engagement.MetricsFilter{From: from, To: to}, metric, bucket)
+	if err != nil {
+		return webkit.NewError(http.StatusInternalServerError, "failed to fetch trend data")
+	}
 
-		api.JSON(w, http.StatusOK, map[string]any{"data": data})
-	})(w, r)
+	return c.JSON(http.StatusOK, map[string]any{"data": data})
 }

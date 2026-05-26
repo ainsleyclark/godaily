@@ -20,22 +20,22 @@
 package issues
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleBySlug(t *testing.T) {
+func TestBySlug(t *testing.T) {
 	tt := map[string]struct {
 		mock       func(issues *mockdigest.MockIssueRepository)
 		slug       string
@@ -43,10 +43,7 @@ func TestHandleBySlug(t *testing.T) {
 	}{
 		"OK": {
 			mock: func(issues *mockdigest.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{
-					ID:   1,
-					Slug: "2026-01-01",
-				}, nil)
+				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{ID: 1, Slug: "2026-01-01"}, nil)
 			},
 			slug:       "2026-01-01",
 			wantStatus: http.StatusOK,
@@ -78,23 +75,31 @@ func TestHandleBySlug(t *testing.T) {
 			issuesMock := mockdigest.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
-			a := &godaily.App{
-				Config: &env.Config{},
-				Repository: &godaily.Repository{
-					Issues: issuesMock,
-				},
-			}
+			h := &Handler{issuesRepo: issuesMock}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/issues/"+test.slug, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
 			if test.slug != "" {
-				r.SetPathValue("slug", test.slug)
+				rctx := chi.NewRouteContext()
+				rctx.URLParams.Add("slug", test.slug)
+				r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, rctx))
 			}
 
-			HandleBySlug(w, r)
+			invoke(h.BySlug, w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 		})
+	}
+}
+
+func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
+	c := webkit.NewContext(w, r)
+	if err := h(c); err != nil {
+		var e *webkit.Error
+		if errors.As(err, &e) {
+			_ = c.JSON(e.Code, map[string]string{"error": e.Message})
+		} else {
+			_ = c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
 	}
 }

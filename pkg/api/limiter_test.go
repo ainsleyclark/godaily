@@ -137,7 +137,7 @@ func TestClientIP(t *testing.T) {
 				r.Header.Set("X-Forwarded-For", test.xff)
 			}
 
-			got := clientIP(r)
+			got := ClientIP(r)
 			assert.Equal(t, test.want, got)
 		})
 	}
