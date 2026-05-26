@@ -134,7 +134,7 @@
 
 - slug: gophercon-korea-2026
   name: GopherCon Korea 2026
-  url: https://gopherconkorea.com/
+  url: https://gophercon.kr/
   location: Seoul, South Korea
   start_date: 2026-11-08
   end_date: 2026-11-08
@@ -150,7 +150,7 @@
 
 - slug: gowest-2026
   name: GoWest 2026
-  url: https://www.gowestconf.com/
+  url: https://gowestconf.com/
   location: Lehi, UT, USA
   start_date: 2026-10-23
   end_date: 2026-10-23
@@ -163,37 +163,3 @@
     - 2026-05-25  # announcement
     - 2026-07-27  # ~3 months out
     - 2026-10-16  # 1 week before
-
-- slug: gophercon-2026
-  name: GopherCon 2026
-  url: https://www.youtube.com/watch?v=4Dr8FXs9aJM&list=PLxFC1MYuNgJT_ynbXGuYAZbSnUnq-6VQA
-  location: United States
-  start_date: 2026-07-13
-  end_date: 2026-07-16
-  description: "GopherCon is the premier annual Go programming language conference featuring talks, workshops, and community events for Go developers."
-  image_url: ""
-  handles:
-    linkedin: ""
-    bluesky: ""
-    mastodon: ""
-  notify_dates:
-    - 2026-01-13  # announcement (~6 months before start_date)
-    - 2026-04-13  # reminder (~3 months before start_date)
-    - 2026-07-06  # alert (~1 week before start_date)
-
-- slug: gophercon-2026
-  name: GopherCon 2026
-  url: https://www.youtube.com/playlist?list=PLtLJO5JKE5YALxdnGgvgwxTSmANOvyAo9
-  location: United States
-  start_date: 2026-07-13
-  end_date: 2026-07-16
-  description: "GopherCon is the premier annual conference for the Go programming language community, featuring talks, workshops, and networking for Go developers."
-  image_url: ""
-  handles:
-    linkedin: ""
-    bluesky: ""
-    mastodon: ""
-  notify_dates:
-    - 2026-01-13  # announcement (~6 months before start_date)
-    - 2026-04-13  # reminder (~3 months before start_date)
-    - 2026-07-06  # alert (~1 week before start_date)
