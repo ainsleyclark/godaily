@@ -43,10 +43,10 @@ import (
 func Handler(app *godaily.App) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", handlers.HandleHealthz)
-	mux.HandleFunc("POST /digest/subscribe", digesthandlers.HandleSubscribe)
-	mux.HandleFunc("GET /digest/confirm", digesthandlers.HandleConfirm)
+	mux.HandleFunc("POST /subscribe", digesthandlers.HandleSubscribe)
+	mux.HandleFunc("GET /confirm", digesthandlers.HandleConfirm)
 	// Accept both GET (link click) and POST (RFC 8058 one-click).
-	mux.HandleFunc("/digest/unsubscribe", digesthandlers.HandleUnsubscribe)
+	mux.HandleFunc("/unsubscribe", digesthandlers.HandleUnsubscribe)
 	mux.HandleFunc("GET /digest/collect", digesthandlers.HandleCollect)
 	mux.HandleFunc("GET /digest/build", digesthandlers.HandleBuild)
 	mux.HandleFunc("GET /digest/send", digesthandlers.HandleSend)
