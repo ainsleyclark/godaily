@@ -111,7 +111,7 @@ func run(
 		return "", err
 	}
 
-	text = sanitize(text)
+	text = aiutil.SanitisePost(text)
 
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
 		slog.Warn("Rotation post exceeded char limit",
@@ -152,12 +152,6 @@ func assembleSystem(cfg platformProfile, kindGuidance string) string {
 	b.WriteString("Output strict JSON, schema:\n{\n  \"text\": string   // the full post body, ready to submit verbatim\n}\n\n")
 	b.WriteString("Output the JSON object alone. No prose, no markdown fences.")
 	return b.String()
-}
-
-// sanitize strips characters that the brand rules forbid but that the model
-// occasionally emits anyway. Currently replaces em dashes with a hyphen.
-func sanitize(s string) string {
-	return strings.ReplaceAll(s, "—", "-")
 }
 
 func buildUser(payload any) (string, error) {
