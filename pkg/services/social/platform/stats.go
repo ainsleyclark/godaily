@@ -19,14 +19,18 @@
 
 package platform
 
-import "context"
+import (
+	"context"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+)
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/StatFetcher.go github.com/ainsleyclark/godaily/pkg/services/social/platform StatFetcher
 
 // StatFetcher fetches engagement stats for a published post by its URL.
 type StatFetcher interface {
 	// Platform identifies the platform this fetcher targets.
-	Platform() Name
+	Platform() social.Platform
 
 	// Stats returns the current engagement counts for the post at postURL.
 	// postURL is the canonical web URL stored in social_posts.post_url.

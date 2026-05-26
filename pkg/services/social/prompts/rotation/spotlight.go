@@ -23,7 +23,7 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 // SpotlightPayload is the input to the source-spotlight prompt: the
@@ -48,6 +48,6 @@ Write ONE post that:
 The point is goodwill and discovery, not a hard sell. Sound like one engineer recommending another, not a marketing campaign.`
 
 // Spotlight generates a source-spotlight post for a single platform.
-func Spotlight(ctx context.Context, p ai.Prompter, platform platform.Name, payload SpotlightPayload) (string, error) {
+func Spotlight(ctx context.Context, p ai.Prompter, platform social.Platform, payload SpotlightPayload) (string, error) {
 	return run(ctx, p, platform, spotlightGuidance, payload)
 }

@@ -35,6 +35,7 @@ import (
 	"github.com/ainsleydev/webkit/pkg/util/httputil"
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
@@ -72,8 +73,8 @@ func New(token, authorURN string) *Client {
 }
 
 // Platform implements platform.Poster.
-func (c *Client) Platform() platform.Name {
-	return platform.LinkedIn
+func (c *Client) Platform() social.Platform {
+	return social.LinkedIn
 }
 
 type (

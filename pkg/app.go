@@ -68,7 +68,7 @@ type App struct {
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
-	StatFetchers   map[platform.Name]platform.StatFetcher
+	StatFetchers   map[social.Platform]platform.StatFetcher
 }
 
 // Repository defines the datastore for the application.
@@ -210,16 +210,16 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRe
 
 // buildStatFetchers returns a map of platform → StatFetcher for platforms
 // whose credentials are present in the config.
-func buildStatFetchers(c env.Config) map[platform.Name]platform.StatFetcher {
-	out := make(map[platform.Name]platform.StatFetcher)
+func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
+	out := make(map[social.Platform]platform.StatFetcher)
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		out[platform.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out[platform.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		out[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		out[platform.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
+		out[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 	return out
 }

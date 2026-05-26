@@ -28,14 +28,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 func TestClient_Platform(t *testing.T) {
 	t.Parallel()
 
 	c := New("https://mastodon.social", "tok")
-	assert.Equal(t, platform.Mastodon, c.Platform())
+	assert.Equal(t, social.Mastodon, c.Platform())
 }
 
 func TestClient_Post(t *testing.T) {

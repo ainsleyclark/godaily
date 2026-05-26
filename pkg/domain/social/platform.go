@@ -17,32 +17,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package platform_test
+package social
 
-import (
-	"testing"
+// Platform identifies a social platform.
+type Platform string
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+// Platform name constants. The string values are used as the persisted
+// platform field on social_posts rows.
+const (
+	Bluesky  Platform = "bluesky"
+	LinkedIn Platform = "linkedin"
+	Mastodon Platform = "mastodon"
 )
 
-func TestName_String(t *testing.T) {
-	t.Parallel()
-
-	tt := map[string]struct {
-		input platform.Name
-		want  string
-	}{
-		"Bluesky":  {input: platform.Bluesky, want: "bluesky"},
-		"LinkedIn": {input: platform.LinkedIn, want: "linkedin"},
-		"Mastodon": {input: platform.Mastodon, want: "mastodon"},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, test.input.String())
-		})
-	}
+// String implements fmt.Stringer on Platform.
+func (p Platform) String() string {
+	return string(p)
 }

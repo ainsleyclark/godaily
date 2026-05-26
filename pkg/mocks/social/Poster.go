@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	platform "github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -42,10 +43,10 @@ func (m *MockPoster) EXPECT() *MockPosterMockRecorder {
 }
 
 // Platform mocks base method.
-func (m *MockPoster) Platform() platform.Name {
+func (m *MockPoster) Platform() social.Platform {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Platform")
-	ret0, _ := ret[0].(platform.Name)
+	ret0, _ := ret[0].(social.Platform)
 	return ret0
 }
 
