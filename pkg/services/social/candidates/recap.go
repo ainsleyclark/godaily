@@ -26,8 +26,9 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
@@ -45,12 +46,12 @@ const recapCooldown = 6 * 24 * time.Hour
 // all dataset computation to pkg/services/digest so the same machinery
 // can be reused by email outros, web pages, RSS, etc.
 type Recap struct {
-	recap *digest.RecapService
+	recap *digestsvc.RecapService
 	posts social.PostRepository
 }
 
 // NewRecap constructs the candidate.
-func NewRecap(svc *digest.RecapService, posts social.PostRepository) *Recap {
+func NewRecap(svc *digestsvc.RecapService, posts social.PostRepository) *Recap {
 	return &Recap{recap: svc, posts: posts}
 }
 
