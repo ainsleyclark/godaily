@@ -4,7 +4,7 @@ const AUTH = { Authorization: 'Bearer e2e-test-secret' };
 
 // Give the token bucket (1 req/s, burst 10) time to refill between tests.
 test.beforeEach(async () => {
-  await new Promise((r) => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 2000));
 });
 
 // ── Existing endpoint smoke tests ─────────────────────────────────────────────
