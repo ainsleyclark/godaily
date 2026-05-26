@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,7 +33,7 @@ import (
 func TestSitemap(t *testing.T) {
 	t.Parallel()
 
-	issue := news.Issue{
+	issue := digest.Issue{
 		ID:     1,
 		Slug:   "2026-04-28",
 		SentAt: time.Date(2026, 4, 28, 8, 0, 0, 0, time.UTC),
@@ -55,7 +55,7 @@ func TestSitemap(t *testing.T) {
 			},
 		},
 		"With issues": {
-			w:      website{Issues: []news.Issue{issue}},
+			w:      website{Issues: []digest.Issue{issue}},
 			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`https://godaily.dev/`,

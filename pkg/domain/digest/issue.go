@@ -17,12 +17,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package news
+// Package digest models the newsletter digest: issues assembled from news items.
+package digest
 
 import (
 	"context"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -35,10 +37,10 @@ type Issue struct {
 	Status  IssueStatus `json:"status"`
 	Summary string      `json:"summary,omitzero"`
 	SentAt  time.Time   `json:"sent_at"`
-	Items   []Item      `json:"items"`
+	Items   []news.Item `json:"items"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/news/IssueRepository.go . IssueRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../../mocks/digest/IssueRepository.go . IssueRepository
 
 // IssueRepository defines the methods for interacting with the Issue store.
 type IssueRepository interface {

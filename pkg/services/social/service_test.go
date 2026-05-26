@@ -30,10 +30,12 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
@@ -52,7 +54,7 @@ type fixture struct {
 	t         *testing.T
 	ctrl      *gomock.Controller
 	prompter  *mockai.MockPrompter
-	issues    *mocknews.MockIssueRepository
+	issues    *mockdigest.MockIssueRepository
 	items     *mocknews.MockItemRepository
 	posts     *mocksocial.MockPostRepository
 	slack     *mockslack.MockSender
@@ -68,7 +70,7 @@ func newFixture(t *testing.T) *fixture {
 		t:        t,
 		ctrl:     ctrl,
 		prompter: mockai.NewMockPrompter(ctrl),
-		issues:   mocknews.NewMockIssueRepository(ctrl),
+		issues:   mockdigest.NewMockIssueRepository(ctrl),
 		items:    mocknews.NewMockItemRepository(ctrl),
 		posts:    mocksocial.NewMockPostRepository(ctrl),
 		slack:    mockslack.NewMockSender(ctrl),
@@ -109,8 +111,8 @@ func featureJSON() []byte {
 	return []byte(`{"title":"Go 1.30 released","url":"` + sampleFeatureURL + `","source":"go_release","tag":"release","hook":"Go 1.30 ships generic type inference improvements."}`)
 }
 
-func sampleIssue() news.Issue {
-	return news.Issue{ID: 42, Slug: "2026-05-20"}
+func sampleIssue() digest.Issue {
+	return digest.Issue{ID: 42, Slug: "2026-05-20"}
 }
 
 func sampleItems() []news.Item {
@@ -177,7 +179,7 @@ func TestService_Post_IssueNotFound(t *testing.T) {
 	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
 
 	f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").
-		Return(news.Issue{}, store.ErrNotFound)
+		Return(digest.Issue{}, store.ErrNotFound)
 
 	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 	_, err := f.service().Post(t.Context(), PostOptions{Date: date})

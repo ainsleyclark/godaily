@@ -32,7 +32,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
@@ -87,7 +88,7 @@ func newRotationFixture(t *testing.T, candidates ...socialsvc.Candidate) rotatio
 	slk.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 
 	prompter := mockai.NewMockPrompter(ctrl)
-	issues := mocknews.NewMockIssueRepository(ctrl)
+	issues := mockdigest.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocksocial.NewMockPostRepository(ctrl)
 
@@ -260,7 +261,7 @@ func TestService_Rotate(t *testing.T) {
 
 		slk := mockslack.NewMockSender(ctrl)
 		prompter := mockai.NewMockPrompter(ctrl)
-		issues := mocknews.NewMockIssueRepository(ctrl)
+		issues := mockdigest.NewMockIssueRepository(ctrl)
 		items := mocknews.NewMockItemRepository(ctrl)
 		posts := mocksocial.NewMockPostRepository(ctrl)
 

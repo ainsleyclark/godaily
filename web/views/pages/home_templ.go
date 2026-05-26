@@ -9,16 +9,16 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/web/views/components"
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
 // HomeData carries the dynamic content rendered on the marketing homepage.
 type HomeData struct {
-	LatestIssue     news.Issue
-	SampleIssue     news.Issue
-	RecentIssues    []news.Issue
+	LatestIssue     digest.Issue
+	SampleIssue     digest.Issue
+	RecentIssues    []digest.Issue
 	Flash           string
 	SubscriberCount int64
 }

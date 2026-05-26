@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 )
 
@@ -55,7 +55,7 @@ func WebSiteSchema() string {
 
 // IssueSchemas returns a JSON-LD array containing NewsArticle and BreadcrumbList
 // schemas for a single digest page.
-func IssueSchemas(issue news.Issue) string {
+func IssueSchemas(issue digest.Issue) string {
 	issueURL := fmt.Sprintf("%s/issues/%s/", env.AppURL, issue.Slug)
 	ogImage := fmt.Sprintf("%s/og/issues/%s.png", env.AppURL, issue.Slug)
 	publisher := map[string]any{
@@ -97,7 +97,7 @@ func IssueSchemas(issue news.Issue) string {
 
 // ArchiveSchemas returns a JSON-LD array containing CollectionPage and BreadcrumbList
 // schemas for the issues archive page.
-func ArchiveSchemas(issues []news.Issue) string {
+func ArchiveSchemas(issues []digest.Issue) string {
 	archiveURL := env.AppURL + "/issues/"
 
 	collection := map[string]any{

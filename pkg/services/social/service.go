@@ -38,6 +38,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	social "github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
@@ -51,7 +52,7 @@ import (
 type Service struct {
 	posters    []platform.Poster
 	prompter   ai.Prompter
-	issues     news.IssueRepository
+	issues     digest.IssueRepository
 	items      news.ItemRepository
 	posts      social.PostRepository
 	slack      slack.Sender
@@ -79,7 +80,7 @@ func defaultReframers() map[platform.Name]reframer {
 func New(
 	posters []platform.Poster,
 	prompter ai.Prompter,
-	issues news.IssueRepository,
+	issues digest.IssueRepository,
 	items news.ItemRepository,
 	posts social.PostRepository,
 	slackSender slack.Sender,

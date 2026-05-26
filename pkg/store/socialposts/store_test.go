@@ -26,7 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -38,10 +38,10 @@ func TestSocialPosts_Store(t *testing.T) {
 	defer teardown()
 
 	is := issues.New(db)
-	issue, err := is.Create(ctx, news.Issue{
+	issue, err := is.Create(ctx, digest.Issue{
 		Slug:    "2026-05-20",
 		Subject: "GoDaily - May 20, 2026",
-		Status:  news.IssueStatusSent,
+		Status:  digest.IssueStatusSent,
 		SentAt:  time.Date(2026, time.May, 20, 8, 0, 0, 0, time.UTC),
 	})
 	require.NoError(t, err)

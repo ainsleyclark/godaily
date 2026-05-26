@@ -32,7 +32,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -51,13 +51,13 @@ func (m *mockSender) Send(_ context.Context, req email.SendEmailRequest) error {
 
 func setup(t *testing.T) (
 	*mockaudience.MockSubscriberRepository,
-	*mocknews.MockIssueRepository,
+	*mockdigest.MockIssueRepository,
 	*mockSender,
 ) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	return mockaudience.NewMockSubscriberRepository(ctrl),
-		mocknews.NewMockIssueRepository(ctrl),
+		mockdigest.NewMockIssueRepository(ctrl),
 		&mockSender{}
 }
 

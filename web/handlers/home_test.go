@@ -31,8 +31,8 @@ import (
 	"go.uber.org/mock/gomock"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
@@ -43,12 +43,12 @@ func TestHome(t *testing.T) {
 
 	tt := map[string]struct {
 		url        string
-		mock       func(issues *mocknews.MockIssueRepository)
+		mock       func(issues *mockdigest.MockIssueRepository)
 		wantStatus int
 		wantHTML   string
 	}{
 		"Internal Error": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					Latest(gomock.Any(), 4).
 					Return(nil, errors.New("internal error"))
@@ -56,28 +56,28 @@ func TestHome(t *testing.T) {
 			wantStatus: http.StatusInternalServerError,
 		},
 		"OK No Issues": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					Latest(gomock.Any(), 4).
-					Return([]news.Issue{}, nil)
+					Return([]digest.Issue{}, nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"OK With Issue": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					Latest(gomock.Any(), 4).
-					Return([]news.Issue{{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"}}, nil)
+					Return([]digest.Issue{{Slug: "2026-04-28", Subject: "GoDaily - April 28, 2026"}}, nil)
 			},
 			wantStatus: http.StatusOK,
 			wantHTML:   "GoDaily - April 28, 2026",
 		},
 		"OK Confirmed Flash": {
 			url: "/?confirmed=1",
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					Latest(gomock.Any(), 4).
-					Return([]news.Issue{}, nil)
+					Return([]digest.Issue{}, nil)
 			},
 			wantStatus: http.StatusOK,
 			wantHTML:   "You&#39;re confirmed!",
@@ -89,7 +89,7 @@ func TestHome(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			mockIssues := mocknews.NewMockIssueRepository(ctrl)
+			mockIssues := mockdigest.NewMockIssueRepository(ctrl)
 
 			if test.mock != nil {
 				test.mock(mockIssues)

@@ -29,6 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
@@ -36,7 +37,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	audiencesvc "github.com/ainsleyclark/godaily/pkg/services/audience"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
@@ -60,7 +61,7 @@ type App struct {
 	Config         *env.Config
 	DB             *sql.DB
 	Repository     *Repository
-	Runner         news.Service
+	Runner         digest.Service
 	Social         *socialsvc.Service
 	Cache          cache.Store
 	Subscribers    audience.SubscriberService
@@ -72,7 +73,7 @@ type App struct {
 
 // Repository defines the datastore for the application.
 type Repository struct {
-	Issues        news.IssueRepository
+	Issues        digest.IssueRepository
 	Items         news.ItemRepository
 	Subscribers   audience.SubscriberRepository
 	SocialPosts   social.PostRepository
@@ -135,7 +136,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 	aiClient := ai.New(config, slackClient)
 
-	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
+	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
@@ -200,7 +201,7 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRe
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
 	if repo != nil && repo.Metrics != nil {
-		if recapSvc, err := digest.NewRecapService(repo.Metrics); err == nil {
+		if recapSvc, err := digestsvc.NewRecapService(repo.Metrics); err == nil {
 			out = append(out, candidates.NewRecap(recapSvc, posts))
 		}
 	}

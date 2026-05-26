@@ -27,13 +27,14 @@ import (
 
 	"github.com/pkg/errors"
 
+	domaindigest "github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 // Collect fetches Go news items from all registered sources within the current
 // collection window, scores and sorts them, and (unless DryRun) persists them
 // as unlinked items in the database (issue_id = nil).
-func (a Aggregator) Collect(ctx context.Context, opts news.CollectOptions) (news.CollectResponse, error) {
+func (a Aggregator) Collect(ctx context.Context, opts domaindigest.CollectOptions) (domaindigest.CollectResponse, error) {
 	start, end := collectWindow(time.Now())
 
 	sources := opts.Sources
@@ -44,11 +45,11 @@ func (a Aggregator) Collect(ctx context.Context, opts news.CollectOptions) (news
 	if !opts.DryRun && a.items != nil {
 		existing, err := a.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
 		if err != nil {
-			return news.CollectResponse{}, errors.Wrap(err, "checking existing items")
+			return domaindigest.CollectResponse{}, errors.Wrap(err, "checking existing items")
 		}
 		if len(existing) > 0 {
 			slog.InfoContext(ctx, "Items already collected for window, skipping", "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"), "count", len(existing))
-			return news.CollectResponse{}, nil
+			return domaindigest.CollectResponse{}, nil
 		}
 	}
 
@@ -98,7 +99,7 @@ func (a Aggregator) Collect(ctx context.Context, opts news.CollectOptions) (news
 		return results[i].Source.Priority() > results[j].Source.Priority()
 	})
 
-	resp := news.CollectResponse{Sources: results, Errors: sourceErrs}
+	resp := domaindigest.CollectResponse{Sources: results, Errors: sourceErrs}
 
 	if opts.DryRun || len(results) == 0 {
 		if !opts.DryRun && a.items != nil {

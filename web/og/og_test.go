@@ -23,6 +23,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -51,10 +52,10 @@ func TestGenerator_Issue(t *testing.T) {
 	g := setup(t)
 
 	tt := map[string]struct {
-		input news.Issue
+		input digest.Issue
 	}{
 		"With items and date": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      42,
 				Slug:    "2026-05-12",
 				Subject: "A Go roundup before standup",
@@ -69,7 +70,7 @@ func TestGenerator_Issue(t *testing.T) {
 			},
 		},
 		"Fewer than 3 items": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      1,
 				Slug:    "2026-01-01",
 				Subject: "First issue",
@@ -79,7 +80,7 @@ func TestGenerator_Issue(t *testing.T) {
 			},
 		},
 		"No items, zero date": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      99,
 				Slug:    "draft",
 				Subject: "Long headline that should be truncated if it exceeds the maximum rune limit set in the generator",

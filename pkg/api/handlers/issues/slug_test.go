@@ -27,9 +27,9 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -37,13 +37,13 @@ import (
 
 func TestHandleBySlug(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(issues *mocknews.MockIssueRepository)
+		mock       func(issues *mockdigest.MockIssueRepository)
 		slug       string
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(news.Issue{
+			mock: func(issues *mockdigest.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{
 					ID:   1,
 					Slug: "2026-01-01",
 				}, nil)
@@ -52,20 +52,20 @@ func TestHandleBySlug(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"Not found": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(news.Issue{}, store.ErrNotFound)
+			mock: func(issues *mockdigest.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(digest.Issue{}, store.ErrNotFound)
 			},
 			slug:       "unknown",
 			wantStatus: http.StatusNotFound,
 		},
 		"Missing slug": {
-			mock:       func(issues *mocknews.MockIssueRepository) {},
+			mock:       func(issues *mockdigest.MockIssueRepository) {},
 			slug:       "",
 			wantStatus: http.StatusBadRequest,
 		},
 		"Store error": {
-			mock: func(issues *mocknews.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(news.Issue{}, errors.New("db error"))
+			mock: func(issues *mockdigest.MockIssueRepository) {
+				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{}, errors.New("db error"))
 			},
 			slug:       "2026-01-01",
 			wantStatus: http.StatusInternalServerError,
@@ -75,7 +75,7 @@ func TestHandleBySlug(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			issuesMock := mocknews.NewMockIssueRepository(ctrl)
+			issuesMock := mockdigest.NewMockIssueRepository(ctrl)
 			test.mock(issuesMock)
 
 			a := &godaily.App{

@@ -27,7 +27,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 	// Register all news-source fetchers (lingua-go + scrapers) so the
 	// registry populates in this single binary.
@@ -45,7 +45,7 @@ func HandleCollect(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		resp, err := a.Runner.Collect(ctx, news.CollectOptions{})
+		resp, err := a.Runner.Collect(ctx, digest.CollectOptions{})
 		if err != nil {
 			a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
 			api.Error(w, http.StatusInternalServerError, "collect failed: "+err.Error())

@@ -25,7 +25,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -48,12 +48,12 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 
 		var (
 			total  int64
-			issues []news.Issue
+			issues []digest.Issue
 			err    error
 		)
 
 		if statusParam != "" {
-			status := news.IssueStatus(statusParam)
+			status := digest.IssueStatus(statusParam)
 			total, err = a.Repository.Issues.CountByStatus(ctx, status)
 			if err != nil {
 				api.Error(w, http.StatusInternalServerError, "failed to count issues")
@@ -77,7 +77,7 @@ func HandleIssues(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		api.JSON(w, http.StatusOK, api.PaginatedResponse[news.Issue]{
+		api.JSON(w, http.StatusOK, api.PaginatedResponse[digest.Issue]{
 			Data:    issues,
 			Page:    page,
 			PerPage: perPage,

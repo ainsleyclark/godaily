@@ -3,12 +3,12 @@ package pages
 import (
 	"fmt"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/web/views/components"
 	"github.com/ainsleyclark/godaily/web/views/layouts"
 )
 
-templ IssuesArchive(issues []news.Issue) {
+templ IssuesArchive(issues []digest.Issue) {
 	@layouts.Base(layouts.PageMeta{
 		Title:        "Go Newsletter Archive: All Issues",
 		Description:  "Browse the complete GoDaily archive. Every issue of the daily Go newsletter, fully linked and readable. Go news delivered weekdays.",

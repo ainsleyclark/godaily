@@ -29,31 +29,32 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 
 func TestSite(t *testing.T) {
 	t.Parallel()
 
-	issue := news.Issue{
+	issue := digest.Issue{
 		ID:      1,
 		Slug:    "2026-04-28",
 		Subject: "GoDaily - April 28, 2026",
-		Status:  news.IssueStatusSent,
+		Status:  digest.IssueStatusSent,
 		Items:   []news.Item{},
 	}
 
 	tt := map[string]struct {
-		mock      func(*mocknews.MockIssueRepository)
+		mock      func(*mockdigest.MockIssueRepository)
 		wantErr   bool
 		wantFiles []string
 	}{
 		"Happy path no issues": {
-			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{}, nil)
+			mock: func(repo *mockdigest.MockIssueRepository) {
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{}, nil)
 			},
 			wantFiles: []string{
 				"index.html",
@@ -65,9 +66,9 @@ func TestSite(t *testing.T) {
 			},
 		},
 		"Happy path with issue": {
-			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{issue}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
+			mock: func(repo *mockdigest.MockIssueRepository) {
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 			},
 			wantFiles: []string{
@@ -83,23 +84,23 @@ func TestSite(t *testing.T) {
 			},
 		},
 		"List error": {
-			mock: func(repo *mocknews.MockIssueRepository) {
+			mock: func(repo *mockdigest.MockIssueRepository) {
 				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Latest error": {
-			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{}, nil)
+			mock: func(repo *mockdigest.MockIssueRepository) {
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Find error": {
-			mock: func(repo *mocknews.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{issue}, nil)
-				repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
-				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(news.Issue{}, errors.New("db error"))
+			mock: func(repo *mockdigest.MockIssueRepository) {
+				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(digest.Issue{}, errors.New("db error"))
 			},
 			wantErr: true,
 		},
@@ -110,7 +111,7 @@ func TestSite(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			repo := mocknews.NewMockIssueRepository(ctrl)
+			repo := mockdigest.NewMockIssueRepository(ctrl)
 			test.mock(repo)
 
 			outDir := t.TempDir()

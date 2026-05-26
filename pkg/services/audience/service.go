@@ -31,7 +31,7 @@ import (
 	texttemplate "text/template"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -58,12 +58,12 @@ var _ audience.SubscriberService = (*Service)(nil)
 // Service owns the full subscriber lifecycle.
 type Service struct {
 	repo   audience.SubscriberRepository
-	issues news.IssueRepository
+	issues digest.IssueRepository
 	email  email.Sender
 }
 
 // New returns a Service wired to the provided dependencies.
-func New(repo audience.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
+func New(repo audience.SubscriberRepository, issues digest.IssueRepository, sender email.Sender) *Service {
 	return &Service{
 		repo:   repo,
 		issues: issues,

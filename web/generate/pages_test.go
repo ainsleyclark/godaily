@@ -30,19 +30,20 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 
 func TestOGImages(t *testing.T) {
 	t.Parallel()
 
-	issue := news.Issue{
+	issue := digest.Issue{
 		ID:      3,
 		Slug:    "2026-05-12",
 		Subject: "GoDaily – May 12, 2026",
-		Status:  news.IssueStatusSent,
+		Status:  digest.IssueStatusSent,
 		SentAt:  time.Date(2026, 5, 12, 8, 0, 0, 0, time.UTC),
 		Items: []news.Item{
 			{Title: "Go 1.26 released"},
@@ -53,9 +54,9 @@ func TestOGImages(t *testing.T) {
 	}
 
 	ctrl := gomock.NewController(t)
-	repo := mocknews.NewMockIssueRepository(ctrl)
-	repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Issue{issue}, nil)
-	repo.EXPECT().Latest(gomock.Any(), 4).Return([]news.Issue{issue}, nil)
+	repo := mockdigest.NewMockIssueRepository(ctrl)
+	repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+	repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
 	repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 
 	outDir := t.TempDir()
