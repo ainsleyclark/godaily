@@ -30,7 +30,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
 )

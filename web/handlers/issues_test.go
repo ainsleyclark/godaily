@@ -33,7 +33,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 

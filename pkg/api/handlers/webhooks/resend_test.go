@@ -42,7 +42,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )

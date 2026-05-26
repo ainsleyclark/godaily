@@ -27,7 +27,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleydev/webkit/pkg/cache"
 	"github.com/ainsleydev/webkit/pkg/cache/cachefakes"
 	"github.com/stretchr/testify/assert"

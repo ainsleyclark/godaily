@@ -29,7 +29,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	engagementsvc "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )

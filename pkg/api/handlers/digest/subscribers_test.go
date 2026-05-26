@@ -29,7 +29,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"

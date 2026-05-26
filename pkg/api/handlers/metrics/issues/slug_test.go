@@ -31,7 +31,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"

@@ -34,8 +34,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 )
 
 func TestAggregator_SendDigest(t *testing.T) {

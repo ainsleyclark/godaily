@@ -31,8 +31,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 

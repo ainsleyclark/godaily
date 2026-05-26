@@ -26,7 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	domaindigest "github.com/ainsleyclark/godaily/pkg/domain/digest"
+	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
@@ -51,7 +51,7 @@ func NewRecapService(metrics engagement.MetricsRepository) (*RecapService, error
 // Top returns the most-clicked items in the window ending at now. When
 // the dataset has fewer than opts.MinItems entries, it returns the zero
 // value (and an empty period) — the caller treats that as "skip".
-func (s *RecapService) Top(ctx context.Context, now time.Time, opts domaindigest.TopOptions) (domaindigest.Top, error) {
+func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOptions) (digest.Top, error) {
 	limit := opts.N
 	if limit <= 0 {
 		limit = defaultLimit
@@ -65,24 +65,24 @@ func (s *RecapService) Top(ctx context.Context, now time.Time, opts domaindigest
 		Limit: limit,
 	})
 	if err != nil {
-		return domaindigest.Top{}, errors.Wrap(err, "metrics.ItemList")
+		return digest.Top{}, errors.Wrap(err, "metrics.ItemList")
 	}
 
 	if opts.MinItems > 0 && len(items) < opts.MinItems {
-		return domaindigest.Top{}, nil
+		return digest.Top{}, nil
 	}
 
-	ranked := make([]domaindigest.RankedItem, 0, len(items))
+	ranked := make([]digest.RankedItem, 0, len(items))
 	for _, it := range items {
-		ranked = append(ranked, domaindigest.RankedItem{ItemMetrics: it})
+		ranked = append(ranked, digest.RankedItem{ItemMetrics: it})
 	}
-	return domaindigest.Top{Period: period, Items: ranked}, nil
+	return digest.Top{Period: period, Items: ranked}, nil
 }
 
 // makePeriod builds the [Start, End) window. When window is zero the
 // start is the Monday 00:00 UTC of now's ISO week, so a Friday call
 // returns Mon-Thu activity (and a Thursday call returns Mon-Wed).
-func makePeriod(now time.Time, window time.Duration) domaindigest.Period {
+func makePeriod(now time.Time, window time.Duration) digest.Period {
 	now = now.UTC()
 	var start time.Time
 	if window > 0 {
@@ -91,7 +91,7 @@ func makePeriod(now time.Time, window time.Duration) domaindigest.Period {
 		start = mondayOf(now)
 	}
 	year, week := start.ISOWeek()
-	return domaindigest.Period{
+	return digest.Period{
 		Start: start,
 		End:   now,
 		Label: fmt.Sprintf("%d-W%02d", year, week),

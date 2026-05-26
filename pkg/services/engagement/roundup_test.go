@@ -32,7 +32,7 @@ import (
 
 	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 var errBoom = errors.New("boom")
