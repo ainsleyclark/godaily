@@ -24,31 +24,9 @@ import (
 	"log/slog"
 	"net/http"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
-
-// Handler holds the narrow dependencies for webhook HTTP handlers.
-type Handler struct {
-	emailEvents *svcengagement.EventService
-	config      *env.Config
-}
-
-// New constructs a Handler from the application App.
-func New(a *godaily.App) *Handler {
-	return &Handler{
-		emailEvents: a.EmailEvents,
-		config:      a.Config,
-	}
-}
-
-// Routes registers all webhook routes on kit.
-func (h *Handler) Routes(kit *webkit.Kit) {
-	kit.Post("/resend", h.Resend)
-}
 
 // Resend handles POST /webhooks/resend.
 // The endpoint is public but every request is verified against the Svix-style

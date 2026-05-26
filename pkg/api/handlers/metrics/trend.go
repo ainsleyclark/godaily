@@ -22,7 +22,6 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -56,14 +55,14 @@ func (req trendRequest) validate() error {
 // Returns a time series for a chosen engagement metric, bucketed by day or week.
 func (h *Handler) Trend(c *webkit.Context) error {
 	var req trendRequest
-	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}

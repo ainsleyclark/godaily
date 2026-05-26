@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package metrics
 
 import (
 	"testing"
@@ -32,7 +32,7 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Empty inputs leave bounds nil", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("", "", "")
+		from, to, err := parseDateWindow("", "", "")
 		require.NoError(t, err)
 		assert.Nil(t, from)
 		assert.Nil(t, to)
@@ -40,7 +40,7 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Valid from and to", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("2026-01-01", "2026-02-01", "")
+		from, to, err := parseDateWindow("2026-01-01", "2026-02-01", "")
 		require.NoError(t, err)
 		require.NotNil(t, from)
 		require.NotNil(t, to)
@@ -50,31 +50,31 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Invalid from date", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("not-a-date", "", "")
+		_, _, err := parseDateWindow("not-a-date", "", "")
 		require.Error(t, err)
 	})
 
 	t.Run("Invalid to date", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("", "2026/01/01", "")
+		_, _, err := parseDateWindow("", "2026/01/01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("From equal to to", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("2026-01-01", "2026-01-01", "")
+		_, _, err := parseDateWindow("2026-01-01", "2026-01-01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("From after to", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("2026-02-01", "2026-01-01", "")
+		_, _, err := parseDateWindow("2026-02-01", "2026-01-01", "")
 		require.Error(t, err)
 	})
 
 	t.Run("Period day sets from and to", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("", "", "day")
+		from, to, err := parseDateWindow("", "", "day")
 		require.NoError(t, err)
 		require.NotNil(t, from)
 		require.NotNil(t, to)
@@ -84,7 +84,7 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Period week sets 7-day window", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("", "", "week")
+		from, to, err := parseDateWindow("", "", "week")
 		require.NoError(t, err)
 		require.NotNil(t, from)
 		diff := to.Sub(*from)
@@ -93,7 +93,7 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Period all leaves bounds nil", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("", "", "all")
+		from, to, err := parseDateWindow("", "", "all")
 		require.NoError(t, err)
 		assert.Nil(t, from)
 		assert.Nil(t, to)
@@ -101,13 +101,13 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Unknown period", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("", "", "quarter")
+		_, _, err := parseDateWindow("", "", "quarter")
 		require.Error(t, err)
 	})
 
 	t.Run("Period ignored when from is set", func(t *testing.T) {
 		t.Parallel()
-		from, to, err := ParseDateWindow("2026-01-01", "", "week")
+		from, to, err := parseDateWindow("2026-01-01", "", "week")
 		require.NoError(t, err)
 		require.NotNil(t, from)
 		assert.Nil(t, to)
@@ -115,7 +115,7 @@ func TestParseDateWindow(t *testing.T) {
 
 	t.Run("Unknown period still rejected when from is set", func(t *testing.T) {
 		t.Parallel()
-		_, _, err := ParseDateWindow("2026-01-01", "", "quarter")
+		_, _, err := parseDateWindow("2026-01-01", "", "quarter")
 		require.Error(t, err)
 	})
 }

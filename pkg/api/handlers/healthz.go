@@ -25,7 +25,7 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// Healthz handles GET /healthz.
-func Healthz(c *webkit.Context) error {
+// HealthZ handles GET /healthz.
+func HealthZ(c *webkit.Context) error {
 	return c.NoContent(http.StatusOK)
 }

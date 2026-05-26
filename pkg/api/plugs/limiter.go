@@ -17,15 +17,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package plugs
 
 import (
 	"net"
 	"net/http"
 	"sync"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"golang.org/x/time/rate"
 )
+
+// RateLimit returns a webkit.Plug that enforces per-IP rate limiting using the
+// provided RateLimiter.
+func RateLimit(limiter *RateLimiter) webkit.Plug {
+	return func(next webkit.Handler) webkit.Handler {
+		return func(c *webkit.Context) error {
+			if !limiter.Allow(ClientIP(c.Request)) {
+				return webkit.NewError(http.StatusTooManyRequests, "rate limit exceeded")
+			}
+			return next(c)
+		}
+	}
+}
 
 // Limiter is the shared rate limiter for public API endpoints.
 // Allows 1 request per second with a burst of 10 per unique client IP.
@@ -50,21 +64,6 @@ func NewRateLimiter(rps float64, burst int) *RateLimiter {
 	}
 }
 
-// Limit wraps next and rejects requests with HTTP 429 when the per-IP
-// token bucket is exhausted.
-func (rl *RateLimiter) Limit(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ip := ClientIP(r)
-		if !rl.Allow(ip) {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusTooManyRequests)
-			_, _ = w.Write([]byte(`{"error":"rate limit exceeded"}`))
-			return
-		}
-		next(w, r)
-	}
-}
-
 // Allow reports whether the client identified by ip is within the rate limit.
 func (rl *RateLimiter) Allow(ip string) bool {
 	rl.mu.Lock()
@@ -81,7 +80,6 @@ func (rl *RateLimiter) Allow(ip string) bool {
 // RemoteAddr, stripping the port if present.
 func ClientIP(r *http.Request) string {
 	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-		// Take only the first address — the originating client.
 		if idx := len(xff); idx > 0 {
 			for i := 0; i < len(xff); i++ {
 				if xff[i] == ',' {

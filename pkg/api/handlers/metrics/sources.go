@@ -22,7 +22,6 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -38,7 +37,7 @@ type sourcesRequest struct {
 func (req sourcesRequest) validate() error {
 	return validation.ValidateStruct(
 		&req,
-		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
+		validation.Field(&req.Limit, validation.Min(0), validation.Max(MaxMetricsLimit)),
 	)
 }
 
@@ -46,21 +45,21 @@ func (req sourcesRequest) validate() error {
 // Returns total clicks aggregated by item source.
 func (h *Handler) Sources(c *webkit.Context) error {
 	var req sourcesRequest
-	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
 
 	limit := req.Limit
 	if limit == 0 {
-		limit = api.DefaultMetricsLimit
+		limit = DefaultMetricsLimit
 	}
 
 	rows, err := h.metricsRepo.SourceList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit})

@@ -22,7 +22,6 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -50,14 +49,14 @@ func (req subscribersRequest) validate() error {
 // Returns subscriber growth and churn bucketed over time.
 func (h *Handler) Subscribers(c *webkit.Context) error {
 	var req subscribersRequest
-	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}

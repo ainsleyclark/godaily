@@ -28,10 +28,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHealthz(t *testing.T) {
+func TestHealthZ(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/healthz", nil)
 	c := webkit.NewContext(w, r)
-	_ = Healthz(c)
+	_ = HealthZ(c)
 	assert.Equal(t, http.StatusOK, w.Code)
 }

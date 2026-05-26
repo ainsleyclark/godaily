@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package api
+package metrics
 
 import (
 	"fmt"
@@ -41,23 +41,23 @@ var periodDays = map[string]int{
 	"all":   0,
 }
 
-// Decoder is the shared gorilla/schema decoder for metrics query parameters.
+// decoder is the shared gorilla/schema decoder for metrics query parameters.
 // IgnoreUnknownKeys is set so endpoint-specific params (bucket, metric, etc.)
 // do not cause decode errors when processed by handlers that don't declare them.
-var Decoder = func() *schema.Decoder {
+var decoder = func() *schema.Decoder {
 	d := schema.NewDecoder()
 	d.IgnoreUnknownKeys(true)
 	return d
 }()
 
-// ParseDateWindow resolves optional from/to time bounds from raw query string values
+// parseDateWindow resolves optional from/to time bounds from raw query string values
 // and a period shorthand. It enforces cross-field rules that cannot be expressed as
 // single-field ozzo rules:
 //   - from and to must parse as YYYY-MM-DD
 //   - from must be strictly before to when both are present
 //   - period is resolved only when neither from nor to is set
 //   - an unrecognised period is always rejected, even when from/to are also set
-func ParseDateWindow(rawFrom, rawTo, period string) (from, to *time.Time, err error) {
+func parseDateWindow(rawFrom, rawTo, period string) (from, to *time.Time, err error) {
 	if rawFrom != "" {
 		t, parseErr := time.Parse("2006-01-02", rawFrom)
 		if parseErr != nil {

@@ -27,9 +27,8 @@ import (
 	"net/http"
 	"strings"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
-	handlers "github.com/ainsleyclark/godaily/pkg/api/handlers"
+	"github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/api/handlers"
 	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
 	itemhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/items"
@@ -45,15 +44,16 @@ import (
 // before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
+	kit.Plug(plugs.RateLimit(plugs.Limiter))
 
 	kit.ErrorHandler = func(c *webkit.Context, err error) error {
 		var e *webkit.Error
 		if errors.As(err, &e) {
-			pkgapi.Error(c.Response, e.Code, e.Message)
-			return nil
+			return c.JSON(e.Code, e.Error())
+			// pkgapi.Error(c.Response, e.Code, e.Message)
 		}
-		pkgapi.Error(c.Response, http.StatusInternalServerError, err.Error())
-		return nil
+		return c.JSON(http.StatusInternalServerError, err.Error())
+		// pkgapi.Error(c.Response, http.StatusInternalServerError, err.Error())
 	}
 
 	auth := plugs.Auth(app.Config.APISecret)
@@ -65,11 +65,8 @@ func Handler(app *godaily.App) http.Handler {
 	itemsH := itemhandlers.New(app)
 	webhookH := webhookhandlers.New(app)
 
-	kit.Get("/healthz", handlers.Healthz)
+	kit.Get("/healthz", handlers.HealthZ)
 
-	// Public subscriber lifecycle endpoints live at the root, not under /digest,
-	// because confirmation and unsubscribe URLs are embedded in emails and cannot
-	// change once sent.
 	kit.Post("/subscribe", digestH.Subscribe)
 	kit.Get("/confirm", digestH.Confirm)
 	kit.Get("/unsubscribe", digestH.Unsubscribe)

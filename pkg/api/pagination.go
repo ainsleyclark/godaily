@@ -22,8 +22,10 @@ package api
 const (
 	// DefaultPage is the default page number for paginated responses.
 	DefaultPage int64 = 1
+
 	// DefaultPerPage is the default number of items per page.
 	DefaultPerPage int64 = 20
+
 	// MaxPerPage is the maximum number of items allowed per page.
 	MaxPerPage int64 = 100
 )

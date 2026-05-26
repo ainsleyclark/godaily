@@ -23,7 +23,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
@@ -46,7 +45,7 @@ func (req issuesRequest) validate() error {
 			validation.In("click_rate", "open_rate", "total_clicks", "unique_clicks", "total_opens", "unique_opens", "delivered", "sent_at").
 				Error("invalid sort: use click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, or sent_at"),
 		)),
-		validation.Field(&req.Limit, validation.Min(0), validation.Max(api.MaxMetricsLimit)),
+		validation.Field(&req.Limit, validation.Min(0), validation.Max(MaxMetricsLimit)),
 	)
 }
 
@@ -54,14 +53,14 @@ func (req issuesRequest) validate() error {
 // Returns per-issue engagement stats with optional filtering and sorting.
 func (h *Handler) Issues(c *webkit.Context) error {
 	var req issuesRequest
-	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
 
-	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
@@ -72,7 +71,7 @@ func (h *Handler) Issues(c *webkit.Context) error {
 	}
 	limit := req.Limit
 	if limit == 0 {
-		limit = api.DefaultMetricsLimit
+		limit = DefaultMetricsLimit
 	}
 
 	rows, err := h.metricsRepo.IssueList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)

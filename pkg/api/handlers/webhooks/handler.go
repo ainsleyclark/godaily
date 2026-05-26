@@ -17,35 +17,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package api provides helpers for writing HTTP JSON responses.
-package api
+package webhooks
 
 import (
-	"encoding/json"
-	"log/slog"
-	"net/http"
+	"github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/env"
+	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// JSON writes v as JSON with the given HTTP status code and sets the
-// Content-Type header to application/json.
-func JSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	if err := json.NewEncoder(w).Encode(v); err != nil {
-		slog.Error("Encoding JSON response", "error", err)
+// Handler the narrow dependencies for webhook HTTP handlers.
+type Handler struct {
+	emailEvents *svcengagement.EventService
+	config      *env.Config
+}
+
+// New constructs a Handler from the application App.
+func New(a *godaily.App) *Handler {
+	return &Handler{
+		emailEvents: a.EmailEvents,
+		config:      a.Config,
 	}
 }
 
-// Error writes a JSON body {"error": message} with the given HTTP status code.
-// For 5xx responses it also logs the message at error level.
-func Error(w http.ResponseWriter, status int, message string) {
-	if status >= http.StatusInternalServerError {
-		slog.Error(message)
-	}
-	JSON(w, status, map[string]string{"error": message})
-}
-
-// OK writes a 200 OK JSON body {"ok": true}.
-func OK(w http.ResponseWriter) {
-	JSON(w, http.StatusOK, map[string]bool{"ok": true})
+// Routes registers all webhook routes on kit.
+func (h *Handler) Routes(kit *webkit.Kit) {
+	kit.Post("/resend", h.Resend)
 }

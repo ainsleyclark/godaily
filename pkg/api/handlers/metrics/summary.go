@@ -22,7 +22,6 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -37,11 +36,11 @@ type summaryRequest struct {
 // Returns headline engagement numbers for a period.
 func (h *Handler) Summary(c *webkit.Context) error {
 	var req summaryRequest
-	if err := api.Decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
 	}
 
-	from, to, err := api.ParseDateWindow(req.From, req.To, req.Period)
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
 		return webkit.NewError(http.StatusBadRequest, err.Error())
 	}
