@@ -68,6 +68,14 @@ func Handler(app *godaily.App) http.Handler {
 
 	kit.Get("/healthz", handlers.Healthz)
 
+	// Public subscriber lifecycle endpoints live at the root, not under /digest,
+	// because confirmation and unsubscribe URLs are embedded in emails and cannot
+	// change once sent.
+	kit.Post("/subscribe", digestH.Subscribe)
+	kit.Get("/confirm", digestH.Confirm)
+	kit.Get("/unsubscribe", digestH.Unsubscribe)
+	kit.Post("/unsubscribe", digestH.Unsubscribe)
+
 	kit.Group("/digest", func(k *webkit.Kit) { digestH.Routes(k, auth) })
 	kit.Group("/metrics", func(k *webkit.Kit) { metricsH.Routes(k, auth) })
 	kit.Group("/social", func(k *webkit.Kit) { socialH.Routes(k, auth) })

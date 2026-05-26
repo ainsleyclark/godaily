@@ -50,12 +50,10 @@ func New(a *godaily.App) *Handler {
 	}
 }
 
-// Routes registers all digest routes on kit.
+// Routes registers the authenticated digest pipeline routes on kit.
+// Public subscriber lifecycle routes (subscribe, confirm, unsubscribe) are
+// registered at the root level in the mux, not here.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Post("/subscribe", h.Subscribe)
-	kit.Get("/confirm", h.Confirm)
-	kit.Get("/unsubscribe", h.Unsubscribe)
-	kit.Post("/unsubscribe", h.Unsubscribe)
 	kit.Get("/collect", h.Collect, auth)
 	kit.Get("/build", h.Build, auth)
 	kit.Get("/send", h.Send, auth)

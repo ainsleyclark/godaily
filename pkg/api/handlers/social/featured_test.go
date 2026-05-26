@@ -24,10 +24,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
@@ -35,6 +31,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 // newHandlerNoPosters builds a Handler with a real social.Service that has no posters configured.
