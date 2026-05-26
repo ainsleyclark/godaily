@@ -29,7 +29,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // metricsSince is the look-back window for fetching social post stats.
@@ -57,7 +56,7 @@ func HandleMetrics(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			fetcher, ok := a.StatFetchers[platform.Name(post.Platform)]
+			fetcher, ok := a.StatFetchers[social.Platform(post.Platform)]
 			if !ok {
 				continue
 			}

@@ -27,6 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -73,11 +74,11 @@ func (a Aggregator) Build(ctx context.Context, date time.Time) error {
 		return a.buildErr(ctx, errors.Wrap(lookupErr, "checking existing issue"))
 	}
 
-	issue := news.Issue{
+	issue := digest.Issue{
 		Slug:    slug,
 		Subject: subject,
 		Summary: summary,
-		Status:  news.IssueStatusDraft,
+		Status:  digest.IssueStatusDraft,
 		SentAt:  today,
 	}
 

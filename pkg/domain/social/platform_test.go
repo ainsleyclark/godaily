@@ -17,42 +17,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package handlers
+package social_test
 
 import (
-	"net/http"
+	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/webkit"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
-// Home handles the GoDaily homepage.
-func Home(a *godaily.App) webkit.Handler {
-	return func(c *webkit.Context) error {
-		ctx := c.Request.Context()
+func TestPlatform_String(t *testing.T) {
+	t.Parallel()
 
-		recent, err := a.Repository.Issues.Latest(ctx, 4)
-		if err != nil {
-			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
-		}
+	tt := map[string]struct {
+		input social.Platform
+		want  string
+	}{
+		"Bluesky":  {input: social.Bluesky, want: "bluesky"},
+		"LinkedIn": {input: social.LinkedIn, want: "linkedin"},
+		"Mastodon": {input: social.Mastodon, want: "mastodon"},
+	}
 
-		var issue digest.Issue
-		if len(recent) > 0 {
-			issue = recent[0]
-		}
-
-		var flash string
-		if c.Request.URL.Query().Get("confirmed") != "" {
-			flash = "You're confirmed! Digest arrives weekday mornings."
-		}
-
-		return c.Render(pages.Home(pages.HomeData{
-			LatestIssue:  issue,
-			SampleIssue:  issue,
-			RecentIssues: recent,
-			Flash:        flash,
-		}))
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, test.input.String())
+		})
 	}
 }

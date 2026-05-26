@@ -30,6 +30,7 @@ import (
 	"github.com/mattn/go-mastodon"
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
@@ -62,8 +63,8 @@ func New(server, accessToken string) *Client {
 }
 
 // Platform implements platform.Poster.
-func (c *Client) Platform() platform.Name {
-	return platform.Mastodon
+func (c *Client) Platform() social.Platform {
+	return social.Mastodon
 }
 
 // Stats fetches engagement counts for a Mastodon status. postURL must be

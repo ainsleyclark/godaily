@@ -19,7 +19,11 @@
 
 package platform
 
-import "context"
+import (
+	"context"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+)
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/services/social/platform Poster
 
@@ -30,27 +34,11 @@ import "context"
 // transport must respect the supplied context for cancellation.
 type Poster interface {
 	// Platform identifies which platform this poster targets.
-	Platform() Name
+	Platform() social.Platform
 
 	// Post publishes text to the platform. Implementations are responsible
 	// for any auth dance their API requires.
 	Post(ctx context.Context, text string) (Result, error)
-}
-
-// Name identifies a social platform.
-type Name string
-
-// Platform name constants. The string values are used as the persisted
-// platform field on news.SocialPost rows.
-const (
-	Bluesky  Name = "bluesky"
-	LinkedIn Name = "linkedin"
-	Mastodon Name = "mastodon"
-)
-
-// String implements fmt.Stringer on Name.
-func (p Name) String() string {
-	return string(p)
 }
 
 // Result is what a platform returned after a successful post. PostURL is the

@@ -27,11 +27,11 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -39,14 +39,14 @@ import (
 
 func TestHandleBySlug(t *testing.T) {
 	tt := map[string]struct {
-		mockIssues      func(m *mocknews.MockIssueRepository)
+		mockIssues      func(m *mockdigest.MockIssueRepository)
 		mockEmailEvents func(m *mockengagement.MockEmailEventRepository)
 		slug            string
 		wantStatus      int
 	}{
 		"OK": {
-			mockIssues: func(m *mocknews.MockIssueRepository) {
-				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(news.Issue{ID: 7, Slug: "2026-05-22"}, nil)
+			mockIssues: func(m *mockdigest.MockIssueRepository) {
+				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{ID: 7, Slug: "2026-05-22"}, nil)
 			},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {
 				m.EXPECT().IssueStats(gomock.Any(), int64(7)).Return(engagement.IssueStats{IssueID: 7, Delivered: 312}, nil)
@@ -58,30 +58,30 @@ func TestHandleBySlug(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		"Missing slug": {
-			mockIssues:      func(m *mocknews.MockIssueRepository) {},
+			mockIssues:      func(m *mockdigest.MockIssueRepository) {},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {},
 			slug:            "",
 			wantStatus:      http.StatusBadRequest,
 		},
 		"Issue not found": {
-			mockIssues: func(m *mocknews.MockIssueRepository) {
-				m.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(news.Issue{}, store.ErrNotFound)
+			mockIssues: func(m *mockdigest.MockIssueRepository) {
+				m.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(digest.Issue{}, store.ErrNotFound)
 			},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {},
 			slug:            "unknown",
 			wantStatus:      http.StatusNotFound,
 		},
 		"Issue store error": {
-			mockIssues: func(m *mocknews.MockIssueRepository) {
-				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(news.Issue{}, errors.New("db error"))
+			mockIssues: func(m *mockdigest.MockIssueRepository) {
+				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{}, errors.New("db error"))
 			},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {},
 			slug:            "2026-05-22",
 			wantStatus:      http.StatusInternalServerError,
 		},
 		"Stats store error": {
-			mockIssues: func(m *mocknews.MockIssueRepository) {
-				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(news.Issue{ID: 7}, nil)
+			mockIssues: func(m *mockdigest.MockIssueRepository) {
+				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{ID: 7}, nil)
 			},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {
 				m.EXPECT().IssueStats(gomock.Any(), int64(7)).Return(engagement.IssueStats{}, errors.New("db error"))
@@ -90,8 +90,8 @@ func TestHandleBySlug(t *testing.T) {
 			wantStatus: http.StatusInternalServerError,
 		},
 		"TopLinks store error": {
-			mockIssues: func(m *mocknews.MockIssueRepository) {
-				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(news.Issue{ID: 7}, nil)
+			mockIssues: func(m *mockdigest.MockIssueRepository) {
+				m.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{ID: 7}, nil)
 			},
 			mockEmailEvents: func(m *mockengagement.MockEmailEventRepository) {
 				m.EXPECT().IssueStats(gomock.Any(), int64(7)).Return(engagement.IssueStats{IssueID: 7}, nil)
@@ -105,7 +105,7 @@ func TestHandleBySlug(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			issuesMock := mocknews.NewMockIssueRepository(ctrl)
+			issuesMock := mockdigest.NewMockIssueRepository(ctrl)
 			emailEventsMock := mockengagement.NewMockEmailEventRepository(ctrl)
 			test.mockIssues(issuesMock)
 			test.mockEmailEvents(emailEventsMock)

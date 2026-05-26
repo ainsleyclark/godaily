@@ -31,8 +31,8 @@ import (
 	"go.uber.org/mock/gomock"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -43,31 +43,31 @@ func TestDigest(t *testing.T) {
 	log.SetOutput(io.Discard)
 
 	tt := map[string]struct {
-		mock       func(issues *mocknews.MockIssueRepository)
+		mock       func(issues *mockdigest.MockIssueRepository)
 		wantStatus int
 		wantHTML   string
 	}{
 		"Not Found": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					FindBySlug(gomock.Any(), "issue-1").
-					Return(news.Issue{}, store.ErrNotFound)
+					Return(digest.Issue{}, store.ErrNotFound)
 			},
 			wantStatus: http.StatusNotFound,
 		},
 		"Internal Error": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					FindBySlug(gomock.Any(), "issue-1").
-					Return(news.Issue{}, errors.New("internal error"))
+					Return(digest.Issue{}, errors.New("internal error"))
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		"OK": {
-			mock: func(issues *mocknews.MockIssueRepository) {
+			mock: func(issues *mockdigest.MockIssueRepository) {
 				issues.EXPECT().
 					FindBySlug(gomock.Any(), "issue-1").
-					Return(news.Issue{Slug: "issue-1", Subject: "Go Weekly #1"}, nil)
+					Return(digest.Issue{Slug: "issue-1", Subject: "Go Weekly #1"}, nil)
 			},
 			wantStatus: http.StatusOK,
 			wantHTML:   "Go Weekly #1",
@@ -79,7 +79,7 @@ func TestDigest(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			mockIssues := mocknews.NewMockIssueRepository(ctrl)
+			mockIssues := mockdigest.NewMockIssueRepository(ctrl)
 
 			if test.mock != nil {
 				test.mock(mockIssues)

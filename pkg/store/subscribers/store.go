@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package subscribers implements domain/contacts.SubscriberRepository backed by a SQL database.
+// Package subscribers implements domain/audience.SubscriberRepository backed by a SQL database.
 package subscribers
 
 import (
@@ -29,7 +29,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
@@ -54,58 +54,58 @@ type Store struct {
 	RandReader io.Reader
 }
 
-var _ contacts.SubscriberRepository = (*Store)(nil)
+var _ audience.SubscriberRepository = (*Store)(nil)
 
-func (s Store) Find(ctx context.Context, id int64) (contacts.Subscriber, error) {
+func (s Store) Find(ctx context.Context, id int64) (audience.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByID(ctx, id)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return contacts.Subscriber{}, store.ErrNotFound
+		return audience.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) FindByEmail(ctx context.Context, email string) (contacts.Subscriber, error) {
+func (s Store) FindByEmail(ctx context.Context, email string) (audience.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByEmail(ctx, email)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return contacts.Subscriber{}, store.ErrNotFound
+		return audience.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) FindByUnsubscribeToken(ctx context.Context, token string) (contacts.Subscriber, error) {
+func (s Store) FindByUnsubscribeToken(ctx context.Context, token string) (audience.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberByUnsubscribeToken(ctx, token)
 
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return contacts.Subscriber{}, store.ErrNotFound
+		return audience.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Create(ctx context.Context, email string) (contacts.Subscriber, error) {
+func (s Store) Create(ctx context.Context, email string) (audience.Subscriber, error) {
 	email = strings.ToLower(strings.TrimSpace(email))
 	if email == "" {
-		return contacts.Subscriber{}, errors.New("email is required")
+		return audience.Subscriber{}, errors.New("email is required")
 	}
 
 	unsubscribe, err := newToken()
 	if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	confirm, err := newToken()
 	if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	sub, err := s.sqlc.SubscriberCreate(ctx, sqlc.SubscriberCreateParams{
@@ -114,20 +114,20 @@ func (s Store) Create(ctx context.Context, email string) (contacts.Subscriber, e
 		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
 	})
 	if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Reactivate(ctx context.Context, email string) (contacts.Subscriber, error) {
+func (s Store) Reactivate(ctx context.Context, email string) (audience.Subscriber, error) {
 	unsubscribe, err := newToken()
 	if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 	confirm, err := newToken()
 	if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 	sub, err := s.sqlc.SubscriberReactivate(ctx, sqlc.SubscriberReactivateParams{
 		ConfirmToken:     sql.NullString{String: confirm, Valid: true},
@@ -135,19 +135,19 @@ func (s Store) Reactivate(ctx context.Context, email string) (contacts.Subscribe
 		Email:            email,
 	})
 	if errors.Is(err, sql.ErrNoRows) {
-		return contacts.Subscriber{}, store.ErrNotFound
+		return audience.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 	return transformSubscriber(sub), nil
 }
 
-func (s Store) Confirm(ctx context.Context, token string) (contacts.Subscriber, error) {
+func (s Store) Confirm(ctx context.Context, token string) (audience.Subscriber, error) {
 	sub, err := s.sqlc.SubscriberConfirm(ctx, sql.NullString{String: token, Valid: true})
 	if errors.Is(err, sql.ErrNoRows) {
-		return contacts.Subscriber{}, store.ErrNotFound
+		return audience.Subscriber{}, store.ErrNotFound
 	} else if err != nil {
-		return contacts.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 	return transformSubscriber(sub), nil
 }
@@ -180,7 +180,7 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-func (s Store) List(ctx context.Context, opts store.ListOptions) ([]contacts.Subscriber, error) {
+func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Subscriber, error) {
 	rows, err := s.db.QueryContext(
 		ctx,
 		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
@@ -191,10 +191,10 @@ func (s Store) List(ctx context.Context, opts store.ListOptions) ([]contacts.Sub
 	}
 	defer rows.Close()
 
-	var out []contacts.Subscriber
+	var out []audience.Subscriber
 	for rows.Next() {
 		var (
-			sub                                    contacts.Subscriber
+			sub                                    audience.Subscriber
 			confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
 		)
 		if err := rows.Scan(
@@ -217,21 +217,21 @@ func (s Store) List(ctx context.Context, opts store.ListOptions) ([]contacts.Sub
 	return out, rows.Err()
 }
 
-func (s Store) ListActive(ctx context.Context) ([]contacts.Subscriber, error) {
+func (s Store) ListActive(ctx context.Context) ([]audience.Subscriber, error) {
 	rows, err := s.sqlc.SubscriberListActive(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	out := make([]contacts.Subscriber, 0, len(rows))
+	out := make([]audience.Subscriber, 0, len(rows))
 	for _, r := range rows {
 		out = append(out, transformSubscriber(r))
 	}
 	return out, nil
 }
 
-func transformSubscriber(s sqlc.Subscriber) contacts.Subscriber {
-	return contacts.Subscriber{
+func transformSubscriber(s sqlc.Subscriber) audience.Subscriber {
+	return audience.Subscriber{
 		ID:               s.ID,
 		Email:            s.Email,
 		UnsubscribeToken: s.UnsubscribeToken,

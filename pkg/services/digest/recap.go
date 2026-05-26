@@ -26,6 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
@@ -33,43 +34,6 @@ import (
 // specify one. Three items fits cleanly into a social post; consumers
 // that want more (e.g. an email outro) can override.
 const defaultLimit = 3
-
-type (
-	// Period describes the [Start, End) window covered by a recap.
-	Period struct {
-		Start time.Time
-		End   time.Time
-		// Label is an ISO-week style identifier used for idempotency
-		// keys, e.g. "2026-W21". Stable across reruns within the same
-		// week.
-		Label string
-	}
-	// RankedItem is one entry in a recap, paired with its click count.
-	RankedItem struct {
-		engagement.ItemMetrics
-	}
-	// Top is the recap dataset.
-	Top struct {
-		Period Period
-		Items  []RankedItem
-	}
-	// TopOptions tunes a Top call.
-	TopOptions struct {
-		// N caps the returned items. Zero means defaultLimit (3).
-		N int
-		// Window is the lookback duration ending at "now". Zero means
-		// "since Monday 00:00 UTC of now's week" — the natural Mon→Fri
-		// recap window.
-		Window time.Duration
-		// MinItems is the floor below which Top returns its zero value
-		// (so the caller can no-op cleanly). Defaults to 0 — every
-		// result kept.
-		MinItems int
-	}
-)
-
-// HasItems reports whether the recap has any ranked items at all.
-func (t Top) HasItems() bool { return len(t.Items) > 0 }
 
 // RecapService computes recap datasets from the metrics repository.
 type RecapService struct {
@@ -87,7 +51,7 @@ func NewRecapService(metrics engagement.MetricsRepository) (*RecapService, error
 // Top returns the most-clicked items in the window ending at now. When
 // the dataset has fewer than opts.MinItems entries, it returns the zero
 // value (and an empty period) — the caller treats that as "skip".
-func (s *RecapService) Top(ctx context.Context, now time.Time, opts TopOptions) (Top, error) {
+func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOptions) (digest.Top, error) {
 	limit := opts.N
 	if limit <= 0 {
 		limit = defaultLimit
@@ -101,24 +65,24 @@ func (s *RecapService) Top(ctx context.Context, now time.Time, opts TopOptions) 
 		Limit: limit,
 	})
 	if err != nil {
-		return Top{}, errors.Wrap(err, "metrics.ItemList")
+		return digest.Top{}, errors.Wrap(err, "metrics.ItemList")
 	}
 
 	if opts.MinItems > 0 && len(items) < opts.MinItems {
-		return Top{}, nil
+		return digest.Top{}, nil
 	}
 
-	ranked := make([]RankedItem, 0, len(items))
+	ranked := make([]digest.RankedItem, 0, len(items))
 	for _, it := range items {
-		ranked = append(ranked, RankedItem{ItemMetrics: it})
+		ranked = append(ranked, digest.RankedItem{ItemMetrics: it})
 	}
-	return Top{Period: period, Items: ranked}, nil
+	return digest.Top{Period: period, Items: ranked}, nil
 }
 
 // makePeriod builds the [Start, End) window. When window is zero the
 // start is the Monday 00:00 UTC of now's ISO week, so a Friday call
 // returns Mon-Thu activity (and a Thursday call returns Mon-Wed).
-func makePeriod(now time.Time, window time.Duration) Period {
+func makePeriod(now time.Time, window time.Duration) digest.Period {
 	now = now.UTC()
 	var start time.Time
 	if window > 0 {
@@ -127,7 +91,7 @@ func makePeriod(now time.Time, window time.Duration) Period {
 		start = mondayOf(now)
 	}
 	year, week := start.ISOWeek()
-	return Period{
+	return digest.Period{
 		Start: start,
 		End:   now,
 		Label: fmt.Sprintf("%d-W%02d", year, week),

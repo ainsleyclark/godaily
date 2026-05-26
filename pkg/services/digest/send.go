@@ -29,6 +29,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -93,7 +94,7 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 		}
 	}
 
-	if _, err = a.issues.UpdateStatus(ctx, issue.ID, news.IssueStatusSent, time.Now().UTC()); err != nil {
+	if _, err = a.issues.UpdateStatus(ctx, issue.ID, digest.IssueStatusSent, time.Now().UTC()); err != nil {
 		slog.ErrorContext(ctx, "Failed to update issue status", "err", err)
 	}
 
@@ -103,19 +104,19 @@ func (a Aggregator) SendDigest(ctx context.Context, date time.Time, force bool) 
 // loadDraftDigest finds the issue for slug, validates its status, and returns
 // the issue along with its grouped sections. Pass force=true to skip the
 // draft-status guard (used by SendDigest --force).
-func (a Aggregator) loadDraftDigest(ctx context.Context, slug string, force bool) (news.Issue, []news.SourceItems, error) {
+func (a Aggregator) loadDraftDigest(ctx context.Context, slug string, force bool) (digest.Issue, []news.SourceItems, error) {
 	issue, err := a.issues.FindBySlug(ctx, slug)
 	if errors.Is(err, store.ErrNotFound) {
-		return news.Issue{}, nil, fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
+		return digest.Issue{}, nil, fmt.Errorf("no digest found for %s — run `godaily build` first", slug)
 	} else if err != nil {
-		return news.Issue{}, nil, errors.Wrap(err, "loading digest")
-	} else if !force && issue.Status != news.IssueStatusDraft {
-		return news.Issue{}, nil, fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, news.IssueStatusDraft)
+		return digest.Issue{}, nil, errors.Wrap(err, "loading digest")
+	} else if !force && issue.Status != digest.IssueStatusDraft {
+		return digest.Issue{}, nil, fmt.Errorf("digest for %s has status %q, expected %q", slug, issue.Status, digest.IssueStatusDraft)
 	}
 
 	sections, err := loadSections(ctx, a.items, issue.ID)
 	if err != nil {
-		return news.Issue{}, nil, errors.Wrap(err, "loading sections")
+		return digest.Issue{}, nil, errors.Wrap(err, "loading sections")
 	}
 
 	return issue, sections, nil

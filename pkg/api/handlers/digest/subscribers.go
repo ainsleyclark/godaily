@@ -25,7 +25,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -54,7 +54,7 @@ func HandleSubscribers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		api.JSON(w, http.StatusOK, api.PaginatedResponse[contacts.Subscriber]{
+		api.JSON(w, http.StatusOK, api.PaginatedResponse[audience.Subscriber]{
 			Data:    subs,
 			Page:    page,
 			PerPage: perPage,

@@ -27,8 +27,8 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
 // HandleFeatured handles GET /social/featured.

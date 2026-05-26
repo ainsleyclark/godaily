@@ -31,10 +31,11 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
@@ -49,7 +50,7 @@ func newAppNoPosters(t *testing.T, secret string) *godaily.App {
 	slack.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 
 	prompter := mockai.NewMockPrompter(ctrl)
-	issues := mocknews.NewMockIssueRepository(ctrl)
+	issues := mockdigest.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocksocial.NewMockPostRepository(ctrl)
 

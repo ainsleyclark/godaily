@@ -17,11 +17,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package news
+package digest
 
 import (
 	"context"
 	"time"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mockdigest -destination=../../mocks/digest/Service.go . Service
@@ -42,7 +44,7 @@ type CollectOptions struct {
 
 	// Sources restricts the run to the given sources. If empty,
 	// all registered sources (news.Sources) are used.
-	Sources []Source
+	Sources []news.Source
 }
 
 // CollectResponse is the result of a Collect call. Sources contains the
@@ -50,6 +52,6 @@ type CollectOptions struct {
 // source that failed to fetch; a source absent from Errors succeeded (even if
 // it returned zero items, which is normal on quiet days).
 type CollectResponse struct {
-	Sources []SourceItems
-	Errors  map[Source]error
+	Sources []news.SourceItems
+	Errors  map[news.Source]error
 }

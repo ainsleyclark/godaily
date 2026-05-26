@@ -23,7 +23,7 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 // CTAPayload is the input to the signup-CTA prompt: an angle to anchor
@@ -45,6 +45,6 @@ Write ONE post that:
 Keep it human and low-pressure. No "join the community" boilerplate, no hype, no exclamation marks. Sound like a recommendation from a friend, not an ad.`
 
 // CTA generates a signup CTA post for a single platform.
-func CTA(ctx context.Context, p ai.Prompter, platform platform.Name, payload CTAPayload) (string, error) {
+func CTA(ctx context.Context, p ai.Prompter, platform social.Platform, payload CTAPayload) (string, error) {
 	return run(ctx, p, platform, ctaGuidance, payload)
 }

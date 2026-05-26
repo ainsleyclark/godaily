@@ -30,10 +30,11 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
@@ -65,7 +66,7 @@ func (f *fakeCandidate) Eligible(_ context.Context, _ time.Time) (socialsvc.Cand
 	return cctx, true, nil
 }
 
-func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ platform.Name, _ socialsvc.CandidateContext) (string, error) {
+func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ social.Platform, _ socialsvc.CandidateContext) (string, error) {
 	return f.text, nil
 }
 
@@ -87,12 +88,12 @@ func newRotationFixture(t *testing.T, candidates ...socialsvc.Candidate) rotatio
 	slk.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
 
 	prompter := mockai.NewMockPrompter(ctrl)
-	issues := mocknews.NewMockIssueRepository(ctrl)
+	issues := mockdigest.NewMockIssueRepository(ctrl)
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocksocial.NewMockPostRepository(ctrl)
 
 	bluesky := mocksocial.NewMockPoster(ctrl)
-	bluesky.EXPECT().Platform().Return(platform.Bluesky).AnyTimes()
+	bluesky.EXPECT().Platform().Return(social.Bluesky).AnyTimes()
 
 	svc, err := socialsvc.New([]platform.Poster{bluesky}, prompter, issues, items, posts, slk)
 	require.NoError(t, err)
@@ -122,7 +123,7 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: true}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindSpotlight, res[0].Kind)
@@ -140,7 +141,7 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindCTA, res[0].Kind)
@@ -152,7 +153,7 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: false}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
 		require.NoError(t, err)
 		assert.Empty(t, res)
 	})
@@ -166,7 +167,7 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: true, text: "z"}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: friAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		assert.Empty(t, res, "Friday without recap registered must no-op")
 	})
@@ -180,7 +181,7 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, rec)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: friAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindRecap, res[0].Kind)
@@ -190,7 +191,7 @@ func TestService_Rotate(t *testing.T) {
 		always := &fakeCandidate{kind: social.PostKindNewSource, eligible: true, text: "x"}
 		f := newRotationFixture(t, always)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: thuAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: thuAt15, DryRun: true})
 		require.NoError(t, err)
 		assert.Empty(t, res, "Thursday is not a rotation day")
 	})
@@ -204,7 +205,7 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, community)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: wedAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: wedAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindCommunity, res[0].Kind)
@@ -219,7 +220,7 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, cta)
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       wedAt15, // not a rotation day, but ForceKind overrides
 			DryRun:    true,
 			ForceKind: social.PostKindCTA,
@@ -232,7 +233,7 @@ func TestService_Rotate(t *testing.T) {
 	t.Run("Unknown ForceKind returns an error", func(t *testing.T) {
 		f := newRotationFixture(t, &fakeCandidate{kind: social.PostKindCTA, eligible: true})
 
-		_, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{
+		_, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       wedAt15,
 			ForceKind: "no_such_kind",
 		})
@@ -246,7 +247,7 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, broken)
 
-		_, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{
+		_, err := f.svc.Rotate(context.Background(), social.RotateOptions{
 			Now:       tueAt15,
 			ForceKind: social.PostKindNewSource,
 		})
@@ -260,7 +261,7 @@ func TestService_Rotate(t *testing.T) {
 
 		slk := mockslack.NewMockSender(ctrl)
 		prompter := mockai.NewMockPrompter(ctrl)
-		issues := mocknews.NewMockIssueRepository(ctrl)
+		issues := mockdigest.NewMockIssueRepository(ctrl)
 		items := mocknews.NewMockItemRepository(ctrl)
 		posts := mocksocial.NewMockPostRepository(ctrl)
 
@@ -268,7 +269,7 @@ func TestService_Rotate(t *testing.T) {
 		require.NoError(t, err)
 		svc.WithCandidates(&fakeCandidate{kind: social.PostKindCTA, eligible: true})
 
-		res, err := svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15})
+		res, err := svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
 		assert.Empty(t, res)
 	})
@@ -299,7 +300,7 @@ func TestService_Rotate(t *testing.T) {
 				return p, nil
 			})
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindSpotlight, res[0].Kind)
@@ -320,7 +321,7 @@ func TestService_Rotate(t *testing.T) {
 			Return(true, nil)
 		// No Post(), no Create() — the platform is skipped.
 
-		res, err := f.svc.Rotate(context.Background(), socialsvc.RotateOptions{Now: tueAt15})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.True(t, res[0].Skipped, "platform should report Skipped when already posted")

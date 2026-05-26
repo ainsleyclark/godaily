@@ -29,7 +29,7 @@ import (
 	"image/color"
 	"image/png"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	webpkg "github.com/ainsleyclark/godaily/web"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
@@ -97,7 +97,7 @@ func (g *Generator) Home() ([]byte, error) {
 // Issue renders a 1200×630 (@2x) OG card for the given digest by compositing
 // the headline and top article titles onto the issue template PNG. The content
 // block is vertically centred in the template's text area.
-func (g *Generator) Issue(issue news.Issue) ([]byte, error) {
+func (g *Generator) Issue(issue digest.Issue) ([]byte, error) {
 	base, err := png.Decode(bytes.NewReader(g.issueTPL))
 	if err != nil {
 		return nil, errors.Wrap(err, "decoding issue template")

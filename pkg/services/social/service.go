@@ -33,13 +33,13 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
-	"time"
 
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
@@ -51,11 +51,11 @@ import (
 type Service struct {
 	posters    []platform.Poster
 	prompter   ai.Prompter
-	issues     news.IssueRepository
+	issues     digest.IssueRepository
 	items      news.ItemRepository
 	posts      social.PostRepository
 	slack      slack.Sender
-	reframers  map[platform.Name]reframer
+	reframers  map[social.Platform]reframer
 	candidates []Candidate
 }
 
@@ -64,11 +64,11 @@ type Service struct {
 type reframer func(ctx context.Context, p ai.Prompter, f featured.Featured) (string, error)
 
 // defaultReframers maps each Platform to its production reframing prompt.
-func defaultReframers() map[platform.Name]reframer {
-	return map[platform.Name]reframer{
-		platform.Bluesky:  featured.Bluesky,
-		platform.LinkedIn: featured.LinkedIn,
-		platform.Mastodon: featured.Mastodon,
+func defaultReframers() map[social.Platform]reframer {
+	return map[social.Platform]reframer{
+		social.Bluesky:  featured.Bluesky,
+		social.LinkedIn: featured.LinkedIn,
+		social.Mastodon: featured.Mastodon,
 	}
 }
 
@@ -79,7 +79,7 @@ func defaultReframers() map[platform.Name]reframer {
 func New(
 	posters []platform.Poster,
 	prompter ai.Prompter,
-	issues news.IssueRepository,
+	issues digest.IssueRepository,
 	items news.ItemRepository,
 	posts social.PostRepository,
 	slackSender slack.Sender,
@@ -118,34 +118,6 @@ func (s *Service) HasPosters() bool {
 	return len(s.posters) > 0
 }
 
-// PostOptions controls a single Post invocation.
-type PostOptions struct {
-	// Date is the digest date — the issue slug is its UTC YYYY-MM-DD.
-	Date time.Time
-
-	// DryRun runs the full pipeline (DB read, AI calls, text generation)
-	// but skips both platform HTTP and the social_posts insert.
-	DryRun bool
-
-	// Platforms optionally restricts which configured posters run. When
-	// empty, every configured poster runs. Unknown platforms are ignored
-	// with a log line.
-	Platforms []platform.Name
-}
-
-// PostResult summarises one platform's outcome.
-type PostResult struct {
-	Platform platform.Name
-	Kind     social.PostKind
-	Text     string
-	PostURL  string
-	Err      error
-
-	// Skipped is true when this platform was already posted for the same
-	// idempotency key (issue or subject) on this run.
-	Skipped bool
-}
-
 // Post is the entry point for the daily featured slot. It:
 //  1. Loads the issue for Date (returns store.ErrNotFound if there is none).
 //  2. Loads the issue's items.
@@ -153,7 +125,7 @@ type PostResult struct {
 //  4. For each enabled poster: skips if already posted today; otherwise
 //     reframes the featured item for that platform, publishes it, and
 //     records the result.
-func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, error) {
+func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	if len(s.posters) == 0 {
 		slog.InfoContext(ctx, "Skipping social — no posters configured")
 		return nil, nil
@@ -179,7 +151,7 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 		return nil, nil
 	}
 
-	featured, err := featured.Feature(ctx, s.prompter, date, rows)
+	feat, err := featured.Feature(ctx, s.prompter, date, rows)
 	if err != nil {
 		s.notifyFailure(ctx, "AI feature pick failed: "+err.Error())
 		return nil, errors.Wrap(err, "feature")
@@ -187,7 +159,7 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 
 	slog.InfoContext(
 		ctx, "Selected featured item",
-		"title", featured.Title, "url", featured.URL, "tag", string(featured.Tag),
+		"title", feat.Title, "url", feat.URL, "tag", string(feat.Tag),
 	)
 
 	wanted := selectPosters(s.posters, opts.Platforms)
@@ -198,16 +170,16 @@ func (s *Service) Post(ctx context.Context, opts PostOptions) ([]PostResult, err
 		dryRun:    opts.DryRun,
 		kind:      social.PostKindFeatured,
 		issueID:   &issueID,
-		generate: func(_ context.Context, platform platform.Name) (string, error) {
-			reframe, ok := s.reframers[platform]
+		generate: func(_ context.Context, p social.Platform) (string, error) {
+			reframe, ok := s.reframers[p]
 			if !ok {
-				return "", fmt.Errorf("no reframer registered for platform %s", platform)
+				return "", fmt.Errorf("no reframer registered for platform %s", p)
 			}
-			return reframe(ctx, s.prompter, featured)
+			return reframe(ctx, s.prompter, feat)
 		},
 		// Featured posts use (issue_id, platform) for idempotency.
-		skipIfPosted: func(ctx context.Context, platform string) (bool, error) {
-			return s.posts.HasPosted(ctx, issueID, platform)
+		skipIfPosted: func(ctx context.Context, p string) (bool, error) {
+			return s.posts.HasPosted(ctx, issueID, p)
 		},
 	})
 }
@@ -225,7 +197,7 @@ type publishCtx struct {
 	// generate returns the post text for a given platform. Candidates may
 	// ignore the platform and return identical text everywhere; the
 	// featured path uses the platform reframers.
-	generate func(ctx context.Context, platform platform.Name) (string, error)
+	generate func(ctx context.Context, platform social.Platform) (string, error)
 
 	// skipIfPosted is the per-row idempotency check. Returning true skips
 	// the platform without an error.
@@ -237,8 +209,8 @@ type publishCtx struct {
 //
 // Per-platform errors are accumulated, not fatal. The slack notifier is
 // pinged on any failure.
-func (s *Service) publish(ctx context.Context, pc publishCtx) ([]PostResult, error) {
-	results := make([]PostResult, 0, len(pc.platforms))
+func (s *Service) publish(ctx context.Context, pc publishCtx) ([]social.PostResult, error) {
+	results := make([]social.PostResult, 0, len(pc.platforms))
 	var errs []error
 
 	for _, poster := range pc.platforms {
@@ -260,12 +232,12 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]PostResult, err
 	return results, nil
 }
 
-func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc publishCtx) PostResult {
-	platform := poster.Platform()
-	res := PostResult{Platform: platform, Kind: pc.kind}
+func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc publishCtx) social.PostResult {
+	p := poster.Platform()
+	res := social.PostResult{Platform: p, Kind: pc.kind}
 
 	if !pc.dryRun && pc.skipIfPosted != nil {
-		posted, err := pc.skipIfPosted(ctx, platform.String())
+		posted, err := pc.skipIfPosted(ctx, p.String())
 		if err != nil {
 			res.Err = errors.Wrap(err, "checking idempotency")
 			return res
@@ -274,13 +246,13 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 			res.Skipped = true
 			slog.InfoContext(
 				ctx, "Skipping platform — already posted",
-				"platform", platform, "kind", string(pc.kind),
+				"platform", p, "kind", string(pc.kind),
 			)
 			return res
 		}
 	}
 
-	text, err := pc.generate(ctx, platform)
+	text, err := pc.generate(ctx, p)
 	if err != nil {
 		res.Err = errors.Wrap(err, "generate")
 		return res
@@ -290,7 +262,7 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 	if pc.dryRun {
 		slog.InfoContext(
 			ctx, "Dry-run: skipping post + DB write",
-			"platform", platform, "kind", string(pc.kind), "chars", len(text),
+			"platform", p, "kind", string(pc.kind), "chars", len(text),
 		)
 		return res
 	}
@@ -306,7 +278,7 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 		IssueID:  pc.issueID,
 		Kind:     pc.kind,
 		Subject:  pc.subject,
-		Platform: platform.String(),
+		Platform: p.String(),
 		Text:     text,
 		PostURL:  result.PostURL,
 	}); err != nil {
@@ -318,19 +290,19 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 
 	slog.InfoContext(
 		ctx, "Social post published",
-		"platform", platform, "kind", string(pc.kind), "url", result.PostURL,
+		"platform", p, "kind", string(pc.kind), "url", result.PostURL,
 	)
 	return res
 }
 
 // selectPosters narrows the configured posters to those requested in opts.
 // When wanted is empty the full slice is returned unchanged.
-func selectPosters(all []platform.Poster, wanted []platform.Name) []platform.Poster {
+func selectPosters(all []platform.Poster, wanted []social.Platform) []platform.Poster {
 	if len(wanted) == 0 {
 		return all
 	}
 
-	wantedSet := make(map[platform.Name]bool, len(wanted))
+	wantedSet := make(map[social.Platform]bool, len(wanted))
 	for _, p := range wanted {
 		wantedSet[p] = true
 	}
@@ -355,7 +327,7 @@ func (s *Service) notifyFailure(ctx context.Context, msg string) {
 // failed platforms are omitted; failures are already covered by
 // notifyFailure inside the loop. A no-op when no platform succeeded or
 // when the slack sender is not configured.
-func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []PostResult) {
+func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
@@ -381,13 +353,13 @@ func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []Po
 
 // platformLabel returns the human-friendly name for a platform used in
 // Slack notifications.
-func platformLabel(p platform.Name) string {
+func platformLabel(p social.Platform) string {
 	switch p {
-	case platform.Bluesky:
+	case social.Bluesky:
 		return "Bluesky"
-	case platform.LinkedIn:
+	case social.LinkedIn:
 		return "LinkedIn"
-	case platform.Mastodon:
+	case social.Mastodon:
 		return "Mastodon"
 	default:
 		return string(p)

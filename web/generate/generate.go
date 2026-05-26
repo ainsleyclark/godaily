@@ -27,7 +27,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
@@ -35,15 +35,15 @@ import (
 
 // website holds all data required to generate the static site.
 type website struct {
-	Issues       []news.Issue
-	LatestIssue  news.Issue
-	RecentIssues []news.Issue
+	Issues       []digest.Issue
+	LatestIssue  digest.Issue
+	RecentIssues []digest.Issue
 }
 
 // Site renders all sent issues and the homepage to outDir, generates
 // sitemap.xml and rss.xml, copies static files from staticDir, then
 // copies compiled frontend assets from assetsDir into outDir/assets.
-func Site(ctx context.Context, repo news.IssueRepository, subscriberCount int64, outDir, staticDir, assetsDir string) error {
+func Site(ctx context.Context, repo digest.IssueRepository, subscriberCount int64, outDir, staticDir, assetsDir string) error {
 	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return errors.Wrap(err, "creating output directory")
 	}

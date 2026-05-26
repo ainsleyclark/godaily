@@ -28,7 +28,7 @@ import (
 	"path/filepath"
 
 	"github.com/a-h/templ"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/web/og"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
@@ -36,7 +36,7 @@ import (
 
 // renderPages writes the homepage, thank-you page, issues archive, and all
 // individual issue pages to outDir. It calls repo.Find for each issue to load its full item list.
-func renderPages(ctx context.Context, repo news.IssueRepository, w website, subscriberCount int64, outDir string) error {
+func renderPages(ctx context.Context, repo digest.IssueRepository, w website, subscriberCount int64, outDir string) error {
 	gen, err := og.New()
 	if err != nil {
 		return errors.Wrap(err, "creating OG image generator")
@@ -71,7 +71,7 @@ func renderPages(ctx context.Context, repo news.IssueRepository, w website, subs
 		return errors.Wrap(err, "rendering privacy page")
 	}
 
-	fullIssues := make([]news.Issue, 0, len(w.Issues))
+	fullIssues := make([]digest.Issue, 0, len(w.Issues))
 	for _, issue := range w.Issues {
 		full, err := repo.Find(ctx, issue.ID)
 		if err != nil {

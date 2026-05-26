@@ -30,13 +30,10 @@ import (
 // invocation per day does real work regardless of which endpoint fires.
 const CronSlotsPerHour = 6
 
-// PickSlot returns the 10-minute slot (0..SlotsPerHour-1) that should
+// PickSlot returns the 10-minute slot (0..CronSlotsPerHour-1) that should
 // actually post for the given date. The result is stable across retries
 // on the same day, so a cron invocation in the wrong slot can safely
 // short-circuit while the right slot does the work.
-//
-// The slot is derived deterministically from the date so the time of
-// posting jitters day-to-day without persisting state.
 func PickSlot(date time.Time) int {
 	h := fnv.New32a()
 	_, _ = h.Write([]byte(date.UTC().Format("2006-01-02")))

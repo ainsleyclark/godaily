@@ -28,6 +28,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
@@ -79,10 +80,10 @@ func TestMetrics_Store(t *testing.T) {
 	filter := engagement.MetricsFilter{From: &from, To: &now}
 
 	// Issue sent 2 days ago (within the window).
-	issue, err := issues.New(db).Create(ctx, news.Issue{
+	issue, err := issues.New(db).Create(ctx, digest.Issue{
 		Slug:    "2026-05-22",
 		Subject: "GoDaily - May 22, 2026",
-		Status:  news.IssueStatusSent,
+		Status:  digest.IssueStatusSent,
 		SentAt:  now.Add(-2 * 24 * time.Hour),
 	})
 	require.NoError(t, err)

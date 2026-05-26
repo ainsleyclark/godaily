@@ -42,12 +42,13 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/audience"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all source fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -98,10 +99,10 @@ func (noopSlack) MustSend(_ context.Context, _ string)   {}
 // is exercised with the spy email sender.
 type seedRunner struct {
 	items      news.ItemRepository
-	aggregator *digest.Aggregator
+	aggregator *digestsvc.Aggregator
 }
 
-func (r seedRunner) Collect(ctx context.Context, _ news.CollectOptions) (news.CollectResponse, error) {
+func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) (digest.CollectResponse, error) {
 	// Items are published yesterday so they fall within buildWindow's [yesterday, today) range.
 	yesterday := time.Now().UTC().Truncate(24*time.Hour).AddDate(0, 0, -1)
 	seeds := []news.Item{
@@ -110,10 +111,10 @@ func (r seedRunner) Collect(ctx context.Context, _ news.CollectOptions) (news.Co
 	}
 	for i, item := range seeds {
 		if _, err := r.items.Create(ctx, nil, i+1, item); err != nil {
-			return news.CollectResponse{}, err
+			return digest.CollectResponse{}, err
 		}
 	}
-	return news.CollectResponse{}, nil
+	return digest.CollectResponse{}, nil
 }
 
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {
@@ -165,12 +166,12 @@ func main() {
 
 	// The aggregator uses the non-cached issueStore so SendDigest can find a
 	// freshly-built draft without a cache miss. nil prompter → static subject.
-	aggregator, err := digest.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore)
+	aggregator, err := digestsvc.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore)
 	if err != nil {
 		log.Fatalf("create aggregator: %v", err)
 	}
 
-	subscriberSvc := subscriber.New(subsStore, cached, spy)
+	subscriberSvc := audience.New(subsStore, cached, spy)
 
 	app := &godaily.App{
 		Config: &env.Config{
@@ -199,7 +200,7 @@ func main() {
 
 		// ── E2E pipeline: bypass weekend guard, call runner directly ──────────
 		case "/api/e2e/pipeline/collect":
-			if _, err := app.Runner.Collect(r.Context(), news.CollectOptions{}); err != nil {
+			if _, err := app.Runner.Collect(r.Context(), digest.CollectOptions{}); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}

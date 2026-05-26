@@ -26,29 +26,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
-
-// RotateOptions controls a single Rotate invocation.
-type RotateOptions struct {
-	// Now is the wall clock used to pick the day's candidate list. Tuesday
-	// runs the self_release/spotlight/cta rotation; Friday runs recap only.
-	// Any other day is a no-op.
-	Now time.Time
-
-	// DryRun runs the candidate's full pipeline (eligibility + AI
-	// generation) but skips platform HTTP and the social_posts insert.
-	DryRun bool
-
-	// Platforms optionally restricts which configured posters run.
-	Platforms []platform.Name
-
-	// ForceKind, when non-empty, bypasses the day-aware routing and runs
-	// the named candidate's Eligible check directly. Used by the CLI to
-	// test a specific kind out-of-band.
-	ForceKind social.PostKind
-}
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the
 // first eligible one, and publishes it across the configured platforms.
@@ -59,7 +38,7 @@ type RotateOptions struct {
 //   - Friday: recap (only). No fallback — Friday is recap day; if there's
 //     no click data, the slot stays quiet.
 //   - Other days: no-op unless ForceKind is set.
-func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult, error) {
+func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
 	if len(s.posters) == 0 {
 		slog.InfoContext(ctx, "Skipping rotation — no posters configured")
 		return nil, nil
@@ -101,8 +80,8 @@ func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult,
 			dryRun:    opts.DryRun,
 			kind:      cand.Kind(),
 			subject:   cctx.Subject,
-			generate: func(ctx context.Context, platform platform.Name) (string, error) {
-				return cand.Generate(ctx, s.prompter, platform, cctx)
+			generate: func(ctx context.Context, p social.Platform) (string, error) {
+				return cand.Generate(ctx, s.prompter, p, cctx)
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
 		})
@@ -114,7 +93,7 @@ func (s *Service) Rotate(ctx context.Context, opts RotateOptions) ([]PostResult,
 
 // pickCandidates returns the candidate list for the day, or honors
 // ForceKind. Returns nil when the day is not a rotation day.
-func (s *Service) pickCandidates(opts RotateOptions) ([]Candidate, error) {
+func (s *Service) pickCandidates(opts social.RotateOptions) ([]Candidate, error) {
 	if opts.ForceKind != "" {
 		c := candidateByKind(s.candidates, opts.ForceKind)
 		if c == nil {

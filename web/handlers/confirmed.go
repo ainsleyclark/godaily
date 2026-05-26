@@ -23,7 +23,7 @@ import (
 	"net/http"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -39,7 +39,7 @@ func Confirmed(a *godaily.App) webkit.Handler {
 			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}
 
-		var issue news.Issue
+		var issue digest.Issue
 		if len(latest) > 0 {
 			issue = latest[0]
 		}

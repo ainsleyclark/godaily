@@ -29,7 +29,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/services/audience"
 )
 
 // HandleSubscribe handles POST /digest/subscribe.
@@ -54,7 +54,7 @@ func HandleSubscribe(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if _, err := a.Subscribers.Subscribe(ctx, body.Email); err != nil {
-			if errors.Is(err, subscriber.ErrAlreadySubscribed) {
+			if errors.Is(err, audience.ErrAlreadySubscribed) {
 				api.Error(w, http.StatusConflict, "already subscribed")
 				return
 			}

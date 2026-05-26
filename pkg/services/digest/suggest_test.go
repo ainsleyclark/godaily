@@ -31,8 +31,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 )
 
@@ -119,10 +120,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Sends Suggestion Email To Owner", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-10",
 			Subject: "GoDaily - 2026-05-10",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -171,10 +172,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("No Items Skips Send", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-13")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-13",
 			Subject: "GoDaily - 2026-05-13",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -211,10 +212,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Loading Items Fails", func(t *testing.T) {
 		issueRepo, _ := newTestStores(t)
 		date := day("2026-05-17")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-17",
 			Subject: "GoDaily - 2026-05-17",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -231,10 +232,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error On Render Failure", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-16")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-16",
 			Subject: "GoDaily - 2026-05-16",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -262,10 +263,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Prompter Fails", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-15")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-15",
 			Subject: "GoDaily - 2026-05-15",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -289,10 +290,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Prompter Error Sends Slack Notification", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-18")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-18",
 			Subject: "GoDaily - 2026-05-18",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)

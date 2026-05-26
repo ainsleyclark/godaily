@@ -23,7 +23,7 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 // NewSourcePayload is the input to the new-source announcement prompt:
@@ -48,6 +48,6 @@ Write ONE post that:
 Tone is collegial — you're crediting a source and pointing readers at them, not selling. Do not say "we're excited" or similar.`
 
 // NewSource generates a "GoDaily now pulls from X" post for one platform.
-func NewSource(ctx context.Context, p ai.Prompter, platform platform.Name, payload NewSourcePayload) (string, error) {
+func NewSource(ctx context.Context, p ai.Prompter, platform social.Platform, payload NewSourcePayload) (string, error) {
 	return run(ctx, p, platform, newSourceGuidance, payload)
 }

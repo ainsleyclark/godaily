@@ -28,6 +28,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
@@ -42,10 +43,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 	t.Run("Sends Digest To Admin And Leaves Status As Draft", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-10",
 			Subject: "Go 1.25 ships",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -62,7 +63,7 @@ func TestAggregator_SendPreview(t *testing.T) {
 		// Issue must remain draft so SendDigest can still send to subscribers.
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusDraft, updated.Status)
+		assert.Equal(t, digest.IssueStatusDraft, updated.Status)
 	})
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
@@ -76,10 +77,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 
 	t.Run("Returns Error When Status Not Draft", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-11",
 			Subject: "GoDaily - 2026-05-11",
-			Status:  news.IssueStatusSent,
+			Status:  digest.IssueStatusSent,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -94,10 +95,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 	t.Run("Returns Error When Loading Sections Fails", func(t *testing.T) {
 		issueRepo, _ := newTestStores(t)
 		date := day("2026-05-12")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-12",
 			Subject: "GoDaily - 2026-05-12",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -113,10 +114,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 	t.Run("Returns Error When Rendering Fails", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-13")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-13",
 			Subject: "GoDaily - 2026-05-13",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -141,10 +142,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 	t.Run("Returns Error When Email Send Fails", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-14")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-14",
 			Subject: "GoDaily - 2026-05-14",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -160,10 +161,10 @@ func TestAggregator_SendPreview(t *testing.T) {
 	t.Run("Suggestion Error Does Not Fail Preview", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-15")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-15",
 			Subject: "GoDaily - 2026-05-15",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
