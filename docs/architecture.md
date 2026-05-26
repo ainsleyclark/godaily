@@ -15,8 +15,9 @@ to reach it.
 GoDaily uses **horizontal layers, strictly mirrored by domain**. Three
 layers, each a sibling under `pkg/`:
 
-- `pkg/domain/X/` — value types, repository interfaces, and pure
-  domain logic for bounded context `X`.
+- `pkg/domain/X/` — value types, repository interfaces, service
+  interfaces, operation DTOs (`*Options`, `*Result`, `*Response`),
+  and pure domain logic for bounded context `X`.
 - `pkg/services/X/` — behaviour: workflows and orchestration that
   operate on `domain/X` types.
 - `pkg/store/<table>/` — persistence: SQL-backed implementations of
@@ -57,18 +58,18 @@ store names the domain it serves.
 
 | Domain (`pkg/domain/`) | Service (`pkg/services/`) | Store (`pkg/store/`) |
 |---|---|---|
-| `news` | `digest` | `issues`, `items` |
+| `news` | — | `items` |
+| `digest` | `digest` | `issues` |
 | `social` | `social` | `socialposts`, `socialmetrics` |
-| `subscriber` | `subscriber` | `subscribers` |
+| `audience` | `audience` | `subscribers` |
 | `engagement` | `engagement` | `emailevents`, `engagement` |
 
 Notes:
 
-- `services/digest` is named for the workflow it drives, not the
-  domain. This is the one allowed exception to the mirror rule —
-  digest builds, sends, and recaps GoDaily issues, so "digest"
-  describes what it does more clearly than "news" would. It still
-  imports only `domain/news` from the domain layer.
+- `domain/news` has no paired service — its items are consumed by
+  `services/digest` (which builds issues from them) and by
+  `services/social` (which posts about them). The mirror rule applies
+  to service packages: every `services/X` imports its `domain/X`.
 - `store/socialmetrics` writes to a domain that lives in
   `engagement.SocialMetric`, not `domain/social`. The mapping is
   documented in the store's package comment so the boundary is clear.
@@ -81,14 +82,13 @@ a new type, find its domain below and check the **Owns** and
 
 ### `domain/news`
 
-**Purpose.** The news domain models the content GoDaily collects,
-ranks, and ships in each issue.
+**Purpose.** The news domain models the raw content GoDaily collects
+from external sources: individual articles before they are assembled
+into a digest.
 
 **Owns.**
 
 - `Item` — a single news article (title, URL, source, score, etc.).
-- `Issue` — a collection of items shipped as one digest.
-- `IssueStatus` — `draft` / `sent` / `error`.
 - `Source` — the identifier for a content origin (HN, Reddit, etc.).
 - `Sources` (registry) — the canonical list of every source GoDaily
   ingests from.
@@ -96,17 +96,56 @@ ranks, and ships in each issue.
 - `Author` — identity for an item's author.
 - `Score` — per-source relevance/popularity normaliser.
 - `Registry` — the runtime fetcher registry (Builder, Get, Materialise).
-- `ListOptions`, `ItemListOptions` — filter/pagination for List queries.
-- `IssueRepository`, `ItemRepository` — persistence interfaces.
+- `ItemListOptions` — filter/pagination for List queries.
+- `ItemRepository` — persistence interface.
 
 **Does NOT own.**
 
+- ❌ `Issue`, `IssueStatus`, `IssueRepository` → `domain/digest`.
+  Issues are the digest bounded context's aggregate, not news.
 - ❌ `SocialPost`, `SocialProfile` → `domain/social`. A post about a
   news source is a social concept, not a news concept.
-- ❌ `Subscriber` → `domain/subscriber`. The newsletter recipient is
+- ❌ `Subscriber` → `domain/audience`. The newsletter recipient is
   not a news entity.
 - ❌ `EmailEvent`, `SocialMetric` → `domain/engagement`. Anything
   measured about how users react to content is engagement.
+
+**Service.** None. Items are consumed by `services/digest` (which
+builds issues from them) and by `services/social` (which picks a
+featured item to post about).
+
+**Stores.** `store/items`.
+
+**Cross-references.** None at the import level. `engagement.LinkClicks`
+holds an `ItemID`, but it does so by `int64`, not by importing
+`news.Item`.
+
+### `domain/digest`
+
+**Purpose.** The digest domain models newsletter editions: the issues
+GoDaily assembles from news items, sends to subscribers, and recaps
+weekly.
+
+**Owns.**
+
+- `Issue` — a collection of items shipped as one newsletter edition.
+- `IssueStatus` — `draft` / `sent` / `error`.
+- `IssueRepository` — persistence interface.
+- `Service` — the domain service interface for the collect→build→send
+  workflow.
+- `CollectOptions`, `CollectResponse`, `SourceItems` — operation DTOs
+  for the collect step.
+- `Period`, `Top`, `RankedItem`, `TopOptions` — recap value types
+  representing the weekly top-clicked dataset.
+
+**Does NOT own.**
+
+- ❌ `Item`, `Source`, `ItemRepository` → `domain/news`. Items are
+  upstream of any digest.
+- ❌ `RecapService`, `Aggregator` — these are service implementations,
+  not domain types, and live in `services/digest`.
+- ❌ `Subscriber` → `domain/audience`.
+- ❌ `EmailEvent`, `SocialMetric` → `domain/engagement`.
 
 **Service.** `services/digest`.
 
@@ -115,15 +154,16 @@ ranks, and ships in each issue.
 - `suggest.go` — AI-generated subject/summary.
 - `preview.go` — renders the digest for preview.
 - `send.go` — dispatches the issue via the email gateway.
-- `recap.go` — assembles the weekly recap (folded in from
-  `services/recap`).
+- `recap.go` — assembles weekly recap datasets; RecapService stays
+  here because it is a concrete service implementation.
 - `run.go` — orchestrates the full daily run.
 
-**Stores.** `store/issues`, `store/items`.
+**Stores.** `store/issues`.
 
-**Cross-references.** None at the import level. `engagement.LinkClicks`
-holds an `ItemID`, but it does so by `int64`, not by importing
-`news.Item`.
+**Cross-references.** `services/digest` also imports `domain/news`
+(`ItemRepository`, `Item`) to read the items it assembles into issues.
+The import direction is one-way: `digest` consumes `news`, never the
+reverse.
 
 ### `domain/social`
 
@@ -132,19 +172,24 @@ third-party platforms (Bluesky, LinkedIn, Mastodon, etc.).
 
 **Owns.**
 
-- `Post` (currently `SocialPost`) — a single outbound post on one or
-  more platforms.
-- `PostKind` (currently `SocialPostKind`) — `featured` / `new_source`
-  / `recap` / `spotlight` / `cta` / `community`.
-- `Profile` (currently `SocialProfile`) — the social metadata
-  (display name, mentions, blurb, announceability) attached to a
-  news source so it can be spotlighted or announced.
+- `Post` — a single outbound post on one platform.
+- `PostKind` — `featured` / `new_source` / `recap` / `spotlight` /
+  `cta` / `community`.
+- `Platform` — the platform identifier (`bluesky`, `linkedin`,
+  `mastodon`). A domain enum; concrete HTTP clients live in
+  `services/social/platform`.
+- `Profile` — the social metadata (display name, mentions, blurb,
+  announceability) attached to a news source so it can be spotlighted
+  or announced.
 - `Profiles` — the curated registry of all profiles.
 - `PostRepository` — persistence interface.
+- `PostOptions`, `PostResult` — operation DTOs for the daily featured
+  post path.
+- `RotateOptions` — operation DTO for the Tue/Fri rotation path.
 
 **Does NOT own.**
 
-- ❌ Platform clients (Bluesky API, LinkedIn API, Mastodon API)
+- ❌ Platform HTTP clients (Bluesky API, LinkedIn API, Mastodon API)
   → `pkg/services/social/platform`. The domain is provider-agnostic.
 - ❌ `SocialMetric` (likes/reposts/impressions) → `domain/engagement`.
   Metrics about how a post performed are engagement signals, not
@@ -167,10 +212,14 @@ belongs to the engagement domain — see below.
 **Cross-references.** Posts hold an optional `IssueID` (`int64`)
 referencing `news.Issue`. No import dependency.
 
-### `domain/subscriber`
+### `domain/audience`
 
-**Purpose.** People who have signed up to receive GoDaily by email,
-plus their lifecycle (confirm, unsubscribe, bounce, suppress).
+**Purpose.** The audience bounded context covers everyone who receives
+GoDaily — subscribers and their lifecycle (confirm, unsubscribe,
+bounce, suppress). The package is named for the bounded context rather
+than the `Subscriber` entity so that `audience.SubscriberRepository`
+reads without stutter and the package can absorb future audience-shaped
+concepts (segments, preferences, suppression tiers) without a rename.
 
 **Owns.**
 
@@ -179,6 +228,8 @@ plus their lifecycle (confirm, unsubscribe, bounce, suppress).
 - `SubscriberRepository` — persistence interface, including the
   health side effects (`MarkBounced`, `MarkComplained`,
   `MarkSuppressed`).
+- `SubscriberService` — the service interface for the subscription
+  lifecycle.
 
 **Does NOT own.**
 
@@ -188,7 +239,7 @@ plus their lifecycle (confirm, unsubscribe, bounce, suppress).
 - ❌ Provider-specific webhook parsing (Resend payloads, etc.) →
   `pkg/gateway/email`.
 
-**Service.** `services/subscriber`.
+**Service.** `services/audience`.
 
 - `service.go` — subscription lifecycle: subscribe, confirm,
   unsubscribe, reactivate. Implements the `SubscriberHealth`
@@ -199,7 +250,7 @@ plus their lifecycle (confirm, unsubscribe, bounce, suppress).
 
 **Cross-references.** None. The flow is one-way:
 `services/engagement` consumes a `SubscriberHealth` interface
-satisfied by `services/subscriber`.
+satisfied by `services/audience`.
 
 ### `domain/engagement`
 
@@ -299,9 +350,12 @@ A decision tree for adding new code:
 - **Single word, lowercase, no dashes or underscores.** This applies
   to every package under `pkg/`.
 - **Domain and service names match exactly.** `services/social`
-  imports `domain/social`. The one allowed exception is
-  `services/digest` (workflow-named); document any future exceptions
-  here.
+  imports `domain/social`. Every `services/X` imports its `domain/X`.
+- **Domain packages are named for the bounded context they cover, not
+  for any single aggregate inside them.** This is what makes
+  `social.PostRepository` and `audience.SubscriberRepository` read
+  without stutter — the package name carries the context, the type
+  name carries the aggregate.
 - **Store packages are named after their database table.** Plural is
   fine (`items`, `subscribers`, `socialposts`). The package comment
   must name the domain whose interface the store implements.
@@ -315,37 +369,21 @@ A decision tree for adding new code:
 
 ## Migration plan
 
-The current tree differs from the target. Each bullet below is a
-separate, reviewable PR. None of them changes behaviour — they move
-files and update imports only. Run `go test ./...` and
-`golangci-lint run ./... --fix --config=.golangci.yaml` after each.
+✅ All steps below have been completed on the `claude/beautiful-albattani-g3IX6`
+branch. The current tree matches the target package map above.
 
-1. **Split `domain/news`**
-   - Move `pkg/domain/news/social-post.go` →
-     `pkg/domain/social/post.go` (rename type `SocialPost` → `Post`,
-     `SocialPostKind` → `PostKind`).
-   - Move `pkg/domain/news/social-profiles.go` →
-     `pkg/domain/social/profile.go` (rename `SocialProfile` →
-     `Profile`).
-   - Move `pkg/domain/news/subscriber.go` →
-     `pkg/domain/subscriber/subscriber.go`.
-   - Update all imports; regenerate mocks with `go generate
-     ./pkg/domain/...`.
-2. **Rename `services/metrics` → `services/engagement`**
-   - Rename the directory and the package declaration.
-   - Update all callers (`pkg/app.go`, `pkg/api/`).
-3. **Rename `store/metrics` → `store/engagement`**
-   - Rename the directory and package; update the
-     `sqlc.yaml` package path if needed; re-run `sqlc generate`.
-4. **Fold `services/emailevent` into `services/engagement`**
-   - Move `service.go` → `services/engagement/events.go`.
-   - Merge the `Service` struct constructors if they were separate.
-   - Delete `pkg/services/emailevent/`.
-5. **Fold `services/recap` into `services/digest`**
-   - Move `recap.go` → `services/digest/recap.go`.
-   - Delete `pkg/services/recap/`.
-   - Update callers (web handlers, social rotation).
-6. **Audit the mirror rule**
-   - Run the audit snippet from [The mirror rule](#the-mirror-rule).
-   - Update every package comment to match its "Purpose" line in
-     this doc.
+1. ✅ **Rename `domain/contacts` → `domain/audience`; `services/subscriber` → `services/audience`**
+   — so the mirror rule holds and `SubscriberRepository` no longer stutters.
+2. ✅ **Split `domain/news` into `domain/news` (items) and `domain/digest` (issues)**
+   — `Issue`, `IssueRepository`, the digest `Service` interface, and collect DTOs
+   moved to `domain/digest`. `domain/news` retains `Item`, `Source`, and the
+   fetcher registry.
+3. ✅ **Move social operation DTOs (`PostOptions`, `PostResult`, `RotateOptions`)
+   into `domain/social`**
+4. ✅ **Move `platform.Name` into `domain/social` as `Platform`**
+5. ✅ **Move recap DTOs (`Period`, `Top`, `RankedItem`, `TopOptions`) into
+   `domain/digest`**
+6. ✅ **Sweep remaining service orphan DTOs** — only `platform.Result` remains in
+   `services/social/platform` (kept there intentionally; the plan's scope note
+   says to leave `Poster`, `Result`, and clients in the platform package).
+7. ✅ **Update `architecture.md`** (this file).
