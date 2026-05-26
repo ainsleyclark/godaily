@@ -1,30 +1,28 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
-// Package social defines the types and repository interfaces for GoDaily's
-// outbound social media presence.
 package social
 
 import (
 	"context"
 	"time"
 )
+
+// Post records a single published social media post. Featured posts link
+// back to a digest issue via IssueID; rotation posts (recap, spotlight,
+// cta, self_release) leave IssueID nil and use Subject as their idempotency
+// key (e.g. "spotlight:ardanlabs", "self_release:v1.4.0", "recap:2026-W21").
+type Post struct {
+	ID       int64     `json:"id"`
+	IssueID  *int64    `json:"issue_id,omitempty"`
+	Kind     PostKind  `json:"kind"`
+	Subject  string    `json:"subject,omitempty"`
+	Platform string    `json:"platform"`
+	Text     string    `json:"text"`
+	PostURL  string    `json:"post_url,omitempty"`
+	PostedAt time.Time `json:"posted_at"`
+}
 
 // PostKind classifies what flavour of social post a row represents.
 // 'featured' rows pair with an issue and come from the daily 11 UTC slot;
@@ -53,21 +51,6 @@ const (
 	// a Go conference or meetup. Subject is "community:<slug>:<year>".
 	PostKindCommunity PostKind = "community"
 )
-
-// Post records a single published social media post. Featured posts link
-// back to a digest issue via IssueID; rotation posts (recap, spotlight,
-// cta, self_release) leave IssueID nil and use Subject as their idempotency
-// key (e.g. "spotlight:ardanlabs", "self_release:v1.4.0", "recap:2026-W21").
-type Post struct {
-	ID       int64     `json:"id"`
-	IssueID  *int64    `json:"issue_id,omitempty"`
-	Kind     PostKind  `json:"kind"`
-	Subject  string    `json:"subject,omitempty"`
-	Platform string    `json:"platform"`
-	Text     string    `json:"text"`
-	PostURL  string    `json:"post_url,omitempty"`
-	PostedAt time.Time `json:"posted_at"`
-}
 
 // PostListOptions filters a List query. At least one field must be set.
 type PostListOptions struct {

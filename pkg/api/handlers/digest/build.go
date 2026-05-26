@@ -1,54 +1,36 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
 import (
-	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
-// HandleBuild handles GET /digest/build.
-func HandleBuild(w http.ResponseWriter, r *http.Request) {
-	api.HandleAuth(func(ctx context.Context, w http.ResponseWriter, r *http.Request, a *godaily.App) {
-		now := time.Now().UTC()
-		force := r.URL.Query().Get("force") == "true"
-		if !force && api.IsWeekend(now) {
-			slog.InfoContext(ctx, "Skipping build — weekend")
-			hook.Heartbeat(ctx, a.Config.BetterStackBuildHeartbeatURL)
-			api.OK(w)
-			return
-		}
+// Build handles GET /digest/build.
+func (h *Handler) Build(c *webkit.Context) error {
+	ctx := c.Context()
+	now := time.Now().UTC()
+	force := c.Request.URL.Query().Get("force") == "true"
+	if !force && api.IsWeekend(now) {
+		slog.InfoContext(ctx, "Skipping build — weekend")
+		hook.Heartbeat(ctx, h.config.BetterStackBuildHeartbeatURL)
+		return c.NoContent(http.StatusOK)
+	}
 
-		if err := a.Runner.Build(ctx, now); err != nil {
-			api.Error(w, http.StatusInternalServerError, "build failed: "+err.Error())
-			return
-		}
+	if err := h.runner.Build(ctx, now); err != nil {
+		return fmt.Errorf("build failed: %w", err)
+	}
 
-		hook.Heartbeat(ctx, a.Config.BetterStackBuildHeartbeatURL)
+	hook.Heartbeat(ctx, h.config.BetterStackBuildHeartbeatURL)
 
-		api.OK(w)
-	})(w, r)
+	return c.NoContent(http.StatusOK)
 }

@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -161,7 +146,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		t.Parallel()
 
 		m := &mockEmail{err: errors.New("boom")}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
+		agg := Service{email: m, adminEmailAddress: "to@example.com"}
 
 		err := agg.sendRendered(t.Context(), "to@example.com", rendered, nil)
 		assert.True(t, m.called)
@@ -172,7 +157,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		t.Parallel()
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com"}
+		agg := Service{email: m, adminEmailAddress: "to@example.com"}
 
 		err := agg.sendRendered(t.Context(), "to@example.com", rendered, nil)
 		require.NoError(t, err)
@@ -192,7 +177,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		require.NoError(t, err)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+		agg := Service{email: m, adminEmailAddress: "admin@example.com"}
 
 		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", subRendered, nil))
 		assert.Equal(t, "<"+unsubURL+">", m.req.Headers["List-Unsubscribe"])
@@ -203,7 +188,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		t.Parallel()
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+		agg := Service{email: m, adminEmailAddress: "admin@example.com"}
 
 		require.NoError(t, agg.sendRendered(t.Context(), "admin@example.com", rendered, nil))
 		assert.Empty(t, m.req.Headers)
@@ -218,7 +203,7 @@ func TestAggregator_SendDigestHelper(t *testing.T) {
 		}
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "admin@example.com"}
+		agg := Service{email: m, adminEmailAddress: "admin@example.com"}
 
 		require.NoError(t, agg.sendRendered(t.Context(), "sub@example.com", rendered, tags))
 		assert.Equal(t, tags, m.req.Tags)
