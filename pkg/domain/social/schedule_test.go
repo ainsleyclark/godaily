@@ -25,7 +25,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 func TestPickSlot(t *testing.T) {
@@ -61,7 +61,6 @@ func TestPickSlot(t *testing.T) {
 		for i := 0; i < 60; i++ {
 			seen[social.PickSlot(start.AddDate(0, 0, i))] = true
 		}
-		// All six slots should appear across two months of weekdays.
 		assert.GreaterOrEqual(t, len(seen), 4, "expected slot distribution to vary across days")
 	})
 
@@ -83,7 +82,6 @@ func TestShouldRun(t *testing.T) {
 	t.Run("True for the picked minute slot", func(t *testing.T) {
 		t.Parallel()
 
-		// Picked slot maps to minutes [slot*10, slot*10+9].
 		now := time.Date(2026, time.May, 20, 11, slot*10+3, 0, 0, time.UTC)
 		assert.True(t, social.ShouldRun(now, d))
 	})

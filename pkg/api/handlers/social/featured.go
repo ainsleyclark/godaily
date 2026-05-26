@@ -29,7 +29,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
 // HandleFeatured handles GET /social/featured.
@@ -53,10 +52,10 @@ func HandleFeatured(w http.ResponseWriter, r *http.Request) {
 
 		today := now.Truncate(24 * time.Hour)
 
-		if !socialsvc.ShouldRun(now, today) {
+		if !social.ShouldRun(now, today) {
 			slog.InfoContext(
 				ctx, "Skipping featured — wrong slot",
-				"minute", now.Minute(), "picked", socialsvc.PickSlot(today),
+				"minute", now.Minute(), "picked", social.PickSlot(today),
 			)
 			api.OK(w)
 			return
