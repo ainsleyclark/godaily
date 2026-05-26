@@ -73,6 +73,7 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 	}
 
 	slog.InfoContext(ctx, "Rotation: no eligible candidate", "weekday", now.Weekday())
+
 	return nil, nil
 }
 

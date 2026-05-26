@@ -57,5 +57,6 @@ func (h *Handler) Featured(c *webkit.Context) error {
 
 	slog.InfoContext(ctx, "Featured run complete", "platforms", len(results))
 	hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
+
 	return c.NoContent(http.StatusOK)
 }
