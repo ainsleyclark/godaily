@@ -58,6 +58,11 @@ func SourceWeight(s Source, t Tag) float64 {
 			return 1.8
 		case TagProposalShipped:
 			return 1.7
+		case TagProposal:
+			// Open proposals on golang/go are curated, intentional signal —
+			// they should outrank generic discussion sources (Reddit, Lobsters)
+			// even with zero reactions, but stay below already-shipped proposals.
+			return 1.5
 		default:
 			return 1.0
 		}
