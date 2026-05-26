@@ -24,6 +24,7 @@ package mux
 
 import (
 	"net/http"
+	"strings"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
@@ -69,6 +70,13 @@ func Handler(app *godaily.App) http.Handler {
 	mux.HandleFunc("GET /metrics/roundup", metricshandlers.HandleRoundup)
 	mux.HandleFunc("POST /webhooks/resend", webhookhandlers.HandleResend)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Vercel's trailingSlash:true setting appends a slash to every URL.
+		// Strip it here so Go 1.22 exact-match patterns resolve correctly.
+		if p := r.URL.Path; p != "/" && strings.HasSuffix(p, "/") {
+			r2 := r.Clone(r.Context())
+			r2.URL.Path = p[:len(p)-1]
+			r = r2
+		}
 		mux.ServeHTTP(w, r.WithContext(pkgapi.WithApp(r.Context(), app)))
 	})
 }
