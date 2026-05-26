@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package cmd
 
@@ -30,9 +15,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/services/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func appWithCreds(cfg env.Config) *godaily.App {
@@ -82,7 +66,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(allApp, []string{"bluesky"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, platform.Bluesky, got[0].Platform())
+		assert.Equal(t, social.Bluesky, got[0].Platform())
 	})
 
 	t.Run("LinkedIn creds", func(t *testing.T) {
@@ -90,7 +74,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(linkedInApp, []string{"linkedin"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, platform.LinkedIn, got[0].Platform())
+		assert.Equal(t, social.LinkedIn, got[0].Platform())
 	})
 
 	t.Run("Mastodon creds", func(t *testing.T) {
@@ -98,7 +82,7 @@ func TestPostersForFlags(t *testing.T) {
 		got, err := postersForFlags(mastodonApp, []string{"mastodon"})
 		require.NoError(t, err)
 		require.Len(t, got, 1)
-		assert.Equal(t, platform.Mastodon, got[0].Platform())
+		assert.Equal(t, social.Mastodon, got[0].Platform())
 	})
 
 	t.Run("Requesting unconfigured platform errors", func(t *testing.T) {
@@ -139,7 +123,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Error result", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: platform.LinkedIn,
+				Platform: social.LinkedIn,
 				Err:      errors.New("bad token"),
 			}})
 		})
@@ -150,7 +134,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Skipped result", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: platform.Bluesky,
+				Platform: social.Bluesky,
 				Skipped:  true,
 			}})
 		})
@@ -160,7 +144,7 @@ func TestPrintResults(t *testing.T) {
 	t.Run("Dry-run result prints text", func(t *testing.T) {
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: platform.Mastodon,
+				Platform: social.Mastodon,
 				Text:     "Hello world",
 			}})
 		})
@@ -172,7 +156,7 @@ func TestPrintResults(t *testing.T) {
 		url := "https://bsky.app/profile/godaily.bsky.social/post/abc"
 		out := capture(func() {
 			printResults([]social.PostResult{{
-				Platform: platform.Bluesky,
+				Platform: social.Bluesky,
 				PostURL:  url,
 			}})
 		})
@@ -195,10 +179,10 @@ func TestParsePlatforms(t *testing.T) {
 		t.Parallel()
 		got, err := parsePlatforms([]string{"bluesky", "linkedin", "mastodon"})
 		require.NoError(t, err)
-		assert.Equal(t, []platform.Name{
-			platform.Bluesky,
-			platform.LinkedIn,
-			platform.Mastodon,
+		assert.Equal(t, []social.Platform{
+			social.Bluesky,
+			social.LinkedIn,
+			social.Mastodon,
 		}, got)
 	})
 
@@ -206,9 +190,9 @@ func TestParsePlatforms(t *testing.T) {
 		t.Parallel()
 		got, err := parsePlatforms([]string{"  Bluesky  ", "LINKEDIN"})
 		require.NoError(t, err)
-		assert.Equal(t, []platform.Name{
-			platform.Bluesky,
-			platform.LinkedIn,
+		assert.Equal(t, []social.Platform{
+			social.Bluesky,
+			social.LinkedIn,
 		}, got)
 	})
 

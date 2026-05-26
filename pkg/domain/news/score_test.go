@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package news
 
@@ -82,7 +67,7 @@ func TestSourceWeight(t *testing.T) {
 		"Go Blog":                  {source: SourceGoBlog, tag: TagArticle, want: 2.0},
 		"GitHub Proposal Accepted": {source: SourceGitHub, tag: TagProposalAccepted, want: 1.8},
 		"GitHub Proposal Shipped":  {source: SourceGitHub, tag: TagProposalShipped, want: 1.7},
-		"GitHub Proposal Open":     {source: SourceGitHub, tag: TagProposal, want: 1.0},
+		"GitHub Proposal Open":     {source: SourceGitHub, tag: TagProposal, want: 1.5},
 		"Hacker News":              {source: SourceHN, tag: TagArticle, want: 1.2},
 		"HN Who's Hiring":          {source: SourceHNJobs, tag: TagJobs, want: 1.4},
 		"Remote OK":                {source: SourceRemoteOK, tag: TagJobs, want: 1.0},
@@ -130,7 +115,7 @@ func TestScoreOf(t *testing.T) {
 		"Lobsters at saturation":            {SourceLobsters, TagArticle, 50, true, 1.0, 1.0},
 		"GitHub Accepted floor carries":     {SourceGitHub, TagProposalAccepted, 0, true, 0.9, 0.9},
 		"GitHub Shipped floor carries":      {SourceGitHub, TagProposalShipped, 0, true, 0.85, 0.85},
-		"GitHub Proposal floor carries":     {SourceGitHub, TagProposal, 0, true, 0.5, 0.5},
+		"GitHub Proposal floor carries":     {SourceGitHub, TagProposal, 0, true, 0.75, 0.75},
 		"Go Blog no signal":                 {SourceGoBlog, TagArticle, 0, false, 1.0, 1.0},
 		"Medium no signal":                  {SourceMedium, TagArticle, 0, false, 0.25, 0.25},
 		"YouTube no signal":                 {SourceYouTube, TagVideo, 0, false, 0.5, 0.5},

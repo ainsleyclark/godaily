@@ -1,10 +1,10 @@
 package components
 
-import "github.com/ainsleyclark/godaily/pkg/domain/news"
+import "github.com/ainsleyclark/godaily/pkg/domain/digest"
 
 // SampleSection wraps Sample with the standard section heading used on the
 // homepage. The digest page renders Sample directly without a wrapping section.
-templ SampleSection(issue news.Issue) {
+templ SampleSection(issue digest.Issue) {
 	<section id="sample" class="section">
 		@Container(false) {
 			<div class="section__label">Sample output</div>

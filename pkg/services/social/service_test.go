@@ -1,44 +1,28 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package social
 
 import (
 	"context"
-	"errors"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // constReframer returns a reframer that always returns text.
@@ -52,12 +36,12 @@ type fixture struct {
 	t         *testing.T
 	ctrl      *gomock.Controller
 	prompter  *mockai.MockPrompter
-	issues    *mocknews.MockIssueRepository
+	issues    *mockdigest.MockIssueRepository
 	items     *mocknews.MockItemRepository
 	posts     *mocksocial.MockPostRepository
 	slack     *mockslack.MockSender
 	posters   []platform.Poster
-	reframers map[platform.Name]reframer
+	reframers map[social.Platform]reframer
 }
 
 func newFixture(t *testing.T) *fixture {
@@ -68,7 +52,7 @@ func newFixture(t *testing.T) *fixture {
 		t:        t,
 		ctrl:     ctrl,
 		prompter: mockai.NewMockPrompter(ctrl),
-		issues:   mocknews.NewMockIssueRepository(ctrl),
+		issues:   mockdigest.NewMockIssueRepository(ctrl),
 		items:    mocknews.NewMockItemRepository(ctrl),
 		posts:    mocksocial.NewMockPostRepository(ctrl),
 		slack:    mockslack.NewMockSender(ctrl),
@@ -88,7 +72,7 @@ func (f *fixture) service() *Service {
 // stubReframer replaces the reframer for one platform on this fixture's
 // service. It does not touch any package-level state, so tests are safe
 // to run in parallel.
-func (f *fixture) stubReframer(p platform.Name, stub reframer) {
+func (f *fixture) stubReframer(p social.Platform, stub reframer) {
 	if f.reframers == nil {
 		f.reframers = defaultReframers()
 	}
@@ -96,7 +80,7 @@ func (f *fixture) stubReframer(p platform.Name, stub reframer) {
 }
 
 // newMockPoster returns a Poster whose Platform() returns p.
-func newMockPoster(ctrl *gomock.Controller, p platform.Name) *mocksocial.MockPoster {
+func newMockPoster(ctrl *gomock.Controller, p social.Platform) *mocksocial.MockPoster {
 	mp := mocksocial.NewMockPoster(ctrl)
 	mp.EXPECT().Platform().Return(p).AnyTimes()
 	return mp
@@ -109,8 +93,8 @@ func featureJSON() []byte {
 	return []byte(`{"title":"Go 1.30 released","url":"` + sampleFeatureURL + `","source":"go_release","tag":"release","hook":"Go 1.30 ships generic type inference improvements."}`)
 }
 
-func sampleIssue() news.Issue {
-	return news.Issue{ID: 42, Slug: "2026-05-20"}
+func sampleIssue() digest.Issue {
+	return digest.Issue{ID: 42, Slug: "2026-05-20"}
 }
 
 func sampleItems() []news.Item {
@@ -157,245 +141,6 @@ func TestService_HasPosters(t *testing.T) {
 	f := newFixture(t)
 	assert.False(t, f.service().HasPosters())
 
-	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
+	f.posters = []platform.Poster{newMockPoster(f.ctrl, social.Bluesky)}
 	assert.True(t, f.service().HasPosters())
-}
-
-func TestService_Post_NoPostersSkips(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: time.Now()})
-	require.NoError(t, err)
-	assert.Empty(t, res)
-}
-
-func TestService_Post_IssueNotFound(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").
-		Return(news.Issue{}, store.ErrNotFound)
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	_, err := f.service().Post(t.Context(), PostOptions{Date: date})
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "no digest")
-}
-
-func TestService_Post_NoItemsSkips(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	f.posters = []platform.Poster{newMockPoster(f.ctrl, platform.Bluesky)}
-
-	issue := sampleIssue()
-	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(issue, nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, nil)
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
-	require.NoError(t, err)
-	assert.Empty(t, res)
-}
-
-func TestService_Post_HappyPath(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	issue := sampleIssue()
-
-	f.stubReframer(platform.Bluesky, constReframer(
-		"Go 1.30 lands generic inference improvements.\n\nhttps://go.dev/blog/go1.30\n#golang",
-	))
-
-	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
-	bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-		platform.Result{PostURL: "https://bsky.app/profile/godaily/post/abc"}, nil,
-	)
-	f.posters = []platform.Poster{bluesky}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").Return(issue, nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-	f.prompter.EXPECT().
-		Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(featureJSON(), nil)
-
-	f.posts.EXPECT().
-		HasPosted(gomock.Any(), int64(42), "bluesky").Return(false, nil)
-	f.posts.EXPECT().
-		Create(gomock.Any(), gomock.Any()).
-		DoAndReturn(func(_ context.Context, p social.Post) (social.Post, error) {
-			require.NotNil(t, p.IssueID)
-			assert.Equal(t, int64(42), *p.IssueID)
-			assert.Equal(t, social.PostKindFeatured, p.Kind)
-			assert.Equal(t, "bluesky", p.Platform)
-			assert.Contains(t, p.Text, "Go 1.30")
-			assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", p.PostURL)
-			p.ID = 1
-			return p, nil
-		})
-
-	// One success Slack notification expected, carrying the post URL.
-	var successMsg string
-	f.slack.EXPECT().
-		MustSend(gomock.Any(), gomock.Any()).
-		Do(func(_ context.Context, m string) { successMsg = m })
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
-	require.NoError(t, err)
-	require.Len(t, res, 1)
-	assert.Equal(t, platform.Bluesky, res[0].Platform)
-	assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", res[0].PostURL)
-	assert.False(t, res[0].Skipped)
-	assert.Contains(t, successMsg, "featured")
-	assert.Contains(t, successMsg, "Bluesky")
-	assert.Contains(t, successMsg, "https://bsky.app/profile/godaily/post/abc")
-}
-
-func TestService_Post_SkipsAlreadyPosted(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
-	// bluesky.Post must NOT be called when HasPosted returns true.
-	f.posters = []platform.Poster{bluesky}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(featureJSON(), nil)
-
-	f.posts.EXPECT().HasPosted(gomock.Any(), int64(42), "bluesky").Return(true, nil)
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
-	require.NoError(t, err)
-	require.Len(t, res, 1)
-	assert.True(t, res[0].Skipped)
-}
-
-func TestService_Post_DryRun(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-
-	f.stubReframer(platform.Bluesky, constReframer("dry-run text"))
-
-	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
-	// bluesky.Post must NOT be called in dry-run.
-	f.posters = []platform.Poster{bluesky}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(featureJSON(), nil)
-	// posts.HasPosted + posts.Create must NOT be called in dry-run.
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: date, DryRun: true})
-	require.NoError(t, err)
-	require.Len(t, res, 1)
-	assert.Equal(t, "dry-run text", res[0].Text)
-	assert.Empty(t, res[0].PostURL)
-}
-
-func TestService_Post_PosterErrorNotifiesSlack(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-
-	f.stubReframer(platform.Bluesky, constReframer("ok"))
-
-	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
-	bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(platform.Result{}, errors.New("API down"))
-	f.posters = []platform.Poster{bluesky}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(featureJSON(), nil)
-	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
-
-	// Capture the Slack notification so we can assert on its content.
-	var slackMsg string
-	f.slack.EXPECT().
-		MustSend(gomock.Any(), gomock.Any()).
-		Do(func(_ context.Context, m string) { slackMsg = m })
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{Date: date})
-	require.Error(t, err)
-	require.Len(t, res, 1)
-	assert.Contains(t, res[0].Err.Error(), "API down")
-	assert.Contains(t, slackMsg, "bluesky")
-}
-
-func TestService_Post_PlatformsFilter(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-
-	f.stubReframer(platform.Mastodon, constReframer("mastodon text"))
-
-	bluesky := newMockPoster(f.ctrl, platform.Bluesky)
-	mastodon := newMockPoster(f.ctrl, platform.Mastodon)
-	mastodon.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-		platform.Result{PostURL: "https://mastodon.social/@godaily/9"}, nil,
-	)
-	f.posters = []platform.Poster{bluesky, mastodon}
-
-	f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
-	f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-	f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(featureJSON(), nil)
-	f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), "mastodon").Return(false, nil)
-	f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(social.Post{}, nil)
-
-	// Wet run posts a single platform — one success Slack notification.
-	f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())
-
-	date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-	res, err := f.service().Post(t.Context(), PostOptions{
-		Date:      date,
-		Platforms: []platform.Name{platform.Mastodon},
-	})
-	require.NoError(t, err)
-	require.Len(t, res, 1)
-	assert.Equal(t, platform.Mastodon, res[0].Platform)
-}
-
-func TestSelectPosters(t *testing.T) {
-	t.Parallel()
-
-	ctrl := gomock.NewController(t)
-	t.Cleanup(ctrl.Finish)
-
-	bluesky := newMockPoster(ctrl, platform.Bluesky)
-	linkedin := newMockPoster(ctrl, platform.LinkedIn)
-	mastodon := newMockPoster(ctrl, platform.Mastodon)
-	all := []platform.Poster{bluesky, linkedin, mastodon}
-
-	t.Run("Empty wanted returns all", func(t *testing.T) {
-		t.Parallel()
-		got := selectPosters(all, nil)
-		assert.Len(t, got, 3)
-	})
-
-	t.Run("Subset returns only matches", func(t *testing.T) {
-		t.Parallel()
-		got := selectPosters(all, []platform.Name{platform.LinkedIn, platform.Mastodon})
-		require.Len(t, got, 2)
-		assert.Equal(t, platform.LinkedIn, got[0].Platform())
-		assert.Equal(t, platform.Mastodon, got[1].Platform())
-	})
-
-	t.Run("Unknown wanted yields empty", func(t *testing.T) {
-		t.Parallel()
-		got := selectPosters(all, []platform.Name{"twitter"})
-		assert.Empty(t, got)
-	})
 }

@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest_test
 
@@ -29,9 +14,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 )
 
 // Friday 2026-05-22 is in ISO W21; Monday of that week is 2026-05-18.
@@ -42,13 +28,13 @@ var (
 
 func TestNewRecapService(t *testing.T) {
 	t.Run("Requires a metrics repository", func(t *testing.T) {
-		_, err := digest.NewRecapService(nil)
+		_, err := digestsvc.NewRecapService(nil)
 		require.Error(t, err)
 	})
 
 	t.Run("Returns a service when wired correctly", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		svc, err := digest.NewRecapService(mockengagement.NewMockMetricsRepository(ctrl))
+		svc, err := digestsvc.NewRecapService(mockengagement.NewMockMetricsRepository(ctrl))
 		require.NoError(t, err)
 		require.NotNil(t, svc)
 	})
@@ -74,7 +60,7 @@ func TestRecapService_Top(t *testing.T) {
 				}, nil
 			})
 
-		svc, err := digest.NewRecapService(mr)
+		svc, err := digestsvc.NewRecapService(mr)
 		require.NoError(t, err)
 
 		top, err := svc.Top(context.Background(), fri, digest.TopOptions{})
@@ -96,7 +82,7 @@ func TestRecapService_Top(t *testing.T) {
 				return []engagement.ItemMetrics{}, nil
 			})
 
-		svc, _ := digest.NewRecapService(mr)
+		svc, _ := digestsvc.NewRecapService(mr)
 		_, err := svc.Top(context.Background(), fri, digest.TopOptions{N: 5})
 		require.NoError(t, err)
 	})
@@ -113,7 +99,7 @@ func TestRecapService_Top(t *testing.T) {
 				return nil, nil
 			})
 
-		svc, _ := digest.NewRecapService(mr)
+		svc, _ := digestsvc.NewRecapService(mr)
 		_, err := svc.Top(context.Background(), fri, digest.TopOptions{Window: 24 * time.Hour})
 		require.NoError(t, err)
 	})
@@ -129,7 +115,7 @@ func TestRecapService_Top(t *testing.T) {
 				{ItemID: 2, Title: "B", URL: "https://b", Clicks: 2},
 			}, nil)
 
-		svc, _ := digest.NewRecapService(mr)
+		svc, _ := digestsvc.NewRecapService(mr)
 		top, err := svc.Top(context.Background(), fri, digest.TopOptions{MinItems: 3})
 		require.NoError(t, err)
 		assert.False(t, top.HasItems(), "below MinItems must return zero value")
@@ -143,7 +129,7 @@ func TestRecapService_Top(t *testing.T) {
 			ItemList(gomock.Any(), gomock.Any()).
 			Return(nil, errors.New("boom"))
 
-		svc, _ := digest.NewRecapService(mr)
+		svc, _ := digestsvc.NewRecapService(mr)
 		_, err := svc.Top(context.Background(), fri, digest.TopOptions{})
 		require.Error(t, err)
 	})
@@ -163,7 +149,7 @@ func TestRecapService_Top(t *testing.T) {
 				return []engagement.ItemMetrics{{ItemID: 1, Clicks: 1}}, nil
 			})
 
-		svc, _ := digest.NewRecapService(mr)
+		svc, _ := digestsvc.NewRecapService(mr)
 		top, err := svc.Top(context.Background(), sun, digest.TopOptions{})
 		require.NoError(t, err)
 		assert.Equal(t, "2026-W21", top.Period.Label)

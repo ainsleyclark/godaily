@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -24,10 +9,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 )
 
 func TestAggregator_Collect(t *testing.T) {
@@ -38,8 +24,8 @@ func TestAggregator_Collect(t *testing.T) {
 
 	tt := map[string]struct {
 		registry map[news.Source]news.Fetcher
-		opts     news.CollectOptions
-		want     func(t *testing.T, resp news.CollectResponse, err error)
+		opts     digest.CollectOptions
+		want     func(t *testing.T, resp digest.CollectResponse, err error)
 	}{
 		"DryRun Returns Items Without Persisting": {
 			registry: map[news.Source]news.Fetcher{
@@ -47,8 +33,8 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "in", Published: inWindow}},
 				},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -58,8 +44,8 @@ func TestAggregator_Collect(t *testing.T) {
 		},
 		"Default Sources When Empty": {
 			registry: allRegistered(),
-			opts:     news.CollectOptions{DryRun: true},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts:     digest.CollectOptions{DryRun: true},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -71,8 +57,8 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "zero"}},
 				},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -86,8 +72,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -105,8 +91,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -125,8 +111,8 @@ func TestAggregator_Collect(t *testing.T) {
 					},
 				},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -148,11 +134,11 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "r", Published: inWindow}},
 				},
 			},
-			opts: news.CollectOptions{
+			opts: digest.CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceMedium, news.SourceGoBlog, news.SourceReddit},
 			},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 3)
@@ -168,11 +154,11 @@ func TestAggregator_Collect(t *testing.T) {
 					items: []news.Item{{Title: "ok", Published: inWindow}},
 				},
 			},
-			opts: news.CollectOptions{
+			opts: digest.CollectOptions{
 				DryRun:  true,
 				Sources: []news.Source{news.SourceDevTo, news.SourceLobsters},
 			},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, resp.Sources, 1)
@@ -184,8 +170,8 @@ func TestAggregator_Collect(t *testing.T) {
 			registry: map[news.Source]news.Fetcher{
 				news.SourceDevTo: mockFetcher{items: []news.Item{}},
 			},
-			opts: news.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
-			want: func(t *testing.T, resp news.CollectResponse, err error) {
+			opts: digest.CollectOptions{DryRun: true, Sources: []news.Source{news.SourceDevTo}},
+			want: func(t *testing.T, resp digest.CollectResponse, err error) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, resp.Sources)
@@ -197,7 +183,7 @@ func TestAggregator_Collect(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Cleanup(news.SwapRegistry(test.registry))
 
-			agg := Aggregator{}
+			agg := Service{}
 			got, err := agg.Collect(t.Context(), test.opts)
 			test.want(t, got, err)
 		})
@@ -237,11 +223,11 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		_, itemRepo := newTestStores(t)
-		agg := Aggregator{
+		agg := Service{
 			items: itemRepo,
 		}
 
-		_, err := agg.Collect(t.Context(), news.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		_, err := agg.Collect(t.Context(), digest.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
 		require.NoError(t, err)
 
 		collStart, collEnd := collectWindow(time.Now())
@@ -264,11 +250,11 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		_, itemRepo := newTestStores(t)
-		agg := Aggregator{
+		agg := Service{
 			items: itemRepo,
 		}
 
-		opts := news.CollectOptions{Sources: []news.Source{news.SourceDevTo}}
+		opts := digest.CollectOptions{Sources: []news.Source{news.SourceDevTo}}
 
 		_, err := agg.Collect(t.Context(), opts)
 		require.NoError(t, err)
@@ -293,11 +279,11 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
 		_, itemRepo := newTestStores(t)
-		agg := Aggregator{
+		agg := Service{
 			items: itemRepo,
 		}
 
-		_, err := agg.Collect(t.Context(), news.CollectOptions{
+		_, err := agg.Collect(t.Context(), digest.CollectOptions{
 			Sources: []news.Source{news.SourceDevTo},
 			DryRun:  true,
 		})

@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -25,24 +10,21 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	godaily "github.com/ainsleyclark/godaily/pkg"
-	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-func TestHandleUnsubscribe(t *testing.T) {
+func TestUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
 		token        string
-		mock         func(s *mocksubscriber.MockService)
+		mock         func(s *mockaudience.MockService)
 		wantStatus   int
 		wantLocation string
 	}{
 		"OK": {
 			token: "valid-token",
-			mock: func(s *mocksubscriber.MockService) {
+			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 			},
 			wantStatus:   http.StatusFound,
@@ -50,12 +32,12 @@ func TestHandleUnsubscribe(t *testing.T) {
 		},
 		"Missing Token": {
 			token:      "",
-			mock:       func(s *mocksubscriber.MockService) {},
+			mock:       func(s *mockaudience.MockService) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Unsubscribe Error": {
 			token: "bad-token",
-			mock: func(s *mocksubscriber.MockService) {
+			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -65,21 +47,19 @@ func TestHandleUnsubscribe(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			svc := mocksubscriber.NewMockService(ctrl)
+			svc := mockaudience.NewMockService(ctrl)
 			test.mock(svc)
 
-			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+			h := &Handler{subscribers: svc}
 
-			url := "/digest/unsubscribe"
+			url := "/unsubscribe"
 			if test.token != "" {
 				url += "?token=" + test.token
 			}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, url, nil)
-			r = r.WithContext(api.WithApp(r.Context(), a))
-
-			HandleUnsubscribe(w, r)
+			invoke(h.Unsubscribe, w, r)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 			if test.wantLocation != "" {
@@ -89,18 +69,16 @@ func TestHandleUnsubscribe(t *testing.T) {
 	}
 }
 
-func TestHandleUnsubscribePost(t *testing.T) {
+func TestUnsubscribePost(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	svc := mocksubscriber.NewMockService(ctrl)
+	svc := mockaudience.NewMockService(ctrl)
 	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 
-	a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
+	h := &Handler{subscribers: svc}
 
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodPost, "/digest/unsubscribe?token=valid-token", nil)
-	r = r.WithContext(api.WithApp(r.Context(), a))
-
-	HandleUnsubscribe(w, r)
+	r := httptest.NewRequest(http.MethodPost, "/unsubscribe?token=valid-token", nil)
+	invoke(h.Unsubscribe, w, r)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Empty(t, w.Header().Get("Location"))

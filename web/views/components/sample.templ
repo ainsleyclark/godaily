@@ -6,19 +6,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/web/views/graphics"
 )
 
 // Sample renders the email-preview block used on the digest detail page.
-templ Sample(issue news.Issue) {
+templ Sample(issue digest.Issue) {
 	<div class="email-preview">
 		@sampleInner(issue)
 	</div>
 }
 
 // sampleInner renders the topbar and body content shared by Sample and SampleWide.
-templ sampleInner(issue news.Issue) {
+templ sampleInner(issue digest.Issue) {
 	<div class="email-preview__topbar">
 		<div class="email-preview__topbar-dot email-preview__topbar-dot--red"></div>
 		<div class="email-preview__topbar-dot email-preview__topbar-dot--yellow"></div>
@@ -92,7 +93,7 @@ func formatDigestDate(t time.Time) string {
 // issueDate extracts the issue date from the Subject field, falling back to
 // SentAt. The subject is formatted as "GoDaily - January 2, 2006", so we
 // strip the prefix and parse the remainder.
-func issueDate(issue news.Issue) time.Time {
+func issueDate(issue digest.Issue) time.Time {
 	for _, prefix := range []string{"GoDaily - ", "GoDaily – "} {
 		if after, ok := strings.CutPrefix(issue.Subject, prefix); ok {
 			if t, err := time.Parse("January 2, 2006", after); err == nil {

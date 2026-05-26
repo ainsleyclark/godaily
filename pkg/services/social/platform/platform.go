@@ -1,25 +1,14 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package platform
 
-import "context"
+import (
+	"context"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+)
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/services/social/platform Poster
 
@@ -30,27 +19,11 @@ import "context"
 // transport must respect the supplied context for cancellation.
 type Poster interface {
 	// Platform identifies which platform this poster targets.
-	Platform() Name
+	Platform() social.Platform
 
 	// Post publishes text to the platform. Implementations are responsible
 	// for any auth dance their API requires.
 	Post(ctx context.Context, text string) (Result, error)
-}
-
-// Name identifies a social platform.
-type Name string
-
-// Platform name constants. The string values are used as the persisted
-// platform field on news.SocialPost rows.
-const (
-	Bluesky  Name = "bluesky"
-	LinkedIn Name = "linkedin"
-	Mastodon Name = "mastodon"
-)
-
-// String implements fmt.Stringer on Name.
-func (p Name) String() string {
-	return string(p)
 }
 
 // Result is what a platform returned after a successful post. PostURL is the

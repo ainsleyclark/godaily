@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package godaily
 
@@ -28,14 +13,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
-	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	audiencesvc "github.com/ainsleyclark/godaily/pkg/services/audience"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
@@ -43,7 +30,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
-	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -60,25 +46,31 @@ type App struct {
 	Config         *env.Config
 	DB             *sql.DB
 	Repository     *Repository
-	Runner         news.Service
+	Runner         digest.Service
 	Social         *socialsvc.Service
 	Cache          cache.Store
-	Subscribers    contacts.SubscriberService
+	Subscribers    audience.SubscriberService
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
-	StatFetchers   map[platform.Name]platform.StatFetcher
+	StatFetchers   map[social.Platform]platform.StatFetcher
 }
 
 // Repository defines the datastore for the application.
 type Repository struct {
-	Issues        news.IssueRepository
+	Issues        digest.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   contacts.SubscriberRepository
+	Subscribers   audience.SubscriberRepository
 	SocialPosts   social.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
 	Metrics       engagement.MetricsRepository
+}
+
+type Service struct {
+	Digest      digest.Service
+	Subscribers audience.SubscriberService
+	Social      *socialsvc.Service
 }
 
 // Bootstrap ties all the app dependencies together
@@ -135,7 +127,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 	aiClient := ai.New(config, slackClient)
 
-	aggregator, err := digest.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
+	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
 	if err != nil {
 		return nil, teardown, err
 	}
@@ -153,7 +145,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
-	subscriberSvc := subscribersvc.New(subsStore, issueStore, emailSender)
+	subscriberSvc := audiencesvc.New(subsStore, issueStore, emailSender)
 
 	return &App{
 		Config:         &config,
@@ -200,7 +192,7 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRe
 	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
 
 	if repo != nil && repo.Metrics != nil {
-		if recapSvc, err := digest.NewRecapService(repo.Metrics); err == nil {
+		if recapSvc, err := digestsvc.NewRecapService(repo.Metrics); err == nil {
 			out = append(out, candidates.NewRecap(recapSvc, posts))
 		}
 	}
@@ -209,16 +201,16 @@ func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRe
 
 // buildStatFetchers returns a map of platform → StatFetcher for platforms
 // whose credentials are present in the config.
-func buildStatFetchers(c env.Config) map[platform.Name]platform.StatFetcher {
-	out := make(map[platform.Name]platform.StatFetcher)
+func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
+	out := make(map[social.Platform]platform.StatFetcher)
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		out[platform.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out[platform.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		out[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		out[platform.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
+		out[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 	return out
 }

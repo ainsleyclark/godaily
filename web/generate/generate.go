@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package generate
 
@@ -27,7 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
@@ -35,15 +20,15 @@ import (
 
 // website holds all data required to generate the static site.
 type website struct {
-	Issues       []news.Issue
-	LatestIssue  news.Issue
-	RecentIssues []news.Issue
+	Issues       []digest.Issue
+	LatestIssue  digest.Issue
+	RecentIssues []digest.Issue
 }
 
 // Site renders all sent issues and the homepage to outDir, generates
 // sitemap.xml and rss.xml, copies static files from staticDir, then
 // copies compiled frontend assets from assetsDir into outDir/assets.
-func Site(ctx context.Context, repo news.IssueRepository, subscriberCount int64, outDir, staticDir, assetsDir string) error {
+func Site(ctx context.Context, repo digest.IssueRepository, subscriberCount int64, outDir, staticDir, assetsDir string) error {
 	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return errors.Wrap(err, "creating output directory")
 	}

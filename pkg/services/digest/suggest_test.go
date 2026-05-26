@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -31,8 +16,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 )
 
@@ -119,10 +105,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Sends Suggestion Email To Owner", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-10",
 			Subject: "GoDaily - 2026-05-10",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -138,7 +124,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(validJSON("first-post", "second-post", "third-post"), nil)
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
@@ -152,7 +138,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Prompter Nil", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-11"))
 		require.Error(t, err)
@@ -161,7 +147,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 	t.Run("Returns Error When Repos Are Nil", func(t *testing.T) {
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p}
 
 		err := agg.SendSuggestion(t.Context(), day("2026-05-12"))
 		require.Error(t, err)
@@ -171,17 +157,17 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("No Items Skips Send", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-13")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-13",
 			Subject: "GoDaily - 2026-05-13",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), date))
 
@@ -192,7 +178,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		m := &mockEmail{}
-		agg := Aggregator{email: m, adminEmailAddress: "", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: m, adminEmailAddress: "", prompter: p, issues: issueRepo, items: itemRepo}
 
 		require.NoError(t, agg.SendSuggestion(t.Context(), day("2026-05-14")))
 		assert.False(t, m.called)
@@ -201,7 +187,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err := agg.SendSuggestion(t.Context(), day("1999-01-01"))
 		require.Error(t, err)
@@ -211,17 +197,17 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Loading Items Fails", func(t *testing.T) {
 		issueRepo, _ := newTestStores(t)
 		date := day("2026-05-17")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-17",
 			Subject: "GoDaily - 2026-05-17",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
 		badItems := errItemRepo{err: errors.New("db failure")}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: badItems}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: badItems}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
@@ -231,10 +217,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error On Render Failure", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-16")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-16",
 			Subject: "GoDaily - 2026-05-16",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -252,7 +238,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("p"), nil)
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
@@ -262,10 +248,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Returns Error When Prompter Fails", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-15")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-15",
 			Subject: "GoDaily - 2026-05-15",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -279,7 +265,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic down"))
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)
@@ -289,10 +275,10 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 	t.Run("Prompter Error Sends Slack Notification", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-18")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-18",
 			Subject: "GoDaily - 2026-05-18",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -307,7 +293,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("rate limited"))
 		sl := &mockSlack{}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
 		require.Error(t, err)

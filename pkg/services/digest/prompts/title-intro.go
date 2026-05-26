@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package prompts
 
@@ -42,9 +27,13 @@ You will receive a JSON list of items aggregated from Go news sources for a sing
 
 Output strict JSON, schema:
 {
-  "title": string  // <=80 chars — punchy email subject line teaser drawn from the top item (e.g. "Go 1.24 lands, goroutines got faster")
-  "intro": string  // 1-2 plain sentences stating the key technical fact(s) from the top item(s), for the top of the email body
+  "title": string  // <=80 chars — punchy email subject line teaser drawn from the headline item (e.g. "Go 1.24 lands, goroutines got faster")
+  "intro": string  // 1-2 plain sentences stating the key technical fact(s) from the headline item(s), for the top of the email body
 }
+
+Picking the headline item:
+- Prefer high-signal Go sources for the headline: releases, security advisories, accepted/shipped/open proposals on golang/go, and the official Go blog. Pick the highest-ranked item from these when one is in the top few.
+- Only headline a discussion thread (Reddit, Hacker News, Lobsters, golang-nuts) when no release, proposal, or official post is present in the top items.
 
 Rules for the intro:
 - FACTUAL ONLY. State the technical substance directly. Never describe a discussion, thread, or conversation — write what the content covers or what shipped.

@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package candidates_test
 
@@ -33,7 +18,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // confsYAML and meetupsYAML are deliberately small so subject expectations
@@ -153,7 +137,7 @@ func TestCommunity_Eligible(t *testing.T) {
 		assert.Equal(t, social.PostKindCommunity, cctx.Kind)
 		assert.Equal(t, fmt.Sprintf("community:alpha-meetup:%d", year), cctx.Subject)
 		assert.Equal(t, "https://alpha-meetup.example", cctx.URL)
-		assert.Equal(t, "https://www.linkedin.com/company/alpha-meetup-group", cctx.Mentions[platform.LinkedIn])
+		assert.Equal(t, "https://www.linkedin.com/company/alpha-meetup-group", cctx.Mentions[social.LinkedIn])
 	})
 
 	t.Run("Conference week picks first unposted upcoming conference", func(t *testing.T) {
@@ -172,8 +156,8 @@ func TestCommunity_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 		assert.Equal(t, fmt.Sprintf("community:alpha-conf:%d", year), cctx.Subject)
-		assert.Equal(t, "@alpha-conf.example", cctx.Mentions[platform.Bluesky])
-		assert.Equal(t, "https://www.linkedin.com/company/alpha-conf", cctx.Mentions[platform.LinkedIn])
+		assert.Equal(t, "@alpha-conf.example", cctx.Mentions[social.Bluesky])
+		assert.Equal(t, "https://www.linkedin.com/company/alpha-conf", cctx.Mentions[social.LinkedIn])
 	})
 
 	t.Run("Rotates past already-posted entry", func(t *testing.T) {
@@ -252,7 +236,7 @@ func TestCommunity_Generate(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		out, err := c.Generate(context.Background(), nil, platform.LinkedIn, cctx)
+		out, err := c.Generate(context.Background(), nil, social.LinkedIn, cctx)
 		require.NoError(t, err)
 		assert.Contains(t, out, "https://www.linkedin.com/company/alpha-meetup-group")
 		assert.Contains(t, out, "https://alpha-meetup.example")
@@ -274,7 +258,7 @@ func TestCommunity_Generate(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		out, err := c.Generate(context.Background(), nil, platform.Bluesky, cctx)
+		out, err := c.Generate(context.Background(), nil, social.Bluesky, cctx)
 		require.NoError(t, err)
 		assert.Contains(t, out, "Alpha Meetup")
 		assert.NotContains(t, out, "@") // no Bluesky handle → no @mention.
@@ -294,7 +278,7 @@ func TestCommunity_Generate(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		out, err := c.Generate(context.Background(), nil, platform.Bluesky, cctx)
+		out, err := c.Generate(context.Background(), nil, social.Bluesky, cctx)
 		require.NoError(t, err)
 		assert.Contains(t, out, "@alpha-conf.example")
 	})
@@ -313,7 +297,7 @@ func TestCommunity_Generate(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 
-		out, err := c.Generate(context.Background(), nil, platform.Name("nonexistent"), cctx)
+		out, err := c.Generate(context.Background(), nil, social.Platform("nonexistent"), cctx)
 		require.NoError(t, err)
 		assert.Empty(t, out)
 	})

@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package candidates
 
@@ -32,7 +17,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // promoCycleLen is the M-M-C pattern length. Two meetups for each
@@ -54,18 +38,18 @@ const promoCycleLen = 3
 //
 // Keep the strings short — Bluesky caps at 300 chars and we want
 // headroom for long conference names.
-var communityTemplates = map[platform.Name][]string{
-	platform.LinkedIn: {
+var communityTemplates = map[social.Platform][]string{
+	social.LinkedIn: {
 		"{{.Mention}} — {{.Description}}\n\n{{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}}\n\n{{.URL}}",
 		"{{.Mention}}: {{.Description}}\n\n{{.URL}}",
 	},
-	platform.Bluesky: {
+	social.Bluesky: {
 		"{{.Mention}} — {{.Description}} {{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}} {{.URL}}",
 		"{{.Mention}}: {{.Description}} {{.URL}}",
 	},
-	platform.Mastodon: {
+	social.Mastodon: {
 		"{{.Mention}} — {{.Description}} #golang {{.URL}}",
 		"{{.Mention}} ({{.Location}}) — {{.Description}} #golang {{.URL}}",
 		"{{.Mention}}: {{.Description}} #golang {{.URL}}",
@@ -97,16 +81,16 @@ type communityHandles struct {
 // mentions returns the per-platform string to splice into the post body.
 // Empty platforms are omitted so the template-render fallback (use Name)
 // kicks in.
-func (e communityEntry) mentions() map[platform.Name]string {
-	out := make(map[platform.Name]string)
+func (e communityEntry) mentions() map[social.Platform]string {
+	out := make(map[social.Platform]string)
 	if e.Handles.LinkedIn != "" {
-		out[platform.LinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
+		out[social.LinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
 	}
 	if e.Handles.Bluesky != "" {
-		out[platform.Bluesky] = "@" + e.Handles.Bluesky
+		out[social.Bluesky] = "@" + e.Handles.Bluesky
 	}
 	if e.Handles.Mastodon != "" {
-		out[platform.Mastodon] = "@" + e.Handles.Mastodon
+		out[social.Mastodon] = "@" + e.Handles.Mastodon
 	}
 	return out
 }
@@ -180,18 +164,18 @@ func (c *Community) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 // Generate renders one of the per-platform templates with the entry's
 // mention spliced in (or its plain name as fallback when no handle is
 // configured for the platform).
-func (c *Community) Generate(_ context.Context, _ ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform, cctx socialsvc.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(communityPayload)
 	if !ok {
 		return "", errors.New("community: payload missing")
 	}
-	pool := communityTemplates[platform]
+	pool := communityTemplates[p]
 	if len(pool) == 0 {
 		return "", nil
 	}
 
 	mention := payload.Entry.Name
-	if m := cctx.Mentions[platform]; m != "" {
+	if m := cctx.Mentions[p]; m != "" {
 		mention = m
 	}
 

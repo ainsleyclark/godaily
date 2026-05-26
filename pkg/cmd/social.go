@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package cmd
 
@@ -30,8 +15,7 @@ import (
 	"github.com/urfave/cli/v3"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
@@ -129,7 +113,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			results, err := a.Social.Post(ctx, socialsvc.PostOptions{
+			results, err := a.Social.Post(ctx, social.PostOptions{
 				Date:      date,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
@@ -186,7 +170,7 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 				now = parsed.UTC()
 			}
 
-			results, err := a.Social.Rotate(ctx, socialsvc.RotateOptions{
+			results, err := a.Social.Rotate(ctx, social.RotateOptions{
 				Now:       now,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
@@ -209,15 +193,15 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, error) {
 	c := app.Config
 
-	all := map[platform.Name]platform.Poster{}
+	all := map[social.Platform]platform.Poster{}
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		all[platform.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
+		all[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		all[platform.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		all[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		all[platform.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
+		all[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
 	}
 
 	if len(platforms) == 0 {
@@ -230,7 +214,7 @@ func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, e
 
 	out := make([]platform.Poster, 0, len(platforms))
 	for _, name := range platforms {
-		key := platform.Name(strings.ToLower(strings.TrimSpace(name)))
+		key := social.Platform(strings.ToLower(strings.TrimSpace(name)))
 		p, ok := all[key]
 		if !ok {
 			return nil, fmt.Errorf("platform %q not configured or unknown (expected: bluesky, linkedin, mastodon)", name)
@@ -241,16 +225,16 @@ func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, e
 }
 
 // parsePlatforms validates and converts --platform flag values.
-func parsePlatforms(raw []string) ([]platform.Name, error) {
+func parsePlatforms(raw []string) ([]social.Platform, error) {
 	if len(raw) == 0 {
 		return nil, nil
 	}
-	known := map[string]platform.Name{
-		"bluesky":  platform.Bluesky,
-		"linkedin": platform.LinkedIn,
-		"mastodon": platform.Mastodon,
+	known := map[string]social.Platform{
+		"bluesky":  social.Bluesky,
+		"linkedin": social.LinkedIn,
+		"mastodon": social.Mastodon,
 	}
-	out := make([]platform.Name, 0, len(raw))
+	out := make([]social.Platform, 0, len(raw))
 	for _, name := range raw {
 		p, ok := known[strings.ToLower(strings.TrimSpace(name))]
 		if !ok {
@@ -261,7 +245,7 @@ func parsePlatforms(raw []string) ([]platform.Name, error) {
 	return out, nil
 }
 
-func printResults(results []socialsvc.PostResult) {
+func printResults(results []social.PostResult) {
 	if len(results) == 0 {
 		fmt.Fprintln(os.Stdout, "no posts produced")
 		return

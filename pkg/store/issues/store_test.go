@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package issues_test
 
@@ -26,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -37,10 +22,10 @@ func TestIssues_Store(t *testing.T) {
 	defer teardown()
 	s := issues.New(db)
 
-	mock := news.Issue{
+	mock := digest.Issue{
 		Slug:    "2026-04-28",
 		Subject: "GoDaily - April 28, 2026",
-		Status:  news.IssueStatusSent,
+		Status:  digest.IssueStatusSent,
 		Summary: "a summary",
 		SentAt:  time.Date(2026, time.April, 28, 8, 0, 0, 0, time.UTC),
 	}
@@ -135,15 +120,15 @@ func TestIssues_Store(t *testing.T) {
 	t.Run("UpdateStatus", func(t *testing.T) {
 		t.Log("Happy path")
 		{
-			got, err := s.UpdateStatus(ctx, mock.ID, news.IssueStatusError, mock.SentAt)
+			got, err := s.UpdateStatus(ctx, mock.ID, digest.IssueStatusError, mock.SentAt)
 			require.NoError(t, err)
-			assert.Equal(t, news.IssueStatusError, got.Status)
+			assert.Equal(t, digest.IssueStatusError, got.Status)
 			assert.Equal(t, mock.ID, got.ID)
 		}
 
 		t.Log("Unknown ID returns sql.ErrNoRows via RETURNING *")
 		{
-			_, err := s.UpdateStatus(ctx, 999, news.IssueStatusSent, mock.SentAt)
+			_, err := s.UpdateStatus(ctx, 999, digest.IssueStatusSent, mock.SentAt)
 			assert.Error(t, err)
 		}
 	})
@@ -168,13 +153,13 @@ func TestIssues_Store(t *testing.T) {
 
 		t.Log("Create")
 		{
-			_, err := s.Create(ctx, news.Issue{Slug: "x", Subject: "x", Status: news.IssueStatusSent})
+			_, err := s.Create(ctx, digest.Issue{Slug: "x", Subject: "x", Status: digest.IssueStatusSent})
 			assert.Error(t, err)
 		}
 
 		t.Log("UpdateStatus")
 		{
-			_, err := s.UpdateStatus(ctx, 1, news.IssueStatusSent, mock.SentAt)
+			_, err := s.UpdateStatus(ctx, 1, digest.IssueStatusSent, mock.SentAt)
 			assert.Error(t, err)
 		}
 

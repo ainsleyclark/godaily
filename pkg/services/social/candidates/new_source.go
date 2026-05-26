@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package candidates
 
@@ -30,7 +15,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -95,14 +79,14 @@ func (c *NewSource) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 
 // Generate dispatches to the new_source prompt with the right per-platform
 // mention.
-func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, platform platform.Name, cctx socialsvc.CandidateContext) (string, error) {
+func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, plat social.Platform, cctx socialsvc.CandidateContext) (string, error) {
 	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("new_source: profile payload missing")
 	}
-	return rotation.NewSource(ctx, p, platform, rotation.NewSourcePayload{
+	return rotation.NewSource(ctx, p, plat, rotation.NewSourcePayload{
 		DisplayName: profile.DisplayName,
-		Mention:     profile.Mention(platform.String()),
+		Mention:     profile.Mention(plat.String()),
 		Blurb:       profile.SpotlightBlurb,
 		URL:         profile.SourceURL,
 	})
@@ -122,13 +106,13 @@ func sortedAnnounceable(profiles map[news.Source]social.Profile) []news.Source {
 // socialMentionsFor translates SocialProfile.Mentions (string-keyed, so
 // the news package stays free of socialgw imports) into the typed map the
 // rotation orchestrator carries around.
-func socialMentionsFor(p social.Profile) map[platform.Name]string {
+func socialMentionsFor(p social.Profile) map[social.Platform]string {
 	if len(p.Mentions) == 0 {
 		return nil
 	}
-	out := make(map[platform.Name]string, len(p.Mentions))
+	out := make(map[social.Platform]string, len(p.Mentions))
 	for k, v := range p.Mentions {
-		out[platform.Name(k)] = v
+		out[social.Platform(k)] = v
 	}
 	return out
 }

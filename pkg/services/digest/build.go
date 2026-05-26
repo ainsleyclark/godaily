@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -27,6 +12,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -36,16 +22,16 @@ import (
 // deduplicates them, runs AI synthesis, and persists a draft Issue with the
 // items associated. If a draft already exists for the date's slug it is deleted
 // and rebuilt. On any failure a Slack notification is sent.
-func (a Aggregator) Build(ctx context.Context, date time.Time) error {
+func (s Service) Build(ctx context.Context, date time.Time) error {
 	today := date.UTC().Truncate(24 * time.Hour)
 	start, end := buildWindow(today)
 	slug := today.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Building digest", "slug", slug, "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"))
 
-	items, err := a.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
+	items, err := s.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
 	if err != nil {
-		return a.buildErr(ctx, errors.Wrap(err, "listing items"))
+		return s.buildErr(ctx, errors.Wrap(err, "listing items"))
 	}
 
 	if len(items) == 0 {
@@ -57,33 +43,33 @@ func (a Aggregator) Build(ctx context.Context, date time.Time) error {
 
 	sections := groupIntoSections(items)
 
-	subject, summary := a.synthesiseDigestMeta(ctx, today, sections)
+	subject, summary := s.synthesiseDigestMeta(ctx, today, sections)
 
-	existing, lookupErr := a.issues.FindBySlug(ctx, slug)
+	existing, lookupErr := s.issues.FindBySlug(ctx, slug)
 	switch {
 	case lookupErr == nil:
 		slog.InfoContext(ctx, "Replacing existing draft", "slug", slug)
-		if err = a.items.DeleteByIssue(ctx, existing.ID); err != nil {
-			return a.buildErr(ctx, errors.Wrap(err, "deleting existing items"))
+		if err = s.items.DeleteByIssue(ctx, existing.ID); err != nil {
+			return s.buildErr(ctx, errors.Wrap(err, "deleting existing items"))
 		}
-		if _, err = a.issues.Delete(ctx, existing.ID); err != nil {
-			return a.buildErr(ctx, errors.Wrap(err, "deleting existing issue"))
+		if _, err = s.issues.Delete(ctx, existing.ID); err != nil {
+			return s.buildErr(ctx, errors.Wrap(err, "deleting existing issue"))
 		}
 	case !errors.Is(lookupErr, store.ErrNotFound):
-		return a.buildErr(ctx, errors.Wrap(lookupErr, "checking existing issue"))
+		return s.buildErr(ctx, errors.Wrap(lookupErr, "checking existing issue"))
 	}
 
-	issue := news.Issue{
+	issue := digest.Issue{
 		Slug:    slug,
 		Subject: subject,
 		Summary: summary,
-		Status:  news.IssueStatusDraft,
+		Status:  digest.IssueStatusDraft,
 		SentAt:  today,
 	}
 
-	created, err := a.issues.Create(ctx, issue)
+	created, err := s.issues.Create(ctx, issue)
 	if err != nil {
-		return a.buildErr(ctx, errors.Wrap(err, "creating issue"))
+		return s.buildErr(ctx, errors.Wrap(err, "creating issue"))
 	}
 
 	var position int
@@ -92,8 +78,8 @@ func (a Aggregator) Build(ctx context.Context, date time.Time) error {
 			position++
 			item.Source = section.Source
 			id := created.ID
-			if _, err = a.items.Create(ctx, &id, position, item); err != nil {
-				return a.buildErr(ctx, errors.Wrap(err, "associating item"))
+			if _, err = s.items.Create(ctx, &id, position, item); err != nil {
+				return s.buildErr(ctx, errors.Wrap(err, "associating item"))
 			}
 		}
 	}
@@ -149,9 +135,9 @@ func groupIntoSections(items []news.Item) []news.SourceItems {
 	return sections
 }
 
-func (a Aggregator) buildErr(ctx context.Context, err error) error {
-	if a.slack != nil {
-		a.slack.MustSend(ctx, "Build failed: "+err.Error())
+func (s Service) buildErr(ctx context.Context, err error) error {
+	if s.slack != nil {
+		s.slack.MustSend(ctx, "Build failed: "+err.Error())
 	}
 	return err
 }
@@ -159,18 +145,20 @@ func (a Aggregator) buildErr(ctx context.Context, err error) error {
 // synthesiseDigestMeta calls the prompter to generate the email subject title
 // and intro paragraph. On failure it logs a warning and returns static fallbacks
 // so a missing API key never blocks delivery.
-func (a Aggregator) synthesiseDigestMeta(ctx context.Context, day time.Time, sections []news.SourceItems) (subject, summary string) {
+func (s Service) synthesiseDigestMeta(ctx context.Context, day time.Time, sections []news.SourceItems) (subject, summary string) {
 	subject = "GoDaily - " + day.Format("January 2, 2006")
-	if a.prompter == nil {
+	if s.prompter == nil {
 		return subject, ""
 	}
-	meta, err := prompts.Synthesise(ctx, a.prompter, day, sections)
+
+	meta, err := prompts.Synthesise(ctx, s.prompter, day, sections)
 	if err != nil {
 		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
-		if a.slack != nil {
-			a.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
+		if s.slack != nil {
+			s.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
 		}
 		return subject, ""
 	}
+
 	return meta.Title, meta.Intro
 }

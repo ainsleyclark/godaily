@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 // e2e/main.go starts a combined web+API server on :4000 for Playwright tests.
 // Run with: go run ./e2e
@@ -42,12 +27,13 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	"github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/audience"
+	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all source fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -94,14 +80,14 @@ func (noopSlack) MustSend(_ context.Context, _ string)   {}
 
 // seedRunner satisfies digest.Runner for E2E tests. Collect inserts fixed fake
 // items directly into the DB (bypassing real HTTP sources). Build and
-// SendDigest delegate to the real digest.Aggregator so the full pipeline logic
+// SendDigest delegate to the real digest.Service so the full pipeline logic
 // is exercised with the spy email sender.
 type seedRunner struct {
 	items      news.ItemRepository
-	aggregator *digest.Aggregator
+	aggregator *digestsvc.Service
 }
 
-func (r seedRunner) Collect(ctx context.Context, _ news.CollectOptions) (news.CollectResponse, error) {
+func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) (digest.CollectResponse, error) {
 	// Items are published yesterday so they fall within buildWindow's [yesterday, today) range.
 	yesterday := time.Now().UTC().Truncate(24*time.Hour).AddDate(0, 0, -1)
 	seeds := []news.Item{
@@ -110,10 +96,10 @@ func (r seedRunner) Collect(ctx context.Context, _ news.CollectOptions) (news.Co
 	}
 	for i, item := range seeds {
 		if _, err := r.items.Create(ctx, nil, i+1, item); err != nil {
-			return news.CollectResponse{}, err
+			return digest.CollectResponse{}, err
 		}
 	}
-	return news.CollectResponse{}, nil
+	return digest.CollectResponse{}, nil
 }
 
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {
@@ -165,12 +151,12 @@ func main() {
 
 	// The aggregator uses the non-cached issueStore so SendDigest can find a
 	// freshly-built draft without a cache miss. nil prompter → static subject.
-	aggregator, err := digest.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore)
+	aggregator, err := digestsvc.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore)
 	if err != nil {
 		log.Fatalf("create aggregator: %v", err)
 	}
 
-	subscriberSvc := subscriber.New(subsStore, cached, spy)
+	subscriberSvc := audience.New(subsStore, cached, spy)
 
 	app := &godaily.App{
 		Config: &env.Config{
@@ -199,7 +185,7 @@ func main() {
 
 		// ── E2E pipeline: bypass weekend guard, call runner directly ──────────
 		case "/api/e2e/pipeline/collect":
-			if _, err := app.Runner.Collect(r.Context(), news.CollectOptions{}); err != nil {
+			if _, err := app.Runner.Collect(r.Context(), digest.CollectOptions{}); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}

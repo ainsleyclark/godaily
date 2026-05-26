@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package og
 
@@ -23,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -51,10 +37,10 @@ func TestGenerator_Issue(t *testing.T) {
 	g := setup(t)
 
 	tt := map[string]struct {
-		input news.Issue
+		input digest.Issue
 	}{
 		"With items and date": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      42,
 				Slug:    "2026-05-12",
 				Subject: "A Go roundup before standup",
@@ -69,7 +55,7 @@ func TestGenerator_Issue(t *testing.T) {
 			},
 		},
 		"Fewer than 3 items": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      1,
 				Slug:    "2026-01-01",
 				Subject: "First issue",
@@ -79,7 +65,7 @@ func TestGenerator_Issue(t *testing.T) {
 			},
 		},
 		"No items, zero date": {
-			input: news.Issue{
+			input: digest.Issue{
 				ID:      99,
 				Slug:    "draft",
 				Subject: "Long headline that should be truncated if it exceeds the maximum rune limit set in the generator",

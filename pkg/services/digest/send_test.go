@@ -1,21 +1,6 @@
-// Copyright (c) 2026 godaily (Ainsley Clark)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package digest
 
@@ -30,11 +15,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 )
 
 func TestAggregator_SendDigest(t *testing.T) {
@@ -48,21 +34,21 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Sends Email To Subscribers And Updates Status To Sent", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-26")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-04-26",
 			Subject: "Go 1.24 lands — goroutines got faster",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
@@ -71,33 +57,33 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusSent, updated.Status)
+		assert.Equal(t, digest.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Subscriber Email Error Still Updates Status To Sent", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-27")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-04-27",
 			Subject: "GoDaily - 2026-04-27",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
 		m := &mockEmail{err: errors.New("send boom")}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusSent, updated.Status)
+		assert.Equal(t, digest.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Returns Error When Issue Not Found", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		err := agg.SendDigest(t.Context(), day("1999-01-01"), false)
 		require.Error(t, err)
@@ -106,15 +92,15 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 	t.Run("Returns Error When Status Not Draft", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-04-30",
 			Subject: "GoDaily - 2026-04-30",
-			Status:  news.IssueStatusSent,
+			Status:  digest.IssueStatusSent,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 		sendErr := agg.SendDigest(t.Context(), day("2026-04-30"), false)
 		require.Error(t, sendErr)
 		assert.Contains(t, sendErr.Error(), "expected")
@@ -123,36 +109,36 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Force Skips Status Check", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-04-30")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-04-30",
 			Subject: "GoDaily - 2026-04-30",
-			Status:  news.IssueStatusSent,
+			Status:  digest.IssueStatusSent,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
-		agg := Aggregator{email: &mockEmail{}, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, issues: issueRepo, items: itemRepo, subscribers: newSubsMock(t)}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, true))
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusSent, updated.Status)
+		assert.Equal(t, digest.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Returns Error When Loading Sections Fails", func(t *testing.T) {
 		issueRepo, _ := newTestStores(t)
 		date := day("2026-05-02")
-		_, err := issueRepo.Create(t.Context(), news.Issue{
+		_, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-02",
 			Subject: "GoDaily - 2026-05-02",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
 		badItems := errItemRepo{err: errors.New("db failure")}
-		agg := Aggregator{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: badItems, subscribers: newSubsMock(t)}
+		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", issues: issueRepo, items: badItems, subscribers: newSubsMock(t)}
 
 		err = agg.SendDigest(t.Context(), date, false)
 		require.Error(t, err)
@@ -162,10 +148,10 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Subscriber Render Error Is Skipped", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-03")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-03",
 			Subject: "GoDaily - 2026-05-03",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -181,13 +167,13 @@ func TestAggregator_SendDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		// Subscriber rendering errors are non-fatal; the digest is still marked sent.
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
@@ -195,27 +181,27 @@ func TestAggregator_SendDigest(t *testing.T) {
 
 		updated, err := issueRepo.Find(t.Context(), stored.ID)
 		require.NoError(t, err)
-		assert.Equal(t, news.IssueStatusSent, updated.Status)
+		assert.Equal(t, digest.IssueStatusSent, updated.Status)
 	})
 
 	t.Run("Tags Subscriber Email With Issue And Subscriber IDs", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-10")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-10",
 			Subject: "GoDaily - 2026-05-10",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 99, Email: "reader@example.com", UnsubscribeToken: "tok-99"},
 		}, nil)
 
 		m := &mockEmail{}
-		agg := Aggregator{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 		require.Len(t, m.reqs, 1)
@@ -229,10 +215,10 @@ func TestAggregator_SendDigest(t *testing.T) {
 	t.Run("Prompter Never Called During Send", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
 		date := day("2026-05-01")
-		stored, err := issueRepo.Create(t.Context(), news.Issue{
+		stored, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:    "2026-05-01",
 			Subject: "GoDaily - 2026-05-01",
-			Status:  news.IssueStatusDraft,
+			Status:  digest.IssueStatusDraft,
 			SentAt:  time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -244,15 +230,15 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
 		// No expectations set on p — any call to the prompter would fail the test.
-		agg := Aggregator{email: m, prompter: p, issues: issueRepo, items: itemRepo, subscribers: subs}
+		agg := Service{email: m, prompter: p, issues: issueRepo, items: itemRepo, subscribers: subs}
 
 		require.NoError(t, agg.SendDigest(t.Context(), date, false))
 		assert.True(t, m.called)
@@ -262,9 +248,9 @@ func TestAggregator_SendDigest(t *testing.T) {
 func TestLoadSections(t *testing.T) {
 	t.Run("Empty Issue Returns Empty Sections", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		issue, err := issueRepo.Create(t.Context(), news.Issue{
+		issue, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:   "2026-01-01",
-			Status: news.IssueStatusDraft,
+			Status: digest.IssueStatusDraft,
 			SentAt: time.Now().UTC(),
 		})
 		require.NoError(t, err)
@@ -276,9 +262,9 @@ func TestLoadSections(t *testing.T) {
 
 	t.Run("Groups Items By Source And Sorts By Priority", func(t *testing.T) {
 		issueRepo, itemRepo := newTestStores(t)
-		issue, err := issueRepo.Create(t.Context(), news.Issue{
+		issue, err := issueRepo.Create(t.Context(), digest.Issue{
 			Slug:   "2026-01-02",
-			Status: news.IssueStatusDraft,
+			Status: digest.IssueStatusDraft,
 			SentAt: time.Now().UTC(),
 		})
 		require.NoError(t, err)
