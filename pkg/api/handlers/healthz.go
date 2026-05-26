@@ -12,5 +12,7 @@ import (
 
 // HealthZ handles GET /healthz.
 func HealthZ(c *webkit.Context) error {
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, map[string]any{
+		"status": "ok",
+	})
 }

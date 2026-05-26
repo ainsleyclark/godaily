@@ -67,6 +67,12 @@ type Repository struct {
 	Metrics       engagement.MetricsRepository
 }
 
+type Service struct {
+	Digest      digest.Service
+	Subscribers audience.SubscriberService
+	Social      *socialsvc.Service
+}
+
 // Bootstrap ties all the app dependencies together
 // and returns a new App.
 func Bootstrap(ctx context.Context) (*App, func(), error) {

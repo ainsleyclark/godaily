@@ -31,19 +31,6 @@ type Service struct {
 	candidates []Candidate
 }
 
-// reframer reframes a featured item for one platform. Function-typed so
-// tests can inject deterministic text without going through the AI.
-type reframer func(ctx context.Context, p ai.Prompter, f featured.Featured) (string, error)
-
-// defaultReframers maps each Platform to its production reframing prompt.
-func defaultReframers() map[social.Platform]reframer {
-	return map[social.Platform]reframer{
-		social.Bluesky:  featured.Bluesky,
-		social.LinkedIn: featured.LinkedIn,
-		social.Mastodon: featured.Mastodon,
-	}
-}
-
 // New creates a new social Service. posters may be empty (nothing to post);
 // the service errors if prompter, issues, items, or posts are nil.
 // slackSender may be nil to disable Slack notifications. Rotation candidates
@@ -88,4 +75,17 @@ func (s *Service) WithCandidates(cs ...Candidate) *Service {
 // Useful for callers that want to short-circuit when no creds are set.
 func (s *Service) HasPosters() bool {
 	return len(s.posters) > 0
+}
+
+// reframer reframes a featured item for one platform. Function-typed so
+// tests can inject deterministic text without going through the AI.
+type reframer func(ctx context.Context, p ai.Prompter, f featured.Featured) (string, error)
+
+// defaultReframers maps each Platform to its production reframing prompt.
+func defaultReframers() map[social.Platform]reframer {
+	return map[social.Platform]reframer{
+		social.Bluesky:  featured.Bluesky,
+		social.LinkedIn: featured.LinkedIn,
+		social.Mastodon: featured.Mastodon,
+	}
 }
