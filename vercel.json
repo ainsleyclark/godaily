@@ -8,23 +8,21 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"rewrites": [
-		{ "source": "/healthz",                    "destination": "/api/healthz" },
-		{ "source": "/api/issues/:slug",           "destination": "/api/issues/slug?slug=:slug" },
-		{ "source": "/api/items/:id",              "destination": "/api/items/id?id=:id" },
-		{ "source": "/api/metrics/issues/:slug",   "destination": "/api/metrics/issues/slug?slug=:slug" }
+		{ "source": "/healthz",  "destination": "/api/index" },
+		{ "source": "/api/(.*)", "destination": "/api/index" }
 	],
 	"crons": [
-		{ "path": "/api/collect/",         "schedule": "0 1 * * *"                 },
-		{ "path": "/api/build/",           "schedule": "0 2 * * *"                  },
-		{ "path": "/api/preview/",         "schedule": "0 6 * * 1-5"               },
-		{ "path": "/api/send/",            "schedule": "0 8 * * *"                  },
-		{ "path": "/api/social/featured/", "schedule": "0,10,20,30,40,50 11 * * *" },
-		{ "path": "/api/social/rotation/", "schedule": "0 15 * * 2,3,5"            },
-		{ "path": "/api/social/metrics/",  "schedule": "0 3 * * *"                 },
-		{ "path": "/api/metrics/roundup/", "schedule": "0 15 * * 5"                }
+		{ "path": "/api/digest/collect/",   "schedule": "0 1 * * *"                 },
+		{ "path": "/api/digest/build/",     "schedule": "0 2 * * *"                  },
+		{ "path": "/api/digest/preview/",   "schedule": "0 6 * * 1-5"               },
+		{ "path": "/api/digest/send/",      "schedule": "0 8 * * *"                  },
+		{ "path": "/api/social/featured/",  "schedule": "0,10,20,30,40,50 11 * * *" },
+		{ "path": "/api/social/rotation/",  "schedule": "0 15 * * 2,3,5"            },
+		{ "path": "/api/social/metrics/",   "schedule": "0 3 * * *"                 },
+		{ "path": "/api/metrics/roundup/",  "schedule": "0 15 * * 5"                }
 	],
 	"functions": {
-		"api/**/*.go": {
+		"api/index.go": {
 			"runtime": "@vercel/go@3.6.0",
 			"maxDuration": 300
 		}

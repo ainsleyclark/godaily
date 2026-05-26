@@ -39,10 +39,7 @@ import (
 	"syscall"
 	"time"
 
-	apihandlers "github.com/ainsleyclark/godaily/api"
-	webhookhandler "github.com/ainsleyclark/godaily/api/webhooks"
 	godaily "github.com/ainsleyclark/godaily/pkg"
-	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -192,12 +189,6 @@ func main() {
 	webH := webserver.Handler(app)
 	apiH := http.StripPrefix("/api", mux.Handler(app))
 
-	// withApp injects app into the request context for Vercel function handlers
-	// that are not registered in the mux (e.g. HandleBuild).
-	withApp := func(r *http.Request) *http.Request {
-		return r.WithContext(pkgapi.WithApp(r.Context(), app))
-	}
-
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		// ── E2E debug: email spy ──────────────────────────────────────────────
@@ -255,14 +246,8 @@ func main() {
 		case "/api/e2e/sign":
 			handleSign(w, r)
 
-		// ── Routes that are Vercel functions (not in mux.go) ─────────────────
-		case "/api/build":
-			apihandlers.HandleBuild(w, withApp(r))
-
 		default:
 			switch {
-			case strings.HasPrefix(r.URL.Path, "/api/webhooks/"):
-				webhookhandler.Handler(w, withApp(r))
 			case strings.HasPrefix(r.URL.Path, "/api/"):
 				apiH.ServeHTTP(w, r)
 			default:
