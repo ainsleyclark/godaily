@@ -17,7 +17,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package contacts
+// Package audience models the newsletter's audience: who receives it, in what
+// state, with what preferences.
+package audience
 
 import (
 	"context"
@@ -39,7 +41,7 @@ type Subscriber struct {
 	CreatedAt        time.Time  `json:"created_at"`
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/SubscriberRepository.go . SubscriberRepository
+//go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/SubscriberRepository.go . SubscriberRepository
 
 // SubscriberRepository defines the methods for interacting with the
 // subscriber store.
@@ -60,7 +62,7 @@ type SubscriberRepository interface {
 	MarkSuppressed(ctx context.Context, email string) error
 }
 
-//go:generate go run go.uber.org/mock/mockgen -package=mocksubscriber -destination=../../mocks/subscriber/Service.go . Service
+//go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/Service.go . SubscriberService
 
 // SubscriberService defines the subscription lifecycle methods used by HTTP handlers
 // and the email webhook pipeline.

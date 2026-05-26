@@ -17,9 +17,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Package subscriber owns the subscription lifecycle: creating subscribers,
+// Package audience owns the subscription lifecycle: creating subscribers,
 // sending confirmation emails, and processing unsubscribes.
-package subscriber
+package audience
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ import (
 	"log/slog"
 	texttemplate "text/template"
 
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -53,17 +53,17 @@ type confirmData struct {
 	CanonicalURL   string
 }
 
-var _ subscriber.SubscriberService = (*Service)(nil)
+var _ audience.SubscriberService = (*Service)(nil)
 
 // Service owns the full subscriber lifecycle.
 type Service struct {
-	repo   subscriber.SubscriberRepository
+	repo   audience.SubscriberRepository
 	issues news.IssueRepository
 	email  email.Sender
 }
 
 // New returns a Service wired to the provided dependencies.
-func New(repo subscriber.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
+func New(repo audience.SubscriberRepository, issues news.IssueRepository, sender email.Sender) *Service {
 	return &Service{
 		repo:   repo,
 		issues: issues,
@@ -75,29 +75,29 @@ func New(repo subscriber.SubscriberRepository, issues news.IssueRepository, send
 // It returns ErrAlreadySubscribed if the email is already registered as active.
 // Previously unsubscribed addresses are reactivated with a fresh token.
 // Confirmation email failures are logged but do not fail the subscription.
-func (s Service) Subscribe(ctx context.Context, emailAddr string) (subscriber.Subscriber, error) {
-	var sub subscriber.Subscriber
+func (s Service) Subscribe(ctx context.Context, emailAddr string) (audience.Subscriber, error) {
+	var sub audience.Subscriber
 
 	existing, err := s.repo.FindByEmail(ctx, emailAddr)
 	switch {
 	case err == nil && existing.UnsubscribedAt == nil:
-		return subscriber.Subscriber{}, ErrAlreadySubscribed
+		return audience.Subscriber{}, ErrAlreadySubscribed
 	case err == nil:
 		sub, err = s.repo.Reactivate(ctx, emailAddr)
 		if err != nil {
-			return subscriber.Subscriber{}, err
+			return audience.Subscriber{}, err
 		}
 	case errors.Is(err, store.ErrNotFound):
 		sub, err = s.repo.Create(ctx, emailAddr)
 		if err != nil {
-			return subscriber.Subscriber{}, err
+			return audience.Subscriber{}, err
 		}
 	default:
-		return subscriber.Subscriber{}, err
+		return audience.Subscriber{}, err
 	}
 
 	if sub.ConfirmToken == "" {
-		return subscriber.Subscriber{}, errors.New("subscriber created without confirmation token")
+		return audience.Subscriber{}, errors.New("subscriber created without confirmation token")
 	}
 	confirmURL := env.AppURL + "/api/confirm?token=" + sub.ConfirmToken
 	unsubscribeURL := env.AppURL + "/api/unsubscribe/?token=" + sub.UnsubscribeToken
@@ -124,19 +124,19 @@ func (s Service) Unsubscribe(ctx context.Context, token string) error {
 // MarkBounced flags a subscriber whose address hard-bounced so the digest is
 // no longer sent to it. It is keyed by email because bounce notifications
 // identify the recipient by address, not token.
-func (s Service) MarkBounced(ctx context.Context, email string) error {
-	return s.repo.MarkBounced(ctx, email)
+func (s Service) MarkBounced(ctx context.Context, emailAddr string) error {
+	return s.repo.MarkBounced(ctx, emailAddr)
 }
 
 // MarkComplained unsubscribes a subscriber who reported the digest as spam.
-func (s Service) MarkComplained(ctx context.Context, email string) error {
-	return s.repo.MarkComplained(ctx, email)
+func (s Service) MarkComplained(ctx context.Context, emailAddr string) error {
+	return s.repo.MarkComplained(ctx, emailAddr)
 }
 
 // MarkSuppressed flags a subscriber whose address is on Resend's global
 // suppression list, meaning delivery will be silently refused.
-func (s Service) MarkSuppressed(ctx context.Context, email string) error {
-	return s.repo.MarkSuppressed(ctx, email)
+func (s Service) MarkSuppressed(ctx context.Context, emailAddr string) error {
+	return s.repo.MarkSuppressed(ctx, emailAddr)
 }
 
 func (s Service) sendConfirmation(ctx context.Context, to, confirmURL, unsubscribeURL string) error {

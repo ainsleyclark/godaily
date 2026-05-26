@@ -30,11 +30,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
 )
 
 func TestAggregator_SendDigest(t *testing.T) {
@@ -56,8 +56,8 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 
@@ -181,8 +181,8 @@ func TestAggregator_SendDigest(t *testing.T) {
 		htmlTmpl = htmltemplate.Must(htmltemplate.New("digest").Parse(`{{ .Missing.NotAField }}`))
 		t.Cleanup(func() { htmlTmpl = orig })
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 
@@ -209,8 +209,8 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 99, Email: "reader@example.com", UnsubscribeToken: "tok-99"},
 		}, nil)
 
@@ -244,8 +244,8 @@ func TestAggregator_SendDigest(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		subs := mocksubscriber.NewMockSubscriberRepository(gomock.NewController(t))
-		subs.EXPECT().ListActive(gomock.Any()).Return([]subscriber.Subscriber{
+		subs := mockaudience.NewMockSubscriberRepository(gomock.NewController(t))
+		subs.EXPECT().ListActive(gomock.Any()).Return([]audience.Subscriber{
 			{ID: 1, Email: "reader@example.com", UnsubscribeToken: "tok-1"},
 		}, nil)
 

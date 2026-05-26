@@ -45,9 +45,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/services/audience"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
-	"github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	_ "github.com/ainsleyclark/godaily/pkg/source" // registers all source fetchers via init()
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -170,7 +170,7 @@ func main() {
 		log.Fatalf("create aggregator: %v", err)
 	}
 
-	subscriberSvc := subscriber.New(subsStore, cached, spy)
+	subscriberSvc := audience.New(subsStore, cached, spy)
 
 	app := &godaily.App{
 		Config: &env.Config{

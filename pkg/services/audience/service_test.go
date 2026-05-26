@@ -17,7 +17,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-package subscriber
+package audience
 
 import (
 	"context"
@@ -29,10 +29,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	subscriber "github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
@@ -50,13 +50,13 @@ func (m *mockSender) Send(_ context.Context, req email.SendEmailRequest) error {
 }
 
 func setup(t *testing.T) (
-	*mocksubscriber.MockSubscriberRepository,
+	*mockaudience.MockSubscriberRepository,
 	*mocknews.MockIssueRepository,
 	*mockSender,
 ) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
-	return mocksubscriber.NewMockSubscriberRepository(ctrl),
+	return mockaudience.NewMockSubscriberRepository(ctrl),
 		mocknews.NewMockIssueRepository(ctrl),
 		&mockSender{}
 }
@@ -66,7 +66,7 @@ var errBoom = errors.New("boom")
 func TestService_Subscribe(t *testing.T) {
 	t.Parallel()
 
-	sub := subscriber.Subscriber{
+	sub := audience.Subscriber{
 		ID:               1,
 		Email:            "user@example.com",
 		UnsubscribeToken: "tok123",
@@ -89,7 +89,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(audience.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -101,8 +101,8 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
-		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(subscriber.Subscriber{Email: sub.Email}, nil)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(audience.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(audience.Subscriber{Email: sub.Email}, nil)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -115,8 +115,8 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
-		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(audience.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(audience.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -128,7 +128,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(audience.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
@@ -147,7 +147,7 @@ func TestService_Subscribe(t *testing.T) {
 
 		repo, issues, sender := setup(t)
 		sender.err = errBoom
-		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(audience.Subscriber{}, store.ErrNotFound)
 		repo.EXPECT().Create(gomock.Any(), sub.Email).Return(sub, nil)
 
 		got, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
@@ -160,13 +160,13 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		now := time.Now()
-		unsubscribed := subscriber.Subscriber{
+		unsubscribed := audience.Subscriber{
 			ID:               1,
 			Email:            sub.Email,
 			UnsubscribeToken: "old-token",
 			UnsubscribedAt:   &now,
 		}
-		reactivated := subscriber.Subscriber{
+		reactivated := audience.Subscriber{
 			ID:               1,
 			Email:            sub.Email,
 			UnsubscribeToken: "new-token",
@@ -189,7 +189,7 @@ func TestService_Subscribe(t *testing.T) {
 		t.Parallel()
 
 		now := time.Now()
-		unsubscribed := subscriber.Subscriber{
+		unsubscribed := audience.Subscriber{
 			ID:             1,
 			Email:          sub.Email,
 			UnsubscribedAt: &now,
@@ -197,7 +197,7 @@ func TestService_Subscribe(t *testing.T) {
 
 		repo, issues, sender := setup(t)
 		repo.EXPECT().FindByEmail(gomock.Any(), sub.Email).Return(unsubscribed, nil)
-		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(subscriber.Subscriber{}, errBoom)
+		repo.EXPECT().Reactivate(gomock.Any(), sub.Email).Return(audience.Subscriber{}, errBoom)
 
 		_, err := New(repo, issues, sender).Subscribe(t.Context(), sub.Email)
 
@@ -213,7 +213,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "confirm-tok").Return(subscriber.Subscriber{}, nil)
+		repo.EXPECT().Confirm(gomock.Any(), "confirm-tok").Return(audience.Subscriber{}, nil)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "confirm-tok")
 		require.NoError(t, err)
@@ -223,7 +223,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "bad-tok").Return(subscriber.Subscriber{}, store.ErrNotFound)
+		repo.EXPECT().Confirm(gomock.Any(), "bad-tok").Return(audience.Subscriber{}, store.ErrNotFound)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "bad-tok")
 		assert.ErrorIs(t, err, store.ErrNotFound)
@@ -233,7 +233,7 @@ func TestService_Confirm(t *testing.T) {
 		t.Parallel()
 
 		repo, issues, sender := setup(t)
-		repo.EXPECT().Confirm(gomock.Any(), "tok").Return(subscriber.Subscriber{}, errBoom)
+		repo.EXPECT().Confirm(gomock.Any(), "tok").Return(audience.Subscriber{}, errBoom)
 
 		err := New(repo, issues, sender).Confirm(t.Context(), "tok")
 		assert.ErrorIs(t, err, errBoom)

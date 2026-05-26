@@ -29,8 +29,8 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	engagementsvc "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )
 
@@ -48,11 +48,11 @@ func (s stubItemFinder) FindByURLInIssue(context.Context, int64, string) (int64,
 	return s.id, s.ok, s.err
 }
 
-func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mocksubscriber.MockService, *engagementsvc.EventService) {
+func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mockaudience.MockService, *engagementsvc.EventService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
-	subs := mocksubscriber.NewMockService(ctrl)
+	subs := mockaudience.NewMockService(ctrl)
 	return events, subs, engagementsvc.NewEvents(events, subs, stubItemFinder{}, "admin@example.com")
 }
 
@@ -216,7 +216,7 @@ func TestService_Process_ClickItemResolution(t *testing.T) {
 		t.Helper()
 		ctrl := gomock.NewController(t)
 		events := mockengagement.NewMockEmailEventRepository(ctrl)
-		subs := mocksubscriber.NewMockService(ctrl)
+		subs := mockaudience.NewMockService(ctrl)
 		return events, engagementsvc.NewEvents(events, subs, finder, "admin@example.com")
 	}
 

@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
@@ -36,7 +36,7 @@ func TestSubscribers_Store(t *testing.T) {
 	defer teardown()
 	s := subscribers.New(db)
 
-	var created contacts.Subscriber
+	var created audience.Subscriber
 
 	t.Run("Create", func(t *testing.T) {
 		t.Log("Normalises email and generates tokens")

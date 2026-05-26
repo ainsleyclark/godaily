@@ -28,13 +28,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
-	"github.com/ainsleyclark/godaily/pkg/domain/contacts"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	audiencesvc "github.com/ainsleyclark/godaily/pkg/services/audience"
 	"github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
@@ -43,7 +44,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
-	subscribersvc "github.com/ainsleyclark/godaily/pkg/services/subscriber"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -63,7 +63,7 @@ type App struct {
 	Runner         news.Service
 	Social         *socialsvc.Service
 	Cache          cache.Store
-	Subscribers    contacts.SubscriberService
+	Subscribers    audience.SubscriberService
 	EmailEvents    *svcengagement.EventService
 	Slack          slack.Sender
 	MetricsService engagement.MetricsReporter
@@ -74,7 +74,7 @@ type App struct {
 type Repository struct {
 	Issues        news.IssueRepository
 	Items         news.ItemRepository
-	Subscribers   contacts.SubscriberRepository
+	Subscribers   audience.SubscriberRepository
 	SocialPosts   social.PostRepository
 	EmailEvents   engagement.EmailEventRepository
 	SocialMetrics engagement.SocialMetricRepository
@@ -153,7 +153,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
-	subscriberSvc := subscribersvc.New(subsStore, issueStore, emailSender)
+	subscriberSvc := audiencesvc.New(subsStore, issueStore, emailSender)
 
 	return &App{
 		Config:         &config,

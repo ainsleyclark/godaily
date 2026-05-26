@@ -28,7 +28,7 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -36,13 +36,13 @@ import (
 func TestHandleUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
 		token        string
-		mock         func(s *mocksubscriber.MockService)
+		mock         func(s *mockaudience.MockService)
 		wantStatus   int
 		wantLocation string
 	}{
 		"OK": {
 			token: "valid-token",
-			mock: func(s *mocksubscriber.MockService) {
+			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 			},
 			wantStatus:   http.StatusFound,
@@ -50,12 +50,12 @@ func TestHandleUnsubscribe(t *testing.T) {
 		},
 		"Missing Token": {
 			token:      "",
-			mock:       func(s *mocksubscriber.MockService) {},
+			mock:       func(s *mockaudience.MockService) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Unsubscribe Error": {
 			token: "bad-token",
-			mock: func(s *mocksubscriber.MockService) {
+			mock: func(s *mockaudience.MockService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -65,7 +65,7 @@ func TestHandleUnsubscribe(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			svc := mocksubscriber.NewMockService(ctrl)
+			svc := mockaudience.NewMockService(ctrl)
 			test.mock(svc)
 
 			a := &godaily.App{Subscribers: svc, Config: &env.Config{}}
@@ -91,7 +91,7 @@ func TestHandleUnsubscribe(t *testing.T) {
 
 func TestHandleUnsubscribePost(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	svc := mocksubscriber.NewMockService(ctrl)
+	svc := mockaudience.NewMockService(ctrl)
 	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 
 	a := &godaily.App{Subscribers: svc, Config: &env.Config{}}

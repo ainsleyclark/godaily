@@ -42,8 +42,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
-	"github.com/ainsleyclark/godaily/pkg/mocks/subscriber"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 )
 
@@ -72,11 +72,11 @@ func sign(t *testing.T, secret, id, timestamp, payload string) string {
 	return "v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmailEventRepository, *mocksubscriber.MockService) {
+func newApp(t *testing.T, secret string) (*godaily.App, *mockengagement.MockEmailEventRepository, *mockaudience.MockService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
-	subs := mocksubscriber.NewMockService(ctrl)
+	subs := mockaudience.NewMockService(ctrl)
 	return &godaily.App{
 		Config:      &env.Config{ResendWebhookSecret: secret},
 		EmailEvents: svcengagement.NewEvents(events, subs, noopItemFinder{}, ""),
