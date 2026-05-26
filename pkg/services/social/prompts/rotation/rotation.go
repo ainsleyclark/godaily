@@ -31,6 +31,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	socialprompts "github.com/ainsleyclark/godaily/pkg/services/social/prompts"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
@@ -110,6 +111,8 @@ func run(
 		return "", err
 	}
 
+	text = sanitize(text)
+
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
 		slog.Warn("Rotation post exceeded char limit",
 			"platform", cfg.name, "chars", n, "limit", cfg.charLimit)
@@ -134,10 +137,7 @@ func assembleSystem(cfg platformProfile, kindGuidance string) string {
 	}
 	b.WriteString("\n")
 
-	b.WriteString("## Voice\n")
-	b.WriteString("- Professional, technical, dry. Confident without being smug. Treat the reader as a peer.\n")
-	b.WriteString("- Factual. No marketing language.\n")
-	b.WriteString("- Forbidden: 'exciting', 'huge', 'game-changer', 'must-read', 'today in Go', emojis, em dashes (—), bullet lists.\n")
+	b.WriteString(socialprompts.BrandRules)
 	b.WriteString("\n")
 
 	b.WriteString("## Platform guidance\n")
@@ -152,6 +152,12 @@ func assembleSystem(cfg platformProfile, kindGuidance string) string {
 	b.WriteString("Output strict JSON, schema:\n{\n  \"text\": string   // the full post body, ready to submit verbatim\n}\n\n")
 	b.WriteString("Output the JSON object alone. No prose, no markdown fences.")
 	return b.String()
+}
+
+// sanitize strips characters that the brand rules forbid but that the model
+// occasionally emits anyway. Currently replaces em dashes with a hyphen.
+func sanitize(s string) string {
+	return strings.ReplaceAll(s, "—", "-")
 }
 
 func buildUser(payload any) (string, error) {

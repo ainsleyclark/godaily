@@ -37,11 +37,15 @@ type NewSourcePayload struct {
 
 const newSourceGuidance = `You are announcing that GoDaily has added a new source to its daily digest. The point of the post is to tell subscribers (and the source's creator) that their stuff now flows into GoDaily, and to give a one-line reason why a Go dev should care about this source.
 
-Inputs include a display name, a platform-specific handle ("mention") — use it verbatim where present, or fall back to the display name — a one-sentence blurb about the source, and the source's URL.
+Inputs include a display name, a platform-specific handle ("mention"), a one-sentence blurb about the source, and the source's URL.
+
+Mention handling:
+- If the "mention" field starts with "@", use it verbatim — it is the source's platform handle.
+- If the "mention" field does NOT start with "@", it is a plain display name. Use it naturally in the sentence. Do not add an "@" prefix or attempt to create a social handle.
 
 Write ONE post that:
 1. Says GoDaily now pulls from this source.
-2. Tags the source by their mention (handle) so they see it.
+2. References the source using the mention field (per the rules above).
 3. Uses one line adapted from the blurb to explain why it's worth following.
 4. Includes the source URL on its own line.
 
