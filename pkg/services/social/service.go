@@ -39,7 +39,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"

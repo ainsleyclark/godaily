@@ -30,7 +30,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	"github.com/ainsleyclark/godaily/pkg/mocks/news"

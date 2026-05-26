@@ -26,7 +26,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the

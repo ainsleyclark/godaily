@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	social "github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
 type (

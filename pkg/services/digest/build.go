@@ -27,7 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"

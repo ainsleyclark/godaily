@@ -24,11 +24,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 )
 
 func TestAggregator_Collect(t *testing.T) {
