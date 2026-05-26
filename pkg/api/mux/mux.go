@@ -29,7 +29,6 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	pkgapi "github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/api/plugs"
 	handlers "github.com/ainsleyclark/godaily/pkg/api/handlers"
 	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
@@ -37,6 +36,7 @@ import (
 	metricshandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/metrics"
 	socialhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/social"
 	webhookhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/webhooks"
+	"github.com/ainsleyclark/godaily/pkg/api/plugs"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
@@ -56,7 +56,6 @@ func Handler(app *godaily.App) http.Handler {
 		return nil
 	}
 
-	kit.Plug(plugs.RateLimit(pkgapi.Limiter))
 	auth := plugs.Auth(app.Config.APISecret)
 
 	digestH := digesthandlers.New(app)
