@@ -57,16 +57,16 @@ func (mr *MockPosterMockRecorder) Platform() *gomock.Call {
 }
 
 // Post mocks base method.
-func (m *MockPoster) Post(ctx context.Context, text string) (platform.Result, error) {
+func (m *MockPoster) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Post", ctx, text)
-	ret0, _ := ret[0].(platform.Result)
+	ret := m.ctrl.Call(m, "Post", ctx, req)
+	ret0, _ := ret[0].(platform.PostResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Post indicates an expected call of Post.
-func (mr *MockPosterMockRecorder) Post(ctx, text any) *gomock.Call {
+func (mr *MockPosterMockRecorder) Post(ctx, req any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Post", reflect.TypeOf((*MockPoster)(nil).Post), ctx, text)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Post", reflect.TypeOf((*MockPoster)(nil).Post), ctx, req)
 }

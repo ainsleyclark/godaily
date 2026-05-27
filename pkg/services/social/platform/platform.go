@@ -21,14 +21,29 @@ type Poster interface {
 	// Platform identifies which platform this poster targets.
 	Platform() social.Platform
 
-	// Post publishes text to the platform. Implementations are responsible
-	// for any auth dance their API requires.
-	Post(ctx context.Context, text string) (Result, error)
+	// Post publishes a request to the platform. Implementations are
+	// responsible for any auth dance their API requires.
+	Post(ctx context.Context, req PostRequest) (PostResponse, error)
 }
 
-// Result is what a platform returned after a successful post. PostURL is the
-// canonical web URL of the published content when available — implementations
-// leave it empty when the platform does not return one synchronously.
-type Result struct {
+// PostRequest is the per-post payload handed to a Poster. Text is the
+// fully-rendered post body. MentionURN and MentionDisplayName are
+// optional and only meaningful for platforms whose mention model needs
+// out-of-band metadata (currently LinkedIn): on LinkedIn the platform
+// uses MentionURN as the target organisation URN and the first
+// case-sensitive occurrence of MentionDisplayName inside Text to build
+// an inline annotation. Implementations for platforms where the @handle
+// is already baked into Text (Bluesky, Mastodon) ignore both fields.
+type PostRequest struct {
+	Text               string
+	MentionURN         string
+	MentionDisplayName string
+}
+
+// PostResponse is what a platform returned after a successful post. PostURL
+// is the canonical web URL of the published content when available —
+// implementations leave it empty when the platform does not return one
+// synchronously.
+type PostResponse struct {
 	PostURL string
 }

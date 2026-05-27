@@ -66,30 +66,50 @@ type (
 	// postRequest is the body sent to /rest/posts. Field names follow the
 	// platform's documented shape.
 	postRequest struct {
-		Author                    string       `json:"author"`
-		Commentary                string       `json:"commentary"`
-		Visibility                string       `json:"visibility"`
-		Distribution              distribution `json:"distribution"`
-		LifecycleState            string       `json:"lifecycleState"`
-		IsReshareDisabledByAuthor bool         `json:"isReshareDisabledByAuthor"`
+		Author                    string             `json:"author"`
+		Commentary                string             `json:"commentary"`
+		CommentaryAnnotations     []inlineAnnotation `json:"commentaryAnnotations,omitempty"`
+		Visibility                string             `json:"visibility"`
+		Distribution              distribution       `json:"distribution"`
+		LifecycleState            string             `json:"lifecycleState"`
+		IsReshareDisabledByAuthor bool               `json:"isReshareDisabledByAuthor"`
 	}
 	distribution struct {
 		FeedDistribution               string   `json:"feedDistribution"`
 		TargetEntities                 []string `json:"targetEntities"`
 		ThirdPartyDistributionChannels []string `json:"thirdPartyDistributionChannels"`
 	}
+	// inlineAnnotation marks a (start, length) range of commentary as a
+	// link to the entity in entity. start is a zero-based UTF-16 code-unit
+	// offset and length is in code units — matching LinkedIn's convention
+	// for the Posts API.
+	inlineAnnotation struct {
+		Start  int    `json:"start"`
+		Length int    `json:"length"`
+		Entity string `json:"entity"`
+	}
 )
 
-// Post publishes text to the configured organisation's feed.
+// Post publishes the request text to the configured organisation's feed.
+// When req.MentionURN is a LinkedIn organisation URN and req.MentionDisplayName
+// occurs (case-sensitive) in req.Text, the first occurrence is annotated as
+// an inline mention so the rendered post links to that organisation page.
 //
 // The post URL is reconstructed from the x-restli-id response header
 // (LinkedIn's REST convention for newly created resources).
-func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
+//
+// NOTE: the inline-mention shape (commentaryAnnotations with start/length/
+// entity) reflects the LinkedIn Posts API v202601 contract as of writing.
+// LinkedIn rolls API versions ~every quarter and renames fields between
+// them; verify against the live docs before relying on mentions in
+// production.
+func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
 	body := postRequest{
-		Author:         c.authorURN,
-		Commentary:     text,
-		Visibility:     "PUBLIC",
-		LifecycleState: "PUBLISHED",
+		Author:                c.authorURN,
+		Commentary:            req.Text,
+		CommentaryAnnotations: buildAnnotations(req.Text, req.MentionURN, req.MentionDisplayName),
+		Visibility:            "PUBLIC",
+		LifecycleState:        "PUBLISHED",
 		Distribution: distribution{
 			FeedDistribution:               "MAIN_FEED",
 			TargetEntities:                 []string{},
@@ -99,33 +119,33 @@ func (c *Client) Post(ctx context.Context, text string) (platform.Result, error)
 
 	buf, err := json.Marshal(body)
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "marshalling post body")
+		return platform.PostResponse{}, errors.Wrap(err, "marshalling post body")
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "building request")
+		return platform.PostResponse{}, errors.Wrap(err, "building request")
 	}
 
-	req.Header.Set("Authorization", "Bearer "+c.token)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("LinkedIn-Version", c.apiVersion)
-	req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
+	httpReq.Header.Set("Authorization", "Bearer "+c.token)
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("LinkedIn-Version", c.apiVersion)
+	httpReq.Header.Set("X-Restli-Protocol-Version", "2.0.0")
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(httpReq)
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "sending request")
+		return platform.PostResponse{}, errors.Wrap(err, "sending request")
 	}
 	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		respBuf := new(bytes.Buffer)
 		_, _ = respBuf.ReadFrom(resp.Body)
-		return platform.Result{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
+		return platform.PostResponse{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
 	}
 
 	urn := resp.Header.Get("x-restli-id")
-	return platform.Result{PostURL: feedURL(urn)}, nil
+	return platform.PostResponse{PostURL: feedURL(urn)}, nil
 }
 
 // Stats fetches engagement counts for a LinkedIn organisation post.
@@ -211,6 +231,26 @@ func urnFromPostURL(postURL string) (string, error) {
 		return "", fmt.Errorf("extracted value is not a LinkedIn URN: %q", urn)
 	}
 	return urn, nil
+}
+
+// buildAnnotations returns a single inline annotation pointing at urn for
+// the first case-sensitive occurrence of displayName inside text. Returns
+// nil when any input is empty or displayName is not found — in that case
+// the post is sent without annotations and LinkedIn renders the text
+// verbatim (same behaviour as before mention support existed).
+func buildAnnotations(text, urn, displayName string) []inlineAnnotation {
+	if text == "" || urn == "" || displayName == "" {
+		return nil
+	}
+	idx := strings.Index(text, displayName)
+	if idx < 0 {
+		return nil
+	}
+	return []inlineAnnotation{{
+		Start:  idx,
+		Length: len(displayName),
+		Entity: urn,
+	}}
 }
 
 // feedURL builds the public URL for a published post. urn looks like

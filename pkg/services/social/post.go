@@ -63,6 +63,15 @@ func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.P
 	wanted := selectPosters(s.posters, opts.Platforms)
 	issueID := issue.ID
 
+	// If the featured item's source has a registered profile, thread its
+	// LinkedIn URN through so the post mentions the source organisation.
+	// Missing profile or URN → no annotation, post renders unchanged.
+	var linkedInURN, linkedInName string
+	if profile, ok := social.ProfileFor(feat.Source); ok {
+		linkedInURN = profile.LinkedInURN()
+		linkedInName = profile.DisplayName
+	}
+
 	return s.publish(ctx, publishCtx{
 		platforms: wanted,
 		dryRun:    opts.DryRun,
@@ -79,5 +88,7 @@ func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.P
 		skipIfPosted: func(ctx context.Context, p string) (bool, error) {
 			return s.posts.HasPosted(ctx, issueID, p)
 		},
+		linkedInOrgURN:      linkedInURN,
+		linkedInDisplayName: linkedInName,
 	})
 }

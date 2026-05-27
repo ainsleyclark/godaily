@@ -117,7 +117,7 @@ func TestService_Post(t *testing.T) {
 		f.stubReframer(social.Bluesky, constReframer("ok"))
 
 		bluesky := newMockPoster(f.ctrl, social.Bluesky)
-		bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(platform.Result{}, errors.New("API down"))
+		bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(platform.PostResponse{}, errors.New("API down"))
 		f.posters = []platform.Poster{bluesky}
 
 		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
@@ -150,7 +150,7 @@ func TestService_Post(t *testing.T) {
 		bluesky := newMockPoster(f.ctrl, social.Bluesky)
 		mastodon := newMockPoster(f.ctrl, social.Mastodon)
 		mastodon.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-			platform.Result{PostURL: "https://mastodon.social/@godaily/9"}, nil,
+			platform.PostResponse{PostURL: "https://mastodon.social/@godaily/9"}, nil,
 		)
 		f.posters = []platform.Poster{bluesky, mastodon}
 
@@ -186,7 +186,7 @@ func TestService_Post(t *testing.T) {
 
 		bluesky := newMockPoster(f.ctrl, social.Bluesky)
 		bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(
-			platform.Result{PostURL: "https://bsky.app/profile/godaily/post/abc"}, nil,
+			platform.PostResponse{PostURL: "https://bsky.app/profile/godaily/post/abc"}, nil,
 		)
 		f.posters = []platform.Poster{bluesky}
 

@@ -31,6 +31,14 @@ type CandidateContext struct {
 	Subject  string
 	Mentions map[social.Platform]string
 	Payload  any
+
+	// LinkedInOrgURN is the LinkedIn organisation URN this candidate
+	// represents, when one is known. The publish loop turns it into an
+	// inline @-organisation annotation on the LinkedIn post, anchored
+	// to LinkedInDisplayName. Both must be set for the annotation to
+	// render; either empty falls back to plain-text (current behaviour).
+	LinkedInOrgURN      string
+	LinkedInDisplayName string
 }
 
 // Candidate is one possible rotation post. Eligible looks at the world

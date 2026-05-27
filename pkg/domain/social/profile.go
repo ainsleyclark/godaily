@@ -34,6 +34,20 @@ func (p Profile) Mention(platform string) string {
 	return p.DisplayName
 }
 
+// linkedInURNKey is the Mentions map key used for LinkedIn organisation
+// URNs. It is deliberately namespaced away from "linkedin" because the
+// URN is out-of-band metadata for the API call — not a textual handle to
+// be inlined into post copy. Keeping it under its own key means Mention
+// ("linkedin") continues to fall back to DisplayName for prompts.
+const linkedInURNKey = "linkedin_urn"
+
+// LinkedInURN returns the LinkedIn organisation URN configured for this
+// profile, or "" when none is set. Used by the LinkedIn platform to build
+// an inline organisation mention on the post.
+func (p Profile) LinkedInURN() string {
+	return p.Mentions[linkedInURNKey]
+}
+
 // Profiles is the curated metadata for every source GoDaily knows about.
 // Adding a row here makes that source eligible for spotlights, and (if
 // Announceable) for new-source announcements when first added.

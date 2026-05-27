@@ -69,13 +69,16 @@ type (
 	}
 )
 
-// Post publishes text as a single post on the configured account. URLs in the
-// text are annotated with AT Protocol link facets so they render as clickable
-// hyperlinks in Bluesky clients.
-func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
+// Post publishes the request text as a single post on the configured
+// account. URLs in the text are annotated with AT Protocol link facets so
+// they render as clickable hyperlinks in Bluesky clients. The request's
+// mention fields are ignored — Bluesky @-handles are already inlined in
+// the text by the rendering layer.
+func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
+	text := req.Text
 	session, err := c.createSession(ctx)
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "bluesky createSession")
+		return platform.PostResponse{}, errors.Wrap(err, "bluesky createSession")
 	}
 
 	record := map[string]any{
@@ -96,10 +99,10 @@ func (c *Client) Post(ctx context.Context, text string) (platform.Result, error)
 
 	var out createRecordResponse
 	if err := c.doJSON(ctx, "com.atproto.repo.createRecord", session.AccessJWT, body, &out); err != nil {
-		return platform.Result{}, errors.Wrap(err, "bluesky createRecord")
+		return platform.PostResponse{}, errors.Wrap(err, "bluesky createRecord")
 	}
 
-	return platform.Result{PostURL: c.postURLFromURI(out.URI)}, nil
+	return platform.PostResponse{PostURL: c.postURLFromURI(out.URI)}, nil
 }
 
 func (c *Client) createSession(ctx context.Context) (sessionResponse, error) {

@@ -64,7 +64,7 @@ func socialPostCmd(app *godaily.App) *cli.Command {
 			var anyErr error
 			for _, p := range posters {
 				slog.InfoContext(ctx, "Posting", "platform", p.Platform(), "chars", len(text))
-				res, err := p.Post(ctx, text)
+				res, err := p.Post(ctx, platform.PostRequest{Text: text})
 				if err != nil {
 					slog.ErrorContext(ctx, "Post failed", "platform", p.Platform(), "error", err)
 					anyErr = err

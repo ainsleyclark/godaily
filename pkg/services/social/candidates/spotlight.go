@@ -54,11 +54,13 @@ func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (candidate.Candid
 
 		profile := c.profiles[src]
 		return candidate.CandidateContext{
-			Kind:     c.Kind(),
-			Subject:  subject,
-			URL:      profile.SourceURL,
-			Mentions: socialMentionsFor(profile),
-			Payload:  profile,
+			Kind:                c.Kind(),
+			Subject:             subject,
+			URL:                 profile.SourceURL,
+			Mentions:            socialMentionsFor(profile),
+			Payload:             profile,
+			LinkedInOrgURN:      profile.LinkedInURN(),
+			LinkedInDisplayName: profile.DisplayName,
 		}, true, nil
 	}
 
