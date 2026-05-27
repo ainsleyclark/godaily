@@ -79,6 +79,7 @@ const (
 	TagConference         Tag = "conference"          // major Go conference announcement
 	TagConferenceReminder Tag = "conference_reminder" // ~3 months before
 	TagConferenceAlert    Tag = "conference_alert"    // ~1 week before
+	TagJobs               Tag = "jobs"
 )
 
 // SectionTags lists the canonical section tags in display order. Each digest
@@ -94,6 +95,7 @@ var SectionTags = []Tag{
 	TagVideo,
 	TagTrending,
 	TagSecurity,
+	TagJobs,
 }
 
 // NoLimit disables the per-section item cap when used in SectionLimits.
@@ -110,6 +112,7 @@ var SectionLimits = map[Tag]int{
 	TagArticle:    5,
 	TagDiscussion: 8,
 	TagVideo:      5,
+	TagJobs:       5,
 	TagTrending:   5,
 }
 
@@ -139,6 +142,7 @@ var sectionTitles = map[Tag]string{
 	TagDiscussion: "Discussions",
 	TagVideo:      "Videos",
 	TagTrending:   "Trending",
+	TagJobs:       "Jobs",
 }
 
 // Title returns the display heading for a section tag. Defined for the six
