@@ -41,9 +41,19 @@ func (p Profile) Mention(platform string) string {
 // ("linkedin") continues to fall back to DisplayName for prompts.
 const linkedInURNKey = "linkedin_urn"
 
-// LinkedInURN returns the LinkedIn organisation URN configured for this
-// profile, or "" when none is set. Used by the LinkedIn platform to build
-// an inline organisation mention on the post.
+// LinkedInURN returns the LinkedIn URN configured for this profile, or
+// "" when none is set. Used by the LinkedIn platform to build an inline
+// mention on the post.
+//
+// Person vs. organisation mentions: the LinkedIn Posts API treats both
+// urn:li:organization:<id> and urn:li:person:<id> the same way at the
+// annotation layer (entity URN + start/length range), so dropping a
+// person URN into Mentions[linkedInURNKey] works for sources whose
+// canonical identity is a person (e.g. a solo-author podcast). It does
+// NOT cover "tag the author of this article": Profile is one-per-source,
+// so there's no slot for per-item author URNs. Adding that would mean a
+// new model — author metadata on news.Item plus a people directory or
+// per-source author overrides — and is intentionally out of scope here.
 func (p Profile) LinkedInURN() string {
 	return p.Mentions[linkedInURNKey]
 }
