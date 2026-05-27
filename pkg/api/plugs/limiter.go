@@ -7,6 +7,7 @@ package plugs
 import (
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
@@ -14,16 +15,32 @@ import (
 )
 
 // RateLimit returns a webkit.Plug that enforces per-IP rate limiting using the
-// provided RateLimiter.
-func RateLimit(limiter *RateLimiter) webkit.Plug {
+// provided RateLimiter. Requests presenting a valid Bearer token matching
+// exemptSecret bypass the limiter, so authenticated traffic (admin tools,
+// the dashboard) is never throttled. An empty exemptSecret disables
+// exemption (all requests are rate-limited).
+func RateLimit(limiter *RateLimiter, exemptSecret string) webkit.Plug {
 	return func(next webkit.Handler) webkit.Handler {
 		return func(c *webkit.Context) error {
+			if bearerMatches(c.Request, exemptSecret) {
+				return next(c)
+			}
 			if !limiter.Allow(ClientIP(c.Request)) {
 				return webkit.NewError(http.StatusTooManyRequests, "rate limit exceeded")
 			}
 			return next(c)
 		}
 	}
+}
+
+// bearerMatches reports whether the request carries an Authorization: Bearer
+// header equal to secret. Returns false when secret is empty.
+func bearerMatches(r *http.Request, secret string) bool {
+	if secret == "" {
+		return false
+	}
+	token, ok := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
+	return ok && token == secret
 }
 
 // Limiter is the shared rate limiter for public API endpoints.

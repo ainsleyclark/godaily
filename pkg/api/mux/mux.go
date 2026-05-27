@@ -31,7 +31,7 @@ import (
 // before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
-	// kit.Plug(plugs.RateLimit(plugs.Limiter))
+	kit.Plug(plugs.RateLimit(plugs.Limiter, app.Config.APISecret))
 	kit.Plug(middleware.Logger)
 
 	kit.ErrorHandler = func(c *webkit.Context, err error) error {

@@ -39,15 +39,10 @@
 	<Card class="w-full max-w-sm">
 		<CardHeader>
 			<div class="mb-2 flex items-center gap-2">
-				<span
-					class="inline-flex h-7 w-7 items-center justify-center rounded-md text-sm font-bold"
-					style="background:var(--chart-1); color:var(--primary-foreground)"
-				>
-					G
-				</span>
+				<img src="/favicon.png" alt="GoDaily" class="h-7 w-7 rounded-md" />
 				<span class="text-sm font-semibold">GoDaily</span>
 			</div>
-			<CardTitle>Mission Control</CardTitle>
+			<CardTitle>Dashboard</CardTitle>
 			<CardDescription>Enter the API secret to continue.</CardDescription>
 		</CardHeader>
 		<CardContent>

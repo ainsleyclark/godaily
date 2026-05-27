@@ -4,4 +4,4 @@
 	let { class: className = '', children }: { class?: string; children?: Snippet } = $props();
 </script>
 
-<td class={cn('p-3 align-middle', className)}>{@render children?.()}</td>
+<td class={cn('px-6 py-3 align-middle', className)}>{@render children?.()}</td>

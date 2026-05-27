@@ -3,6 +3,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import type { SourceMetrics } from '$lib/api/types';
 	import { formatCompact } from '$lib/utils/format';
+	import { prettify } from '$lib/utils/labels';
 
 	interface Props {
 		data: SourceMetrics[] | null;
@@ -34,7 +35,7 @@
 				{#each rows as r (r.source)}
 					<div class="space-y-1">
 						<div class="flex items-center justify-between text-sm">
-							<span class="text-foreground truncate font-medium" title={r.source}>{r.source}</span>
+							<span class="text-foreground truncate font-medium" title={r.source}>{prettify(r.source)}</span>
 							<span class="text-muted-foreground tabular-nums">{formatCompact(r.clicks)}</span>
 						</div>
 						<div class="bg-secondary/40 h-1.5 w-full overflow-hidden rounded-full">

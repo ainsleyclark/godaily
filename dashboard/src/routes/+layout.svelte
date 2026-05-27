@@ -13,6 +13,8 @@
 
 	const isLogin = $derived($page.url.pathname === '/login');
 
+	let mobileOpen = $state(false);
+
 	function logout() {
 		auth.clearSecret();
 		void goto('/login');
@@ -23,30 +25,56 @@
 
 <div class="min-h-screen">
 	{#if !isLogin}
-		<header
-			class="border-border/60 bg-background/80 sticky top-0 z-40 border-b backdrop-blur"
-		>
-			<div class="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-6">
+		<header class="border-border/60 bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
+			<div class="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4 sm:px-6">
 				<div class="flex items-center gap-2">
-					<span
-						class="inline-flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold"
-						style="background:var(--chart-1); color:var(--primary-foreground)"
-					>
-						G
-					</span>
-					<span class="text-sm font-semibold tracking-tight">GoDaily · Mission Control</span>
+					<img src="/favicon.png" alt="GoDaily" class="h-7 w-7 rounded-md" />
+					<span class="text-sm font-semibold tracking-tight">GoDaily Dashboard</span>
 				</div>
-				<div class="ml-auto flex items-center gap-2">
+
+				<!-- Desktop controls -->
+				<div class="ml-auto hidden items-center gap-2 md:flex">
 					<DateRangePicker />
 					<div class="bg-border mx-1 h-6 w-px"></div>
 					<ThemeToggle />
 					<Button variant="ghost" size="sm" onclick={logout}>Logout</Button>
 				</div>
+
+				<!-- Mobile toggle -->
+				<button
+					type="button"
+					class="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md md:hidden hover:bg-accent"
+					aria-label="Toggle menu"
+					aria-expanded={mobileOpen}
+					onclick={() => (mobileOpen = !mobileOpen)}
+				>
+					{#if mobileOpen}
+						<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M18 6L6 18M6 6l12 12" />
+						</svg>
+					{:else}
+						<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M3 6h18M3 12h18M3 18h18" />
+						</svg>
+					{/if}
+				</button>
 			</div>
+
+			{#if mobileOpen}
+				<div class="border-border/60 border-t bg-background md:hidden">
+					<div class="mx-auto flex max-w-[1400px] flex-col gap-3 px-4 py-4 sm:px-6">
+						<DateRangePicker />
+						<div class="flex items-center justify-between">
+							<ThemeToggle />
+							<Button variant="ghost" size="sm" onclick={logout}>Logout</Button>
+						</div>
+					</div>
+				</div>
+			{/if}
 		</header>
 	{/if}
 
-	<main class="mx-auto max-w-[1400px] px-6 py-6">
+	<main class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
 		{@render children?.()}
 	</main>
 </div>

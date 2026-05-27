@@ -90,8 +90,14 @@
 				No data
 			</div>
 		{:else}
-			<svg viewBox="0 0 {W} {H}" class="h-[220px] w-full" preserveAspectRatio="none"
-				onmouseleave={() => (hover = null)}>
+			<svg
+				viewBox="0 0 {W} {H}"
+				class="h-[220px] w-full"
+				preserveAspectRatio="none"
+				role="img"
+				aria-label="Subscriber growth chart"
+				onmouseleave={() => (hover = null)}
+			>
 				<!-- zero line -->
 				<line
 					x1={PAD.left}
@@ -144,6 +150,7 @@
 						width={(W - PAD.left - PAD.right) / points.length}
 						height={H - PAD.top - PAD.bottom}
 						fill="transparent"
+						role="presentation"
 						onmouseenter={() => (hover = b.i)}
 					/>
 				{/each}

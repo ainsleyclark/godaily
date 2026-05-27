@@ -5,6 +5,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import type { ItemMetrics } from '$lib/api/types';
 	import { formatCompact } from '$lib/utils/format';
+	import { prettify } from '$lib/utils/labels';
 
 	interface Props {
 		data: ItemMetrics[] | null;
@@ -53,10 +54,10 @@
 									{r.title}
 								</a>
 								{#if r.tag}
-									<Badge variant="outline" class="mt-1">{r.tag}</Badge>
+									<Badge variant="outline" class="mt-1">{prettify(r.tag)}</Badge>
 								{/if}
 							</TD>
-							<TD class="text-muted-foreground text-xs">{r.source}</TD>
+							<TD class="text-muted-foreground text-xs">{prettify(r.source)}</TD>
 							<TD class="text-right tabular-nums font-medium">{formatCompact(r.clicks)}</TD>
 						</TR>
 					{/each}

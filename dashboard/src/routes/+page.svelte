@@ -88,34 +88,34 @@
 	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
 		<KpiCard
 			label="Issues sent"
-			value={summary ? formatCompact(summary.issues_sent) : '—'}
+			value={summary ? formatCompact(summary.issues_sent) : '--'}
 			{loading}
 		/>
 		<KpiCard
 			label="Delivered"
-			value={summary ? formatCompact(summary.delivered) : '—'}
+			value={summary ? formatCompact(summary.delivered) : '--'}
 			{loading}
 		/>
 		<KpiCard
 			label="Open rate"
-			value={summary ? formatPercent(summary.open_rate) : '—'}
+			value={summary ? formatPercent(summary.open_rate) : '--'}
 			sublabel={summary ? `${formatCompact(summary.unique_opens)} unique` : undefined}
 			{loading}
 		/>
 		<KpiCard
 			label="Click rate"
-			value={summary ? formatPercent(summary.click_rate) : '—'}
+			value={summary ? formatPercent(summary.click_rate) : '--'}
 			sublabel={summary ? `${formatCompact(summary.unique_clicks)} unique` : undefined}
 			{loading}
 		/>
 		<KpiCard
 			label="Engaged subs"
-			value={summary ? formatCompact(summary.unique_subscribers_engaged) : '—'}
+			value={summary ? formatCompact(summary.unique_subscribers_engaged) : '--'}
 			{loading}
 		/>
 		<KpiCard
 			label="Bounce rate"
-			value={bounceRate != null ? formatPercent(bounceRate) : '—'}
+			value={bounceRate != null ? formatPercent(bounceRate) : '--'}
 			sublabel={summary ? `${formatCompact(summary.bounced)} bounced` : undefined}
 			{loading}
 		/>
