@@ -50,6 +50,8 @@ const (
 	SourceConferences    Source = "conferences"
 	SourceGoVuln         Source = "go_vuln"
 	SourceFreeCodeCamp   Source = "freecodecamp"
+	SourceHNJobs         Source = "hacker_news_jobs"
+	SourceRemoteOK       Source = "remote_ok"
 )
 
 // Sources defines a list of all source types.
@@ -77,6 +79,8 @@ var Sources = []Source{
 	SourceConferences,
 	SourceGoVuln,
 	SourceFreeCodeCamp,
+	SourceHNJobs,
+	SourceRemoteOK,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -135,6 +139,8 @@ var sourcePriorities = map[Source]int{
 	SourceGolangNuts:     2,
 	SourcePlanetGolang:   1,
 	SourceGoVuln:         23,
+	SourceHNJobs:         24,
+	SourceRemoteOK:       25,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -168,6 +174,8 @@ var sourceNiceNames = map[Source]string{
 	SourceConferences:    "Go Conferences",
 	SourceGoVuln:         "Go Vulnerabilities",
 	SourceFreeCodeCamp:   "freeCodeCamp",
+	SourceHNJobs:         "HN Who's Hiring",
+	SourceRemoteOK:       "Remote OK",
 }
 
 // NiceName returns a formatted string of the source.
@@ -203,6 +211,8 @@ var sourceEmojis = map[Source]string{
 	SourceConferences:    "🎤",
 	SourceGoVuln:         "🔒",
 	SourceFreeCodeCamp:   "🎓",
+	SourceHNJobs:         "💼",
+	SourceRemoteOK:       "🌍",
 }
 
 // Emoji returns the display emoji for the source.
@@ -267,6 +277,8 @@ var sourceShortLabels = map[Source]string{
 	SourceConferences:    "GC",
 	SourceGoVuln:         "SEC",
 	SourceFreeCodeCamp:   "FCC",
+	SourceHNJobs:         "HN",
+	SourceRemoteOK:       "RO",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,

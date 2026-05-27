@@ -48,7 +48,7 @@ func TestGolangNuts_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 2)
+				require.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGolangNuts,
 					Title:     "How to efficiently process large slices without allocation?",
@@ -58,6 +58,36 @@ func TestGolangNuts_Fetch(t *testing.T) {
 					Score:     news.ScoreOf(news.SourceGolangNuts, news.TagDiscussion, 0, false),
 					Published: time.Date(2026, time.May, 12, 8, 30, 0, 0, time.UTC),
 				}, items[0])
+			},
+		},
+		"Filters reply threads": {
+			stub: func() http.HandlerFunc {
+				const body = `<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <item>
+      <title>Re: [go-nuts] Some reply</title>
+      <link>https://www.mail-archive.com/golang-nuts@googlegroups.com/msg00001.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Someone&lt;/a&gt;</description>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>[go-nuts] Re: Another reply</title>
+      <link>https://www.mail-archive.com/golang-nuts@googlegroups.com/msg00002.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Someone&lt;/a&gt;</description>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>`
+				return func(w http.ResponseWriter, _ *http.Request) {
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write([]byte(body))
+				}
+			},
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				assert.Empty(t, items)
 			},
 		},
 		"Missing title prefix": {

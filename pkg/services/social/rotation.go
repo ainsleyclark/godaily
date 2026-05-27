@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 )
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the
@@ -24,7 +25,7 @@ import (
 //     no click data, the slot stays quiet.
 //   - Other days: no-op unless ForceKind is set.
 func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
-	if len(s.posters) == 0 {
+	if !s.hasPosters() {
 		slog.InfoContext(ctx, "Skipping rotation — no posters configured")
 		return nil, nil
 	}
@@ -79,13 +80,13 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 
 // pickCandidates returns the candidate list for the day, or honors
 // ForceKind. Returns nil when the day is not a rotation day.
-func (s *Service) pickCandidates(opts social.RotateOptions) ([]Candidate, error) {
+func (s *Service) pickCandidates(opts social.RotateOptions) ([]candidate.Candidate, error) {
 	if opts.ForceKind != "" {
 		c := candidateByKind(s.candidates, opts.ForceKind)
 		if c == nil {
 			return nil, errors.Errorf("no candidate registered for kind %q", opts.ForceKind)
 		}
-		return []Candidate{c}, nil
+		return []candidate.Candidate{c}, nil
 	}
 
 	weekday := opts.Now.UTC().Weekday()
@@ -109,8 +110,8 @@ func (s *Service) pickCandidates(opts social.RotateOptions) ([]Candidate, error)
 // orderedByKinds returns the subset of candidates matching the given
 // kinds, in the requested order. Missing candidates are silently dropped
 // — useful when a deployment hasn't wired every kind.
-func orderedByKinds(all []Candidate, kinds ...social.PostKind) []Candidate {
-	out := make([]Candidate, 0, len(kinds))
+func orderedByKinds(all []candidate.Candidate, kinds ...social.PostKind) []candidate.Candidate {
+	out := make([]candidate.Candidate, 0, len(kinds))
 	for _, k := range kinds {
 		if c := candidateByKind(all, k); c != nil {
 			out = append(out, c)

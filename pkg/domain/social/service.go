@@ -18,9 +18,4 @@ type Service interface {
 	// Rotate runs the day-aware rotation slot (recap, spotlight, cta,
 	// self_release, community) for the wall clock in opts.Now.
 	Rotate(ctx context.Context, opts RotateOptions) ([]PostResult, error)
-
-	// HasPosters reports whether any platforms are configured. Callers use
-	// this to short-circuit before invoking Post or Rotate when no creds
-	// are wired.
-	HasPosters() bool
 }

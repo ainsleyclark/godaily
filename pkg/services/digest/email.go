@@ -40,6 +40,7 @@ var sectionAccents = map[news.Tag]string{
 	news.TagTutorial:   "#0ea5e9",
 	news.TagDiscussion: "#0d9488",
 	news.TagVideo:      "#ec4899",
+	news.TagJobs:       "#d97706",
 	news.TagTrending:   "#f59e0b",
 }
 

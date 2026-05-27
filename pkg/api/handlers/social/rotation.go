@@ -25,8 +25,8 @@ func (h *Handler) Rotation(c *webkit.Context) error {
 		return c.NoContent(http.StatusOK)
 	}
 
-	if h.social == nil || !h.social.HasPosters() {
-		slog.InfoContext(ctx, "Skipping rotation — no posters configured")
+	if h.social == nil {
+		slog.InfoContext(ctx, "Skipping rotation — social service not wired")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialRotationHeartbeatURL)
 		return c.NoContent(http.StatusOK)
 	}

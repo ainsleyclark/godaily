@@ -41,20 +41,6 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// HasPosters mocks base method.
-func (m *MockService) HasPosters() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasPosters")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// HasPosters indicates an expected call of HasPosters.
-func (mr *MockServiceMockRecorder) HasPosters() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPosters", reflect.TypeOf((*MockService)(nil).HasPosters))
-}
-
 // Post mocks base method.
 func (m *MockService) Post(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	m.ctrl.T.Helper()

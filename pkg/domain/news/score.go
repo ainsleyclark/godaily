@@ -53,11 +53,52 @@ func SourceWeight(s Source, t Tag) float64 {
 		}
 	case SourceHN:
 		return 1.2
+	case SourceHNJobs:
+		return 1.4
+	case SourceRemoteOK:
+		return 1.0
 	case SourceMedium:
 		return 0.5
 	default:
 		return 1.0
 	}
+}
+
+// Per-job scoring constants. Jobs lack the engagement signals other sources
+// rely on (points, stars, views), so ranking leans on intrinsic relevance:
+// is the role actually about Go, how fresh is the listing, and how much
+// information does the poster disclose.
+const (
+	jobGoBoost      = 1.5  // role title mentions Go / Golang as a whole word
+	jobSalaryBoost  = 1.2  // salary range disclosed
+	jobRemoteBoost  = 1.15 // remote-friendly
+	jobRecencyDays  = 7.0  // exp decay scale: ~37% at 7 days, ~14% at 14 days
+	jobRecencyFloor = 0.1  // never decay below this so a strong-on-other-axes listing isn't entirely buried
+)
+
+// JobBoost returns the multiplier applied on top of SourceWeight when ranking
+// items in the Jobs section. Combines Go-in-title relevance, recency decay,
+// salary disclosure, and remote-friendly status. ageDays clamps at zero so
+// future-dated listings don't get a runaway boost.
+func JobBoost(ageDays int, goInTitle, hasSalary, isRemote bool) float64 {
+	if ageDays < 0 {
+		ageDays = 0
+	}
+	boost := 1.0
+	if goInTitle {
+		boost *= jobGoBoost
+	}
+	if hasSalary {
+		boost *= jobSalaryBoost
+	}
+	if isRemote {
+		boost *= jobRemoteBoost
+	}
+	recency := math.Exp(-float64(ageDays) / jobRecencyDays)
+	if recency < jobRecencyFloor {
+		recency = jobRecencyFloor
+	}
+	return boost * recency
 }
 
 // LogScore maps a raw signal to [0, 1] via log(value+1)/log(saturation+1),

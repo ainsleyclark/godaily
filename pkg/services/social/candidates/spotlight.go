@@ -14,7 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -37,23 +37,23 @@ func (c *Spotlight) Kind() social.PostKind { return social.PostKindSpotlight }
 // Eligible walks SocialProfiles in stable name order, returning the first
 // source not yet covered on the anchor platform. Once every source has
 // been covered the candidate goes silent until rows are manually pruned.
-func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (socialsvc.CandidateContext, bool, error) {
+func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (candidate.CandidateContext, bool, error) {
 	if len(c.profiles) == 0 {
-		return socialsvc.CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 
 	for _, src := range sortedSources(c.profiles) {
 		subject := "spotlight:" + string(src)
 		posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
 		if err != nil {
-			return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking spotlight subject")
+			return candidate.CandidateContext{}, false, errors.Wrap(err, "checking spotlight subject")
 		}
 		if posted {
 			continue
 		}
 
 		profile := c.profiles[src]
-		return socialsvc.CandidateContext{
+		return candidate.CandidateContext{
 			Kind:     c.Kind(),
 			Subject:  subject,
 			URL:      profile.SourceURL,
@@ -62,12 +62,12 @@ func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (socialsvc.Candid
 		}, true, nil
 	}
 
-	return socialsvc.CandidateContext{}, false, nil
+	return candidate.CandidateContext{}, false, nil
 }
 
 // Generate dispatches to the spotlight prompt with the right per-platform
 // mention.
-func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx candidate.CandidateContext) (string, error) {
 	profile, ok := cctx.Payload.(social.Profile)
 	if !ok {
 		return "", errors.New("spotlight: profile payload missing")

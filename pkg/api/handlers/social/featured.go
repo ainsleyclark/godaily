@@ -43,8 +43,8 @@ func (h *Handler) Featured(c *webkit.Context) error {
 		return c.NoContent(http.StatusOK)
 	}
 
-	if h.social == nil || !h.social.HasPosters() {
-		slog.InfoContext(ctx, "Skipping featured — no posters configured")
+	if h.social == nil {
+		slog.InfoContext(ctx, "Skipping featured — social service not wired")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
 		return c.NoContent(http.StatusOK)
 	}
