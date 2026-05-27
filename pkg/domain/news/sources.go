@@ -108,6 +108,7 @@ var FeaturedSources = []Source{
 	SourceConferences,
 	SourceGoVuln,
 	SourceFreeCodeCamp,
+	SourceRemoteOK,
 }
 
 // String implements fmt.Stringer on source.
@@ -245,6 +246,8 @@ var sourceMarkURLs = map[Source]string{
 	SourceGolangNuts:   "/assets/images/marks/golang_nuts.svg",
 	SourceMeetup:       "/assets/images/marks/meetup.svg",
 	SourceGoVuln:       "/assets/images/marks/go_vuln.svg",
+	SourceFreeCodeCamp: "/assets/images/marks/fcc.svg",
+	SourceRemoteOK:     "/assets/images/marks/remoteok.png",
 }
 
 // MarkURL returns the public path of the source's mark/logo asset, or ""
