@@ -27,7 +27,7 @@ type Handler struct {
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		social:        a.Social,
+		social:        a.Service.Social,
 		socialPosts:   a.Repository.SocialPosts,
 		socialMetrics: a.Repository.SocialMetrics,
 		statFetchers:  a.StatFetchers,
