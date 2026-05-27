@@ -44,7 +44,11 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 	return ingest.TransformAll(ctx, feed.Channel.Items), nil
 }
 
-func (e golangNutsItem) ShouldInclude() bool   { return true }
+// ShouldInclude returns false for reply threads (subjects containing "Re: "),
+// keeping only original posts from the mailing list.
+func (e golangNutsItem) ShouldInclude() bool {
+	return !strings.HasPrefix(e.Title, "Re: ") && !strings.HasPrefix(e.Title, "[go-nuts] Re: ")
+}
 func (e golangNutsItem) EnrichmentURL() string { return "" }
 
 func (e golangNutsItem) Transform() news.Item {
