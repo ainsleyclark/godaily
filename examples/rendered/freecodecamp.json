@@ -1,0 +1,227 @@
+[
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Create Dynamic Emails in Go with React Email",
+		"url": "https://www.freecodecamp.org/news/how-to-create-dynamic-emails-in-go-with-react-email/",
+		"image_url": "https://cdn.hashnode.com/uploads/covers/5e1e335a7a1d3fcc59028c64/62917f79-c4d8-40e2-8eb7-87b63560e546.png",
+		"author": {
+			"name": "\n                     Orim Dominic Adah \n                "
+		},
+		"snippet": "Backend applications are required to send emails to users to deliver notifications and maintain communication outside the application interface. These emails usually contain information specific to ea",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-04-20T20:16:44Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Build a Bank Ledger in Golang with PostgreSQL using the Double-Entry Accounting Principle.",
+		"url": "https://www.freecodecamp.org/news/build-a-bank-ledger-in-go-with-postgresql-using-the-double-entry-accounting-principle/",
+		"image_url": "https://cdn.hashnode.com/uploads/covers/5e1e335a7a1d3fcc59028c64/faea1d4c-5319-4746-96b0-315f37017e26.png",
+		"author": {
+			"name": "\n                     Paul Babatuyi \n                "
+		},
+		"snippet": "The Hidden Bugs in How Most Developers Store Money Imagine you're building the backend for a million-dollar fintech app. You store each user's balance as a single number in the database. It feels simp",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-25T17:11:25Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Get Started Coding in Golang",
+		"url": "https://www.freecodecamp.org/news/how-to-get-started-coding-in-golang/",
+		"image_url": "https://cdn.hashnode.com/uploads/covers/5e1e335a7a1d3fcc59028c64/a429db13-593a-4afe-be02-2c94ae1f246f.png",
+		"author": {
+			"name": "\n                     Njong Emy \n                "
+		},
+		"snippet": "In the world of Software Engineering, there are plenty of programming languages to learn. And there are both low-level and high-level options. I’ve tried my hand at a few of them, and the one langua",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-12T15:56:21Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Find the Top-K Items: Heap and Streaming Approaches in Go",
+		"url": "https://www.freecodecamp.org/news/how-to-find-the-top-k-items-heap-and-streaming-approaches-in-go/",
+		"image_url": "https://cdn.hashnode.com/uploads/covers/5e1e335a7a1d3fcc59028c64/4cf09440-765e-416a-8d15-ff12496f595d.png",
+		"author": {
+			"name": "\n                     Gabor Koos \n                "
+		},
+		"snippet": "Finding the top K items in a dataset pops up everywhere: from highlighting the hottest posts in a social feed, to detecting the largest transactions in a financial system, or spotting the heaviest use",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-03-10T23:25:25Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Understanding Escape Analysis in Go – Explained with Example Code",
+		"url": "https://www.freecodecamp.org/news/understanding-escape-analysis-in-go/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1770921059389/c45b42cb-8cff-4de5-b3d1-7c7adad402c5.png",
+		"author": {
+			"name": "\n                     Eti Ijeoma \n                "
+		},
+		"snippet": "In most languages, the stack and heap are two ways a program stores data in memory, managed by the language runtime. Each is optimized for different use cases, such as fast access or flexible lifetime",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-02-12T18:31:12Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Unit Testing in Go - A Beginner's Guide",
+		"url": "https://www.freecodecamp.org/news/unit-testing-in-go-a-beginners-guide/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1768240528981/73c9c9f6-4942-4c39-9e62-87f540fd2233.png",
+		"author": {
+			"name": "\n                     Gabor Koos \n                "
+		},
+		"snippet": "If you're learning Go and you’re already familiar with the idea of unit testing, the main challenge is usually not why to test, but how to test in Go. Go takes a deliberately minimal approach to tes",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-01-12T17:55:57Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Real-Time Systems for Web Developers: From Theory to a Live Go + React App",
+		"url": "https://www.freecodecamp.org/news/real-time-systems-for-web-developers-from-theory-to-a-live-go-react-app/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1767748231282/074fcd8b-8808-4a3d-8c9c-17d5a7b388e6.png",
+		"author": {
+			"name": "\n                     Emmanuel Etukudo \n                "
+		},
+		"snippet": "Many developers think that “real-time” is about Websockets, Live data, or instant refreshes on web application dashboards. And although these concepts are closely related to what real-time means, ",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2026-01-07T17:24:03Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Build a Smart HomeKit Virtual Light in Go",
+		"url": "https://www.freecodecamp.org/news/how-to-build-a-smart-homekit-virtual-light-in-go/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1766104866742/8d8c0158-95d0-493b-a311-cd99189654e1.png",
+		"author": {
+			"name": "\n                     Rez Moss \n                "
+		},
+		"snippet": "Recently, I wanted to understand how smart home devices actually work. When you scan a QR code and a light appears in your Home app, what's really happening? When you tap \"on\", what bytes travel acros",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-12-19T00:41:41Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Build an LSM Tree Storage Engine from Scratch – Full Handbook",
+		"url": "https://www.freecodecamp.org/news/build-an-lsm-tree-storage-engine-from-scratch-handbook/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1766089431510/433ff03f-8aca-4a87-82d3-0b6d6c1f371c.png",
+		"author": {
+			"name": "\n                     Ramesh Sinha \n                "
+		},
+		"snippet": "Databases are one of the most important parts of a software system. They allow us to store huge amounts of data in an organized way and retrieve it efficiently when we need it. In the early days, when",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-12-18T20:25:02Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Get Started with PocketBase: Build a Lightweight Backend in Minutes",
+		"url": "https://www.freecodecamp.org/news/how-to-get-started-with-pocketbase-build-a-lightweight-backend-in-minutes/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1763143867523/1a4c8cd4-629f-4dd7-8a82-5b6d0d34d90e.png",
+		"author": {
+			"name": "\n                     Manish Shivanandhan \n                "
+		},
+		"snippet": "If you’re a developer looking for a simple, fast, and self-hosted backend, PocketBase might be exactly what you need. It’s an open-source backend written in Go that lets you set up a complete back",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-11-14T18:11:55Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Use Closures in Go",
+		"url": "https://www.freecodecamp.org/news/how-to-use-closures-in-go/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1761597115311/04035f6b-6bd0-4889-8433-3f0d652f2586.png",
+		"author": {
+			"name": "\n                     Gabor Koos \n                "
+		},
+		"snippet": "If you've written code in JavaScript, Python, or Rust, you've probably heard the word closure before. The concept has subtle differences in each language, but the core idea is the same: a closure is a",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-27T20:35:29Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "How to Cache Golang API Responses for High Performance",
+		"url": "https://www.freecodecamp.org/news/how-to-cache-golang-api-responses/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1760523799795/3b48a898-77fc-4983-90b5-6e21e8019f1e.png",
+		"author": {
+			"name": "\n                     Temitope Oyedele \n                "
+		},
+		"snippet": "Go makes it easy to build APIs that are fast out of the box. But as usage grows, speed at the language level is not enough. If every request keeps hitting the database, crunching the same data, or ser",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-15T10:27:00Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Learn How to Use Pointers in Go – With Example Code",
+		"url": "https://www.freecodecamp.org/news/learn-how-to-use-pointers-in-go-with-example-code/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1759763060124/8b3f21fa-052e-4c18-a1b4-9fe4fd456830.png",
+		"author": {
+			"name": "\n                     Gabor Koos \n                "
+		},
+		"snippet": "Pointers are a fundamental but often dreaded concept in every programming language that supports them. Luckily for us, Go makes working with pointers straightforward and safe. In this article, we will",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-06T15:04:41Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Build a Full Stack Movie Streaming App with Go, React, MongoDB, OpenAI",
+		"url": "https://www.freecodecamp.org/news/build-a-full-stack-movie-streaming-app-with-go-react-mongodb-openai/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1759352344795/21e9357b-d611-4223-a1f3-704960eae165.jpeg",
+		"author": {
+			"name": "\n                     Beau Carnes \n                "
+		},
+		"snippet": "We’ve just posted a full-stack course on the freeCodeCamp.org YouTube channel that will teach you to build a complete, production-ready movie streaming application named MagicStream, complete with A",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-10-01T20:59:30Z"
+	},
+	{
+		"id": 0,
+		"source": "freecodecamp",
+		"title": "Common Slice Mistakes in Go and How to Avoid Them",
+		"url": "https://www.freecodecamp.org/news/common-slice-mistakes-in-go/",
+		"image_url": "https://cdn.hashnode.com/res/hashnode/image/upload/v1759251032781/125e9bfc-2e78-4f71-b423-2d045bf82a9f.png",
+		"author": {
+			"name": "\n                     Temitope Oyedele \n                "
+		},
+		"snippet": "Slices are one of the most fundamental and powerful data structures in Go. They provide a dynamic array-like interface that's both flexible and efficient. However, they can be very tricky when impleme",
+		"tag": "tutorial",
+		"comments": 0,
+		"score": 0.5,
+		"published": "2025-09-30T16:52:28Z"
+	}
+]
