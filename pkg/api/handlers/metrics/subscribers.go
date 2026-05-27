@@ -5,6 +5,7 @@
 package metrics
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
@@ -53,6 +54,7 @@ func (h *Handler) Subscribers(c *webkit.Context) error {
 
 	data, err := h.metricsRepo.SubscriberGrowth(c.Context(), engagement.MetricsFilter{From: from, To: to}, bucket)
 	if err != nil {
+		slog.ErrorContext(c.Context(), "failed to fetch subscriber data", "error", err)
 		return webkit.NewError(http.StatusInternalServerError, "failed to fetch subscriber data")
 	}
 

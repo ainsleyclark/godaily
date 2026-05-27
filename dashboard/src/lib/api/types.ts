@@ -79,7 +79,7 @@ export interface SubscriberData {
 }
 
 export type Bucket = 'day' | 'week' | 'month';
-export type TrendMetric = 'opens' | 'clicks' | 'open_rate' | 'click_rate';
+export type TrendMetric = 'unique_opens' | 'unique_clicks' | 'open_rate' | 'click_rate';
 
 export interface MetricsQuery {
 	from?: string;

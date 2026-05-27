@@ -13,8 +13,8 @@
 	let { data, loading = false, metric, onMetricChange }: Props = $props();
 
 	const metricLabels: Record<TrendMetric, string> = {
-		opens: 'Opens',
-		clicks: 'Clicks',
+		unique_opens: 'Opens',
+		unique_clicks: 'Clicks',
 		open_rate: 'Open rate',
 		click_rate: 'Click rate'
 	};
@@ -92,7 +92,7 @@
 				</CardDescription>
 			</div>
 			<div class="bg-secondary/40 flex items-center rounded-md p-0.5">
-				{#each ['opens', 'clicks', 'open_rate', 'click_rate'] as TrendMetric[] as m}
+				{#each ['unique_opens', 'unique_clicks', 'open_rate', 'click_rate'] as TrendMetric[] as m}
 					<button
 						type="button"
 						onclick={() => onMetricChange(m)}

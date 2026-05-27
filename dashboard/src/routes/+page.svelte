@@ -29,7 +29,7 @@
 	let trend = $state<TrendData | null>(null);
 	let subscribers = $state<SubscriberData | null>(null);
 	let loading = $state(true);
-	let trendMetric = $state<TrendMetric>('clicks');
+	let trendMetric = $state<TrendMetric>('unique_clicks');
 
 	async function loadAll() {
 		const q = toQueryParams($dateRange);

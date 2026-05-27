@@ -19,6 +19,7 @@
 		}
 		submitting = true;
 		try {
+			console.log('ddd')
 			await api.summary({}, secret.trim());
 			auth.setSecret(secret.trim());
 			await goto('/');

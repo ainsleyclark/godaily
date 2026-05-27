@@ -8,9 +8,8 @@ export default defineConfig({
 		port: 5173,
 		proxy: {
 			'/api': {
-				target: 'https://godaily.dev',
-				changeOrigin: true,
-				secure: true
+				target: 'http://localhost:3000',
+				changeOrigin: true
 			}
 		}
 	}

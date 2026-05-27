@@ -5,6 +5,7 @@
 package metrics
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
@@ -63,6 +64,7 @@ func (h *Handler) Trend(c *webkit.Context) error {
 
 	data, err := h.metricsRepo.Trend(c.Context(), engagement.MetricsFilter{From: from, To: to}, metric, bucket)
 	if err != nil {
+		slog.ErrorContext(c.Context(), "failed to fetch trend data", "error", err)
 		return webkit.NewError(http.StatusInternalServerError, "failed to fetch trend data")
 	}
 

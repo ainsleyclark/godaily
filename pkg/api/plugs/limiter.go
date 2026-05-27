@@ -28,7 +28,7 @@ func RateLimit(limiter *RateLimiter) webkit.Plug {
 
 // Limiter is the shared rate limiter for public API endpoints.
 // Allows 1 request per second with a burst of 10 per unique client IP.
-var Limiter = NewRateLimiter(1, 10)
+var Limiter = NewRateLimiter(1, 50)
 
 // RateLimiter holds a per-IP token-bucket limiter map.
 // Implementations must be used via NewRateLimiter.
