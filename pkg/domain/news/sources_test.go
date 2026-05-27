@@ -43,16 +43,17 @@ func TestSource_Priority(t *testing.T) {
 		source Source
 		want   int
 	}{
-		"Go Releases":        {source: SourceGoRelease, want: 20},
-		"Go Blog":            {source: SourceGoBlog, want: 19},
-		"GitHub":             {source: SourceGitHub, want: 18},
-		"GitHub Trending":    {source: SourceGitHubTrending, want: 17},
-		"Hacker News":        {source: SourceHN, want: 16},
-		"Lobsters":           {source: SourceLobsters, want: 15},
-		"Reddit":             {source: SourceReddit, want: 14},
-		"JetBrains":          {source: SourceJetBrains, want: 13},
-		"Dev.to":             {source: SourceDevTo, want: 12},
-		"GolangBridge":       {source: SourceGolangBridge, want: 11},
+		"Go Releases":        {source: SourceGoRelease, want: 21},
+		"Go Blog":            {source: SourceGoBlog, want: 20},
+		"GitHub":             {source: SourceGitHub, want: 19},
+		"GitHub Trending":    {source: SourceGitHubTrending, want: 18},
+		"Hacker News":        {source: SourceHN, want: 17},
+		"Lobsters":           {source: SourceLobsters, want: 16},
+		"Reddit":             {source: SourceReddit, want: 15},
+		"JetBrains":          {source: SourceJetBrains, want: 14},
+		"Dev.to":             {source: SourceDevTo, want: 13},
+		"GolangBridge":       {source: SourceGolangBridge, want: 12},
+		"freeCodeCamp":       {source: SourceFreeCodeCamp, want: 11},
 		"Meetup":             {source: SourceMeetup, want: 10},
 		"go podcast()":       {source: SourceGoPodcast, want: 9},
 		"Fallthrough":        {source: SourceFallthrough, want: 8},
@@ -87,7 +88,8 @@ func TestSource_Priority(t *testing.T) {
 		assert.Greater(t, SourceReddit.Priority(), SourceJetBrains.Priority())
 		assert.Greater(t, SourceJetBrains.Priority(), SourceDevTo.Priority())
 		assert.Greater(t, SourceDevTo.Priority(), SourceGolangBridge.Priority())
-		assert.Greater(t, SourceGolangBridge.Priority(), SourceMeetup.Priority())
+		assert.Greater(t, SourceGolangBridge.Priority(), SourceFreeCodeCamp.Priority())
+		assert.Greater(t, SourceFreeCodeCamp.Priority(), SourceMeetup.Priority())
 		assert.Greater(t, SourceMeetup.Priority(), SourceGoPodcast.Priority())
 		assert.Greater(t, SourceGoPodcast.Priority(), SourceFallthrough.Priority())
 		assert.Greater(t, SourceFallthrough.Priority(), SourceArdanLabs.Priority())
