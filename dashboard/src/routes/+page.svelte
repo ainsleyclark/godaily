@@ -106,6 +106,10 @@
 			: null
 	);
 
+	const clickToOpen = $derived(
+		summary && summary.unique_opens > 0 ? summary.unique_clicks / summary.unique_opens : null
+	);
+
 	const netDelta = $derived.by(() => {
 		if (netChange == null) return undefined;
 		const sign = netChange > 0 ? '+' : '';
@@ -118,7 +122,7 @@
 
 <div class="space-y-6">
 	<!-- Hero stats -->
-	<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 		<KpiCard
 			label="Active subscribers"
 			size="lg"
@@ -128,6 +132,13 @@
 				: undefined}
 			delta={netDelta}
 			loading={loading && !subscribers}
+		/>
+		<KpiCard
+			label="Total opens"
+			size="lg"
+			value={summary ? formatCompact(summary.total_opens) : '--'}
+			sublabel={summary ? `${formatCompact(summary.unique_opens)} unique` : undefined}
+			{loading}
 		/>
 		<KpiCard
 			label="Total clicks"
@@ -148,7 +159,7 @@
 	</div>
 
 	<!-- Detail KPIs -->
-	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
 		<KpiCard
 			label="Issues sent"
 			value={summary ? formatCompact(summary.issues_sent) : '--'}
@@ -162,19 +173,25 @@
 		<KpiCard
 			label="Open rate"
 			value={summary ? formatPercent(summary.open_rate) : '--'}
-			sublabel={summary ? `${formatCompact(summary.unique_opens)} unique` : undefined}
 			{loading}
 		/>
 		<KpiCard
 			label="Click rate"
 			value={summary ? formatPercent(summary.click_rate) : '--'}
-			sublabel={summary ? `${formatCompact(summary.unique_clicks)} unique` : undefined}
+			{loading}
+		/>
+		<KpiCard
+			label="Click-to-open"
+			value={clickToOpen != null ? formatPercent(clickToOpen) : '--'}
+			sublabel="of opens that clicked"
 			{loading}
 		/>
 		<KpiCard
 			label="Bounce rate"
 			value={bounceRate != null ? formatPercent(bounceRate) : '--'}
-			sublabel={summary ? `${formatCompact(summary.bounced)} bounced` : undefined}
+			sublabel={summary
+				? `${formatCompact(summary.bounced)} bounced · ${formatCompact(summary.complained)} complaints`
+				: undefined}
 			{loading}
 		/>
 	</div>
