@@ -42,6 +42,8 @@ type Snapshot struct {
 	BestIssue *engagement.IssueEngagement
 }
 
+var _ engagement.MetricsService = (*Service)(nil)
+
 // Service composes engagement queries into reports.
 type Service struct {
 	metrics engagement.MetricsRepository

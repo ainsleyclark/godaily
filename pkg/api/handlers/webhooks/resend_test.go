@@ -54,11 +54,11 @@ func sign(t *testing.T, secret, id, timestamp, payload string) string {
 	return "v1," + base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func newHandler(t *testing.T, secret string) (*Handler, *mockengagement.MockEmailEventRepository, *mockaudience.MockService) {
+func newHandler(t *testing.T, secret string) (*Handler, *mockengagement.MockEmailEventRepository, *mockaudience.MockSubscriberService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
-	subs := mockaudience.NewMockService(ctrl)
+	subs := mockaudience.NewMockSubscriberService(ctrl)
 	return &Handler{
 		emailEvents: svcengagement.NewEvents(events, subs, noopItemFinder{}, ""),
 		config:      &env.Config{ResendWebhookSecret: secret},

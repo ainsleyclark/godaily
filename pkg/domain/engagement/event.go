@@ -32,6 +32,19 @@ type EmailEvent struct {
 	CreatedAt    time.Time      `json:"created_at"`
 }
 
+//go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/EventService.go . EventService
+
+// EventService stores email lifecycle events and applies their
+// subscriber-health side effects (bounces, complaints, suppressions). It is
+// the interface webhook handlers depend on so they can be tested without
+// wiring the event store, subscriber service, and item lookup together.
+type EventService interface {
+	// Process stores an email event and applies any subscriber-health side
+	// effect. Implementations should be idempotent on EmailEvent.EventID so
+	// duplicate webhook deliveries do not double-count.
+	Process(ctx context.Context, e EmailEvent) error
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mockengagement -destination=../../mocks/engagement/EmailEventRepository.go . EmailEventRepository
 
 // EmailEventRepository persists email events and answers engagement

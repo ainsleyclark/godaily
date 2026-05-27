@@ -21,13 +21,13 @@ import (
 func TestSubscribe(t *testing.T) {
 	tt := map[string]struct {
 		body       string
-		mock       func(s *mockaudience.MockService)
+		mock       func(s *mockaudience.MockSubscriberService)
 		repoMock   func(r *mockaudience.MockSubscriberRepository)
 		wantStatus int
 	}{
 		"OK": {
 			body: `{"email":"test@example.com"}`,
-			mock: func(s *mockaudience.MockService) {
+			mock: func(s *mockaudience.MockSubscriberService) {
 				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(audience.Subscriber{}, nil)
 			},
 			repoMock: func(r *mockaudience.MockSubscriberRepository) {
@@ -37,19 +37,19 @@ func TestSubscribe(t *testing.T) {
 		},
 		"Missing Email": {
 			body:       `{}`,
-			mock:       func(s *mockaudience.MockService) {},
+			mock:       func(s *mockaudience.MockSubscriberService) {},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Invalid Email": {
 			body:       `{"email":"notanemail"}`,
-			mock:       func(s *mockaudience.MockService) {},
+			mock:       func(s *mockaudience.MockSubscriberService) {},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Already Subscribed": {
 			body: `{"email":"dupe@example.com"}`,
-			mock: func(s *mockaudience.MockService) {
+			mock: func(s *mockaudience.MockSubscriberService) {
 				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(audience.Subscriber{}, audience.ErrAlreadySubscribed)
 			},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
@@ -57,7 +57,7 @@ func TestSubscribe(t *testing.T) {
 		},
 		"Subscribe Error": {
 			body: `{"email":"err@example.com"}`,
-			mock: func(s *mockaudience.MockService) {
+			mock: func(s *mockaudience.MockSubscriberService) {
 				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(audience.Subscriber{}, errors.New("db error"))
 			},
 			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
@@ -68,7 +68,7 @@ func TestSubscribe(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			svc := mockaudience.NewMockService(ctrl)
+			svc := mockaudience.NewMockSubscriberService(ctrl)
 			slackMock := mockslack.NewMockSender(ctrl)
 			repo := mockaudience.NewMockSubscriberRepository(ctrl)
 			slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()

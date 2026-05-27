@@ -17,32 +17,32 @@ import (
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockService is a mock of SubscriberService interface.
-type MockService struct {
+// MockSubscriberService is a mock of SubscriberService interface.
+type MockSubscriberService struct {
 	ctrl     *gomock.Controller
-	recorder *MockServiceMockRecorder
+	recorder *MockSubscriberServiceMockRecorder
 	isgomock struct{}
 }
 
-// MockServiceMockRecorder is the mock recorder for MockService.
-type MockServiceMockRecorder struct {
-	mock *MockService
+// MockSubscriberServiceMockRecorder is the mock recorder for MockSubscriberService.
+type MockSubscriberServiceMockRecorder struct {
+	mock *MockSubscriberService
 }
 
-// NewMockService creates a new mock instance.
-func NewMockService(ctrl *gomock.Controller) *MockService {
-	mock := &MockService{ctrl: ctrl}
-	mock.recorder = &MockServiceMockRecorder{mock}
+// NewMockSubscriberService creates a new mock instance.
+func NewMockSubscriberService(ctrl *gomock.Controller) *MockSubscriberService {
+	mock := &MockSubscriberService{ctrl: ctrl}
+	mock.recorder = &MockSubscriberServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockService) EXPECT() *MockServiceMockRecorder {
+func (m *MockSubscriberService) EXPECT() *MockSubscriberServiceMockRecorder {
 	return m.recorder
 }
 
 // Confirm mocks base method.
-func (m *MockService) Confirm(ctx context.Context, token string) error {
+func (m *MockSubscriberService) Confirm(ctx context.Context, token string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Confirm", ctx, token)
 	ret0, _ := ret[0].(error)
@@ -50,13 +50,13 @@ func (m *MockService) Confirm(ctx context.Context, token string) error {
 }
 
 // Confirm indicates an expected call of Confirm.
-func (mr *MockServiceMockRecorder) Confirm(ctx, token any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) Confirm(ctx, token any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Confirm", reflect.TypeOf((*MockService)(nil).Confirm), ctx, token)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Confirm", reflect.TypeOf((*MockSubscriberService)(nil).Confirm), ctx, token)
 }
 
 // MarkBounced mocks base method.
-func (m *MockService) MarkBounced(ctx context.Context, email string) error {
+func (m *MockSubscriberService) MarkBounced(ctx context.Context, email string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MarkBounced", ctx, email)
 	ret0, _ := ret[0].(error)
@@ -64,13 +64,13 @@ func (m *MockService) MarkBounced(ctx context.Context, email string) error {
 }
 
 // MarkBounced indicates an expected call of MarkBounced.
-func (mr *MockServiceMockRecorder) MarkBounced(ctx, email any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) MarkBounced(ctx, email any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkBounced", reflect.TypeOf((*MockService)(nil).MarkBounced), ctx, email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkBounced", reflect.TypeOf((*MockSubscriberService)(nil).MarkBounced), ctx, email)
 }
 
 // MarkComplained mocks base method.
-func (m *MockService) MarkComplained(ctx context.Context, email string) error {
+func (m *MockSubscriberService) MarkComplained(ctx context.Context, email string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MarkComplained", ctx, email)
 	ret0, _ := ret[0].(error)
@@ -78,13 +78,13 @@ func (m *MockService) MarkComplained(ctx context.Context, email string) error {
 }
 
 // MarkComplained indicates an expected call of MarkComplained.
-func (mr *MockServiceMockRecorder) MarkComplained(ctx, email any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) MarkComplained(ctx, email any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockService)(nil).MarkComplained), ctx, email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockSubscriberService)(nil).MarkComplained), ctx, email)
 }
 
 // MarkSuppressed mocks base method.
-func (m *MockService) MarkSuppressed(ctx context.Context, email string) error {
+func (m *MockSubscriberService) MarkSuppressed(ctx context.Context, email string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MarkSuppressed", ctx, email)
 	ret0, _ := ret[0].(error)
@@ -92,13 +92,13 @@ func (m *MockService) MarkSuppressed(ctx context.Context, email string) error {
 }
 
 // MarkSuppressed indicates an expected call of MarkSuppressed.
-func (mr *MockServiceMockRecorder) MarkSuppressed(ctx, email any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) MarkSuppressed(ctx, email any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkSuppressed", reflect.TypeOf((*MockService)(nil).MarkSuppressed), ctx, email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkSuppressed", reflect.TypeOf((*MockSubscriberService)(nil).MarkSuppressed), ctx, email)
 }
 
 // Subscribe mocks base method.
-func (m *MockService) Subscribe(ctx context.Context, email string) (audience.Subscriber, error) {
+func (m *MockSubscriberService) Subscribe(ctx context.Context, email string) (audience.Subscriber, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Subscribe", ctx, email)
 	ret0, _ := ret[0].(audience.Subscriber)
@@ -107,13 +107,13 @@ func (m *MockService) Subscribe(ctx context.Context, email string) (audience.Sub
 }
 
 // Subscribe indicates an expected call of Subscribe.
-func (mr *MockServiceMockRecorder) Subscribe(ctx, email any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) Subscribe(ctx, email any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Subscribe", reflect.TypeOf((*MockService)(nil).Subscribe), ctx, email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Subscribe", reflect.TypeOf((*MockSubscriberService)(nil).Subscribe), ctx, email)
 }
 
 // Unsubscribe mocks base method.
-func (m *MockService) Unsubscribe(ctx context.Context, token string) error {
+func (m *MockSubscriberService) Unsubscribe(ctx context.Context, token string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Unsubscribe", ctx, token)
 	ret0, _ := ret[0].(error)
@@ -121,7 +121,7 @@ func (m *MockService) Unsubscribe(ctx context.Context, token string) error {
 }
 
 // Unsubscribe indicates an expected call of Unsubscribe.
-func (mr *MockServiceMockRecorder) Unsubscribe(ctx, token any) *gomock.Call {
+func (mr *MockSubscriberServiceMockRecorder) Unsubscribe(ctx, token any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unsubscribe", reflect.TypeOf((*MockService)(nil).Unsubscribe), ctx, token)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unsubscribe", reflect.TypeOf((*MockSubscriberService)(nil).Unsubscribe), ctx, token)
 }

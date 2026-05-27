@@ -17,17 +17,17 @@ import (
 
 func TestHandleRoundup(t *testing.T) {
 	tt := map[string]struct {
-		mock       func(r *mockengagement.MockMetricsReporter)
+		mock       func(r *mockengagement.MockMetricsService)
 		wantStatus int
 	}{
 		"OK": {
-			mock: func(r *mockengagement.MockMetricsReporter) {
+			mock: func(r *mockengagement.MockMetricsService) {
 				r.EXPECT().Roundup(gomock.Any()).Return(nil)
 			},
 			wantStatus: http.StatusOK,
 		},
 		"Roundup error": {
-			mock: func(r *mockengagement.MockMetricsReporter) {
+			mock: func(r *mockengagement.MockMetricsService) {
 				r.EXPECT().Roundup(gomock.Any()).Return(errors.New("boom"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -37,10 +37,10 @@ func TestHandleRoundup(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			reporter := mockengagement.NewMockMetricsReporter(ctrl)
+			reporter := mockengagement.NewMockMetricsService(ctrl)
 			test.mock(reporter)
 
-			h := &Handler{metricsReporter: reporter}
+			h := &Handler{metricsService: reporter}
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/metrics/roundup", nil)

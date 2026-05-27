@@ -47,12 +47,12 @@ type App struct {
 	DB             *sql.DB
 	Repository     *Repository
 	Runner         digest.Service
-	Social         *socialsvc.Service
+	Social         social.Service
 	Cache          cache.Store
 	Subscribers    audience.SubscriberService
-	EmailEvents    *svcengagement.EventService
+	EmailEvents    engagement.EventService
 	Slack          slack.Sender
-	MetricsService engagement.MetricsReporter
+	MetricsService engagement.MetricsService
 	StatFetchers   map[social.Platform]platform.StatFetcher
 }
 
@@ -67,10 +67,13 @@ type Repository struct {
 	Metrics       engagement.MetricsRepository
 }
 
+// Service aggregates the domain-level service interfaces for the app.
 type Service struct {
 	Digest      digest.Service
 	Subscribers audience.SubscriberService
-	Social      *socialsvc.Service
+	Social      social.Service
+	Metrics     engagement.MetricsService
+	Events      engagement.EventService
 }
 
 // Bootstrap ties all the app dependencies together

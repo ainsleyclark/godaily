@@ -13,19 +13,19 @@ import (
 
 // Handler holds the dependencies for metrics HTTP handlers.
 type Handler struct {
-	metricsRepo     engagement.MetricsRepository
-	issuesRepo      digest.IssueRepository
-	emailEvents     engagement.EmailEventRepository
-	metricsReporter engagement.MetricsReporter
+	metricsRepo    engagement.MetricsRepository
+	issuesRepo     digest.IssueRepository
+	emailEvents    engagement.EmailEventRepository
+	metricsService engagement.MetricsService
 }
 
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		metricsRepo:     a.Repository.Metrics,
-		issuesRepo:      a.Repository.Issues,
-		emailEvents:     a.Repository.EmailEvents,
-		metricsReporter: a.MetricsService,
+		metricsRepo:    a.Repository.Metrics,
+		issuesRepo:     a.Repository.Issues,
+		emailEvents:    a.Repository.EmailEvents,
+		metricsService: a.MetricsService,
 	}
 }
 
