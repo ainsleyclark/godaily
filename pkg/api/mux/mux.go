@@ -22,6 +22,7 @@ import (
 	socialhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/social"
 	webhookhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/webhooks"
 	"github.com/ainsleyclark/godaily/pkg/api/plugs"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleydev/webkit/pkg/middleware"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -31,6 +32,9 @@ import (
 // before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
+	// CORS runs as chi middleware (not a webkit.Plug) so OPTIONS preflight
+	// requests for routes that only register GET reach it before chi's 405.
+	kit.Mux().Use(plugs.CORS([]string{env.DashboardURL, env.AppURL}))
 	kit.Plug(plugs.RateLimit(plugs.Limiter, app.Config.APISecret))
 	kit.Plug(middleware.Logger)
 
