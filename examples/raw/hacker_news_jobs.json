@@ -5086,16 +5086,18 @@
 	"processingTimeMS": 1,
 	"processingTimingsMS": {
 		"_request": {
-			"queue": 18,
-			"roundTrip": 15
+			"roundTrip": 19
 		},
 		"afterFetch": {
 			"format": {
 				"total": 1
 			}
 		},
+		"fetch": {
+			"scanning": 1
+		},
 		"total": 1
 	},
 	"query": "",
-	"serverTimeMS": 20
+	"serverTimeMS": 3
 }
