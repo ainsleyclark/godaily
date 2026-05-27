@@ -18,13 +18,13 @@ import (
 func TestUnsubscribe(t *testing.T) {
 	tt := map[string]struct {
 		token        string
-		mock         func(s *mockaudience.MockService)
+		mock         func(s *mockaudience.MockSubscriberService)
 		wantStatus   int
 		wantLocation string
 	}{
 		"OK": {
 			token: "valid-token",
-			mock: func(s *mockaudience.MockService) {
+			mock: func(s *mockaudience.MockSubscriberService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 			},
 			wantStatus:   http.StatusFound,
@@ -32,12 +32,12 @@ func TestUnsubscribe(t *testing.T) {
 		},
 		"Missing Token": {
 			token:      "",
-			mock:       func(s *mockaudience.MockService) {},
+			mock:       func(s *mockaudience.MockSubscriberService) {},
 			wantStatus: http.StatusBadRequest,
 		},
 		"Unsubscribe Error": {
 			token: "bad-token",
-			mock: func(s *mockaudience.MockService) {
+			mock: func(s *mockaudience.MockSubscriberService) {
 				s.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
 			},
 			wantStatus: http.StatusInternalServerError,
@@ -47,7 +47,7 @@ func TestUnsubscribe(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-			svc := mockaudience.NewMockService(ctrl)
+			svc := mockaudience.NewMockSubscriberService(ctrl)
 			test.mock(svc)
 
 			h := &Handler{subscribers: svc}
@@ -71,7 +71,7 @@ func TestUnsubscribe(t *testing.T) {
 
 func TestUnsubscribePost(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	svc := mockaudience.NewMockService(ctrl)
+	svc := mockaudience.NewMockSubscriberService(ctrl)
 	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 
 	h := &Handler{subscribers: svc}

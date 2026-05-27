@@ -6,14 +6,14 @@ package webhooks
 
 import (
 	"github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Handler the narrow dependencies for webhook HTTP handlers.
 type Handler struct {
-	emailEvents *svcengagement.EventService
+	emailEvents engagement.EventService
 	config      *env.Config
 }
 

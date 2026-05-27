@@ -16,7 +16,7 @@ import (
 // engagement data (with a week-over-week comparison) and posts a formatted
 // summary to the configured Slack channel.
 func (h *Handler) Roundup(c *webkit.Context) error {
-	if err := h.metricsReporter.Roundup(c.Context()); err != nil {
+	if err := h.metricsService.Roundup(c.Context()); err != nil {
 		slog.ErrorContext(c.Context(), "Weekly roundup failed", "err", err)
 		return webkit.NewError(http.StatusInternalServerError, "failed to send weekly roundup")
 	}

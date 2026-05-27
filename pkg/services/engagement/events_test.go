@@ -33,11 +33,11 @@ func (s stubItemFinder) FindByURLInIssue(context.Context, int64, string) (int64,
 	return s.id, s.ok, s.err
 }
 
-func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mockaudience.MockService, *engagementsvc.EventService) {
+func setup(t *testing.T) (*mockengagement.MockEmailEventRepository, *mockaudience.MockSubscriberService, *engagementsvc.EventService) {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	events := mockengagement.NewMockEmailEventRepository(ctrl)
-	subs := mockaudience.NewMockService(ctrl)
+	subs := mockaudience.NewMockSubscriberService(ctrl)
 	return events, subs, engagementsvc.NewEvents(events, subs, stubItemFinder{}, "admin@example.com")
 }
 
@@ -201,7 +201,7 @@ func TestService_Process_ClickItemResolution(t *testing.T) {
 		t.Helper()
 		ctrl := gomock.NewController(t)
 		events := mockengagement.NewMockEmailEventRepository(ctrl)
-		subs := mockaudience.NewMockService(ctrl)
+		subs := mockaudience.NewMockSubscriberService(ctrl)
 		return events, engagementsvc.NewEvents(events, subs, finder, "admin@example.com")
 	}
 

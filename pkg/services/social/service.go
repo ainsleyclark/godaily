@@ -18,6 +18,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 )
 
+var _ social.Service = (*Service)(nil)
+
 // Service publishes social media posts for both the daily featured slot
 // and the Tue/Fri rotation slot.
 type Service struct {

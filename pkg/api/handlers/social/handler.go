@@ -10,14 +10,13 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Handler holds the dependencies for social HTTP handlers.
 type Handler struct {
-	social        *socialsvc.Service
+	social        social.Service
 	socialPosts   social.PostRepository
 	socialMetrics engagement.SocialMetricRepository
 	statFetchers  map[social.Platform]platform.StatFetcher

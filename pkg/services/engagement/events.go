@@ -28,6 +28,8 @@ type ItemFinder interface {
 	FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error)
 }
 
+var _ eng.EventService = (*EventService)(nil)
+
 // EventService stores email events and applies their subscriber-health effects.
 type EventService struct {
 	events      eng.EmailEventRepository
