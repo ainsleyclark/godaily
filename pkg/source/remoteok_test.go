@@ -110,22 +110,22 @@ func TestRemoteOK_Fetch(t *testing.T) {
 				goEng := items[0]
 				assert.Equal(t, news.SourceRemoteOK, goEng.Source)
 				assert.Equal(t, news.TagJobs, goEng.Tag)
-				// Title now includes the location for scannability.
-				assert.Equal(t, "Senior Go Engineer · Worldwide", goEng.Title)
+				// Title is now "Company · Role · Location" for scannability.
+				assert.Equal(t, "Acme Corp · Senior Go Engineer · Worldwide", goEng.Title)
 				assert.Equal(t, "https://acme.example/apply", goEng.URL)
 				assert.Equal(t, "https://remoteok.com/remote-jobs/go-1", goEng.OriginalURL)
 				require.NotNil(t, goEng.Author)
 				assert.Equal(t, "Acme Corp", goEng.Author.Name)
-				// Snippet is now company · salary (location moved to title).
-				assert.Contains(t, goEng.Snippet, "Acme Corp")
-				assert.Contains(t, goEng.Snippet, "$120k")
-				assert.NotContains(t, goEng.Snippet, "Worldwide")
+				// Snippet is the salary range only — company and location are in the title.
+				assert.Equal(t, "$120k–$160k", goEng.Snippet)
 				// Salary-disclosed + Go-in-title + remote, fresh: full boost.
 				assert.Greater(t, goEng.Score, 1.5)
 
 				backend := items[1]
 				// Empty location renders as "Remote" in the title.
-				assert.Equal(t, "Backend Engineer · Remote", backend.Title)
+				assert.Equal(t, "Polyglot Inc · Backend Engineer · Remote", backend.Title)
+				// No salary disclosed → snippet is empty (template skips it silently).
+				assert.Empty(t, backend.Snippet)
 				// No salary, no Go in title - lower score than goEng.
 				assert.Less(t, backend.Score, goEng.Score)
 				// apply_url empty → URL falls back to the listing URL.
@@ -287,20 +287,24 @@ func TestRemoteOK_BuildTitle(t *testing.T) {
 		job  remoteOKJob
 		want string
 	}{
-		"Position with specific location": {
-			job:  remoteOKJob{Position: "Senior Go Engineer", Location: "Italy"},
-			want: "Senior Go Engineer · Italy",
+		"Company, position and specific location": {
+			job:  remoteOKJob{Company: "Acme", Position: "Senior Go Engineer", Location: "Italy"},
+			want: "Acme · Senior Go Engineer · Italy",
 		},
 		"Empty location renders as Remote": {
-			job:  remoteOKJob{Position: "Senior Go Engineer", Location: ""},
-			want: "Senior Go Engineer · Remote",
+			job:  remoteOKJob{Company: "Acme", Position: "Senior Go Engineer", Location: ""},
+			want: "Acme · Senior Go Engineer · Remote",
 		},
 		"Malformed location is sanitised": {
-			job:  remoteOKJob{Position: "Backend Engineer", Location: "Reston, "},
-			want: "Backend Engineer · Reston",
+			job:  remoteOKJob{Company: "Acme", Position: "Backend Engineer", Location: "Reston, "},
+			want: "Acme · Backend Engineer · Reston",
+		},
+		"Missing company falls back to role · location": {
+			job:  remoteOKJob{Company: "", Position: "Senior Go Engineer", Location: "Italy"},
+			want: "Senior Go Engineer · Italy",
 		},
 		"Empty position returns empty": {
-			job:  remoteOKJob{Position: "", Location: "Italy"},
+			job:  remoteOKJob{Company: "Acme", Position: "", Location: "Italy"},
 			want: "",
 		},
 	}

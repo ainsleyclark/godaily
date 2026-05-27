@@ -141,20 +141,24 @@ func (j remoteOKJob) Transform() news.Item {
 	}
 }
 
-// buildRemoteOKTitle appends the listing's location to the role so the link
-// text reads e.g. "Senior Golang Developer · Italy" or "… · Remote". Without
-// this, locations only surface in the snippet and many listings come through
-// with no location at all — falling back to a "Remote" tag makes the scope
-// visible at a glance.
+// buildRemoteOKTitle composes the link text as "Company · Role · Location".
+// Putting the employer first mirrors the HN whoishiring convention and gives
+// the otherwise-bare title some weight; without it readers see only a role
+// and have to scan the snippet for context. Falls back gracefully when any
+// field is missing.
 func buildRemoteOKTitle(j remoteOKJob) string {
 	if j.Position == "" {
 		return ""
 	}
-	loc := remoteOKDisplayLocation(j.Location)
-	if loc == "" {
-		return j.Position
+	parts := make([]string, 0, 3)
+	if j.Company != "" {
+		parts = append(parts, j.Company)
 	}
-	return j.Position + " · " + loc
+	parts = append(parts, j.Position)
+	if loc := remoteOKDisplayLocation(j.Location); loc != "" {
+		parts = append(parts, loc)
+	}
+	return strings.Join(parts, " · ")
 }
 
 // remoteOKDisplayLocation normalises the API's location field for display.
@@ -170,19 +174,13 @@ func remoteOKDisplayLocation(s string) string {
 	return loc
 }
 
-// buildRemoteOKSnippet composes a short meta line: company · salary. Location
-// is omitted because it's already in the title (see buildRemoteOKTitle).
-// Description is omitted too — it's frequently a wall of HTML and the pair
-// above is the highest-signal context for a daily digest.
+// buildRemoteOKSnippet returns the salary range, if disclosed. Company and
+// location both live in the title now (see buildRemoteOKTitle), so the
+// snippet's only remaining job is surfacing the comp band — the one piece
+// of context worth a second line. Empty when no salary is on the listing,
+// which the email template skips silently.
 func buildRemoteOKSnippet(j remoteOKJob) string {
-	var parts []string
-	if j.Company != "" {
-		parts = append(parts, j.Company)
-	}
-	if s := formatSalary(j.SalaryMin, j.SalaryMax); s != "" {
-		parts = append(parts, s)
-	}
-	return strings.Join(parts, " · ")
+	return formatSalary(j.SalaryMin, j.SalaryMax)
 }
 
 // formatSalary renders the disclosed salary range as e.g. "$80k–$120k" or
