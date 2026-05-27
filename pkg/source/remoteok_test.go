@@ -190,3 +190,66 @@ func TestRemoteOK_FormatSalary(t *testing.T) {
 		})
 	}
 }
+
+func TestRemoteOK_ShouldInclude(t *testing.T) {
+	t.Parallel()
+
+	// 20 unrelated tags + golang — the keyword-spam pattern we want to drop.
+	spamTags := []string{
+		"golang", "swift", "mongo", "design", "recruiter", "marketing",
+		"finance", "medical", "robotics", "education", "dev", "mobile",
+		"digital nomad", "exec", "part time", "travel", "ops", "hr",
+		"technical", "coordinator", "admin",
+	}
+
+	tt := map[string]struct {
+		job  remoteOKJob
+		want bool
+	}{
+		"Go in position passes": {
+			job:  remoteOKJob{Position: "Senior Go Engineer", URL: "https://x", Tags: []string{"go"}},
+			want: true,
+		},
+		"Tag-only match with sane tag count passes": {
+			job:  remoteOKJob{Position: "Backend Engineer", URL: "https://x", Tags: []string{"golang", "backend", "remote"}},
+			want: true,
+		},
+		"Spam tag set dropped": {
+			job:  remoteOKJob{Position: "The perfect role not posted yet", URL: "https://x", Tags: spamTags},
+			want: false,
+		},
+		"Empty position rejected": {
+			job:  remoteOKJob{Position: "", URL: "https://x", Tags: []string{"golang"}},
+			want: false,
+		},
+		"Empty URL rejected": {
+			job:  remoteOKJob{Position: "Senior Go Engineer", URL: "", Tags: []string{"golang"}},
+			want: false,
+		},
+		"Non-Go listing rejected": {
+			job:  remoteOKJob{Position: "Rust Engineer", URL: "https://x", Tags: []string{"rust"}},
+			want: false,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, test.job.ShouldInclude())
+		})
+	}
+}
+
+func TestRemoteOK_TrimsLocationPunctuation(t *testing.T) {
+	t.Parallel()
+
+	// API returned a half-typed location: "Reston, " with trailing space and
+	// dangling comma. The snippet must trim both so it doesn't read like a
+	// truncated sentence.
+	job := remoteOKJob{
+		Company:  "The Group, LLC",
+		Location: "Reston, ",
+	}
+	got := buildRemoteOKSnippet(job)
+	assert.Equal(t, "The Group, LLC · Reston", got)
+}

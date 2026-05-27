@@ -84,13 +84,22 @@ func remoteOKAgeDays(now time.Time, epoch int64) int {
 	return days
 }
 
+// remoteOKMaxTags caps the tag count for tag-only matches. Listings that
+// self-tag with dozens of unrelated terms ("golang, swift, mongo, recruiter,
+// design, ...") are spam-fishing every search and don't belong in a
+// Go-curated section.
+const remoteOKMaxTags = 15
+
 func (j remoteOKJob) ShouldInclude() bool {
 	if j.Position == "" || j.URL == "" {
 		return false
 	}
-	// Defence in depth: the API is supposed to filter by tag, but we re-check
-	// so a stale-tag listing ("Mongo backend") doesn't slip into the digest.
-	return hasGoWord(j.Position) || tagsContainGo(j.Tags)
+	if hasGoWord(j.Position) {
+		return true
+	}
+	// Tag-only match: only trust the listing when its tag set isn't a
+	// keyword-fishing pile.
+	return len(j.Tags) <= remoteOKMaxTags && tagsContainGo(j.Tags)
 }
 
 func (j remoteOKJob) EnrichmentURL() string { return "" }
@@ -139,7 +148,10 @@ func buildRemoteOKSnippet(j remoteOKJob) string {
 	if j.Company != "" {
 		parts = append(parts, j.Company)
 	}
-	if loc := strings.TrimSpace(j.Location); loc != "" {
+	// The API regularly returns half-typed locations such as "Reston, " or
+	// "London, UK,". Trim trailing punctuation so the snippet doesn't end
+	// mid-thought.
+	if loc := strings.Trim(j.Location, " ,\t\n"); loc != "" {
 		parts = append(parts, loc)
 	} else {
 		parts = append(parts, "Remote")

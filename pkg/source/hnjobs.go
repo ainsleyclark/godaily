@@ -55,7 +55,11 @@ func init() {
 }
 
 const (
-	hnJobsStoriesURL = "https://hn.algolia.com/api/v1/search?tags=story,author_whoishiring&hitsPerPage=10"
+	// search_by_date returns hits in descending creation order so the latest
+	// month's "Who is hiring?" thread is always the first match. The plain
+	// `search` endpoint orders by Algolia relevance and surfaces ancient
+	// threads (e.g. "Who is hiring right now?" from 2020) first.
+	hnJobsStoriesURL = "https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring&hitsPerPage=10"
 	hnJobsItemURL    = "https://hn.algolia.com/api/v1/items"
 )
 
@@ -169,23 +173,63 @@ const maxHNJobTitleLen = 140
 
 var hnJobsTagRe = regexp.MustCompile(`<[^>]*>`)
 
-// parseHNJobComment splits the first paragraph (the COMPANY | ROLE | ... line
-// by convention) from the rest of the comment. The title is HTML-stripped and
-// trimmed; the snippet is left as HTML and cleaned by ingest.sanitise.
+// parseHNJobComment splits a Who-is-hiring comment into a one-line title and
+// a body snippet. Three strategies, in order of preference:
+//
+//  1. <p>...</p> paragraph boundary — older HN comments preserve these.
+//  2. The first \n inside the title-length window — Algolia's /items/
+//     endpoint strips <p> tags but keeps embedded newlines.
+//  3. Hard truncation at maxHNJobTitleLen on a word boundary. The whoishiring
+//     convention is "COMPANY | ROLE | LOC | REMOTE | $" which usually fits;
+//     when the header runs into the body without a separator (a frequent
+//     Algolia quirk where "Full-time" jams against the next paragraph), the
+//     hard cap still produces a scannable title and the rest surfaces in
+//     the snippet.
 func parseHNJobComment(text string) (title, snippet string) {
 	if text == "" {
 		return "", ""
 	}
-	end := strings.Index(text, "</p>")
-	if end < 0 {
-		return cleanTitle(text), ""
+
+	if i := strings.Index(text, "</p>"); i > 0 {
+		title = cleanTitle(text[:i])
+		snippet = strings.TrimSpace(text[i+len("</p>"):])
+		return truncateAtWord(title, maxHNJobTitleLen), snippet
 	}
-	title = cleanTitle(text[:end])
-	snippet = strings.TrimSpace(text[end+len("</p>"):])
-	if len(title) > maxHNJobTitleLen {
-		title = title[:maxHNJobTitleLen-3] + "..."
+
+	cleaned := strings.TrimSpace(cleanTitle(text))
+	if cleaned == "" {
+		return "", ""
 	}
-	return title, snippet
+
+	if i := strings.IndexByte(cleaned, '\n'); i > 0 && i <= maxHNJobTitleLen {
+		return strings.TrimSpace(cleaned[:i]), strings.TrimSpace(cleaned[i:])
+	}
+
+	if len(cleaned) <= maxHNJobTitleLen {
+		return cleaned, ""
+	}
+	cut := maxHNJobTitleLen - 3 // reserve room for the "..." marker
+	if i := strings.LastIndexAny(cleaned[:cut], " \t"); i > cut/2 {
+		cut = i
+	}
+	return strings.TrimRight(cleaned[:cut], " \t|·-") + "...", strings.TrimSpace(cleaned[cut:])
+}
+
+// truncateAtWord trims s to at most max bytes, cutting at the last whitespace
+// before the limit so words aren't sliced. Reserves 3 bytes for the "..."
+// marker. Returns s unchanged when it already fits.
+func truncateAtWord(s string, max int) string {
+	if len(s) <= max {
+		return s
+	}
+	cut := max - 3
+	if cut < 1 {
+		return s[:max]
+	}
+	if i := strings.LastIndexAny(s[:cut], " \t"); i > cut/2 {
+		cut = i
+	}
+	return strings.TrimRight(s[:cut], " \t|·-") + "..."
 }
 
 func cleanTitle(s string) string {

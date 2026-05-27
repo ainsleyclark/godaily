@@ -98,6 +98,13 @@ func TestParseHNJobComment(t *testing.T) {
 			in:        "<p>" + strings.Repeat("A", 200) + "</p><p>Body</p>",
 			wantTitle: strings.Repeat("A", maxHNJobTitleLen-3) + "...",
 		},
+		"Newline boundary when no <p> tags": {
+			// Algolia /items/<id> strips <p> tags but preserves embedded
+			// newlines — the realistic shape for current HN comments.
+			in:          "Acme | Senior Go Engineer | Remote | $150k\nWe're hiring a Go developer.",
+			wantTitle:   "Acme | Senior Go Engineer | Remote | $150k",
+			wantSnippet: "We're hiring a Go developer.",
+		},
 	}
 
 	for name, test := range tt {
@@ -110,6 +117,20 @@ func TestParseHNJobComment(t *testing.T) {
 			}
 		})
 	}
+
+	// Property-based check for the realistic Algolia-/items/ case: header
+	// concatenated to body with no separator. Verifies the title is capped
+	// and the body lands in the snippet.
+	t.Run("Hard truncate preserves body in snippet", func(t *testing.T) {
+		t.Parallel()
+		in := "Roblox | San Mateo, CA | Full Time | ONSITE (Remote during Shelter In Place)We are actively hiring and all interviews are currently done via phone and zoom."
+		title, snippet := parseHNJobComment(in)
+
+		assert.LessOrEqual(t, len(title), maxHNJobTitleLen)
+		assert.True(t, strings.HasSuffix(title, "..."), "title %q should end with ellipsis", title)
+		assert.True(t, strings.HasPrefix(in, strings.TrimSuffix(title, "...")), "title should be a prefix of the input")
+		assert.NotEmpty(t, snippet, "body should land in snippet, not be lost")
+	})
 }
 
 func TestParseHNJobCompany(t *testing.T) {
