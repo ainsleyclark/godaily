@@ -66,6 +66,7 @@ type Tag string
 
 const (
 	TagArticle            Tag = "article"
+	TagTutorial           Tag = "tutorial"
 	TagProposal           Tag = "proposal"
 	TagProposalAccepted   Tag = "proposal_accepted"
 	TagProposalShipped    Tag = "proposal_shipped"
@@ -92,6 +93,7 @@ var SectionTags = []Tag{
 	TagDiscussion,
 	TagEvent,
 	TagArticle,
+	TagTutorial,
 	TagVideo,
 	TagTrending,
 	TagSecurity,
@@ -110,6 +112,7 @@ var SectionLimits = map[Tag]int{
 	TagSecurity:   3,
 	TagProposal:   NoLimit,
 	TagArticle:    5,
+	TagTutorial:   5,
 	TagDiscussion: 8,
 	TagVideo:      5,
 	TagJobs:       5,
@@ -139,6 +142,7 @@ var sectionTitles = map[Tag]string{
 	TagSecurity:   "Security",
 	TagProposal:   "Proposals",
 	TagArticle:    "Articles",
+	TagTutorial:   "Tutorials",
 	TagDiscussion: "Discussions",
 	TagVideo:      "Videos",
 	TagTrending:   "Trending",

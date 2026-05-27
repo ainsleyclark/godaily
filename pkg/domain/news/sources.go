@@ -49,6 +49,7 @@ const (
 	SourceMeetup         Source = "meetup"
 	SourceConferences    Source = "conferences"
 	SourceGoVuln         Source = "go_vuln"
+	SourceFreeCodeCamp   Source = "freecodecamp"
 	SourceHNJobs         Source = "hacker_news_jobs"
 	SourceRemoteOK       Source = "remote_ok"
 )
@@ -77,6 +78,7 @@ var Sources = []Source{
 	SourceMeetup,
 	SourceConferences,
 	SourceGoVuln,
+	SourceFreeCodeCamp,
 	SourceHNJobs,
 	SourceRemoteOK,
 }
@@ -105,6 +107,7 @@ var FeaturedSources = []Source{
 	SourceMeetup,
 	SourceConferences,
 	SourceGoVuln,
+	SourceFreeCodeCamp,
 }
 
 // String implements fmt.Stringer on source.
@@ -113,17 +116,18 @@ func (s Source) String() string {
 }
 
 var sourcePriorities = map[Source]int{
-	SourceGoRelease:      20,
-	SourceGoBlog:         19,
-	SourceGitHub:         18,
-	SourceGitHubTrending: 17,
-	SourceHN:             16,
-	SourceLobsters:       15,
-	SourceReddit:         14,
-	SourceJetBrains:      13,
-	SourceDevTo:          12,
-	SourceGolangBridge:   11,
-	SourceConferences:    21,
+	SourceGoRelease:      21,
+	SourceGoBlog:         20,
+	SourceGitHub:         19,
+	SourceGitHubTrending: 18,
+	SourceHN:             17,
+	SourceLobsters:       16,
+	SourceReddit:         15,
+	SourceJetBrains:      14,
+	SourceDevTo:          13,
+	SourceGolangBridge:   12,
+	SourceFreeCodeCamp:   11,
+	SourceConferences:    22,
 	SourceMeetup:         10,
 	SourceGoPodcast:      9,
 	SourceFallthrough:    8,
@@ -134,9 +138,9 @@ var sourcePriorities = map[Source]int{
 	SourceMedium:         3,
 	SourceGolangNuts:     2,
 	SourcePlanetGolang:   1,
-	SourceGoVuln:         22,
-	SourceHNJobs:         23,
-	SourceRemoteOK:       24,
+	SourceGoVuln:         23,
+	SourceHNJobs:         24,
+	SourceRemoteOK:       25,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -169,6 +173,7 @@ var sourceNiceNames = map[Source]string{
 	SourceMeetup:         "Meetup",
 	SourceConferences:    "Go Conferences",
 	SourceGoVuln:         "Go Vulnerabilities",
+	SourceFreeCodeCamp:   "freeCodeCamp",
 	SourceHNJobs:         "HN Who's Hiring",
 	SourceRemoteOK:       "Remote OK",
 }
@@ -205,6 +210,7 @@ var sourceEmojis = map[Source]string{
 	SourceMeetup:         "📅",
 	SourceConferences:    "🎤",
 	SourceGoVuln:         "🔒",
+	SourceFreeCodeCamp:   "🎓",
 	SourceHNJobs:         "💼",
 	SourceRemoteOK:       "🌍",
 }
@@ -270,6 +276,7 @@ var sourceShortLabels = map[Source]string{
 	SourceMeetup:         "MT",
 	SourceConferences:    "GC",
 	SourceGoVuln:         "SEC",
+	SourceFreeCodeCamp:   "FCC",
 	SourceHNJobs:         "HN",
 	SourceRemoteOK:       "RO",
 }

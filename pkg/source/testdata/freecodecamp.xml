@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title><![CDATA[freeCodeCamp.org]]></title>
+  <description><![CDATA[freeCodeCamp.org - Articles tagged "Go"]]></description>
+  <link>https://www.freecodecamp.org/news/</link>
+  <item>
+    <title><![CDATA[How to Build a REST API in Go]]></title>
+    <description><![CDATA[A practical walkthrough of building a REST API in Go using the standard library.]]></description>
+    <link>https://www.freecodecamp.org/news/how-to-build-a-rest-api-in-go/</link>
+    <pubDate>Wed, 21 May 2026 10:00:00 GMT</pubDate>
+    <dc:creator>
+                    <![CDATA[ Quincy Larson ]]>
+                </dc:creator>
+    <content:encoded><![CDATA[<p>In this tutorial we will build a small REST API in Go.</p>]]></content:encoded>
+  </item>
+  <item>
+    <title><![CDATA[Goroutines Explained]]></title>
+    <description><![CDATA[Understanding goroutines, channels, and concurrency primitives in Go.]]></description>
+    <link>https://www.freecodecamp.org/news/goroutines-explained/</link>
+    <pubDate>Mon, 19 May 2026 09:30:00 GMT</pubDate>
+    <dc:creator><![CDATA[Beau Carnes]]></dc:creator>
+    <content:encoded><![CDATA[<p>Goroutines are lightweight threads managed by the Go runtime.</p>]]></content:encoded>
+  </item>
+</channel>
+</rss>

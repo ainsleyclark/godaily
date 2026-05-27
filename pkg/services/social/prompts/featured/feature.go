@@ -27,6 +27,7 @@ var tagWeights = map[news.Tag]float64{
 	news.TagRelease:          0.9,
 	news.TagProposal:         0.85,
 	news.TagArticle:          0.8,
+	news.TagTutorial:         0.75,
 	news.TagDiscussion:       0.5,
 	news.TagPodcast:          0.45,
 	news.TagVideo:            0.4,
