@@ -130,7 +130,7 @@ func (j remoteOKJob) Transform() news.Item {
 
 	return news.Item{
 		Source:      news.SourceRemoteOK,
-		Title:       j.Position,
+		Title:       buildRemoteOKTitle(j),
 		URL:         target,
 		OriginalURL: j.URL,
 		Author:      author,
@@ -141,21 +141,43 @@ func (j remoteOKJob) Transform() news.Item {
 	}
 }
 
-// buildRemoteOKSnippet composes a short meta line: company · location · salary.
-// Description is intentionally omitted — it's frequently a wall of HTML and
-// the trio above is the highest-signal context for a daily digest.
+// buildRemoteOKTitle appends the listing's location to the role so the link
+// text reads e.g. "Senior Golang Developer · Italy" or "… · Remote". Without
+// this, locations only surface in the snippet and many listings come through
+// with no location at all — falling back to a "Remote" tag makes the scope
+// visible at a glance.
+func buildRemoteOKTitle(j remoteOKJob) string {
+	if j.Position == "" {
+		return ""
+	}
+	loc := remoteOKDisplayLocation(j.Location)
+	if loc == "" {
+		return j.Position
+	}
+	return j.Position + " · " + loc
+}
+
+// remoteOKDisplayLocation normalises the API's location field for display.
+// Trims the dangling ", " the API regularly returns, maps the Portuguese
+// "Remoto" to "Remote" for consistency, and falls back to "Remote" when the
+// field is blank (Remote OK is a remote-only board, so the absence of a
+// location means remote-anywhere rather than missing data).
+func remoteOKDisplayLocation(s string) string {
+	loc := strings.Trim(s, " ,\t\n")
+	if loc == "" || strings.EqualFold(loc, "remoto") {
+		return "Remote"
+	}
+	return loc
+}
+
+// buildRemoteOKSnippet composes a short meta line: company · salary. Location
+// is omitted because it's already in the title (see buildRemoteOKTitle).
+// Description is omitted too — it's frequently a wall of HTML and the pair
+// above is the highest-signal context for a daily digest.
 func buildRemoteOKSnippet(j remoteOKJob) string {
 	var parts []string
 	if j.Company != "" {
 		parts = append(parts, j.Company)
-	}
-	// The API regularly returns half-typed locations such as "Reston, " or
-	// "London, UK,". Trim trailing punctuation so the snippet doesn't end
-	// mid-thought.
-	if loc := strings.Trim(j.Location, " ,\t\n"); loc != "" {
-		parts = append(parts, loc)
-	} else {
-		parts = append(parts, "Remote")
 	}
 	if s := formatSalary(j.SalaryMin, j.SalaryMax); s != "" {
 		parts = append(parts, s)

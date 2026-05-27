@@ -110,23 +110,24 @@ func TestRemoteOK_Fetch(t *testing.T) {
 				goEng := items[0]
 				assert.Equal(t, news.SourceRemoteOK, goEng.Source)
 				assert.Equal(t, news.TagJobs, goEng.Tag)
-				assert.Equal(t, "Senior Go Engineer", goEng.Title)
+				// Title now includes the location for scannability.
+				assert.Equal(t, "Senior Go Engineer · Worldwide", goEng.Title)
 				assert.Equal(t, "https://acme.example/apply", goEng.URL)
 				assert.Equal(t, "https://remoteok.com/remote-jobs/go-1", goEng.OriginalURL)
 				require.NotNil(t, goEng.Author)
 				assert.Equal(t, "Acme Corp", goEng.Author.Name)
+				// Snippet is now company · salary (location moved to title).
 				assert.Contains(t, goEng.Snippet, "Acme Corp")
-				assert.Contains(t, goEng.Snippet, "Worldwide")
 				assert.Contains(t, goEng.Snippet, "$120k")
+				assert.NotContains(t, goEng.Snippet, "Worldwide")
 				// Salary-disclosed + Go-in-title + remote, fresh: full boost.
 				assert.Greater(t, goEng.Score, 1.5)
 
 				backend := items[1]
-				assert.Equal(t, "Backend Engineer", backend.Title)
+				// Empty location renders as "Remote" in the title.
+				assert.Equal(t, "Backend Engineer · Remote", backend.Title)
 				// No salary, no Go in title - lower score than goEng.
 				assert.Less(t, backend.Score, goEng.Score)
-				// Falls back to "Remote" when location is empty.
-				assert.Contains(t, backend.Snippet, "Remote")
 				// apply_url empty → URL falls back to the listing URL.
 				assert.Equal(t, "https://remoteok.com/remote-jobs/go-2", backend.URL)
 			},
@@ -255,16 +256,59 @@ func TestRemoteOK_ShouldInclude(t *testing.T) {
 	}
 }
 
-func TestRemoteOK_TrimsLocationPunctuation(t *testing.T) {
+func TestRemoteOK_DisplayLocation(t *testing.T) {
 	t.Parallel()
 
-	// API returned a half-typed location: "Reston, " with trailing space and
-	// dangling comma. The snippet must trim both so it doesn't read like a
-	// truncated sentence.
-	job := remoteOKJob{
-		Company:  "The Group, LLC",
-		Location: "Reston, ",
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"Specific country":         {in: "Italy", want: "Italy"},
+		"City and country":         {in: "London, UK", want: "London, UK"},
+		"Trailing comma trimmed":   {in: "Reston, ", want: "Reston"},
+		"Multiple trailing commas": {in: "London,,", want: "London"},
+		"Empty falls back":         {in: "", want: "Remote"},
+		"Whitespace only":          {in: "  ", want: "Remote"},
+		"Portuguese remoto":        {in: "Remoto", want: "Remote"},
 	}
-	got := buildRemoteOKSnippet(job)
-	assert.Equal(t, "The Group, LLC · Reston", got)
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, remoteOKDisplayLocation(test.in))
+		})
+	}
+}
+
+func TestRemoteOK_BuildTitle(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		job  remoteOKJob
+		want string
+	}{
+		"Position with specific location": {
+			job:  remoteOKJob{Position: "Senior Go Engineer", Location: "Italy"},
+			want: "Senior Go Engineer · Italy",
+		},
+		"Empty location renders as Remote": {
+			job:  remoteOKJob{Position: "Senior Go Engineer", Location: ""},
+			want: "Senior Go Engineer · Remote",
+		},
+		"Malformed location is sanitised": {
+			job:  remoteOKJob{Position: "Backend Engineer", Location: "Reston, "},
+			want: "Backend Engineer · Reston",
+		},
+		"Empty position returns empty": {
+			job:  remoteOKJob{Position: "", Location: "Italy"},
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, buildRemoteOKTitle(test.job))
+		})
+	}
 }
