@@ -15,6 +15,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	socialprompts "github.com/ainsleyclark/godaily/pkg/services/social/prompts"
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
@@ -57,6 +58,8 @@ func reframe(ctx context.Context, p ai.Prompter, cfg platformConfig, f Featured)
 		return "", err
 	}
 
+	text = aiutil.SanitisePost(text)
+
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
 		slog.Warn("Social post exceeded char limit",
 			"platform", cfg.name, "chars", n, "limit", cfg.charLimit)
@@ -81,10 +84,7 @@ func buildPlatformSystem(cfg platformConfig) string {
 	}
 	b.WriteString("\n")
 
-	b.WriteString("## Voice\n")
-	b.WriteString("- Professional, technical, dry. Confident without being smug. Treat the reader as a peer.\n")
-	b.WriteString("- Factual. Report what shipped/landed/dropped. No marketing language.\n")
-	b.WriteString("- Forbidden: 'exciting', 'huge', 'game-changer', 'must-read', 'today in Go', emojis, em dashes (—), bullet lists.\n")
+	b.WriteString(socialprompts.BrandRules)
 	b.WriteString("\n")
 
 	b.WriteString("## Platform-specific guidance\n")

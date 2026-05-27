@@ -7,6 +7,13 @@ package aiutil
 
 import "strings"
 
+// SanitisePost removes characters that brand rules forbid but the model
+// occasionally emits anyway. Currently replaces em dashes (—) with a
+// plain hyphen so they never reach platform APIs.
+func SanitisePost(s string) string {
+	return strings.ReplaceAll(s, "—", "-")
+}
+
 // StripFences defensively removes a wrapping ```json ... ``` (or plain
 // ``` ... ```) block if the model emits one despite being told not to.
 // Anything outside the fence is discarded.

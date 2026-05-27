@@ -25,8 +25,12 @@ const spotlightGuidance = `You are giving a shout-out to one of GoDaily's curate
 
 Inputs include a hand-written 1-sentence blurb (use it verbatim or lightly adapted), a display name, a platform-specific handle ("mention"), and the source's URL.
 
+Mention handling:
+- If the "mention" field starts with "@", use it verbatim — it is the source's platform handle.
+- If the "mention" field does NOT start with "@", it is a plain display name. Use it naturally in the sentence. Do not add an "@" prefix or attempt to create a social handle.
+
 Write ONE post that:
-1. Mentions the source by their platform handle (the "mention" field) verbatim — it's already in the right syntax. On platforms where mention falls back to a plain name, just use the name.
+1. References the source using the mention field (per the rules above).
 2. Says one specific thing about why they're worth following — adapt the blurb, do not just quote it.
 3. Includes the URL on its own line near the end.
 
