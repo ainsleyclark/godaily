@@ -27,6 +27,7 @@ var logoItems = []logoEntry{
 	{"/assets/images/logos/golang-bridge.png", "Golang Bridge"},
 	{"/assets/images/logos/hacker-news.svg", "Hacker News"},
 	{"/assets/images/logos/meetup.svg", "Meetup"},
+	{"/assets/images/logos/fcc.svg", "freeCodeCamp"},
 }
 
 func Logos() templ.Component {
