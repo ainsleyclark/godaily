@@ -9,7 +9,9 @@
     <description><![CDATA[A practical walkthrough of building a REST API in Go using the standard library.]]></description>
     <link>https://www.freecodecamp.org/news/how-to-build-a-rest-api-in-go/</link>
     <pubDate>Wed, 21 May 2026 10:00:00 GMT</pubDate>
-    <dc:creator><![CDATA[Quincy Larson]]></dc:creator>
+    <dc:creator>
+                    <![CDATA[ Quincy Larson ]]>
+                </dc:creator>
     <content:encoded><![CDATA[<p>In this tutorial we will build a small REST API in Go.</p>]]></content:encoded>
   </item>
   <item>

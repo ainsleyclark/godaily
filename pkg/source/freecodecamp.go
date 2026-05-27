@@ -73,7 +73,7 @@ func (i fccItem) Transform() news.Item {
 		Source:    news.SourceFreeCodeCamp,
 		Title:     strings.TrimSpace(i.Title),
 		URL:       i.Link,
-		Author:    &news.Author{Name: i.Creator},
+		Author:    &news.Author{Name: strings.TrimSpace(i.Creator)},
 		Snippet:   i.Description,
 		Tag:       news.TagTutorial,
 		Score:     news.ScoreOf(news.SourceFreeCodeCamp, news.TagTutorial, 0, false),
