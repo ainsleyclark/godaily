@@ -218,6 +218,21 @@ func TestRemoteOK_ShouldInclude(t *testing.T) {
 			job:  remoteOKJob{Position: "The perfect role not posted yet", URL: "https://x", Tags: spamTags},
 			want: false,
 		},
+		"Mid-count spam (13 tags) dropped": {
+			// The US Army Corps "Interdisciplinary" listing pattern: 13 tags
+			// spanning unrelated industries. Just over the legitimate-listing
+			// max (~4–8 tags) and easily caught by the cap.
+			job: remoteOKJob{
+				Position: "Interdisciplinary",
+				URL:      "https://x",
+				Tags: []string{
+					"customer support", "engineer", "marketing", "finance",
+					"medical", "recruiter", "full time", "robotics",
+					"education", "dev", "mobile", "golang", "digital nomad",
+				},
+			},
+			want: false,
+		},
 		"Empty position rejected": {
 			job:  remoteOKJob{Position: "", URL: "https://x", Tags: []string{"golang"}},
 			want: false,

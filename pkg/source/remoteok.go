@@ -84,11 +84,12 @@ func remoteOKAgeDays(now time.Time, epoch int64) int {
 	return days
 }
 
-// remoteOKMaxTags caps the tag count for tag-only matches. Listings that
-// self-tag with dozens of unrelated terms ("golang, swift, mongo, recruiter,
-// design, ...") are spam-fishing every search and don't belong in a
-// Go-curated section.
-const remoteOKMaxTags = 15
+// remoteOKMaxTags caps the tag count for tag-only matches. Legitimate Go
+// listings on Remote OK have ~4 tags (golang, senior, backend, dev);
+// keyword-fishing spam carries 13+ across unrelated industries (medical,
+// recruiter, marketing, finance, ...). The gap is wide enough to draw a
+// clean line at 10.
+const remoteOKMaxTags = 10
 
 func (j remoteOKJob) ShouldInclude() bool {
 	if j.Position == "" || j.URL == "" {
