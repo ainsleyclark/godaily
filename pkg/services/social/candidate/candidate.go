@@ -16,8 +16,8 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
 
-// Context is the unit of work the rotation pipeline hands from a
-// Candidate's Eligible check to the per-platform Generate step.
+// CandidateContext is the unit of work the rotation pipeline hands from
+// a Candidate's Eligible check to the per-platform Generate step.
 // Different candidate kinds populate different fields:
 //
 //   - new_source/recap/spotlight/cta all set Subject for idempotency.
@@ -32,10 +32,6 @@ type CandidateContext struct {
 	Mentions map[social.Platform]string
 	Payload  any
 }
-
-// Generator produces post text for one platform from a Context.
-// Returning a non-nil error aborts the publish for that platform only.
-type Generator func(ctx context.Context, p ai.Prompter, platform social.Platform, c CandidateContext) (string, error)
 
 // Candidate is one possible rotation post. Eligible looks at the world
 // (DB, click metrics) and either returns a populated context or reports

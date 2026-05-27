@@ -21,6 +21,7 @@ import (
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 )
@@ -41,7 +42,7 @@ type fixture struct {
 	posts      *mocksocial.MockPostRepository
 	slack      *mockslack.MockSender
 	posters    []platform.Poster
-	candidates []Candidate
+	candidates []candidate.Candidate
 	reframers  map[social.Platform]reframer
 }
 

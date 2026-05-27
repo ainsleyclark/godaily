@@ -10,6 +10,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
@@ -38,8 +39,8 @@ func buildPosters(c env.Config) []platform.Poster {
 // chooses from. The recap candidate is skipped if metrics aren't wired
 // (would never happen in production but keeps tests/no-DB bootstraps
 // from blowing up).
-func buildCandidates(posts social.PostRepository, metrics engagement.MetricsRepository) []Candidate {
-	out := make([]Candidate, 0, 5)
+func buildCandidates(posts social.PostRepository, metrics engagement.MetricsRepository) []candidate.Candidate {
+	out := make([]candidate.Candidate, 0, 5)
 
 	out = append(out, candidates.NewNewSource(social.Profiles, posts))
 	out = append(out, candidates.NewSpotlight(social.Profiles, posts))

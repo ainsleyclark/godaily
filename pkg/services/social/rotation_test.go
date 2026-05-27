@@ -22,6 +22,7 @@ import (
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
@@ -32,26 +33,26 @@ import (
 type fakeCandidate struct {
 	kind     social.PostKind
 	eligible bool
-	ctx      CandidateContext
+	ctx      candidate.CandidateContext
 	err      error
 	text     string
 }
 
 func (f *fakeCandidate) Kind() social.PostKind { return f.kind }
 
-func (f *fakeCandidate) Eligible(_ context.Context, _ time.Time) (CandidateContext, bool, error) {
+func (f *fakeCandidate) Eligible(_ context.Context, _ time.Time) (candidate.CandidateContext, bool, error) {
 	if f.err != nil {
-		return CandidateContext{}, false, f.err
+		return candidate.CandidateContext{}, false, f.err
 	}
 	if !f.eligible {
-		return CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 	cctx := f.ctx
 	cctx.Kind = f.kind
 	return cctx, true, nil
 }
 
-func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ social.Platform, _ CandidateContext) (string, error) {
+func (f *fakeCandidate) Generate(_ context.Context, _ ai.Prompter, _ social.Platform, _ candidate.CandidateContext) (string, error) {
 	return f.text, nil
 }
 
@@ -64,7 +65,7 @@ type rotationFixture struct {
 	poster   *mocksocial.MockPoster
 }
 
-func newRotationFixture(t *testing.T, cands ...Candidate) rotationFixture {
+func newRotationFixture(t *testing.T, cands ...candidate.Candidate) rotationFixture {
 	t.Helper()
 	ctrl := gomock.NewController(t)
 	t.Cleanup(ctrl.Finish)
@@ -103,7 +104,7 @@ func TestService_Rotate(t *testing.T) {
 		spot := &fakeCandidate{
 			kind:     social.PostKindSpotlight,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "spotlight:ardanlabs"},
+			ctx:      candidate.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "Follow @ardanlabs for great Go content.",
 		}
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: true}
@@ -122,7 +123,7 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{
 			kind:     social.PostKindCTA,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "cta:angle-0"},
+			ctx:      candidate.CandidateContext{Subject: "cta:angle-0"},
 			text:     "Sign up to GoDaily.",
 		}
 		f := newRotationFixture(t, newSrc, spot, cta)
@@ -162,7 +163,7 @@ func TestService_Rotate(t *testing.T) {
 		rec := &fakeCandidate{
 			kind:     social.PostKindRecap,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "recap:2026-W21"},
+			ctx:      candidate.CandidateContext{Subject: "recap:2026-W21"},
 			text:     "Top stories this week …",
 		}
 		f := newRotationFixture(t, rec)
@@ -186,7 +187,7 @@ func TestService_Rotate(t *testing.T) {
 		community := &fakeCandidate{
 			kind:     social.PostKindCommunity,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "community:golang-london:2026"},
+			ctx:      candidate.CandidateContext{Subject: "community:golang-london:2026"},
 			text:     "shout-out to Golang London",
 		}
 		f := newRotationFixture(t, community)
@@ -201,7 +202,7 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{
 			kind:     social.PostKindCTA,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "cta:forced"},
+			ctx:      candidate.CandidateContext{Subject: "cta:forced"},
 			text:     "subscribe please",
 		}
 		f := newRotationFixture(t, cta)
@@ -253,7 +254,7 @@ func TestService_Rotate(t *testing.T) {
 
 		svc, err := New(env.Config{}, prompter, issues, items, posts, nil, slk)
 		require.NoError(t, err)
-		svc.candidates = []Candidate{&fakeCandidate{kind: social.PostKindCTA, eligible: true}}
+		svc.candidates = []candidate.Candidate{&fakeCandidate{kind: social.PostKindCTA, eligible: true}}
 
 		res, err := svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
 		require.NoError(t, err)
@@ -264,7 +265,7 @@ func TestService_Rotate(t *testing.T) {
 		spot := &fakeCandidate{
 			kind:     social.PostKindSpotlight,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "spotlight:ardanlabs"},
+			ctx:      candidate.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "Follow @ardanlabs for great Go content.",
 		}
 		f := newRotationFixture(t, spot)
@@ -297,7 +298,7 @@ func TestService_Rotate(t *testing.T) {
 		spot := &fakeCandidate{
 			kind:     social.PostKindSpotlight,
 			eligible: true,
-			ctx:      CandidateContext{Subject: "spotlight:ardanlabs"},
+			ctx:      candidate.CandidateContext{Subject: "spotlight:ardanlabs"},
 			text:     "x",
 		}
 		f := newRotationFixture(t, spot)

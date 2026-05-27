@@ -16,6 +16,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 )
@@ -32,7 +33,7 @@ type Service struct {
 	posts        social.PostRepository
 	slack        slack.Sender
 	reframers    map[social.Platform]reframer
-	candidates   []Candidate
+	candidates   []candidate.Candidate
 	statFetchers map[social.Platform]platform.StatFetcher
 }
 
