@@ -32,7 +32,7 @@ func previewCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			return a.Runner.SendPreview(ctx, date)
+			return a.Service.Digest.SendPreview(ctx, date)
 		},
 	}
 }

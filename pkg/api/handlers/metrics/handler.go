@@ -25,7 +25,7 @@ func New(a *godaily.App) *Handler {
 		metricsRepo:    a.Repository.Metrics,
 		issuesRepo:     a.Repository.Issues,
 		emailEvents:    a.Repository.EmailEvents,
-		metricsService: a.MetricsService,
+		metricsService: a.Service.Metrics,
 	}
 }
 

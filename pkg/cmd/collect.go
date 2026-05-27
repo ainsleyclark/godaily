@@ -38,7 +38,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			raw, err := a.Runner.Collect(ctx, digest.CollectOptions{
+			raw, err := a.Service.Digest.Collect(ctx, digest.CollectOptions{
 				DryRun:  cmd.Bool("dry-run"),
 				Sources: sources,
 			})

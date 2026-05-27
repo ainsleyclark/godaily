@@ -20,7 +20,7 @@ type Handler struct {
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		emailEvents: a.EmailEvents,
+		emailEvents: a.Service.Events,
 		config:      a.Config,
 	}
 }
