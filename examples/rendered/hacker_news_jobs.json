@@ -1,0 +1,836 @@
+[
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "ngrok | San Francisco \u0026 Seattle | ONSITE | Full-time | https://ngrok.com/I'm the Director of Engineering here at ngrok.Ngrok builds developer tools and infrastructure to bring secure, powerful network tunnels to individual developers and companies alike. Ngrok's tools enable our customers to easily share local development environments, securely access remote devices, build and test webhook integrations, and much more.We're looking for Backend \u0026 Devops Engineers across a number of different teams. We work mostly in Go, Typescript, \u0026 React. We're also looking to add Rust to our toolbelt.Email me frank@ngrok.com to learn more.",
+		"url": "https://news.ycombinator.com/item?id=22665572",
+		"author": {
+			"name": "ngrok"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T16:28:38Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "OneSignal | Full Stack and Backend Engineers | San Mateo, CA | Onsite | https://onesignal.comOneSignal helps developers simply implement re-engagement messages in their applications and websites, and we do it by taking care of a lot of the complexity on our side.Each day we deliver over 6 billion daily notifications (4x more than the number of emails SendGrid sent on their IPO), for nearly 1 million registered developers (More than Twilio on their IPO).We've observed a 10% to 20% increase in usage over the last few days as customers seek to keep their users better informed of breaking news.We do this all with a small, humble, and experienced team. We're providing an essential service for our customers and there's a lot more we're working on building for them.Please apply if you enjoy working on developer tools, interesting problems at scale, or just being a part of a high growth technology startup.Tech Stack: Rust, Go, Ruby, Rails, React, Typescript, PostgreSQL, Redis, Spark, Kafka, and InfluxDBYou can find more details and apply at https://onesignal.com/careers",
+		"url": "https://news.ycombinator.com/item?id=22665848",
+		"author": {
+			"name": "OneSignal"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T16:51:17Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Cytora | London, United Kingdom | Full Time | ONSITE (WFH currently due to covid) | Golang, JavaScript and Python | https://cytora.comI'm the CTO at Cytora, a small and experienced B2B product team laser focused on bringing technology to transform the commercial insurance industry.Using our API platform, insurers can underwrite more accurately and efficiently, and deliver fairer prices to their customers.Our engineering team are proud to be one of the best places to build data products in Go, deployed on a strong core platform and cloud-native architecture.Email me at aeneas AT cytora.com to learn more",
+		"url": "https://news.ycombinator.com/item?id=22665902",
+		"author": {
+			"name": "Cytora"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T16:55:16Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Alto Pharmacy | San Francisco, CA and Denver, CO | Software Engineer | Full Time - Onsite | https://www.alto.comAt Alto we are using technology to re-design and re-build the pharmacy from the ground up to offer better patient care and improve people's lives. We recently announced our series D funding and our plans to expand nationwide. (https://markets.businessinsider.com/news/stocks/alto-pharmac...)We believe that the status quo in the pharmacy industry is broken and we’re doing something about it. We’re a VC funded technology startup based in San Francisco made up of ex-Facebook engineers. We offer free medication delivery in the Bay Area, Seattle, Los Angeles, Orange County, Nevada, and Denver, and we’re building an advanced technology platform to help patients manage and understand their medication therapy. We allow patients to text, call or email their pharmacists with any question and strive to provide an amazing patient experience. The pharmacy experience is completely broken, and we have a huge opportunity to use technology to improve the lives of millions of patients.Our stack is Ruby on Rails, React, React Native, and Go. We’re offering a competitive salary and a generous equity package.Hiring for: frontend engineers, backend engineers, fullstack engineers, early career engineers, software security engineers, security incident detection and response engineers, infrastructure engineers, engineering managers-- come one, come all, we're hiring!More details at https://alto.com/careers",
+		"url": "https://news.ycombinator.com/item?id=22666082",
+		"author": {
+			"name": "Alto Pharmacy"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.252,
+		"published": "2020-03-23T17:08:57Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Perry Street Software | New York, NY | Product Manager; Mobile Developer | Remote (WFH) | Full-TimeThe publisher of SCRUFF (www.scruff.com) and Jack'd (www.jackd.com), two of the worlds largest queer dating apps, is hiring for Product Manager and Mobile Developer (iOS or Android). Today we are 100% remote, though normally we run a distributed engineering team (1/2 in NYC, 1/2 remote). Our company connects millions of gay, bi, trans and queer people around the world every day. We also take our responsibility to build a safe space seriously, and that's why we're the only major social app not to integrate with Facebook/Instagram and not to incorporate any third-party ad networks.As a Product Manager, you are a passionate, customer-facing and hands-on team member who will help define the future of Jack’d and SCRUFF. You are a problem solver who is happy collaborating with a team to help grow and transform our products. You get excited by new and existing technologies on your phone. You conceptualize how this will empower our community to better connect with each other and how to enable users to better express their authentic self. You enjoy working with other people and are motivated by the current and potential power of our platform.As a Mobile Software engineer, you'll be working with the latest technologies (Swift, Kotlin, RxJava, ReactiveSwift) in evolving the architecture for current and future needs in order to develop innovative, consumer-facing mobile products, while supporting the product roadmap. You'll deploy and help us evolve our client into an MVVM architecture. And you'll have an opportunity both to go deep in a specific platform and be exposed to technologies across our stack.Visit https://www.scruff.com/en/careers for more information!",
+		"url": "https://news.ycombinator.com/item?id=22666178",
+		"author": {
+			"name": "Perry Street Software"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:16:32Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Khan Academy | Mountain View, CA and REMOTE USA/CANADA | Senior Backend / Fullstack | https://khanacademy.org/careersWe're a non-profit with a mission to provide a free, world-class education to anyone, anywhere. It's a big mission that we're taking on step by step. While we want anyone to be able to get a great education independently, we've been focusing a lot on trying to help teachers working in their classrooms (and a lot of teachers and parents are using Khan away from their classrooms right now!)Our site has been built on Python 2 and Google App Engine for its first 10 years of existence. We're now in the midst of a rebuild in Go (still on App Engine).[1] Parts of that new Go-based infrastructure are already running in production.To say that this is an exciting time for us would be an understatement, I think, but we continue to have working sustainably as an engineering principle. (Our principles are available publicly[2].)[1]: http://engineering.khanacademy.org/posts/goliath.htm\n[2]: https://docs.google.com/presentation/d/1ZQ-HTuH38L8sf4ZObfJN...",
+		"url": "https://news.ycombinator.com/item?id=22666193",
+		"author": {
+			"name": "Khan Academy"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:18:00Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Eneba | Kaunas, Lithuania | Full Time | Onsite (remote while quarantine is in effect) | Backend, frontend developer | https://www.eneba.com/Eneba.com is a newly established marketplace for games. With a huge selection of titles at the best price, Eneba is quickly becoming a go-to place to find the best game deals. While game collection in the market grows by the day everyone can find something for their liking - fresh new games, world-renowned game titles or various console giftcards.Our merchants rave about us and we're steadily growing a loyal client base.\nWe had one the biggest seed rounds in the Baltics and we're in the gaming market that actually grows in recessions/quarantines.We have a very strong team (tech and business wise) and are looking for people that are willing to join and learn.\nWe're looking for* mid level backend developer. You'd be working with php (symfony) most of the time, a bit of golang and occasional devops tool.* junior/mid level frontend developer. You'd be working with react and apolloHiring: we do a \u003c1h meet to get to know each other (video conf. due to quarantine) and ask to spend a few hours on a coding task at home.Mail to karolis@[domain from above] to talk",
+		"url": "https://news.ycombinator.com/item?id=22666249",
+		"author": {
+			"name": "Eneba"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:22:08Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Griddy | Los Angeles (Playa Vista) | Full Time | Onsite \u0026 Remote | Backend, Frontend, Mobile, QA, DataGriddy is an energy provider in Texas innovating on how we consume this resource together (clean-tech). We are revenue profitable and are preparing for growth.We have great team and are hiring at all experience levels.Tech Stack: React (Web), Go, Native Android, Native iOS, and NodeMail to saumya.garg AT gogriddy DOT com to talk",
+		"url": "https://news.ycombinator.com/item?id=22666371",
+		"author": {
+			"name": "Griddy"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:30:40Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Commit | Toronto, On, Canada | Fullstack/Senior Software Engineer or DevOps Engineers | Full-timeSite: Remote (Canada only)Techstack: React/redux, Golang/node.js, GraphQL, Postgres, AWS/GCP, Docker, Kubernetes/Terraform/EKSCommit (https://commit.dev) is trying to improve the engineering career experience by 10x and de-risk the path that engineers have to take. No need to worry about balancing passion versus stability, we become the buffer so you can continue to learn and grow.Contact phong@commit.dev or https://www.linkedin.com/in/pthieu/ if you're interested in a chat.",
+		"url": "https://news.ycombinator.com/item?id=22666380",
+		"author": {
+			"name": "Commit"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:31:33Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Vetspire | Full Stack Software Engineer | Austin, TX | Full-Time | https://vetspire.comVeterinary medicine is one of the essential services needed to be provided during the coronavirus pandemic. Every day, veterinarians risk themselves to take care of your pets, and we're working every day at Vetspire to build them the tools to do so while following social-distancing best practices.Vetspire is an AI-driven medical records and practice management platform for veterinarians. We’re a startup that builds the technology suite that powers veterinary hospitals, impacting every aspect of patient care from AI assistance in the exam room to managing client communications and clinical analytics.We're looking for a full stack engineer to join our small and technical team to help bring veterinarians’ dreams into fruition. Your day to day work will consist of learning and understanding veterinarians' and veterinary staff needs and bringing them into reality from the front-end to the backend. Some examples of what your weeks may look like: building remote tools for pet owners to sign consent forms, pay invoices, and fill in information online so they don't have to walk into the clinics during the pandemic, creating an emergency room clinical census to monitor patients and alert staff in real-time, or designing the interface and algorithms for intelligent immunization reminders.You'll be working directly with our clients (the veterinarians and staff) using Vetspire, and talking with them almost every day to better understand their needs and iterate on solutions with them. It's an incredibly fulfilling role to be able to make such a drastic difference in the lives of vets, and ultimately, everyone's pets. As such, this is more than just an engineering role, as, although you can code and develop remotely, you'll be expected to go into the hospitals every now and then to talk with the users directly, understand their needs, design solutions with them, and iterate on the results.Our backend tech stack is a GraphQL Phoenix/Absinthe application written in Elixir, our front end is a React SPA using the Apollo GraphQL framework, our primary database is PostgreSQL, and it all runs on Google Cloud via Kubernetes.Email me if interested at sam@vetspire.com (include \"HN\" in the subject).",
+		"url": "https://news.ycombinator.com/item?id=22666418",
+		"author": {
+			"name": "Vetspire"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T17:34:02Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Routefusion | Austin, TX, Full-stack engineers | Full-timeWe are an international payments/payouts API. We are focused on best engineering practices, solving extremely hard problems, and writing great documentation.  Our team is based in Austin, TX, but have employees on three different continents.Our stack is Node, Golang, K8's, Nats, Postgres, Vue/React.We are backed by some amazing investors and have phenomenal customers.  If you want to be early at a company that has great growth potential, solving very difficult problems, and is quite literally building the future of cross-border payments, send your resume over to engineering@routefusion.coCan't wait to hear from you!- Colton Seal\n- developer.routefusion.co",
+		"url": "https://news.ycombinator.com/item?id=22666424",
+		"author": {
+			"name": "Routefusion"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T17:34:22Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Springer Nature | Java/Kotlin Developer | London | Full-time, Onsite | https://sndigital.springernature.com/At SN Digital we maintain and deliver millions of articles used by researchers, scientists and students around the globe. We offer a non-hierarchical environment where everyone can contribute meaningfully to the direction of the products and the department. We believe in continuously delivering high quality solutions to our customers, and empowering teams to do this. You'll be able to see your work go live, usually immediately, to millions of visitors around the globe. All our software is built iteratively. XP and Kanban heavily influence our flavour of agile and if something isn't working, we change it.We're looking for:  - Java / Kotlin developers (permanent)\n\nContact: Greg.Goorwitch@springernature.com",
+		"url": "https://news.ycombinator.com/item?id=22666468",
+		"author": {
+			"name": "Springer Nature"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T17:36:44Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "byte | New York, San Francisco, Remote (USA) | Full Time | iOS/Android/Golang | https://byte.cobyte is an app where creators make looping 6 second videos, from some of the same people that brought you Vine. Our goals are to democratize creativity and give our audience tools to make creative, interesting, and unique content.We launched at the end of January and have fundraised enough to get us to our next goal. Our technical stack includes Go, Google Spanner, and Google Cloud Platform for the backend, and Swift/Kotlin on our iOS/Android apps respectively.We're looking for engineers that are thoughtful and excited about helping creators express themselves, and get excited about building new tools and algorithms to help people browsing the app discover content that suits them.We offer competitive salary and equity, great benefits, a flexible/remote working environment and fun problems. Come join us!Feel free to apply using these links or email me directly at luke@byte.co — happy to answer any questions.Android engineers: https://jobs.lever.co/byte-2/8969f10b-e81f-48ff-830a-7c7079f...Backend engineers: https://jobs.lever.co/byte-2/6eb31ae6-7c44-438c-b406-45cbbc9...iOS engineers: https://jobs.lever.co/byte-2/f4fe0b53-690b-40c4-9c7e-467bdce...",
+		"url": "https://news.ycombinator.com/item?id=22666673",
+		"author": {
+			"name": "byte"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T17:52:15Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Chronosphere | Senior Frontend Engineer, Senior UX Designer | NYC, Seattle | Full-time Onsite (Remote for now) | VISAChronosphere is a Series A startup delivering the most highly scalable and reliable open source metric  data platform to the world. That platform is M3, which was created by the founders of Chronosphere while at Uber. It is the only open source metric data platform proven at petabyte scale in production, stores over tens of billions of metric time series and ingests and serves billions of data points per second. Chronosphere is a modern and highly scalable monitoring monitoring and observability tool built on M3 for companies faced with scaling challenges. We deliver products and APIs that run in the cloud as a single hosted platform.Senior Frontend Engineer:Are you driven by how users digest, explore and build proficiency using a product? As a front-end product engineer you will build interfaces that engineers, data scientists, business analysts and operations staff will use every day to build, analyze and operate products at scale for the companies they work at. Your natural design instincts will be paired with great Javascript fundamentals and how to best design and consume APIs, either using GraphQL or other APIs. For our customers, our tools are leveraged by thousands of engineers on a daily basis to measure and monitor their products and systems. Your work will continue to drive fundamental change to how software is created, delivered and operates all over the world. You will work alongside the engineering team, the head of product and product team, the CEO and the CTO.Technologies: Javascript (ES6), React, GraphQL on the front end. Go, GRPC, Kubernetes, MySQL and M3DB (distributed time series database) on the back end.Senior UX Designer:We're looking for a UX designer to help build Chronosphere. You will drive and complete the design process for our cloud web application from beginning to end. You will work with multiple teams to design a clean, usable console focusing on metrics, data visualization, altering, dashboards, infrastructure, and more. We are open to this role being in either New York or our Bellevue, Washington office. You will work alongside the head of product, the engineering team, the CEO and the CTO.What we offer: Excellent benefits, competitive pay and equity at Series A, flexible working environment, challenging problems at scale and pragmatically harnessing millions of instrumentation being collected per second.Senior Frontend Engineer: https://boards.greenhouse.io/chronosphere/jobs/4012681003Senior UX Designer: https://boards.greenhouse.io/chronosphere/jobs/4012682003Email me with questions at rob at chronosphere.ioRegarding remote for now:\nIf you are applying to work in the NYC or Seattle office you are not expected to interview in person (it will be remote), or work in person until the CV-19 crisis is resolved (work will be remote). The roles are not remote, but no one is in the office currently.",
+		"url": "https://news.ycombinator.com/item?id=22666710",
+		"author": {
+			"name": "Chronosphere"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T17:55:15Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Roblox | San Mateo, CA | Full Time | ONSITE (Remote during Shelter In Place)We are actively hiring and all interviews are currently done via phone \u0026 zoom.Roblox is ushering in the next generation of entertainment, allowing people to imagine, create, and play together in immersive, user-generated worlds. We are recruiting across multiple teams and positions. Our top priority roles are:Technical Artist: 5+ years’ experience; Proficient in C++, Lua, Python and/or JavaScriptBackend Web Engineer: 5+ years’ experience, Fluent in C#, C++, Java, or another OOP languageC++ / Lua Engineer: 3-5 years’ experience; Proficient in C++; Experience with Lua preferredC++ / UI Engineer: 3-5+ years’ experience; Proficient in C++; Experience with building very complex end user applicationsC++ 3D Modeling Engineer: 3-5+ years'; Proficient in C++ (and/or Python); focus on 3D API'sData Engineer: 3+ years’ experience; Expert with Java and Go; Custom ETL design, implementation and maintenanceEngineering Manager, Developer Tools (3D); 3-5+ years'; Proficient in C++ (and/or Python); focus on growing and mentoring teamsUI Engineer: 2-4+ years experience; Strong Python; Build tools to accelerate the development process for millions of engineersPlease visit https://corp.roblox.com/careers/ to apply, find more information and/or to see our full list of open positions.",
+		"url": "https://news.ycombinator.com/item?id=22667099",
+		"author": {
+			"name": "Roblox"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T18:31:22Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Coinbase (YC S12) | San Francisco, New York, London | Onsite | https://www.coinbase.comDigital currency will bring about more innovation, efficiency, and equality of opportunity in the world by creating an open financial system. We can use this new technology to help good ideas spread faster, reduce the inefficiencies that legacy payment networks impose on the world, and provide access to financial services to several billion people in the developing world.I've personally been here for 3 years and love it. Tons of autonomy, lots of really challenging problems, and a super mission aligned employee group.To learn more about who we are, our engineering culture, and whether this is the right place for you, read our Key Values profile: https://www.keyvalues.com/coinbaseSee all our open roles at Coinbase here: https://grnh.se/8a8a01cf1Tech Stack: Go, Ruby Rails, React (web), Swift (iOS), Kotlin \u0026 React Native (Android)If you're interested in chatting more, feel free to shoot me an email at jpollak@coinbase.com. Looking forward to talking!",
+		"url": "https://news.ycombinator.com/item?id=22667298",
+		"author": {
+			"name": "Coinbase (YC S12)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T18:50:36Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Tinfoil Security (Synopsys Software Integrity Group) | Software Engineer | San Francisco, CA / Mountain View, CA | Full-timeWe're hiring for the Tinfoil Security engineering team at Synopsys! We're looking for engineers at all skill levels to continue developing Tinfoil's Webapp and API security tools. We have a close-knit team and a diverse tech stack (Elixir, Ruby, Javascript/Typescript, Go).https://tinfoil.co/go/job_SWE2\nhttps://tinfoil.co/go/job_SWEsr2",
+		"url": "https://news.ycombinator.com/item?id=22667449",
+		"author": {
+			"name": "Tinfoil Security (Synopsys Software Integrity Group)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T19:01:35Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Relevant Healthcare Technologies | Various Engineering, Design, and Product Roles | Full-time, Onsite | New York City | https://relevant.healthcare/#jobsRelevant builds workflow and analytics tools for healthcare non-profits that provide care to the underserved in the US. We're a bootstrapped and mission-driven company filled with passionate and lovely humans who are lucky to get to work on interesting problems for unimpeachably good actors in the healthcare space. Come join us!Our tech stack is PostgreSQL, Ruby, Rails, React, d3.js, and weensy bit of Go.If you have any questions, reach out to me directly at brandon@relevant.healthcare (no dot com).Thanks!",
+		"url": "https://news.ycombinator.com/item?id=22667624",
+		"author": {
+			"name": "Relevant Healthcare Technologies"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T19:15:19Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Ubisoft Massive | Site Reliability Engineer (SRE / Infrastructure Engineer) | Malmo, SE | Onsite, Relocation/VISA offered | http://www.massive.seMy team is looking for an automation focused individual to help us release AAA games with the highest possible reliability, while supporting the needs of the adjacent programming squad. Our team is comprised of classically trained sysadmins who have always had a brush with automation, we work very closely with C++ programmers so experience or willingness is helpful.Our stack is primarily comprised of Saltstack/Python/terraform, an ideal candidate would have enough Python experience to be able to investigate with us and fix bugs with us in saltstack (and contribute them back upstream) - Knowledge of C++ is a plus, but not required.We also deal with Windows Server, Debian and FreeBSD, but absolute knowledge in those things is not paramount, typically we look for expertise in practical use of systems and infrastructure, concepts that go beyond the implementation of a single OS. A full Jobspec is here: https://www.massive.se/job/online-infrastructure-engineer-si...We have many other open positions for C++ programmers, Animators, Data Managers, build engineers: https://www.massive.se/career/ each offers a relocation package and a VISA sponsorship if required.",
+		"url": "https://news.ycombinator.com/item?id=22667729",
+		"author": {
+			"name": "Ubisoft Massive"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T19:24:09Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Sourcegraph (https://sourcegraph.com) | Software Engineer, Product Manager, Designer | ALL REMOTESourcegraph makes code search universal so developers can focus on solving problems instead of struggling to find and understand code. Read our master plan to learn more about what we’re building, and why it matters: https://sourcegraph.com/planWith Sourcegraph, you can instantly search across both your company’s private code and public open-source code with inline code intelligence providing go-to-definition and find-references. Developers at Uber, Lyft, Yelp, and many other companies use Sourcegraph regularly every day.We just raised a $23M Series B and are growing our team to keep up with customer demand. If you are passionate about making the world better through software, come join us!Sourcegraph is an equal opportunity workplace; we embrace diversity and welcome people from all backgrounds and communities.Technologies that we use: Go, TypeScript, React, RxJS, GraphQL, Postgres, Docker, KubernetesWe’re hiring for many different roles. Apply here: https://github.com/sourcegraph/careers/",
+		"url": "https://news.ycombinator.com/item?id=22667973",
+		"author": {
+			"name": "Sourcegraph (https://sourcegraph.com)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T19:48:07Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Nightfall AI | Backend, Systems, Machine Learning, Full Stack, DevOps | San Francisco, CA or Lehi, UT | https://nightfall.aiNightfall is a data security startup dedicated to helping enterprises discover, classify, and protect sensitive data across their cloud footprint - their corporate SaaS, data infrastructure, and APIs - via machine learning.- We’re looking for folks passionate about working at the intersection of deep learning, information security, and distributed systems.- Tech Stack: Go, Node.js, React, Python, Cassandra, Redis, Terraform, Docker, Kubernetes.- Raised $20M+ from top-tier VC investors who have invested in, operated at, taken public/exited major cybersecurity \u0026 SaaS companies.Apply \u0026 view detailed roles here: https://www.nightfall.ai/careersWe would love to hear from you - please reach out to us at careers@nightfall.ai with any questions you may have.",
+		"url": "https://news.ycombinator.com/item?id=22668130",
+		"author": {
+			"name": "Nightfall AI"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.252,
+		"published": "2020-03-23T20:02:19Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "SentiLink (https://sentilink.com) | San Francisco, CA | On-Site | Data ScientistSentiLink prevents synthetic fraud, an emerging fraud vector in which fraudsters open accounts using name/DOB/SSN combinations that don't correspond to real people. Our partners include top ten US banks, fintechs, and alternative lenders. We're backed by investors including a16z, Max Levchin (Affirm CEO/PayPal cofounder), and former presidents/CEO's of Visa, Transunion, HSBC, and Citi.Our tech stack uses Go (for the API part) and Python (for the ML part) on k8s and the work involves a lot of complex and sensitive data.Please apply at https://jobs.lever.co/sentilink or reach out to jewel@sentilink.com with your interest / questions.",
+		"url": "https://news.ycombinator.com/item?id=22668204",
+		"author": {
+			"name": "SentiLink (https://sentilink.com)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T20:09:47Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Datadog | Software Engineers | ONSITE (Boston, NYC, Paris) and REMOTE | Full-timeDatadog is a monitoring, tracing, and logs system for your infrastructure and services. We build our own tsdb, distributed tracing tools, cutting edge visualizations, and more. We love shipping great experiences for customers just like us and are growing fast!We write Go, Python, Java, and React, (mostly) run on k8s, and are multi-region and multi-cloud.We're looking for people who can build systems at scale as we process trillions of events per day. Let us know if that's you!Apply here: https://grnh.se/72e6d4551us",
+		"url": "https://news.ycombinator.com/item?id=22668236",
+		"author": {
+			"name": "Datadog"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T20:14:13Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Chronosphere | Senior Frontend Engineer, Senior UX Designer | NYC, Seattle | Full-time Onsite (Remote for now) | VISAChronosphere is a Series A startup delivering the most highly scalable and reliable open source metric data platform to the world. That platform is M3, which was created by the founders of Chronosphere while at Uber. It is the only open source metric data platform proven at petabyte scale in production, stores over tens of billions of metric time series and ingests and serves billions of data points per second. Chronosphere is a modern and highly scalable monitoring monitoring and observability tool built on M3 for companies faced with scaling challenges. We deliver products and APIs that run in the cloud as a single hosted platform.Senior Frontend Engineer:Are you driven by how users digest, explore and build proficiency using a product? As a front-end product engineer you will build interfaces that engineers, data scientists, business analysts and operations staff will use every day to build, analyze and operate products at scale for the companies they work at. Your natural design instincts will be paired with great Javascript fundamentals and how to best design and consume APIs, either using GraphQL or other APIs. For our customers, our tools are leveraged by thousands of engineers on a daily basis to measure and monitor their products and systems. Your work will continue to drive fundamental change to how software is created, delivered and operates all over the world. You will work alongside the engineering team, the head of product and product team, the CEO and the CTO.Technologies: Javascript (ES6), React, GraphQL on the front end. Go, GRPC, Kubernetes, MySQL and M3DB (distributed time series database) on the back end.Senior UX Designer:We're looking for a UX designer to help build Chronosphere. You will drive and complete the design process for our cloud web application from beginning to end. You will work with multiple teams to design a clean, usable console focusing on metrics, data visualization, altering, dashboards, infrastructure, and more. We are open to this role being in either New York or our Bellevue, Washington office. You will work alongside the head of product, the engineering team, the CEO and the CTO.What we offer: Excellent benefits, competitive pay and equity at Series A, flexible working environment, challenging problems at scale and pragmatically harnessing millions of instrumentation being collected per second.Senior Frontend Engineer: https://boards.greenhouse.io/chronosphere/jobs/4012681003Senior UX Designer: https://boards.greenhouse.io/chronosphere/jobs/4012682003Email me with questions at rob at chronosphere.ioRegarding remote for now: If you are applying to work in the NYC or Seattle office you are not expected to interview in person (it will be remote), or work in person until the CV-19 crisis is resolved (work will be remote). The roles are not remote, but no one is in the office currently.",
+		"url": "https://news.ycombinator.com/item?id=22668255",
+		"author": {
+			"name": "Chronosphere"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T20:16:08Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "MemSQL (https://memsql.com) | Lisbon (Portugal), San Francisco and Seattle | Full TimeMemSQL is a database startup focused on high performance, hybrid workloads. Our customers include half of the top 10 US banks, 2 of the top 3 US telcos, and 12% of the fortune 100. You can read all about our product here: https://memsql.com/product.Right now, we are in the process of building a next generation data platform capable of handling many different workloads in one system. Think about a massive company storing all of its data, operational or analytical together. That's the vision - if that resonates with you, say hello!We have several positions open:* Engineering Manager, Helios (San Francisco)* Support Engineer (Portland, OR / Lisbon, Portugal)* Senior Backend Engineer (Go/distributed systems/Kubernetes) (Seattle, SF or Lisbon)* Software Engineer, Performance (Seattle)* Senior Professional Services Architect/Engineer (West Coast, Remote)* Software Engineer, Frontend - Growth Team (Lisbon)Careers page with individual links for each open position: https://www.memsql.com/careers/jobs/If you want to learn more about the engineering work we do, check out memsql.engineering.Feel free to email directly at david at memsql dot com.",
+		"url": "https://news.ycombinator.com/item?id=22668280",
+		"author": {
+			"name": "MemSQL (https://memsql.com)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T20:17:55Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Kira Systems | Software Developer - DevOps Team, QE Specialist(onsite only) | Toronto, Canada | Remote | Onsite | https://www.kirasystems.com\nKira Systems is a powerful machine learning software that identifies, extracts, and analyzes text in your contracts and other documents. Our software is intuitive and easy-to-use to uncover relevant information for some of the largest law firms, professional services and corporate companies in the world.We're hiring a Software Developer (DevOps) to work closely with our developers on building software, maintaining the Continuous Integration pipeline, and tooling. You will also support our development and testing environment, automate our existing tasks, improve our current automation and support and improve our application infrastructure in the cloud. Our app is written in Clojure, Clojurescript, React and Golang. We use PostgreSQL to store our data and don’t hide SQL behind big frameworks. We also use many other popular technologies such as Linux, Docker, AWS, Bash, Ansible, RabbitMQ, Zookeeper, ElasticSearch, Kubernetes and CI/CD.\nFor our QE Specialist role, we use Selenium, Java, JMeter. Our QE Specialist work very closely with developers and product on manual and automation testing.For more information, visit our careers page https://www.kirasystems.com/careers/?gh_jid=4195424002 or email us at jobs@kirasystems.com.",
+		"url": "https://news.ycombinator.com/item?id=22668288",
+		"author": {
+			"name": "Kira Systems"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T20:18:30Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Duolingo | Mobile, Backend, Web, Distributed Systems | Pittsburgh, New York City, BellevueWe are still hiring! For folks who are finishing school, go here: https://university.duolingo.com/We're changing how people around the world learn new languages. We're a multilingual, diverse group of people who work in small, cross-functional teams to help change the world, one word at a time. We're learners first, and we specialize in making learning fun.We have several roles open - check out all of them here: duolingo.com/careersAndroid Engineer - NYC: https://grnh.se/4e9462842Android Engineer - PIT: https://grnh.se/2c3c620f2Android Engineer - BEL: https://grnh.se/d6f601692iOS Engineer - NYC: https://grnh.se/1846d9c92iOS Engineer - PIT: https://grnh.se/267c898c2iOS Engineer - BEL: https://grnh.se/4a64dfcb2Backend Engineer - PIT: https://grnh.se/881b13af2Duolingo English Test - Security Engineer - PIT: https://grnh.se/076125c22Product Manager - MBA New Grad - PIT: https://grnh.se/6abf6c1f2Reach out to jcarberry@duolingo.com if you have questions or want to talk to a human!University Students can learn more at https://university.duolingo.com/",
+		"url": "https://news.ycombinator.com/item?id=22668340",
+		"author": {
+			"name": "Duolingo"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T20:24:26Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "strongDM | All Roles! Go / Golang | REMOTE (core hours ~US timezones, any latitude) | Full-time | https://www.strongdm.com strongDM is an identity-aware proxy for managing and auditing access to databases, k8s, and other servers. We build secure, high-throughput networking systems in Go.We're a fully remote (UTC -4 to -7), building software to help people work remotely. We have high standards and high levels of respect for each other and our customers.Current roles:* Senior Software Engineer (Golang, distributed systems)* Lead Engineer / Engineering Manager* Product ManagerIf this sounds like the type of work and the type of environment that would suit you, send me (Justin, co-founder \u0026 CTO) a note at justin@strongdm.com",
+		"url": "https://news.ycombinator.com/item?id=22668880",
+		"author": {
+			"name": "strongDM"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T21:20:10Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Gruntwork | 100% Remote | Full-time | Full-stack engineers, Frontend Engineers | https://gruntwork.ioGruntwork co-founder here. We aim to improve humanity's most important invention: Software. Our product enables software teams to launch and maintain production-grade cloud infrastructure in days, not months.We create the building blocks that devs and DevOps engineers can use to make launching in the cloud 10x better / faster / easier. We think of our work as creating a new paradigm for how DevOps can be done, one that leverages the insight that so many companies re-invent so much of the foundations that software engineers need to build and launch their apps. We work primarily with AWS, K8s, Terraform, Go, Typescript, and React, and introduce new tech as needed. We’re a small team (~15 people), but our clients include the United Nations, Adobe, TicketMaster, Verizon, and lots of startups.We are profitable, self-funded (no investors, no debt), pay salaries, equity, and bonuses according to transparent formulas, and are very focused on building a company we're proud of. We are 100% remote, with half our team in the USA and half in Europe/Africa. We have company-wide in-person meetups every few months. We welcome applicants from all backgrounds.Our measure of a successful Grunt is (1) make impact, (2) think like an owner, (3) communicate effectively, and (4) be a good person. If this sounds like you, we're hiring:- Software Engineer (full-stack)- Senior Software Engineer (full-stack)- Principal Software Engineer (full-stack)- Frontend Engineer (bonus points for some design skills)",
+		"url": "https://news.ycombinator.com/item?id=22668884",
+		"author": {
+			"name": "Gruntwork"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T21:20:25Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Hinge Health | Security Analyst | San Francisco, CA or Portland, OR | REMOTE (only during COVID-19 pandemic, FT remote possible) | https://www.hingehealth.com/careersAs a healthcare company providing pain relief and alternatives to surgical treatment for those with chronic musculoskeletal (joint) pain, we play a critical role during the pandemic to help people stay healthy, safe, and calm. We do this by delivering a mobile app, motion sensors, and a remote health coach with zero direct human interaction.With physical therapy offices closing around the United States, we are quickly becoming one of very few options people have available for managing their chronic pain. Our interventions have been proven to keep people away from hospitals for surgery, and during these times that can be a life-saving intervention.The whole organization is preparing to go to war with SARS-CoV-2 by doing whatever it takes to continue supporting those who are still healthy enough to exercise. Given that there are criminals already taking advantage of the pandemic, the job of securing our organization is more important than ever.Our security analysts are instrumental in helping ensure we do right by our legal and contractual obligations, as well as protecting the actual security of our patients' data. If the two are ever at odds with each other, securing the data always takes priority without question. Security analysts also help us maintain our advanced secure-by-default and secure-by-design posture by providing expert guidance as we expand in IT and R\u0026D.We're looking for someone with serious technical chops, a sharp eye that never misses a single detail, excellent writing skills, and the kind of tenaciousness that means no resting on an incident until a true root cause is found.If you're interested in applying, send an email to the following email address: anVsaWFuK2huMjAyMDAzQGhpbmdlaGVhbHRoLmNvbQ==(I will not disclose the encoding method – consider this part of the screening process. Best of luck!)",
+		"url": "https://news.ycombinator.com/item?id=22669196",
+		"author": {
+			"name": "Hinge Health"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T21:49:38Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Noom | Senior Data Science/Full Stack/Backend/Android/iOS/QA positions | REMOTE or HQ | FULL-TIME | https://noom.comAt Noom, we use scientifically-proven methods to help users get a handle on chronic medical conditions like obesity, diabetes, and heart disease. We use a variety of technologies, and get to work on hard problems that range from data warehousing to running experiments on mobile devices.Our engineering team is expanding, and we have openings for a number of positions that include backend and mobile engineering. Our offices are in NYC, but we are a remote-first organization (some 90% of our team is remote) and are happy to consider candidates anywhere.Here are some links where you can apply:- Sr Data Scientist - https://grnh.se/2850e1a91- Sr Full Stack Engineer - https://grnh.se/4cd542051- Sr Backend Engineer - https://grnh.se/bcdd69491- Sr iOS Engineer - https://grnh.se/8009698e1- Sr Android Engineer - https://grnh.se/ff4d1d451- Mobile QA Automation Engineer - https://grnh.se/1677c07a1Our stack includes Python, React, Kotlin, Swift, and Go, all hosted on AWS.I'm Noom's VP of Engineering -- feel free to drop me a note if you have questions; I'm mt at noom dot com.",
+		"url": "https://news.ycombinator.com/item?id=22669278",
+		"author": {
+			"name": "Noom"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T22:01:10Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "10x Genomics | Pleasanton, CA \u0026 San Francisco, CA | Various Engineers \u0026 PMs | https://www.10xgenomics.com/careers/ | US RemoteScientists are using our technology to make discoveries and guide COVID-19 therapeutic development. There have been a number of recently published pre-prints using single cell genomics to study infection, response, and potential drug targets. For example, Vanderbilt University’s Vaccine Center is using our immune profiling technology to discover antibodies from survivors who have recovered from coronavirus infection in order to turn them into antibody therapies.10x Genomics is a rapidly-growing biotech company that develops software, hardware, and chemistry that enables researchers to study disease at an unprecedented resolution. Our products are used by researchers around the world, including 93 of the top 100 global research institutions. We went public last year as the largest healthcare IPO of 2019 (ticker: TXG).Software is an integral part of the 10x Genomics product. We develop software to generate data that scientists can explore programmatically or visually. We utilize Go, React/Redux, Typescript, and Electron to create easy-to-use visualization applications and are making increasing use of Rust to accelerate and harden our bioinformatics code.There are open positions for front-end software engineers, product managers, full stack engineers, backend engineers, QA engineers, computational biologists, and firmware engineers. Please contact me directly at kevin.wu@10xgenomics.com with your resume. You can find all of our job listings at https://www.10xgenomics.com/careers/We hope you are safe and healthy, good luck on your search!",
+		"url": "https://news.ycombinator.com/item?id=22669670",
+		"author": {
+			"name": "10x Genomics"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T22:52:54Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "But you don't have money for paying salaries ? It seems you guys make a lot of people go through the hoops of online assessment and hire no one just to boost your \"number-of-applications\" metric.",
+		"url": "https://news.ycombinator.com/item?id=22669838",
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T23:09:09Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "GiveCampus (YC S15) | software engineers | Full Time | Washington DC | On-site (remote for now) | https://jobs.lever.co/givecampusWe recently just announced free use (minus payment processing) of our Giving Forms product to all non-profits raising money to to help with COVID-19 issues.  Check https://go.givecampus.com/gf-covid-19/ for more details.GiveCampus builds fundraising software for colleges, universities, and K-12 schools. The company is 5 years old, profitable, and serves more than 800 schools, including 30 of the Top 50-ranked colleges in the United States. We're backed by Y Combinator and YC's CEO listed us among the 20 YC companies that he expects to be a household name by 2020 (https://news.ycombinator.com/item?id=13896296). You can read a bit more about what we do in The Washington Post (https://www.washingtonpost.com/news/grade-point/wp/2016/04/1...).We're looking for full-stack, front-end, and backend engineers with at least 2 years of professional experience who really care about helping schools raise money to provide high-quality education. Our mission is to help advance the quality, affordability, and accessibility of education. Many on our team come from the industry as former Directors of Annual Giving or currently volunteer for their alma mater, so we're looking for people who want to make a difference in the accessibility of education.Our stack is Ruby on Rails, backed by Postgres and Redis, with vanilla JS and React on the front-end. We're still a small engineering team, so if you're looking to join a fast-growing startup and have an immediate impact, please apply at https://jobs.lever.co/givecampus?team=Engineering with a bit about why you're passionate about education, and a project you've working on that you're particularly proud of.",
+		"url": "https://news.ycombinator.com/item?id=22669938",
+		"author": {
+			"name": "GiveCampus (YC S15)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2020-03-23T23:19:10Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "DataGrail | Senior / Software Engineer | San Francisco, CA | Onsite / Remotehttps://datagrail.io/careersHelp us build data privacy as a service.Data privacy / data protection should be a no-brainer, but the reality is that many organizations were not built with privacy in mind (the HN crowd knows all too well), so we're looking to make this not suck. In doing so, we'll give consumers better control over their data without all the needless hurdles one currently confronts.Our stack (and growing):* aws (codedeploy, rds, athena, etc) \n* ruby/rails, react\n* a bit of python, go and likely to grow\n* integrations with redshift, mysql, oracle db, snowflake, s3 data lakes, and more.If interested, email me (co-founder \u0026 cto): iz|at|datagrail.io",
+		"url": "https://news.ycombinator.com/item?id=22670015",
+		"author": {
+			"name": "DataGrail"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T23:27:59Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Ferrum Health | REMOTE | Full Time | Senior Backend Engineer | https://ferrumhealth.comMedical errors are the third leading cause of death in the US, and Ferrum builds AI-powered monitoring systems to help health systems detect and address mistakes before they affect patient care.Ferrum is a fully remote and distributed company focused around the US and European timezones. Since launching its first offering for lung cancer errors two years ago, Ferrum now covers over 10 million patients at nine health systems around the world, including the US. The company is backed by multiple top-tier venture capital firms and is led by an experienced digital health founding team that includes industry leaders in enterprise healthcare, machine learning, and edge infrastructure security.We are looking for Senior Backend Engineers with a strong understanding of distributed systems and Linux internals to help build out infrastructure that is deployed to healthcare systems. The backend stack consists of Go and containerized environments with deployments in cloud and bare-metal environments. You would be joining an engineering team of nine people who have proven track records delivering solutions in the networking, storage, and machine learning spaces.Our ideal candidates has proven technical skills in addition to a passion for improving the quality of healthcare.To apply, send an email to jobs@ferrumhealth.com.",
+		"url": "https://news.ycombinator.com/item?id=22670240",
+		"author": {
+			"name": "Ferrum Health"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-23T23:53:55Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Valora Digital | Head of Engineering | Full-time | Zurich, Switzerland | ONSITEValora Digital is the newly founded digital unit of Valora, a European retailer with 2700 stores across 5 countries. We are tackling interesting challenges in areas such as Autonomous Stores (think Amazon Go), Ecommerce \u0026 Delivery, Loyalty, Payments and Process Improvement. For this purpose we are building up a development team from the ground up. You will be one of the first engineers and will have a big part in shaping the culture as well as choosing our stack. We are looking to bring the startup ethos to the corporate world and get to combine the best of both worlds: ample funding, a huge customer base to deploy to and lots of freedom. I'm the head of this new unit and was previously a founder, CTO and CEO.We are looking for a Head of Engineering interested in getting their hands dirty in code on a daily basis but also able to transition and grow the organization into something much bigger.Please apply here https://recruitingapp-2538.umantis.com/Vacancies/9277/Descri... or get in touch directly at michael.wirth@valora.com",
+		"url": "https://news.ycombinator.com/item?id=22670246",
+		"author": {
+			"name": "Valora Digital"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T23:55:09Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Course Hero | Redwood City, CA | Various Engineering, Product, Design roles | Full-time, Onsite, Visa | https://grnh.se/2ywlpfCourse Hero is an online learning platform where students can access over 40 million course-specific study resources contributed by a community of educators and other students. We envision a world where every student graduates, confident and prepared.Our tech stack: React, Typescript, Sass, Go, PythonWe are hiring for the following roles:\n- Senior/Staff/Lead Software Engineers, front-end (5+ YOE)\n- Senior Machine Learning Engineers (5+ YOE)\n- Senior Data Analysts (3+ YOE)\n- Senior Data Scientists (3+ YOE)\n- Lead Product Managers (5+ YOE)\n- Senior Product Designers (5+ YOE)We are in hyper-growth mode and are actively hiring across the board! We would like to invite you to join us on our journey to help invent the future of student learning!Apply here: https://grnh.se/2ywlpfFeel free to reach out to me directly if you want to chat about the front-end roles - my contact info is in my profile.",
+		"url": "https://news.ycombinator.com/item?id=22670282",
+		"author": {
+			"name": "Course Hero"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-23T23:59:07Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "AWS Developer Tools | Seattle (Remote until post-COVID19) | Developer | Full-Time | ONSITE | https://aws.amazon.com/products/developer-tools/AWS Dev Tools builds the tools that we all use for software development and CI/CD ... at least some of them :-). I'm leading a team (CodeStar) of impassioned developers trying to re-invent how we create, release, and iterate on software quickly and safely.We're looking for engineers to build this out! If you have experience with different languages (Python, Go, Java, Node, etc...), different platforms (Linux, iOS/Android, MacOS, Web Apps), different workflow tools (JIRA, Circle CI, Pivotal Tracker, etc...), different organizations (startups, enterprises, governments, universities), I'd like to hear from you.I come from a startup background and the rest of the team is made of people with varied skills - you will learn ALOT here. I'm also interested in talking to Product Managers or UX people with a background in tools for building and shipping software.2+ years of professional experience are required for these roles and leadership opportunities are available.Email me (Adam) a resume (or similar): adnelso @at amazon.com",
+		"url": "https://news.ycombinator.com/item?id=22670409",
+		"author": {
+			"name": "AWS Developer Tools"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T00:14:33Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Cisco Umbrella | Software Engineer, Engineering Manager | San Jose, CA | Onsite Full-TimeCisco Umbrella is building a cloud based Secure Internet Gateway. The team building the Secure Web Gateway component is looking for software engineers and an engineering manager. You will be building microservices which provide security to and proxy web traffic. I'm an engineer in the team and can vouch the work and people are awesome.Apple here\n - Senior Software Engineer (C/Go/Python) https://jobs.cisco.com/jobs/ProjectDetail/Senior-Software-En...\n - SRE https://jobs.cisco.com/jobs/ProjectDetail/Security-and-Ops-E...\n - Engineering Manager https://jobs.cisco.com/jobs/ProjectDetail/Software-Engineeri...or reach out to me at spehlari (at) cisco.com",
+		"url": "https://news.ycombinator.com/item?id=22670462",
+		"author": {
+			"name": "Cisco Umbrella"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T00:25:08Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Brex | Engineering, Product Management, Design | SF, NYC, VancouverBrex is building the next generation of B2B financial services with better tech and without the restrictions of outdated legacy banking technology, starting with corporate cards for startups. We’re looking for engineers, product managers, and product designers who want to be part of a team that believes that taking the time to make a thorough decision matters, where pride in our craft is a defining characteristic, and who are optimistic about accelerating a bright future of financial services for our customers.Tech stack:\nOur system is powered by dozens of microservices written in Elixir, Typescript, Python and Golang all built and deployed on-top of AWS and Kubernetes.Learn More: https://www.themuse.com/profiles/brexSee all jobs: https://careers.brex.com/",
+		"url": "https://news.ycombinator.com/item?id=22671061",
+		"author": {
+			"name": "Brex"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T01:59:12Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Nightwatch.io | Remote | Full-time | Elixir, Rust, Ruby, GoThis is a fully remote position, full-time or part-time, with flexible working hours and work arrangements.We’re looking for an experienced developer who enjoys working with server side technologies and possesses a good mixture of DevOps and application development chops, has been around the block a couple of times, and would like to build forward-thinking and innovative solutions with experienced teammates in a progressive-oriented environment.About the role: You should have plenty of experience in building performant, easy to use, well monitored and well tested APIs, creating and maintaining robust web applications, designing efficient data flows, communicating clearly, sharing knowledge and questioning existing solutions.If you are a positive-oriented hacker who does not fit the traditional company structure and resonates with the mindset of programming languages and paradigms being just a tool and not a heavy personal attachment and identification, then this role might be the right fit for you.About the company: We’re a self funded SaaS company that primarily builds forward-thinking tools for internet professionals. We are a bootstrapped company that believes the future belongs to smaller companies that don’t subscribe to the 9-to-5 corporate way of doing things. We believe that the Silicon Valley era is over, and we are building a business that allows us to enjoy the freedom of working remotely where each of us has the autonomy and flexibility to have a high impact on the world with our work.By actively maintaining an environment in which developers can grow professionally and personally, we’re making sure that solving problems becomes not just a joy, but a thrill.Lead Elixir / Ruby Back-end Developer: https://nightwatch.io/jobs/backend-developerDevops Engineer: https://nightwatch.io/jobs/devops-engineerQA Engineer: https://nightwatch.io/jobs/quality-assurance-specialistHead of Marketing: https://nightwatch.io/jobs/head-of-marketing",
+		"url": "https://news.ycombinator.com/item?id=22671519",
+		"author": {
+			"name": "Nightwatch.io"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2020-03-24T03:13:48Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "AdGear - ONSITE - Backend Engineer (Erlang, C, Rust, Go) - Montreal - FullTime\n  AdGear - ONSITE - Data Engineer (Scala, Spark, Kafka, Vertica, AWS)- Montreal - FullTime\n  AdGear - ONSITE - Javascript Application Engineer (TypeScript, React) - Montreal - FullTime\n  AdGear - ONSITE - Ruby Application Engineer (Ruby, Rails) - Montreal - FullTime\n  AdGear - ONSITE - Senior Machine Learning Engineer - Montreal - FullTime\n\nFollowing its acquisition by the Visual Display division of Samsung in 2016, AdGear is now focusing on enabling brands to connect with Samsung TV audiences as they are exposed to digital media across all devices. We're trying to bridge the gap between traditional TV advertising and digital advertising! For more information, complete description of roles, and details on applying, please seehttps://adgear.com/en/#section_jobs#erlang #c11 #go #rust #scala #ruby #typescript #react #opensource",
+		"url": "https://news.ycombinator.com/item?id=22671822",
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T04:11:05Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Proton Technologies AG | Geneve, Zurich, Taipei, Vilnius, Skopje ONSITE | Full Time | Several openings | https://careers.protonmail.com/Proton Technologies AG is the Company behind ProtonMail [1] and ProtonVPN [2]. Head-quartered in Geneva, Switzerland, Proton is always at the forefront in the fight for privacy and a safe Internet.As we keep on extending ProtonMail and ProtonVPN, and we are building our new products - ProtonCalendar and ProtonDrive - we have several openings including Android, iOS, Windows and Go developers for our clients, QA engineers, Designers, SREs, Front-end devs, Security analysts, Database engineers, Mail Delivery engineers, and more.We are strong believers in quality over quantity, so the hiring process at ProtonMail is highly selective. But if you make it, you will join a tight-knit team where nobody is a stranger.--[1] https://protonmail.com\n[2] https://protonvpn.com",
+		"url": "https://news.ycombinator.com/item?id=22672810",
+		"author": {
+			"name": "Proton Technologies AG"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T07:30:54Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Vocdoni | Frontend Developer | REMOTE Worldwide | Full-Time | https://vocdoni.io\nVocdoni is building an open toolset for anonymous and universally verifying voting, a participation platform and a sovereign identity scheme. Using Ethereum \u0026 Tendermint and ZK-SnarksAll our code is free open-source. Our open stack makes uses Golang, Flutter \u0026 web technologies (Typescript)--EXPERIENCEReactive frameworks, JS, TS or DartStrong background in responsive \u0026 multi-platform design.Experience integrating with backend infrastructure \u0026 manipulating data structuresExperience in Flutter (or capacity to learn it) \u0026 UI testing frameworksMUSTPassion for details \u0026 minimal designGood understanding of Web3 \u0026 blockchainGeneral understanding of cryptographic functionsAbility to self-organize \u0026 prioritize--Apply here: https://cryptojobslist.com/jobs/front-end-flutter-developmen...",
+		"url": "https://news.ycombinator.com/item?id=22673041",
+		"author": {
+			"name": "Vocdoni"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T08:24:24Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "ory | ory.sh | Germany | Full-Time | On-Sitehttps://github.com/ory/jobs\nWe build stuff for an emerging cloud infrastructure.It’s security, zero trust, hardcore bullet proof engineering.It’s Golang, K8S, React, Hashicorp etc. - no more buzzwords!Just open an issue and go ahead, make our day :) - or drop us a short introductory email to jobs@ory.sh.We believe that great engineering deserves to be paid accordingly.Our open positions (all full-time in Munich, Germany):Software Engineer / Go https://tinyurl.com/uwnn387Software Engineer / React https://tinyurl.com/vcfztwlSoftware Engineer / SRE https://tinyurl.com/vbynfcyCheck out https://github.com/ory/jobs",
+		"url": "https://news.ycombinator.com/item?id=22674628",
+		"author": {
+			"name": "ory"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T13:26:55Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Datadog | Software Engineers | ONSITE (Boston, NYC, Paris) and REMOTE | Full-timeDatadog is a monitoring, tracing, and logs system for your infrastructure and services. We build our own tsdb, distributed tracing tools, cutting edge visualizations, and more. We love shipping great experiences for customers just like us and are growing fast!We write Go, Python, Java, and React, (mostly) run on k8s, and are multi-region and multi-cloud.We're looking for people who can build systems at scale as we process trillions of events per day. Let us know if that's you!https://dtdg.co/hnwhoshiring",
+		"url": "https://news.ycombinator.com/item?id=22674890",
+		"author": {
+			"name": "Datadog"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T14:19:57Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Eleanor Health | Senior Software Engineer | ONSITE (Greater Boston), REMOTE | Full-timeEleanor Health provides a revolutionary new approach to the complex disease of SUD and turns the tide of the opioid epidemic: bringing the first comprehensive, “whole person” care solution to the communities that need it most. Our goal is to help people heal, inside and out, for good. Through a combination of exceptional medical and psychological care, engaged community partnerships, and best in class technology, we provide an unparalleled approach to recovery support that serves individual needs in an integrated way.Stack: We use a variety of technologies, but the primary ones are Go, TypeScript, React, Kubernetes, and Postgres hosted on Google Cloud Platform.We’re looking for a senior software engineer to join a quickly growing team with a culture rooted in kindness, empathy, and product-mindedness. We’re in the early stages of building a new and exciting product to support our clinical team who works tirelessly providing care to our members.Job description: https://tinyurl.com/tkagvqqWe're looking to fill both back end and front end roles.",
+		"url": "https://news.ycombinator.com/item?id=22675064",
+		"author": {
+			"name": "Eleanor Health"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T14:47:42Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "NewsUK | Full-time | Onsite | LONDON, UK | Newsuk bringing you the likes of The Times \u0026 Sunday Times, TheSun, talkSPORT, Virgin Radio, TimesRadio \u0026 talkRADIO.Tech Stack- JavaScript, React, ReactNative, Node.js, GraphQL, Go, Java, AWS.Currently hiring-Principal Engineer (Java) https://www.newscareers.co.uk/vacancies/452/principal-engine...Full Stack- https://www.newscareers.co.uk/vacancies/503/senior-full-stac...Android Engineer- https://www.newscareers.co.uk/vacancies/446/software-enginee...Software Engineer- JavaScriptAll roles can be found at www.newscareers.co.uk any questions please contact me on - vinny.marino@news.co.uk",
+		"url": "https://news.ycombinator.com/item?id=22675148",
+		"author": {
+			"name": "NewsUK"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T14:59:54Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Linden Lab (Tilia) | Backend Software Developer (Golang) | Full-time | Remote in CA, CO, FL, GA, MA, NH, TX, VA, WATilia is an emerging FinTech company that makes it possible for game companies to pay content creators for their game content. We are a small team of hard workers solving hard problems. We value work-life balance, have great senses of humor, trust each other, and embrace the habit of continual improvement.We're looking for someone who shares those values and who is already productive in Golang.https://hire.withgoogle.com/public/jobs/lindenlabcom/view/P_...",
+		"url": "https://news.ycombinator.com/item?id=22675212",
+		"author": {
+			"name": "Linden Lab (Tilia)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T15:10:11Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Tray.io | London | Backend Engineer (Scala/Java) / Security Engineer / Frontend Engineer | Security Engineer| Site Reliability Engineer| Technical Support Administrator|  Full-time | Onsite | https://tray.ioTray is a visual programming platform. It’s a low-code user experience that allows anyone to build business logic that precisely defines how data flows through their organisation.We’re a well-funded startup with a team in San Francisco and 100+ in our London Engineering HQ. We have secured a huge Series C in November last year, at over 8.5x the valuation of our Series A in March 2018; we’ve worked hard on creating a fantastic support layer for our technical teams and now we’re expanding. We’re small (approaching medium sized) and dynamic, very open to new ideas and the work you do now will have a big impact on shaping how we grow our team and our product.We aim to pick the right tool for the job, and currently use: Typescript, React, Redux, GraphQL, and our toolchain includes Webpack and PostCSS. On the backend, our APIs are built in Scala, with Go and Java powering some of our custom services.We are excited by people who want to constantly innovate; borrow from other industries, experiment with new tools and pool their knowledge with other solution seekers; people who have shipped entire projects with ownership and autonomy; people who take pride in what gets built, all the whilst balancing day-to-day pragmatism with building for the future.Current open roles:\n- Backend Software Engineer https://boards.greenhouse.io/trayio/jobs/4586921002\n - Systems Software Engineer https://boards.greenhouse.io/trayio/jobs/4370269002\n - Security Engineer https://boards.greenhouse.io/trayio/jobs/4629664002\n - Frontend Software Engineer (Performance)  https://boards.greenhouse.io/trayio/jobs/4363932002\n - Frontend Software Engineer (Design system) https://boards.greenhouse.io/trayio/jobs/4655086002\n-Site Reliability Engineer\nhttps://boards.greenhouse.io/trayio/jobs/4370269002\n-Technical Support Administrator\nhttps://boards.greenhouse.io/trayio/jobs/4675597002Tech stack: Scala, Go, GraphQL, ReactJS, TypeScript, JavaScript, PostgreSQL, Redis, ElasticSearch, MongoDB, DynamoDB, AWS SQS, AWS Kinesis, Docker, Terraform, AWS Lambda, Serverless Framework, Jenkins, Grafana, Prometheus, AWS \u0026 Linux.Apply: https://tray.io/jobs or get in touch with london-talent@tray.io",
+		"url": "https://news.ycombinator.com/item?id=22675298",
+		"author": {
+			"name": "Tray.io"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.252,
+		"published": "2020-03-24T15:20:06Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Shopify | All R\u0026D Roles | Global | Full-time | Onsite/Remote [All remote for now]Shopify is hiring for all R\u0026D roles!We’re an all-in-one commerce platform building tools to start, grow, market, and manage retail businesses of any size (from your fave local shops to behemoths like GymShark and Allbirds).We support over 1 million merchants on our global platform. Our current stack is primarily Ruby, Rails, React, React Native, Go, Kafka, GraphQl, etc.We’re looking for builders who want to solve highly technical problems with really powerful tools.We have open roles for:\nSr/Staff Developers\nPrincipal Engineers\nTechnical Leads\nDeveloper Managers\nSr. Site Reliability Engineer\nDirectors of engineering\nBackend, FED, MobileCheck out: https://www.shopify.com/careers/Here’s two on my team specifically: https://www.shopify.com/careers/director-of-engineering-reta...https://www.shopify.com/careers/principal-engineer-mobile-6e...",
+		"url": "https://news.ycombinator.com/item?id=22675364",
+		"author": {
+			"name": "Shopify"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T15:26:48Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "HubSpot | Senior Software Engineer | Cambridge, MA REMOTE | Full timeHubSpot helps millions of organizations grow better, our business builds the software and systems that power the world’s small to medium-sized businesses.We’re looking for top engineering talent to join our small, customer-driven development teams to work on a variety of projects including:Back End: We write lots of micro-services, primarily with Java 11. Our APIs are RESTful and use the minimal Dropwizard framework. We take advantage of Kafka, Spark, Hadoop for processing volumes of data.Front End: Our web applications are complex, single-page apps written in JavaScript (React, ECMAScript 6, Sass).Core Data, Infrastructure, \u0026 Reliability: Building the systems that power thousands of services with Singularity on Apache Mesos, and empowering access to massive datasets with Kafka, HBase, Elastic Search, ZooKeeper, Redis, MySQL, and Memcached.At HubSpot, apps are owned and developed by small, autonomous, cross-functional teams. You and your team set the goals, set the timelines, build the software, go to user tests, and carry the pager. Instead of trying to fill specific titles, we hire talented people at all seniority levels and work with them to find the role that suits them best.Full list of open positions where you can apply here: (https://www.hubspot.com/careers/jobs?hubs_signup-cta=careers...;)Happy to also connect on open positions directly ochin@hubspot.com",
+		"url": "https://news.ycombinator.com/item?id=22675565",
+		"author": {
+			"name": "HubSpot"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T15:49:08Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "New Vector (Matrix.org \u0026 Riot.im) | Offices in London, UK, Rennes, Fr | REMOTE | Full-time | Team of 40 growing rapidlyNew Vector is the startup which employs the core team behind Matrix (https://matrix.org) - the leading project for secure, open decentralised communication.\nMatrix’s mission is to make messaging as open as email -allowing everyone to choose where their data is hosted, enjoy private conversations thanks to multi-device end-to-end encryption, and ultimately be in control of their own communication. We use Matrix to power our flagship apps for the web, iOS \u0026 Android (https://riot.im) and our SaaS platform (https://modular.im).We’re a small mission-led team with early adopters including organic users in the tens of millions, The French Government and others we can’t talk about yet(!). Almost all of the work we do is open source (https://github.com/matrix-org https://github.com/vector-im) and our server stack includes Python/Twisted \u0026 Go backed by Postgres and managed by Kubernetes/Ansible. Our client stack includes React, Kotlin, Objective-C and Swift.We’re currently hiring for:- Mobile Developer https://apply.workable.com/new-vector/j/4E9E47C166/- Fullstack Web Developer https://apply.workable.com/new-vector/j/8F95A52698/- Safety Engineer (London) https://apply.workable.com/new-vector/j/1E79B2C579/- Data Protection Officer (London) https://apply.workable.com/new-vector/j/49BDBDBFFE/If you would like to know more, checkout https://vector.im/careers, either apply via the links or reach out on https://riot.im to @neilj:matrix.orgEven if you are not a perfect match for the above get in touch anyway, we’re always keen to talk to people interested in Matrix.",
+		"url": "https://news.ycombinator.com/item?id=22675756",
+		"author": {
+			"name": "New Vector (Matrix.org \u0026 Riot.im)"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T16:08:12Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Sotheby's | Full-Stack Engineers |Full-time | NYC | Onsite/RemoteSotheby's (the first international auction house) is hiring senior full-stack engineers (plus many other data/cloud architect positions) for the data and machine learning teams. Looking for candidates who want to work closely with product managers, engineers, designers, and stakeholders across the company.5+ years of experience in full-stack web development building scalable and responsive web-based applications\nExperience with one or more general purpose programming languages including but not limited to: Python, Ruby, JavaScript, Java, or Go.Check out full list of opportunities here: https://careers-sothebys.icims.com/jobs/search?ss=1\u0026searchLo...",
+		"url": "https://news.ycombinator.com/item?id=22675967",
+		"author": {
+			"name": "Sotheby's"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T16:26:30Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Sensor Tower | San Francisco, CA and Minsk, Belarus | Full-Time, Onsite | https://sensortower.com | VISASensor Tower provides key metrics for everyone involved in the mobile ecosystem. Whether you’re a mobile app developer, a financial institution performing mobile market research, or a large brand thinking about your mobile initiatives, we provide your one-stop shop for due diligence.Learn more about our engineering culture here: https://www.keyvalues.com/sensor-towerAnd check out our open roles!* Software Engineer, Infrastructure (SF): https://jobs.lever.co/sensortower/89f581f0-ef3f-4f1b-b28b-e9...* Software Engineer, Infrastructure (Minsk): https://jobs.lever.co/sensortower/a97b90f1-158a-495c-b8af-41...* Ruby on Rails Developer (Minsk): https://jobs.lever.co/sensortower/88ce6848-525d-40b0-bca1-96...* Senior Full-Stack Engineer (SF): https://jobs.lever.co/sensortower/c171234a-4906-46c3-b609-7d...* Senior Full-Stack Engineer (Minsk): https://jobs.lever.co/sensortower/c6c3e152-8232-4af5-8e18-40...* Full-Stack Engineer (SF): https://jobs.lever.co/sensortower/a421feb6-2c0e-4f1b-adb1-84...* Technical Product Manager (SF): https://jobs.lever.co/sensortower/d55ac1e9-a7d2-479d-949d-c9...We use Ruby on Rails, MongoDB, KnockoutJS, and Go.If you're interested or have questions, email: jobs [at] sensortower [dot] com",
+		"url": "https://news.ycombinator.com/item?id=22675988",
+		"author": {
+			"name": "Sensor Tower"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T16:28:41Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Ori Industries | Mid/Senior Dev \u0026 SRE roles | Global | Full-time | RemoteOri is looking for mid/senior level devs and SREs to work on cloud-native stuff. We build upon Kubernetes to provision Kubernetes clusters for Edge infrastructure.We do mostly Go at the moment and are looking at Rust for some critical parts.\nThe company is remote-first with a base office in London.Company info:https://www.ori.co/ , https://www.linkedin.com/company/ori-edge/, https://angel.co/company/ori-industries-1Job listings:SRE: https://angel.co/company/ori-industries-1/jobs/626693-sreSenior Go Engineer: https://angel.co/company/ori-industries-1/jobs/566175-senior...Software Engineer: https://angel.co/company/ori-industries-1/jobs/554058-softwa...Distributed Systems Engineer (Security): https://angel.co/company/ori-industries-1/jobs/638104-distri...",
+		"url": "https://news.ycombinator.com/item?id=22677471",
+		"author": {
+			"name": "Ori Industries"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.24149999999999996,
+		"published": "2020-03-24T18:37:33Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Brex | Engineer - Frontend/Full Stack/Backend/Infra | Onsite | Full-Time | SF, NYC, VancouverBrex is building the next generation of B2B financial services with better tech and without the restrictions of outdated legacy banking technology, starting with corporate cards for startups. We’re looking for engineers across all roles who want to be part of a team that believes that taking the time to make a thorough decision matters, where pride in our craft is a defining characteristic, and who are optimistic about accelerating a bright future of financial services for our customers.Tech stack: Our system is powered by dozens of microservices written in Elixir, Typescript, Python and Golang all built and deployed on-top of AWS and Kubernetes.Learn More: https://www.themuse.com/profiles/brexSee all jobs: https://careers.brex.com/",
+		"url": "https://news.ycombinator.com/item?id=22678821",
+		"author": {
+			"name": "Brex"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-24T20:46:32Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Scribd | Software Engineers | Amsterdam | ONSITEScribd is a reading subscription that gives you access to the best books, audiobooks, magazines, and more. Our mission is to change how the world reads. Beginning of this year we hit 1M paying subscribers (https://techcrunch.com/2019/01/28/scribd-1-million-subscribe...)! We are one of the oldest YC startups (YC '06), operating one of the largest Ruby on Rails sites.In Amsterdam we are hiring backend software engineers with solid experience in building, running and scaling out cloud-native microservices (preferably in Ruby and/or Go). We value a hacker mindset, clean coding and a natural aversion to complexity, or if you're a glass-half-empty person: an affinity for simplicity.We're also looking for a site reliability engineer to help us out in the cloud.Scribd has a very friendly, engineering-driven company culture with competitive salary and great benefits. We are ambitious but at the same time we value a good work life balance.We have hired many people from these threads. If you have questions you can reach out to me directly at nickyp at scribd.com (I'm the Engineering Manager of the Core Services team and happy to answer questions related to the role). Please apply directly via: https://jobs.lever.co/scribd?lever-via=ze1h-jCbee\u0026location=A...",
+		"url": "https://news.ycombinator.com/item?id=22691677",
+		"author": {
+			"name": "Scribd"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.252,
+		"published": "2020-03-26T08:57:29Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "National Robotics Engineering Center | Software, Computer Vision, Machine Learning, UI | Pittsburgh, PA, USA | ONSITE | Full Time | H1-B VISAhttps://www.nrec.ri.cmu.edu/careers/index.htmlThe National Robotics Engineering Center (NREC), a robotics research and development powerhouse, is looking for experienced developers, especially in embedded systems, robotics, perception, deep learning, data science, and AI. For more than 21 years NREC has brought together a critical mass of software and hardware engineers in order to take technology from the laboratory to the real world. NREC maintains a diverse portfolio of projects, from Augmented Reality driver assistance to full off-road autonomy and from advanced teleoperation to full autonomous manipulation.NREC is part of the Robotics Institute at Carnegie Mellon University, focused on commercialization of robotic technologies, and employs over 150 people in their off-campus facility. An NREC developer can go from developing mapping for a mining robot operating in extreme environments (https://www.nrec.ri.cmu.edu/solutions/mining/profiler.html) to developing hardware and controls for unique research vehicles (https://www.youtube.com/watch?v=-URxpqi0oAU). Another may go from developing training products for humanitarian workers (https://www.nrec.ri.cmu.edu/solutions/defense/other-projects...) on to assistive technologies that make work easier for farmers around the world (https://www.nrec.ri.cmu.edu/solutions/agriculture/other-agri...).A subset of our openings:C++ and Python software engineers - https://www.nrec.ri.cmu.edu/careers/software-engineer-2.htmlDevOps - https://www.nrec.ri.cmu.edu/careers/software-build-engineer....ML/AI Engineering - https://www.nrec.ri.cmu.edu/careers/software-engineer-machin...Computer Vision engineers - https://www.nrec.ri.cmu.edu/careers/robotics-engineer-comput...User Interface - https://www.nrec.ri.cmu.edu/careers/user-interface-software-...If you have questions or are interested in any positions in robotics, please contact Christine DeCarolis ( cdecarolis@nrec.ri.cmu.edu ). In your communication, please mention hacker news.",
+		"url": "https://news.ycombinator.com/item?id=22742202",
+		"author": {
+			"name": "National Robotics Engineering Center"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2020-03-31T20:31:18Z"
+	}
+]
