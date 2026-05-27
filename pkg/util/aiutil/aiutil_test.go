@@ -19,14 +19,14 @@ func TestSanitisePost(t *testing.T) {
 		in   string
 		want string
 	}{
-		"No Em Dash":              {in: "Go is fast", want: "Go is fast"},
-		"Em Dash Mid Sentence":    {in: "fast — really fast", want: "fast - really fast"},
-		"Em Dash No Spaces":       {in: "fast—really fast", want: "fast-really fast"},
-		"Multiple Em Dashes":      {in: "a — b — c", want: "a - b - c"},
-		"Em Dash At Start":        {in: "— leading", want: "- leading"},
-		"Em Dash At End":          {in: "trailing —", want: "trailing -"},
-		"Hyphen Preserved":        {in: "swiss-table", want: "swiss-table"},
-		"Empty String":            {in: "", want: ""},
+		"No Em Dash":           {in: "Go is fast", want: "Go is fast"},
+		"Em Dash Mid Sentence": {in: "fast — really fast", want: "fast - really fast"},
+		"Em Dash No Spaces":    {in: "fast—really fast", want: "fast-really fast"},
+		"Multiple Em Dashes":   {in: "a — b — c", want: "a - b - c"},
+		"Em Dash At Start":     {in: "— leading", want: "- leading"},
+		"Em Dash At End":       {in: "trailing —", want: "trailing -"},
+		"Hyphen Preserved":     {in: "swiss-table", want: "swiss-table"},
+		"Empty String":         {in: "", want: ""},
 	}
 
 	for name, tc := range tt {
