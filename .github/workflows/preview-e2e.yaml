@@ -50,5 +50,6 @@ jobs:
           TESTMAIL_API_KEY: ${{ secrets.TESTMAIL_API_KEY }}
           TESTMAIL_NAMESPACE: ${{ secrets.TESTMAIL_NAMESPACE }}
           API_SECRET: ${{ secrets.API_SECRET }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: pnpm exec playwright test --config=playwright.preview.config.ts
         working-directory: e2e

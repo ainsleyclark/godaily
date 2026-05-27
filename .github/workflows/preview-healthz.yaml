@@ -1,0 +1,40 @@
+name: Preview Health Check
+
+on:
+  deployment_status:
+
+jobs:
+  healthz:
+    if: |
+      github.event.deployment_status.state == 'success' &&
+      startsWith(github.event.deployment.environment, 'Preview')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /healthz
+        env:
+          PREVIEW_URL: ${{ github.event.deployment_status.environment_url }}
+          BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          URL="${PREVIEW_URL%/}/api/healthz/"
+          echo "Checking $URL"
+
+          HTTP_STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" -L --max-time 15 \
+            -H "x-vercel-protection-bypass: ${BYPASS_SECRET}" \
+            "$URL")
+          BODY=$(cat /tmp/healthz.json)
+
+          echo "Status : $HTTP_STATUS"
+          echo "Body   : $BODY"
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "::error::/healthz returned HTTP $HTTP_STATUS (expected 200)"
+            exit 1
+          fi
+
+          STATUS_VALUE=$(echo "$BODY" | jq -r '.status // empty')
+          if [ "$STATUS_VALUE" != "ok" ]; then
+            echo "::error::/healthz body status field is '$STATUS_VALUE' (expected 'ok')"
+            exit 1
+          fi
+
+          echo "Health check passed"
