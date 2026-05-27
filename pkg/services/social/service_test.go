@@ -8,7 +8,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
@@ -16,11 +15,13 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	"github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/env"
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 )
@@ -33,15 +34,16 @@ func constReframer(text string) reframer {
 }
 
 type fixture struct {
-	t         *testing.T
-	ctrl      *gomock.Controller
-	prompter  *mockai.MockPrompter
-	issues    *mockdigest.MockIssueRepository
-	items     *mocknews.MockItemRepository
-	posts     *mocksocial.MockPostRepository
-	slack     *mockslack.MockSender
-	posters   []platform.Poster
-	reframers map[social.Platform]reframer
+	t          *testing.T
+	ctrl       *gomock.Controller
+	prompter   *mockai.MockPrompter
+	issues     *mockdigest.MockIssueRepository
+	items      *mocknews.MockItemRepository
+	posts      *mocksocial.MockPostRepository
+	slack      *mockslack.MockSender
+	posters    []platform.Poster
+	candidates []candidate.Candidate
+	reframers  map[social.Platform]reframer
 }
 
 func newFixture(t *testing.T) *fixture {
@@ -59,10 +61,16 @@ func newFixture(t *testing.T) *fixture {
 	}
 }
 
+// service constructs a Service with the fixture's mocks. Posters and
+// candidates are injected directly rather than bootstrapped from env —
+// the package's bootstrap helpers are tested separately and would
+// otherwise require real credentials to produce a usable poster.
 func (f *fixture) service() *Service {
 	f.t.Helper()
-	svc, err := New(f.posters, f.prompter, f.issues, f.items, f.posts, f.slack)
+	svc, err := New(env.Config{}, f.prompter, f.issues, f.items, f.posts, nil, f.slack)
 	require.NoError(f.t, err)
+	svc.posters = f.posters
+	svc.candidates = f.candidates
 	if f.reframers != nil {
 		svc.reframers = f.reframers
 	}
@@ -116,15 +124,24 @@ func TestNew(t *testing.T) {
 
 	t.Run("Happy path", func(t *testing.T) {
 		t.Parallel()
-		_, err := New(nil, f.prompter, f.issues, f.items, f.posts, nil)
+		_, err := New(env.Config{}, f.prompter, f.issues, f.items, f.posts, nil, nil)
 		require.NoError(t, err)
 	})
 
 	tt := map[string]func(*fixture) error{
-		"Nil prompter":    func(f *fixture) error { _, e := New(nil, nil, f.issues, f.items, f.posts, nil); return e },
-		"Nil issues":      func(f *fixture) error { _, e := New(nil, f.prompter, nil, f.items, f.posts, nil); return e },
-		"Nil items":       func(f *fixture) error { _, e := New(nil, f.prompter, f.issues, nil, f.posts, nil); return e },
-		"Nil socialposts": func(f *fixture) error { _, e := New(nil, f.prompter, f.issues, f.items, nil, nil); return e },
+		"Nil prompter": func(f *fixture) error { _, e := New(env.Config{}, nil, f.issues, f.items, f.posts, nil, nil); return e },
+		"Nil issues": func(f *fixture) error {
+			_, e := New(env.Config{}, f.prompter, nil, f.items, f.posts, nil, nil)
+			return e
+		},
+		"Nil items": func(f *fixture) error {
+			_, e := New(env.Config{}, f.prompter, f.issues, nil, f.posts, nil, nil)
+			return e
+		},
+		"Nil socialposts": func(f *fixture) error {
+			_, e := New(env.Config{}, f.prompter, f.issues, f.items, nil, nil, nil)
+			return e
+		},
 	}
 	for name, build := range tt {
 		t.Run(name, func(t *testing.T) {
@@ -133,14 +150,4 @@ func TestNew(t *testing.T) {
 			require.Error(t, err)
 		})
 	}
-}
-
-func TestService_HasPosters(t *testing.T) {
-	t.Parallel()
-
-	f := newFixture(t)
-	assert.False(t, f.service().HasPosters())
-
-	f.posters = []platform.Poster{newMockPoster(f.ctrl, social.Bluesky)}
-	assert.True(t, f.service().HasPosters())
 }

@@ -24,7 +24,7 @@ import (
 //     reframes the featured item for that platform, publishes it, and
 //     records the result.
 func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
-	if len(s.posters) == 0 {
+	if !s.hasPosters() {
 		slog.InfoContext(ctx, "Skipping social — no posters configured")
 		return nil, nil
 	}
