@@ -113,7 +113,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			results, err := a.Social.Post(ctx, social.PostOptions{
+			results, err := a.Service.Social.Post(ctx, social.PostOptions{
 				Date:      date,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
@@ -170,7 +170,7 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 				now = parsed.UTC()
 			}
 
-			results, err := a.Social.Rotate(ctx, social.RotateOptions{
+			results, err := a.Service.Social.Rotate(ctx, social.RotateOptions{
 				Now:       now,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,

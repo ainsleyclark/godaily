@@ -38,17 +38,13 @@ import (
 
 // App defines a global state for godaily.
 type App struct {
-	Config         *env.Config
-	DB             *sql.DB
-	Repository     *Repository
-	Runner         digest.Service
-	Social         social.Service
-	Cache          cache.Store
-	Subscribers    audience.SubscriberService
-	EmailEvents    engagement.EventService
-	Slack          slack.Sender
-	MetricsService engagement.MetricsService
-	StatFetchers   map[social.Platform]platform.StatFetcher
+	Config       *env.Config
+	DB           *sql.DB
+	Repository   *Repository
+	Service      *Service
+	Cache        cache.Store
+	Slack        slack.Sender
+	StatFetchers map[social.Platform]platform.StatFetcher
 }
 
 // Repository defines the datastore for the application.
@@ -146,16 +142,18 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	subscriberSvc := audiencesvc.New(subsStore, issueStore, emailSender)
 
 	return &App{
-		Config:         &config,
-		DB:             conn,
-		Repository:     repo,
-		Runner:         aggregator,
-		Social:         socialSvc,
-		Cache:          store,
-		Subscribers:    subscriberSvc,
-		EmailEvents:    svcengagement.NewEvents(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
-		Slack:          slackClient,
-		MetricsService: svcengagement.New(repo.Metrics, slackClient),
-		StatFetchers:   socialSvc.StatFetchers(),
+		Config:     &config,
+		DB:         conn,
+		Repository: repo,
+		Service: &Service{
+			Digest:      aggregator,
+			Social:      socialSvc,
+			Subscribers: subscriberSvc,
+			Events:      svcengagement.NewEvents(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
+			Metrics:     svcengagement.New(repo.Metrics, slackClient),
+		},
+		Cache:        store,
+		Slack:        slackClient,
+		StatFetchers: socialSvc.StatFetchers(),
 	}, teardown, nil
 }

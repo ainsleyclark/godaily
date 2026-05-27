@@ -61,6 +61,8 @@ func TestSource_Priority(t *testing.T) {
 		"Mastodon":           {source: SourceMastodon, want: 5},
 		"Awesome Go":         {source: SourceAwesomeGo, want: 4},
 		"Medium":             {source: SourceMedium, want: 3},
+		"HN Who's Hiring":    {source: SourceHNJobs, want: 23},
+		"Remote OK":          {source: SourceRemoteOK, want: 24},
 	}
 	for name, test := range values {
 		t.Run(name, func(t *testing.T) {

@@ -32,7 +32,7 @@ func synthCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			return a.Runner.SendSuggestion(ctx, date)
+			return a.Service.Digest.SendSuggestion(ctx, date)
 		},
 	}
 }

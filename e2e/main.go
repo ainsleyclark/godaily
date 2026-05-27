@@ -163,13 +163,15 @@ func main() {
 			APISecret:           "e2e-test-secret",
 			ResendWebhookSecret: e2eWebhookSecret,
 		},
-		DB:          conn,
-		Repository:  &godaily.Repository{Issues: cached, Items: itemStore, Subscribers: subsStore, EmailEvents: eventsStore},
-		Runner:      seedRunner{items: itemStore, aggregator: aggregator},
-		Cache:       store,
-		Subscribers: subscriberSvc,
-		EmailEvents: svcengagement.NewEvents(eventsStore, subscriberSvc, itemStore, "admin@e2e.test"),
-		Slack:       noopSlack{},
+		DB:         conn,
+		Repository: &godaily.Repository{Issues: cached, Items: itemStore, Subscribers: subsStore, EmailEvents: eventsStore},
+		Service: &godaily.Service{
+			Digest:      seedRunner{items: itemStore, aggregator: aggregator},
+			Subscribers: subscriberSvc,
+			Events:      svcengagement.NewEvents(eventsStore, subscriberSvc, itemStore, "admin@e2e.test"),
+		},
+		Cache: store,
+		Slack: noopSlack{},
 	}
 
 	webH := webserver.Handler(app)
@@ -185,20 +187,20 @@ func main() {
 
 		// ── E2E pipeline: bypass weekend guard, call runner directly ──────────
 		case "/api/e2e/pipeline/collect":
-			if _, err := app.Runner.Collect(r.Context(), digest.CollectOptions{}); err != nil {
+			if _, err := app.Service.Digest.Collect(r.Context(), digest.CollectOptions{}); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 			w.WriteHeader(http.StatusOK)
 		case "/api/e2e/pipeline/build":
-			if err := app.Runner.Build(r.Context(), time.Now().UTC()); err != nil {
+			if err := app.Service.Digest.Build(r.Context(), time.Now().UTC()); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 			w.WriteHeader(http.StatusOK)
 		case "/api/e2e/pipeline/send":
 			// force=true bypasses the draft-status guard so tests aren't order-sensitive.
-			if err := app.Runner.SendDigest(r.Context(), time.Now().UTC(), true); err != nil {
+			if err := app.Service.Digest.SendDigest(r.Context(), time.Now().UTC(), true); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}

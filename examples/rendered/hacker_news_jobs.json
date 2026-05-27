@@ -1,0 +1,581 @@
+[
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "NetBird | Berlin, Germany | ONSITE \u0026 Remote for some roles | Full-time | https://netbird.ioWe build open source secure remote access for...",
+		"url": "https://news.ycombinator.com/item?id=47975581",
+		"author": {
+			"name": "NetBird"
+		},
+		"snippet": "teams and infrastructure. 25k+ stars, Series A. Our mission: make secure connectivity simple and accessible for everyone.Looking for people excited about the product, startup pace, and growth. Activel",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T15:00:28Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Loophole Labs | Senior Systems Engineer | REMOTE (Americas \u0026 Europe) | $150k–195k USD + equity | Go, Zig, Rust, C, eBPF, CRIU,...",
+		"url": "https://news.ycombinator.com/item?id=47975670",
+		"author": {
+			"name": "Loophole Labs"
+		},
+		"snippet": "KubernetesWe make Architect: a Kubernetes runtime that hibernates idle pods in place and wakes them in 50ms with TCP connections intact. Five engineers. You'd be the 6th.If tracing an x86 instruction ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2026-05-01T15:06:32Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Fastly | Software Engineers (Senior, Staff, Principal) | REMOTE (US, UK, EU) or ONSITE | Full-timeWhen you look at the headers of major...",
+		"url": "https://news.ycombinator.com/item?id=47975839",
+		"author": {
+			"name": "Fastly"
+		},
+		"snippet": "websites, you’ll see us. If it has to be performant, secure, scaled worldwide, and always-on, it uses Fastly.We're a globally edge cloud platform for performance and security, emphasizing open stand",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T15:19:48Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Project Debug | General Engineer | Singapore (HYBRID) | Full-time | debug.comProject Debug raises, sorts by sex, and releases millions...",
+		"url": "https://news.ycombinator.com/item?id=47975944",
+		"author": {
+			"name": "Project Debug"
+		},
+		"snippet": "of (non-biting) male mosquitoes in Singapore to reduce the local mosquito population and prevent the spread of dengue and other mosquito-borne illnesses. Our trial in Fresno, CA showed a 95% reduction",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.13999999999999999,
+		"published": "2026-05-01T15:30:01Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Aqora | Paris, France / US / Remote (EU) | Multiple roles | https://aqora.ioAqora is the \"Hugging Face for quantum computing\". We host...",
+		"url": "https://news.ycombinator.com/item?id=47976048",
+		"author": {
+			"name": "Aqora"
+		},
+		"snippet": "datasets, benchmarks, and use-case challenges, plus the orchestration layer to run quantum algorithms and workflows across hardware backends, so results are reproducible, comparable, and actually move",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T15:39:12Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Join (https://join.build) | Staff Software Engineer | Remote | $175K–$205K + equity",
+		"url": "https://news.ycombinator.com/item?id=47976189",
+		"author": {
+			"name": "Join (https://join.build)"
+		},
+		"snippet": "Join builds collaboration software for the construction industry — helping contractors, owners, and architects coordinate on high-value projects. React, Golang, Postgres. We deploy to AWS via Terraf",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-01T15:50:20Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "MongoDB | Senior/Staff/Lead Site Reliability Engineers (SRE) and Infra SWE, Multiple Teams | REMOTE (US) or HYBRID (NYC, Dublin)...",
+		"url": "https://news.ycombinator.com/item?id=47976334",
+		"author": {
+			"name": "MongoDB"
+		},
+		"snippet": "Full-TimeWe are looking for experienced Site Reliability Engineers and Infrastructure Software Engineers to help build, scale, and secure the foundation of MongoDB Atlas, our globally distributed, mul",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T16:02:23Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Sectigo | Manager, Software Development | HYBRID (Canada) Ottawa | $142k - $165k CAD per yearCompany DescriptionAt Sectigo, we align...",
+		"url": "https://news.ycombinator.com/item?id=47976670",
+		"author": {
+			"name": "Sectigo"
+		},
+		"snippet": "around our mission and pride ourselves in helping thousands of customers sleep better at night.Sectigo is the most innovative provider of certificate lifecycle management (CLM), delivering comprehensi",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-01T16:29:51Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Spacelift | Remote (Europe) | Full-time | Senior Software Engineer | $80k-$110k+ (can go higher)We're a VC-funded startup (recently...",
+		"url": "https://news.ycombinator.com/item?id=47976728",
+		"author": {
+			"name": "Spacelift"
+		},
+		"snippet": "raised $51M Series C) building an infrastructure orchestrator and collaborative management platform for Infrastructure-as-Code – from OpenTofu, Terraform, Terragrunt, CloudFormation, Pulumi, Kuberne",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.28979999999999995,
+		"published": "2026-05-01T16:33:41Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Opendate | Senior Full Stack Engineer (Ruby on Rails) | REMOTE (US only) | Full-time...",
+		"url": "https://news.ycombinator.com/item?id=47976768",
+		"author": {
+			"name": "Opendate"
+		},
+		"snippet": "https://www.opendate.io/careers/senior-full-stack-software-e...Opendate is the operating system for live music venues — booking, ticketing, marketing, and settlement, all in one place. We replace th",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T16:35:57Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Sumble is the newco from the founders of Kaggle. We are hiring full stack engineers, ai/ml engineers and growth/marketing. Can view our...",
+		"url": "https://news.ycombinator.com/item?id=47976780",
+		"snippet": "roles and apply here: https://sumble-inc.workable.com/ We are building a knowledge graph from web data with a first focus on data for go-to-market teams.We use web data to identify things like org str",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-01T16:36:44Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "GAIM | Onsite (Malmö, Sweden / Copenhagen, Denmark) | Full Time | gaim.comGAIM is a marksman training simulation game, we're expanding...",
+		"url": "https://news.ycombinator.com/item?id=47977270",
+		"author": {
+			"name": "GAIM"
+		},
+		"snippet": "our development team with a Rust programmer to help work with our next generation backend to support on-the-go analysis of their performance in the simulator.Prior gamedev experience is a bonus but no",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.13999999999999999,
+		"published": "2026-05-01T17:10:19Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Chestnut | Senior Product Engineer | SF or Seattle (Hybrid) | https://jobs.ashbyhq.com/ChestnutI'm Nick, CTO \u0026 co-founder. We're...",
+		"url": "https://news.ycombinator.com/item?id=47977276",
+		"author": {
+			"name": "Chestnut"
+		},
+		"snippet": "Rippling, but for insurance carriers paying their sales force. Every policy sold triggers a chain of payouts across brokers, agents, and sub-agents. Today that runs on spreadsheets and legacy vendor s",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-01T17:10:45Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "vvd | Design Engineer | Remote (work from anywhere) | Full-time | React, TypeScript, Next.jshttps://vvd.worldWe’re building tools for...",
+		"url": "https://news.ycombinator.com/item?id=47977567",
+		"author": {
+			"name": "vvd"
+		},
+		"snippet": "storytellers, worldbuilders, writers, and creators.We’re looking for a Design Engineer who can design and build polished product experiences end-to-end. You should care deeply about taste, interacti",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T17:33:44Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "River | Senior + Staff Engineers (Elixir, React, ML/AI) | SF or NYC or REMOTE (US, Europe, South America) | Full-Time | $150K-$250K +...",
+		"url": "https://news.ycombinator.com/item?id=47977581",
+		"author": {
+			"name": "River"
+		},
+		"snippet": "equity | https://jobs.ashbyhq.com/river?utm source=Zp9nJyqvd4I'm Alex, founder and CEO of River. I also wrote the first line of code and still ship PRs.River is a client-first Bitcoin-only financial i",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-01T17:34:38Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Gladly | Remote (US) | Staff Software Engineer, AI \u0026 Automation | $60k–$215k + Equity | https://www.gladly.ai/careersGladly is at the...",
+		"url": "https://news.ycombinator.com/item?id=47977919",
+		"author": {
+			"name": "Gladly"
+		},
+		"snippet": "forefront of building retail customer service AI. Our AI is live in production with customer-centric brands like Crate \u0026 Barrel, Sephora, and REI. We have the ingredients that make AI work: rich data,",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-01T18:01:11Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Kinelo | kinelo.com | San Francisco | Onsite (with a bit of flexibility)Kinelo solves \"context myopia\": autonomous and semi-autonomous...",
+		"url": "https://news.ycombinator.com/item?id=47978064",
+		"author": {
+			"name": "Kinelo"
+		},
+		"snippet": "AI agents don't know what they don't know, so they can't search or find the background information required to accomplish tasks accurately and effectively. The result looks like slop but it's not due ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-01T18:13:10Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "DuckDuckGo | Multiple Roles | Remote | Full-time | $178,500 - $242,800 USD + equityWe are looking for candidates that are excited to...",
+		"url": "https://news.ycombinator.com/item?id=47978141",
+		"author": {
+			"name": "DuckDuckGo"
+		},
+		"snippet": "join us on a mission to raise the standard of trust online. All of our roles are fully-remote, except where specific locations are noted.Most of the software engineering positions have been repeating ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-01T18:19:31Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Coop (https://smart.coop.farm)| 2nd Founding Engineer | iOS Heavy Engineer | Hybrid onsite | Austin, TX | Full-time, Part-timeMy name is...",
+		"url": "https://news.ycombinator.com/item?id=47979300",
+		"author": {
+			"name": "Coop (https://smart.coop.farm)"
+		},
+		"snippet": "AJ Forsythe and I'm the Founder / Chief Chicken Tender at Coop! We're an Austin TX based company on a mission to build the world’s largest decentralized food production network, starting with AI pow",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-01T19:44:36Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Fixly | Senior Software Engineer (Backend, Node.js) | Poland | Remote | 2 days in office per month | Polish language required...",
+		"url": "https://news.ycombinator.com/item?id=47979344",
+		"author": {
+			"name": "Fixly"
+		},
+		"snippet": "ContractFixly is one of the largest service marketplaces in Poland, connecting customers directly with local service providers - from handymen and electricians to accountants and language instructors.",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-01T19:48:20Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Yassi|Senior Fullstack Engineer (Golang, Node.js/React, AWS) 3 days in-office ChicagoYASSI provides real-time access to vehicle title,...",
+		"url": "https://news.ycombinator.com/item?id=47979955",
+		"author": {
+			"name": "Yassi"
+		},
+		"snippet": "lien, and registration data directly from U.S. state motor vehicle agencies. Unlike traditional bulk data providers, YASSI retrieves each vehicle record live at the time of request, ensuring the most ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2026-05-01T20:36:03Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Fuck mosquitoes, go get em",
+		"url": "https://news.ycombinator.com/item?id=47980592",
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.21000000000000002,
+		"published": "2026-05-01T21:26:42Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Mitte (https://mitte.ai) | Berlin | ONSITE | Full-TimeMitte is an AI creative suite. We've built our own media agent and we're hiring...",
+		"url": "https://news.ycombinator.com/item?id=47984681",
+		"author": {
+			"name": "Mitte (https://mitte.ai)"
+		},
+		"snippet": "engineers who want this to be the best work of their career.Founded by an ex-Superhuman lead engineer. Lean startup and unix philosophy run deep at Mitte. We ship every day and like to design systems,",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.13999999999999999,
+		"published": "2026-05-02T08:55:18Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Stellar | Amsterdam, the Netherlands | Onsite (2 days remote OK) | €70-100k + equity | https://stellarcs.aiHey, I'm one of Stellar's...",
+		"url": "https://news.ycombinator.com/item?id=47984711",
+		"author": {
+			"name": "Stellar"
+		},
+		"snippet": "founders. We're building AI for large contact centers, our primary product is voice.Contact centers are the last place where companies actually talk to their customers. We listen to calls every week a",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-02T09:03:54Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Axis Communications | Software Engineer - Video Management \u0026 Agentic Engineering | Linköping, Sweden (Onsite)Join a newly formed R\u0026D...",
+		"url": "https://news.ycombinator.com/item?id=47985407",
+		"author": {
+			"name": "Axis Communications"
+		},
+		"snippet": "team at Axis focused on rethinking how software is built using AI coding agents. Build next-generation video management software for cloud and on-prem environments while experimenting with tools like ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.13999999999999999,
+		"published": "2026-05-02T11:21:46Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "FunnelStory | Principal Engineer, AI Systems | Remote (India) | Full-Time | funnelstory.aiFunnelStory builds a queryable context graph...",
+		"url": "https://news.ycombinator.com/item?id=47988194",
+		"author": {
+			"name": "FunnelStory"
+		},
+		"snippet": "over enterprise data — the infrastructure layer that lets AI agents reason over live customer intelligence. We've built a federated query engine purpose-built for agents, ML models from scratch in G",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-02T17:04:51Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Yidi's Consulting | Senior Full-Stack Engineer | REMOTE (LATAM/EU time zones welcome) | Contract-to-hire | $40/hr...",
+		"url": "https://news.ycombinator.com/item?id=47988482",
+		"author": {
+			"name": "Yidi's Consulting"
+		},
+		"snippet": "yidisconsulting.comWe're a 4-person boutique consulting shop in Albany, NY building custom web apps for healthcare, legal, and education clients. Looking for a senior engineer to work alongside the fo",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-02T17:29:30Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "MixRank (YC S11) | Software Engineers | 100% REMOTE (Global) | Full-Time MixRank processes petabytes of data every month from web...",
+		"url": "https://news.ycombinator.com/item?id=47999750",
+		"author": {
+			"name": "MixRank (YC S11)"
+		},
+		"snippet": "crawling. We have hundreds of customers using our data products including Google, Amazon, Facebook, Intel, and Adobe, across industries including Finance, Recruiting, Sales, Marketing, and Security. W",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-03T18:14:27Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Cora AI | Full Stack / Applied AI Engineer | REMOTE (US ONLY, LA or SF a plus) | Full-time | $190–250k + early equityCustomer success...",
+		"url": "https://news.ycombinator.com/item?id=48003986",
+		"author": {
+			"name": "Cora AI"
+		},
+		"snippet": "agents and account intelligence layer that actually do the manual work to serve and grow the book of business. So our customers can focus on the human, relationship-driven work to drive growth.Why Cor",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-04T02:31:57Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Confidential Series B fintech | Senior SRE | REMOTE (US) | Full-timeWe're hiring a US-based senior SRE to help support our feature...",
+		"url": "https://news.ycombinator.com/item?id=48009461",
+		"author": {
+			"name": "Confidential Series B fintech"
+		},
+		"snippet": "teams. We are predominately an API company in the b2b fintech space. Our stack is golang services running on EKS in AWS. Postgres, Datadog, Github, and some growing ML and AI capabilities. Leaning int",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-04T14:49:20Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Fullstory | REMOTE (US), Atlanta USA, \u0026 Bogotá Colombia | https://www.fullstory.com/Fullstory offers privacy-preserving session replay...",
+		"url": "https://news.ycombinator.com/item?id=48013821",
+		"author": {
+			"name": "Fullstory"
+		},
+		"snippet": "and analytics for websites and mobile apps. Our session replays are nothing short of magical, and the combination with our automatic analytics creates eye-opening insights.---Remote (US): Senior Manag",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-04T19:34:09Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "At SentiLink, we stop identity fraud at scale. Our products protect banks, fintechs, marketplaces, and leading financial institutions...",
+		"url": "https://news.ycombinator.com/item?id=48017490",
+		"snippet": "from synthetic identity fraud, identity theft, and emerging threats — analyzing millions of applications while keeping real users moving fast.We’ve seen tremendous traction and are growing extreme",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-05T02:39:38Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Happy Returns | Engineering Manager | Remote, USA | Full-timeHappy Returns is solving one of e-commerce’s biggest pain points:...",
+		"url": "https://news.ycombinator.com/item?id=48017525",
+		"author": {
+			"name": "Happy Returns"
+		},
+		"snippet": "returns. We combine proprietary returns software with reverse logistics, including box-free consolidated returns, to make returns better for shoppers, retailers, and the planet. We’re a UPS company,",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-05T02:45:30Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Gigs (YC W21) | Multiple US \u0026 EU Locations | Hybrid | (SF, NY, Berlin, London) | Full-timeAt Gigs, we're building the operating system...",
+		"url": "https://news.ycombinator.com/item?id=48020288",
+		"author": {
+			"name": "Gigs (YC W21)"
+		},
+		"snippet": "for mobile services - a platform that enables tech companies to seamlessly embed connectivity into their products. Klarna Mobile, OnePay Wireless and Revolut Mobile are powered by Gigs!We are looking ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.13999999999999999,
+		"published": "2026-05-05T10:00:57Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Senior Python Backend Engineer | REMOTE (EMEA/APAC)We’re looking for Python backend engineers to work on a trustless supercluster of...",
+		"url": "https://news.ycombinator.com/item?id=48020730",
+		"author": {
+			"name": "Senior Python Backend Engineer"
+		},
+		"snippet": "performance-proofed GPU-enabled sandboxed docker container runners controlled by truly decentralized algorithms (not just PAXOS or RAFT).Wow, that was a mouthful...If you found it interesting, join Re",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-05T10:57:21Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Stream | Amsterdam (NL), Skopje (North Macedonia)| Remote possible | Full Time | Visa SponsorshipWe power real-time Chat, Video,...",
+		"url": "https://news.ycombinator.com/item?id=48034721",
+		"author": {
+			"name": "Stream"
+		},
+		"snippet": "Activity Feeds, and AI Moderation for apps like Strava, Bumble, eBay, and Patreon - billions of API requests per month, millions of concurrent users.We're looking for a hands-on Lead Engineer (Staff /",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-06T10:48:22Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Post Up | Full time | Senior Backend Engineer | Onsite | Vancouver, BC (Hybrid) | Salary: $120-$130k CAD | https://www.postup.proI'm...",
+		"url": "https://news.ycombinator.com/item?id=48040028",
+		"author": {
+			"name": "Post Up"
+		},
+		"snippet": "Wilson, co-founder of Post Up. We're building the Databricks for content production. Our orchestration engine coordinates pipelines end to end and turns post-production workflows into a persistent gra",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-06T18:48:24Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Estuary | US-Based / Remote | Full-time – https://estuary.dev/ Estuary is a VC-backed, post–Series A startup powering right-time...",
+		"url": "https://news.ycombinator.com/item?id=48051915",
+		"author": {
+			"name": "Estuary"
+		},
+		"snippet": "data replication and transform — from sub-second CDC replication to terabyte-scale OLAP data flows. We’re open-source, developer-first, and focused on making data movement radically simpler across",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16099999999999998,
+		"published": "2026-05-07T17:09:08Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Elucid | Principal Platform Engineer | Boston, MA | ONSITE (hybrid) | $170k–$205k...",
+		"url": "https://news.ycombinator.com/item?id=48052996",
+		"author": {
+			"name": "Elucid"
+		},
+		"snippet": "https://elucid.applytojob.com/apply/BHpChxSggM/Principal-Pla...Elucid builds FDA-cleared AI software that analyzes cardiac CT scans to characterize plaque and predict heart attack and stroke risk. The",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.16799999999999998,
+		"published": "2026-05-07T18:30:35Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "SEEKING FREELANCER | Tiger Tracks (REMOTE, US/EU timezones) | Founding AI Engineer | Contract-to-hireWe're a performance marketing...",
+		"url": "https://news.ycombinator.com/item?id=48070967",
+		"author": {
+			"name": "SEEKING FREELANCER"
+		},
+		"snippet": "agency (Inc. 5000 123, ex-Google founders) hiring our first dedicated AI engineer as a contractor.What you'd build: landing page conversion analyzers, creative analyzers for video ads, vertical media ",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19319999999999996,
+		"published": "2026-05-09T01:51:46Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Oaktree Capital | Senior Software Engineer | Los Angeles, CA (HYBRID) / Hyderabad, India | 1 LA + 2 HyderabadI'm Julien — I lead...",
+		"url": "https://news.ycombinator.com/item?id=48099184",
+		"author": {
+			"name": "Oaktree Capital"
+		},
+		"snippet": "Product Engineering at Oaktree. My background is tech, not finance: startups, Meta, data infrastructure companies.I'm hands-on and building a flat, small team that operates like an engineering org, no",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.19709619903834127,
+		"published": "2026-05-11T18:57:27Z"
+	},
+	{
+		"id": 0,
+		"source": "hacker_news_jobs",
+		"title": "Woosmap | https://www.woosmap.com/ | Backend Engineer (Mid-level \u0026 Senior) | HYBRID (London, Paris, Montpellier) or REMOTE (UTC-1 to...",
+		"url": "https://news.ycombinator.com/item?id=48147597",
+		"author": {
+			"name": "Woosmap"
+		},
+		"snippet": "UTC+2) | Full-timeWe run location APIs. Geocoding, routing, store locator, address autocomplete, etc. at enterprise scale. When a checkout page resolves your address, or a courier finds you first try:",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.33447458130119734,
+		"published": "2026-05-15T12:06:57Z"
+	}
+]

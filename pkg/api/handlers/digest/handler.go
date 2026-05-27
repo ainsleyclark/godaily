@@ -26,8 +26,8 @@ type Handler struct {
 // New constructs a Handler from the application App.
 func New(a *godaily.App) *Handler {
 	return &Handler{
-		runner:          a.Runner,
-		subscribers:     a.Subscribers,
+		runner:          a.Service.Digest,
+		subscribers:     a.Service.Subscribers,
 		subscribersRepo: a.Repository.Subscribers,
 		issuesRepo:      a.Repository.Issues,
 		slack:           a.Slack,

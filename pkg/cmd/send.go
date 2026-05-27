@@ -36,7 +36,7 @@ func sendCmd(a *godaily.App) *cli.Command {
 				}
 				date = d
 			}
-			if err := a.Runner.SendDigest(ctx, date, cmd.Bool("force")); err != nil {
+			if err := a.Service.Digest.SendDigest(ctx, date, cmd.Bool("force")); err != nil {
 				a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
 				return err
 			}

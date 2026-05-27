@@ -17,7 +17,7 @@ func buildCmd(a *godaily.App) *cli.Command {
 		Name:  "build",
 		Usage: "Build the daily digest issue from collected items.",
 		Action: func(ctx context.Context, cmd *cli.Command) error {
-			return a.Runner.Build(ctx, time.Now().UTC())
+			return a.Service.Digest.Build(ctx, time.Now().UTC())
 		},
 	}
 }
