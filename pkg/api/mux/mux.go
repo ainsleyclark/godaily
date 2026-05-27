@@ -9,6 +9,7 @@ package mux
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -21,6 +22,7 @@ import (
 	socialhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/social"
 	webhookhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/webhooks"
 	"github.com/ainsleyclark/godaily/pkg/api/plugs"
+	"github.com/ainsleydev/webkit/pkg/middleware"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
@@ -29,12 +31,17 @@ import (
 // before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
-	kit.Plug(plugs.RateLimit(plugs.Limiter))
+	kit.Plug(plugs.RateLimit(plugs.Limiter, app.Config.APISecret))
+	kit.Plug(middleware.Logger)
 
 	kit.ErrorHandler = func(c *webkit.Context, err error) error {
+		slog.ErrorContext(c.Context(), "Request failed: "+err.Error())
 		var e *webkit.Error
 		if errors.As(err, &e) {
-			return c.JSON(e.Code, e.Error())
+			return c.JSON(e.Code, map[string]any{
+				"code":    e.Code,
+				"message": e.Message,
+			})
 			// pkgapi.Error(c.Response, e.Code, e.Message)
 		}
 		return c.JSON(http.StatusInternalServerError, err.Error())

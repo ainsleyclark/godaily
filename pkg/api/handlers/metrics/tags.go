@@ -5,6 +5,7 @@
 package metrics
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
@@ -49,6 +50,7 @@ func (h *Handler) Tags(c *webkit.Context) error {
 
 	rows, err := h.metricsRepo.TagList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit})
 	if err != nil {
+		slog.ErrorContext(c.Context(), "failed to fetch tag metrics", "error", err)
 		return webkit.NewError(http.StatusInternalServerError, "failed to fetch tag metrics")
 	}
 
