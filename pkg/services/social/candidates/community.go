@@ -16,7 +16,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 )
 
 // promoCycleLen is the M-M-C pattern length. Two meetups for each
@@ -132,7 +132,7 @@ func (c *Community) Kind() social.PostKind { return social.PostKindCommunity }
 // Eligible picks the right pool for this Wednesday and returns the first
 // entry not yet promoted this year. Falls through to the other pool when
 // this week's pool is exhausted.
-func (c *Community) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateContext, bool, error) {
+func (c *Community) Eligible(ctx context.Context, now time.Time) (candidate.CandidateContext, bool, error) {
 	today := now.UTC().Truncate(24 * time.Hour)
 	idx := weekIndex(now)
 	year := now.UTC().Year()
@@ -144,12 +144,12 @@ func (c *Community) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 			subject := fmt.Sprintf("community:%s:%d", entry.Slug, year)
 			posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
 			if err != nil {
-				return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking community subject")
+				return candidate.CandidateContext{}, false, errors.Wrap(err, "checking community subject")
 			}
 			if posted {
 				continue
 			}
-			return socialsvc.CandidateContext{
+			return candidate.CandidateContext{
 				Kind:     c.Kind(),
 				Subject:  subject,
 				URL:      entry.URL,
@@ -158,13 +158,13 @@ func (c *Community) Eligible(ctx context.Context, now time.Time) (socialsvc.Cand
 			}, true, nil
 		}
 	}
-	return socialsvc.CandidateContext{}, false, nil
+	return candidate.CandidateContext{}, false, nil
 }
 
 // Generate renders one of the per-platform templates with the entry's
 // mention spliced in (or its plain name as fallback when no handle is
 // configured for the platform).
-func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform, cctx candidate.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(communityPayload)
 	if !ok {
 		return "", errors.New("community: payload missing")

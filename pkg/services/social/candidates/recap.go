@@ -14,7 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -45,26 +45,26 @@ func (c *Recap) Kind() social.PostKind { return social.PostKindRecap }
 
 // Eligible blocks if a recap was already posted within the cooldown, and
 // requires the recap dataset to contain at least recapMinItems entries.
-func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateContext, bool, error) {
+func (c *Recap) Eligible(ctx context.Context, now time.Time) (candidate.CandidateContext, bool, error) {
 	if c.recap == nil {
-		return socialsvc.CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 
 	since := now.UTC().Add(-recapCooldown)
 	posted, err := c.posts.HasPostedKindSince(ctx, social.PostKindRecap, platformAnchor, since)
 	if err != nil {
-		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking recap cooldown")
+		return candidate.CandidateContext{}, false, errors.Wrap(err, "checking recap cooldown")
 	}
 	if posted {
-		return socialsvc.CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 
 	top, err := c.recap.Top(ctx, now, digest.TopOptions{MinItems: recapMinItems})
 	if err != nil {
-		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "computing recap")
+		return candidate.CandidateContext{}, false, errors.Wrap(err, "computing recap")
 	}
 	if !top.HasItems() {
-		return socialsvc.CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 
 	items := make([]rotation.RecapItem, 0, len(top.Items))
@@ -77,7 +77,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 		})
 	}
 
-	return socialsvc.CandidateContext{
+	return candidate.CandidateContext{
 		Kind:    c.Kind(),
 		Subject: "recap:" + top.Period.Label,
 		Payload: rotation.RecapPayload{
@@ -88,7 +88,7 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (socialsvc.Candidat
 }
 
 // Generate dispatches to the recap prompt.
-func (c *Recap) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *Recap) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx candidate.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(rotation.RecapPayload)
 	if !ok {
 		return "", errors.New("recap: payload missing")

@@ -36,7 +36,7 @@ func newHandlerNoPosters(t *testing.T) *Handler {
 	items := mocknews.NewMockItemRepository(ctrl)
 	posts := mocksocial.NewMockPostRepository(ctrl)
 
-	svc, err := socialsvc.New(nil, prompter, issues, items, posts, slackMock)
+	svc, err := socialsvc.New(env.Config{}, prompter, issues, items, posts, nil, slackMock)
 	require.NoError(t, err)
 
 	return &Handler{

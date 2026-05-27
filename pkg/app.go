@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
-	"github.com/ainsleyclark/godaily/pkg/data"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
@@ -25,11 +24,7 @@ import (
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
-	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	metricsstore "github.com/ainsleyclark/godaily/pkg/store/engagement"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
@@ -136,17 +131,17 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	}
 
 	socialSvc, err := socialsvc.New(
-		buildSocialPosters(config),
+		config,
 		aiClient,
 		issueStore,
 		repo.Items,
 		socialPostsStore,
+		repo.Metrics,
 		slackClient,
 	)
 	if err != nil {
 		return nil, teardown, err
 	}
-	socialSvc.WithCandidates(buildRotationCandidates(config, repo, socialPostsStore)...)
 
 	subscriberSvc := audiencesvc.New(subsStore, issueStore, emailSender)
 
@@ -161,59 +156,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		EmailEvents:    svcengagement.NewEvents(repo.EmailEvents, subscriberSvc, itemStore, config.EmailSendAddress),
 		Slack:          slackClient,
 		MetricsService: svcengagement.New(repo.Metrics, slackClient),
-		StatFetchers:   buildStatFetchers(config),
+		StatFetchers:   socialSvc.StatFetchers(),
 	}, teardown, nil
-}
-
-// buildSocialPosters returns the slice of social.Poster implementations
-// whose credentials are present in the config. Each platform is opt-in:
-// missing creds means the platform is skipped entirely.
-func buildSocialPosters(c env.Config) []platform.Poster {
-	var out []platform.Poster
-	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
-	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN))
-	}
-	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
-	}
-	return out
-}
-
-// buildRotationCandidates wires the four kinds the Tue/Fri rotation
-// chooses from. The recap candidate is skipped if metrics aren't wired
-// (would never happen in production but keeps tests/no-DB bootstraps
-// from blowing up).
-func buildRotationCandidates(_ env.Config, repo *Repository, posts social.PostRepository) []socialsvc.Candidate {
-	out := make([]socialsvc.Candidate, 0, 4)
-
-	out = append(out, candidates.NewNewSource(social.Profiles, posts))
-	out = append(out, candidates.NewSpotlight(social.Profiles, posts))
-	out = append(out, candidates.NewCTA(posts))
-	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
-
-	if repo != nil && repo.Metrics != nil {
-		if recapSvc, err := digestsvc.NewRecapService(repo.Metrics); err == nil {
-			out = append(out, candidates.NewRecap(recapSvc, posts))
-		}
-	}
-	return out
-}
-
-// buildStatFetchers returns a map of platform → StatFetcher for platforms
-// whose credentials are present in the config.
-func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
-	out := make(map[social.Platform]platform.StatFetcher)
-	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
-		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
-	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
-	}
-	if c.MastodonServer != "" && c.MastodonAppToken != "" {
-		out[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
-	}
-	return out
 }

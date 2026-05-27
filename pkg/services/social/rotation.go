@@ -24,7 +24,7 @@ import (
 //     no click data, the slot stays quiet.
 //   - Other days: no-op unless ForceKind is set.
 func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
-	if len(s.posters) == 0 {
+	if !s.hasPosters() {
 		slog.InfoContext(ctx, "Skipping rotation — no posters configured")
 		return nil, nil
 	}

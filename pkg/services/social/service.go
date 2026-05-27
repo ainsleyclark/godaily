@@ -11,8 +11,10 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
@@ -23,26 +25,29 @@ var _ social.Service = (*Service)(nil)
 // Service publishes social media posts for both the daily featured slot
 // and the Tue/Fri rotation slot.
 type Service struct {
-	posters    []platform.Poster
-	prompter   ai.Prompter
-	issues     digest.IssueRepository
-	items      news.ItemRepository
-	posts      social.PostRepository
-	slack      slack.Sender
-	reframers  map[social.Platform]reframer
-	candidates []Candidate
+	posters      []platform.Poster
+	prompter     ai.Prompter
+	issues       digest.IssueRepository
+	items        news.ItemRepository
+	posts        social.PostRepository
+	slack        slack.Sender
+	reframers    map[social.Platform]reframer
+	candidates   []Candidate
+	statFetchers map[social.Platform]platform.StatFetcher
 }
 
-// New creates a new social Service. posters may be empty (nothing to post);
-// the service errors if prompter, issues, items, or posts are nil.
-// slackSender may be nil to disable Slack notifications. Rotation candidates
-// must be wired separately via WithCandidates if Rotate will be called.
+// New creates a new social Service. It reads platform credentials from
+// config to bootstrap posters, rotation candidates, and stat fetchers.
+// The service errors if prompter, issues, items, or posts are nil.
+// slackSender may be nil to disable Slack notifications. metrics may be
+// nil — the recap candidate is then skipped.
 func New(
-	posters []platform.Poster,
+	config env.Config,
 	prompter ai.Prompter,
 	issues digest.IssueRepository,
 	items news.ItemRepository,
 	posts social.PostRepository,
+	metrics engagement.MetricsRepository,
 	slackSender slack.Sender,
 ) (*Service, error) {
 	if prompter == nil {
@@ -55,27 +60,29 @@ func New(
 		return nil, errors.New("social: social post repository is required")
 	}
 	return &Service{
-		posters:   posters,
-		prompter:  prompter,
-		issues:    issues,
-		items:     items,
-		posts:     posts,
-		slack:     slackSender,
-		reframers: defaultReframers(),
+		posters:      buildPosters(config),
+		prompter:     prompter,
+		issues:       issues,
+		items:        items,
+		posts:        posts,
+		slack:        slackSender,
+		reframers:    defaultReframers(),
+		candidates:   buildCandidates(posts, metrics),
+		statFetchers: buildStatFetchers(config),
 	}, nil
 }
 
-// WithCandidates registers the rotation candidates the service offers when
-// Rotate is called. Order matters per-day but final selection is by the
-// day-aware logic in rotation.go.
-func (s *Service) WithCandidates(cs ...Candidate) *Service {
-	s.candidates = cs
-	return s
+// StatFetchers returns the per-platform StatFetcher map built from the
+// config the service was constructed with. Consumed by the engagement
+// metrics flow at app level.
+func (s *Service) StatFetchers() map[social.Platform]platform.StatFetcher {
+	return s.statFetchers
 }
 
-// HasPosters reports whether the service has any platforms configured.
-// Useful for callers that want to short-circuit when no creds are set.
-func (s *Service) HasPosters() bool {
+// hasPosters reports whether the service has any platforms configured.
+// Evaluated internally by Post and Rotate to short-circuit when no creds
+// are wired.
+func (s *Service) hasPosters() bool {
 	return len(s.posters) > 0
 }
 

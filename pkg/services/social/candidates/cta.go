@@ -15,7 +15,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
@@ -52,20 +52,20 @@ func (c *CTA) Kind() social.PostKind { return social.PostKindCTA }
 // Eligible blocks if a CTA was posted to bluesky within the cooldown.
 // The angle for this run is derived from the week number so the rotation
 // stays stable across retries within the same week.
-func (c *CTA) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateContext, bool, error) {
+func (c *CTA) Eligible(ctx context.Context, now time.Time) (candidate.CandidateContext, bool, error) {
 	since := now.UTC().Add(-ctaCooldown)
 	posted, err := c.posts.HasPostedKindSince(ctx, c.Kind(), platformAnchor, since)
 	if err != nil {
-		return socialsvc.CandidateContext{}, false, errors.Wrap(err, "checking CTA cooldown")
+		return candidate.CandidateContext{}, false, errors.Wrap(err, "checking CTA cooldown")
 	}
 	if posted {
-		return socialsvc.CandidateContext{}, false, nil
+		return candidate.CandidateContext{}, false, nil
 	}
 
 	angle := pickAngle(now, ctaAngles)
 	subject := "cta:" + angleKey(angle)
 
-	return socialsvc.CandidateContext{
+	return candidate.CandidateContext{
 		Kind:    c.Kind(),
 		Subject: subject,
 		URL:     env.AppURL + "/",
@@ -77,7 +77,7 @@ func (c *CTA) Eligible(ctx context.Context, now time.Time) (socialsvc.CandidateC
 }
 
 // Generate dispatches to the cta prompt.
-func (c *CTA) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx socialsvc.CandidateContext) (string, error) {
+func (c *CTA) Generate(ctx context.Context, p ai.Prompter, platform social.Platform, cctx candidate.CandidateContext) (string, error) {
 	payload, ok := cctx.Payload.(rotation.CTAPayload)
 	if !ok {
 		return "", errors.New("cta: payload missing")
