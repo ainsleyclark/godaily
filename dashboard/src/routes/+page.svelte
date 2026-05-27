@@ -81,11 +81,74 @@
 	const bounceRate = $derived(
 		summary && summary.delivered > 0 ? summary.bounced / summary.delivered : null
 	);
+
+	const activeSubs = $derived(
+		subscribers && subscribers.points.length
+			? subscribers.points[subscribers.points.length - 1].active_at_end
+			: null
+	);
+
+	const netChange = $derived(
+		subscribers ? subscribers.points.reduce((acc, p) => acc + p.net_change, 0) : null
+	);
+
+	const newSubs = $derived(
+		subscribers ? subscribers.points.reduce((acc, p) => acc + p.new, 0) : null
+	);
+
+	const unsubs = $derived(
+		subscribers ? subscribers.points.reduce((acc, p) => acc + p.unsubscribed, 0) : null
+	);
+
+	const engagementRate = $derived(
+		summary && activeSubs && activeSubs > 0
+			? summary.unique_subscribers_engaged / activeSubs
+			: null
+	);
+
+	const netDelta = $derived.by(() => {
+		if (netChange == null) return undefined;
+		const sign = netChange > 0 ? '+' : '';
+		return {
+			value: `${sign}${formatCompact(netChange)}`,
+			direction: netChange > 0 ? 'up' : netChange < 0 ? 'down' : 'flat'
+		} as const;
+	});
 </script>
 
 <div class="space-y-6">
-	<!-- KPI Row -->
-	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+	<!-- Hero stats -->
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+		<KpiCard
+			label="Active subscribers"
+			size="lg"
+			value={activeSubs != null ? formatCompact(activeSubs) : '--'}
+			sublabel={newSubs != null && unsubs != null
+				? `+${formatCompact(newSubs)} new · -${formatCompact(unsubs)} unsubscribed`
+				: undefined}
+			delta={netDelta}
+			loading={loading && !subscribers}
+		/>
+		<KpiCard
+			label="Total clicks"
+			size="lg"
+			value={summary ? formatCompact(summary.total_clicks) : '--'}
+			sublabel={summary ? `${formatCompact(summary.unique_clicks)} unique` : undefined}
+			{loading}
+		/>
+		<KpiCard
+			label="Engagement rate"
+			size="lg"
+			value={engagementRate != null ? formatPercent(engagementRate) : '--'}
+			sublabel={summary && activeSubs
+				? `${formatCompact(summary.unique_subscribers_engaged)} of ${formatCompact(activeSubs)} active`
+				: undefined}
+			loading={loading && (!summary || !subscribers)}
+		/>
+	</div>
+
+	<!-- Detail KPIs -->
+	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
 		<KpiCard
 			label="Issues sent"
 			value={summary ? formatCompact(summary.issues_sent) : '--'}
@@ -106,11 +169,6 @@
 			label="Click rate"
 			value={summary ? formatPercent(summary.click_rate) : '--'}
 			sublabel={summary ? `${formatCompact(summary.unique_clicks)} unique` : undefined}
-			{loading}
-		/>
-		<KpiCard
-			label="Engaged subs"
-			value={summary ? formatCompact(summary.unique_subscribers_engaged) : '--'}
 			{loading}
 		/>
 		<KpiCard

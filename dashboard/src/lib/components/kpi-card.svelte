@@ -7,18 +7,52 @@
 		value: string;
 		sublabel?: string;
 		loading?: boolean;
+		size?: 'sm' | 'lg';
+		delta?: { value: string; direction: 'up' | 'down' | 'flat' };
 	}
-	let { label, value, sublabel, loading = false }: Props = $props();
+	let { label, value, sublabel, loading = false, size = 'sm', delta }: Props = $props();
+
+	const isLg = $derived(size === 'lg');
+
+	const deltaColor = $derived(
+		delta?.direction === 'up'
+			? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+			: delta?.direction === 'down'
+				? 'text-destructive bg-destructive/10 border-destructive/30'
+				: 'text-muted-foreground bg-secondary/40 border-border'
+	);
 </script>
 
 <Card>
-	<CardContent class="p-5">
+	<CardContent class={isLg ? 'p-6' : 'p-5'}>
 		<div class="text-muted-foreground text-xs font-medium uppercase tracking-wider">{label}</div>
-		<div class="mt-2 flex items-baseline gap-2">
+		<div class="mt-2 flex items-baseline gap-3">
 			{#if loading}
-				<Skeleton class="h-8 w-24" />
+				<Skeleton class={isLg ? 'h-12 w-32' : 'h-8 w-24'} />
 			{:else}
-				<span class="text-foreground text-3xl font-semibold tabular-nums">{value}</span>
+				<span
+					class="text-foreground font-semibold tabular-nums"
+					class:text-3xl={!isLg}
+					class:text-4xl={isLg}
+				>
+					{value}
+				</span>
+				{#if delta && !loading}
+					<span
+						class={`inline-flex items-center gap-0.5 rounded-md border px-1.5 py-0.5 text-xs font-medium ${deltaColor}`}
+					>
+						{#if delta.direction === 'up'}
+							<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+								<path d="M7 17L17 7M17 7H8M17 7v9" />
+							</svg>
+						{:else if delta.direction === 'down'}
+							<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+								<path d="M17 7L7 17M7 17h9M7 17V8" />
+							</svg>
+						{/if}
+						{delta.value}
+					</span>
+				{/if}
 			{/if}
 		</div>
 		{#if sublabel && !loading}
