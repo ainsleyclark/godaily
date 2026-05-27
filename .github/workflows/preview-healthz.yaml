@@ -13,11 +13,14 @@ jobs:
       - name: Ping /healthz
         env:
           PREVIEW_URL: ${{ github.event.deployment_status.environment_url }}
+          BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           URL="${PREVIEW_URL%/}/healthz"
           echo "Checking $URL"
 
-          HTTP_STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" -L --max-time 15 "$URL")
+          HTTP_STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" -L --max-time 15 \
+            -H "x-vercel-protection-bypass: ${BYPASS_SECRET}" \
+            "$URL")
           BODY=$(cat /tmp/healthz.json)
 
           echo "Status : $HTTP_STATUS"
