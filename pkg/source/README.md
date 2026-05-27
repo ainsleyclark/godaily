@@ -100,7 +100,9 @@ Key points:
 - For empty snippets (e.g. external link posts), the cron pipeline calls `ingest.EnrichSnippets`
   after fetch, which fills them in from the article's meta description.
 
-## 3. Add a mark/logo asset
+## 3. Add mark/logo assets and wire the homepage
+
+### Mark (digest items + sources grid)
 
 Add a square SVG (or PNG/WebP for raster brands) to `web/assets/images/marks/<source_id>.<ext>` and
 register its path in the `sourceMarkURLs` map in `pkg/domain/news/sources.go`:
@@ -112,8 +114,55 @@ var sourceMarkURLs = map[Source]string{
 }
 ```
 
-Sources without a `MarkURL` entry fall back to their `ShortLabel` chip — that is acceptable for
-sources whose brand assets cannot be freely redistributed, but a mark file is strongly preferred.
+Sources without a `MarkURL` entry fall back to their `ShortLabel` chip — acceptable for sources
+whose brand assets cannot be freely redistributed, but a mark file is strongly preferred.
+
+> **Asset sourcing:** do not attempt to generate or synthesise brand assets. Either source the
+> official mark/logo files yourself (brand kit, press page, etc.) or ask the repo owner to supply
+> them before wiring up the source.
+
+### Logo (hero ticker)
+
+Add the full wordmark/logo to `web/assets/images/logos/<source_id>.<ext>` and append an entry to
+`logoItems` in `web/views/components/logos.templ`:
+
+```go
+var logoItems = []logoEntry{
+    // ...
+    {"/assets/images/logos/foo.svg", "Foo"},
+}
+```
+
+Apply the same white-fill check as above — the ticker sits on a light background.
+
+### Featured sources grid
+
+To show the source on the marketing homepage coverage section, append it to `FeaturedSources` in
+`pkg/domain/news/sources.go`:
+
+```go
+var FeaturedSources = []Source{
+    // ...
+    SourceFoo,
+}
+```
+
+### Inline SVG fallback + background colour
+
+If no mark file is available, add a `templ Foo(size int)` SVG in
+`web/views/graphics/logos/logos.templ`, wire it into the `SourceLogo` switch, and add a background
+colour to `Background()`:
+
+```go
+case news.SourceFoo:
+    return "#hexcolor"
+```
+
+After any `.templ` change, regenerate:
+
+```sh
+go tool templ generate
+```
 
 ## 4. Capture a real-API fixture
 

@@ -108,6 +108,7 @@ var FeaturedSources = []Source{
 	SourceConferences,
 	SourceGoVuln,
 	SourceFreeCodeCamp,
+	SourceRemoteOK,
 }
 
 // String implements fmt.Stringer on source.
