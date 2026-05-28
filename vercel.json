@@ -5,7 +5,7 @@
 	"devCommand": "mkdir -p tmp && (test -d web/node_modules || (cd web && pnpm install)) && web/node_modules/.bin/concurrently -k -n templ,air,esbuild -c blue,green,magenta 'go tool templ generate --watch --path=./web' 'go tool air -c .air.toml' 'pnpm --dir web dev'",
 	"installCommand": "cd web && pnpm install",
 	"outputDirectory": "out",
-	"trailingSlash": true,
+	"trailingSlash": false,
 	"cleanUrls": true,
 	"rewrites": [
 		{ "source": "/healthz",  "destination": "/api/index" },
