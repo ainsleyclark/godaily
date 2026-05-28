@@ -63,7 +63,24 @@ async function request<T>(
 	return body.data;
 }
 
+async function login(password: string): Promise<{ token: string }> {
+	// Hits the dashboard's own SvelteKit server endpoint (same origin), not the
+	// Go API — so the password and API secret stay server-side.
+	const res = await fetch('/auth/login', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+		body: JSON.stringify({ password })
+	});
+	if (res.status === 401) throw new ApiError(401, 'Unauthorized');
+	if (!res.ok) {
+		const text = await res.text().catch(() => '');
+		throw new ApiError(res.status, text || `HTTP ${res.status}`);
+	}
+	return ((await res.json()) as { data: { token: string } }).data;
+}
+
 export const api = {
+	login,
 	summary: (q?: MetricsQuery, secret?: string) =>
 		request<SummaryStats>('/api/metrics/summary', q, secret),
 	issues: (q?: MetricsQuery) => request<IssueEngagement[]>('/api/metrics/issues', q),

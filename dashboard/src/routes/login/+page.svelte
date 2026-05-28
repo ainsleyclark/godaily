@@ -6,27 +6,27 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '$lib/components/ui/card';
 
-	let secret = $state('');
+	let password = $state('');
 	let error = $state<string | null>(null);
 	let submitting = $state(false);
 
 	async function submit(e: SubmitEvent) {
 		e.preventDefault();
 		error = null;
-		if (!secret.trim()) {
-			error = 'Enter the API secret.';
+		if (!password.trim()) {
+			error = 'Enter your password.';
 			return;
 		}
 		submitting = true;
 		try {
-			await api.summary({}, secret.trim());
-			auth.setSecret(secret.trim());
+			const { token } = await api.login(password.trim());
+			auth.setSecret(token);
 			await goto('/');
 		} catch (err) {
 			if (err instanceof ApiError && err.status === 401) {
-				error = 'Invalid secret.';
+				error = 'Invalid password.';
 			} else {
-				error = (err as Error).message || 'Failed to verify secret.';
+				error = (err as Error).message || 'Failed to sign in.';
 			}
 		} finally {
 			submitting = false;
@@ -42,14 +42,14 @@
 				<span class="text-sm font-semibold">GoDaily</span>
 			</div>
 			<CardTitle>Dashboard</CardTitle>
-			<CardDescription>Enter the API secret to continue.</CardDescription>
+			<CardDescription>Enter your password to continue.</CardDescription>
 		</CardHeader>
 		<CardContent>
 			<form onsubmit={submit} class="space-y-4">
 				<Input
 					type="password"
-					placeholder="API secret"
-					bind:value={secret}
+					placeholder="Password"
+					bind:value={password}
 					autocomplete="current-password"
 					autofocus
 				/>
