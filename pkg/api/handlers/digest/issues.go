@@ -14,8 +14,22 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// Issues handles GET /digest/issues.
-// An optional ?status= query parameter filters by issue status (e.g. "draft", "sent").
+// IssueListResponse is the response envelope for GET /digest/issues.
+type IssueListResponse = api.Response[api.PaginatedResponse[digest.Issue]] //@name IssueListResponse
+
+// Issues godoc
+//
+//	@Summary		List digest issues.
+//	@Description	Returns a paginated list of digest issues, optionally filtered by status.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			status		query		string	false	"Filter by issue status (e.g. draft, sent)"
+//	@Param			page		query		int		false	"Page number (default 1)"
+//	@Param			per_page	query		int		false	"Items per page (default 20, max 100)"
+//	@Success		200			{object}	IssueListResponse										"Successfully retrieved issues"
+//	@Failure		500			{object}	api.MessageResponse											"Failed to list issues"
+//	@Router			/digest/issues [get]
 func (h *Handler) Issues(c *webkit.Context) error {
 	ctx := c.Context()
 	r := c.Request

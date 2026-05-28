@@ -15,7 +15,17 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Build handles GET /digest/build.
+// Build godoc
+//
+//	@Summary		Build the draft digest.
+//	@Description	Assembles today's collected items into a draft digest issue. Skipped at weekends unless force=true.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			force	query		bool			false	"Force build even at weekends"
+//	@Success		200		{object}	api.MessageResponse	"Successfully built digest"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to build digest"
+//	@Router			/digest/build [get]
 func (h *Handler) Build(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()

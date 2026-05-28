@@ -33,8 +33,24 @@ func (req subscribersRequest) validate() error {
 	)
 }
 
-// Subscribers handles GET /metrics/subscribers.
-// Returns subscriber growth and churn bucketed over time.
+// SubscriberMetricsResponse is the response envelope for GET /metrics/subscribers.
+type SubscriberMetricsResponse = api.Response[engagement.SubscriberData] //@name SubscriberMetricsResponse
+
+// Subscribers godoc
+//
+//	@Summary		Subscriber growth and churn.
+//	@Description	Returns subscriber growth and churn bucketed over time.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Param			bucket	query		string	false	"Bucket: day, week, or month"
+//	@Success		200		{object}	SubscriberMetricsResponse					"Successfully retrieved subscriber data"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch subscriber data"
+//	@Router			/metrics/subscribers [get]
 func (h *Handler) Subscribers(c *webkit.Context) error {
 	ctx := c.Context()
 

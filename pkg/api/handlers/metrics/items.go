@@ -29,8 +29,24 @@ func (req itemsRequest) validate() error {
 	)
 }
 
-// Items handles GET /metrics/items.
-// Returns the top-clicked news items enriched with title, tag, and source metadata.
+// ItemMetricsResponse is the response envelope for GET /metrics/items.
+type ItemMetricsResponse = api.Response[[]engagement.ItemMetrics] //@name ItemMetricsResponse
+
+// Items godoc
+//
+//	@Summary		Top-clicked news items.
+//	@Description	Returns the top-clicked news items enriched with title, tag, and source metadata.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Param			limit	query		int		false	"Max rows (max 100)"
+//	@Success		200		{object}	ItemMetricsResponse							"Successfully retrieved item metrics"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch item metrics"
+//	@Router			/metrics/items [get]
 func (h *Handler) Items(c *webkit.Context) error {
 	ctx := c.Context()
 

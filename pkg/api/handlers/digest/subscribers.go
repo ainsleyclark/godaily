@@ -14,7 +14,21 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// Subscribers handles GET /digest/subscribers.
+// SubscriberListResponse is the response envelope for GET /digest/subscribers.
+type SubscriberListResponse = api.Response[api.PaginatedResponse[audience.Subscriber]] //@name SubscriberListResponse
+
+// Subscribers godoc
+//
+//	@Summary		List subscribers.
+//	@Description	Returns a paginated list of all subscribers.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			page		query		int	false	"Page number (default 1)"
+//	@Param			per_page	query		int	false	"Items per page (default 20, max 100)"
+//	@Success		200			{object}	SubscriberListResponse											"Successfully retrieved subscribers"
+//	@Failure		500			{object}	api.MessageResponse												"Failed to list subscribers"
+//	@Router			/digest/subscribers [get]
 func (h *Handler) Subscribers(c *webkit.Context) error {
 	ctx := c.Context()
 	r := c.Request

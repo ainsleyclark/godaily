@@ -15,9 +15,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Preview handles GET /digest/preview.
-// It runs at 6 AM UTC on weekdays, sending the draft digest and AI synth suggestion
-// to the owner before the full subscriber send at 8 AM.
+// Preview godoc
+//
+//	@Summary		Send the digest preview to the owner.
+//	@Description	Sends the draft digest and AI synth suggestion to the owner ahead of the full subscriber send. Skipped at weekends.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	api.MessageResponse	"Successfully sent preview"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to send preview"
+//	@Router			/digest/preview [get]
 func (h *Handler) Preview(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()

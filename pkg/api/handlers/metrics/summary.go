@@ -19,8 +19,23 @@ type summaryRequest struct {
 	Period string `schema:"period"`
 }
 
-// Summary handles GET /metrics/summary.
-// Returns headline engagement numbers for a period.
+// SummaryResponse is the response envelope for GET /metrics/summary.
+type SummaryResponse = api.Response[engagement.SummaryStats] //@name SummaryResponse
+
+// Summary godoc
+//
+//	@Summary		Headline engagement summary.
+//	@Description	Returns headline engagement numbers (delivered, opens, clicks, rates) for a period.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Success		200		{object}	SummaryResponse								"Successfully retrieved summary stats"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch summary stats"
+//	@Router			/metrics/summary [get]
 func (h *Handler) Summary(c *webkit.Context) error {
 	ctx := c.Context()
 

@@ -15,9 +15,21 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 )
 
-// Resend handles POST /webhooks/resend.
-// The endpoint is public but every request is verified against the Svix-style
-// signature Resend includes; unsigned or tampered requests are rejected.
+// Resend godoc
+//
+//	@Summary		Resend email webhook.
+//	@Description	Receives Resend email events (opens, clicks, bounces). Public, but every request is verified against its Svix-style signature; unsigned or tampered requests are rejected.
+//	@Tags			webhooks
+//	@Accept			json
+//	@Produce		json
+//	@Param			svix-id			header		string			true	"Svix message ID"
+//	@Param			svix-timestamp	header		string			true	"Svix timestamp"
+//	@Param			svix-signature	header		string			true	"Svix signature"
+//	@Success		200				{object}	api.MessageResponse	"Successfully tracked event"
+//	@Failure		400				{object}	api.MessageResponse	"Misconfigured, unreadable, or invalid payload"
+//	@Failure		401				{object}	api.MessageResponse	"Invalid signature"
+//	@Failure		500				{object}	api.MessageResponse	"Failed to process event"
+//	@Router			/webhooks/resend [post]
 func (h *Handler) Resend(c *webkit.Context) error {
 	ctx := c.Context()
 

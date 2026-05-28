@@ -16,15 +16,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Featured handles GET /social/featured.
+// Featured godoc
 //
-// vercel.json schedules six cron firings per day (every 10 minutes between
-// 11:00 and 11:50 UTC, weekdays). For each firing this handler:
-//   - skips weekends entirely
-//   - asks social.PickSlot which 10-minute slot today's posts belong in
-//   - returns OK with no-op if the current minute is not the chosen slot
-//   - otherwise delegates to h.social.Post() which is itself idempotent
-//     via the social_posts table.
+//	@Summary		Post the featured social update.
+//	@Description	Posts today's featured social update across platforms. Skipped at weekends and outside the chosen 10-minute slot; idempotent via the social_posts table.
+//	@Tags			social
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	api.MessageResponse	"Posted, or skipped (weekend/wrong slot/not wired)"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to post featured"
+//	@Router			/social/featured [get]
 func (h *Handler) Featured(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()

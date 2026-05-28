@@ -33,7 +33,22 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/{slug}", h.BySlug, auth)
 }
 
-// BySlug handles GET /issues/{slug}.
+// IssueResponse is the response envelope for GET /issues/{slug}.
+type IssueResponse = api.Response[digest.Issue] //@name IssueResponse
+
+// BySlug godoc
+//
+//	@Summary		Fetch an issue by slug.
+//	@Description	Returns a single digest issue identified by its date slug.
+//	@Tags			issues
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			slug	path		string	true	"Issue date slug"
+//	@Success		200		{object}	IssueResponse					"Successfully retrieved issue"
+//	@Failure		400		{object}	api.MessageResponse					"Slug is required"
+//	@Failure		404		{object}	api.MessageResponse					"Issue not found"
+//	@Failure		500		{object}	api.MessageResponse					"Failed to fetch issue"
+//	@Router			/issues/{slug} [get]
 func (h *Handler) BySlug(c *webkit.Context) error {
 	ctx := c.Context()
 

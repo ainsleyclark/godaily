@@ -34,7 +34,22 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/{id}", h.ByID, auth)
 }
 
-// ByID handles GET /items/{id}.
+// ItemResponse is the response envelope for GET /items/{id}.
+type ItemResponse = api.Response[news.Item] //@name ItemResponse
+
+// ByID godoc
+//
+//	@Summary		Fetch a news item by ID.
+//	@Description	Returns a single news item identified by its numeric ID.
+//	@Tags			items
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int				true	"Item ID"
+//	@Success		200	{object}	ItemResponse	"Successfully retrieved item"
+//	@Failure		400	{object}	api.MessageResponse	"ID is required or not a positive integer"
+//	@Failure		404	{object}	api.MessageResponse	"Item not found"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to fetch item"
+//	@Router			/items/{id} [get]
 func (h *Handler) ByID(c *webkit.Context) error {
 	ctx := c.Context()
 

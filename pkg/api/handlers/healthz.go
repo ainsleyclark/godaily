@@ -12,7 +12,14 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
-// HealthZ handles GET /healthz.
+// HealthZ godoc
+//
+//	@Summary		Health check.
+//	@Description	Returns 200 OK when the API is up.
+//	@Tags			health
+//	@Produce		json
+//	@Success		200	{object}	api.MessageResponse	"ok"
+//	@Router			/healthz [get]
 func HealthZ(c *webkit.Context) error {
 	return api.OK(c, http.StatusOK, nil, "ok")
 }

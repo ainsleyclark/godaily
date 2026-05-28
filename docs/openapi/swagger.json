@@ -1,0 +1,2296 @@
+{
+    "components": {
+        "schemas": {
+            "IssueListResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/api.PaginatedResponse-digest_Issue"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "IssueMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.IssueEngagement"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "IssueResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/digest.Issue"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ItemMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.ItemMetrics"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ItemResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/news.Item"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Response": {
+                "properties": {
+                    "data": {},
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SourceMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.SourceMetrics"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SubscribeRequest": {
+                "properties": {
+                    "email": {
+                        "example": "hello@ainsley.dev",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "SubscriberListResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/api.PaginatedResponse-audience_Subscriber"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SubscriberMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/engagement.SubscriberData"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SummaryResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/engagement.SummaryStats"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TagMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.TagMetrics"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TrendResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/engagement.TrendData"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "api.PaginatedResponse-audience_Subscriber": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/audience.Subscriber"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "page": {
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "api.PaginatedResponse-digest_Issue": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/digest.Issue"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "page": {
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "audience.Subscriber": {
+                "properties": {
+                    "bounced_at": {
+                        "type": "string"
+                    },
+                    "confirm_token": {
+                        "type": "string"
+                    },
+                    "confirmed_at": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "integer"
+                    },
+                    "suppressed_at": {
+                        "type": "string"
+                    },
+                    "unsubscribe_token": {
+                        "type": "string"
+                    },
+                    "unsubscribed_at": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "digest.Issue": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/news.Item"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "sent_at": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/digest.IssueStatus"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "summary": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "digest.IssueStatus": {
+                "enum": [
+                    "draft",
+                    "sent",
+                    "error"
+                ],
+                "type": "string",
+                "x-enum-varnames": [
+                    "IssueStatusDraft",
+                    "IssueStatusSent",
+                    "IssueStatusError"
+                ]
+            },
+            "engagement.IssueEngagement": {
+                "properties": {
+                    "bounced": {
+                        "type": "integer"
+                    },
+                    "click_rate": {
+                        "type": "number"
+                    },
+                    "complained": {
+                        "type": "integer"
+                    },
+                    "delayed": {
+                        "type": "integer"
+                    },
+                    "delivered": {
+                        "type": "integer"
+                    },
+                    "failed": {
+                        "type": "integer"
+                    },
+                    "issue_id": {
+                        "type": "integer"
+                    },
+                    "open_rate": {
+                        "type": "number"
+                    },
+                    "sent_at": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "suppressed": {
+                        "type": "integer"
+                    },
+                    "total_clicks": {
+                        "type": "integer"
+                    },
+                    "total_opens": {
+                        "type": "integer"
+                    },
+                    "unique_clicks": {
+                        "type": "integer"
+                    },
+                    "unique_opens": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.ItemMetrics": {
+                "properties": {
+                    "clicks": {
+                        "type": "integer"
+                    },
+                    "item_id": {
+                        "type": "integer"
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "tag": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.SourceMetrics": {
+                "properties": {
+                    "clicks": {
+                        "type": "integer"
+                    },
+                    "source": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.SubscriberData": {
+                "properties": {
+                    "bucket": {
+                        "type": "string"
+                    },
+                    "points": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.SubscriberPoint"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.SubscriberPoint": {
+                "properties": {
+                    "active_at_end": {
+                        "type": "integer"
+                    },
+                    "bucket_start": {
+                        "type": "string"
+                    },
+                    "confirmed": {
+                        "type": "integer"
+                    },
+                    "lost": {
+                        "type": "integer"
+                    },
+                    "net_change": {
+                        "type": "integer"
+                    },
+                    "new": {
+                        "type": "integer"
+                    },
+                    "unsubscribed": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.SummaryStats": {
+                "properties": {
+                    "bounced": {
+                        "type": "integer"
+                    },
+                    "click_rate": {
+                        "type": "number"
+                    },
+                    "complained": {
+                        "type": "integer"
+                    },
+                    "delivered": {
+                        "type": "integer"
+                    },
+                    "from": {
+                        "type": "string"
+                    },
+                    "issues_sent": {
+                        "type": "integer"
+                    },
+                    "open_rate": {
+                        "type": "number"
+                    },
+                    "to": {
+                        "type": "string"
+                    },
+                    "total_clicks": {
+                        "type": "integer"
+                    },
+                    "total_opens": {
+                        "type": "integer"
+                    },
+                    "unique_clicks": {
+                        "type": "integer"
+                    },
+                    "unique_opens": {
+                        "type": "integer"
+                    },
+                    "unique_subscribers_engaged": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.TagMetrics": {
+                "properties": {
+                    "clicks": {
+                        "type": "integer"
+                    },
+                    "tag": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.TrendData": {
+                "properties": {
+                    "bucket": {
+                        "type": "string"
+                    },
+                    "metric": {
+                        "type": "string"
+                    },
+                    "points": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.TrendPoint"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.TrendPoint": {
+                "properties": {
+                    "bucket_start": {
+                        "type": "string"
+                    },
+                    "delivered": {
+                        "type": "integer"
+                    },
+                    "value": {
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "news.Author": {
+                "properties": {
+                    "avatar_url": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "profile_url": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "news.Item": {
+                "properties": {
+                    "author": {
+                        "$ref": "#/components/schemas/news.Author"
+                    },
+                    "comments": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "integer"
+                    },
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "original_url": {
+                        "description": "listing on the source platform (e.g. HN comments page), when different from URL",
+                        "type": "string"
+                    },
+                    "published": {
+                        "type": "string"
+                    },
+                    "score": {
+                        "description": "per-source relevance/popularity, normalised across sources",
+                        "type": "number"
+                    },
+                    "snippet": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "$ref": "#/components/schemas/news.Source"
+                    },
+                    "tag": {
+                        "$ref": "#/components/schemas/news.Tag"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "description": "click target — the external content the source is linking to",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "news.Source": {
+                "enum": [
+                    "dev_to",
+                    "go_blog",
+                    "github",
+                    "github_trending",
+                    "reddit",
+                    "hacker_news",
+                    "golangbridge",
+                    "lobsters",
+                    "medium",
+                    "youtube",
+                    "go_podcast",
+                    "fallthrough",
+                    "ardanlabs_podcast",
+                    "go_release",
+                    "mastodon",
+                    "awesome_go",
+                    "jetbrains",
+                    "golang_nuts",
+                    "planet_golang",
+                    "meetup",
+                    "conferences",
+                    "go_vuln",
+                    "freecodecamp",
+                    "hacker_news_jobs",
+                    "remote_ok"
+                ],
+                "type": "string",
+                "x-enum-varnames": [
+                    "SourceDevTo",
+                    "SourceGoBlog",
+                    "SourceGitHub",
+                    "SourceGitHubTrending",
+                    "SourceReddit",
+                    "SourceHN",
+                    "SourceGolangBridge",
+                    "SourceLobsters",
+                    "SourceMedium",
+                    "SourceYouTube",
+                    "SourceGoPodcast",
+                    "SourceFallthrough",
+                    "SourceArdanLabs",
+                    "SourceGoRelease",
+                    "SourceMastodon",
+                    "SourceAwesomeGo",
+                    "SourceJetBrains",
+                    "SourceGolangNuts",
+                    "SourcePlanetGolang",
+                    "SourceMeetup",
+                    "SourceConferences",
+                    "SourceGoVuln",
+                    "SourceFreeCodeCamp",
+                    "SourceHNJobs",
+                    "SourceRemoteOK"
+                ]
+            },
+            "news.Tag": {
+                "description": "source-specific hint (\"proposal-accepted\", \"trending\", \"official\")",
+                "enum": [
+                    "article",
+                    "tutorial",
+                    "proposal",
+                    "proposal_accepted",
+                    "proposal_shipped",
+                    "video",
+                    "podcast",
+                    "release",
+                    "security",
+                    "discussion",
+                    "trending",
+                    "event",
+                    "conference",
+                    "conference_reminder",
+                    "conference_alert",
+                    "jobs"
+                ],
+                "type": "string",
+                "x-enum-comments": {
+                    "TagConference": "major Go conference announcement",
+                    "TagConferenceAlert": "~1 week before",
+                    "TagConferenceReminder": "~3 months before"
+                },
+                "x-enum-varnames": [
+                    "TagArticle",
+                    "TagTutorial",
+                    "TagProposal",
+                    "TagProposalAccepted",
+                    "TagProposalShipped",
+                    "TagVideo",
+                    "TagPodcast",
+                    "TagRelease",
+                    "TagSecurity",
+                    "TagDiscussion",
+                    "TagTrending",
+                    "TagEvent",
+                    "TagConference",
+                    "TagConferenceReminder",
+                    "TagConferenceAlert",
+                    "TagJobs"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "description": "Bearer token supplied in the Authorization header.",
+                "in": "header",
+                "name": "Authorization",
+                "type": "apiKey"
+            }
+        }
+    },
+    "info": {
+        "contact": {
+            "name": "ainsley.dev",
+            "url": "https://ainsley.dev"
+        },
+        "description": "The GoDaily news digest API — ranked, summarised Go news delivered daily.",
+        "license": {
+            "name": "BSD-style"
+        },
+        "title": "GoDaily API",
+        "version": "1.0"
+    },
+    "externalDocs": {
+        "description": "",
+        "url": ""
+    },
+    "paths": {
+        "/confirm": {
+            "get": {
+                "description": "Confirms a pending subscription using the token from the confirmation email, then redirects.",
+                "parameters": [
+                    {
+                        "description": "Confirmation token",
+                        "in": "query",
+                        "name": "token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirect to /confirmed/ on success or / when the token is missing/unknown"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to confirm subscriber"
+                    }
+                },
+                "summary": "Confirm a subscription.",
+                "tags": [
+                    "subscription"
+                ]
+            }
+        },
+        "/digest/build": {
+            "get": {
+                "description": "Assembles today's collected items into a draft digest issue. Skipped at weekends unless force=true.",
+                "parameters": [
+                    {
+                        "description": "Force build even at weekends",
+                        "in": "query",
+                        "name": "force",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully built digest"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to build digest"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Build the draft digest.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/collect": {
+            "get": {
+                "description": "Fetches and ranks news from all registered sources. Skipped at weekends unless force=true.",
+                "parameters": [
+                    {
+                        "description": "Force collection even at weekends",
+                        "in": "query",
+                        "name": "force",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Per-source collection results"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to collect"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Run the news collection pipeline.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/issues": {
+            "get": {
+                "description": "Returns a paginated list of digest issues, optionally filtered by status.",
+                "parameters": [
+                    {
+                        "description": "Filter by issue status (e.g. draft, sent)",
+                        "in": "query",
+                        "name": "status",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Page number (default 1)",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Items per page (default 20, max 100)",
+                        "in": "query",
+                        "name": "per_page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueListResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved issues"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to list issues"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "List digest issues.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/preview": {
+            "get": {
+                "description": "Sends the draft digest and AI synth suggestion to the owner ahead of the full subscriber send. Skipped at weekends.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully sent preview"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to send preview"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Send the digest preview to the owner.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/send": {
+            "get": {
+                "description": "Sends today's digest by email to all active subscribers. Skipped at weekends unless force=true.",
+                "parameters": [
+                    {
+                        "description": "Force send even at weekends",
+                        "in": "query",
+                        "name": "force",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully sent digest"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to send digest"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Send the digest to subscribers.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/subscribers": {
+            "get": {
+                "description": "Returns a paginated list of all subscribers.",
+                "parameters": [
+                    {
+                        "description": "Page number (default 1)",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Items per page (default 20, max 100)",
+                        "in": "query",
+                        "name": "per_page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriberListResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved subscribers"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to list subscribers"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "List subscribers.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/healthz": {
+            "get": {
+                "description": "Returns 200 OK when the API is up.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "ok"
+                    }
+                },
+                "summary": "Health check.",
+                "tags": [
+                    "health"
+                ]
+            }
+        },
+        "/issues/{slug}": {
+            "get": {
+                "description": "Returns a single digest issue identified by its date slug.",
+                "parameters": [
+                    {
+                        "description": "Issue date slug",
+                        "in": "path",
+                        "name": "slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved issue"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Slug is required"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch issue"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Fetch an issue by slug.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
+        "/items/{id}": {
+            "get": {
+                "description": "Returns a single news item identified by its numeric ID.",
+                "parameters": [
+                    {
+                        "description": "Item ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved item"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "ID is required or not a positive integer"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Item not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch item"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Fetch a news item by ID.",
+                "tags": [
+                    "items"
+                ]
+            }
+        },
+        "/metrics/issues": {
+            "get": {
+                "description": "Returns engagement metrics per issue with optional date filtering and sorting.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Max rows (max 100)",
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Sort key: click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, sent_at",
+                        "in": "query",
+                        "name": "sort",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved issue metrics"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch issue metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Per-issue engagement stats.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/issues/{slug}": {
+            "get": {
+                "description": "Returns engagement stats plus the top-clicked links for one issue identified by its date slug.",
+                "parameters": [
+                    {
+                        "description": "Issue date slug",
+                        "in": "path",
+                        "name": "slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue stats and top links"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Slug is required"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch issue metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Single-issue stats and top links.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/items": {
+            "get": {
+                "description": "Returns the top-clicked news items enriched with title, tag, and source metadata.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Max rows (max 100)",
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved item metrics"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch item metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Top-clicked news items.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/roundup": {
+            "get": {
+                "description": "Gathers the last seven days of engagement data (with a week-over-week comparison) and posts a formatted summary to Slack. Scheduled every Friday at 15:00 UTC.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully sent weekly roundup"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to send weekly roundup"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Send the weekly engagement roundup.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/sources": {
+            "get": {
+                "description": "Returns total clicks aggregated by item source.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Max rows (max 100)",
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SourceMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved source metrics"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch source metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Clicks aggregated by source.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/subscribers": {
+            "get": {
+                "description": "Returns subscriber growth and churn bucketed over time.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Bucket: day, week, or month",
+                        "in": "query",
+                        "name": "bucket",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriberMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved subscriber data"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch subscriber data"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Subscriber growth and churn.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/summary": {
+            "get": {
+                "description": "Returns headline engagement numbers (delivered, opens, clicks, rates) for a period.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SummaryResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved summary stats"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch summary stats"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Headline engagement summary.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/tags": {
+            "get": {
+                "description": "Returns total clicks aggregated by item tag.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Max rows (max 100)",
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved tag metrics"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch tag metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Clicks aggregated by tag.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/trend": {
+            "get": {
+                "description": "Returns a time series for a chosen engagement metric, bucketed by day or week.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate",
+                        "in": "query",
+                        "name": "metric",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Bucket: day or week",
+                        "in": "query",
+                        "name": "bucket",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrendResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved trend data"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch trend data"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Engagement time series.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/social/featured": {
+            "get": {
+                "description": "Posts today's featured social update across platforms. Skipped at weekends and outside the chosen 10-minute slot; idempotent via the social_posts table.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Posted, or skipped (weekend/wrong slot/not wired)"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to post featured"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Post the featured social update.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/social/metrics": {
+            "get": {
+                "description": "For every social post published in the last 30 days, fetches current engagement counts from the originating platform and upserts them into social_metrics. Scheduled daily at 03:00 UTC.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully refreshed social metrics"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to list posts"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Refresh social post metrics.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/social/rotation": {
+            "get": {
+                "description": "Posts the next rotating social update across platforms. Skipped at weekends or when the social service is not wired.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Rotated, or skipped (weekend/not wired)"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to rotate"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Post a rotation social update.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/subscribe": {
+            "post": {
+                "description": "Registers an email address for the daily digest and sends a confirmation email.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/SubscribeRequest",
+                                        "summary": "request",
+                                        "description": "Subscription request"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "description": "Subscription request",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully subscribed"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Email is required or invalid"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Already subscribed"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to subscribe"
+                    }
+                },
+                "summary": "Subscribe an email address.",
+                "tags": [
+                    "subscription"
+                ]
+            }
+        },
+        "/unsubscribe": {
+            "get": {
+                "description": "Removes a subscriber using the token from the digest email.\nGET redirects to /unsubscribed/; POST implements the RFC 8058 one-click unsubscribe and returns 200 OK.",
+                "parameters": [
+                    {
+                        "description": "Unsubscribe token",
+                        "in": "query",
+                        "name": "token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully unsubscribed (POST one-click)"
+                    },
+                    "302": {
+                        "description": "Redirect to /unsubscribed/ (GET)"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Missing token"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to unsubscribe"
+                    }
+                },
+                "summary": "Unsubscribe an email address.",
+                "tags": [
+                    "subscription"
+                ]
+            },
+            "post": {
+                "description": "Removes a subscriber using the token from the digest email.\nGET redirects to /unsubscribed/; POST implements the RFC 8058 one-click unsubscribe and returns 200 OK.",
+                "parameters": [
+                    {
+                        "description": "Unsubscribe token",
+                        "in": "query",
+                        "name": "token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully unsubscribed (POST one-click)"
+                    },
+                    "302": {
+                        "description": "Redirect to /unsubscribed/ (GET)"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Missing token"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to unsubscribe"
+                    }
+                },
+                "summary": "Unsubscribe an email address.",
+                "tags": [
+                    "subscription"
+                ]
+            }
+        },
+        "/webhooks/resend": {
+            "post": {
+                "description": "Receives Resend email events (opens, clicks, bounces). Public, but every request is verified against its Svix-style signature; unsigned or tampered requests are rejected.",
+                "parameters": [
+                    {
+                        "description": "Svix message ID",
+                        "in": "header",
+                        "name": "svix-id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Svix timestamp",
+                        "in": "header",
+                        "name": "svix-timestamp",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Svix signature",
+                        "in": "header",
+                        "name": "svix-signature",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully tracked event"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Misconfigured, unreadable, or invalid payload"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid signature"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to process event"
+                    }
+                },
+                "summary": "Resend email webhook.",
+                "tags": [
+                    "webhooks"
+                ]
+            }
+        }
+    },
+    "openapi": "3.1.0",
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ]
+}
