@@ -4,42 +4,26 @@
 
 package plugs
 
-import (
-	"net/http"
-	"strings"
-)
+import "net/http"
 
-// CORS returns an HTTP middleware that adds CORS headers for matching origins
-// and short-circuits OPTIONS preflight requests with 204.
+// CORS returns an HTTP middleware that opens the API up to cross-origin browser
+// requests and short-circuits OPTIONS preflight with 204.
 //
-// It's a plain net/http middleware (not a webkit.Plug) so it can be mounted on
-// a chi sub-router via Mux().Use(...). That placement is required: preflight
-// requests target methods that aren't registered on the route (only GET is),
-// so chi would 405 before any per-route webkit.Plug ran. Mounted on the
-// sub-router, the middleware runs first and can answer the preflight directly.
+// Wildcard origin is safe here because every authenticated route gates on a
+// Bearer token (see Auth) and we never use cookies — a hostile browser can
+// preflight but can't read anything without the secret. Non-browser callers
+// (curl, scripts, MCP tools) ignore CORS entirely.
 //
-// Origins are matched exact-string; the wildcard "*" is not supported because
-// the dashboard sends an Authorization header and credentialed CORS doesn't
-// allow wildcards. Pass an empty slice to disable CORS entirely.
-func CORS(allowedOrigins []string) func(http.Handler) http.Handler {
-	allowed := make(map[string]struct{}, len(allowedOrigins))
-	for _, o := range allowedOrigins {
-		o = strings.TrimSpace(o)
-		if o != "" {
-			allowed[o] = struct{}{}
-		}
-	}
+// Mounted as chi middleware on the top-level mux (not a webkit.Plug) so OPTIONS
+// preflight is answered before chi 405s on routes that only register GET.
+func CORS() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			origin := r.Header.Get("Origin")
-			if _, ok := allowed[origin]; ok {
-				h := w.Header()
-				h.Set("Access-Control-Allow-Origin", origin)
-				h.Add("Vary", "Origin")
-				h.Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-				h.Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept")
-				h.Set("Access-Control-Max-Age", "600")
-			}
+			h := w.Header()
+			h.Set("Access-Control-Allow-Origin", "*")
+			h.Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			h.Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept")
+			h.Set("Access-Control-Max-Age", "600")
 			if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusNoContent)
 				return

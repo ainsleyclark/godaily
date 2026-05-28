@@ -56,19 +56,17 @@ respective scope, so dashboard-only pushes don't redeploy the main app, and vice
 
 ## CORS
 
-The dashboard is cross-origin from the API, so the Go backend
-(`pkg/api/plugs/cors.go`, mounted at `pkg/api/mux/mux.go`) emits CORS headers
-for the constants `env.DashboardURL` and `env.AppURL` defined in
-`pkg/env/env.go`:
+The dashboard is cross-origin from the API. The Go backend
+(`pkg/api/plugs/cors.go`, mounted at `pkg/api/mux/mux.go`) emits
+`Access-Control-Allow-Origin: *` on every response and answers OPTIONS
+preflight with 204.
 
-```
-https://analytics.godaily.dev
-https://godaily.dev
-```
-
-To allow a new origin (e.g. a staging URL), edit those constants — the allow-list
-is intentionally not an env var. Preview URLs (`*.vercel.app`) aren't in the list;
-for previews, run `pnpm dev` locally against prod via the Vite proxy.
+The wildcard is safe because every protected route gates on a Bearer token —
+a hostile browser can preflight but can't read anything without the secret —
+and we never use cookies. Non-browser callers (curl, scripts, MCP/Claude
+skills) ignore CORS entirely. The wildcard simply removes friction for any
+browser-based tool we might point at the API later (preview URLs, staging,
+ad-hoc dashboards).
 
 Bearer auth (`Authorization: Bearer <APISecret>`) is unchanged: the dashboard
 verifies the secret by calling `/api/metrics/summary` at login and stores it in

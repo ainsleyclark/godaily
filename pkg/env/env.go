@@ -16,11 +16,6 @@ import (
 // AppURL is the canonical production URL for godaily.
 const AppURL = "https://godaily.dev"
 
-// DashboardURL is the canonical production URL for the internal metrics
-// dashboard SPA, deployed as a separate Vercel project. Listed alongside
-// AppURL in the API's CORS allow-list.
-const DashboardURL = "https://analytics.godaily.dev"
-
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {
