@@ -2,7 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package browse
+// Package frontend serves dynamic pieces of the otherwise-static website.
+// The /browse page is generated as a static file at build time; listing and
+// filtering items happens client-side by fetching the rendered HTML fragments
+// from here, so the same templ components render on every surface.
+package frontend
 
 import (
 	"context"
@@ -12,29 +16,40 @@ import (
 	"github.com/a-h/templ"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 
+	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 )
 
-// FragmentResponse is the JSON envelope returned by GET /browse. Each field
-// is the rendered HTML for one swappable region of the browse page.
-type FragmentResponse struct {
+// Handler holds the narrow dependencies for the frontend fragment endpoints.
+type Handler struct {
+	issuesRepo digest.IssueRepository
+	itemsRepo  news.ItemRepository
+}
+
+// New constructs a Handler from the application App.
+func New(a *godaily.App) *Handler {
+	return &Handler{
+		issuesRepo: a.Repository.Issues,
+		itemsRepo:  a.Repository.Items,
+	}
+}
+
+// BrowseResponse is the JSON envelope returned by GET /browse. Each field is
+// the rendered HTML for one swappable region of the browse page.
+type BrowseResponse struct {
 	Tabs string `json:"tabs"`
 	Side string `json:"side"`
 	Main string `json:"main"`
 }
 
-// Fragments godoc
-//
-//	@Summary		Render the browse page's filterable regions.
-//	@Description	Returns the rendered HTML for the tabs, filter sidebar, and results column for the given filter query. Used by the static /browse page to list and filter items client-side.
-//	@Tags			browse
-//	@Produce		json
-//	@Success		200	{object}	FragmentResponse	"Rendered fragments"
-//	@Failure		500	{object}	api.MessageResponse	"Failed to build browse view"
-//	@Router			/browse [get]
-func (h *Handler) Fragments(c *webkit.Context) error {
+// Browse returns the rendered HTML for the browse page's tabs, filter sidebar,
+// and results column for the given filter query. The static /browse page
+// fetches these fragments to list and filter items client-side.
+func (h *Handler) Browse(c *webkit.Context) error {
 	ctx := c.Context()
 
 	props, err := handlers.BuildBrowseProps(ctx, h.issuesRepo, h.itemsRepo, c.Request.URL.Query())
@@ -55,7 +70,7 @@ func (h *Handler) Fragments(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to render results")
 	}
 
-	return c.JSON(http.StatusOK, FragmentResponse{Tabs: tabs, Side: side, Main: main})
+	return c.JSON(http.StatusOK, BrowseResponse{Tabs: tabs, Side: side, Main: main})
 }
 
 func renderComponent(ctx context.Context, comp templ.Component) (string, error) {

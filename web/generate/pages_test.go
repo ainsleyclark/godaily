@@ -17,7 +17,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 
@@ -42,14 +43,21 @@ func TestOGImages(t *testing.T) {
 	repo := mockdigest.NewMockIssueRepository(ctrl)
 	repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
 	repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
+	repo.EXPECT().Latest(gomock.Any(), 1).Return([]digest.Issue{}, nil).AnyTimes()
 	repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
+
+	items := mocknews.NewMockItemRepository(ctrl)
+	items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{}, nil).AnyTimes()
+	items.EXPECT().Count(gomock.Any()).Return(int64(0), nil).AnyTimes()
+	items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil).AnyTimes()
+	items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil).AnyTimes()
 
 	outDir := t.TempDir()
 	staticDir := t.TempDir()
 	assetsDir := t.TempDir()
 	require.NoError(t, os.WriteFile(filepath.Join(assetsDir, "app.css"), []byte("body{}"), 0o644))
 
-	require.NoError(t, generate.Site(t.Context(), repo, 0, outDir, staticDir, assetsDir))
+	require.NoError(t, generate.Site(t.Context(), repo, items, 0, outDir, staticDir, assetsDir))
 
 	cases := map[string]string{
 		"home OG image":  filepath.Join(outDir, "og", "home.png"),

@@ -35,7 +35,7 @@ func generateCmd(a *godaily.App) *cli.Command {
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			count, _ := a.Repository.Subscribers.CountActive(ctx)
-			return generate.Site(ctx, a.Repository.Issues, count, cmd.String("out"), cmd.String("static"), cmd.String("assets"))
+			return generate.Site(ctx, a.Repository.Issues, a.Repository.Items, count, cmd.String("out"), cmd.String("static"), cmd.String("assets"))
 		},
 	}
 }
