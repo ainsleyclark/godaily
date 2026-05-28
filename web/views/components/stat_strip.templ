@@ -1,0 +1,23 @@
+package components
+
+type StatProps struct {
+	Value string
+	Label string
+	Delta string // optional small accent text (e.g. "06:30 CET")
+}
+
+templ StatStrip(stats []StatProps) {
+	<div class="stat-strip">
+		for _, s := range stats {
+			<div class="stat">
+				<div class="stat__value">
+					{ s.Value }
+					if s.Delta != "" {
+						<span class="stat__delta">{ s.Delta }</span>
+					}
+				</div>
+				<div class="stat__label">{ s.Label }</div>
+			</div>
+		}
+	</div>
+}

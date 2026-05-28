@@ -1,0 +1,89 @@
+package components
+
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+)
+
+type BrowseFilterSideProps struct {
+	Sources         []CheckableRow
+	Ranges          []RangeButton
+	ClearSourcesURL string
+	ClearSourcesCount int
+
+	DigestOnly      bool
+	DigestToggleURL string
+	DigestPicks     int64
+	TotalInScope    int64
+}
+
+templ BrowseFilterSide(props BrowseFilterSideProps) {
+	<aside class="browse-side">
+		@digestToggleBlock(props)
+		@SideBlock(SideBlockProps{
+			Title:       "Sources",
+			ActionLabel: clearLabel(props.ClearSourcesCount),
+			ActionURL:   clearLink(props.ClearSourcesURL, props.ClearSourcesCount),
+		}) {
+			@CheckableList(props.Sources)
+		}
+		@SideBlock(SideBlockProps{Title: "Date range"}) {
+			@RangeButtons(props.Ranges)
+		}
+	</aside>
+}
+
+templ digestToggleBlock(props BrowseFilterSideProps) {
+	<section class={ "side-block", "side-block--digest", templ.KV("side-block--digest-on", props.DigestOnly) }>
+		<a class={ "digest-toggle", templ.KV("digest-toggle--on", props.DigestOnly) } href={ templ.SafeURL(props.DigestToggleURL) }>
+			<span class="digest-toggle__mark" aria-hidden="true">
+				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M3 6h18v12H3z"></path>
+					<polyline points="3 7 12 13 21 7"></polyline>
+				</svg>
+			</span>
+			<span class="digest-toggle__body">
+				<span class="digest-toggle__title">Only digest picks</span>
+				<span class="digest-toggle__sub">
+					if props.DigestOnly {
+						{ fmt.Sprintf("Showing the curated %d.", props.DigestPicks) }
+					} else {
+						{ fmt.Sprintf("%d of %d made the cut.", props.DigestPicks, props.TotalInScope) }
+					}
+				</span>
+			</span>
+			<span class={ "digest-toggle__knob", templ.KV("digest-toggle__knob--on", props.DigestOnly) }><span></span></span>
+		</a>
+	</section>
+}
+
+func clearLabel(n int) string {
+	if n <= 0 {
+		return ""
+	}
+	return fmt.Sprintf("Clear (%d)", n)
+}
+
+func clearLink(url string, n int) string {
+	if n <= 0 {
+		return ""
+	}
+	return url
+}
+
+// BrowseSourcesToRows is a small helper for handlers/pages building source
+// rows from SourceCount aggregates. Each row needs a toggle URL the caller
+// computes via the filter URL builder.
+func BrowseSourcesToRows(counts []news.SourceCount, hrefFor func(news.Source) string, activeFor func(news.Source) bool) []CheckableRow {
+	rows := make([]CheckableRow, 0, len(counts))
+	for _, c := range counts {
+		rows = append(rows, CheckableRow{
+			Label:  c.Source.NiceName(),
+			Count:  fmt.Sprintf("%d", c.Count),
+			Href:   hrefFor(c.Source),
+			Active: activeFor(c.Source),
+		})
+	}
+	return rows
+}

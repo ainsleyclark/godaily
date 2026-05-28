@@ -1,0 +1,13 @@
+package components
+
+type CardProps struct {
+	Variant string // optional modifier appended as card--{variant}, e.g. "tinted"
+}
+
+// Card is a generic bordered container with an optional variant for accented
+// or tinted backgrounds. Slot content via children.
+templ Card(props CardProps) {
+	<div class={ "card", templ.KV("card--"+props.Variant, props.Variant != "") }>
+		{ children... }
+	</div>
+}

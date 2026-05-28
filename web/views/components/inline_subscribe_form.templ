@@ -1,0 +1,41 @@
+package components
+
+type InlineSubscribeFormProps struct {
+	Heading     string
+	Sub         string
+	Placeholder string
+	CTALabel    string
+}
+
+// InlineSubscribeForm is a compact subscribe form intended for sidebars and
+// inline placements. It reuses the same `data-subscribe` form contract as
+// SubscribeCTA so the same JS handler picks it up.
+templ InlineSubscribeForm(props InlineSubscribeFormProps) {
+	<div class="inline-subscribe">
+		if props.Heading != "" {
+			<h5 class="inline-subscribe__title">{ props.Heading }</h5>
+		}
+		if props.Sub != "" {
+			<p class="inline-subscribe__sub">{ props.Sub }</p>
+		}
+		<form class="inline-subscribe__form" data-subscribe>
+			<input
+				class="inline-subscribe__input"
+				type="email"
+				name="email"
+				placeholder={ props.Placeholder }
+				autocomplete="email"
+				aria-label="Email address"
+				required
+			/>
+			<button class="inline-subscribe__submit" type="submit">
+				if props.CTALabel != "" {
+					{ props.CTALabel }
+				} else {
+					Subscribe
+				}
+			</button>
+			<p class="inline-subscribe__hint" data-subscribe-hint hidden></p>
+		</form>
+	</div>
+}

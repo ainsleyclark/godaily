@@ -1,0 +1,26 @@
+package components
+
+type EmptyStateProps struct {
+	Title   string
+	Body    string
+	CTALabel string
+	CTAURL   string
+}
+
+templ EmptyState(props EmptyStateProps) {
+	<div class="empty-state">
+		<div class="empty-state__glyph" aria-hidden="true">
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M3 6h18v12H3z"></path>
+				<polyline points="3 7 12 13 21 7"></polyline>
+			</svg>
+		</div>
+		<h3 class="empty-state__title">{ props.Title }</h3>
+		if props.Body != "" {
+			<p class="empty-state__body">{ props.Body }</p>
+		}
+		if props.CTALabel != "" && props.CTAURL != "" {
+			<a class="empty-state__cta" href={ templ.SafeURL(props.CTAURL) }>{ props.CTALabel }</a>
+		}
+	</div>
+}

@@ -1,0 +1,246 @@
+package pages
+
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/web/views/components"
+	"github.com/ainsleyclark/godaily/web/views/layouts"
+)
+
+type BrowseProps struct {
+	Items        []news.Item
+	Trending     []news.Item
+	Total        int64
+	Matching     int64
+	DigestPicks  int64
+	SourceCounts []news.SourceCount
+	TagCounts    []news.TagCount
+	State        BrowseFilterState
+	Page         int64
+	PerPage      int64
+	TotalPages   int64
+	NextDigest   string // e.g. "06:12" — caller computes from cron
+	LatestIssue  int64  // 0 to hide
+}
+
+templ Browse(props BrowseProps) {
+	@layouts.Base(layouts.PageMeta{
+		Title:        "Browse all Go news — GoDaily",
+		Description:  "The full firehose of Go news the GoDaily pipeline has collected. Filter by source, section, and date — and see which stories made the digest.",
+		CanonicalURL: "https://godaily.dev/browse/",
+	}) {
+		@components.Header()
+		<section class="section browse">
+			@components.Container(false) {
+				@components.PageHero(components.PageHeroProps{
+					Kicker: "Browse the archive",
+					Title:  "The full firehose, with <span class=\"page-hero__accent\">digest picks</span> marked.",
+					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"page-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
+				}) {
+					@components.SearchBox(components.SearchBoxProps{
+						Action:      BrowseBasePath,
+						Name:        "q",
+						Value:       props.State.Query,
+						Placeholder: fmt.Sprintf("Search %s stories…", formatThousands(props.Total)),
+						Hint:        "⌘K",
+					})
+				}
+				@components.StatStrip(browseStats(props))
+			}
+			@components.Tabs(browseTabs(props))
+			@components.Container(false) {
+				<div class="browse__layout">
+					@components.BrowseFilterSide(browseFilterSideProps(props))
+					<main class="browse__main">
+						@components.BrowseToolbar(browseToolbarProps(props))
+						@components.AppliedFilters(browseAppliedFilters(props))
+						if len(props.Items) == 0 {
+							@components.EmptyState(components.EmptyStateProps{
+								Title:    "No stories match those filters",
+								Body:     emptyBody(props.State.Digest),
+								CTALabel: "Reset all filters",
+								CTAURL:   BrowseURL(props.State, ResetAll()),
+							})
+						} else {
+							@components.BrowseItemList(props.Items)
+							@components.Pagination(components.PaginationProps{
+								Page:       props.Page,
+								TotalPages: props.TotalPages,
+								HrefFor: func(p int64) string {
+									return BrowseURL(props.State, WithPage(p))
+								},
+							})
+						}
+					</main>
+					@components.BrowseTrendingSide(components.BrowseTrendingSideProps{
+						Trending: props.Trending,
+						SubscribeCTA: components.InlineSubscribeFormProps{
+							Heading:     "Skip the scroll.",
+							Sub:         "Get the top picks of the day, ranked and summarised, before 6:30am.",
+							Placeholder: "you@example.com",
+							CTALabel:    "Get the daily digest",
+						},
+					})
+				</div>
+			}
+		</section>
+		@components.Rule()
+		@components.SubscribeCTA(components.SubscribeCTAProps{})
+	}
+}
+
+func browseStats(p BrowseProps) []components.StatProps {
+	stats := []components.StatProps{
+		{Value: formatThousands(p.Total), Label: "Stories indexed"},
+		{Value: fmt.Sprintf("%d", len(news.Sources)), Label: "Live sources"},
+	}
+	if p.LatestIssue > 0 {
+		stats = append(stats, components.StatProps{
+			Value: fmt.Sprintf("%d", p.LatestIssue),
+			Delta: "issue",
+			Label: "Latest digest",
+		})
+	}
+	if p.NextDigest != "" {
+		stats = append(stats, components.StatProps{
+			Value: p.NextDigest,
+			Delta: "06:30 CET",
+			Label: "Next digest in",
+		})
+	}
+	return stats
+}
+
+func browseTabs(p BrowseProps) []components.TabProps {
+	tabs := []components.TabProps{{
+		Label:  "All",
+		Href:   BrowseURL(p.State, WithTab("all")),
+		Count:  formatThousands(p.Total),
+		Active: p.State.Tab == "" || p.State.Tab == "all",
+	}}
+	counts := tagCountMap(p.TagCounts)
+	for _, t := range news.SectionTags {
+		tabs = append(tabs, components.TabProps{
+			Label:  t.Title(),
+			Href:   BrowseURL(p.State, WithTab(string(t))),
+			Count:  fmt.Sprintf("%d", counts[t]),
+			Active: p.State.Tab == string(t),
+		})
+	}
+	return tabs
+}
+
+func tagCountMap(counts []news.TagCount) map[news.Tag]int64 {
+	out := make(map[news.Tag]int64, len(counts))
+	for _, c := range counts {
+		out[c.Tag.Section()] += c.Count
+	}
+	return out
+}
+
+func browseFilterSideProps(p BrowseProps) components.BrowseFilterSideProps {
+	sources := components.BrowseSourcesToRows(p.SourceCounts,
+		func(s news.Source) string { return BrowseURL(p.State, WithToggleSource(string(s))) },
+		func(s news.Source) bool { return containsSource(p.State, string(s)) })
+
+	ranges := []components.RangeButton{
+		{Label: "Today", Href: BrowseURL(p.State, WithRange("today")), Active: p.State.Range == "today"},
+		{Label: "Week", Href: BrowseURL(p.State, WithRange("week")), Active: p.State.Range == "week"},
+		{Label: "Month", Href: BrowseURL(p.State, WithRange("month")), Active: p.State.Range == "month"},
+		{Label: "Year", Href: BrowseURL(p.State, WithRange("year")), Active: p.State.Range == "year"},
+		{Label: "All", Href: BrowseURL(p.State, WithRange("all")), Active: p.State.Range == "all"},
+	}
+
+	return components.BrowseFilterSideProps{
+		Sources:           sources,
+		Ranges:            ranges,
+		ClearSourcesURL:   BrowseURL(p.State, WithoutSources()),
+		ClearSourcesCount: len(p.State.Sources),
+		DigestOnly:        p.State.Digest,
+		DigestToggleURL:   BrowseURL(p.State, WithDigest(!p.State.Digest)),
+		DigestPicks:       p.DigestPicks,
+		TotalInScope:      p.Matching,
+	}
+}
+
+func browseToolbarProps(p BrowseProps) components.BrowseToolbarProps {
+	sort := []components.SegmentProps{
+		{Label: "Hot", Href: BrowseURL(p.State, WithSort("hot")), Active: p.State.Sort == "" || p.State.Sort == "hot"},
+		{Label: "Top", Href: BrowseURL(p.State, WithSort("top")), Active: p.State.Sort == "top"},
+		{Label: "New", Href: BrowseURL(p.State, WithSort("new")), Active: p.State.Sort == "new"},
+	}
+	ranges := []components.SelectOption{
+		{Label: "Today", Value: "today", Selected: p.State.Range == "today"},
+		{Label: "Week", Value: "week", Selected: p.State.Range == "week" || p.State.Range == ""},
+		{Label: "Month", Value: "month", Selected: p.State.Range == "month"},
+		{Label: "Year", Value: "year", Selected: p.State.Range == "year"},
+		{Label: "All", Value: "all", Selected: p.State.Range == "all"},
+	}
+	return components.BrowseToolbarProps{
+		Sort:            sort,
+		RangeOptions:    ranges,
+		RangeName:       "range",
+		RangeSelected:   p.State.Range,
+		RangeFormAction: BrowseBasePath,
+		DigestOnly:      p.State.Digest,
+		DigestToggleURL: BrowseURL(p.State, WithDigest(!p.State.Digest)),
+		Matching:        p.Matching,
+	}
+}
+
+func browseAppliedFilters(p BrowseProps) components.AppliedFiltersProps {
+	var chips []components.AppliedChip
+	if p.State.Digest {
+		chips = append(chips, components.AppliedChip{
+			Label:     "Digest picks only",
+			RemoveURL: BrowseURL(p.State, WithDigest(false)),
+			Variant:   "digest",
+		})
+	}
+	if p.State.Tab != "" && p.State.Tab != "all" {
+		chips = append(chips, components.AppliedChip{
+			Label:     news.Tag(p.State.Tab).Title(),
+			RemoveURL: BrowseURL(p.State, WithTab("all")),
+		})
+	}
+	for _, src := range p.State.Sources {
+		chips = append(chips, components.AppliedChip{
+			Label:     news.Source(src).NiceName(),
+			RemoveURL: BrowseURL(p.State, WithoutSource(src)),
+		})
+	}
+	if p.State.Range != "" && p.State.Range != "week" {
+		chips = append(chips, components.AppliedChip{
+			Label:     "Last " + p.State.Range,
+			RemoveURL: BrowseURL(p.State, WithRange("week")),
+		})
+	}
+	return components.AppliedFiltersProps{
+		Label:    "Showing",
+		Chips:    chips,
+		ResetURL: BrowseURL(p.State, ResetAll()),
+	}
+}
+
+func emptyBody(digestOnly bool) string {
+	if digestOnly {
+		return "Nothing in this slice made the digest. Try widening the date range, or include the full firehose."
+	}
+	return "Try widening the date range, picking fewer sources, or jump back to All."
+}
+
+func formatThousands(n int64) string {
+	if n < 1000 {
+		return fmt.Sprintf("%d", n)
+	}
+	s := fmt.Sprintf("%d", n)
+	var out []byte
+	for i, c := range []byte(s) {
+		if i > 0 && (len(s)-i)%3 == 0 {
+			out = append(out, ',')
+		}
+		out = append(out, c)
+	}
+	return string(out)
+}

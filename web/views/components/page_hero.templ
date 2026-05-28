@@ -1,0 +1,26 @@
+package components
+
+type PageHeroProps struct {
+	Kicker string
+	Title  string
+	Sub    string
+}
+
+// PageHero renders a section header with kicker, h1, and supporting copy.
+// Pass children to slot additional content (e.g. a search box) on the right.
+templ PageHero(props PageHeroProps) {
+	<header class="page-hero">
+		<div class="page-hero__copy">
+			if props.Kicker != "" {
+				<div class="page-hero__kicker">{ props.Kicker }</div>
+			}
+			<h1 class="page-hero__title">@templ.Raw(props.Title)</h1>
+			if props.Sub != "" {
+				<p class="page-hero__sub">@templ.Raw(props.Sub)</p>
+			}
+		</div>
+		<div class="page-hero__aside">
+			{ children... }
+		</div>
+	</header>
+}

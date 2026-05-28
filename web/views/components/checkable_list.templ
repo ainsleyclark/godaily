@@ -1,0 +1,31 @@
+package components
+
+type CheckableRow struct {
+	Label    string
+	Count    string // optional right-aligned count
+	Href     string // anchor target that toggles this row's filter
+	DotColor string // optional swatch colour
+	Active   bool
+}
+
+templ CheckableList(rows []CheckableRow) {
+	<ul class="checkable-list">
+		for _, r := range rows {
+			<li>
+				<a
+					class={ "checkable-list__row", templ.KV("checkable-list__row--active", r.Active) }
+					href={ templ.SafeURL(r.Href) }
+				>
+					<span class={ "checkable-list__box", templ.KV("checkable-list__box--active", r.Active) } aria-hidden="true"></span>
+					if r.DotColor != "" {
+						<span class="checkable-list__dot" style={ "background:" + r.DotColor }></span>
+					}
+					<span class="checkable-list__label">{ r.Label }</span>
+					if r.Count != "" {
+						<span class="checkable-list__count">{ r.Count }</span>
+					}
+				</a>
+			</li>
+		}
+	</ul>
+}

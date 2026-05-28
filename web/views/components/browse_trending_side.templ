@@ -1,0 +1,38 @@
+package components
+
+import (
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+)
+
+type BrowseTrendingSideProps struct {
+	Trending     []news.Item
+	SubscribeCTA InlineSubscribeFormProps
+}
+
+templ BrowseTrendingSide(props BrowseTrendingSideProps) {
+	<aside class="browse-trending">
+		@SideBlock(SideBlockProps{Title: "Top stories this week"}) {
+			@RankedList(itemsToRanked(props.Trending))
+			<p class="browse-trending__note">Ranked by our relevance score. Click-driven trending coming soon.</p>
+		}
+		@Card(CardProps{Variant: "tinted"}) {
+			@InlineSubscribeForm(props.SubscribeCTA)
+		}
+	</aside>
+}
+
+func itemsToRanked(items []news.Item) []RankedItem {
+	out := make([]RankedItem, 0, len(items))
+	for _, it := range items {
+		href := it.URL
+		if href == "" {
+			href = it.OriginalURL
+		}
+		out = append(out, RankedItem{
+			Title: it.Title,
+			Meta:  it.Source.NiceName(),
+			Href:  href,
+		})
+	}
+	return out
+}

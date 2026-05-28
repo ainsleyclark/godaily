@@ -1,0 +1,25 @@
+package components
+
+type SegmentProps struct {
+	Label  string
+	Href   string
+	Icon   templ.Component // optional leading icon
+	Active bool
+}
+
+templ Segmented(segments []SegmentProps) {
+	<div class="seg" role="group">
+		for _, s := range segments {
+			<a
+				class={ "seg__btn", templ.KV("seg__btn--active", s.Active) }
+				href={ templ.SafeURL(s.Href) }
+				aria-current?={ s.Active }
+			>
+				if s.Icon != nil {
+					@s.Icon
+				}
+				<span>{ s.Label }</span>
+			</a>
+		}
+	</div>
+}

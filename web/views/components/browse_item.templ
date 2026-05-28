@@ -1,0 +1,108 @@
+package components
+
+import (
+	"fmt"
+	"net/url"
+	"strings"
+	"time"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+)
+
+type BrowseItemProps struct {
+	Item news.Item
+}
+
+templ BrowseItem(props BrowseItemProps) {
+	<article class={ "browse-item", templ.KV("browse-item--in-digest", props.Item.InDigest) }>
+		<div class="browse-item__mark">
+			@SourceMark(props.Item.Source)
+		</div>
+		<div class="browse-item__body">
+			<a
+				class="browse-item__title"
+				href={ templ.URL(itemTarget(props.Item)) }
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				{ props.Item.Title }
+				if host := hostOf(props.Item.URL); host != "" {
+					<span class="browse-item__host">({ host })</span>
+				}
+			</a>
+			if props.Item.Snippet != "" {
+				<p class="browse-item__snippet">{ props.Item.Snippet }</p>
+			}
+			<div class="browse-item__meta">
+				<span class="browse-item__pill">{ props.Item.Tag.Title() }</span>
+				if props.Item.InDigest {
+					<span class="browse-item__digest" title="Featured in a digest">
+						<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M3 6h18v12H3z"></path>
+							<polyline points="3 7 12 13 21 7"></polyline>
+						</svg>
+						<span>In digest</span>
+					</span>
+				}
+				<span class="browse-item__via">via <span class="browse-item__author">{ props.Item.Source.NiceName() }</span></span>
+				if props.Item.Author != nil && props.Item.Author.String() != "" {
+					<span class="browse-item__dot"></span>
+					<span>by { props.Item.Author.String() }</span>
+				}
+				if !props.Item.Published.IsZero() {
+					<span class="browse-item__dot"></span>
+					<time datetime={ props.Item.Published.Format(time.RFC3339) }>{ RelativeTime(props.Item.Published) }</time>
+				}
+			</div>
+		</div>
+	</article>
+}
+
+templ BrowseItemList(items []news.Item) {
+	<div class="browse-item-list">
+		for _, it := range items {
+			@BrowseItem(BrowseItemProps{Item: it})
+		}
+	</div>
+}
+
+func itemTarget(it news.Item) string {
+	if it.URL != "" {
+		return it.URL
+	}
+	return it.OriginalURL
+}
+
+func hostOf(rawURL string) string {
+	if rawURL == "" {
+		return ""
+	}
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return ""
+	}
+	return strings.TrimPrefix(u.Host, "www.")
+}
+
+// RelativeTime formats a past time as a short relative string ("3h ago",
+// "2d ago"). Exported so other components can reuse it.
+func RelativeTime(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	d := time.Since(t)
+	switch {
+	case d < time.Minute:
+		return "just now"
+	case d < time.Hour:
+		return fmt.Sprintf("%dm ago", int(d.Minutes()))
+	case d < 24*time.Hour:
+		return fmt.Sprintf("%dh ago", int(d.Hours()))
+	case d < 30*24*time.Hour:
+		return fmt.Sprintf("%dd ago", int(d.Hours()/24))
+	case d < 365*24*time.Hour:
+		return fmt.Sprintf("%dmo ago", int(d.Hours()/24/30))
+	default:
+		return fmt.Sprintf("%dy ago", int(d.Hours()/24/365))
+	}
+}
