@@ -83,6 +83,7 @@ func (h HNJobs) Fetch(ctx context.Context) ([]news.Item, error) {
 			Text:      child.Text,
 			CreatedAt: child.CreatedAt,
 			ageDays:   hnJobsAgeDays(now, child.CreatedAt),
+			now:       now,
 		})
 	}
 	return ingest.TransformAll(ctx, comments), nil
@@ -146,7 +147,7 @@ func (c hnJobsComment) Transform() news.Item {
 		Author:    author,
 		Snippet:   snippet,
 		Tag:       news.TagJobs,
-		Published: c.CreatedAt,
+		Published: c.now,
 		Score:     score,
 	}
 }
@@ -257,5 +258,6 @@ type (
 		Text      string
 		CreatedAt time.Time
 		ageDays   int
+		now       time.Time
 	}
 )

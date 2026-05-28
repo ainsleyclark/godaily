@@ -243,6 +243,7 @@ func TestHNJobs_Fetch(t *testing.T) {
 				assert.Equal(t, "Acme", acme.Author.Name)
 				assert.Contains(t, acme.Snippet, "distributed systems")
 				assert.NotContains(t, acme.Snippet, "<p>", "snippet must be HTML-stripped by ingest")
+				assert.Equal(t, fixedNow(), acme.Published, "Published should be the collection time, not CreatedAt")
 
 				poly := items[1]
 				assert.Equal(t, "PolyShop | Backend Engineer | Onsite London", poly.Title)

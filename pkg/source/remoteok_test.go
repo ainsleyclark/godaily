@@ -105,6 +105,7 @@ func TestRemoteOK_Fetch(t *testing.T) {
 				assert.Equal(t, "$120k–$160k", goEng.Snippet)
 				// Salary-disclosed + Go-in-title + remote, fresh: full boost.
 				assert.Greater(t, goEng.Score, 1.5)
+				assert.Equal(t, fixedNow(), goEng.Published, "Published should be the collection time, not the listing epoch")
 
 				backend := items[1]
 				// Empty location renders as "Remote" in the title.
