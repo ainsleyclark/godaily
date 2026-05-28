@@ -8,18 +8,48 @@
 	"trailingSlash": true,
 	"cleanUrls": true,
 	"rewrites": [
-		{ "source": "/healthz",  "destination": "/api/index" },
-		{ "source": "/api/(.*)", "destination": "/api/index" }
+		{
+			"source": "/healthz",
+			"destination": "/api/index"
+		},
+		{
+			"source": "/api/(.*)",
+			"destination": "/api/index"
+		}
 	],
 	"crons": [
-		{ "path": "/api/digest/collect/",   "schedule": "0 1 * * *"                 },
-		{ "path": "/api/digest/build/",     "schedule": "0 2 * * *"                  },
-		{ "path": "/api/digest/preview/",   "schedule": "0 6 * * 1-5"               },
-		{ "path": "/api/digest/send/",      "schedule": "0 8 * * *"                  },
-		{ "path": "/api/social/featured/",  "schedule": "0 11 * * *"                 },
-		{ "path": "/api/social/rotation/",  "schedule": "0 15 * * 2,3,5"            },
-		{ "path": "/api/social/metrics/",   "schedule": "0 3 * * *"                 },
-		{ "path": "/api/metrics/roundup/",  "schedule": "0 15 * * 5"                }
+		{
+			"path": "/api/digest/collect/",
+			"schedule": "0 1 * * *"
+		},
+		{
+			"path": "/api/digest/build/",
+			"schedule": "0 2 * * *"
+		},
+		{
+			"path": "/api/digest/preview/",
+			"schedule": "0 6 * * 1-5"
+		},
+		{
+			"path": "/api/digest/send/",
+			"schedule": "0 8 * * *"
+		},
+		{
+			"path": "/api/social/featured/",
+			"schedule": "0 11 * * *"
+		},
+		{
+			"path": "/api/social/rotation/",
+			"schedule": "0 15 * * 2,3,5"
+		},
+		{
+			"path": "/api/social/metrics/",
+			"schedule": "0 3 * * *"
+		},
+		{
+			"path": "/api/metrics/roundup/",
+			"schedule": "0 15 * * 5"
+		}
 	],
 	"functions": {
 		"api/index.go": {
