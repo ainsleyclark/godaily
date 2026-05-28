@@ -21,8 +21,9 @@
 		{ "path": "/api/social/metrics/",   "schedule": "0 3 * * *"                 },
 		{ "path": "/api/metrics/roundup/",  "schedule": "0 15 * * 5"                },
 
-		{ "path": "/api/healthz/", "schedule": "30 17 * * *" },
-		{ "path": "/api/healthz/", "schedule": "0 18 * * *" }
+		{ "path": "/api/healthz/", "schedule": "40 16 * * *" },
+		{ "path": "/api/healthz/", "schedule": "40 17 * * *" },
+		{ "path": "/api/healthz/", "schedule": "40 18 * * *" }
 	],
 	"functions": {
 		"api/index.go": {
