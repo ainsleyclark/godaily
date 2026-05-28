@@ -37,12 +37,7 @@ func (req issuesRequest) validate() error {
 }
 
 // IssueMetricsResponse is the response envelope for GET /metrics/issues.
-type IssueMetricsResponse struct {
-	Status  int                          `json:"status"`
-	Error   bool                         `json:"error"`
-	Message string                       `json:"message" example:"Successfully retrieved issue metrics"`
-	Data    []engagement.IssueEngagement `json:"data"`
-} //@name IssueMetricsResponse
+type IssueMetricsResponse = api.Response[[]engagement.IssueEngagement] //@name IssueMetricsResponse
 
 // Issues godoc
 //
@@ -57,8 +52,8 @@ type IssueMetricsResponse struct {
 //	@Param			limit	query		int		false	"Max rows (max 100)"
 //	@Param			sort	query		string	false	"Sort key: click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, sent_at"
 //	@Success		200		{object}	IssueMetricsResponse							"Successfully retrieved issue metrics"
-//	@Failure		400		{object}	api.Response									"Invalid query parameters"
-//	@Failure		500		{object}	api.Response									"Failed to fetch issue metrics"
+//	@Failure		400		{object}	api.MessageResponse									"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse									"Failed to fetch issue metrics"
 //	@Router			/metrics/issues [get]
 func (h *Handler) Issues(c *webkit.Context) error {
 	ctx := c.Context()
@@ -104,10 +99,10 @@ const topLinksLimit = 10
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			slug	path		string			true	"Issue date slug"
-//	@Success		200		{object}	api.Response	"Issue stats and top links"
-//	@Failure		400		{object}	api.Response	"Slug is required"
-//	@Failure		404		{object}	api.Response	"Issue not found"
-//	@Failure		500		{object}	api.Response	"Failed to fetch issue metrics"
+//	@Success		200		{object}	api.MessageResponse	"Issue stats and top links"
+//	@Failure		400		{object}	api.MessageResponse	"Slug is required"
+//	@Failure		404		{object}	api.MessageResponse	"Issue not found"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to fetch issue metrics"
 //	@Router			/metrics/issues/{slug} [get]
 func (h *Handler) IssueBySlug(c *webkit.Context) error {
 	ctx := c.Context()

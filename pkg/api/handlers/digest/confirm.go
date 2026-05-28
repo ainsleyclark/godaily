@@ -22,7 +22,7 @@ import (
 //	@Tags			subscription
 //	@Param			token	query	string	true	"Confirmation token"
 //	@Success		302		"Redirect to /confirmed/ on success or / when the token is missing/unknown"
-//	@Failure		500		{object}	api.Response	"Failed to confirm subscriber"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to confirm subscriber"
 //	@Router			/confirm [get]
 func (h *Handler) Confirm(c *webkit.Context) error {
 	ctx := c.Context()

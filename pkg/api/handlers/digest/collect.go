@@ -27,8 +27,8 @@ import (
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			force	query		bool			false	"Force collection even at weekends"
-//	@Success		200		{object}	api.Response	"Per-source collection results"
-//	@Failure		500		{object}	api.Response	"Failed to collect"
+//	@Success		200		{object}	api.MessageResponse	"Per-source collection results"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to collect"
 //	@Router			/digest/collect [get]
 func (h *Handler) Collect(c *webkit.Context) error {
 	ctx := c.Context()

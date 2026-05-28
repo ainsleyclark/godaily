@@ -30,10 +30,10 @@ type subscribeRequest struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		subscribeRequest	true	"Subscription request"
-//	@Success		200		{object}	api.Response		"Successfully subscribed"
-//	@Failure		400		{object}	api.Response		"Email is required or invalid"
-//	@Failure		409		{object}	api.Response		"Already subscribed"
-//	@Failure		500		{object}	api.Response		"Failed to subscribe"
+//	@Success		200		{object}	api.MessageResponse		"Successfully subscribed"
+//	@Failure		400		{object}	api.MessageResponse		"Email is required or invalid"
+//	@Failure		409		{object}	api.MessageResponse		"Already subscribed"
+//	@Failure		500		{object}	api.MessageResponse		"Failed to subscribe"
 //	@Router			/subscribe [post]
 func (h *Handler) Subscribe(c *webkit.Context) error {
 	ctx := c.Context()

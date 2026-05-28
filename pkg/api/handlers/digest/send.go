@@ -23,8 +23,8 @@ import (
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			force	query		bool			false	"Force send even at weekends"
-//	@Success		200		{object}	api.Response	"Successfully sent digest"
-//	@Failure		500		{object}	api.Response	"Failed to send digest"
+//	@Success		200		{object}	api.MessageResponse	"Successfully sent digest"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to send digest"
 //	@Router			/digest/send [get]
 func (h *Handler) Send(c *webkit.Context) error {
 	ctx := c.Context()

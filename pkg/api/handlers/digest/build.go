@@ -23,8 +23,8 @@ import (
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			force	query		bool			false	"Force build even at weekends"
-//	@Success		200		{object}	api.Response	"Successfully built digest"
-//	@Failure		500		{object}	api.Response	"Failed to build digest"
+//	@Success		200		{object}	api.MessageResponse	"Successfully built digest"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to build digest"
 //	@Router			/digest/build [get]
 func (h *Handler) Build(c *webkit.Context) error {
 	ctx := c.Context()

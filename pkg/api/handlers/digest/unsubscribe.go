@@ -21,10 +21,10 @@ import (
 //	@Tags			subscription
 //	@Produce		json
 //	@Param			token	query		string			true	"Unsubscribe token"
-//	@Success		200		{object}	api.Response	"Successfully unsubscribed (POST one-click)"
+//	@Success		200		{object}	api.MessageResponse	"Successfully unsubscribed (POST one-click)"
 //	@Success		302		"Redirect to /unsubscribed/ (GET)"
-//	@Failure		400		{object}	api.Response	"Missing token"
-//	@Failure		500		{object}	api.Response	"Failed to unsubscribe"
+//	@Failure		400		{object}	api.MessageResponse	"Missing token"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to unsubscribe"
 //	@Router			/unsubscribe [get]
 //	@Router			/unsubscribe [post]
 func (h *Handler) Unsubscribe(c *webkit.Context) error {

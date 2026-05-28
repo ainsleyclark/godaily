@@ -18,7 +18,7 @@ import (
 //	@Description	Returns 200 OK when the API is up.
 //	@Tags			health
 //	@Produce		json
-//	@Success		200	{object}	api.Response	"ok"
+//	@Success		200	{object}	api.MessageResponse	"ok"
 //	@Router			/healthz [get]
 func HealthZ(c *webkit.Context) error {
 	return api.OK(c, http.StatusOK, nil, "ok")

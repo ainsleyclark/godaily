@@ -17,7 +17,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved issues",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -39,7 +39,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved issue metrics",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -57,7 +57,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved issue",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -79,7 +79,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved item metrics",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -97,7 +97,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved item",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -135,7 +135,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved source metrics",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -162,7 +162,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved subscribers",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -180,7 +180,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved subscriber data",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -198,7 +198,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved summary stats",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -220,7 +220,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved tag metrics",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {
@@ -238,7 +238,7 @@ const docTemplate = `{
                         "type": "boolean"
                     },
                     "message": {
-                        "example": "Successfully retrieved trend data",
+                        "example": "User formatted message from the API",
                         "type": "string"
                     },
                     "status": {

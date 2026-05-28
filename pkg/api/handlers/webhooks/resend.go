@@ -25,10 +25,10 @@ import (
 //	@Param			svix-id			header		string			true	"Svix message ID"
 //	@Param			svix-timestamp	header		string			true	"Svix timestamp"
 //	@Param			svix-signature	header		string			true	"Svix signature"
-//	@Success		200				{object}	api.Response	"Successfully tracked event"
-//	@Failure		400				{object}	api.Response	"Misconfigured, unreadable, or invalid payload"
-//	@Failure		401				{object}	api.Response	"Invalid signature"
-//	@Failure		500				{object}	api.Response	"Failed to process event"
+//	@Success		200				{object}	api.MessageResponse	"Successfully tracked event"
+//	@Failure		400				{object}	api.MessageResponse	"Misconfigured, unreadable, or invalid payload"
+//	@Failure		401				{object}	api.MessageResponse	"Invalid signature"
+//	@Failure		500				{object}	api.MessageResponse	"Failed to process event"
 //	@Router			/webhooks/resend [post]
 func (h *Handler) Resend(c *webkit.Context) error {
 	ctx := c.Context()

@@ -15,12 +15,7 @@ import (
 )
 
 // SubscriberListResponse is the response envelope for GET /digest/subscribers.
-type SubscriberListResponse struct {
-	Status  int                                        `json:"status"`
-	Error   bool                                       `json:"error"`
-	Message string                                     `json:"message" example:"Successfully retrieved subscribers"`
-	Data    api.PaginatedResponse[audience.Subscriber] `json:"data"`
-} //@name SubscriberListResponse
+type SubscriberListResponse = api.Response[api.PaginatedResponse[audience.Subscriber]] //@name SubscriberListResponse
 
 // Subscribers godoc
 //
@@ -32,7 +27,7 @@ type SubscriberListResponse struct {
 //	@Param			page		query		int	false	"Page number (default 1)"
 //	@Param			per_page	query		int	false	"Items per page (default 20, max 100)"
 //	@Success		200			{object}	SubscriberListResponse											"Successfully retrieved subscribers"
-//	@Failure		500			{object}	api.Response												"Failed to list subscribers"
+//	@Failure		500			{object}	api.MessageResponse												"Failed to list subscribers"
 //	@Router			/digest/subscribers [get]
 func (h *Handler) Subscribers(c *webkit.Context) error {
 	ctx := c.Context()

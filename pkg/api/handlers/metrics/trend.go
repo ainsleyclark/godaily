@@ -40,12 +40,7 @@ func (req trendRequest) validate() error {
 }
 
 // TrendResponse is the response envelope for GET /metrics/trend.
-type TrendResponse struct {
-	Status  int                  `json:"status"`
-	Error   bool                 `json:"error"`
-	Message string               `json:"message" example:"Successfully retrieved trend data"`
-	Data    engagement.TrendData `json:"data"`
-} //@name TrendResponse
+type TrendResponse = api.Response[engagement.TrendData] //@name TrendResponse
 
 // Trend godoc
 //
@@ -60,8 +55,8 @@ type TrendResponse struct {
 //	@Param			metric	query		string	false	"Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate"
 //	@Param			bucket	query		string	false	"Bucket: day or week"
 //	@Success		200		{object}	TrendResponse								"Successfully retrieved trend data"
-//	@Failure		400		{object}	api.Response							"Invalid query parameters"
-//	@Failure		500		{object}	api.Response							"Failed to fetch trend data"
+//	@Failure		400		{object}	api.MessageResponse							"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse							"Failed to fetch trend data"
 //	@Router			/metrics/trend [get]
 func (h *Handler) Trend(c *webkit.Context) error {
 	ctx := c.Context()

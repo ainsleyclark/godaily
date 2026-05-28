@@ -20,8 +20,8 @@ import (
 //	@Tags			metrics
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.Response	"Successfully sent weekly roundup"
-//	@Failure		500	{object}	api.Response	"Failed to send weekly roundup"
+//	@Success		200	{object}	api.MessageResponse	"Successfully sent weekly roundup"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to send weekly roundup"
 //	@Router			/metrics/roundup [get]
 func (h *Handler) Roundup(c *webkit.Context) error {
 	ctx := c.Context()

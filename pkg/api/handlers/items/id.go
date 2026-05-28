@@ -35,12 +35,7 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 }
 
 // ItemResponse is the response envelope for GET /items/{id}.
-type ItemResponse struct {
-	Status  int       `json:"status"`
-	Error   bool      `json:"error"`
-	Message string    `json:"message" example:"Successfully retrieved item"`
-	Data    news.Item `json:"data"`
-} //@name ItemResponse
+type ItemResponse = api.Response[news.Item] //@name ItemResponse
 
 // ByID godoc
 //
@@ -51,9 +46,9 @@ type ItemResponse struct {
 //	@Security		BearerAuth
 //	@Param			id	path		int				true	"Item ID"
 //	@Success		200	{object}	ItemResponse	"Successfully retrieved item"
-//	@Failure		400	{object}	api.Response	"ID is required or not a positive integer"
-//	@Failure		404	{object}	api.Response	"Item not found"
-//	@Failure		500	{object}	api.Response	"Failed to fetch item"
+//	@Failure		400	{object}	api.MessageResponse	"ID is required or not a positive integer"
+//	@Failure		404	{object}	api.MessageResponse	"Item not found"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to fetch item"
 //	@Router			/items/{id} [get]
 func (h *Handler) ByID(c *webkit.Context) error {
 	ctx := c.Context()

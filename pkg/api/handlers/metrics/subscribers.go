@@ -34,12 +34,7 @@ func (req subscribersRequest) validate() error {
 }
 
 // SubscriberMetricsResponse is the response envelope for GET /metrics/subscribers.
-type SubscriberMetricsResponse struct {
-	Status  int                       `json:"status"`
-	Error   bool                      `json:"error"`
-	Message string                    `json:"message" example:"Successfully retrieved subscriber data"`
-	Data    engagement.SubscriberData `json:"data"`
-} //@name SubscriberMetricsResponse
+type SubscriberMetricsResponse = api.Response[engagement.SubscriberData] //@name SubscriberMetricsResponse
 
 // Subscribers godoc
 //
@@ -53,8 +48,8 @@ type SubscriberMetricsResponse struct {
 //	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
 //	@Param			bucket	query		string	false	"Bucket: day, week, or month"
 //	@Success		200		{object}	SubscriberMetricsResponse					"Successfully retrieved subscriber data"
-//	@Failure		400		{object}	api.Response								"Invalid query parameters"
-//	@Failure		500		{object}	api.Response								"Failed to fetch subscriber data"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch subscriber data"
 //	@Router			/metrics/subscribers [get]
 func (h *Handler) Subscribers(c *webkit.Context) error {
 	ctx := c.Context()

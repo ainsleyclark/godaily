@@ -20,12 +20,7 @@ type summaryRequest struct {
 }
 
 // SummaryResponse is the response envelope for GET /metrics/summary.
-type SummaryResponse struct {
-	Status  int                     `json:"status"`
-	Error   bool                    `json:"error"`
-	Message string                  `json:"message" example:"Successfully retrieved summary stats"`
-	Data    engagement.SummaryStats `json:"data"`
-} //@name SummaryResponse
+type SummaryResponse = api.Response[engagement.SummaryStats] //@name SummaryResponse
 
 // Summary godoc
 //
@@ -38,8 +33,8 @@ type SummaryResponse struct {
 //	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
 //	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
 //	@Success		200		{object}	SummaryResponse								"Successfully retrieved summary stats"
-//	@Failure		400		{object}	api.Response								"Invalid query parameters"
-//	@Failure		500		{object}	api.Response								"Failed to fetch summary stats"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch summary stats"
 //	@Router			/metrics/summary [get]
 func (h *Handler) Summary(c *webkit.Context) error {
 	ctx := c.Context()

@@ -14,13 +14,20 @@ type (
 	// Response represents the data sent back from the API.
 	// Indicating if there was an error processing the requests, a
 	// status code, a message and the data that was processed.
-	Response struct {
+	//
+	// The generic parameter T sets the shape of the Data field so the
+	// generated OpenAPI contract can describe each endpoint's payload.
+	Response[T any] struct {
 		Status  int    `json:"status"`
 		Error   bool   `json:"error"`
 		Message string `json:"message" example:"User formatted message from the API"`
-		Data    any    `json:"data,omitempty"`
-	} //@name Response
+		Data    T      `json:"data,omitempty"`
+	}
 )
+
+// MessageResponse is the response envelope for endpoints that return only a
+// status message with no typed data, including all error responses.
+type MessageResponse = Response[any] //@name Response
 
 const (
 	// ErrDecodeBodyMessage is returned by a handler when a
@@ -39,7 +46,7 @@ func OK(ctx *webkit.Context, status int, data any, message string) error {
 	if data == nil {
 		data = make(map[string]any) // Not null
 	}
-	return ctx.JSON(status, Response{
+	return ctx.JSON(status, Response[any]{
 		Status:  status,
 		Error:   false,
 		Message: message,
@@ -51,7 +58,7 @@ func OK(ctx *webkit.Context, status int, data any, message string) error {
 // status code, data, and message, wrapping the
 // response in the standard API Response struct.
 func Error(ctx *webkit.Context, status int, message string) error {
-	return ctx.JSON(status, Response{
+	return ctx.JSON(status, Response[any]{
 		Status:  status,
 		Error:   true,
 		Message: message,

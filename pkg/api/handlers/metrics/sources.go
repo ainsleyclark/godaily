@@ -30,12 +30,7 @@ func (req sourcesRequest) validate() error {
 }
 
 // SourceMetricsResponse is the response envelope for GET /metrics/sources.
-type SourceMetricsResponse struct {
-	Status  int                        `json:"status"`
-	Error   bool                       `json:"error"`
-	Message string                     `json:"message" example:"Successfully retrieved source metrics"`
-	Data    []engagement.SourceMetrics `json:"data"`
-} //@name SourceMetricsResponse
+type SourceMetricsResponse = api.Response[[]engagement.SourceMetrics] //@name SourceMetricsResponse
 
 // Sources godoc
 //
@@ -49,8 +44,8 @@ type SourceMetricsResponse struct {
 //	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
 //	@Param			limit	query		int		false	"Max rows (max 100)"
 //	@Success		200		{object}	SourceMetricsResponse						"Successfully retrieved source metrics"
-//	@Failure		400		{object}	api.Response								"Invalid query parameters"
-//	@Failure		500		{object}	api.Response								"Failed to fetch source metrics"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch source metrics"
 //	@Router			/metrics/sources [get]
 func (h *Handler) Sources(c *webkit.Context) error {
 	ctx := c.Context()

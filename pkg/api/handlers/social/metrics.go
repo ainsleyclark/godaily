@@ -26,8 +26,8 @@ const metricsSince = 30 * 24 * time.Hour
 //	@Tags			social
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.Response	"Successfully refreshed social metrics"
-//	@Failure		500	{object}	api.Response	"Failed to list posts"
+//	@Success		200	{object}	api.MessageResponse	"Successfully refreshed social metrics"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to list posts"
 //	@Router			/social/metrics [get]
 func (h *Handler) Metrics(c *webkit.Context) error {
 	ctx := c.Context()

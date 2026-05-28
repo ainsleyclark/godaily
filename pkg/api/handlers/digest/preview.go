@@ -22,8 +22,8 @@ import (
 //	@Tags			digest
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.Response	"Successfully sent preview"
-//	@Failure		500	{object}	api.Response	"Failed to send preview"
+//	@Success		200	{object}	api.MessageResponse	"Successfully sent preview"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to send preview"
 //	@Router			/digest/preview [get]
 func (h *Handler) Preview(c *webkit.Context) error {
 	ctx := c.Context()

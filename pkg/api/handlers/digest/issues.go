@@ -15,12 +15,7 @@ import (
 )
 
 // IssueListResponse is the response envelope for GET /digest/issues.
-type IssueListResponse struct {
-	Status  int                                 `json:"status"`
-	Error   bool                                `json:"error"`
-	Message string                              `json:"message" example:"Successfully retrieved issues"`
-	Data    api.PaginatedResponse[digest.Issue] `json:"data"`
-} //@name IssueListResponse
+type IssueListResponse = api.Response[api.PaginatedResponse[digest.Issue]] //@name IssueListResponse
 
 // Issues godoc
 //
@@ -33,7 +28,7 @@ type IssueListResponse struct {
 //	@Param			page		query		int		false	"Page number (default 1)"
 //	@Param			per_page	query		int		false	"Items per page (default 20, max 100)"
 //	@Success		200			{object}	IssueListResponse										"Successfully retrieved issues"
-//	@Failure		500			{object}	api.Response											"Failed to list issues"
+//	@Failure		500			{object}	api.MessageResponse											"Failed to list issues"
 //	@Router			/digest/issues [get]
 func (h *Handler) Issues(c *webkit.Context) error {
 	ctx := c.Context()

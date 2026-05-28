@@ -23,8 +23,8 @@ import (
 //	@Tags			social
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.Response	"Rotated, or skipped (weekend/not wired)"
-//	@Failure		500	{object}	api.Response	"Failed to rotate"
+//	@Success		200	{object}	api.MessageResponse	"Rotated, or skipped (weekend/not wired)"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to rotate"
 //	@Router			/social/rotation [get]
 func (h *Handler) Rotation(c *webkit.Context) error {
 	ctx := c.Context()

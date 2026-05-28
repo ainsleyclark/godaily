@@ -23,8 +23,8 @@ import (
 //	@Tags			social
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.Response	"Posted, or skipped (weekend/wrong slot/not wired)"
-//	@Failure		500	{object}	api.Response	"Failed to post featured"
+//	@Success		200	{object}	api.MessageResponse	"Posted, or skipped (weekend/wrong slot/not wired)"
+//	@Failure		500	{object}	api.MessageResponse	"Failed to post featured"
 //	@Router			/social/featured [get]
 func (h *Handler) Featured(c *webkit.Context) error {
 	ctx := c.Context()

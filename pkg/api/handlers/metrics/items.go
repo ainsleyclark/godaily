@@ -30,12 +30,7 @@ func (req itemsRequest) validate() error {
 }
 
 // ItemMetricsResponse is the response envelope for GET /metrics/items.
-type ItemMetricsResponse struct {
-	Status  int                      `json:"status"`
-	Error   bool                     `json:"error"`
-	Message string                   `json:"message" example:"Successfully retrieved item metrics"`
-	Data    []engagement.ItemMetrics `json:"data"`
-} //@name ItemMetricsResponse
+type ItemMetricsResponse = api.Response[[]engagement.ItemMetrics] //@name ItemMetricsResponse
 
 // Items godoc
 //
@@ -49,8 +44,8 @@ type ItemMetricsResponse struct {
 //	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
 //	@Param			limit	query		int		false	"Max rows (max 100)"
 //	@Success		200		{object}	ItemMetricsResponse							"Successfully retrieved item metrics"
-//	@Failure		400		{object}	api.Response								"Invalid query parameters"
-//	@Failure		500		{object}	api.Response								"Failed to fetch item metrics"
+//	@Failure		400		{object}	api.MessageResponse								"Invalid query parameters"
+//	@Failure		500		{object}	api.MessageResponse								"Failed to fetch item metrics"
 //	@Router			/metrics/items [get]
 func (h *Handler) Items(c *webkit.Context) error {
 	ctx := c.Context()
