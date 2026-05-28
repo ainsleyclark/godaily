@@ -16,6 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func TestClient_Platform(t *testing.T) {
@@ -56,7 +57,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("my-token", "urn:li:organization:99")
 		c.baseURL = srv.URL
 
-		res, err := c.Post(context.Background(), "Hello, Go community")
+		res, err := c.Post(context.Background(), platform.PostRequest{Text: "Hello, Go community"})
 		require.NoError(t, err)
 		assert.Equal(
 			t,
@@ -77,7 +78,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("bad", "urn:li:organization:1")
 		c.baseURL = srv.URL
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "401")
 		assert.Contains(t, err.Error(), "invalid token")
@@ -94,7 +95,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("tok", "urn:li:organization:1")
 		c.baseURL = srv.URL
 
-		res, err := c.Post(context.Background(), "x")
+		res, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.NoError(t, err)
 		assert.Empty(t, res.PostURL)
 	})
@@ -105,8 +106,174 @@ func TestClient_Post(t *testing.T) {
 		c := New("tok", "urn")
 		c.baseURL = "http://127.0.0.1:1"
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
+	})
+}
+
+func TestClient_Post_Annotation(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Mention with matching display name produces annotation", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			body, err := io.ReadAll(r.Body)
+			require.NoError(t, err)
+
+			var got map[string]any
+			require.NoError(t, json.Unmarshal(body, &got))
+
+			anns, ok := got["commentaryAnnotations"].([]any)
+			require.True(t, ok, "expected commentaryAnnotations array")
+			require.Len(t, anns, 1)
+			a := anns[0].(map[string]any)
+			assert.Equal(t, float64(15), a["start"])
+			assert.Equal(t, float64(10), a["length"])
+			assert.Equal(t, "urn:li:organization:42", a["entity"])
+
+			w.Header().Set("x-restli-id", "urn:li:share:1")
+			w.WriteHeader(http.StatusCreated)
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:99")
+		c.baseURL = srv.URL
+
+		_, err := c.Post(context.Background(), platform.PostRequest{
+			Text: "Today we thank Ardan Labs for their writing.",
+			Mentions: []social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:42"},
+			},
+		})
+		require.NoError(t, err)
+	})
+
+	t.Run("Missing display name in text omits annotations", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			body, _ := io.ReadAll(r.Body)
+			var got map[string]any
+			require.NoError(t, json.Unmarshal(body, &got))
+			_, present := got["commentaryAnnotations"]
+			assert.False(t, present, "commentaryAnnotations should be omitted when no match")
+
+			w.Header().Set("x-restli-id", "urn:li:share:1")
+			w.WriteHeader(http.StatusCreated)
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:99")
+		c.baseURL = srv.URL
+
+		_, err := c.Post(context.Background(), platform.PostRequest{
+			Text: "Today we thank some other source.",
+			Mentions: []social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:42"},
+			},
+		})
+		require.NoError(t, err)
+	})
+}
+
+func TestBuildAnnotations(t *testing.T) {
+	t.Parallel()
+
+	lin := func(displayName, handle string) social.Mention {
+		return social.Mention{Platform: social.LinkedIn, DisplayName: displayName, Handle: handle}
+	}
+
+	t.Run("Single mention matched", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{lin("Ardan Labs", "urn:li:organization:1")},
+		)
+		require.Len(t, got, 1)
+		assert.Equal(t, 0, got[0].Start)
+		assert.Equal(t, 10, got[0].Length)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Two non-overlapping mentions both matched in document order", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Today Ardan Labs and William Kennedy ship.",
+			[]social.Mention{
+				lin("William Kennedy", "urn:li:person:2"),
+				lin("Ardan Labs", "urn:li:organization:1"),
+			},
+		)
+		require.Len(t, got, 2)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity, "Ardan Labs appears first in text")
+		assert.Equal(t, "urn:li:person:2", got[1].Entity)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Overlapping mentions: longer wins", func(t *testing.T) {
+		t.Parallel()
+		// "Go" is a substring of "Go Blog"; the longer match wins, the
+		// shorter mention is dropped as missed.
+		got, _ := buildAnnotations(
+			"The Go Blog covers Go internals.",
+			[]social.Mention{
+				lin("Go", "urn:li:organization:99"),
+				lin("Go Blog", "urn:li:organization:1"),
+			},
+		)
+		require.Len(t, got, 1)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity)
+		assert.Equal(t, 7, got[0].Length)
+	})
+
+	t.Run("Missing display name surfaced in missed list", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Hello world.",
+			[]social.Mention{lin("Ardan Labs", "urn:li:organization:1")},
+		)
+		assert.Empty(t, got)
+		require.Len(t, missed, 1)
+		assert.Equal(t, "Ardan Labs", missed[0].DisplayName)
+	})
+
+	t.Run("Non-LinkedIn mentions ignored", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{
+				{Platform: social.Bluesky, DisplayName: "Ardan Labs", Handle: "@ardanlabs.com"},
+				{Platform: social.Mastodon, DisplayName: "Ardan Labs", Handle: "@ardanlabs@hachyderm.io"},
+			},
+		)
+		assert.Empty(t, got)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Empty inputs return nil", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations("", []social.Mention{lin("X", "urn:li:organization:1")})
+		assert.Nil(t, got)
+		assert.Nil(t, missed)
+
+		got, missed = buildAnnotations("Text", nil)
+		assert.Nil(t, got)
+		assert.Nil(t, missed)
+	})
+
+	t.Run("Empty handle or display name skipped silently", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "", Handle: "urn:li:organization:1"},
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: ""},
+			},
+		)
+		assert.Empty(t, got)
+		assert.Empty(t, missed)
 	})
 }
 

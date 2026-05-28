@@ -21,14 +21,26 @@ type Poster interface {
 	// Platform identifies which platform this poster targets.
 	Platform() social.Platform
 
-	// Post publishes text to the platform. Implementations are responsible
-	// for any auth dance their API requires.
-	Post(ctx context.Context, text string) (Result, error)
+	// Post publishes a request to the platform. Implementations are
+	// responsible for any auth dance their API requires.
+	Post(ctx context.Context, req PostRequest) (PostResponse, error)
 }
 
-// Result is what a platform returned after a successful post. PostURL is the
-// canonical web URL of the published content when available — implementations
-// leave it empty when the platform does not return one synchronously.
-type Result struct {
+// PostRequest is the per-post payload handed to a Poster. Text is the
+// fully-rendered post body. Mentions carries every mentionable identity
+// the publish loop wants attached to this post — implementations filter
+// by m.Platform and decide how to render them (LinkedIn builds inline
+// annotations; Bluesky / Mastodon ignore the list because their handles
+// are already inlined in Text by the prompt layer).
+type PostRequest struct {
+	Text     string
+	Mentions []social.Mention
+}
+
+// PostResponse is what a platform returned after a successful post.
+// PostURL is the canonical web URL of the published content when
+// available — implementations leave it empty when the platform does not
+// return one synchronously.
+type PostResponse struct {
 	PostURL string
 }

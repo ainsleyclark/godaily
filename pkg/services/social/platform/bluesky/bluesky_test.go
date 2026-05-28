@@ -17,6 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func TestClient_Platform(t *testing.T) {
@@ -69,7 +70,7 @@ func TestClient_Post(t *testing.T) {
 		c.baseURL = srv.URL
 		c.publicURL = "https://bsky.app"
 
-		got, err := c.Post(context.Background(), "Go 1.30 released")
+		got, err := c.Post(context.Background(), platform.PostRequest{Text: "Go 1.30 released"})
 		require.NoError(t, err)
 		assert.Equal(t, "https://bsky.app/profile/godaily.bsky.social/post/3kabcdef", got.PostURL)
 		assert.Equal(t, 1, sessionHits)
@@ -88,7 +89,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("h", "bad")
 		c.baseURL = srv.URL
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "createSession")
 		assert.Contains(t, err.Error(), "401")
@@ -111,7 +112,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("h", "pw")
 		c.baseURL = srv.URL
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "createRecord")
 	})
@@ -122,7 +123,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("h", "pw")
 		c.baseURL = "http://127.0.0.1:1" // nothing listening
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
 	})
 
@@ -154,7 +155,7 @@ func TestClient_Post(t *testing.T) {
 		c := New("godaily.bsky.social", "pw")
 		c.baseURL = srv.URL
 
-		_, err := c.Post(context.Background(), "New release\n\nhttps://go.dev/dl\n#golang")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "New release\n\nhttps://go.dev/dl\n#golang"})
 		require.NoError(t, err)
 	})
 }

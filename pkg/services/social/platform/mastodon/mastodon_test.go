@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 func TestClient_Platform(t *testing.T) {
@@ -37,7 +38,7 @@ func TestClient_Post(t *testing.T) {
 			},
 		}
 
-		got, err := c.Post(context.Background(), "Hello, fediverse!")
+		got, err := c.Post(context.Background(), platform.PostRequest{Text: "Hello, fediverse!"})
 		require.NoError(t, err)
 		assert.Equal(t, "https://mastodon.social/@godaily/123", got.PostURL)
 	})
@@ -51,7 +52,7 @@ func TestClient_Post(t *testing.T) {
 			},
 		}
 
-		got, err := c.Post(context.Background(), "x")
+		got, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.NoError(t, err)
 		assert.Empty(t, got.PostURL)
 	})
@@ -65,7 +66,7 @@ func TestClient_Post(t *testing.T) {
 			},
 		}
 
-		_, err := c.Post(context.Background(), "x")
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: "x"})
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "mastodon PostStatus")
 		assert.Contains(t, err.Error(), "network down")

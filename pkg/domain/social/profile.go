@@ -6,18 +6,34 @@ package social
 
 import "github.com/ainsleyclark/godaily/pkg/domain/news"
 
+// Mention is one mentionable identity carried on a Profile or threaded
+// through a post. The same shape covers @-handles (Bluesky, Mastodon)
+// that are inlined directly in post text and URNs (LinkedIn) that are
+// attached as out-of-band API annotations.
+//
+// DisplayName is the case-sensitive substring the LinkedIn annotation
+// pipeline scans for inside post text — required for LinkedIn, optional
+// elsewhere (the @-handle on Bluesky/Mastodon already carries identity).
+//
+// Handle is the platform-native identifier: an @-handle on Bluesky /
+// Mastodon, a urn:li:organization:<id> or urn:li:person:<id> on
+// LinkedIn.
+type Mention struct {
+	Platform    Platform
+	DisplayName string
+	Handle      string
+}
+
 // Profile carries the social-media metadata for a news source. It is
-// the source-of-truth for spotlight posts (which need a hand-written blurb
-// and the right per-platform mention syntax) and new-source announcements
-// (which need a display name and source URL). Mentions keys are platform
-// strings ("bluesky", "linkedin", "mastodon") rather than typed Platforms
-// to keep the social package free of any gateway dependency.
+// the source-of-truth for spotlight posts (which need a hand-written
+// blurb and the right per-platform mention syntax) and new-source
+// announcements (which need a display name and source URL).
 type Profile struct {
 	Source         news.Source
 	DisplayName    string
 	SourceURL      string
 	SpotlightBlurb string
-	Mentions       map[string]string
+	Mentions       []Mention
 	// Announceable controls whether NewSource posts about this source.
 	// Aggregator / community sources (HN, Reddit, Mastodon) leave this
 	// false because there's nothing distinctive to shout about — they
@@ -25,13 +41,36 @@ type Profile struct {
 	Announceable bool
 }
 
-// Mention returns the platform-specific handle for a source, or the
-// DisplayName when no mention is configured for that platform.
-func (p Profile) Mention(platform string) string {
-	if m, ok := p.Mentions[platform]; ok && m != "" {
-		return m
+// Mention returns the inline-text handle for a platform: the @-handle for
+// Bluesky / Mastodon, or DisplayName when no handle is configured.
+//
+// LinkedIn is special-cased to always return DisplayName — LinkedIn has
+// no inline @-syntax; LinkedIn mentions render via the annotation API,
+// not via text. Returning a URN here would inject "urn:li:organization:..."
+// into the post body, which is never what callers want.
+func (p Profile) Mention(platform Platform) string {
+	if platform == LinkedIn {
+		return p.DisplayName
+	}
+	for _, m := range p.Mentions {
+		if m.Platform == platform && m.Handle != "" {
+			return m.Handle
+		}
 	}
 	return p.DisplayName
+}
+
+// MentionsFor returns every Mention configured for the given platform.
+// Used by the LinkedIn annotation pipeline to look up URNs (both
+// organisation and person) for inline-annotation building.
+func (p Profile) MentionsFor(platform Platform) []Mention {
+	out := make([]Mention, 0, len(p.Mentions))
+	for _, m := range p.Mentions {
+		if m.Platform == platform {
+			out = append(out, m)
+		}
+	}
+	return out
 }
 
 // Profiles is the curated metadata for every source GoDaily knows about.
@@ -44,9 +83,9 @@ var Profiles = map[news.Source]Profile{
 	news.SourceArdanLabs: {
 		Source:      news.SourceArdanLabs,
 		DisplayName: "Ardan Labs",
-		Mentions: map[string]string{
-			"bluesky":  "@ardanlabs.com",
-			"mastodon": "@ardanlabs@hachyderm.io",
+		Mentions: []Mention{
+			{Platform: Bluesky, Handle: "@ardanlabs.com"},
+			{Platform: Mastodon, Handle: "@ardanlabs@hachyderm.io"},
 		},
 		SpotlightBlurb: "Bill Kennedy's writing, courses and podcast are essential Go reading. If you want depth, start here.",
 		SourceURL:      "https://www.ardanlabs.com/",
@@ -55,9 +94,9 @@ var Profiles = map[news.Source]Profile{
 	news.SourceGoBlog: {
 		Source:      news.SourceGoBlog,
 		DisplayName: "the Go team",
-		Mentions: map[string]string{
-			"bluesky":  "@golang.org",
-			"mastodon": "@golang@hachyderm.io",
+		Mentions: []Mention{
+			{Platform: Bluesky, Handle: "@golang.org"},
+			{Platform: Mastodon, Handle: "@golang@hachyderm.io"},
 		},
 		SpotlightBlurb: "Release notes, design rationale and deep dives straight from the people who build Go.",
 		SourceURL:      "https://go.dev/blog/",
@@ -66,9 +105,9 @@ var Profiles = map[news.Source]Profile{
 	news.SourceJetBrains: {
 		Source:      news.SourceJetBrains,
 		DisplayName: "JetBrains GoLand",
-		Mentions: map[string]string{
-			"bluesky":  "@jetbrains.com",
-			"mastodon": "@jetbrains@mastodon.social",
+		Mentions: []Mention{
+			{Platform: Bluesky, Handle: "@jetbrains.com"},
+			{Platform: Mastodon, Handle: "@jetbrains@mastodon.social"},
 		},
 		SpotlightBlurb: "GoLand's blog is one of the few places consistently writing about Go tooling in depth.",
 		SourceURL:      "https://blog.jetbrains.com/go/",
@@ -77,8 +116,8 @@ var Profiles = map[news.Source]Profile{
 	news.SourceGoPodcast: {
 		Source:      news.SourceGoPodcast,
 		DisplayName: "go podcast()",
-		Mentions: map[string]string{
-			"mastodon": "@dmitshur@hachyderm.io",
+		Mentions: []Mention{
+			{Platform: Mastodon, Handle: "@dmitshur@hachyderm.io"},
 		},
 		SpotlightBlurb: "Short, focused interviews on what's happening in the Go ecosystem.",
 		SourceURL:      "https://gopodcast.dev/",
@@ -87,8 +126,8 @@ var Profiles = map[news.Source]Profile{
 	news.SourceFallthrough: {
 		Source:      news.SourceFallthrough,
 		DisplayName: "Fallthrough Podcast",
-		Mentions: map[string]string{
-			"bluesky": "@fallthrough.fm",
+		Mentions: []Mention{
+			{Platform: Bluesky, Handle: "@fallthrough.fm"},
 		},
 		SpotlightBlurb: "The Go team's own podcast — language design discussions you won't get anywhere else.",
 		SourceURL:      "https://fallthrough.fm/",
@@ -125,9 +164,9 @@ var Profiles = map[news.Source]Profile{
 	news.SourceDevTo: {
 		Source:      news.SourceDevTo,
 		DisplayName: "DEV's #go community",
-		Mentions: map[string]string{
-			"bluesky":  "@thepracticaldev.bsky.social",
-			"mastodon": "@thepracticaldev@mas.to",
+		Mentions: []Mention{
+			{Platform: Bluesky, Handle: "@thepracticaldev.bsky.social"},
+			{Platform: Mastodon, Handle: "@thepracticaldev@mas.to"},
 		},
 		SpotlightBlurb: "DEV's #go tag is one of the friendliest places to read and write about Go publicly.",
 		SourceURL:      "https://dev.to/t/go",

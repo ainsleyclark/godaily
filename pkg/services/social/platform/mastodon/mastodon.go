@@ -92,19 +92,24 @@ func statusIDFromURL(postURL string) (mastodon.ID, error) {
 	return mastodon.ID(id), nil
 }
 
-// Post publishes text as a public status on the configured instance.
-func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
+// Post publishes the request text as a public status on the configured
+// instance.
+//
+// req.Mentions is ignored — Mastodon @-handles are already inlined in
+// req.Text by the rendering layer, and Mastodon renders them natively
+// without out-of-band annotations.
+func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
 	status, err := c.postStatusFunc(ctx, &mastodon.Toot{
-		Status:     text,
+		Status:     req.Text,
 		Visibility: "public",
 	})
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "mastodon PostStatus")
+		return platform.PostResponse{}, errors.Wrap(err, "mastodon PostStatus")
 	}
 
 	if status == nil {
-		return platform.Result{}, nil
+		return platform.PostResponse{}, nil
 	}
 
-	return platform.Result{PostURL: status.URL}, nil
+	return platform.PostResponse{PostURL: status.URL}, nil
 }

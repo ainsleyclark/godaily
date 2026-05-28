@@ -34,6 +34,12 @@ type publishCtx struct {
 	// skipIfPosted is the per-row idempotency check. Returning true skips
 	// the platform without an error.
 	skipIfPosted func(ctx context.Context, platform string) (bool, error)
+
+	// mentions are the platform-tagged identities the post should
+	// reference. Each Poster filters by m.Platform and renders the
+	// matching subset natively (LinkedIn → inline annotations; Bluesky
+	// / Mastodon → ignored, their @-handles are baked into text).
+	mentions []social.Mention
 }
 
 // publish runs the per-platform reframe → post → persist loop. It is the
@@ -99,7 +105,7 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 		return res
 	}
 
-	result, err := poster.Post(ctx, text)
+	result, err := poster.Post(ctx, platform.PostRequest{Text: text, Mentions: pc.mentions})
 	if err != nil {
 		res.Err = errors.Wrap(err, "poster.Post")
 		return res

@@ -137,7 +137,7 @@ func TestCommunity_Eligible(t *testing.T) {
 		assert.Equal(t, social.PostKindCommunity, cctx.Kind)
 		assert.Equal(t, fmt.Sprintf("community:alpha-meetup:%d", year), cctx.Subject)
 		assert.Equal(t, "https://alpha-meetup.example", cctx.URL)
-		assert.Equal(t, "https://www.linkedin.com/company/alpha-meetup-group", cctx.Mentions[social.LinkedIn])
+		assert.Equal(t, "https://www.linkedin.com/company/alpha-meetup-group", cctx.Mention(social.LinkedIn))
 	})
 
 	t.Run("Conference week picks first unposted upcoming conference", func(t *testing.T) {
@@ -156,8 +156,8 @@ func TestCommunity_Eligible(t *testing.T) {
 		require.NoError(t, err)
 		require.True(t, ok)
 		assert.Equal(t, fmt.Sprintf("community:alpha-conf:%d", year), cctx.Subject)
-		assert.Equal(t, "@alpha-conf.example", cctx.Mentions[social.Bluesky])
-		assert.Equal(t, "https://www.linkedin.com/company/alpha-conf", cctx.Mentions[social.LinkedIn])
+		assert.Equal(t, "@alpha-conf.example", cctx.Mention(social.Bluesky))
+		assert.Equal(t, "https://www.linkedin.com/company/alpha-conf", cctx.Mention(social.LinkedIn))
 	})
 
 	t.Run("Rotates past already-posted entry", func(t *testing.T) {

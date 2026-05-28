@@ -69,7 +69,7 @@ func (c *NewSource) Eligible(ctx context.Context, _ time.Time) (candidate.Candid
 			Kind:     c.Kind(),
 			Subject:  subject,
 			URL:      profile.SourceURL,
-			Mentions: socialMentionsFor(profile),
+			Mentions: profile.Mentions,
 			Payload:  profile,
 		}, true, nil
 	}
@@ -86,7 +86,7 @@ func (c *NewSource) Generate(ctx context.Context, p ai.Prompter, plat social.Pla
 	}
 	return rotation.NewSource(ctx, p, plat, rotation.NewSourcePayload{
 		DisplayName: profile.DisplayName,
-		Mention:     profile.Mention(plat.String()),
+		Mention:     profile.Mention(plat),
 		Blurb:       profile.SpotlightBlurb,
 		URL:         profile.SourceURL,
 	})
@@ -100,19 +100,5 @@ func sortedAnnounceable(profiles map[news.Source]social.Profile) []news.Source {
 		}
 	}
 	sort.Slice(out, func(i, j int) bool { return string(out[i]) < string(out[j]) })
-	return out
-}
-
-// socialMentionsFor translates SocialProfile.Mentions (string-keyed, so
-// the news package stays free of socialgw imports) into the typed map the
-// rotation orchestrator carries around.
-func socialMentionsFor(p social.Profile) map[social.Platform]string {
-	if len(p.Mentions) == 0 {
-		return nil
-	}
-	out := make(map[social.Platform]string, len(p.Mentions))
-	for k, v := range p.Mentions {
-		out[social.Platform(k)] = v
-	}
 	return out
 }

@@ -12,8 +12,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -66,30 +68,60 @@ type (
 	// postRequest is the body sent to /rest/posts. Field names follow the
 	// platform's documented shape.
 	postRequest struct {
-		Author                    string       `json:"author"`
-		Commentary                string       `json:"commentary"`
-		Visibility                string       `json:"visibility"`
-		Distribution              distribution `json:"distribution"`
-		LifecycleState            string       `json:"lifecycleState"`
-		IsReshareDisabledByAuthor bool         `json:"isReshareDisabledByAuthor"`
+		Author                    string             `json:"author"`
+		Commentary                string             `json:"commentary"`
+		CommentaryAnnotations     []inlineAnnotation `json:"commentaryAnnotations,omitempty"`
+		Visibility                string             `json:"visibility"`
+		Distribution              distribution       `json:"distribution"`
+		LifecycleState            string             `json:"lifecycleState"`
+		IsReshareDisabledByAuthor bool               `json:"isReshareDisabledByAuthor"`
 	}
 	distribution struct {
 		FeedDistribution               string   `json:"feedDistribution"`
 		TargetEntities                 []string `json:"targetEntities"`
 		ThirdPartyDistributionChannels []string `json:"thirdPartyDistributionChannels"`
 	}
+	// inlineAnnotation marks a (start, length) range of commentary as a
+	// link to the entity in entity. start is a zero-based UTF-16 code-unit
+	// offset and length is in code units — matching LinkedIn's convention
+	// for the Posts API.
+	inlineAnnotation struct {
+		Start  int    `json:"start"`
+		Length int    `json:"length"`
+		Entity string `json:"entity"`
+	}
 )
 
-// Post publishes text to the configured organisation's feed.
+// Post publishes the request text to the configured organisation's feed.
+// Mentions whose Platform is LinkedIn and whose DisplayName occurs
+// (case-sensitive) in req.Text are attached as inline annotations so the
+// rendered post links to the referenced entity. Mentions whose name
+// can't be matched in the text are logged at WARN and dropped — the
+// post still goes through, just without a tag for that entity.
 //
 // The post URL is reconstructed from the x-restli-id response header
 // (LinkedIn's REST convention for newly created resources).
-func (c *Client) Post(ctx context.Context, text string) (platform.Result, error) {
+//
+// NOTE: the inline-mention shape (commentaryAnnotations with start /
+// length / entity) reflects the LinkedIn Posts API v202601 contract as
+// of writing. LinkedIn rolls API versions ~every quarter and renames
+// fields between them; verify against the live docs before relying on
+// mentions in production.
+func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
+	annotations, missed := buildAnnotations(req.Text, req.Mentions)
+	for _, m := range missed {
+		slog.WarnContext(
+			ctx, "LinkedIn mention dropped: display name not found in post text",
+			"display_name", m.DisplayName, "handle", m.Handle,
+		)
+	}
+
 	body := postRequest{
-		Author:         c.authorURN,
-		Commentary:     text,
-		Visibility:     "PUBLIC",
-		LifecycleState: "PUBLISHED",
+		Author:                c.authorURN,
+		Commentary:            req.Text,
+		CommentaryAnnotations: annotations,
+		Visibility:            "PUBLIC",
+		LifecycleState:        "PUBLISHED",
 		Distribution: distribution{
 			FeedDistribution:               "MAIN_FEED",
 			TargetEntities:                 []string{},
@@ -99,33 +131,33 @@ func (c *Client) Post(ctx context.Context, text string) (platform.Result, error)
 
 	buf, err := json.Marshal(body)
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "marshalling post body")
+		return platform.PostResponse{}, errors.Wrap(err, "marshalling post body")
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "building request")
+		return platform.PostResponse{}, errors.Wrap(err, "building request")
 	}
 
-	req.Header.Set("Authorization", "Bearer "+c.token)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("LinkedIn-Version", c.apiVersion)
-	req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
+	httpReq.Header.Set("Authorization", "Bearer "+c.token)
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("LinkedIn-Version", c.apiVersion)
+	httpReq.Header.Set("X-Restli-Protocol-Version", "2.0.0")
 
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(httpReq)
 	if err != nil {
-		return platform.Result{}, errors.Wrap(err, "sending request")
+		return platform.PostResponse{}, errors.Wrap(err, "sending request")
 	}
 	defer resp.Body.Close()
 
 	if !httputil.Is2xx(resp.StatusCode) {
 		respBuf := new(bytes.Buffer)
 		_, _ = respBuf.ReadFrom(resp.Body)
-		return platform.Result{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
+		return platform.PostResponse{}, fmt.Errorf("linkedin /rest/posts: %d %s: %s", resp.StatusCode, resp.Status, respBuf.String())
 	}
 
 	urn := resp.Header.Get("x-restli-id")
-	return platform.Result{PostURL: feedURL(urn)}, nil
+	return platform.PostResponse{PostURL: feedURL(urn)}, nil
 }
 
 // Stats fetches engagement counts for a LinkedIn organisation post.
@@ -211,6 +243,84 @@ func urnFromPostURL(postURL string) (string, error) {
 		return "", fmt.Errorf("extracted value is not a LinkedIn URN: %q", urn)
 	}
 	return urn, nil
+}
+
+// buildAnnotations resolves mentions against text into a list of inline
+// annotations and a list of mentions that couldn't be inlined (because
+// their DisplayName didn't appear in text, case-sensitively). Only
+// LinkedIn-platform mentions are considered; everything else is silently
+// skipped.
+//
+// Conflict resolution: when two mentions could match overlapping ranges
+// (e.g. one annotates "Go" and another annotates "Go Blog"), the longer
+// match wins. On equal length the earlier mention wins. Each URN is
+// annotated at most once per post — additional occurrences of the same
+// name are ignored.
+func buildAnnotations(text string, mentions []social.Mention) ([]inlineAnnotation, []social.Mention) {
+	if text == "" || len(mentions) == 0 {
+		return nil, nil
+	}
+
+	// Collect the first case-sensitive match for each LinkedIn mention.
+	type candidate struct {
+		start  int
+		length int
+		entity string
+	}
+	var (
+		candidates []candidate
+		missed     []social.Mention
+	)
+	for _, m := range mentions {
+		if m.Platform != social.LinkedIn || m.Handle == "" || m.DisplayName == "" {
+			continue
+		}
+		idx := strings.Index(text, m.DisplayName)
+		if idx < 0 {
+			missed = append(missed, m)
+			continue
+		}
+		candidates = append(candidates, candidate{
+			start:  idx,
+			length: len(m.DisplayName),
+			entity: m.Handle,
+		})
+	}
+	if len(candidates) == 0 {
+		return nil, missed
+	}
+
+	// Resolve overlaps: longest match wins, ties broken by earlier
+	// position.
+	sort.SliceStable(candidates, func(i, j int) bool {
+		if candidates[i].length != candidates[j].length {
+			return candidates[i].length > candidates[j].length
+		}
+		return candidates[i].start < candidates[j].start
+	})
+	accepted := make([]candidate, 0, len(candidates))
+	for _, cand := range candidates {
+		overlaps := false
+		for _, a := range accepted {
+			if cand.start < a.start+a.length && a.start < cand.start+cand.length {
+				overlaps = true
+				break
+			}
+		}
+		if !overlaps {
+			accepted = append(accepted, cand)
+		}
+	}
+
+	// LinkedIn expects annotations in document order.
+	sort.SliceStable(accepted, func(i, j int) bool {
+		return accepted[i].start < accepted[j].start
+	})
+	out := make([]inlineAnnotation, len(accepted))
+	for i, a := range accepted {
+		out[i] = inlineAnnotation{Start: a.start, Length: a.length, Entity: a.entity}
+	}
+	return out, missed
 }
 
 // feedURL builds the public URL for a published post. urn looks like

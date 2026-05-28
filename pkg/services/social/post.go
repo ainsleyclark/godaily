@@ -63,6 +63,14 @@ func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.P
 	wanted := selectPosters(s.posters, opts.Platforms)
 	issueID := issue.ID
 
+	// If the featured item's source has a registered profile, thread its
+	// mentions through so the post can tag the source on LinkedIn (and
+	// pick up its @-handle on Bluesky / Mastodon via the prompt).
+	var mentions []social.Mention
+	if profile, ok := social.ProfileFor(feat.Source); ok {
+		mentions = profile.Mentions
+	}
+
 	return s.publish(ctx, publishCtx{
 		platforms: wanted,
 		dryRun:    opts.DryRun,
@@ -79,5 +87,6 @@ func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.P
 		skipIfPosted: func(ctx context.Context, p string) (bool, error) {
 			return s.posts.HasPosted(ctx, issueID, p)
 		},
+		mentions: mentions,
 	})
 }

@@ -274,8 +274,8 @@ func TestService_Rotate(t *testing.T) {
 			HasPostedBySubject(gomock.Any(), "spotlight:ardanlabs", "bluesky").
 			Return(false, nil)
 		f.poster.EXPECT().
-			Post(gomock.Any(), "Follow @ardanlabs for great Go content.").
-			Return(platform.Result{PostURL: "https://bsky.app/x"}, nil)
+			Post(gomock.Any(), platform.PostRequest{Text: "Follow @ardanlabs for great Go content."}).
+			Return(platform.PostResponse{PostURL: "https://bsky.app/x"}, nil)
 		f.posts.EXPECT().
 			Create(gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ context.Context, p social.Post) (social.Post, error) {

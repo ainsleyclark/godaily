@@ -29,8 +29,8 @@ var (
 		DisplayName:    "Alpha",
 		SourceURL:      "https://alpha.example",
 		SpotlightBlurb: "alpha blurb",
-		Mentions: map[string]string{
-			"bluesky": "@alpha.example",
+		Mentions: []social.Mention{
+			{Platform: social.Bluesky, Handle: "@alpha.example"},
 		},
 	}
 	bravoProfile = social.Profile{
@@ -79,7 +79,7 @@ func TestSpotlight_Eligible(t *testing.T) {
 		profile, ok := cctx.Payload.(social.Profile)
 		require.True(t, ok, "Payload must be a social.Profile")
 		assert.Equal(t, "Alpha", profile.DisplayName)
-		assert.Equal(t, "@alpha.example", cctx.Mentions[social.Bluesky])
+		assert.Equal(t, "@alpha.example", cctx.Mention(social.Bluesky))
 	})
 
 	t.Run("Rotates past already-covered source", func(t *testing.T) {

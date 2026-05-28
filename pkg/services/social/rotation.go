@@ -70,6 +70,7 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 				return cand.Generate(ctx, s.prompter, p, cctx)
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
+			mentions:     cctx.Mentions,
 		})
 	}
 
