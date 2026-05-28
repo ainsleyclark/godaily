@@ -42,9 +42,9 @@ test.describe.serial('pipeline state assertions', () => {
 
     const issuesRes = await request.get('/api/digest/issues?status=draft', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
-    const issuesData = await issuesRes.json();
-    expect(issuesData.total).toBeGreaterThan(0);
-    expect(issuesData.data.some((i: { status: string }) => i.status === 'draft')).toBe(true);
+    const issuesBody = await issuesRes.json();
+    expect(issuesBody.data.total).toBeGreaterThan(0);
+    expect(issuesBody.data.data.some((i: { status: string }) => i.status === 'draft')).toBe(true);
   });
 
   test('send delivers email to subscribers and marks issue as sent', async ({ request }) => {
@@ -71,9 +71,9 @@ test.describe.serial('pipeline state assertions', () => {
     // Public issues API must now return the issue as 'sent'.
     const issuesRes = await request.get('/api/digest/issues', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
-    const issuesData = await issuesRes.json();
-    expect(issuesData.total).toBeGreaterThan(0);
-    expect(issuesData.data[0].status).toBe('sent');
+    const issuesBody = await issuesRes.json();
+    expect(issuesBody.data.total).toBeGreaterThan(0);
+    expect(issuesBody.data.data[0].status).toBe('sent');
   });
 });
 
