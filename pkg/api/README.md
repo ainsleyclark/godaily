@@ -57,6 +57,15 @@ func (h *Handler) List(c *webkit.Context) error {
 }
 ```
 
+**Context rule:**
+
+The first line of every handler body must be `ctx := c.Context()`, and any
+downstream call that takes a `context.Context` must use that `ctx` — never
+`c.Context()` inline. This keeps the request-scoped context (with
+cancellation, tracing, and the logger handler) in one obvious place and
+makes log lines propagate correctly. The only exception is a handler that
+genuinely uses no context (e.g. a static health check) — and those are rare.
+
 **Response rules:**
 
 - `api.OK(c, status, data, message)` — all successful responses

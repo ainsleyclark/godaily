@@ -5,15 +5,15 @@
 package digest
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 	// Register all news-source fetchers (lingua-go + scrapers) so the
 	// registry populates in this single binary.
 	_ "github.com/ainsleyclark/godaily/pkg/source"
@@ -26,13 +26,14 @@ func (h *Handler) Collect(c *webkit.Context) error {
 	if !force && api.IsWeekend(time.Now().UTC()) {
 		slog.InfoContext(ctx, "Skipping collect — weekend")
 		hook.Heartbeat(ctx, h.config.BetterStackCollectHeartbeatURL)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped collect — weekend")
 	}
 
 	resp, err := h.runner.Collect(ctx, digest.CollectOptions{})
 	if err != nil {
 		h.slack.MustSend(ctx, "Collect failed: "+err.Error())
-		return fmt.Errorf("collect failed: %w", err)
+		slog.ErrorContext(ctx, "Collect failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to collect")
 	}
 
 	hook.Heartbeat(ctx, h.config.BetterStackCollectHeartbeatURL)
@@ -50,5 +51,5 @@ func (h *Handler) Collect(c *webkit.Context) error {
 		sources[string(src)] = sourceResult{Error: &msg}
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"ok": true, "sources": sources})
+	return api.OK(c, http.StatusOK, map[string]any{"sources": sources}, "Successfully collected sources")
 }

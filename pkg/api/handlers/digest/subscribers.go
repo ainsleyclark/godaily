@@ -7,10 +7,11 @@ package digest
 import (
 	"net/http"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Subscribers handles GET /digest/subscribers.
@@ -30,18 +31,18 @@ func (h *Handler) Subscribers(c *webkit.Context) error {
 
 	total, err := h.subscribersRepo.CountAll(ctx)
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to count subscribers")
+		return api.Error(c, http.StatusInternalServerError, "Failed to count subscribers")
 	}
 
 	subs, err := h.subscribersRepo.List(ctx, store.ListOptions{Page: page, PerPage: perPage})
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to list subscribers")
+		return api.Error(c, http.StatusInternalServerError, "Failed to list subscribers")
 	}
 
-	return c.JSON(http.StatusOK, api.PaginatedResponse[audience.Subscriber]{
+	return api.OK(c, http.StatusOK, api.PaginatedResponse[audience.Subscriber]{
 		Data:    subs,
 		Page:    page,
 		PerPage: perPage,
 		Total:   total,
-	})
+	}, "Successfully retrieved subscribers")
 }

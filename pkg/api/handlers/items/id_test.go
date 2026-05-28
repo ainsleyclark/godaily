@@ -11,94 +11,103 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 func TestByID(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(items *mocknews.MockItemRepository)
-		id         string
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(items *mocknews.MockItemRepository) {
-				items.EXPECT().Find(gomock.Any(), int64(42)).Return(news.Item{ID: 42}, nil)
-			},
-			id:         "42",
-			wantStatus: http.StatusOK,
-		},
-		"Not found": {
-			mock: func(items *mocknews.MockItemRepository) {
-				items.EXPECT().Find(gomock.Any(), int64(99)).Return(news.Item{}, store.ErrNotFound)
-			},
-			id:         "99",
-			wantStatus: http.StatusNotFound,
-		},
-		"Missing id": {
-			mock:       func(items *mocknews.MockItemRepository) {},
-			id:         "",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Non-numeric id": {
-			mock:       func(items *mocknews.MockItemRepository) {},
-			id:         "abc",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Zero id": {
-			mock:       func(items *mocknews.MockItemRepository) {},
-			id:         "0",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Store error": {
-			mock: func(items *mocknews.MockItemRepository) {
-				items.EXPECT().Find(gomock.Any(), int64(1)).Return(news.Item{}, errors.New("db error"))
-			},
-			id:         "1",
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Items    *mocknews.MockItemRepository
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			itemsMock := mocknews.NewMockItemRepository(ctrl)
-			test.mock(itemsMock)
+	setup := func(t *testing.T, id string) Test {
+		t.Helper()
 
-			h := &Handler{itemsRepo: itemsMock}
+		ctrl := gomock.NewController(t)
+		items := mocknews.NewMockItemRepository(ctrl)
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/items/"+id, nil)
+		if id != "" {
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("id", id)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+		}
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/items/"+test.id, nil)
-
-			switch test.id {
-			case "":
-				// No chi context — Param returns ""
-			default:
-				rctx := chi.NewRouteContext()
-				rctx.URLParams.Add("id", test.id)
-				r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, rctx))
-			}
-
-			invoke(h.ByID, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
-	}
-}
-
-func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
-	c := webkit.NewContext(w, r)
-	if err := h(c); err != nil {
-		var e *webkit.Error
-		if errors.As(err, &e) {
-			_ = c.JSON(e.Code, map[string]string{"error": e.Message})
-		} else {
-			_ = c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return Test{
+			Handler:  &Handler{itemsRepo: items},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Items:    items,
 		}
 	}
+
+	t.Run("Returns item on success", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "42")
+		deps.Items.EXPECT().Find(gomock.Any(), int64(42)).Return(news.Item{ID: 42}, nil)
+
+		err := deps.Handler.ByID(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Not found returns 404", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "99")
+		deps.Items.EXPECT().Find(gomock.Any(), int64(99)).Return(news.Item{}, store.ErrNotFound)
+
+		_ = deps.Handler.ByID(deps.Context)
+		assert.Equal(t, http.StatusNotFound, deps.Recorder.Code)
+	})
+
+	t.Run("Missing id returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+
+		_ = deps.Handler.ByID(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Non-numeric id returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "abc")
+
+		_ = deps.Handler.ByID(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Zero id returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "0")
+
+		_ = deps.Handler.ByID(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Store error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "1")
+		deps.Items.EXPECT().Find(gomock.Any(), int64(1)).Return(news.Item{}, errors.New("db error"))
+
+		_ = deps.Handler.ByID(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
 }

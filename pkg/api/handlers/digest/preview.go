@@ -5,14 +5,14 @@
 package digest
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Preview handles GET /digest/preview.
@@ -24,17 +24,18 @@ func (h *Handler) Preview(c *webkit.Context) error {
 	if api.IsWeekend(now) {
 		slog.InfoContext(ctx, "Skipping preview — weekend")
 		hook.Heartbeat(ctx, h.config.BetterStackSendHeartbeatURL)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped preview — weekend")
 	}
 
 	today := now.Truncate(24 * time.Hour)
 
 	if err := h.runner.SendPreview(ctx, today); err != nil {
 		h.slack.MustSend(ctx, "Send preview failed: "+err.Error())
-		return fmt.Errorf("send preview failed: %w", err)
+		slog.ErrorContext(ctx, "Send preview failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to send preview")
 	}
 
 	hook.Heartbeat(ctx, h.config.BetterStackSendHeartbeatURL)
 
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully sent preview")
 }

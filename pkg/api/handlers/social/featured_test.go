@@ -9,16 +9,18 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/ainsleyclark/godaily/pkg/mocks/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
-	"github.com/ainsleyclark/godaily/pkg/mocks/social"
-	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/env"
+	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
 // newHandlerNoPosters builds a Handler with a real social.Service that has no posters configured.
@@ -26,7 +28,6 @@ func newHandlerNoPosters(t *testing.T) *Handler {
 	t.Helper()
 
 	ctrl := gomock.NewController(t)
-	t.Cleanup(ctrl.Finish)
 
 	slackMock := mockslack.NewMockSender(ctrl)
 	slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
@@ -47,25 +48,37 @@ func newHandlerNoPosters(t *testing.T) *Handler {
 }
 
 func TestHandleFeatured(t *testing.T) {
+	t.Parallel()
+
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
+		t.Parallel()
+
 		h := newHandlerNoPosters(t)
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/social/featured", nil)
+		ctx := webkit.NewContext(rec, req)
 
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/social/featured", nil)
-		invoke(h.Featured, w, r)
+		err := h.Featured(ctx)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, rec.Code)
 	})
 }
 
 func TestHandleRotation(t *testing.T) {
+	t.Parallel()
+
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
+		t.Parallel()
+
 		h := newHandlerNoPosters(t)
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/social/rotation", nil)
+		ctx := webkit.NewContext(rec, req)
 
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest(http.MethodGet, "/social/rotation", nil)
-		invoke(h.Rotation, w, r)
+		err := h.Rotation(ctx)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, rec.Code)
 	})
 }

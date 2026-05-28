@@ -8,9 +8,11 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 type subscribersRequest struct {
@@ -34,17 +36,19 @@ func (req subscribersRequest) validate() error {
 // Subscribers handles GET /metrics/subscribers.
 // Returns subscriber growth and churn bucketed over time.
 func (h *Handler) Subscribers(c *webkit.Context) error {
+	ctx := c.Context()
+
 	var req subscribersRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	bucket := req.Bucket
@@ -52,11 +56,11 @@ func (h *Handler) Subscribers(c *webkit.Context) error {
 		bucket = "day"
 	}
 
-	data, err := h.metricsRepo.SubscriberGrowth(c.Context(), engagement.MetricsFilter{From: from, To: to}, bucket)
+	data, err := h.metricsRepo.SubscriberGrowth(ctx, engagement.MetricsFilter{From: from, To: to}, bucket)
 	if err != nil {
-		slog.ErrorContext(c.Context(), "failed to fetch subscriber data", "error", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch subscriber data")
+		slog.ErrorContext(ctx, "Failed to fetch subscriber data", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch subscriber data")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"data": data})
+	return api.OK(c, http.StatusOK, data, "Successfully retrieved subscriber data")
 }

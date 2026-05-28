@@ -10,69 +10,96 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 )
 
 func TestHandleIssues(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(m *mockengagement.MockMetricsRepository)
-		query      string
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().IssueList(gomock.Any(), gomock.Any(), "sent_at").Return([]engagement.IssueEngagement{
-					{IssueID: 1, Slug: "2026-05-22"},
-				}, nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"OK with sort": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return([]engagement.IssueEngagement{}, nil)
-			},
-			query:      "sort=click_rate",
-			wantStatus: http.StatusOK,
-		},
-		"Store error": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().IssueList(gomock.Any(), gomock.Any(), "sent_at").Return(nil, errors.New("db error"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Invalid query params": {
-			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "from=bad",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Unknown sort": {
-			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "sort=bad_sort",
-			wantStatus: http.StatusBadRequest,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Metrics  *mockengagement.MockMetricsRepository
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
-			test.mock(metricsMock)
+	setup := func(t *testing.T, query string) Test {
+		t.Helper()
 
-			h := &Handler{metricsRepo: metricsMock}
+		ctrl := gomock.NewController(t)
+		metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
+		rec := httptest.NewRecorder()
 
-			target := "/metrics/issues"
-			if test.query != "" {
-				target += "?" + test.query
-			}
+		target := "/metrics/issues"
+		if query != "" {
+			target += "?" + query
+		}
+		req := httptest.NewRequest(http.MethodGet, target, nil)
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, target, nil)
-			invoke(h.Issues, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
+		return Test{
+			Handler:  &Handler{metricsRepo: metricsMock},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Metrics:  metricsMock,
+		}
 	}
+
+	t.Run("Returns issue metrics on success", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+		deps.Metrics.EXPECT().IssueList(gomock.Any(), gomock.Any(), "sent_at").Return([]engagement.IssueEngagement{
+			{IssueID: 1, Slug: "2026-05-22"},
+		}, nil)
+
+		err := deps.Handler.Issues(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Returns issue metrics with sort", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "sort=click_rate")
+		deps.Metrics.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return([]engagement.IssueEngagement{}, nil)
+
+		err := deps.Handler.Issues(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Store error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+		deps.Metrics.EXPECT().IssueList(gomock.Any(), gomock.Any(), "sent_at").Return(nil, errors.New("db error"))
+
+		_ = deps.Handler.Issues(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
+
+	t.Run("Invalid query params returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "from=bad")
+
+		_ = deps.Handler.Issues(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Unknown sort returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "sort=bad_sort")
+
+		_ = deps.Handler.Issues(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
 }

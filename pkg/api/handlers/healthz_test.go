@@ -14,9 +14,32 @@ import (
 )
 
 func TestHealthZ(t *testing.T) {
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/healthz", nil)
-	c := webkit.NewContext(w, r)
-	_ = HealthZ(c)
-	assert.Equal(t, http.StatusOK, w.Code)
+	t.Parallel()
+
+	type Test struct {
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+	}
+
+	setup := func(t *testing.T) Test {
+		t.Helper()
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
+		return Test{
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+		}
+	}
+
+	t.Run("Returns OK", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t)
+
+		err := HealthZ(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
 }

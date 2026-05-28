@@ -10,83 +10,115 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 )
 
 func TestHandleSubscribers(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(m *mockengagement.MockMetricsRepository)
-		query      string
-		wantStatus int
-	}{
-		"OK defaults": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{
-					Bucket: "day",
-					Points: []engagement.SubscriberPoint{},
-				}, nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"OK with week bucket": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{
-					Bucket: "week",
-					Points: []engagement.SubscriberPoint{},
-				}, nil)
-			},
-			query:      "bucket=week",
-			wantStatus: http.StatusOK,
-		},
-		"OK with month bucket": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "month").Return(engagement.SubscriberData{
-					Bucket: "month",
-					Points: []engagement.SubscriberPoint{},
-				}, nil)
-			},
-			query:      "bucket=month",
-			wantStatus: http.StatusOK,
-		},
-		"Invalid bucket": {
-			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "bucket=year",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Invalid query params": {
-			mock:       func(m *mockengagement.MockMetricsRepository) {},
-			query:      "from=not-a-date",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Store error": {
-			mock: func(m *mockengagement.MockMetricsRepository) {
-				m.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{}, errors.New("db error"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Metrics  *mockengagement.MockMetricsRepository
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
-			test.mock(metricsMock)
+	setup := func(t *testing.T, query string) Test {
+		t.Helper()
 
-			h := &Handler{metricsRepo: metricsMock}
+		ctrl := gomock.NewController(t)
+		metricsMock := mockengagement.NewMockMetricsRepository(ctrl)
+		rec := httptest.NewRecorder()
 
-			target := "/metrics/subscribers"
-			if test.query != "" {
-				target += "?" + test.query
-			}
+		target := "/metrics/subscribers"
+		if query != "" {
+			target += "?" + query
+		}
+		req := httptest.NewRequest(http.MethodGet, target, nil)
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, target, nil)
-			invoke(h.Subscribers, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
+		return Test{
+			Handler:  &Handler{metricsRepo: metricsMock},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Metrics:  metricsMock,
+		}
 	}
+
+	t.Run("Returns subscriber growth with defaults on success", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+		deps.Metrics.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{
+			Bucket: "day",
+			Points: []engagement.SubscriberPoint{},
+		}, nil)
+
+		err := deps.Handler.Subscribers(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Returns subscriber growth with week bucket", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "bucket=week")
+		deps.Metrics.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "week").Return(engagement.SubscriberData{
+			Bucket: "week",
+			Points: []engagement.SubscriberPoint{},
+		}, nil)
+
+		err := deps.Handler.Subscribers(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Returns subscriber growth with month bucket", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "bucket=month")
+		deps.Metrics.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "month").Return(engagement.SubscriberData{
+			Bucket: "month",
+			Points: []engagement.SubscriberPoint{},
+		}, nil)
+
+		err := deps.Handler.Subscribers(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Invalid bucket returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "bucket=year")
+
+		_ = deps.Handler.Subscribers(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Invalid query params returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "from=not-a-date")
+
+		_ = deps.Handler.Subscribers(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Store error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+		deps.Metrics.EXPECT().SubscriberGrowth(gomock.Any(), gomock.Any(), "day").Return(engagement.SubscriberData{}, errors.New("db error"))
+
+		_ = deps.Handler.Subscribers(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
 }

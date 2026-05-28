@@ -10,76 +10,86 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
 )
 
 func TestUnsubscribe(t *testing.T) {
-	tt := map[string]struct {
-		token        string
-		mock         func(s *mockaudience.MockSubscriberService)
-		wantStatus   int
-		wantLocation string
-	}{
-		"OK": {
-			token: "valid-token",
-			mock: func(s *mockaudience.MockSubscriberService) {
-				s.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
-			},
-			wantStatus:   http.StatusFound,
-			wantLocation: "/unsubscribed/",
-		},
-		"Missing Token": {
-			token:      "",
-			mock:       func(s *mockaudience.MockSubscriberService) {},
-			wantStatus: http.StatusBadRequest,
-		},
-		"Unsubscribe Error": {
-			token: "bad-token",
-			mock: func(s *mockaudience.MockSubscriberService) {
-				s.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler     *Handler
+		Context     *webkit.Context
+		Recorder    *httptest.ResponseRecorder
+		Subscribers *mockaudience.MockSubscriberService
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			svc := mockaudience.NewMockSubscriberService(ctrl)
-			test.mock(svc)
+	setup := func(t *testing.T, method, token string) Test {
+		t.Helper()
 
-			h := &Handler{subscribers: svc}
+		ctrl := gomock.NewController(t)
+		svc := mockaudience.NewMockSubscriberService(ctrl)
+		rec := httptest.NewRecorder()
 
-			url := "/unsubscribe"
-			if test.token != "" {
-				url += "?token=" + test.token
-			}
+		url := "/unsubscribe"
+		if token != "" {
+			url += "?token=" + token
+		}
+		req := httptest.NewRequest(method, url, nil)
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, url, nil)
-			invoke(h.Unsubscribe, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-			if test.wantLocation != "" {
-				assert.Equal(t, test.wantLocation, w.Header().Get("Location"))
-			}
-		})
+		return Test{
+			Handler:     &Handler{subscribers: svc},
+			Context:     webkit.NewContext(rec, req),
+			Recorder:    rec,
+			Subscribers: svc,
+		}
 	}
-}
 
-func TestUnsubscribePost(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	svc := mockaudience.NewMockSubscriberService(ctrl)
-	svc.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
+	t.Run("Redirects on successful GET unsubscribe", func(t *testing.T) {
+		t.Parallel()
 
-	h := &Handler{subscribers: svc}
+		deps := setup(t, http.MethodGet, "valid-token")
+		deps.Subscribers.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
 
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodPost, "/unsubscribe?token=valid-token", nil)
-	invoke(h.Unsubscribe, w, r)
+		err := deps.Handler.Unsubscribe(deps.Context)
 
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Empty(t, w.Header().Get("Location"))
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusFound, deps.Recorder.Code)
+		assert.Equal(t, "/unsubscribed/", deps.Recorder.Header().Get("Location"))
+	})
+
+	t.Run("Missing token returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, http.MethodGet, "")
+
+		_ = deps.Handler.Unsubscribe(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Unsubscribe error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, http.MethodGet, "bad-token")
+		deps.Subscribers.EXPECT().Unsubscribe(gomock.Any(), "bad-token").Return(errors.New("db error"))
+
+		_ = deps.Handler.Unsubscribe(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
+
+	t.Run("POST unsubscribe returns OK without redirect", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, http.MethodPost, "valid-token")
+		deps.Subscribers.EXPECT().Unsubscribe(gomock.Any(), "valid-token").Return(nil)
+
+		err := deps.Handler.Unsubscribe(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+		assert.Empty(t, deps.Recorder.Header().Get("Location"))
+	})
 }

@@ -11,80 +11,85 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 func TestBySlug(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(issues *mockdigest.MockIssueRepository)
-		slug       string
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(issues *mockdigest.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{ID: 1, Slug: "2026-01-01"}, nil)
-			},
-			slug:       "2026-01-01",
-			wantStatus: http.StatusOK,
-		},
-		"Not found": {
-			mock: func(issues *mockdigest.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(digest.Issue{}, store.ErrNotFound)
-			},
-			slug:       "unknown",
-			wantStatus: http.StatusNotFound,
-		},
-		"Missing slug": {
-			mock:       func(issues *mockdigest.MockIssueRepository) {},
-			slug:       "",
-			wantStatus: http.StatusBadRequest,
-		},
-		"Store error": {
-			mock: func(issues *mockdigest.MockIssueRepository) {
-				issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{}, errors.New("db error"))
-			},
-			slug:       "2026-01-01",
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Issues   *mockdigest.MockIssueRepository
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			issuesMock := mockdigest.NewMockIssueRepository(ctrl)
-			test.mock(issuesMock)
+	setup := func(t *testing.T, slug string) Test {
+		t.Helper()
 
-			h := &Handler{issuesRepo: issuesMock}
+		ctrl := gomock.NewController(t)
+		issues := mockdigest.NewMockIssueRepository(ctrl)
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/issues/"+slug, nil)
+		if slug != "" {
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("slug", slug)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+		}
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/issues/"+test.slug, nil)
-			if test.slug != "" {
-				rctx := chi.NewRouteContext()
-				rctx.URLParams.Add("slug", test.slug)
-				r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, rctx))
-			}
-
-			invoke(h.BySlug, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
-	}
-}
-
-func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
-	c := webkit.NewContext(w, r)
-	if err := h(c); err != nil {
-		var e *webkit.Error
-		if errors.As(err, &e) {
-			_ = c.JSON(e.Code, map[string]string{"error": e.Message})
-		} else {
-			_ = c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return Test{
+			Handler:  &Handler{issuesRepo: issues},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Issues:   issues,
 		}
 	}
+
+	t.Run("Returns issue on success", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "2026-01-01")
+		deps.Issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{ID: 1, Slug: "2026-01-01"}, nil)
+
+		err := deps.Handler.BySlug(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Not found returns 404", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "unknown")
+		deps.Issues.EXPECT().FindBySlug(gomock.Any(), "unknown").Return(digest.Issue{}, store.ErrNotFound)
+
+		_ = deps.Handler.BySlug(deps.Context)
+		assert.Equal(t, http.StatusNotFound, deps.Recorder.Code)
+	})
+
+	t.Run("Missing slug returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "")
+
+		_ = deps.Handler.BySlug(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Store error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, "2026-01-01")
+		deps.Issues.EXPECT().FindBySlug(gomock.Any(), "2026-01-01").Return(digest.Issue{}, errors.New("db error"))
+
+		_ = deps.Handler.BySlug(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
 }

@@ -10,43 +10,58 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	mockengagement "github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 )
 
 func TestHandleRoundup(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(r *mockengagement.MockMetricsService)
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(r *mockengagement.MockMetricsService) {
-				r.EXPECT().Roundup(gomock.Any()).Return(nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Roundup error": {
-			mock: func(r *mockengagement.MockMetricsService) {
-				r.EXPECT().Roundup(gomock.Any()).Return(errors.New("boom"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Metrics  *mockengagement.MockMetricsService
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			reporter := mockengagement.NewMockMetricsService(ctrl)
-			test.mock(reporter)
+	setup := func(t *testing.T) Test {
+		t.Helper()
 
-			h := &Handler{metricsService: reporter}
+		ctrl := gomock.NewController(t)
+		reporter := mockengagement.NewMockMetricsService(ctrl)
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodGet, "/metrics/roundup", nil)
 
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodGet, "/metrics/roundup", nil)
-			invoke(h.Roundup, w, r)
-
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
+		return Test{
+			Handler:  &Handler{metricsService: reporter},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Metrics:  reporter,
+		}
 	}
+
+	t.Run("Runs roundup on success", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t)
+		deps.Metrics.EXPECT().Roundup(gomock.Any()).Return(nil)
+
+		err := deps.Handler.Roundup(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Roundup error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t)
+		deps.Metrics.EXPECT().Roundup(gomock.Any()).Return(errors.New("boom"))
+
+		_ = deps.Handler.Roundup(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
 }

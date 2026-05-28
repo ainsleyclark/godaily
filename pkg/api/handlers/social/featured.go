@@ -9,10 +9,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Featured handles GET /social/featured.
@@ -30,7 +31,7 @@ func (h *Handler) Featured(c *webkit.Context) error {
 	if api.IsWeekend(now) {
 		slog.InfoContext(ctx, "Skipping featured — weekend")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped featured — weekend")
 	}
 
 	today := now.Truncate(24 * time.Hour)
@@ -40,23 +41,24 @@ func (h *Handler) Featured(c *webkit.Context) error {
 			ctx, "Skipping featured — wrong slot",
 			"minute", now.Minute(), "picked", social.PickSlot(today),
 		)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped featured — wrong slot")
 	}
 
 	if h.social == nil {
 		slog.InfoContext(ctx, "Skipping featured — social service not wired")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped featured — service not wired")
 	}
 
 	results, err := h.social.Post(ctx, social.PostOptions{Date: today})
 	if err != nil {
 		h.slack.MustSend(ctx, "Featured post failed: "+err.Error())
-		return webkit.NewError(http.StatusInternalServerError, "featured post failed: "+err.Error())
+		slog.ErrorContext(ctx, "Featured post failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to post featured")
 	}
 
 	slog.InfoContext(ctx, "Featured run complete", "platforms", len(results))
 	hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
 
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully posted featured")
 }

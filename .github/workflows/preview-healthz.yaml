@@ -32,9 +32,9 @@ jobs:
             exit 1
           fi
 
-          STATUS_VALUE=$(echo "$BODY" | jq -r '.status // empty')
-          if [ "$STATUS_VALUE" != "ok" ]; then
-            echo "::error::/healthz body status field is '$STATUS_VALUE' (expected 'ok')"
+          MESSAGE=$(echo "$BODY" | jq -r '.message // empty')
+          if [ "$MESSAGE" != "ok" ]; then
+            echo "::error::/healthz body message field is '$MESSAGE' (expected 'ok')"
             exit 1
           fi
 

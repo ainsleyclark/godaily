@@ -8,9 +8,11 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 type trendRequest struct {
@@ -40,17 +42,19 @@ func (req trendRequest) validate() error {
 // Trend handles GET /metrics/trend.
 // Returns a time series for a chosen engagement metric, bucketed by day or week.
 func (h *Handler) Trend(c *webkit.Context) error {
+	ctx := c.Context()
+
 	var req trendRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	metric := req.Metric
@@ -62,11 +66,11 @@ func (h *Handler) Trend(c *webkit.Context) error {
 		bucket = "day"
 	}
 
-	data, err := h.metricsRepo.Trend(c.Context(), engagement.MetricsFilter{From: from, To: to}, metric, bucket)
+	data, err := h.metricsRepo.Trend(ctx, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
 	if err != nil {
-		slog.ErrorContext(c.Context(), "failed to fetch trend data", "error", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch trend data")
+		slog.ErrorContext(ctx, "Failed to fetch trend data", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch trend data")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"data": data})
+	return api.OK(c, http.StatusOK, data, "Successfully retrieved trend data")
 }

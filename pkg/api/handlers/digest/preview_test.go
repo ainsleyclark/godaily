@@ -12,58 +12,89 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/env"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 func TestPreview(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(r *mockdigest.MockService)
-		weekend    bool
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(r *mockdigest.MockService) {
-				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Send Preview Error": {
-			mock: func(r *mockdigest.MockService) {
-				r.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(errors.New("preview failed"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Weekend": {
-			mock:       func(r *mockdigest.MockService) {},
-			weekend:    true,
-			wantStatus: http.StatusOK,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Runner   *mockdigest.MockService
+		Slack    *mockslack.MockSender
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			synctest.Test(t, func(t *testing.T) {
-				if !test.weekend {
-					// Fake clock starts on Saturday 2000-01-01; advance to Monday.
-					time.Sleep(48 * time.Hour)
-				}
+	setup := func(t *testing.T, req *http.Request) Test {
+		t.Helper()
 
-				ctrl := gomock.NewController(t)
-				runner := mockdigest.NewMockService(ctrl)
-				slackMock := mockslack.NewMockSender(ctrl)
-				slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
-				test.mock(runner)
+		ctrl := gomock.NewController(t)
+		runner := mockdigest.NewMockService(ctrl)
+		slackMock := mockslack.NewMockSender(ctrl)
+		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+		rec := httptest.NewRecorder()
 
-				h := &Handler{runner: runner, config: &env.Config{}, slack: slackMock}
-				w := httptest.NewRecorder()
-				r := httptest.NewRequest(http.MethodGet, "/digest/preview", nil)
-				invoke(h.Preview, w, r)
-				assert.Equal(t, test.wantStatus, w.Code)
-			})
+		return Test{
+			Handler:  &Handler{runner: runner, config: &env.Config{}, slack: slackMock},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Runner:   runner,
+			Slack:    slackMock,
+		}
+	}
+
+	t.Run("Sends preview successfully on a weekday", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			// Fake clock starts on Saturday 2000-01-01; advance to Monday.
+			time.Sleep(48 * time.Hour)
+
+			req := httptest.NewRequest(http.MethodGet, "/digest/preview", nil)
+			deps := setup(t, req)
+			deps.Runner.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(nil)
+
+			err := deps.Handler.Preview(deps.Context)
+
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 		})
-	}
+	})
+
+	t.Run("Send preview error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			time.Sleep(48 * time.Hour)
+
+			req := httptest.NewRequest(http.MethodGet, "/digest/preview", nil)
+			deps := setup(t, req)
+			deps.Runner.EXPECT().SendPreview(gomock.Any(), gomock.Any()).Return(errors.New("preview failed"))
+
+			_ = deps.Handler.Preview(deps.Context)
+
+			assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+		})
+	})
+
+	t.Run("Skips preview on weekend", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, "/digest/preview", nil)
+			deps := setup(t, req)
+
+			err := deps.Handler.Preview(deps.Context)
+
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+		})
+	})
 }

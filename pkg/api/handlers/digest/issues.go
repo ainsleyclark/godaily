@@ -7,10 +7,11 @@ package digest
 import (
 	"net/http"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Issues handles GET /digest/issues.
@@ -42,27 +43,27 @@ func (h *Handler) Issues(c *webkit.Context) error {
 		status := digest.IssueStatus(statusParam)
 		total, err = h.issuesRepo.CountByStatus(ctx, status)
 		if err != nil {
-			return webkit.NewError(http.StatusInternalServerError, "failed to count issues")
+			return api.Error(c, http.StatusInternalServerError, "Failed to count issues")
 		}
 		issues, err = h.issuesRepo.ListByStatus(ctx, status, opts)
 		if err != nil {
-			return webkit.NewError(http.StatusInternalServerError, "failed to list issues")
+			return api.Error(c, http.StatusInternalServerError, "Failed to list issues")
 		}
 	} else {
 		total, err = h.issuesRepo.Count(ctx)
 		if err != nil {
-			return webkit.NewError(http.StatusInternalServerError, "failed to count issues")
+			return api.Error(c, http.StatusInternalServerError, "Failed to count issues")
 		}
 		issues, err = h.issuesRepo.List(ctx, opts)
 		if err != nil {
-			return webkit.NewError(http.StatusInternalServerError, "failed to list issues")
+			return api.Error(c, http.StatusInternalServerError, "Failed to list issues")
 		}
 	}
 
-	return c.JSON(http.StatusOK, api.PaginatedResponse[digest.Issue]{
+	return api.OK(c, http.StatusOK, api.PaginatedResponse[digest.Issue]{
 		Data:    issues,
 		Page:    page,
 		PerPage: perPage,
 		Total:   total,
-	})
+	}, "Successfully retrieved issues")
 }

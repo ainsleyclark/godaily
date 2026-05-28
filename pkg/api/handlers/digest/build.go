@@ -5,14 +5,14 @@
 package digest
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Build handles GET /digest/build.
@@ -23,14 +23,15 @@ func (h *Handler) Build(c *webkit.Context) error {
 	if !force && api.IsWeekend(now) {
 		slog.InfoContext(ctx, "Skipping build — weekend")
 		hook.Heartbeat(ctx, h.config.BetterStackBuildHeartbeatURL)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Skipped build — weekend")
 	}
 
 	if err := h.runner.Build(ctx, now); err != nil {
-		return fmt.Errorf("build failed: %w", err)
+		slog.ErrorContext(ctx, "Build failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to build digest")
 	}
 
 	hook.Heartbeat(ctx, h.config.BetterStackBuildHeartbeatURL)
 
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully built digest")
 }
