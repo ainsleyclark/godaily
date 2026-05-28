@@ -32,9 +32,7 @@ import (
 // before dispatching here.
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
-	// CORS runs as chi middleware (not a webkit.Plug) so OPTIONS preflight
-	// requests for routes that only register GET reach it before chi's 405.
-	kit.Mux().Use(plugs.CORS())
+	kit.Plug(plugs.CORS)
 	kit.Plug(plugs.RateLimit(plugs.Limiter, app.Config.APISecret))
 	kit.Plug(middleware.Logger)
 

@@ -1,5 +1,5 @@
 import { dev } from '$app/environment';
-import { env } from '$env/dynamic/public';
+import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import { getSecret } from '$lib/stores/auth';
 import type {
 	IssueEngagement,
@@ -22,7 +22,7 @@ export class ApiError extends Error {
 
 function baseUrl(): string {
 	if (dev) return ''; // use vite proxy
-	return env.PUBLIC_API_BASE_URL || 'https://godaily.dev';
+	return PUBLIC_API_BASE_URL || 'https://godaily.dev';
 }
 
 function buildUrl(path: string, query?: MetricsQuery): string {
