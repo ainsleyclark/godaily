@@ -1,3 +1,5 @@
+@use '../abstracts/mixins' as *;
+
 .tabs {
 	position: sticky;
 	top: 64px;
@@ -8,14 +10,31 @@
 	border-bottom: 1px solid var(--border-soft);
 	margin-top: 1.6rem;
 
+	/* Right-edge fade hinting that the tab row scrolls horizontally. Pinned to
+	   the right edge of the centred max-width column so it lines up with the
+	   content, and ignores pointer events so tabs underneath stay clickable. */
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 1px;
+		right: max(0px, calc((100% - var(--container-max-width)) / 2));
+		width: 56px;
+		pointer-events: none;
+		background: linear-gradient(90deg, transparent 0%, var(--color-white) 85%);
+		z-index: 1;
+	}
+
 	&__scroll {
 		max-width: var(--container-max-width);
 		margin: 0 auto;
-		padding: 0 var(--section-padding-x);
+		padding: 0 2rem;
 		display: flex;
 		gap: 0;
 		overflow-x: auto;
 		scrollbar-width: none;
+
+		@include mobile { padding: 0 var(--section-padding-x); }
 
 		&::-webkit-scrollbar { display: none; }
 	}

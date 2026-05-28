@@ -46,6 +46,14 @@ body:has(.section.browse) {
 
 		@include tablet { grid-template-columns: 220px 1fr; }
 		@include mobile { grid-template-columns: 1fr; }
+
+		/* No filter sidebar (empty archive): drop the left column. */
+		&--no-filters {
+			grid-template-columns: 1fr 280px;
+
+			@include tablet { grid-template-columns: 1fr; }
+			@include mobile { grid-template-columns: 1fr; }
+		}
 	}
 	&__main { min-width: 0; }
 }

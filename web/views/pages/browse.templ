@@ -48,10 +48,14 @@ templ Browse(props BrowseProps) {
 				}
 				@components.StatStrip(browseStats(props))
 			}
-			@components.Tabs(browseTabs(props))
+			if props.Total > 0 {
+				@components.Tabs(browseTabs(props))
+			}
 			@components.Container(false) {
-				<div class="browse__layout">
-					@components.BrowseFilterSide(browseFilterSideProps(props))
+				<div class={ "browse__layout", templ.KV("browse__layout--no-filters", props.Total == 0) }>
+					if props.Total > 0 {
+						@components.BrowseFilterSide(browseFilterSideProps(props))
+					}
 					<main class="browse__main">
 						@components.BrowseToolbar(browseToolbarProps(props))
 						@components.AppliedFilters(browseAppliedFilters(props))
