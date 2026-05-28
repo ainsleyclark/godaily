@@ -15,6 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/handlers"
+	authhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/auth"
 	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
 	itemhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/items"
@@ -59,8 +60,11 @@ func Handler(app *godaily.App) http.Handler {
 	issuesH := issuehandlers.New(app)
 	itemsH := itemhandlers.New(app)
 	webhookH := webhookhandlers.New(app)
+	authH := authhandlers.New(app)
 
 	kit.Get("/healthz", handlers.HealthZ)
+
+	kit.Group("/auth", func(k *webkit.Kit) { authH.Routes(k) })
 
 	kit.Post("/subscribe", digestH.Subscribe)
 	kit.Get("/confirm", digestH.Confirm)

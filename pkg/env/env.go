@@ -31,6 +31,7 @@ type Config struct {
 	TursoURL                              string          `env:"TURSO_URL,required,unset"`
 	TursoAuthToken                        string          `env:"TURSO_AUTH_TOKEN,required,unset"`
 	APISecret                             string          `env:"API_SECRET,required,unset"`
+	DashboardPassword                     string          `env:"DASHBOARD_PASSWORD,unset"`
 	SlackToken                            string          `env:"SLACK_TOKEN,unset"`
 	SlackChannel                          string          `env:"SLACK_CHANNEL,unset"`
 	VercelDeployHookURL                   string          `env:"VERCEL_DEPLOY_HOOK_URL,unset"`
