@@ -109,10 +109,10 @@ func Browse(props BrowseProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = components.PageHero(components.PageHeroProps{
+				templ_7745c5c3_Err = components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",
-					Title:  "The full firehose, with <span class=\"page-hero__accent\">digest picks</span> marked.",
-					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"page-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
+					Title:  "The full firehose, with <span class=\"listing-hero__accent\">digest picks</span> marked.",
+					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"listing-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
 				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err

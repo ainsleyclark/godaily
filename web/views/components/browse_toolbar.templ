@@ -1,6 +1,10 @@
 package components
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/web/views/graphics/icons"
+)
 
 type BrowseToolbarProps struct {
 	Sort            []SegmentProps    // Hot / Top / New
@@ -39,10 +43,7 @@ templ BrowseToolbar(props BrowseToolbarProps) {
 			Active:  props.DigestOnly,
 			Variant: "digest",
 		}) {
-			<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<path d="M3 6h18v12H3z"></path>
-				<polyline points="3 7 12 13 21 7"></polyline>
-			</svg>
+			@icons.Envelope(11)
 			<span>Only digest picks</span>
 		}
 		<div class="browse-toolbar__meta">{ matchingLabel(props.Matching) }</div>

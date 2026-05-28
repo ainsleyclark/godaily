@@ -1,0 +1,24 @@
+.range-buttons {
+	display: flex;
+	gap: 4px;
+
+	&__btn {
+		flex: 1;
+		text-align: center;
+		font-size: 0.74rem;
+		padding: 5px 0;
+		color: var(--text-2);
+		text-decoration: none;
+		border: 1px solid var(--border-soft);
+		border-radius: 6px;
+		background: var(--bg-soft);
+		transition: all 0.12s;
+
+		&:hover { border-color: var(--accent); color: var(--accent-dark); }
+		&--active {
+			background: var(--accent);
+			color: var(--color-white);
+			border-color: var(--accent);
+		}
+	}
+}

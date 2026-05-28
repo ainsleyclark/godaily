@@ -33,10 +33,10 @@ templ Browse(props BrowseProps) {
 		@components.Header()
 		<section class="section browse">
 			@components.Container(false) {
-				@components.PageHero(components.PageHeroProps{
+				@components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",
-					Title:  "The full firehose, with <span class=\"page-hero__accent\">digest picks</span> marked.",
-					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"page-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
+					Title:  "The full firehose, with <span class=\"listing-hero__accent\">digest picks</span> marked.",
+					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"listing-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
 				}) {
 					@components.SearchBox(components.SearchBoxProps{
 						Action:      BrowseBasePath,

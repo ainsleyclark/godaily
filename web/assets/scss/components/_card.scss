@@ -1,0 +1,11 @@
+.card {
+	background: var(--color-white);
+	border: 1px solid var(--border-soft);
+	border-radius: 14px;
+	padding: 16px;
+
+	&--tinted {
+		background: linear-gradient(155deg, var(--accent-tint) 0%, var(--color-white) 60%);
+		border-color: var(--accent-light);
+	}
+}

@@ -1,5 +1,7 @@
 package components
 
+import "github.com/ainsleyclark/godaily/web/views/graphics/icons"
+
 type SearchBoxProps struct {
 	Action      string
 	Name        string
@@ -10,10 +12,9 @@ type SearchBoxProps struct {
 
 templ SearchBox(props SearchBoxProps) {
 	<form class="search-box" method="get" action={ templ.SafeURL(props.Action) }>
-		<svg class="search-box__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-			<circle cx="11" cy="11" r="7"></circle>
-			<path d="m20 20-3.5-3.5"></path>
-		</svg>
+		<span class="search-box__icon">
+			@icons.Search(16)
+		</span>
 		<input
 			class="search-box__input"
 			type="search"

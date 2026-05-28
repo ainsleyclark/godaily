@@ -1,0 +1,23 @@
+// Package icons holds small inline SVG glyphs shared across components. Keep
+// markup here rather than inline in templ components so the same glyph is
+// defined once and reused at any pixel size.
+package icons
+
+import "fmt"
+
+// Search renders a magnifying-glass glyph at the given pixel size.
+templ Search(size int) {
+	<svg width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<circle cx="11" cy="11" r="7"></circle>
+		<path d="m20 20-3.5-3.5"></path>
+	</svg>
+}
+
+// Envelope renders a mail/digest glyph at the given pixel size. Used to mark
+// digest-related controls and the "In digest" badge.
+templ Envelope(size int) {
+	<svg width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M3 6h18v12H3z"></path>
+		<polyline points="3 7 12 13 21 7"></polyline>
+	</svg>
+}

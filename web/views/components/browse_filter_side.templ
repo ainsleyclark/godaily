@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/web/views/graphics/icons"
 )
 
 type BrowseFilterSideProps struct {
@@ -38,10 +39,7 @@ templ digestToggleBlock(props BrowseFilterSideProps) {
 	<section class={ "side-block", "side-block--digest", templ.KV("side-block--digest-on", props.DigestOnly) }>
 		<a class={ "digest-toggle", templ.KV("digest-toggle--on", props.DigestOnly) } href={ templ.SafeURL(props.DigestToggleURL) }>
 			<span class="digest-toggle__mark" aria-hidden="true">
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M3 6h18v12H3z"></path>
-					<polyline points="3 7 12 13 21 7"></polyline>
-				</svg>
+				@icons.Envelope(11)
 			</span>
 			<span class="digest-toggle__body">
 				<span class="digest-toggle__title">Only digest picks</span>
