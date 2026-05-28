@@ -8,10 +8,12 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 type issuesRequest struct {
@@ -39,15 +41,15 @@ func (req issuesRequest) validate() error {
 func (h *Handler) Issues(c *webkit.Context) error {
 	var req issuesRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	sort := req.Sort
@@ -61,10 +63,10 @@ func (h *Handler) Issues(c *webkit.Context) error {
 
 	rows, err := h.metricsRepo.IssueList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue metrics")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue metrics")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"data": rows})
+	return api.OK(c, http.StatusOK, rows, "Successfully retrieved issue metrics")
 }
 
 // topLinksLimit is the maximum number of top-clicked links returned per issue.
@@ -74,29 +76,29 @@ const topLinksLimit = 10
 func (h *Handler) IssueBySlug(c *webkit.Context) error {
 	slug := c.Param("slug")
 	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
+		return api.Error(c, http.StatusBadRequest, "Slug is required")
 	}
 
 	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
+			return api.Error(c, http.StatusNotFound, "Issue not found")
 		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue")
 	}
 
 	stats, err := h.emailEvents.IssueStats(c.Context(), issue.ID)
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue stats")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue stats")
 	}
 
 	links, err := h.emailEvents.TopLinks(c.Context(), issue.ID, topLinksLimit)
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch top links")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch top links")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{
+	return api.OK(c, http.StatusOK, map[string]any{
 		"stats": stats,
 		"links": links,
-	})
+	}, "Successfully retrieved issue metrics")
 }

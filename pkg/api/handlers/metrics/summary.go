@@ -7,8 +7,10 @@ package metrics
 import (
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 type summaryRequest struct {
@@ -22,18 +24,18 @@ type summaryRequest struct {
 func (h *Handler) Summary(c *webkit.Context) error {
 	var req summaryRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
 	}
 
 	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	stats, err := h.metricsRepo.Summary(c.Context(), engagement.MetricsFilter{From: from, To: to})
 	if err != nil {
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch summary stats")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch summary stats")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"data": stats})
+	return api.OK(c, http.StatusOK, stats, "Successfully retrieved summary stats")
 }

@@ -8,9 +8,11 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 type sourcesRequest struct {
@@ -30,17 +32,19 @@ func (req sourcesRequest) validate() error {
 // Sources handles GET /metrics/sources.
 // Returns total clicks aggregated by item source.
 func (h *Handler) Sources(c *webkit.Context) error {
+	ctx := c.Context()
+
 	var req sourcesRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid query parameters")
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
 	}
 	if err := req.validate(); err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	from, to, err := parseDateWindow(req.From, req.To, req.Period)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, err.Error())
+		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
 	limit := req.Limit
@@ -48,11 +52,11 @@ func (h *Handler) Sources(c *webkit.Context) error {
 		limit = DefaultMetricsLimit
 	}
 
-	rows, err := h.metricsRepo.SourceList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit})
+	rows, err := h.metricsRepo.SourceList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit})
 	if err != nil {
-		slog.ErrorContext(c.Context(), "failed to fetch source metrics", "error", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch source metrics")
+		slog.ErrorContext(ctx, "Failed to fetch source metrics", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch source metrics")
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"data": rows})
+	return api.OK(c, http.StatusOK, rows, "Successfully retrieved source metrics")
 }

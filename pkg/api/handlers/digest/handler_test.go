@@ -5,21 +5,16 @@
 package digest
 
 import (
-	"errors"
 	"net/http"
 	"net/http/httptest"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
+// invoke is a legacy shim for tests not yet migrated to the
+// Test struct + setup closure pattern described in pkg/api/README.md.
+// Handlers now write directly to the recorder via api.OK / api.Error,
+// so the only job left is to construct the context and call the handler.
 func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
-	c := webkit.NewContext(w, r)
-	if err := h(c); err != nil {
-		var e *webkit.Error
-		if errors.As(err, &e) {
-			_ = c.JSON(e.Code, map[string]string{"error": e.Message})
-		} else {
-			_ = c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
-		}
-	}
+	_ = h(webkit.NewContext(w, r))
 }

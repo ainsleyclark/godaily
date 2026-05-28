@@ -9,9 +9,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // metricsSince is the look-back window for fetching social post stats.
@@ -29,7 +31,7 @@ func (h *Handler) Metrics(c *webkit.Context) error {
 	posts, err := h.socialPosts.List(ctx, social.PostListOptions{Since: &since})
 	if err != nil {
 		slog.ErrorContext(ctx, "Failed to list recent social posts", "err", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to list posts")
+		return api.Error(c, http.StatusInternalServerError, "Failed to list posts")
 	}
 
 	var updated int
@@ -72,5 +74,5 @@ func (h *Handler) Metrics(c *webkit.Context) error {
 
 	slog.InfoContext(ctx, "Social metrics refresh complete",
 		"posts_checked", len(posts), "posts_updated", updated)
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully refreshed social metrics")
 }

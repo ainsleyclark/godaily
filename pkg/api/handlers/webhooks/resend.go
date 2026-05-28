@@ -48,7 +48,7 @@ func (h *Handler) Resend(c *webkit.Context) error {
 
 	domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid payload")
+		return api.Error(c, http.StatusBadRequest, "Invalid payload")
 	}
 	if !tracked {
 		slog.WarnContext(ctx, "Rejected Resend webhook with invalid event", "evt", evt)

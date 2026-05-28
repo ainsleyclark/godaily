@@ -9,6 +9,8 @@ import (
 	"net/http"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
 // Roundup handles GET /metrics/roundup. It is scheduled via vercel.json
@@ -16,9 +18,10 @@ import (
 // engagement data (with a week-over-week comparison) and posts a formatted
 // summary to the configured Slack channel.
 func (h *Handler) Roundup(c *webkit.Context) error {
-	if err := h.metricsService.Roundup(c.Context()); err != nil {
-		slog.ErrorContext(c.Context(), "Weekly roundup failed", "err", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to send weekly roundup")
+	ctx := c.Context()
+	if err := h.metricsService.Roundup(ctx); err != nil {
+		slog.ErrorContext(ctx, "Weekly roundup failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to send weekly roundup")
 	}
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully sent weekly roundup")
 }

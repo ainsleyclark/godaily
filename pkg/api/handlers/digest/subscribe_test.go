@@ -11,80 +11,101 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/audience"
-	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
-	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
+	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 func TestSubscribe(t *testing.T) {
-	tt := map[string]struct {
-		body       string
-		mock       func(s *mockaudience.MockSubscriberService)
-		repoMock   func(r *mockaudience.MockSubscriberRepository)
-		wantStatus int
-	}{
-		"OK": {
-			body: `{"email":"test@example.com"}`,
-			mock: func(s *mockaudience.MockSubscriberService) {
-				s.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(audience.Subscriber{}, nil)
-			},
-			repoMock: func(r *mockaudience.MockSubscriberRepository) {
-				r.EXPECT().CountActive(gomock.Any()).Return(int64(42), nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Missing Email": {
-			body:       `{}`,
-			mock:       func(s *mockaudience.MockSubscriberService) {},
-			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusBadRequest,
-		},
-		"Invalid Email": {
-			body:       `{"email":"notanemail"}`,
-			mock:       func(s *mockaudience.MockSubscriberService) {},
-			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusBadRequest,
-		},
-		"Already Subscribed": {
-			body: `{"email":"dupe@example.com"}`,
-			mock: func(s *mockaudience.MockSubscriberService) {
-				s.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(audience.Subscriber{}, audience.ErrAlreadySubscribed)
-			},
-			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusConflict,
-		},
-		"Subscribe Error": {
-			body: `{"email":"err@example.com"}`,
-			mock: func(s *mockaudience.MockSubscriberService) {
-				s.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(audience.Subscriber{}, errors.New("db error"))
-			},
-			repoMock:   func(r *mockaudience.MockSubscriberRepository) {},
-			wantStatus: http.StatusInternalServerError,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler     *Handler
+		Context     *webkit.Context
+		Recorder    *httptest.ResponseRecorder
+		Subscribers *mockaudience.MockSubscriberService
+		Repo        *mockaudience.MockSubscriberRepository
+		Slack       *mockslack.MockSender
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			svc := mockaudience.NewMockSubscriberService(ctrl)
-			slackMock := mockslack.NewMockSender(ctrl)
-			repo := mockaudience.NewMockSubscriberRepository(ctrl)
-			slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
-			test.mock(svc)
-			test.repoMock(repo)
+	setup := func(t *testing.T, body string) Test {
+		t.Helper()
 
-			h := &Handler{
+		ctrl := gomock.NewController(t)
+		svc := mockaudience.NewMockSubscriberService(ctrl)
+		repo := mockaudience.NewMockSubscriberRepository(ctrl)
+		slackMock := mockslack.NewMockSender(ctrl)
+		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).AnyTimes()
+
+		rec := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(body))
+
+		return Test{
+			Handler: &Handler{
 				subscribers:     svc,
 				subscribersRepo: repo,
 				slack:           slackMock,
-			}
-
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(http.MethodPost, "/subscribe", strings.NewReader(test.body))
-			invoke(h.Subscribe, w, r)
-			assert.Equal(t, test.wantStatus, w.Code)
-		})
+			},
+			Context:     webkit.NewContext(rec, req),
+			Recorder:    rec,
+			Subscribers: svc,
+			Repo:        repo,
+			Slack:       slackMock,
+		}
 	}
+
+	t.Run("Subscribes successfully", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, `{"email":"test@example.com"}`)
+		deps.Subscribers.EXPECT().Subscribe(gomock.Any(), "test@example.com").Return(audience.Subscriber{}, nil)
+		deps.Repo.EXPECT().CountActive(gomock.Any()).Return(int64(42), nil)
+
+		err := deps.Handler.Subscribe(deps.Context)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+	})
+
+	t.Run("Missing email returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, `{}`)
+
+		_ = deps.Handler.Subscribe(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Invalid email returns bad request", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, `{"email":"notanemail"}`)
+
+		_ = deps.Handler.Subscribe(deps.Context)
+		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
+	})
+
+	t.Run("Already subscribed returns conflict", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, `{"email":"dupe@example.com"}`)
+		deps.Subscribers.EXPECT().Subscribe(gomock.Any(), "dupe@example.com").Return(audience.Subscriber{}, audience.ErrAlreadySubscribed)
+
+		_ = deps.Handler.Subscribe(deps.Context)
+		assert.Equal(t, http.StatusConflict, deps.Recorder.Code)
+	})
+
+	t.Run("Subscribe error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		deps := setup(t, `{"email":"err@example.com"}`)
+		deps.Subscribers.EXPECT().Subscribe(gomock.Any(), "err@example.com").Return(audience.Subscriber{}, errors.New("db error"))
+
+		_ = deps.Handler.Subscribe(deps.Context)
+		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+	})
 }

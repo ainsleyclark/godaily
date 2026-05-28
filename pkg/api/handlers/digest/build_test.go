@@ -12,55 +12,84 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/env"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+
+	"github.com/ainsleyclark/godaily/pkg/env"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 )
 
 func TestBuild(t *testing.T) {
-	tt := map[string]struct {
-		mock       func(r *mockdigest.MockService)
-		weekend    bool
-		wantStatus int
-	}{
-		"OK": {
-			mock: func(r *mockdigest.MockService) {
-				r.EXPECT().Build(gomock.Any(), gomock.Any()).Return(nil)
-			},
-			wantStatus: http.StatusOK,
-		},
-		"Build Error": {
-			mock: func(r *mockdigest.MockService) {
-				r.EXPECT().Build(gomock.Any(), gomock.Any()).Return(errors.New("boom"))
-			},
-			wantStatus: http.StatusInternalServerError,
-		},
-		"Weekend": {
-			mock:       func(r *mockdigest.MockService) {},
-			weekend:    true,
-			wantStatus: http.StatusOK,
-		},
+	t.Parallel()
+
+	type Test struct {
+		Handler  *Handler
+		Context  *webkit.Context
+		Recorder *httptest.ResponseRecorder
+		Runner   *mockdigest.MockService
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			synctest.Test(t, func(t *testing.T) {
-				if !test.weekend {
-					// Fake clock starts on Saturday 2000-01-01; advance to Monday.
-					time.Sleep(48 * time.Hour)
-				}
+	setup := func(t *testing.T, req *http.Request) Test {
+		t.Helper()
 
-				ctrl := gomock.NewController(t)
-				runner := mockdigest.NewMockService(ctrl)
-				test.mock(runner)
+		ctrl := gomock.NewController(t)
+		runner := mockdigest.NewMockService(ctrl)
+		rec := httptest.NewRecorder()
 
-				h := &Handler{runner: runner, config: &env.Config{}}
-				w := httptest.NewRecorder()
-				r := httptest.NewRequest(http.MethodGet, "/digest/build", nil)
-				invoke(h.Build, w, r)
-				assert.Equal(t, test.wantStatus, w.Code)
-			})
+		return Test{
+			Handler:  &Handler{runner: runner, config: &env.Config{}},
+			Context:  webkit.NewContext(rec, req),
+			Recorder: rec,
+			Runner:   runner,
+		}
+	}
+
+	t.Run("Builds successfully on a weekday", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			// Fake clock starts on Saturday 2000-01-01; advance to Monday.
+			time.Sleep(48 * time.Hour)
+
+			req := httptest.NewRequest(http.MethodGet, "/digest/build", nil)
+			deps := setup(t, req)
+			deps.Runner.EXPECT().Build(gomock.Any(), gomock.Any()).Return(nil)
+
+			err := deps.Handler.Build(deps.Context)
+
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 		})
-	}
+	})
+
+	t.Run("Build error returns internal server error", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			time.Sleep(48 * time.Hour)
+
+			req := httptest.NewRequest(http.MethodGet, "/digest/build", nil)
+			deps := setup(t, req)
+			deps.Runner.EXPECT().Build(gomock.Any(), gomock.Any()).Return(errors.New("boom"))
+
+			_ = deps.Handler.Build(deps.Context)
+
+			assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
+		})
+	})
+
+	t.Run("Skips build on weekend", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, "/digest/build", nil)
+			deps := setup(t, req)
+
+			err := deps.Handler.Build(deps.Context)
+
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+		})
+	})
 }

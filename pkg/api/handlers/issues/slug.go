@@ -8,10 +8,12 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
+
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/store"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
 // Handler holds the narrow dependencies for issues HTTP handlers.
@@ -35,16 +37,16 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 func (h *Handler) BySlug(c *webkit.Context) error {
 	slug := c.Param("slug")
 	if slug == "" {
-		return webkit.NewError(http.StatusBadRequest, "slug is required")
+		return api.Error(c, http.StatusBadRequest, "Slug is required")
 	}
 
 	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
-			return webkit.NewError(http.StatusNotFound, "issue not found")
+			return api.Error(c, http.StatusNotFound, "Issue not found")
 		}
-		return webkit.NewError(http.StatusInternalServerError, "failed to fetch issue")
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue")
 	}
 
-	return c.JSON(http.StatusOK, issue)
+	return api.OK(c, http.StatusOK, issue, "Successfully retrieved issue")
 }

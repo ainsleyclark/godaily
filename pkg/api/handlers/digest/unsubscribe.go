@@ -5,9 +5,12 @@
 package digest
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
 // Unsubscribe handles /unsubscribe.
@@ -19,17 +22,18 @@ func (h *Handler) Unsubscribe(c *webkit.Context) error {
 
 	token := r.URL.Query().Get("token")
 	if token == "" {
-		return webkit.NewError(http.StatusBadRequest, "missing token")
+		return api.Error(c, http.StatusBadRequest, "Missing token")
 	}
 
 	if err := h.subscribers.Unsubscribe(ctx, token); err != nil {
-		return webkit.NewError(http.StatusInternalServerError, err.Error())
+		slog.ErrorContext(ctx, "Failed to unsubscribe", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to unsubscribe")
 	}
 
 	// RFC 8058: mail clients send a POST for one-click unsubscribe and
 	// expect a 2xx response, not a redirect.
 	if r.Method == http.MethodPost {
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Successfully unsubscribed")
 	}
 
 	return c.Redirect(http.StatusFound, "/unsubscribed/")

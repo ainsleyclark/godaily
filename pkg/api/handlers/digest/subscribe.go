@@ -7,11 +7,14 @@ package digest
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/mail"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 )
 
 // Subscribe handles POST /subscribe.
@@ -22,18 +25,19 @@ func (h *Handler) Subscribe(c *webkit.Context) error {
 		Email string `json:"email"`
 	}
 	if err := c.BindJSON(&body); err != nil || body.Email == "" {
-		return webkit.NewError(http.StatusBadRequest, "email is required")
+		return api.Error(c, http.StatusBadRequest, "Email is required")
 	}
 
 	if _, err := mail.ParseAddress(body.Email); err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid email address")
+		return api.Error(c, http.StatusBadRequest, "Invalid email address")
 	}
 
 	if _, err := h.subscribers.Subscribe(ctx, body.Email); err != nil {
 		if errors.Is(err, audience.ErrAlreadySubscribed) {
-			return webkit.NewError(http.StatusConflict, "already subscribed")
+			return api.Error(c, http.StatusConflict, "Already subscribed")
 		}
-		return webkit.NewError(http.StatusInternalServerError, err.Error())
+		slog.ErrorContext(ctx, "Failed to subscribe", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to subscribe")
 	}
 
 	msg := "New subscriber: " + body.Email
@@ -42,5 +46,5 @@ func (h *Handler) Subscribe(c *webkit.Context) error {
 	}
 	h.slack.MustSend(ctx, msg)
 
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully subscribed")
 }

@@ -8,11 +8,11 @@ import (
 	"net/http"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
 // HealthZ handles GET /healthz.
 func HealthZ(c *webkit.Context) error {
-	return c.JSON(http.StatusOK, map[string]any{
-		"status": "ok",
-	})
+	return api.OK(c, http.StatusOK, nil, "ok")
 }
