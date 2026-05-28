@@ -7,11 +7,12 @@ type SearchBoxProps struct {
 	Name        string
 	Value       string
 	Placeholder string
-	Hint        string // optional keyboard hint, e.g. "⌘K"
+	Hint        string           // optional keyboard hint, e.g. "⌘K"
+	Attrs       templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ SearchBox(props SearchBoxProps) {
-	<form class="search-box" method="get" action={ templ.SafeURL(props.Action) }>
+	<form class="search-box" method="get" action={ templ.SafeURL(props.Action) } { props.Attrs... }>
 		<span class="search-box__icon">
 			@icons.Search(16)
 		</span>

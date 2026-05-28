@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/web/views/components"
@@ -69,7 +70,7 @@ func Browse(props BrowseProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section browse\" data-browse-app>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section browse\" data-browse-app hx-target=\"#browse-main\" hx-swap=\"outerHTML\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -103,6 +104,7 @@ func Browse(props BrowseProps) templ.Component {
 						Value:       props.State.Query,
 						Placeholder: fmt.Sprintf("Search %s stories…", formatThousands(props.Total)),
 						Hint:        "⌘K",
+						Attrs:       templ.Attributes{"hx-get": "/api/browse"},
 					}).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -233,9 +235,11 @@ func Browse(props BrowseProps) templ.Component {
 	})
 }
 
-// BrowseTabsRegion renders the section-tab row. Exported so the /api/browse
-// fragment endpoint can re-render it on filter changes.
-func BrowseTabsRegion(props BrowseProps) templ.Component {
+// BrowseFragment is the response rendered by the GET /api/browse endpoint.
+// The results column swaps into #browse-main (the inherited hx-target); the
+// tabs and sidebar piggyback as out-of-band swaps so a single request updates
+// every filter-dependent region at once.
+func BrowseFragment(props BrowseProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -256,7 +260,23 @@ func BrowseTabsRegion(props BrowseProps) templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = BrowseMain(props).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div id=\"browse-tabs\" hx-swap-oob=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = components.Tabs(browseTabs(props)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.BrowseFilterSide(browseFilterSidePropsOOB(props)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -264,9 +284,10 @@ func BrowseTabsRegion(props BrowseProps) templ.Component {
 	})
 }
 
-// BrowseSideRegion renders the filter sidebar (sources, date range, digest
-// toggle). Exported for the /api/browse fragment endpoint.
-func BrowseSideRegion(props BrowseProps) templ.Component {
+// BrowseTabsRegion renders the section-tab row, wrapped in the swappable
+// #browse-tabs container. Exported so the page and the fragment endpoint
+// render identical markup.
+func BrowseTabsRegion(props BrowseProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -287,7 +308,15 @@ func BrowseSideRegion(props BrowseProps) templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = components.BrowseFilterSide(browseFilterSideProps(props)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div id=\"browse-tabs\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.Tabs(browseTabs(props)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -295,10 +324,9 @@ func BrowseSideRegion(props BrowseProps) templ.Component {
 	})
 }
 
-// BrowseMain renders the results column: toolbar, applied filters, the item
-// list (or empty state), and pagination. Exported for the /api/browse
-// fragment endpoint.
-func BrowseMain(props BrowseProps) templ.Component {
+// BrowseSideRegion renders the filter sidebar (sources, date range, digest
+// toggle). The root <aside> carries id="browse-side" for out-of-band swaps.
+func BrowseSideRegion(props BrowseProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -319,7 +347,39 @@ func BrowseMain(props BrowseProps) templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<main class=\"browse__main\">")
+		templ_7745c5c3_Err = components.BrowseFilterSide(browseFilterSideProps(props)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// BrowseMain renders the results column: toolbar, applied filters, the item
+// list (or empty state), and pagination. It is the hx-target swapped on every
+// filter change.
+func BrowseMain(props BrowseProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<main id=\"browse-main\" class=\"browse__main\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -337,6 +397,7 @@ func BrowseMain(props BrowseProps) templ.Component {
 				Body:     emptyBody(props.State.Digest),
 				CTALabel: "Reset all filters",
 				CTAURL:   BrowseURL(props.State, ResetAll()),
+				CTAAttrs: hxNav(BrowseURL(props.State, ResetAll())),
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -346,7 +407,7 @@ func BrowseMain(props BrowseProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -356,17 +417,33 @@ func BrowseMain(props BrowseProps) templ.Component {
 				HrefFor: func(p int64) string {
 					return BrowseURL(props.State, WithPage(p))
 				},
+				AttrsFor: func(p int64) templ.Attributes {
+					return hxNav(BrowseURL(props.State, WithPage(p)))
+				},
 			}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		return nil
 	})
+}
+
+// browseAPIURL maps a public /browse/ link to its /api/browse fragment
+// equivalent, preserving the querystring.
+func browseAPIURL(pageURL string) string {
+	return "/api/browse" + strings.TrimPrefix(pageURL, BrowseBasePath)
+}
+
+// hxNav builds the htmx attributes for a filter control: it issues the
+// fragment request for the given public URL. The target, swap, and pushed URL
+// are inherited from the container and the server's HX-Push-Url header.
+func hxNav(pageURL string) templ.Attributes {
+	return templ.Attributes{"hx-get": browseAPIURL(pageURL)}
 }
 
 func browseStats(p BrowseProps) []components.StatProps {
@@ -392,19 +469,23 @@ func browseStats(p BrowseProps) []components.StatProps {
 }
 
 func browseTabs(p BrowseProps) []components.TabProps {
+	allHref := BrowseURL(p.State, WithTab("all"))
 	tabs := []components.TabProps{{
 		Label:  "All",
-		Href:   BrowseURL(p.State, WithTab("all")),
+		Href:   allHref,
 		Count:  formatThousands(p.Total),
 		Active: p.State.Tab == "" || p.State.Tab == "all",
+		Attrs:  hxNav(allHref),
 	}}
 	counts := tagCountMap(p.TagCounts)
 	for _, t := range news.SectionTags {
+		href := BrowseURL(p.State, WithTab(string(t)))
 		tabs = append(tabs, components.TabProps{
 			Label:  t.Title(),
-			Href:   BrowseURL(p.State, WithTab(string(t))),
+			Href:   href,
 			Count:  fmt.Sprintf("%d", counts[t]),
 			Active: p.State.Tab == string(t),
+			Attrs:  hxNav(href),
 		})
 	}
 	return tabs
@@ -421,33 +502,59 @@ func tagCountMap(counts []news.TagCount) map[news.Tag]int64 {
 func browseFilterSideProps(p BrowseProps) components.BrowseFilterSideProps {
 	sources := components.BrowseSourcesToRows(p.SourceCounts,
 		func(s news.Source) string { return BrowseURL(p.State, WithToggleSource(string(s))) },
-		func(s news.Source) bool { return containsSource(p.State, string(s)) })
+		func(s news.Source) bool { return containsSource(p.State, string(s)) },
+		func(s news.Source) templ.Attributes { return hxNav(BrowseURL(p.State, WithToggleSource(string(s)))) })
 
-	ranges := []components.RangeButton{
-		{Label: "Today", Href: BrowseURL(p.State, WithRange("today")), Active: p.State.Range == "today"},
-		{Label: "Week", Href: BrowseURL(p.State, WithRange("week")), Active: p.State.Range == "week"},
-		{Label: "Month", Href: BrowseURL(p.State, WithRange("month")), Active: p.State.Range == "month"},
-		{Label: "Year", Href: BrowseURL(p.State, WithRange("year")), Active: p.State.Range == "year"},
-		{Label: "All", Href: BrowseURL(p.State, WithRange("all")), Active: p.State.Range == "all"},
+	ranges := make([]components.RangeButton, 0, 5)
+	for _, r := range []struct {
+		label string
+		value string
+	}{{"Today", "today"}, {"Week", "week"}, {"Month", "month"}, {"Year", "year"}, {"All", "all"}} {
+		href := BrowseURL(p.State, WithRange(r.value))
+		ranges = append(ranges, components.RangeButton{
+			Label:  r.label,
+			Href:   href,
+			Active: p.State.Range == r.value,
+			Attrs:  hxNav(href),
+		})
 	}
 
+	digestURL := BrowseURL(p.State, WithDigest(!p.State.Digest))
 	return components.BrowseFilterSideProps{
 		Sources:           sources,
 		Ranges:            ranges,
 		ClearSourcesURL:   BrowseURL(p.State, WithoutSources()),
 		ClearSourcesCount: len(p.State.Sources),
+		ClearSourcesAttrs: hxNav(BrowseURL(p.State, WithoutSources())),
 		DigestOnly:        p.State.Digest,
-		DigestToggleURL:   BrowseURL(p.State, WithDigest(!p.State.Digest)),
+		DigestToggleURL:   digestURL,
+		DigestToggleAttrs: hxNav(digestURL),
 		DigestPicks:       p.DigestPicks,
 		TotalInScope:      p.Matching,
 	}
 }
 
+// browseFilterSidePropsOOB is the sidebar props used in the fragment response:
+// the root <aside> is flagged for an htmx out-of-band swap.
+func browseFilterSidePropsOOB(p BrowseProps) components.BrowseFilterSideProps {
+	props := browseFilterSideProps(p)
+	props.AsideAttrs = templ.Attributes{"hx-swap-oob": "true"}
+	return props
+}
+
 func browseToolbarProps(p BrowseProps) components.BrowseToolbarProps {
-	sort := []components.SegmentProps{
-		{Label: "Hot", Href: BrowseURL(p.State, WithSort("hot")), Active: p.State.Sort == "" || p.State.Sort == "hot"},
-		{Label: "Top", Href: BrowseURL(p.State, WithSort("top")), Active: p.State.Sort == "top"},
-		{Label: "New", Href: BrowseURL(p.State, WithSort("new")), Active: p.State.Sort == "new"},
+	sort := make([]components.SegmentProps, 0, 3)
+	for _, s := range []struct {
+		label string
+		value string
+	}{{"Hot", "hot"}, {"Top", "top"}, {"New", "new"}} {
+		href := BrowseURL(p.State, WithSort(s.value))
+		sort = append(sort, components.SegmentProps{
+			Label:  s.label,
+			Href:   href,
+			Active: p.State.Sort == s.value || (s.value == "hot" && p.State.Sort == ""),
+			Attrs:  hxNav(href),
+		})
 	}
 	ranges := []components.SelectOption{
 		{Label: "Today", Value: "today", Selected: p.State.Range == "today"},
@@ -456,49 +563,55 @@ func browseToolbarProps(p BrowseProps) components.BrowseToolbarProps {
 		{Label: "Year", Value: "year", Selected: p.State.Range == "year"},
 		{Label: "All", Value: "all", Selected: p.State.Range == "all"},
 	}
+	digestURL := BrowseURL(p.State, WithDigest(!p.State.Digest))
 	return components.BrowseToolbarProps{
 		Sort:            sort,
 		RangeOptions:    ranges,
 		RangeName:       "range",
 		RangeSelected:   p.State.Range,
 		RangeFormAction: BrowseBasePath,
+		// The select carries the current filters (minus range) so its chosen
+		// value supplies range without duplicating the param.
+		RangeSelectAttrs: templ.Attributes{
+			"hx-get":     browseAPIURL(BrowseURL(p.State, WithRange(""))),
+			"hx-trigger": "change",
+		},
 		DigestOnly:      p.State.Digest,
-		DigestToggleURL: BrowseURL(p.State, WithDigest(!p.State.Digest)),
+		DigestToggleURL: digestURL,
+		DigestAttrs:     hxNav(digestURL),
 		Matching:        p.Matching,
 	}
 }
 
 func browseAppliedFilters(p BrowseProps) components.AppliedFiltersProps {
+	chip := func(label, removeURL, variant string) components.AppliedChip {
+		return components.AppliedChip{
+			Label:       label,
+			RemoveURL:   removeURL,
+			Variant:     variant,
+			RemoveAttrs: hxNav(removeURL),
+		}
+	}
+
 	var chips []components.AppliedChip
 	if p.State.Digest {
-		chips = append(chips, components.AppliedChip{
-			Label:     "Digest picks only",
-			RemoveURL: BrowseURL(p.State, WithDigest(false)),
-			Variant:   "digest",
-		})
+		chips = append(chips, chip("Digest picks only", BrowseURL(p.State, WithDigest(false)), "digest"))
 	}
 	if p.State.Tab != "" && p.State.Tab != "all" {
-		chips = append(chips, components.AppliedChip{
-			Label:     news.Tag(p.State.Tab).Title(),
-			RemoveURL: BrowseURL(p.State, WithTab("all")),
-		})
+		chips = append(chips, chip(news.Tag(p.State.Tab).Title(), BrowseURL(p.State, WithTab("all")), ""))
 	}
 	for _, src := range p.State.Sources {
-		chips = append(chips, components.AppliedChip{
-			Label:     news.Source(src).NiceName(),
-			RemoveURL: BrowseURL(p.State, WithoutSource(src)),
-		})
+		chips = append(chips, chip(news.Source(src).NiceName(), BrowseURL(p.State, WithoutSource(src)), ""))
 	}
 	if p.State.Range != "" && p.State.Range != "week" {
-		chips = append(chips, components.AppliedChip{
-			Label:     "Last " + p.State.Range,
-			RemoveURL: BrowseURL(p.State, WithRange("week")),
-		})
+		chips = append(chips, chip("Last "+p.State.Range, BrowseURL(p.State, WithRange("week")), ""))
 	}
+	resetURL := BrowseURL(p.State, ResetAll())
 	return components.AppliedFiltersProps{
-		Label:    "Showing",
-		Chips:    chips,
-		ResetURL: BrowseURL(p.State, ResetAll()),
+		Label:      "Showing",
+		Chips:      chips,
+		ResetURL:   resetURL,
+		ResetAttrs: hxNav(resetURL),
 	}
 }
 

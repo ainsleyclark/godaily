@@ -20,11 +20,17 @@ type BrowseFilterSideProps struct {
 	Ranges            []RangeButton
 	ClearSourcesURL   string
 	ClearSourcesCount int
+	ClearSourcesAttrs templ.Attributes // optional extra attributes (e.g. htmx)
 
-	DigestOnly      bool
-	DigestToggleURL string
-	DigestPicks     int64
-	TotalInScope    int64
+	DigestOnly        bool
+	DigestToggleURL   string
+	DigestToggleAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+	DigestPicks       int64
+	TotalInScope      int64
+
+	// AsideAttrs adds attributes to the root <aside> (e.g. hx-swap-oob when
+	// re-rendered as an out-of-band fragment).
+	AsideAttrs templ.Attributes
 }
 
 func BrowseFilterSide(props BrowseFilterSideProps) templ.Component {
@@ -48,7 +54,15 @@ func BrowseFilterSide(props BrowseFilterSideProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<aside class=\"browse-side\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<aside id=\"browse-side\" class=\"browse-side\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.AsideAttrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,6 +92,7 @@ func BrowseFilterSide(props BrowseFilterSideProps) templ.Component {
 			Title:       "Sources",
 			ActionLabel: clearLabel(props.ClearSourcesCount),
 			ActionURL:   clearLink(props.ClearSourcesURL, props.ClearSourcesCount),
+			ActionAttrs: props.ClearSourcesAttrs,
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -104,7 +119,7 @@ func BrowseFilterSide(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</aside>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</aside>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -138,7 +153,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<section class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<section class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -151,7 +166,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -160,7 +175,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<a class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<a class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -173,20 +188,28 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 templ.SafeURL
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(props.DigestToggleURL))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 40, Col: 123}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 47, Col: 123}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\"><span class=\"digest-toggle__mark\" aria-hidden=\"true\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, props.DigestToggleAttrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "><span class=\"digest-toggle__mark\" aria-hidden=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -194,7 +217,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span> <span class=\"digest-toggle__body\"><span class=\"digest-toggle__title\">Only digest picks</span> <span class=\"digest-toggle__sub\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</span> <span class=\"digest-toggle__body\"><span class=\"digest-toggle__title\">Only digest picks</span> <span class=\"digest-toggle__sub\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -202,7 +225,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Showing the curated %d.", props.DigestPicks))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 48, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 55, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -212,14 +235,14 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d of %d made the cut.", props.DigestPicks, props.TotalInScope))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 50, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/browse_filter_side.templ`, Line: 57, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -228,7 +251,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<span class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -241,7 +264,7 @@ func digestToggleBlock(props BrowseFilterSideProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\"><span></span></span></a></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\"><span></span></span></a></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -265,16 +288,21 @@ func clearLink(url string, n int) string {
 
 // BrowseSourcesToRows is a small helper for handlers/pages building source
 // rows from SourceCount aggregates. Each row needs a toggle URL the caller
-// computes via the filter URL builder.
-func BrowseSourcesToRows(counts []news.SourceCount, hrefFor func(news.Source) string, activeFor func(news.Source) bool) []CheckableRow {
+// computes via the filter URL builder; attrsFor optionally adds per-row
+// attributes (e.g. htmx) and may be nil.
+func BrowseSourcesToRows(counts []news.SourceCount, hrefFor func(news.Source) string, activeFor func(news.Source) bool, attrsFor func(news.Source) templ.Attributes) []CheckableRow {
 	rows := make([]CheckableRow, 0, len(counts))
 	for _, c := range counts {
-		rows = append(rows, CheckableRow{
+		row := CheckableRow{
 			Label:  c.Source.NiceName(),
 			Count:  fmt.Sprintf("%d", c.Count),
 			Href:   hrefFor(c.Source),
 			Active: activeFor(c.Source),
-		})
+		}
+		if attrsFor != nil {
+			row.Attrs = attrsFor(c.Source)
+		}
+		rows = append(rows, row)
 	}
 	return rows
 }
