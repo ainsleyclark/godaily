@@ -39,11 +39,10 @@ const (
 
 // ItemListOptions filters for List/ListBrowse queries.
 type ItemListOptions struct {
-	IssueID *int64
-	From    *time.Time
-	To      *time.Time
+	IssueID *int64     // only items linked to this digest issue
+	From    *time.Time // only items published at or after this time
+	To      *time.Time // only items published strictly before this time
 
-	// Browse filters (all optional / zero = no filter).
 	Sources  []Source // OR-match across sources
 	Tags     []Tag    // OR-match across tags
 	Search   string   // LIKE over title + summary
