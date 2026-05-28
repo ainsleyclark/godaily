@@ -19,7 +19,10 @@
 		{ "path": "/api/social/featured/",  "schedule": "0 11 * * *"                 },
 		{ "path": "/api/social/rotation/",  "schedule": "0 15 * * 2,3,5"            },
 		{ "path": "/api/social/metrics/",   "schedule": "0 3 * * *"                 },
-		{ "path": "/api/metrics/roundup/",  "schedule": "0 15 * * 5"                }
+		{ "path": "/api/metrics/roundup/",  "schedule": "0 15 * * 5"                },
+
+		{ "path": "/api/healtz/", "schedule": "30 17 * * *" },
+		{ "path": "/api/healtz/", "schedule": "0 18 * * *" }
 	],
 	"functions": {
 		"api/index.go": {
