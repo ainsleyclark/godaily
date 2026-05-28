@@ -140,9 +140,10 @@ func TestItems_Store(t *testing.T) {
 		assert.NotEmpty(t, got)
 	})
 
-	t.Run("List no filter error", func(t *testing.T) {
-		_, err := s.List(ctx, news.ItemListOptions{})
-		assert.Error(t, err)
+	t.Run("List with no filter returns all", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{})
+		require.NoError(t, err)
+		assert.NotEmpty(t, got)
 	})
 
 	t.Run("Create upserts issue_id on conflict", func(t *testing.T) {
@@ -248,6 +249,24 @@ func TestItems_Store(t *testing.T) {
 			assert.Error(t, err)
 		}
 
+		t.Log("Count")
+		{
+			_, err := s.Count(ctx)
+			assert.Error(t, err)
+		}
+
+		t.Log("SourceCounts")
+		{
+			_, err := s.SourceCounts(ctx)
+			assert.Error(t, err)
+		}
+
+		t.Log("TagCounts")
+		{
+			_, err := s.TagCounts(ctx)
+			assert.Error(t, err)
+		}
+
 		t.Log("Create")
 		{
 			_, err := s.Create(ctx, nil, 0, news.Item{Source: news.SourceHN, Title: "x", URL: "x"})
@@ -265,5 +284,191 @@ func TestItems_Store(t *testing.T) {
 			assert.Error(t, err)
 			assert.False(t, ok)
 		}
+	})
+}
+
+func TestItems_Browse(t *testing.T) {
+	ctx, db, teardown := dbtest.Setup(t)
+	defer teardown()
+
+	is := issues.New(db)
+	issue, err := is.Create(ctx, digest.Issue{
+		Slug:    "2026-05-01",
+		Subject: "GoDaily - May 1, 2026",
+		Status:  digest.IssueStatusSent,
+		SentAt:  time.Date(2026, time.May, 1, 8, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+
+	s := items.New(db)
+
+	base := time.Date(2026, time.May, 1, 0, 0, 0, 0, time.UTC)
+
+	// Linked items (in digest).
+	linked := []news.Item{
+		{Source: news.SourceGoBlog, Tag: news.TagRelease, Title: "Go 1.30 released", URL: "https://go.dev/1.30", Score: 0.9, Snippet: "release notes", Published: base.Add(3 * time.Hour)},
+		{Source: news.SourceHN, Tag: news.TagDiscussion, Title: "HN thread on generics", URL: "https://news.ycombinator.com/item?id=10", Score: 0.5, Snippet: "generics chatter", Published: base.Add(2 * time.Hour)},
+		{Source: news.SourceGoBlog, Tag: news.TagArticle, Title: "Profiling Go", URL: "https://go.dev/profiling", Score: 0.7, Snippet: "pprof tips", Published: base.Add(1 * time.Hour)},
+	}
+	for i, it := range linked {
+		_, err := s.Create(ctx, &issue.ID, i, it)
+		require.NoError(t, err)
+	}
+
+	// Unlinked items (not in digest).
+	unlinked := []news.Item{
+		{Source: news.SourceHN, Tag: news.TagTrending, Title: "Rust vs Go", URL: "https://news.ycombinator.com/item?id=20", Score: 0.4, Snippet: "language war", Published: base.Add(4 * time.Hour)},
+		{Source: news.SourceGoBlog, Tag: news.TagTutorial, Title: "Context tutorial", URL: "https://go.dev/context", Score: 0.8, Snippet: "context.Context guide", Published: base.Add(5 * time.Hour)},
+	}
+	for i, it := range unlinked {
+		_, err := s.Create(ctx, nil, i+100, it)
+		require.NoError(t, err)
+	}
+
+	t.Run("InDigest filter", func(t *testing.T) {
+		yes := true
+		no := false
+
+		gotYes, err := s.List(ctx, news.ItemListOptions{InDigest: &yes})
+		require.NoError(t, err)
+		assert.Len(t, gotYes, 3)
+		for _, it := range gotYes {
+			assert.True(t, it.InDigest, "expected InDigest=true for %q", it.Title)
+		}
+
+		gotNo, err := s.List(ctx, news.ItemListOptions{InDigest: &no})
+		require.NoError(t, err)
+		assert.Len(t, gotNo, 2)
+		for _, it := range gotNo {
+			assert.False(t, it.InDigest, "expected InDigest=false for %q", it.Title)
+		}
+
+		gotAll, err := s.List(ctx, news.ItemListOptions{})
+		require.NoError(t, err)
+		assert.Len(t, gotAll, 5)
+	})
+
+	t.Run("Source filter", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Sources: []news.Source{news.SourceHN}})
+		require.NoError(t, err)
+		assert.Len(t, got, 2)
+		for _, it := range got {
+			assert.Equal(t, news.SourceHN, it.Source)
+		}
+
+		got, err = s.List(ctx, news.ItemListOptions{Sources: []news.Source{news.SourceGoBlog, news.SourceHN}})
+		require.NoError(t, err)
+		assert.Len(t, got, 5)
+	})
+
+	t.Run("Tag filter", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Tags: []news.Tag{news.TagRelease, news.TagTutorial}})
+		require.NoError(t, err)
+		assert.Len(t, got, 2)
+	})
+
+	t.Run("Search filter", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Search: "generics"})
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+		assert.Equal(t, "HN thread on generics", got[0].Title)
+
+		// Matches summary as well.
+		got, err = s.List(ctx, news.ItemListOptions{Search: "pprof"})
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+		assert.Equal(t, "Profiling Go", got[0].Title)
+	})
+
+	t.Run("Sort New orders by published DESC", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortNew})
+		require.NoError(t, err)
+		require.Len(t, got, 5)
+		for i := 1; i < len(got); i++ {
+			assert.False(t, got[i].Published.After(got[i-1].Published),
+				"expected published DESC at index %d", i)
+		}
+	})
+
+	t.Run("Sort Top orders by score DESC", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortTop})
+		require.NoError(t, err)
+		require.Len(t, got, 5)
+		for i := 1; i < len(got); i++ {
+			assert.LessOrEqual(t, got[i].Score, got[i-1].Score,
+				"expected score DESC at index %d", i)
+		}
+	})
+
+	t.Run("Sort Hot returns all rows", func(t *testing.T) {
+		got, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortHot})
+		require.NoError(t, err)
+		assert.Len(t, got, 5)
+	})
+
+	t.Run("Pagination", func(t *testing.T) {
+		p1, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortNew, Page: 1, PerPage: 2})
+		require.NoError(t, err)
+		assert.Len(t, p1, 2)
+
+		p2, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortNew, Page: 2, PerPage: 2})
+		require.NoError(t, err)
+		assert.Len(t, p2, 2)
+		assert.NotEqual(t, p1[0].ID, p2[0].ID, "second page should not repeat first page rows")
+
+		p3, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortNew, Page: 3, PerPage: 2})
+		require.NoError(t, err)
+		assert.Len(t, p3, 1)
+
+		// Page past the end is empty.
+		p4, err := s.List(ctx, news.ItemListOptions{Sort: news.ItemSortNew, Page: 99, PerPage: 2})
+		require.NoError(t, err)
+		assert.Empty(t, p4)
+	})
+
+	t.Run("Count", func(t *testing.T) {
+		got, err := s.Count(ctx)
+		require.NoError(t, err)
+		assert.Equal(t, int64(5), got)
+	})
+
+	t.Run("SourceCounts", func(t *testing.T) {
+		got, err := s.SourceCounts(ctx)
+		require.NoError(t, err)
+		require.NotEmpty(t, got)
+		total := int64(0)
+		for _, sc := range got {
+			total += sc.Count
+		}
+		assert.Equal(t, int64(5), total)
+		// Ordered by count DESC.
+		for i := 1; i < len(got); i++ {
+			assert.LessOrEqual(t, got[i].Count, got[i-1].Count)
+		}
+	})
+
+	t.Run("TagCounts", func(t *testing.T) {
+		got, err := s.TagCounts(ctx)
+		require.NoError(t, err)
+		require.Len(t, got, 5) // five distinct tags above
+		for i := 1; i < len(got); i++ {
+			assert.LessOrEqual(t, got[i].Count, got[i-1].Count)
+		}
+	})
+
+	t.Run("Combined filters", func(t *testing.T) {
+		yes := true
+		got, err := s.List(ctx, news.ItemListOptions{
+			Sources:  []news.Source{news.SourceGoBlog},
+			InDigest: &yes,
+			Sort:     news.ItemSortTop,
+		})
+		require.NoError(t, err)
+		require.Len(t, got, 2)
+		for _, it := range got {
+			assert.Equal(t, news.SourceGoBlog, it.Source)
+			assert.True(t, it.InDigest)
+		}
+		assert.GreaterOrEqual(t, got[0].Score, got[1].Score)
 	})
 }

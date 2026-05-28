@@ -23,21 +23,55 @@ type Item struct {
 	Comments    int       `json:"comments"`
 	Score       float64   `json:"score"` // per-source relevance/popularity, normalised across sources
 	Published   time.Time `json:"published"`
+	InDigest    bool      `json:"in_digest"` // true when the item is linked to a digest issue
 }
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocknews -destination=../../mocks/news/ItemRepository.go . ItemRepository
 
-// ItemListOptions filters for List queries.
+// ItemSort selects the ordering used by ListBrowse.
+type ItemSort string
+
+const (
+	ItemSortNew ItemSort = "new" // published DESC
+	ItemSortTop ItemSort = "top" // score DESC
+	ItemSortHot ItemSort = "hot" // score with recency decay
+)
+
+// ItemListOptions filters for List/ListBrowse queries.
 type ItemListOptions struct {
 	IssueID *int64
 	From    *time.Time
 	To      *time.Time
+
+	// Browse filters (all optional / zero = no filter).
+	Sources  []Source // OR-match across sources
+	Tags     []Tag    // OR-match across tags
+	Search   string   // LIKE over title + summary
+	Sort     ItemSort // New | Top | Hot ; default New
+	InDigest *bool    // nil = all; true = only digested; false = only raw
+	Page     int64    // 1-based; 0 = no pagination
+	PerPage  int64    // 0 = default
+}
+
+// SourceCount is an aggregate count of items grouped by source.
+type SourceCount struct {
+	Source Source `json:"source"`
+	Count  int64  `json:"count"`
+}
+
+// TagCount is an aggregate count of items grouped by tag.
+type TagCount struct {
+	Tag   Tag   `json:"tag"`
+	Count int64 `json:"count"`
 }
 
 // ItemRepository defines the methods for interacting with the Item store.
 type ItemRepository interface {
 	Find(ctx context.Context, id int64) (Item, error)
 	List(ctx context.Context, opts ItemListOptions) ([]Item, error)
+	Count(ctx context.Context) (int64, error)
+	SourceCounts(ctx context.Context) ([]SourceCount, error)
+	TagCounts(ctx context.Context) ([]TagCount, error)
 	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)
 	DeleteByIssue(ctx context.Context, issueID int64) error
 }

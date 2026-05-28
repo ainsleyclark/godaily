@@ -41,6 +41,21 @@ func (m *MockItemRepository) EXPECT() *MockItemRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Count mocks base method.
+func (m *MockItemRepository) Count(ctx context.Context) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Count", ctx)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Count indicates an expected call of Count.
+func (mr *MockItemRepositoryMockRecorder) Count(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Count", reflect.TypeOf((*MockItemRepository)(nil).Count), ctx)
+}
+
 // Create mocks base method.
 func (m *MockItemRepository) Create(ctx context.Context, issueID *int64, position int, item news.Item) (news.Item, error) {
 	m.ctrl.T.Helper()
@@ -98,4 +113,34 @@ func (m *MockItemRepository) List(ctx context.Context, opts news.ItemListOptions
 func (mr *MockItemRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockItemRepository)(nil).List), ctx, opts)
+}
+
+// SourceCounts mocks base method.
+func (m *MockItemRepository) SourceCounts(ctx context.Context) ([]news.SourceCount, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SourceCounts", ctx)
+	ret0, _ := ret[0].([]news.SourceCount)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SourceCounts indicates an expected call of SourceCounts.
+func (mr *MockItemRepositoryMockRecorder) SourceCounts(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SourceCounts", reflect.TypeOf((*MockItemRepository)(nil).SourceCounts), ctx)
+}
+
+// TagCounts mocks base method.
+func (m *MockItemRepository) TagCounts(ctx context.Context) ([]news.TagCount, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TagCounts", ctx)
+	ret0, _ := ret[0].([]news.TagCount)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TagCounts indicates an expected call of TagCounts.
+func (mr *MockItemRepositoryMockRecorder) TagCounts(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TagCounts", reflect.TypeOf((*MockItemRepository)(nil).TagCounts), ctx)
 }

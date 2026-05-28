@@ -344,6 +344,17 @@ func (q *Queries) ItemByID(ctx context.Context, id int64) (Item, error) {
 	return i, err
 }
 
+const itemCount = `-- name: ItemCount :one
+SELECT COUNT(*) FROM items
+`
+
+func (q *Queries) ItemCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, itemCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const itemCreate = `-- name: ItemCreate :one
 INSERT INTO items (
     issue_id, source, tag, title, url, original_url,
@@ -443,19 +454,14 @@ func (q *Queries) ItemFindByURLInIssue(ctx context.Context, arg ItemFindByURLInI
 	return id, err
 }
 
-const itemListByDateRange = `-- name: ItemListByDateRange :many
+const itemListByIssue = `-- name: ItemListByIssue :many
 SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
-WHERE published >= ?1 AND published < ?2
-ORDER BY score DESC
+WHERE issue_id = ?
+ORDER BY position ASC
 `
 
-type ItemListByDateRangeParams struct {
-	From *time.Time `json:"from"`
-	To   *time.Time `json:"to"`
-}
-
-func (q *Queries) ItemListByDateRange(ctx context.Context, arg ItemListByDateRangeParams) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, itemListByDateRange, arg.From, arg.To)
+func (q *Queries) ItemListByIssue(ctx context.Context, issueID sql.NullInt64) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, itemListByIssue, issueID)
 	if err != nil {
 		return nil, err
 	}
@@ -493,38 +499,63 @@ func (q *Queries) ItemListByDateRange(ctx context.Context, arg ItemListByDateRan
 	return items, nil
 }
 
-const itemListByIssue = `-- name: ItemListByIssue :many
-SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
-WHERE issue_id = ?
-ORDER BY position ASC
+const itemSourceCounts = `-- name: ItemSourceCounts :many
+SELECT source, COUNT(*) AS count
+FROM items
+GROUP BY source
+ORDER BY count DESC
 `
 
-func (q *Queries) ItemListByIssue(ctx context.Context, issueID sql.NullInt64) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, itemListByIssue, issueID)
+type ItemSourceCountsRow struct {
+	Source string `json:"source"`
+	Count  int64  `json:"count"`
+}
+
+func (q *Queries) ItemSourceCounts(ctx context.Context) ([]ItemSourceCountsRow, error) {
+	rows, err := q.db.QueryContext(ctx, itemSourceCounts)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Item{}
+	items := []ItemSourceCountsRow{}
 	for rows.Next() {
-		var i Item
-		if err := rows.Scan(
-			&i.ID,
-			&i.IssueID,
-			&i.Source,
-			&i.Title,
-			&i.Url,
-			&i.Tag,
-			&i.AuthorName,
-			&i.AuthorUsername,
-			&i.AuthorAvatarUrl,
-			&i.AuthorProfileUrl,
-			&i.Score,
-			&i.Summary,
-			&i.Position,
-			&i.OriginalUrl,
-			&i.Published,
-		); err != nil {
+		var i ItemSourceCountsRow
+		if err := rows.Scan(&i.Source, &i.Count); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const itemTagCounts = `-- name: ItemTagCounts :many
+SELECT tag, COUNT(*) AS count
+FROM items
+GROUP BY tag
+ORDER BY count DESC
+`
+
+type ItemTagCountsRow struct {
+	Tag   string `json:"tag"`
+	Count int64  `json:"count"`
+}
+
+func (q *Queries) ItemTagCounts(ctx context.Context) ([]ItemTagCountsRow, error) {
+	rows, err := q.db.QueryContext(ctx, itemTagCounts)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ItemTagCountsRow{}
+	for rows.Next() {
+		var i ItemTagCountsRow
+		if err := rows.Scan(&i.Tag, &i.Count); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
