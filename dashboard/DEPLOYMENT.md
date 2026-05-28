@@ -20,6 +20,18 @@ Vercel project at `analytics.godaily.dev`, sharing the same git repo as the main
 Why two projects (and not e.g. `godaily.dev/dashboard`): independent deploy cadence, full
 Vercel preview URLs for the SPA, and the dashboard doesn't bloat the main Go binary.
 
+## Why two `vercel.json` files
+
+Each Vercel project reads `vercel.json` from its **Root Directory**, not from the
+repo root. The dashboard project (Root Directory `dashboard/`) must have its own
+`dashboard/vercel.json` defining `installCommand`, `buildCommand`, `framework`,
+and `outputDirectory` — otherwise Vercel falls back to the repo-root
+`vercel.json`, which is configured for the main Go app (`bash bin/build.sh`,
+`cd web && pnpm install`, crons, Go function definition…) and breaks the dashboard
+build. UI "Override" toggles only override Vercel's auto-detected defaults — they
+do not override an explicit `vercel.json`, so the per-project file is the only
+way to override.
+
 ## One-time setup
 
 Run the helper, then complete the dashboard-only steps in the Vercel UI:
@@ -39,10 +51,10 @@ What you have to click through (CLI can't set these):
 | Vercel UI setting | Value |
 | --- | --- |
 | Root Directory | `dashboard` |
-| Framework Preset | SvelteKit (auto-detected) |
-| Build Command | `pnpm build` (default) |
-| Install Command | `pnpm install` (default) |
-| Output Directory | `build` |
+| Framework Preset | SvelteKit (set by `dashboard/vercel.json`) |
+| Build Command | (leave default — set by `dashboard/vercel.json`) |
+| Install Command | (leave default — set by `dashboard/vercel.json`) |
+| Output Directory | (leave default — set by `dashboard/vercel.json`) |
 | Ignored Build Step (this project) | `git diff --quiet HEAD^ HEAD .` |
 
 And on the existing **godaily** project (the main app):

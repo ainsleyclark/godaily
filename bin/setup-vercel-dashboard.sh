@@ -38,10 +38,8 @@ cat <<'EOF'
 
   Project Settings → General
     Root Directory       : dashboard
-    Framework Preset     : SvelteKit (auto-detected)
-    Build Command        : pnpm build           (default)
-    Install Command      : pnpm install         (default)
-    Output Directory     : build
+  (Framework, Build / Install / Output are set by dashboard/vercel.json —
+   leave the UI Override toggles OFF for those.)
 
   Project Settings → Git → Ignored Build Step
     Command: git diff --quiet HEAD^ HEAD .
