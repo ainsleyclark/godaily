@@ -104,16 +104,16 @@ func TestIsSelfContent(t *testing.T) {
 		url   string
 		want  bool
 	}{
-		"Unrelated title and URL":           {title: "Go generics deep dive", url: "https://example.com/post", want: false},
-		"Title contains GoDaily exact":      {title: "Launching GoDaily", url: "", want: true},
-		"Title contains godaily lower":      {title: "subscribe to godaily now", url: "", want: true},
-		"Title contains GODAILY upper":      {title: "GODAILY is live", url: "", want: true},
-		"URL points to godaily.dev":         {title: "Something else", url: "https://godaily.dev/issues/1", want: true},
-		"URL points to www.godaily.dev":     {title: "Something else", url: "https://www.godaily.dev/issues/1", want: true},
-		"URL points to other domain":        {title: "Something else", url: "https://github.com/ainsleyclark/godaily", want: false},
-		"Empty title and URL":               {title: "", url: "", want: false},
-		"Invalid URL":                       {title: "Valid title", url: "://bad-url", want: false},
-		"Both title and URL match":          {title: "GoDaily v2", url: "https://godaily.dev/v2", want: true},
+		"Unrelated title and URL":       {title: "Go generics deep dive", url: "https://example.com/post", want: false},
+		"Title contains GoDaily exact":  {title: "Launching GoDaily", url: "", want: true},
+		"Title contains godaily lower":  {title: "subscribe to godaily now", url: "", want: true},
+		"Title contains GODAILY upper":  {title: "GODAILY is live", url: "", want: true},
+		"URL points to godaily.dev":     {title: "Something else", url: "https://godaily.dev/issues/1", want: true},
+		"URL points to www.godaily.dev": {title: "Something else", url: "https://www.godaily.dev/issues/1", want: true},
+		"URL points to other domain":    {title: "Something else", url: "https://github.com/ainsleyclark/godaily", want: false},
+		"Empty title and URL":           {title: "", url: "", want: false},
+		"Invalid URL":                   {title: "Valid title", url: "://bad-url", want: false},
+		"Both title and URL match":      {title: "GoDaily v2", url: "https://godaily.dev/v2", want: true},
 	}
 
 	for name, test := range tt {
