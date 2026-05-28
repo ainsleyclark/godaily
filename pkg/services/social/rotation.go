@@ -69,9 +69,8 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 			generate: func(ctx context.Context, p social.Platform) (string, error) {
 				return cand.Generate(ctx, s.prompter, p, cctx)
 			},
-			skipIfPosted:        subjectIdempotency(s.posts, cctx.Subject),
-			linkedInOrgURN:      cctx.LinkedInOrgURN,
-			linkedInDisplayName: cctx.LinkedInDisplayName,
+			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
+			mentions:     cctx.Mentions,
 		})
 	}
 

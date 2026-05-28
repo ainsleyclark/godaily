@@ -29,8 +29,8 @@ func nsProfile(name string, announceable bool) social.Profile {
 		SourceURL:      "https://" + name + ".example",
 		SpotlightBlurb: name + " blurb",
 		Announceable:   announceable,
-		Mentions: map[string]string{
-			"bluesky": "@" + name,
+		Mentions: []social.Mention{
+			{Platform: social.Bluesky, Handle: "@" + name},
 		},
 	}
 }

@@ -141,9 +141,10 @@ func TestClient_Post_Annotation(t *testing.T) {
 		c.baseURL = srv.URL
 
 		_, err := c.Post(context.Background(), platform.PostRequest{
-			Text:               "Today we thank Ardan Labs for their writing.",
-			MentionURN:         "urn:li:organization:42",
-			MentionDisplayName: "Ardan Labs",
+			Text: "Today we thank Ardan Labs for their writing.",
+			Mentions: []social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:42"},
+			},
 		})
 		require.NoError(t, err)
 	})
@@ -167,9 +168,10 @@ func TestClient_Post_Annotation(t *testing.T) {
 		c.baseURL = srv.URL
 
 		_, err := c.Post(context.Background(), platform.PostRequest{
-			Text:               "Today we thank some other source.",
-			MentionURN:         "urn:li:organization:42",
-			MentionDisplayName: "Ardan Labs",
+			Text: "Today we thank some other source.",
+			Mentions: []social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:42"},
+			},
 		})
 		require.NoError(t, err)
 	})
@@ -178,32 +180,101 @@ func TestClient_Post_Annotation(t *testing.T) {
 func TestBuildAnnotations(t *testing.T) {
 	t.Parallel()
 
-	tt := map[string]struct {
-		text, urn, name string
-		wantLen         int
-		wantStart       int
-	}{
-		"Match at start":      {"Ardan Labs writes Go.", "urn:li:organization:1", "Ardan Labs", 1, 0},
-		"Match mid-text":      {"Today, Ardan Labs ships.", "urn:li:organization:1", "Ardan Labs", 1, 7},
-		"Case mismatch drops": {"ardan labs ships.", "urn:li:organization:1", "Ardan Labs", 0, 0},
-		"Empty URN":           {"Ardan Labs ships.", "", "Ardan Labs", 0, 0},
-		"Empty name":          {"Ardan Labs ships.", "urn:li:organization:1", "", 0, 0},
-		"Empty text":          {"", "urn:li:organization:1", "Ardan Labs", 0, 0},
-		"Not present":         {"Hello world.", "urn:li:organization:1", "Ardan Labs", 0, 0},
+	lin := func(displayName, handle string) social.Mention {
+		return social.Mention{Platform: social.LinkedIn, DisplayName: displayName, Handle: handle}
 	}
 
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			got := buildAnnotations(test.text, test.urn, test.name)
-			assert.Len(t, got, test.wantLen)
-			if test.wantLen > 0 {
-				assert.Equal(t, test.wantStart, got[0].Start)
-				assert.Equal(t, len(test.name), got[0].Length)
-				assert.Equal(t, test.urn, got[0].Entity)
-			}
-		})
-	}
+	t.Run("Single mention matched", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{lin("Ardan Labs", "urn:li:organization:1")},
+		)
+		require.Len(t, got, 1)
+		assert.Equal(t, 0, got[0].Start)
+		assert.Equal(t, 10, got[0].Length)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Two non-overlapping mentions both matched in document order", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Today Ardan Labs and William Kennedy ship.",
+			[]social.Mention{
+				lin("William Kennedy", "urn:li:person:2"),
+				lin("Ardan Labs", "urn:li:organization:1"),
+			},
+		)
+		require.Len(t, got, 2)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity, "Ardan Labs appears first in text")
+		assert.Equal(t, "urn:li:person:2", got[1].Entity)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Overlapping mentions: longer wins", func(t *testing.T) {
+		t.Parallel()
+		// "Go" is a substring of "Go Blog"; the longer match wins, the
+		// shorter mention is dropped as missed.
+		got, _ := buildAnnotations(
+			"The Go Blog covers Go internals.",
+			[]social.Mention{
+				lin("Go", "urn:li:organization:99"),
+				lin("Go Blog", "urn:li:organization:1"),
+			},
+		)
+		require.Len(t, got, 1)
+		assert.Equal(t, "urn:li:organization:1", got[0].Entity)
+		assert.Equal(t, 7, got[0].Length)
+	})
+
+	t.Run("Missing display name surfaced in missed list", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Hello world.",
+			[]social.Mention{lin("Ardan Labs", "urn:li:organization:1")},
+		)
+		assert.Empty(t, got)
+		require.Len(t, missed, 1)
+		assert.Equal(t, "Ardan Labs", missed[0].DisplayName)
+	})
+
+	t.Run("Non-LinkedIn mentions ignored", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{
+				{Platform: social.Bluesky, DisplayName: "Ardan Labs", Handle: "@ardanlabs.com"},
+				{Platform: social.Mastodon, DisplayName: "Ardan Labs", Handle: "@ardanlabs@hachyderm.io"},
+			},
+		)
+		assert.Empty(t, got)
+		assert.Empty(t, missed)
+	})
+
+	t.Run("Empty inputs return nil", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations("", []social.Mention{lin("X", "urn:li:organization:1")})
+		assert.Nil(t, got)
+		assert.Nil(t, missed)
+
+		got, missed = buildAnnotations("Text", nil)
+		assert.Nil(t, got)
+		assert.Nil(t, missed)
+	})
+
+	t.Run("Empty handle or display name skipped silently", func(t *testing.T) {
+		t.Parallel()
+		got, missed := buildAnnotations(
+			"Ardan Labs writes Go.",
+			[]social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "", Handle: "urn:li:organization:1"},
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: ""},
+			},
+		)
+		assert.Empty(t, got)
+		assert.Empty(t, missed)
+	})
 }
 
 func TestFeedURL(t *testing.T) {

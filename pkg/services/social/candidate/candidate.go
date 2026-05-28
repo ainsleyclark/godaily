@@ -29,16 +29,34 @@ type CandidateContext struct {
 	Hook     string
 	URL      string
 	Subject  string
-	Mentions map[social.Platform]string
+	Mentions []social.Mention
 	Payload  any
+}
 
-	// LinkedInOrgURN is the LinkedIn organisation URN this candidate
-	// represents, when one is known. The publish loop turns it into an
-	// inline @-organisation annotation on the LinkedIn post, anchored
-	// to LinkedInDisplayName. Both must be set for the annotation to
-	// render; either empty falls back to plain-text (current behaviour).
-	LinkedInOrgURN      string
-	LinkedInDisplayName string
+// Mention returns the first Handle configured for the given platform, or
+// "" when none is set. Callers using this for inline-text splicing must
+// be sure the stored Handle is a text-safe value (a @-handle or URL) —
+// LinkedIn URNs intended for annotation are not text-safe and should
+// not be queried via this helper.
+func (c CandidateContext) Mention(platform social.Platform) string {
+	for _, m := range c.Mentions {
+		if m.Platform == platform && m.Handle != "" {
+			return m.Handle
+		}
+	}
+	return ""
+}
+
+// MentionsFor returns every Mention configured for the given platform.
+// Used by the LinkedIn annotation pipeline to look up URNs.
+func (c CandidateContext) MentionsFor(platform social.Platform) []social.Mention {
+	out := make([]social.Mention, 0, len(c.Mentions))
+	for _, m := range c.Mentions {
+		if m.Platform == platform {
+			out = append(out, m)
+		}
+	}
+	return out
 }
 
 // Candidate is one possible rotation post. Eligible looks at the world

@@ -93,8 +93,11 @@ func statusIDFromURL(postURL string) (mastodon.ID, error) {
 }
 
 // Post publishes the request text as a public status on the configured
-// instance. The request's mention fields are ignored — Mastodon @-handles
-// are already inlined in the text by the rendering layer.
+// instance.
+//
+// req.Mentions is ignored — Mastodon @-handles are already inlined in
+// req.Text by the rendering layer, and Mastodon renders them natively
+// without out-of-band annotations.
 func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
 	status, err := c.postStatusFunc(ctx, &mastodon.Toot{
 		Status:     req.Text,

@@ -17,35 +17,65 @@ func TestProfile_Mention(t *testing.T) {
 	t.Run("Returns the platform-specific handle when present", func(t *testing.T) {
 		p := social.Profile{
 			DisplayName: "Ardan Labs",
-			Mentions: map[string]string{
-				"bluesky": "@ardanlabs.com",
+			Mentions: []social.Mention{
+				{Platform: social.Bluesky, Handle: "@ardanlabs.com"},
 			},
 		}
-		assert.Equal(t, "@ardanlabs.com", p.Mention("bluesky"))
+		assert.Equal(t, "@ardanlabs.com", p.Mention(social.Bluesky))
 	})
 
 	t.Run("Falls back to DisplayName when the platform has no handle", func(t *testing.T) {
 		p := social.Profile{
 			DisplayName: "Ardan Labs",
-			Mentions: map[string]string{
-				"bluesky": "@ardanlabs.com",
+			Mentions: []social.Mention{
+				{Platform: social.Bluesky, Handle: "@ardanlabs.com"},
 			},
 		}
-		assert.Equal(t, "Ardan Labs", p.Mention("linkedin"))
+		assert.Equal(t, "Ardan Labs", p.Mention(social.Mastodon))
 	})
 
 	t.Run("Falls back to DisplayName when the handle is empty", func(t *testing.T) {
 		p := social.Profile{
 			DisplayName: "Ardan Labs",
-			Mentions:    map[string]string{"mastodon": ""},
+			Mentions:    []social.Mention{{Platform: social.Mastodon, Handle: ""}},
 		}
-		assert.Equal(t, "Ardan Labs", p.Mention("mastodon"))
+		assert.Equal(t, "Ardan Labs", p.Mention(social.Mastodon))
 	})
 
-	t.Run("Empty Mentions map falls back to DisplayName", func(t *testing.T) {
+	t.Run("Empty Mentions slice falls back to DisplayName", func(t *testing.T) {
 		p := social.Profile{DisplayName: "Anonymous Coder"}
-		assert.Equal(t, "Anonymous Coder", p.Mention("bluesky"))
+		assert.Equal(t, "Anonymous Coder", p.Mention(social.Bluesky))
 	})
+
+	t.Run("LinkedIn always falls back to DisplayName even when URN is configured", func(t *testing.T) {
+		p := social.Profile{
+			DisplayName: "Ardan Labs",
+			Mentions: []social.Mention{
+				{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:42"},
+			},
+		}
+		assert.Equal(
+			t, "Ardan Labs", p.Mention(social.LinkedIn),
+			"LinkedIn URNs must never leak into text-handle slots",
+		)
+	})
+}
+
+func TestProfile_MentionsFor(t *testing.T) {
+	p := social.Profile{
+		Mentions: []social.Mention{
+			{Platform: social.Bluesky, Handle: "@ardanlabs.com"},
+			{Platform: social.LinkedIn, DisplayName: "Ardan Labs", Handle: "urn:li:organization:1"},
+			{Platform: social.LinkedIn, DisplayName: "Bill Kennedy", Handle: "urn:li:person:2"},
+		},
+	}
+
+	got := p.MentionsFor(social.LinkedIn)
+	assert.Len(t, got, 2)
+	assert.Equal(t, "urn:li:organization:1", got[0].Handle)
+	assert.Equal(t, "urn:li:person:2", got[1].Handle)
+
+	assert.Len(t, p.MentionsFor(social.Mastodon), 0)
 }
 
 func TestProfileFor(t *testing.T) {

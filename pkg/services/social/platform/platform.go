@@ -27,23 +27,20 @@ type Poster interface {
 }
 
 // PostRequest is the per-post payload handed to a Poster. Text is the
-// fully-rendered post body. MentionURN and MentionDisplayName are
-// optional and only meaningful for platforms whose mention model needs
-// out-of-band metadata (currently LinkedIn): on LinkedIn the platform
-// uses MentionURN as the target organisation URN and the first
-// case-sensitive occurrence of MentionDisplayName inside Text to build
-// an inline annotation. Implementations for platforms where the @handle
-// is already baked into Text (Bluesky, Mastodon) ignore both fields.
+// fully-rendered post body. Mentions carries every mentionable identity
+// the publish loop wants attached to this post — implementations filter
+// by m.Platform and decide how to render them (LinkedIn builds inline
+// annotations; Bluesky / Mastodon ignore the list because their handles
+// are already inlined in Text by the prompt layer).
 type PostRequest struct {
-	Text               string
-	MentionURN         string
-	MentionDisplayName string
+	Text     string
+	Mentions []social.Mention
 }
 
-// PostResponse is what a platform returned after a successful post. PostURL
-// is the canonical web URL of the published content when available —
-// implementations leave it empty when the platform does not return one
-// synchronously.
+// PostResponse is what a platform returned after a successful post.
+// PostURL is the canonical web URL of the published content when
+// available — implementations leave it empty when the platform does not
+// return one synchronously.
 type PostResponse struct {
 	PostURL string
 }

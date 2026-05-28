@@ -35,11 +35,11 @@ type publishCtx struct {
 	// the platform without an error.
 	skipIfPosted func(ctx context.Context, platform string) (bool, error)
 
-	// linkedInOrgURN and linkedInDisplayName seed an inline organisation
-	// mention on LinkedIn posts when both are set. Empty values fall
-	// back to plain-text behaviour. Ignored on Bluesky / Mastodon.
-	linkedInOrgURN      string
-	linkedInDisplayName string
+	// mentions are the platform-tagged identities the post should
+	// reference. Each Poster filters by m.Platform and renders the
+	// matching subset natively (LinkedIn → inline annotations; Bluesky
+	// / Mastodon → ignored, their @-handles are baked into text).
+	mentions []social.Mention
 }
 
 // publish runs the per-platform reframe → post → persist loop. It is the
@@ -105,7 +105,7 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 		return res
 	}
 
-	result, err := poster.Post(ctx, buildPostRequest(p, text, pc))
+	result, err := poster.Post(ctx, platform.PostRequest{Text: text, Mentions: pc.mentions})
 	if err != nil {
 		res.Err = errors.Wrap(err, "poster.Post")
 		return res
@@ -131,18 +131,6 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 		"platform", p, "kind", string(pc.kind), "url", result.PostURL,
 	)
 	return res
-}
-
-// buildPostRequest renders the per-platform payload. Only LinkedIn
-// receives mention metadata — the Bluesky/Mastodon copy generators
-// already inline @-handles directly in text.
-func buildPostRequest(p social.Platform, text string, pc publishCtx) platform.PostRequest {
-	req := platform.PostRequest{Text: text}
-	if p == social.LinkedIn {
-		req.MentionURN = pc.linkedInOrgURN
-		req.MentionDisplayName = pc.linkedInDisplayName
-	}
-	return req
 }
 
 // selectPosters narrows the configured posters to those requested in opts.

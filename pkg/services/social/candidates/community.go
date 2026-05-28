@@ -78,19 +78,34 @@ type communityHandles struct {
 	Mastodon string `yaml:"mastodon"`
 }
 
-// mentions returns the per-platform string to splice into the post body.
-// Empty platforms are omitted so the template-render fallback (use Name)
-// kicks in.
-func (e communityEntry) mentions() map[social.Platform]string {
-	out := make(map[social.Platform]string)
+// mentions returns the per-platform identifier to splice into the post
+// body. Empty platforms are omitted so the template-render fallback
+// (use Name) kicks in.
+//
+// Note: the LinkedIn handle here is a public company-page URL, not a
+// urn:li:organization URN — community posts are template-rendered and
+// the URL is spliced into the visible text. They don't participate in
+// the annotation pipeline; DisplayName is intentionally left empty so
+// the LinkedIn poster skips them.
+func (e communityEntry) mentions() []social.Mention {
+	var out []social.Mention
 	if e.Handles.LinkedIn != "" {
-		out[social.LinkedIn] = "https://www.linkedin.com/company/" + e.Handles.LinkedIn
+		out = append(out, social.Mention{
+			Platform: social.LinkedIn,
+			Handle:   "https://www.linkedin.com/company/" + e.Handles.LinkedIn,
+		})
 	}
 	if e.Handles.Bluesky != "" {
-		out[social.Bluesky] = "@" + e.Handles.Bluesky
+		out = append(out, social.Mention{
+			Platform: social.Bluesky,
+			Handle:   "@" + e.Handles.Bluesky,
+		})
 	}
 	if e.Handles.Mastodon != "" {
-		out[social.Mastodon] = "@" + e.Handles.Mastodon
+		out = append(out, social.Mention{
+			Platform: social.Mastodon,
+			Handle:   "@" + e.Handles.Mastodon,
+		})
 	}
 	return out
 }
@@ -175,7 +190,7 @@ func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform
 	}
 
 	mention := payload.Entry.Name
-	if m := cctx.Mentions[p]; m != "" {
+	if m := cctx.Mention(p); m != "" {
 		mention = m
 	}
 

@@ -54,13 +54,11 @@ func (c *Spotlight) Eligible(ctx context.Context, _ time.Time) (candidate.Candid
 
 		profile := c.profiles[src]
 		return candidate.CandidateContext{
-			Kind:                c.Kind(),
-			Subject:             subject,
-			URL:                 profile.SourceURL,
-			Mentions:            socialMentionsFor(profile),
-			Payload:             profile,
-			LinkedInOrgURN:      profile.LinkedInURN(),
-			LinkedInDisplayName: profile.DisplayName,
+			Kind:     c.Kind(),
+			Subject:  subject,
+			URL:      profile.SourceURL,
+			Mentions: profile.Mentions,
+			Payload:  profile,
 		}, true, nil
 	}
 
@@ -76,7 +74,7 @@ func (c *Spotlight) Generate(ctx context.Context, p ai.Prompter, platform social
 	}
 	return rotation.Spotlight(ctx, p, platform, rotation.SpotlightPayload{
 		DisplayName: profile.DisplayName,
-		Mention:     profile.Mention(platform.String()),
+		Mention:     profile.Mention(platform),
 		Blurb:       profile.SpotlightBlurb,
 		URL:         profile.SourceURL,
 	})

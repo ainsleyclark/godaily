@@ -70,10 +70,12 @@ type (
 )
 
 // Post publishes the request text as a single post on the configured
-// account. URLs in the text are annotated with AT Protocol link facets so
-// they render as clickable hyperlinks in Bluesky clients. The request's
-// mention fields are ignored — Bluesky @-handles are already inlined in
-// the text by the rendering layer.
+// account. URLs in the text are annotated with AT Protocol link facets
+// so they render as clickable hyperlinks in Bluesky clients.
+//
+// req.Mentions is ignored — Bluesky @-handles are already inlined in
+// req.Text by the rendering layer, and Bluesky renders them natively
+// without out-of-band annotations.
 func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
 	text := req.Text
 	session, err := c.createSession(ctx)
