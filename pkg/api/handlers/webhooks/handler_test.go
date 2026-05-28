@@ -12,6 +12,12 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
+//func setup(t *testing.T) (*Handler, *webkit.Kit) {
+//	t.Helper()
+//
+//	retu
+//}
+
 func invoke(h func(*webkit.Context) error, w *httptest.ResponseRecorder, r *http.Request) {
 	c := webkit.NewContext(w, r)
 	if err := h(c); err != nil {

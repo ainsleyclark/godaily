@@ -32,6 +32,9 @@ function buildUrl(path: string, query?: MetricsQuery): string {
 			if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
 		}
 	}
+	// Vercel's trailingSlash:true would otherwise 308-redirect the request,
+	// which browsers reject for CORS preflights. Land on the canonical URL.
+	if (!url.pathname.endsWith('/')) url.pathname += '/';
 	// keep absolute path-only when in dev (vite proxy)
 	if (dev) return `${url.pathname}${url.search}`;
 	return url.toString();

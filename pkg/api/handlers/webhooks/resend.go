@@ -9,8 +9,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleydev/webkit/pkg/webkit"
+
+	"github.com/ainsleyclark/godaily/pkg/api"
+	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 )
 
 // Resend handles POST /webhooks/resend.
@@ -21,12 +23,12 @@ func (h *Handler) Resend(c *webkit.Context) error {
 
 	secret := h.config.ResendWebhookSecret
 	if secret == "" {
-		return webkit.NewError(http.StatusInternalServerError, "resend webhook secret is not configured")
+		return api.Error(c, http.StatusBadRequest, "Resend webhook secret is not configured")
 	}
 
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, "cannot read request body")
+		return api.Error(c, http.StatusBadRequest, "Error reading request body")
 	}
 
 	headers := email.WebhookHeaders{
@@ -36,12 +38,12 @@ func (h *Handler) Resend(c *webkit.Context) error {
 	}
 	if err = email.VerifyWebhook(string(body), headers, secret); err != nil {
 		slog.WarnContext(ctx, "Rejected Resend webhook with invalid signature", "err", err)
-		return webkit.NewError(http.StatusUnauthorized, "invalid signature")
+		return api.Error(c, http.StatusUnauthorized, "Invalid signature")
 	}
 
 	evt, err := email.ParseWebhook(body)
 	if err != nil {
-		return webkit.NewError(http.StatusBadRequest, "invalid payload")
+		return api.Error(c, http.StatusBadRequest, "Invalid payload")
 	}
 
 	domainEvt, tracked, err := email.ToEmailEvent(evt, headers.ID)
