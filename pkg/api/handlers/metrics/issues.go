@@ -36,8 +36,30 @@ func (req issuesRequest) validate() error {
 	)
 }
 
-// Issues handles GET /metrics/issues.
-// Returns per-issue engagement stats with optional filtering and sorting.
+// IssueMetricsResponse is the response envelope for GET /metrics/issues.
+type IssueMetricsResponse struct {
+	Status  int                          `json:"status"`
+	Error   bool                         `json:"error"`
+	Message string                       `json:"message" example:"Successfully retrieved issue metrics"`
+	Data    []engagement.IssueEngagement `json:"data"`
+} //@name IssueMetricsResponse
+
+// Issues godoc
+//
+//	@Summary		Per-issue engagement stats.
+//	@Description	Returns engagement metrics per issue with optional date filtering and sorting.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Param			limit	query		int		false	"Max rows (max 100)"
+//	@Param			sort	query		string	false	"Sort key: click_rate, open_rate, total_clicks, unique_clicks, total_opens, unique_opens, delivered, sent_at"
+//	@Success		200		{object}	IssueMetricsResponse							"Successfully retrieved issue metrics"
+//	@Failure		400		{object}	api.Response									"Invalid query parameters"
+//	@Failure		500		{object}	api.Response									"Failed to fetch issue metrics"
+//	@Router			/metrics/issues [get]
 func (h *Handler) Issues(c *webkit.Context) error {
 	ctx := c.Context()
 
@@ -74,7 +96,19 @@ func (h *Handler) Issues(c *webkit.Context) error {
 // topLinksLimit is the maximum number of top-clicked links returned per issue.
 const topLinksLimit = 10
 
-// IssueBySlug handles GET /metrics/issues/{slug}.
+// IssueBySlug godoc
+//
+//	@Summary		Single-issue stats and top links.
+//	@Description	Returns engagement stats plus the top-clicked links for one issue identified by its date slug.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			slug	path		string			true	"Issue date slug"
+//	@Success		200		{object}	api.Response	"Issue stats and top links"
+//	@Failure		400		{object}	api.Response	"Slug is required"
+//	@Failure		404		{object}	api.Response	"Issue not found"
+//	@Failure		500		{object}	api.Response	"Failed to fetch issue metrics"
+//	@Router			/metrics/issues/{slug} [get]
 func (h *Handler) IssueBySlug(c *webkit.Context) error {
 	ctx := c.Context()
 

@@ -29,8 +29,29 @@ func (req tagsRequest) validate() error {
 	)
 }
 
-// Tags handles GET /metrics/tags.
-// Returns total clicks aggregated by item tag.
+// TagMetricsResponse is the response envelope for GET /metrics/tags.
+type TagMetricsResponse struct {
+	Status  int                     `json:"status"`
+	Error   bool                    `json:"error"`
+	Message string                  `json:"message" example:"Successfully retrieved tag metrics"`
+	Data    []engagement.TagMetrics `json:"data"`
+} //@name TagMetricsResponse
+
+// Tags godoc
+//
+//	@Summary		Clicks aggregated by tag.
+//	@Description	Returns total clicks aggregated by item tag.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Param			limit	query		int		false	"Max rows (max 100)"
+//	@Success		200		{object}	TagMetricsResponse							"Successfully retrieved tag metrics"
+//	@Failure		400		{object}	api.Response							"Invalid query parameters"
+//	@Failure		500		{object}	api.Response							"Failed to fetch tag metrics"
+//	@Router			/metrics/tags [get]
 func (h *Handler) Tags(c *webkit.Context) error {
 	ctx := c.Context()
 

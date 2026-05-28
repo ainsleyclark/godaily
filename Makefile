@@ -54,6 +54,10 @@ sqlc: # Regenerate sqlc output from internal/store/*.sql and the migrations
 	sqlc generate
 .PHONY: sqlc
 
+openapi: # Generate the OpenAPI 3.1 contract into docs/openapi
+	go tool swag init --v3.1 -g pkg/api/openapi.go -d ./ -o docs/openapi --parseInternal --parseDependency
+.PHONY: openapi
+
 conferences-check: # Fetch go.dev/wiki/Conferences and print any conferences not in conferences.yaml
 	go run ./cmd/conferences-check/... -yaml pkg/data/conferences.yaml
 .PHONY: conferences-check

@@ -19,7 +19,17 @@ import (
 	_ "github.com/ainsleyclark/godaily/pkg/source"
 )
 
-// Collect handles GET /digest/collect.
+// Collect godoc
+//
+//	@Summary		Run the news collection pipeline.
+//	@Description	Fetches and ranks news from all registered sources. Skipped at weekends unless force=true.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			force	query		bool			false	"Force collection even at weekends"
+//	@Success		200		{object}	api.Response	"Per-source collection results"
+//	@Failure		500		{object}	api.Response	"Failed to collect"
+//	@Router			/digest/collect [get]
 func (h *Handler) Collect(c *webkit.Context) error {
 	ctx := c.Context()
 	force := c.Request.URL.Query().Get("force") == "true"

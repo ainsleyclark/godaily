@@ -18,6 +18,17 @@ GoDaily (`https://godaily.dev`) is a daily Go newsletter that aggregates news fr
 Reddit, Lobsters, Dev.to, Medium, GitHub Trending, YouTube, and more — synthesised by Claude and
 delivered by email. This skill lets you interact with its HTTP API directly.
 
+## API contract (source of truth)
+
+The canonical, machine-readable API contract is the generated OpenAPI 3.1 spec at
+**`docs/openapi/swagger.yaml`** (also `swagger.json`) in the repository. It is generated from the
+Go handler annotations via `make openapi`, so it tracks production closely.
+
+When you need exact paths, query/path parameters, request bodies, or response shapes — **read
+`docs/openapi/swagger.yaml` and treat it as authoritative.** The tables and examples below are a
+human-friendly quick reference; if they ever disagree with the spec, the spec wins. After the API
+changes, regenerate with `make openapi` rather than hand-editing this skill.
+
 ## Environment
 
 | Variable | Purpose | Default |
@@ -376,7 +387,7 @@ curl -sf \
 
 ## Workflow
 
-1. **Identify the intent** — determine which endpoint(s) satisfy the user's request.
+1. **Identify the intent** — determine which endpoint(s) satisfy the user's request. When in doubt about a path, parameter, or response shape, consult `docs/openapi/swagger.yaml` (the authoritative contract).
 2. **Check auth** — if the endpoint requires auth, verify `GODAILY_API_KEY` is non-empty; halt with a helpful message if not.
 3. **Build the command** — construct the `curl` command using `$GODAILY_API_URL` and `$GODAILY_API_KEY`.
 4. **Execute** — run the command via Bash.

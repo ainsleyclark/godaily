@@ -19,11 +19,16 @@ import (
 // metricsSince is the look-back window for fetching social post stats.
 const metricsSince = 30 * 24 * time.Hour
 
-// Metrics handles GET /social/metrics.
+// Metrics godoc
 //
-// vercel.json schedules this once daily at 03:00 UTC. For every social post
-// published in the last 30 days it fetches the current engagement counts from
-// the originating platform and upserts them into social_metrics.
+//	@Summary		Refresh social post metrics.
+//	@Description	For every social post published in the last 30 days, fetches current engagement counts from the originating platform and upserts them into social_metrics. Scheduled daily at 03:00 UTC.
+//	@Tags			social
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	api.Response	"Successfully refreshed social metrics"
+//	@Failure		500	{object}	api.Response	"Failed to list posts"
+//	@Router			/social/metrics [get]
 func (h *Handler) Metrics(c *webkit.Context) error {
 	ctx := c.Context()
 	since := time.Now().UTC().Add(-metricsSince)

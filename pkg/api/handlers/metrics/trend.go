@@ -39,8 +39,30 @@ func (req trendRequest) validate() error {
 	)
 }
 
-// Trend handles GET /metrics/trend.
-// Returns a time series for a chosen engagement metric, bucketed by day or week.
+// TrendResponse is the response envelope for GET /metrics/trend.
+type TrendResponse struct {
+	Status  int                  `json:"status"`
+	Error   bool                 `json:"error"`
+	Message string               `json:"message" example:"Successfully retrieved trend data"`
+	Data    engagement.TrendData `json:"data"`
+} //@name TrendResponse
+
+// Trend godoc
+//
+//	@Summary		Engagement time series.
+//	@Description	Returns a time series for a chosen engagement metric, bucketed by day or week.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			period	query		string	false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
+//	@Param			metric	query		string	false	"Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate"
+//	@Param			bucket	query		string	false	"Bucket: day or week"
+//	@Success		200		{object}	TrendResponse								"Successfully retrieved trend data"
+//	@Failure		400		{object}	api.Response							"Invalid query parameters"
+//	@Failure		500		{object}	api.Response							"Failed to fetch trend data"
+//	@Router			/metrics/trend [get]
 func (h *Handler) Trend(c *webkit.Context) error {
 	ctx := c.Context()
 

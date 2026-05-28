@@ -13,10 +13,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 )
 
-// Roundup handles GET /metrics/roundup. It is scheduled via vercel.json
-// to fire every Friday at 15:00 UTC. The handler gathers the last seven days of
-// engagement data (with a week-over-week comparison) and posts a formatted
-// summary to the configured Slack channel.
+// Roundup godoc
+//
+//	@Summary		Send the weekly engagement roundup.
+//	@Description	Gathers the last seven days of engagement data (with a week-over-week comparison) and posts a formatted summary to Slack. Scheduled every Friday at 15:00 UTC.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	api.Response	"Successfully sent weekly roundup"
+//	@Failure		500	{object}	api.Response	"Failed to send weekly roundup"
+//	@Router			/metrics/roundup [get]
 func (h *Handler) Roundup(c *webkit.Context) error {
 	ctx := c.Context()
 	if err := h.metricsService.Roundup(ctx); err != nil {

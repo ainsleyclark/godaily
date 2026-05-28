@@ -15,7 +15,17 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Send handles GET /digest/send.
+// Send godoc
+//
+//	@Summary		Send the digest to subscribers.
+//	@Description	Sends today's digest by email to all active subscribers. Skipped at weekends unless force=true.
+//	@Tags			digest
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			force	query		bool			false	"Force send even at weekends"
+//	@Success		200		{object}	api.Response	"Successfully sent digest"
+//	@Failure		500		{object}	api.Response	"Failed to send digest"
+//	@Router			/digest/send [get]
 func (h *Handler) Send(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()

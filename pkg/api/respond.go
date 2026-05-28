@@ -18,7 +18,7 @@ type (
 		Status  int    `json:"status"`
 		Error   bool   `json:"error"`
 		Message string `json:"message" example:"User formatted message from the API"`
-		Data    any    `json:"data,omitempty" swaggertype:"object"`
+		Data    any    `json:"data,omitempty"`
 	} //@name Response
 )
 

@@ -16,7 +16,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
 )
 
-// Rotation handles GET /social/rotation.
+// Rotation godoc
+//
+//	@Summary		Post a rotation social update.
+//	@Description	Posts the next rotating social update across platforms. Skipped at weekends or when the social service is not wired.
+//	@Tags			social
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	api.Response	"Rotated, or skipped (weekend/not wired)"
+//	@Failure		500	{object}	api.Response	"Failed to rotate"
+//	@Router			/social/rotation [get]
 func (h *Handler) Rotation(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()
