@@ -64,7 +64,9 @@ async function request<T>(
 }
 
 async function login(password: string): Promise<{ token: string }> {
-	const res = await fetch(buildUrl('/api/auth/login'), {
+	// Hits the dashboard's own SvelteKit server endpoint (same origin), not the
+	// Go API — so the password and API secret stay server-side.
+	const res = await fetch('/auth/login', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 		body: JSON.stringify({ password })
