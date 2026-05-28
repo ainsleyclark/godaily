@@ -50,6 +50,7 @@ func (r RemoteOK) Fetch(ctx context.Context) ([]news.Item, error) {
 	now := r.now().UTC()
 	for i := range jobs {
 		jobs[i].ageDays = remoteOKAgeDays(now, jobs[i].Epoch)
+		jobs[i].now = now
 	}
 	return ingest.TransformAll(ctx, jobs), nil
 }
@@ -117,7 +118,7 @@ func (j remoteOKJob) Transform() news.Item {
 		Snippet:     buildRemoteOKSnippet(j),
 		Tag:         news.TagJobs,
 		Score:       score,
-		Published:   time.Now(),
+		Published:   j.now,
 	}
 }
 
@@ -209,5 +210,6 @@ type remoteOKJob struct {
 	URL         string   `json:"url"`
 	Description string   `json:"description"`
 
-	ageDays int // populated by Fetch before TransformAll runs
+	ageDays int       // populated by Fetch before TransformAll runs
+	now     time.Time // snapshot of collection time, used as Published
 }
