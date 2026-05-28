@@ -7,6 +7,7 @@ package ingest
 import (
 	"context"
 	"html"
+	"net/url"
 	"regexp"
 	"strings"
 	"unicode"
@@ -58,6 +59,9 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
+		if isSelfLink(i.URL) {
+			continue
+		}
 		i.Title = html.UnescapeString(i.Title)
 		if !isEnglishTitle(i.Title) {
 			continue
@@ -156,6 +160,17 @@ var (
 	mdLinkRe  = regexp.MustCompile(`\[([^\]]+)\]\([^)]+\)`)
 	mdNoiseRe = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
 )
+
+// isSelfLink reports whether u points at godaily.dev, preventing our own
+// Reddit/HN posts from appearing in the digest.
+func isSelfLink(u string) bool {
+	parsed, err := url.Parse(u)
+	if err != nil {
+		return false
+	}
+	host := strings.TrimPrefix(parsed.Hostname(), "www.")
+	return host == "godaily.dev"
+}
 
 // sanitise produces a clean, single-line snippet: strips HTML tags, collapses
 // markdown links to their visible text, strips remaining markdown syntax
