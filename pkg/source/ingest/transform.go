@@ -7,6 +7,7 @@ package ingest
 import (
 	"context"
 	"html"
+	"net/url"
 	"regexp"
 	"strings"
 	"unicode"
@@ -58,6 +59,9 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
+		if isSelfContent(i) {
+			continue
+		}
 		i.Title = html.UnescapeString(i.Title)
 		if !isEnglishTitle(i.Title) {
 			continue
@@ -156,6 +160,20 @@ var (
 	mdLinkRe  = regexp.MustCompile(`\[([^\]]+)\]\([^)]+\)`)
 	mdNoiseRe = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
 )
+
+// isSelfContent reports whether an item is self-promotional content that should
+// be excluded from the digest — specifically items whose click-target URL points
+// at godaily.dev, or whose title contains "GoDaily" (case-insensitive).
+func isSelfContent(i news.Item) bool {
+	if strings.Contains(strings.ToLower(i.Title), "godaily") {
+		return true
+	}
+	parsed, err := url.Parse(i.URL)
+	if err != nil {
+		return false
+	}
+	return strings.TrimPrefix(parsed.Hostname(), "www.") == "godaily.dev"
+}
 
 // sanitise produces a clean, single-line snippet: strips HTML tags, collapses
 // markdown links to their visible text, strips remaining markdown syntax
