@@ -7,30 +7,19 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strings"
+
+	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
 
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
-	kitmiddleware "github.com/ainsleydev/webkit/pkg/middleware"
+
+	"github.com/ainsleydev/webkit/pkg/env"
+	"github.com/ainsleydev/webkit/pkg/webkit"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleyclark/godaily/web/views/pages"
-	"github.com/ainsleydev/webkit/pkg/env"
-	"github.com/ainsleydev/webkit/pkg/webkit"
 )
-
-// trailingSlashRedirect wraps kitmiddleware.TrailingSlashRedirect but passes
-// OPTIONS preflight requests straight through. TrailingSlashRedirect runs as
-// chi middleware and therefore wraps all mounted handlers — including the API
-// mount — which means it fires before the API's CORS plug, redirecting
-// OPTIONS preflights and breaking cross-origin requests.
-func trailingSlashRedirect(next webkit.Handler) webkit.Handler {
-	return func(c *webkit.Context) error {
-		if c.Request.Method == http.MethodOptions {
-			return next(c)
-		}
-		return kitmiddleware.TrailingSlashRedirect(next)(c)
-	}
-}
 
 // Handler returns the configured HTTP handler for the web server without
 // starting it. Useful for composing with additional routes in tests.
@@ -77,4 +66,27 @@ func newKit(a *godaily.App) *webkit.Kit {
 	}
 
 	return kit
+}
+
+// trailingSlashRedirect wraps kitmiddleware.TrailingSlashRedirect but passes
+// OPTIONS preflight requests straight through. TrailingSlashRedirect runs as
+// chi middleware and therefore wraps all mounted handlers — including the API
+// mount — which means it fires before the API's CORS plug, redirecting
+// OPTIONS preflights and breaking cross-origin requests.
+func trailingSlashRedirect(next webkit.Handler) webkit.Handler {
+	return func(c *webkit.Context) error {
+		path := c.Request.URL.Path
+
+		// Never redirect API routes.
+		if strings.HasPrefix(path, "/api/") {
+			return next(c)
+		}
+
+		// Never redirect CORS preflights.
+		if c.Request.Method == http.MethodOptions {
+			return next(c)
+		}
+
+		return kitmiddleware.TrailingSlashRedirect(next)(c)
+	}
 }
