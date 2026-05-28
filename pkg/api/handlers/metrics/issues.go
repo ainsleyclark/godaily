@@ -39,6 +39,8 @@ func (req issuesRequest) validate() error {
 // Issues handles GET /metrics/issues.
 // Returns per-issue engagement stats with optional filtering and sorting.
 func (h *Handler) Issues(c *webkit.Context) error {
+	ctx := c.Context()
+
 	var req issuesRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
@@ -61,7 +63,7 @@ func (h *Handler) Issues(c *webkit.Context) error {
 		limit = DefaultMetricsLimit
 	}
 
-	rows, err := h.metricsRepo.IssueList(c.Context(), engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
+	rows, err := h.metricsRepo.IssueList(ctx, engagement.MetricsFilter{From: from, To: to, Limit: limit}, sort)
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue metrics")
 	}
@@ -74,12 +76,14 @@ const topLinksLimit = 10
 
 // IssueBySlug handles GET /metrics/issues/{slug}.
 func (h *Handler) IssueBySlug(c *webkit.Context) error {
+	ctx := c.Context()
+
 	slug := c.Param("slug")
 	if slug == "" {
 		return api.Error(c, http.StatusBadRequest, "Slug is required")
 	}
 
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
+	issue, err := h.issuesRepo.FindBySlug(ctx, slug)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Issue not found")
@@ -87,12 +91,12 @@ func (h *Handler) IssueBySlug(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue")
 	}
 
-	stats, err := h.emailEvents.IssueStats(c.Context(), issue.ID)
+	stats, err := h.emailEvents.IssueStats(ctx, issue.ID)
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue stats")
 	}
 
-	links, err := h.emailEvents.TopLinks(c.Context(), issue.ID, topLinksLimit)
+	links, err := h.emailEvents.TopLinks(ctx, issue.ID, topLinksLimit)
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch top links")
 	}

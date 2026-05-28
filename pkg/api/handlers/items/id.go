@@ -36,6 +36,8 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 
 // ByID handles GET /items/{id}.
 func (h *Handler) ByID(c *webkit.Context) error {
+	ctx := c.Context()
+
 	raw := c.Param("id")
 	if raw == "" {
 		return api.Error(c, http.StatusBadRequest, "ID is required")
@@ -46,7 +48,7 @@ func (h *Handler) ByID(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
 	}
 
-	item, err := h.itemsRepo.Find(c.Context(), id)
+	item, err := h.itemsRepo.Find(ctx, id)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Item not found")

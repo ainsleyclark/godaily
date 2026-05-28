@@ -35,12 +35,14 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 
 // BySlug handles GET /issues/{slug}.
 func (h *Handler) BySlug(c *webkit.Context) error {
+	ctx := c.Context()
+
 	slug := c.Param("slug")
 	if slug == "" {
 		return api.Error(c, http.StatusBadRequest, "Slug is required")
 	}
 
-	issue, err := h.issuesRepo.FindBySlug(c.Context(), slug)
+	issue, err := h.issuesRepo.FindBySlug(ctx, slug)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Issue not found")

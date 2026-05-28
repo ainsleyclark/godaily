@@ -22,6 +22,8 @@ type summaryRequest struct {
 // Summary handles GET /metrics/summary.
 // Returns headline engagement numbers for a period.
 func (h *Handler) Summary(c *webkit.Context) error {
+	ctx := c.Context()
+
 	var req summaryRequest
 	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
 		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
@@ -32,7 +34,7 @@ func (h *Handler) Summary(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
-	stats, err := h.metricsRepo.Summary(c.Context(), engagement.MetricsFilter{From: from, To: to})
+	stats, err := h.metricsRepo.Summary(ctx, engagement.MetricsFilter{From: from, To: to})
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch summary stats")
 	}
