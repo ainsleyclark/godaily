@@ -37,7 +37,12 @@ func New(cfg env.Config, n notifier) *Client {
 	primary := anthropic.New(cfg.AnthropicAPIKey)
 	var fallback Prompter
 	if cfg.GeminiAPIKey != "" {
-		fallback = gemini.New(cfg.GeminiAPIKey)
+		g, err := gemini.New(cfg.GeminiAPIKey)
+		if err != nil {
+			slog.Warn("Gemini client initialisation failed, fallback disabled", "err", err)
+		} else {
+			fallback = g
+		}
 	}
 	return &Client{primary: primary, fallback: fallback, notifier: n}
 }
