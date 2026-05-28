@@ -2,10 +2,5 @@
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"framework": "sveltekit",
 	"buildCommand": "pnpm build",
-	"installCommand": "pnpm install",
-	"functions": {
-		"**": {
-			"maxDuration": 30
-		}
-	}
+	"installCommand": "pnpm install"
 }
