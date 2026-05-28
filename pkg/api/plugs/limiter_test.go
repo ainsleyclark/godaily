@@ -28,14 +28,14 @@ func TestRateLimit(t *testing.T) {
 
 	t.Run("Passes through within limit", func(t *testing.T) {
 		t.Parallel()
-		plug := RateLimit(NewRateLimiter(10, 10))
+		plug := RateLimit(NewRateLimiter(10, 10), "")
 		err := plug(passHandler)(newCtx("1.2.3.4"))
 		require.NoError(t, err)
 	})
 
 	t.Run("Blocks when limit exceeded", func(t *testing.T) {
 		t.Parallel()
-		handler := RateLimit(NewRateLimiter(0.0001, 1))(passHandler)
+		handler := RateLimit(NewRateLimiter(0.0001, 1), "")(passHandler)
 
 		require.NoError(t, handler(newCtx("5.6.7.8")), "first request should pass")
 
@@ -48,7 +48,7 @@ func TestRateLimit(t *testing.T) {
 
 	t.Run("Different IPs are tracked independently", func(t *testing.T) {
 		t.Parallel()
-		handler := RateLimit(NewRateLimiter(0.0001, 1))(passHandler)
+		handler := RateLimit(NewRateLimiter(0.0001, 1), "")(passHandler)
 
 		require.NoError(t, handler(newCtx("10.0.0.1")))
 		require.NoError(t, handler(newCtx("10.0.0.2")))
@@ -56,7 +56,7 @@ func TestRateLimit(t *testing.T) {
 
 	t.Run("X-Forwarded-For header used for IP", func(t *testing.T) {
 		t.Parallel()
-		handler := RateLimit(NewRateLimiter(0.0001, 1))(passHandler)
+		handler := RateLimit(NewRateLimiter(0.0001, 1), "")(passHandler)
 
 		r := httptest.NewRequest(http.MethodGet, "/", nil)
 		r.RemoteAddr = "127.0.0.1:9999"
@@ -69,6 +69,22 @@ func TestRateLimit(t *testing.T) {
 		var webErr *webkit.Error
 		require.True(t, errors.As(err, &webErr))
 		assert.Equal(t, http.StatusTooManyRequests, webErr.Code)
+	})
+
+	t.Run("Bearer-authenticated requests bypass the limiter", func(t *testing.T) {
+		t.Parallel()
+		handler := RateLimit(NewRateLimiter(0.0001, 1), "shh")(passHandler)
+
+		newAuthCtx := func() *webkit.Context {
+			r := httptest.NewRequest(http.MethodGet, "/", nil)
+			r.RemoteAddr = "8.8.8.8:1234"
+			r.Header.Set("Authorization", "Bearer shh")
+			return webkit.NewContext(httptest.NewRecorder(), r)
+		}
+
+		require.NoError(t, handler(newAuthCtx()))
+		require.NoError(t, handler(newAuthCtx()))
+		require.NoError(t, handler(newAuthCtx()))
 	})
 }
 

@@ -7,7 +7,8 @@ jobs:
   preview-e2e:
     if: |
       github.event.deployment_status.state == 'success' &&
-      startsWith(github.event.deployment.environment, 'Preview')
+      startsWith(github.event.deployment.environment, 'Preview') &&
+      !contains(github.event.deployment_status.environment_url, 'analytics')
     runs-on: ubuntu-latest
     steps:
       - name: Check required secrets
