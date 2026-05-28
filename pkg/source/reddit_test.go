@@ -167,7 +167,7 @@ func TestReddit_Fetch(t *testing.T) {
 			defer s.Close()
 			serverURL = s.URL
 
-			got, err := Reddit{url: s.URL}.Fetch(t.Context())
+			got, err := Reddit{urls: []string{s.URL}}.Fetch(t.Context())
 			test.want(t, got, err, s.URL)
 		})
 	}

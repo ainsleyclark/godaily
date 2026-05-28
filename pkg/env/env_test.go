@@ -82,7 +82,7 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "sk-ant-test", cfg.AnthropicAPIKey)
 		assert.Equal(t, "yt_test", cfg.YouTubeAPIKey)
 		assert.Equal(t, "ghp_test", cfg.GitHubToken)
-		assert.Equal(t, "scraper_test", cfg.ScraperAPIKey)
+		assert.Equal(t, []string{"scraper_test"}, cfg.ScraperAPIKeys)
 		assert.Equal(t, "test@example.com", cfg.EmailSendAddress)
 		assert.Equal(t, "file:./test.db", cfg.TursoURL)
 		assert.Equal(t, "turso_test", cfg.TursoAuthToken)

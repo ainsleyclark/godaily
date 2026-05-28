@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"strings"
@@ -21,7 +22,7 @@ import (
 
 // Reddit defines the type that implements news.Fetcher for r/golang.
 type Reddit struct {
-	url string
+	urls []string
 }
 
 var _ news.Fetcher = &Reddit{}
@@ -36,19 +37,24 @@ const (
 )
 
 // NewReddit creates a Reddit client targeting r/golang.
-// If cfg.ScraperAPIKey is set, requests are routed through ScraperAPI to avoid
+// If cfg.ScraperAPIKeys is set, requests are routed through ScraperAPI to avoid
 // IP blocks on restricted hosting environments (e.g. Vercel, GitHub Actions).
+// Multiple keys are rotated randomly across fetches to spread credit usage.
 func NewReddit(cfg env.Config) *Reddit {
-	u := redditURL
-	if key := cfg.ScraperAPIKey; key != "" {
-		u = fmt.Sprintf("http://api.scraperapi.com?api_key=%s&url=%s", key, url.QueryEscape(redditURL))
+	if len(cfg.ScraperAPIKeys) == 0 {
+		return &Reddit{urls: []string{redditURL}}
 	}
-	return &Reddit{url: u}
+	urls := make([]string, len(cfg.ScraperAPIKeys))
+	for i, key := range cfg.ScraperAPIKeys {
+		urls[i] = fmt.Sprintf("http://api.scraperapi.com?api_key=%s&url=%s", key, url.QueryEscape(redditURL))
+	}
+	return &Reddit{urls: urls}
 }
 
 // Fetch retrieves the latest posts from r/golang via the public JSON API.
 func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
-	listing, err := ingest.Fetch[redditListing](ctx, r.url, "reddit", json.Unmarshal, http.Header{
+	u := r.urls[rand.IntN(len(r.urls))]
+	listing, err := ingest.Fetch[redditListing](ctx, u, "reddit", json.Unmarshal, http.Header{
 		"User-Agent": {redditUserAgent},
 	})
 	if err != nil {
