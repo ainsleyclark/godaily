@@ -27,10 +27,20 @@ SELECT * FROM items
 WHERE issue_id = ?
 ORDER BY position ASC;
 
--- name: ItemListByDateRange :many
-SELECT * FROM items
-WHERE published >= @from AND published < @to
-ORDER BY score DESC;
-
 -- name: ItemDeleteByIssue :exec
 DELETE FROM items WHERE issue_id = ?;
+
+-- name: ItemCount :one
+SELECT COUNT(*) FROM items;
+
+-- name: ItemSourceCounts :many
+SELECT source, COUNT(*) AS count
+FROM items
+GROUP BY source
+ORDER BY count DESC;
+
+-- name: ItemTagCounts :many
+SELECT tag, COUNT(*) AS count
+FROM items
+GROUP BY tag
+ORDER BY count DESC;
