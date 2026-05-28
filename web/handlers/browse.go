@@ -56,6 +56,11 @@ func Browse(a *godaily.App) webkit.Handler {
 		digestPicks := digestPicksCount(ctx, a, opts)
 		trending := trendingItems(ctx, a)
 
+		var latestIssue int64
+		if recent, err := a.Repository.Issues.Latest(ctx, 1); err == nil && len(recent) > 0 {
+			latestIssue = recent[0].ID
+		}
+
 		totalPages := int64(1)
 		if matching > 0 {
 			totalPages = (matching + browsePerPage - 1) / browsePerPage
@@ -79,6 +84,7 @@ func Browse(a *godaily.App) webkit.Handler {
 			PerPage:      browsePerPage,
 			TotalPages:   totalPages,
 			NextDigest:   nextDigestIn(time.Now()),
+			LatestIssue:  latestIssue,
 		}))
 	}
 }

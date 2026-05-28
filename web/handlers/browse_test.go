@@ -16,7 +16,9 @@ import (
 	"go.uber.org/mock/gomock"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
@@ -28,13 +30,13 @@ func TestBrowse(t *testing.T) {
 
 	tt := map[string]struct {
 		url        string
-		mock       func(items *mocknews.MockItemRepository)
+		mock       func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository)
 		wantStatus int
 		wantHTML   string
 	}{
 		"List error": {
 			url: "/browse/",
-			mock: func(items *mocknews.MockItemRepository) {
+			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
 				items.EXPECT().
 					List(gomock.Any(), gomock.Any()).
 					Return(nil, errors.New("boom"))
@@ -43,7 +45,7 @@ func TestBrowse(t *testing.T) {
 		},
 		"OK empty": {
 			url: "/browse/",
-			mock: func(items *mocknews.MockItemRepository) {
+			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
 				items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{}, nil).AnyTimes()
 				items.EXPECT().Count(gomock.Any()).Return(int64(0), nil)
 				items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil)
@@ -54,7 +56,7 @@ func TestBrowse(t *testing.T) {
 		},
 		"OK with items": {
 			url: "/browse/",
-			mock: func(items *mocknews.MockItemRepository) {
+			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
 				items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{
 					{ID: 1, Title: "Generics in 1.25", Source: news.SourceGoBlog, Tag: news.TagArticle, URL: "https://go.dev/blog/x", InDigest: true},
 					{ID: 2, Title: "HN: Some thread", Source: news.SourceHN, Tag: news.TagDiscussion, URL: "https://news.ycombinator.com/y"},
@@ -74,7 +76,7 @@ func TestBrowse(t *testing.T) {
 		},
 		"Invalid source ignored": {
 			url: "/browse/?source=does-not-exist&sort=top",
-			mock: func(items *mocknews.MockItemRepository) {
+			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
 				items.EXPECT().
 					List(gomock.Any(), gomock.AssignableToTypeOf(news.ItemListOptions{})).
 					DoAndReturn(func(_ any, opts news.ItemListOptions) ([]news.Item, error) {
@@ -96,12 +98,14 @@ func TestBrowse(t *testing.T) {
 
 			ctrl := gomock.NewController(t)
 			mockItems := mocknews.NewMockItemRepository(ctrl)
+			mockIssues := mockdigest.NewMockIssueRepository(ctrl)
+			mockIssues.EXPECT().Latest(gomock.Any(), gomock.Any()).Return([]digest.Issue{}, nil).AnyTimes()
 			if test.mock != nil {
-				test.mock(mockItems)
+				test.mock(mockItems, mockIssues)
 			}
 
 			app := &godaily.App{
-				Repository: &godaily.Repository{Items: mockItems},
+				Repository: &godaily.Repository{Items: mockItems, Issues: mockIssues},
 			}
 
 			kit := webkit.New()

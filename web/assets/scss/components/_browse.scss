@@ -1,5 +1,38 @@
 @use '../abstracts/mixins' as *;
 
+/* Browse page uses a white canvas (override the global blue --bg). */
+body:has(.section.browse) {
+	background: #fff;
+}
+
+/* The browse section sits directly under the sticky header and provides its
+   own internal spacing — trim the default section padding so the hero isn't
+   pushed down. A soft blue wash fades out past the hero, matching the home. */
+.section.browse {
+	padding-top: 3rem;
+	padding-bottom: 1.5rem;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 540px;
+		background: linear-gradient(180deg,
+			rgba(42, 168, 216, 0.13) 0%,
+			rgba(42, 168, 216, 0.06) 45%,
+			transparent 100%);
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
 /* ── Page hero ────────────────────────────────────── */
 .page-hero {
 	display: flex;
@@ -7,7 +40,7 @@
 	justify-content: space-between;
 	gap: 1.5rem;
 	flex-wrap: wrap;
-	padding: 2.4rem 0 1.2rem;
+	padding: 0 0 1.2rem;
 
 	&__copy { max-width: 640px; }
 	&__kicker {
@@ -133,7 +166,9 @@
 	position: sticky;
 	top: 64px;
 	z-index: 50;
-	background: rgba(255, 255, 255, 0.94);
+	/* Translucent white reads as transparent on the page's white canvas, but
+	   provides a readable backdrop when content scrolls behind the sticky row. */
+	background: rgba(255, 255, 255, 0.85);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid var(--border-soft);
 	margin-top: 1.6rem;
