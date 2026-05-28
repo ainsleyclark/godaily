@@ -108,11 +108,6 @@ func (j remoteOKJob) Transform() news.Item {
 		author = &news.Author{Name: j.Company}
 	}
 
-	published := time.Time{}
-	if j.Epoch > 0 {
-		published = time.Unix(j.Epoch, 0).UTC()
-	}
-
 	return news.Item{
 		Source:      news.SourceRemoteOK,
 		Title:       buildRemoteOKTitle(j),
@@ -122,7 +117,7 @@ func (j remoteOKJob) Transform() news.Item {
 		Snippet:     buildRemoteOKSnippet(j),
 		Tag:         news.TagJobs,
 		Score:       score,
-		Published:   published,
+		Published:   time.Now(),
 	}
 }
 

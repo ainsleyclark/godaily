@@ -146,7 +146,7 @@ func (c hnJobsComment) Transform() news.Item {
 		Author:    author,
 		Snippet:   snippet,
 		Tag:       news.TagJobs,
-		Published: c.CreatedAt,
+		Published: time.Now(),
 		Score:     score,
 	}
 }
