@@ -52,13 +52,13 @@ func (h *Handler) Resend(c *webkit.Context) error {
 	}
 	if !tracked {
 		slog.WarnContext(ctx, "Rejected Resend webhook with invalid event", "evt", evt)
-		return c.NoContent(http.StatusOK)
+		return api.OK(c, http.StatusOK, nil, "Successfully tracked event")
 	}
 
 	if err = h.emailEvents.Process(ctx, domainEvt); err != nil {
 		slog.ErrorContext(ctx, "Failed to process Resend webhook event", "type", domainEvt.Type, "err", err)
-		return webkit.NewError(http.StatusInternalServerError, "failed to process event")
+		return api.Error(c, http.StatusInternalServerError, "Failed to process event")
 	}
 
-	return c.NoContent(http.StatusOK)
+	return api.OK(c, http.StatusOK, nil, "Successfully tracked event")
 }
