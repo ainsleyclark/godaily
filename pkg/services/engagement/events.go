@@ -14,40 +14,40 @@ import (
 	eng "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
-// SubscriberHealth applies the list-health side effects of email events.
-// It is satisfied by the subscriber service.
-type SubscriberHealth interface {
-	MarkBounced(ctx context.Context, email string) error
-	MarkComplained(ctx context.Context, email string) error
-	MarkSuppressed(ctx context.Context, email string) error
-}
-
-// ItemFinder resolves a clicked URL back to the item it points at, scoped to
-// an issue. It is satisfied by the items store.
-type ItemFinder interface {
-	FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error)
-}
-
 var _ eng.EventService = (*EventService)(nil)
 
 // EventService stores email events and applies their subscriber-health effects.
 type EventService struct {
 	events      eng.EmailEventRepository
-	subscribers SubscriberHealth
-	items       ItemFinder
+	subscribers subscriberHealth
+	items       itemFinder
 	adminEmail  string
 }
 
 // NewEvents returns an EventService wired to the event store, subscriber health
 // and item lookup. adminEmail is the operator address (EMAIL_SEND_ADDRESS);
 // events for it and any @godaily.dev address are silently ignored.
-func NewEvents(events eng.EmailEventRepository, subscribers SubscriberHealth, items ItemFinder, adminEmail string) *EventService {
+func NewEvents(events eng.EmailEventRepository, subscribers subscriberHealth, items itemFinder, adminEmail string) *EventService {
 	return &EventService{
 		events:      events,
 		subscribers: subscribers,
 		items:       items,
 		adminEmail:  adminEmail,
 	}
+}
+
+// subscriberHealth applies the list-health side effects of email events.
+// It is satisfied by the subscriber service.
+type subscriberHealth interface {
+	MarkBounced(ctx context.Context, email string) error
+	MarkComplained(ctx context.Context, email string) error
+	MarkSuppressed(ctx context.Context, email string) error
+}
+
+// itemFinder resolves a clicked URL back to the item it points at, scoped to
+// an issue. It is satisfied by the items store.
+type itemFinder interface {
+	FindByURLInIssue(ctx context.Context, issueID int64, url string) (int64, bool, error)
 }
 
 // Process stores an email event and applies any subscriber-health side

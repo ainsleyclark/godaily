@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )

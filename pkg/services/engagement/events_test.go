@@ -197,7 +197,7 @@ func TestService_Process_ClickItemResolution(t *testing.T) {
 		URL:     "https://example.com/article",
 	}
 
-	newSvc := func(t *testing.T, finder engagementsvc.ItemFinder) (*mockengagement.MockEmailEventRepository, *engagementsvc.EventService) {
+	newSvc := func(t *testing.T, finder stubItemFinder) (*mockengagement.MockEmailEventRepository, *engagementsvc.EventService) {
 		t.Helper()
 		ctrl := gomock.NewController(t)
 		events := mockengagement.NewMockEmailEventRepository(ctrl)
