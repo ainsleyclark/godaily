@@ -31,7 +31,7 @@ templ Browse(props BrowseProps) {
 		CanonicalURL: "https://godaily.dev/browse/",
 	}) {
 		@components.Header()
-		<section class="section browse">
+		<section class="section browse" data-browse-app>
 			@components.Container(false) {
 				@components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",
@@ -49,34 +49,14 @@ templ Browse(props BrowseProps) {
 				@components.StatStrip(browseStats(props))
 			}
 			if props.Total > 0 {
-				@components.Tabs(browseTabs(props))
+				@BrowseTabsRegion(props)
 			}
 			@components.Container(false) {
 				<div class={ "browse__layout", templ.KV("browse__layout--no-filters", props.Total == 0) }>
 					if props.Total > 0 {
-						@components.BrowseFilterSide(browseFilterSideProps(props))
+						@BrowseSideRegion(props)
 					}
-					<main class="browse__main">
-						@components.BrowseToolbar(browseToolbarProps(props))
-						@components.AppliedFilters(browseAppliedFilters(props))
-						if len(props.Items) == 0 {
-							@components.EmptyState(components.EmptyStateProps{
-								Title:    "No stories match those filters",
-								Body:     emptyBody(props.State.Digest),
-								CTALabel: "Reset all filters",
-								CTAURL:   BrowseURL(props.State, ResetAll()),
-							})
-						} else {
-							@components.BrowseItemList(props.Items)
-							@components.Pagination(components.PaginationProps{
-								Page:       props.Page,
-								TotalPages: props.TotalPages,
-								HrefFor: func(p int64) string {
-									return BrowseURL(props.State, WithPage(p))
-								},
-							})
-						}
-					</main>
+					@BrowseMain(props)
 					@components.BrowseTrendingSide(components.BrowseTrendingSideProps{
 						Trending: props.Trending,
 						SubscribeCTA: components.InlineSubscribeFormProps{
@@ -92,6 +72,45 @@ templ Browse(props BrowseProps) {
 		@components.Rule()
 		@components.SubscribeCTA(components.SubscribeCTAProps{})
 	}
+}
+
+// BrowseTabsRegion renders the section-tab row. Exported so the /api/browse
+// fragment endpoint can re-render it on filter changes.
+templ BrowseTabsRegion(props BrowseProps) {
+	@components.Tabs(browseTabs(props))
+}
+
+// BrowseSideRegion renders the filter sidebar (sources, date range, digest
+// toggle). Exported for the /api/browse fragment endpoint.
+templ BrowseSideRegion(props BrowseProps) {
+	@components.BrowseFilterSide(browseFilterSideProps(props))
+}
+
+// BrowseMain renders the results column: toolbar, applied filters, the item
+// list (or empty state), and pagination. Exported for the /api/browse
+// fragment endpoint.
+templ BrowseMain(props BrowseProps) {
+	<main class="browse__main">
+		@components.BrowseToolbar(browseToolbarProps(props))
+		@components.AppliedFilters(browseAppliedFilters(props))
+		if len(props.Items) == 0 {
+			@components.EmptyState(components.EmptyStateProps{
+				Title:    "No stories match those filters",
+				Body:     emptyBody(props.State.Digest),
+				CTALabel: "Reset all filters",
+				CTAURL:   BrowseURL(props.State, ResetAll()),
+			})
+		} else {
+			@components.BrowseItemList(props.Items)
+			@components.Pagination(components.PaginationProps{
+				Page:       props.Page,
+				TotalPages: props.TotalPages,
+				HrefFor: func(p int64) string {
+					return BrowseURL(props.State, WithPage(p))
+				},
+			})
+		}
+	</main>
 }
 
 func browseStats(p BrowseProps) []components.StatProps {

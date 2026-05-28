@@ -15,6 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/handlers"
+	browsehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/browse"
 	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
 	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
 	itemhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/items"
@@ -51,6 +52,7 @@ func Handler(app *godaily.App) http.Handler {
 
 	auth := plugs.Auth(app.Config.APISecret)
 
+	browseH := browsehandlers.New(app)
 	digestH := digesthandlers.New(app)
 	metricsH := metricshandlers.New(app)
 	socialH := socialhandlers.New(app)
@@ -59,6 +61,11 @@ func Handler(app *godaily.App) http.Handler {
 	webhookH := webhookhandlers.New(app)
 
 	kit.Get("/healthz", handlers.HealthZ)
+
+	// Public: the static /browse page fetches these fragments to list and
+	// filter items client-side. No auth — it serves the same public data the
+	// page renders.
+	kit.Get("/browse", browseH.Fragments)
 
 	kit.Post("/subscribe", digestH.Subscribe)
 	kit.Get("/confirm", digestH.Confirm)
