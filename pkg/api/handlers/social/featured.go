@@ -37,14 +37,6 @@ func (h *Handler) Featured(c *webkit.Context) error {
 
 	today := now.Truncate(24 * time.Hour)
 
-	if !social.ShouldRun(now, today) {
-		slog.InfoContext(
-			ctx, "Skipping featured — wrong slot",
-			"minute", now.Minute(), "picked", social.PickSlot(today),
-		)
-		return api.OK(c, http.StatusOK, nil, "Skipped featured — wrong slot")
-	}
-
 	if h.social == nil {
 		slog.InfoContext(ctx, "Skipping featured — social service not wired")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialFeaturedHeartbeatURL)
