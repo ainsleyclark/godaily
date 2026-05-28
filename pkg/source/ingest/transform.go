@@ -59,7 +59,7 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i := item.Transform()
-		if isSelfLink(i.URL) {
+		if isSelfContent(i) {
 			continue
 		}
 		i.Title = html.UnescapeString(i.Title)
@@ -161,15 +161,18 @@ var (
 	mdNoiseRe = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
 )
 
-// isSelfLink reports whether u points at godaily.dev, preventing our own
-// Reddit/HN posts from appearing in the digest.
-func isSelfLink(u string) bool {
-	parsed, err := url.Parse(u)
+// isSelfContent reports whether an item is self-promotional content that should
+// be excluded from the digest — specifically items whose click-target URL points
+// at godaily.dev, or whose title contains "GoDaily" (case-insensitive).
+func isSelfContent(i news.Item) bool {
+	if strings.Contains(strings.ToLower(i.Title), "godaily") {
+		return true
+	}
+	parsed, err := url.Parse(i.URL)
 	if err != nil {
 		return false
 	}
-	host := strings.TrimPrefix(parsed.Hostname(), "www.")
-	return host == "godaily.dev"
+	return strings.TrimPrefix(parsed.Hostname(), "www.") == "godaily.dev"
 }
 
 // sanitise produces a clean, single-line snippet: strips HTML tags, collapses

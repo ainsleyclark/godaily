@@ -13,11 +13,12 @@ import (
 
 type fakeTransformer struct {
 	title   string
+	url     string
 	include bool
 	enrich  string
 }
 
-func (f fakeTransformer) Transform() news.Item  { return news.Item{Title: f.title} }
+func (f fakeTransformer) Transform() news.Item  { return news.Item{Title: f.title, URL: f.url} }
 func (f fakeTransformer) ShouldInclude() bool   { return f.include }
 func (f fakeTransformer) EnrichmentURL() string { return f.enrich }
 
@@ -83,12 +84,43 @@ func TestTransformAll(t *testing.T) {
 		"Filtered by include":    {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
 		"Filtered by language":   {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
 		"HTML entities in title": {items: []fakeTransformer{{title: "pkg &amp; internal directories are way overused", include: true}}, want: []news.Item{{Title: "pkg & internal directories are way overused"}}},
+		"Filtered by self URL":   {items: []fakeTransformer{{title: "A", url: "https://godaily.dev/blog/post", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "B"}}},
+		"Filtered by self title": {items: []fakeTransformer{{title: "Launching GoDaily", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "B"}}},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, test.want, TransformAll(t.Context(), test.items))
+		})
+	}
+}
+
+func TestIsSelfContent(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		title string
+		url   string
+		want  bool
+	}{
+		"Unrelated title and URL":           {title: "Go generics deep dive", url: "https://example.com/post", want: false},
+		"Title contains GoDaily exact":      {title: "Launching GoDaily", url: "", want: true},
+		"Title contains godaily lower":      {title: "subscribe to godaily now", url: "", want: true},
+		"Title contains GODAILY upper":      {title: "GODAILY is live", url: "", want: true},
+		"URL points to godaily.dev":         {title: "Something else", url: "https://godaily.dev/issues/1", want: true},
+		"URL points to www.godaily.dev":     {title: "Something else", url: "https://www.godaily.dev/issues/1", want: true},
+		"URL points to other domain":        {title: "Something else", url: "https://github.com/ainsleyclark/godaily", want: false},
+		"Empty title and URL":               {title: "", url: "", want: false},
+		"Invalid URL":                       {title: "Valid title", url: "://bad-url", want: false},
+		"Both title and URL match":          {title: "GoDaily v2", url: "https://godaily.dev/v2", want: true},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			item := news.Item{Title: test.title, URL: test.url}
+			assert.Equal(t, test.want, isSelfContent(item))
 		})
 	}
 }
