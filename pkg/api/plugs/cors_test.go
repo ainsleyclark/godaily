@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ainsleydev/webkit/pkg/webkit"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,19 +53,21 @@ func TestCORS(t *testing.T) {
 			t.Parallel()
 
 			nextCalled := false
-			next := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			next := webkit.Handler(func(_ *webkit.Context) error {
 				nextCalled = true
-				w.WriteHeader(http.StatusOK)
+				return nil
 			})
 
-			handler := CORS()(next)
+			handler := CORS(next)
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(test.method, "/", nil)
 			if test.origin != "" {
 				r.Header.Set("Origin", test.origin)
 			}
-			handler.ServeHTTP(w, r)
+
+			ctx := webkit.NewContext(w, r)
+			_ = handler(ctx)
 
 			assert.Equal(t, test.wantStatus, w.Code)
 			assert.Equal(t, test.wantNextCalled, nextCalled)
