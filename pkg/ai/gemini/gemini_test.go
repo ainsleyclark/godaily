@@ -6,45 +6,34 @@ package gemini
 
 import (
 	"context"
-	"encoding/json"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"strings"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/genai"
 )
 
-func fakeGeminiServer(t *testing.T, status int, body string) (*httptest.Server, *[]byte) {
-	t.Helper()
-	var captured []byte
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		raw, _ := io.ReadAll(r.Body)
-		captured = raw
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(status)
-		_, _ = w.Write([]byte(body))
-	}))
-	t.Cleanup(srv.Close)
-	return srv, &captured
+// fakeGenerator is a test double for contentGenerator.
+type fakeGenerator struct {
+	resp *genai.GenerateContentResponse
+	err  error
 }
 
-func validGeminiResponse(text string) string {
-	resp := map[string]any{
-		"candidates": []map[string]any{
+func (f *fakeGenerator) GenerateContent(_ context.Context, _ string, _ []*genai.Content, _ *genai.GenerateContentConfig) (*genai.GenerateContentResponse, error) {
+	return f.resp, f.err
+}
+
+func textResponse(text string) *genai.GenerateContentResponse {
+	return &genai.GenerateContentResponse{
+		Candidates: []*genai.Candidate{
 			{
-				"content": map[string]any{
-					"parts": []map[string]any{
-						{"text": text},
-					},
+				Content: &genai.Content{
+					Parts: []*genai.Part{genai.NewPartFromText(text)},
 				},
 			},
 		},
 	}
-	out, _ := json.Marshal(resp)
-	return string(out)
 }
 
 func TestClient_Prompt(t *testing.T) {
@@ -53,82 +42,73 @@ func TestClient_Prompt(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		t.Parallel()
 
-		srv, _ := fakeGeminiServer(t, http.StatusOK, validGeminiResponse(`{"post":"hello"}`))
-
-		c := New("test-key")
-		c.baseURL = srv.URL
+		c := &Client{gen: &fakeGenerator{resp: textResponse(`{"post":"hello"}`)}}
 
 		got, err := c.Prompt(context.Background(), "system prompt", "user payload")
 		require.NoError(t, err)
 		assert.Equal(t, `{"post":"hello"}`, string(got))
 	})
 
-	t.Run("HTTP Non-200 Returns Error", func(t *testing.T) {
+	t.Run("API Error Returns Wrapped Error", func(t *testing.T) {
 		t.Parallel()
 
-		srv, _ := fakeGeminiServer(t, http.StatusUnauthorized, `{"error":"invalid key"}`)
-
-		c := New("bad-key")
-		c.baseURL = srv.URL
+		c := &Client{gen: &fakeGenerator{err: errors.New("HTTP 400: invalid request")}}
 
 		_, err := c.Prompt(context.Background(), "sys", "user")
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), "401")
-	})
-
-	t.Run("Malformed JSON Returns Error", func(t *testing.T) {
-		t.Parallel()
-
-		srv, _ := fakeGeminiServer(t, http.StatusOK, "not json")
-
-		c := New("test-key")
-		c.baseURL = srv.URL
-
-		_, err := c.Prompt(context.Background(), "sys", "user")
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "gemini: parsing response")
+		assert.Contains(t, err.Error(), "gemini: generate content")
+		assert.Contains(t, err.Error(), "HTTP 400")
 	})
 
 	t.Run("Empty Candidates Returns Error", func(t *testing.T) {
 		t.Parallel()
 
-		body, _ := json.Marshal(map[string]any{"candidates": []any{}})
-		srv, _ := fakeGeminiServer(t, http.StatusOK, string(body))
-
-		c := New("test-key")
-		c.baseURL = srv.URL
+		c := &Client{gen: &fakeGenerator{resp: &genai.GenerateContentResponse{
+			Candidates: []*genai.Candidate{},
+		}}}
 
 		_, err := c.Prompt(context.Background(), "sys", "user")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "empty candidates")
 	})
 
-	t.Run("System And User Merged In Request Body", func(t *testing.T) {
+	t.Run("System Instruction Passed Separately", func(t *testing.T) {
 		t.Parallel()
 
-		srv, captured := fakeGeminiServer(t, http.StatusOK, validGeminiResponse("ok"))
+		var capturedCfg *genai.GenerateContentConfig
+		var capturedContents []*genai.Content
 
-		c := New("test-key")
-		c.baseURL = srv.URL
+		gen := &captureGenerator{
+			resp: textResponse("ok"),
+			onCall: func(contents []*genai.Content, cfg *genai.GenerateContentConfig) {
+				capturedContents = contents
+				capturedCfg = cfg
+			},
+		}
 
+		c := &Client{gen: gen}
 		_, err := c.Prompt(context.Background(), "system text", "user text")
 		require.NoError(t, err)
 
-		var req struct {
-			Contents []struct {
-				Role  string `json:"role"`
-				Parts []struct {
-					Text string `json:"text"`
-				} `json:"parts"`
-			} `json:"contents"`
-		}
-		require.NoError(t, json.Unmarshal(*captured, &req))
+		require.Len(t, capturedContents, 1)
+		assert.Equal(t, "user", capturedContents[0].Role)
+		require.Len(t, capturedContents[0].Parts, 1)
+		assert.Equal(t, "user text", capturedContents[0].Parts[0].Text)
 
-		require.Len(t, req.Contents, 1)
-		assert.Equal(t, "user", req.Contents[0].Role)
-		require.Len(t, req.Contents[0].Parts, 1)
-		merged := req.Contents[0].Parts[0].Text
-		assert.True(t, strings.Contains(merged, "system text"), "system text must be in merged body")
-		assert.True(t, strings.Contains(merged, "user text"), "user text must be in merged body")
+		require.NotNil(t, capturedCfg.SystemInstruction)
+		require.Len(t, capturedCfg.SystemInstruction.Parts, 1)
+		assert.Equal(t, "system text", capturedCfg.SystemInstruction.Parts[0].Text)
 	})
+}
+
+type captureGenerator struct {
+	resp   *genai.GenerateContentResponse
+	onCall func(contents []*genai.Content, cfg *genai.GenerateContentConfig)
+}
+
+func (g *captureGenerator) GenerateContent(_ context.Context, _ string, contents []*genai.Content, cfg *genai.GenerateContentConfig) (*genai.GenerateContentResponse, error) {
+	if g.onCall != nil {
+		g.onCall(contents, cfg)
+	}
+	return g.resp, nil
 }
