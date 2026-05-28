@@ -18,6 +18,20 @@ import (
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
+// trailingSlashRedirect wraps kitmiddleware.TrailingSlashRedirect but passes
+// OPTIONS preflight requests straight through. TrailingSlashRedirect runs as
+// chi middleware and therefore wraps all mounted handlers — including the API
+// mount — which means it fires before the API's CORS plug, redirecting
+// OPTIONS preflights and breaking cross-origin requests.
+func trailingSlashRedirect(next webkit.Handler) webkit.Handler {
+	return func(c *webkit.Context) error {
+		if c.Request.Method == http.MethodOptions {
+			return next(c)
+		}
+		return kitmiddleware.TrailingSlashRedirect(next)(c)
+	}
+}
+
 // Handler returns the configured HTTP handler for the web server without
 // starting it. Useful for composing with additional routes in tests.
 func Handler(a *godaily.App) http.Handler {
@@ -33,7 +47,7 @@ func newKit(a *godaily.App) *webkit.Kit {
 	kit := webkit.New()
 
 	kit.Plug(kitmiddleware.NonWWWRedirect)
-	kit.Plug(kitmiddleware.TrailingSlashRedirect)
+	kit.Plug(trailingSlashRedirect)
 	kit.Plug(kitmiddleware.Logger)
 	kit.Plug(kitmiddleware.Recover)
 	kit.Plug(kitmiddleware.RequestID)
