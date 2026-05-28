@@ -91,7 +91,7 @@ func IssuesArchive(issues []digest.Issue) templ.Component {
 						var templ_7745c5c3_Var4 templ.SafeURL
 						templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(fmt.Sprintf("/issues/%s/", issue.Slug)))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/issues.templ`, Line: 33, Col: 87}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/issues.templ`, Line: 33, Col: 87}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 						if templ_7745c5c3_Err != nil {
@@ -104,7 +104,7 @@ func IssuesArchive(issues []digest.Issue) templ.Component {
 						var templ_7745c5c3_Var5 string
 						templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", issue.ID))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/issues.templ`, Line: 34, Col: 73}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/issues.templ`, Line: 34, Col: 73}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 						if templ_7745c5c3_Err != nil {
@@ -117,7 +117,7 @@ func IssuesArchive(issues []digest.Issue) templ.Component {
 						var templ_7745c5c3_Var6 string
 						templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Subject)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/issues.templ`, Line: 35, Col: 53}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/issues.templ`, Line: 35, Col: 53}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 						if templ_7745c5c3_Err != nil {
@@ -130,7 +130,7 @@ func IssuesArchive(issues []digest.Issue) templ.Component {
 						var templ_7745c5c3_Var7 string
 						templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(components.FormatIssueDate(issue.SentAt))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/issues.templ`, Line: 36, Col: 77}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/issues.templ`, Line: 36, Col: 77}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 						if templ_7745c5c3_Err != nil {
