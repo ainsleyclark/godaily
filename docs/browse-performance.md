@@ -8,15 +8,22 @@ pagination controls issue a `GET /api/browse` request that swaps `#browse-main`
 ## What's done
 
 **Loading feedback (UX).** Interactions used to feel frozen — a click took a
-beat with no signal that anything was happening. The browse `<section>` now
-carries:
+beat with no signal that anything was happening. While a request is in flight:
 
-- `hx-indicator="#browse-progress, #browse-main"` — an indeterminate progress
-  bar (`.browse__progress`, styled in `web/assets/scss/components/_browse.scss`)
-  animates under the header while a request is in flight, and the stale results
-  column dims to ~50% so it reads as "updating".
-- `hx-disabled-elt="this"` — the control that fired the request is disabled for
-  the request's lifetime, preventing a second filter firing mid-swap.
+- A full-width loading bar (`.browse__progress`, styled in
+  `web/assets/scss/components/_browse.scss`) sweeps under the sticky header,
+  driven by `hx-indicator`.
+- A centered spinner (`.browse__loader` / `.browse__spinner`) shows over the
+  results column, which dims to ~40% — the toolbar and applied-filter chips
+  stay crisp so the control just acted on remains legible.
+- `hx-disabled-elt="this"` disables the firing control for the request's
+  lifetime, preventing a second filter firing mid-swap.
+
+**Optimistic active state.** `web/assets/js/browse.ts` (`initBrowse`) moves the
+active class on tab and sort-segment clicks *immediately*, rather than waiting
+for the fragment to swap in. The htmx response then swaps in the authoritative
+markup carrying the same state. Delegated from the persistent `[data-browse-app]`
+root so it survives the region swaps.
 
 This makes the page *feel* responsive but does not change how long the request
 actually takes.

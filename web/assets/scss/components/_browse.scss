@@ -60,52 +60,76 @@ body:has(.section.browse) {
 /* ── HTMX loading feedback ──────────────────────────
    Filter, tab, search and pagination clicks swap #browse-main over the
    network. The query can take a beat, and without feedback the page looks
-   frozen. Two cues run together: a thin indeterminate progress bar pinned
-   under the header, and a dimmed, non-interactive results column. Both are
-   driven by htmx — the .htmx-indicator targets named in hx-indicator gain
-   the .htmx-request class for the lifetime of the in-flight request. */
+   frozen. Two cues run together: a full-width loading bar pinned under the
+   header, and a centered spinner over the dimmed, non-interactive results
+   column. Both are driven by htmx — the .htmx-indicator targets named in
+   hx-indicator gain the .htmx-request class for the lifetime of the request. */
 .browse__progress {
 	position: sticky;
 	top: 64px; /* sits flush under the sticky header */
-	z-index: 5;
+	z-index: 60; /* above the sticky tabs row (z-index 50) */
 	height: 3px;
+	width: 100%;
 	margin: 0 0 -3px; /* overlay without nudging layout */
-	overflow: hidden;
 	pointer-events: none;
-
-	&::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		width: 35%;
-		border-radius: 0 3px 3px 0;
-		background: linear-gradient(90deg, var(--accent-light), var(--accent));
-		animation: browse-progress 1.1s ease-in-out infinite;
-	}
+	/* Full-width faint track with a brighter highlight sweeping across, so it
+	   reads as a real loading bar rather than a segment floating mid-page. */
+	background-color: var(--accent-light);
+	background-image: linear-gradient(90deg, transparent, var(--accent), transparent);
+	background-size: 45% 100%;
+	background-repeat: no-repeat;
+	background-position: -45% 0;
+	animation: browse-progress 1.1s ease-in-out infinite;
 }
 
 @keyframes browse-progress {
-	0%   { transform: translateX(-100%); }
-	100% { transform: translateX(386%); }
+	0%   { background-position: -45% 0; }
+	100% { background-position: 145% 0; }
 }
 
-/* The progress bar only animates while a request is mid-flight. htmx toggles
-   .htmx-request on the indicator targets; pause the work otherwise so it's
-   not burning frames on an idle page. */
-.browse__progress:not(.htmx-request)::before {
+/* Don't burn frames sweeping an invisible bar on an idle page. */
+.browse__progress:not(.htmx-request) {
 	animation-play-state: paused;
-	visibility: hidden;
 }
 
-/* Dim the stale results while the next set loads, and block pointer events so
-   a second filter can't fire mid-swap. */
+/* Centered spinner shown over the results while the next set loads. It lives
+   inside #browse-main so it's swapped out with the fresh markup; htmx adds
+   .htmx-request to #browse-main for the request's lifetime, which reveals it
+   and dims everything underneath. */
 #browse-main {
+	position: relative;
+}
+.browse__loader {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding-top: min(140px, 22vh);
+	opacity: 0;
+	pointer-events: none;
+	z-index: 3;
 	transition: opacity 0.15s ease;
+}
+.browse__spinner {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 3px solid var(--accent-light);
+	border-top-color: var(--accent);
+	animation: button-spin 0.7s linear infinite;
+}
+#browse-main.htmx-request {
+	pointer-events: none; /* block a second filter firing mid-swap */
 
-	&.htmx-request {
-		opacity: 0.5;
-		pointer-events: none;
+	/* Dim the results being replaced, but keep the toolbar and applied-filter
+	   chips crisp — those are the controls the user just acted on (e.g. the
+	   Hot/Top/New segment), so they should stay legible. */
+	> :not(.browse__loader):not(.browse-toolbar):not(.applied-filters) {
+		opacity: 0.4;
+		transition: opacity 0.15s ease;
 	}
+	.browse__loader { opacity: 1; }
 }
 
 /* The control that fired the request reads as busy. htmx disables it via

@@ -12,6 +12,7 @@ import { initSwipers } from './swiper';
 import { initLogoTicker } from './logos';
 import { initHamburger } from './hamburger';
 import { initShareButtons } from './share';
+import { initBrowse } from './browse';
 
 document.addEventListener('DOMContentLoaded', () => {
 	initSubscribeForm();
@@ -19,4 +20,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	initLogoTicker();
 	initHamburger();
 	initShareButtons();
+	initBrowse();
 });

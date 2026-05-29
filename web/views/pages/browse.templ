@@ -116,6 +116,9 @@ templ BrowseSideRegion(props BrowseProps) {
 // filter change.
 templ BrowseMain(props BrowseProps) {
 	<main id="browse-main" class="browse__main">
+		<div class="browse__loader" aria-hidden="true">
+			<span class="browse__spinner"></span>
+		</div>
 		@components.BrowseToolbar(browseToolbarProps(props))
 		@components.AppliedFilters(browseAppliedFilters(props))
 		if len(props.Items) == 0 {
