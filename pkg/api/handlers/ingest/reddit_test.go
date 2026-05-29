@@ -56,6 +56,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("Ingests valid payload", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, redditJSON)
 		d.Runner.EXPECT().
 			Submit(gomock.Any(), news.SourceReddit, gomock.Any()).
@@ -70,6 +71,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("Passes parsed items through to the service", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, redditJSON)
 		d.Runner.EXPECT().
 			Submit(gomock.Any(), news.SourceReddit, gomock.Cond(func(items []news.Item) bool {
@@ -85,6 +87,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("Empty body is rejected", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, "")
 
 		err := d.Handler.Reddit(d.Context)
@@ -95,6 +98,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("Invalid JSON is rejected", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, "not json")
 
 		err := d.Handler.Reddit(d.Context)
@@ -105,6 +109,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("All duplicates reports nothing new", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, redditJSON)
 		d.Runner.EXPECT().
 			Submit(gomock.Any(), news.SourceReddit, gomock.Any()).
@@ -119,6 +124,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("No in-window items reports window message", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, redditJSON)
 		d.Runner.EXPECT().
 			Submit(gomock.Any(), news.SourceReddit, gomock.Any()).
@@ -133,6 +139,7 @@ func TestReddit(t *testing.T) {
 
 	t.Run("Service error returns internal server error", func(t *testing.T) {
 		t.Parallel()
+
 		d := setup(t, redditJSON)
 		d.Runner.EXPECT().
 			Submit(gomock.Any(), news.SourceReddit, gomock.Any()).

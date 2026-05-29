@@ -16,6 +16,8 @@ import (
 )
 
 func TestService_Submit(t *testing.T) {
+	t.Parallel()
+
 	start, end := collectWindow(time.Now())
 	inWindow := start.Add(time.Hour)
 	beforeWindow := start.Add(-time.Hour)
@@ -29,6 +31,8 @@ func TestService_Submit(t *testing.T) {
 	}
 
 	t.Run("Persists In-Window Items In Score Order", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -49,6 +53,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Drops Before-Window And Zero-Date Items", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -68,6 +74,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Clamps Future-Dated Items Into Window", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -83,6 +91,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("De-duplicates Within The Payload", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -99,6 +109,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Re-submitting Same Items Adds No Duplicates", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -119,6 +131,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Incremental Run Adds Only New Items", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -141,6 +155,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("De-duplicates Against Other Sources On URL And Tag", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -164,6 +180,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Same URL Different Tag Is Not A Duplicate", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -182,6 +200,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("No In-Window Items Persists Nothing", func(t *testing.T) {
+		t.Parallel()
+
 		_, itemRepo := newTestStores(t)
 		svc := Service{items: itemRepo}
 
@@ -195,6 +215,8 @@ func TestService_Submit(t *testing.T) {
 	})
 
 	t.Run("Propagates List Error", func(t *testing.T) {
+		t.Parallel()
+
 		svc := Service{items: errItemRepo{err: errors.New("boom")}}
 		_, err := svc.Submit(t.Context(), news.SourceReddit, []news.Item{
 			{Title: "in", URL: "https://e.test/1", Tag: news.TagDiscussion, Published: inWindow},
