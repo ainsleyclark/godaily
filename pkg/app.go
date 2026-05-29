@@ -109,7 +109,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	repo := &Repository{
 		Issues:        issueStore,
-		Items:         itemStore,
+		Items:         items.NewCaching(itemStore, store),
 		Subscribers:   subsStore,
 		SocialPosts:   socialPostsStore,
 		EmailEvents:   emailevents.New(conn),

@@ -255,6 +255,12 @@ func TestItems_Store(t *testing.T) {
 			assert.Error(t, err)
 		}
 
+		t.Log("CountMatching")
+		{
+			_, err := s.CountMatching(ctx, news.ItemListOptions{})
+			assert.Error(t, err)
+		}
+
 		t.Log("SourceCounts")
 		{
 			_, err := s.SourceCounts(ctx)
@@ -453,6 +459,38 @@ func TestItems_Browse(t *testing.T) {
 		require.Len(t, got, 5) // five distinct tags above
 		for i := 1; i < len(got); i++ {
 			assert.LessOrEqual(t, got[i].Count, got[i-1].Count)
+		}
+	})
+
+	t.Run("CountMatching", func(t *testing.T) {
+		t.Log("No filters counts every row")
+		{
+			got, err := s.CountMatching(ctx, news.ItemListOptions{})
+			require.NoError(t, err)
+			assert.Equal(t, int64(5), got)
+		}
+
+		t.Log("Ignores pagination")
+		{
+			got, err := s.CountMatching(ctx, news.ItemListOptions{Page: 2, PerPage: 1})
+			require.NoError(t, err)
+			assert.Equal(t, int64(5), got)
+		}
+
+		t.Log("Applies the same WHERE as List")
+		{
+			yes := true
+			got, err := s.CountMatching(ctx, news.ItemListOptions{InDigest: &yes})
+			require.NoError(t, err)
+			assert.Equal(t, int64(3), got)
+
+			got, err = s.CountMatching(ctx, news.ItemListOptions{Sources: []news.Source{news.SourceHN}})
+			require.NoError(t, err)
+			assert.Equal(t, int64(2), got)
+
+			got, err = s.CountMatching(ctx, news.ItemListOptions{Search: "generics"})
+			require.NoError(t, err)
+			assert.Equal(t, int64(1), got)
 		}
 	})
 

@@ -56,6 +56,21 @@ func (mr *MockItemRepositoryMockRecorder) Count(ctx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Count", reflect.TypeOf((*MockItemRepository)(nil).Count), ctx)
 }
 
+// CountMatching mocks base method.
+func (m *MockItemRepository) CountMatching(ctx context.Context, opts news.ItemListOptions) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountMatching", ctx, opts)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountMatching indicates an expected call of CountMatching.
+func (mr *MockItemRepositoryMockRecorder) CountMatching(ctx, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountMatching", reflect.TypeOf((*MockItemRepository)(nil).CountMatching), ctx, opts)
+}
+
 // Create mocks base method.
 func (m *MockItemRepository) Create(ctx context.Context, issueID *int64, position int, item news.Item) (news.Item, error) {
 	m.ctrl.T.Helper()

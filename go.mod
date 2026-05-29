@@ -26,6 +26,7 @@ require (
 	github.com/tursodatabase/libsql-client-go v0.0.0-20251219100830-236aa1ff8acc
 	github.com/urfave/cli/v3 v3.9.0
 	go.uber.org/mock v0.6.0
+	golang.org/x/sync v0.20.0
 	golang.org/x/time v0.15.0
 	google.golang.org/genai v1.58.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -128,7 +129,6 @@ require (
 	golang.org/x/image v0.30.0 // indirect
 	golang.org/x/mod v0.35.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/telemetry v0.0.0-20260421165255-392afab6f40e // indirect
 	golang.org/x/text v0.37.0 // indirect
