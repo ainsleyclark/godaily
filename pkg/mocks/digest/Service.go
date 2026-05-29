@@ -15,6 +15,7 @@ import (
 	time "time"
 
 	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
+	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -111,4 +112,19 @@ func (m *MockService) SendSuggestion(ctx context.Context, date time.Time) error 
 func (mr *MockServiceMockRecorder) SendSuggestion(ctx, date any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendSuggestion", reflect.TypeOf((*MockService)(nil).SendSuggestion), ctx, date)
+}
+
+// Submit mocks base method.
+func (m *MockService) Submit(ctx context.Context, source news.Source, items []news.Item) (digest.SubmitResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Submit", ctx, source, items)
+	ret0, _ := ret[0].(digest.SubmitResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Submit indicates an expected call of Submit.
+func (mr *MockServiceMockRecorder) Submit(ctx, source, items any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Submit", reflect.TypeOf((*MockService)(nil).Submit), ctx, source, items)
 }

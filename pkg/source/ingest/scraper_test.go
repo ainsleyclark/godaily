@@ -18,7 +18,7 @@ func TestScraperURL(t *testing.T) {
 
 	target := "https://www.reddit.com/r/golang/new.json"
 	proxy := func(key string) string {
-		return fmt.Sprintf("%s?api_key=%s&url=%s", scraperAPIBase, key, url.QueryEscape(target))
+		return fmt.Sprintf("%s?api_key=%s&premium=true&url=%s", scraperAPIBase, key, url.QueryEscape(target))
 	}
 
 	tt := map[string]struct {

@@ -102,6 +102,10 @@ func (r seedRunner) Collect(ctx context.Context, _ digest.CollectOptions) (diges
 	return digest.CollectResponse{}, nil
 }
 
+func (r seedRunner) Submit(ctx context.Context, source news.Source, items []news.Item) (digest.SubmitResponse, error) {
+	return r.aggregator.Submit(ctx, source, items)
+}
+
 func (r seedRunner) Build(ctx context.Context, date time.Time) error {
 	return r.aggregator.Build(ctx, date)
 }

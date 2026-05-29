@@ -16,6 +16,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/handlers"
 	digesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/digest"
+	ingesthandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/ingest"
 	issuehandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/issues"
 	itemhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/items"
 	metricshandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/metrics"
@@ -52,6 +53,7 @@ func Handler(app *godaily.App) http.Handler {
 	auth := plugs.Auth(app.Config.APISecret)
 
 	digestH := digesthandlers.New(app)
+	ingestH := ingesthandlers.New(app)
 	metricsH := metricshandlers.New(app)
 	socialH := socialhandlers.New(app)
 	issuesH := issuehandlers.New(app)
@@ -66,6 +68,7 @@ func Handler(app *godaily.App) http.Handler {
 	kit.Post("/unsubscribe", digestH.Unsubscribe)
 
 	kit.Group("/digest", func(k *webkit.Kit) { digestH.Routes(k, auth) })
+	kit.Group("/ingest", func(k *webkit.Kit) { ingestH.Routes(k, auth) })
 	kit.Group("/metrics", func(k *webkit.Kit) { metricsH.Routes(k, auth) })
 	kit.Group("/social", func(k *webkit.Kit) { socialH.Routes(k, auth) })
 	kit.Group("/issues", func(k *webkit.Kit) { issuesH.Routes(k, auth) })
