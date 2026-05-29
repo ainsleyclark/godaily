@@ -12,6 +12,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
@@ -25,7 +26,9 @@ import (
 const htmlBodyMax = 2 * 1024 * 1024
 
 // httpClient is the shared HTTP client used by Fetch and EnrichSnippets.
-var httpClient = gohttp.New()
+// The timeout is raised to 2 minutes because ScraperAPI proxying (e.g. Reddit)
+// can take ~45s+ per response, well past gohttp's 30s default.
+var httpClient = gohttp.New(gohttp.WithTimeout(2 * time.Minute))
 
 // SetHTTPClient replaces the shared HTTP client used by all sources.
 func SetHTTPClient(c *http.Client) {
