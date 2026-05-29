@@ -19,8 +19,19 @@ API_URL="${GODAILY_API_URL:-https://godaily.dev}"
 API_SECRET="${GODAILY_API_SECRET:?GODAILY_API_SECRET must be set}"
 REDDIT_URL="${REDDIT_URL:-https://www.reddit.com/r/golang/new.json?limit=25}"
 USER_AGENT="${REDDIT_USER_AGENT:-godaily-ingest/1.0 (https://godaily.dev)}"
+SLACK_CHANNEL="#godaily-ingest"
+SLACK_TOKEN="xoxb-REPLACE-ME"
 
 log() { echo "==> $*"; }
+
+slack_notify() {
+	local text="$1"
+	curl -fsS -X POST https://slack.com/api/chat.postMessage \
+		-H "Authorization: Bearer ${SLACK_TOKEN}" \
+		-H "Content-Type: application/json; charset=utf-8" \
+		--data "$(printf '{"channel":"%s","text":%s}' "$SLACK_CHANNEL" "$(printf '%s' "$text" | jq -Rs .)")" \
+		>/dev/null || log "Slack notification failed"
+}
 
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
@@ -34,15 +45,26 @@ if ! grep -q '"children"' "$tmp"; then
 	log "Unexpected response (no \"children\" array) — Reddit may have blocked this request:"
 	head -c 500 "$tmp" >&2
 	echo >&2
+	slack_notify ":x: GoDaily Reddit ingest failed — Reddit returned an unexpected response (likely blocked)."
 	exit 1
 fi
 
 # 2. Post the raw JSON to the ingest endpoint.
-log "Posting to ${API_URL}/api/ingest/reddit"
-curl -fsS -X POST "${API_URL}/api/ingest/reddit" \
+log "Posting to ${API_URL}/api/ingest/reddit/"
+response="$(mktemp)"
+trap 'rm -f "$tmp" "$response"' EXIT
+http_code="$(curl -sS -o "$response" -w '%{http_code}' -X POST "${API_URL}/api/ingest/reddit/" \
 	-H "Authorization: Bearer ${API_SECRET}" \
 	-H "Content-Type: application/json" \
-	--data-binary @"$tmp"
+	--data-binary @"$tmp")"
+body="$(cat "$response")"
+echo "$body"
 echo
 
+if [[ "$http_code" != 2* ]]; then
+	slack_notify ":x: GoDaily Reddit ingest failed (HTTP ${http_code}): ${body}"
+	exit 1
+fi
+
+slack_notify ":white_check_mark: GoDaily Reddit ingest succeeded: ${body}"
 log "Done"
