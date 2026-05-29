@@ -40,7 +40,7 @@ templ Browse(props BrowseProps) {
 			hx-indicator="#browse-progress, #browse-main"
 			hx-disabled-elt="this"
 		>
-			<div id="browse-progress" class="browse__progress htmx-indicator" role="progressbar" aria-hidden="true"></div>
+			@components.LoadingBar(components.LoadingBarProps{ID: "browse-progress"})
 			@components.Container(false) {
 				@components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",

@@ -70,7 +70,11 @@ func Browse(props BrowseProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section browse\" data-browse-app hx-target=\"#browse-main\" hx-swap=\"outerHTML\" hx-indicator=\"#browse-progress, #browse-main\" hx-disabled-elt=\"this\"><div id=\"browse-progress\" class=\"browse__progress htmx-indicator\" role=\"progressbar\" aria-hidden=\"true\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <section class=\"section browse\" data-browse-app hx-target=\"#browse-main\" hx-swap=\"outerHTML\" hx-indicator=\"#browse-progress, #browse-main\" hx-disabled-elt=\"this\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.LoadingBar(components.LoadingBarProps{ID: "browse-progress"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

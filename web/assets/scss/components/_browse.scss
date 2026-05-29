@@ -57,40 +57,15 @@ body:has(.section.browse) {
 	}
 	&__main { min-width: 0; }
 }
+
 /* ── HTMX loading feedback ──────────────────────────
    Filter, tab, search and pagination clicks swap #browse-main over the
    network. The query can take a beat, and without feedback the page looks
-   frozen. Two cues run together: a full-width loading bar pinned under the
-   header, and a centered spinner over the dimmed, non-interactive results
-   column. Both are driven by htmx — the .htmx-indicator targets named in
-   hx-indicator gain the .htmx-request class for the lifetime of the request. */
-.browse__progress {
-	position: sticky;
-	top: 64px; /* sits flush under the sticky header */
-	z-index: 60; /* above the sticky tabs row (z-index 50) */
-	height: 3px;
-	width: 100%;
-	margin: 0 0 -3px; /* overlay without nudging layout */
-	pointer-events: none;
-	/* Full-width faint track with a brighter highlight sweeping across, so it
-	   reads as a real loading bar rather than a segment floating mid-page. */
-	background-color: var(--accent-light);
-	background-image: linear-gradient(90deg, transparent, var(--accent), transparent);
-	background-size: 45% 100%;
-	background-repeat: no-repeat;
-	background-position: -45% 0;
-	animation: browse-progress 1.1s ease-in-out infinite;
-}
-
-@keyframes browse-progress {
-	0%   { background-position: -45% 0; }
-	100% { background-position: 145% 0; }
-}
-
-/* Don't burn frames sweeping an invisible bar on an idle page. */
-.browse__progress:not(.htmx-request) {
-	animation-play-state: paused;
-}
+   frozen. Two cues run together: the full-width LoadingBar component pinned
+   under the header (see components/_loading-bar.scss), and a centered spinner
+   over the dimmed, non-interactive results column. Both are driven by htmx —
+   the .htmx-indicator targets named in hx-indicator gain the .htmx-request
+   class for the lifetime of the request. */
 
 /* Centered spinner shown over the results while the next set loads. It lives
    inside #browse-main so it's swapped out with the fresh markup; htmx adds
