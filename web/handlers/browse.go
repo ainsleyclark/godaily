@@ -17,6 +17,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/ainsleydev/webkit/pkg/webkit"
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -46,33 +47,63 @@ func BuildBrowseProps(ctx context.Context, issues digest.IssueRepository, items 
 	state := parseBrowseQuery(query)
 	opts := browseOptions(state)
 
-	list, err := items.List(ctx, opts)
-	if err != nil {
+	var (
+		list         []news.Item
+		total        int64
+		sourceCounts []news.SourceCount
+		tagCounts    []news.TagCount
+		matching     int64
+		digestPicks  int64
+		trending     []news.Item
+		latestIssue  int64
+	)
+
+	// The browse props come from a handful of independent queries; run them
+	// concurrently so the page cost is the slowest query, not their sum.
+	g, gctx := errgroup.WithContext(ctx)
+
+	g.Go(func() (err error) {
+		list, err = items.List(gctx, opts)
+		return err
+	})
+	g.Go(func() (err error) {
+		total, err = items.Count(gctx)
+		return err
+	})
+	g.Go(func() (err error) {
+		sourceCounts, err = items.SourceCounts(gctx)
+		return err
+	})
+	g.Go(func() (err error) {
+		tagCounts, err = items.TagCounts(gctx)
+		return err
+	})
+	g.Go(func() (err error) {
+		matching, err = items.CountMatching(gctx, opts)
+		return err
+	})
+	g.Go(func() (err error) {
+		picksOpts := opts
+		inDigest := true
+		picksOpts.InDigest = &inDigest
+		digestPicks, err = items.CountMatching(gctx, picksOpts)
+		return err
+	})
+	// Trending and the latest issue are best-effort sidebar extras; a failure
+	// shouldn't take down the whole page, so they never return an error.
+	g.Go(func() error {
+		trending = trendingItems(gctx, items)
+		return nil
+	})
+	g.Go(func() error {
+		if recent, err := issues.Latest(gctx, 1); err == nil && len(recent) > 0 {
+			latestIssue = recent[0].ID
+		}
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
 		return pages.BrowseProps{}, err
-	}
-
-	total, err := items.Count(ctx)
-	if err != nil {
-		return pages.BrowseProps{}, err
-	}
-
-	sourceCounts, err := items.SourceCounts(ctx)
-	if err != nil {
-		return pages.BrowseProps{}, err
-	}
-
-	tagCounts, err := items.TagCounts(ctx)
-	if err != nil {
-		return pages.BrowseProps{}, err
-	}
-
-	matching := matchingCount(ctx, items, opts, list)
-	digestPicks := digestPicksCount(ctx, items, opts)
-	trending := trendingItems(ctx, items)
-
-	var latestIssue int64
-	if recent, err := issues.Latest(ctx, 1); err == nil && len(recent) > 0 {
-		latestIssue = recent[0].ID
 	}
 
 	totalPages := int64(1)
@@ -199,37 +230,6 @@ func rangeWindow(r string, now time.Time) *time.Time {
 		return nil
 	}
 	return &from
-}
-
-// matchingCount returns the total number of items matching the filters (not
-// just this page). If the items result is shorter than a full page and we're
-// on page 1, we can derive it; otherwise count via a separate page-less
-// query.
-func matchingCount(ctx context.Context, items news.ItemRepository, opts news.ItemListOptions, page []news.Item) int64 {
-	if opts.Page <= 1 && int64(len(page)) < opts.PerPage {
-		return int64(len(page))
-	}
-	countOpts := opts
-	countOpts.Page = 0
-	countOpts.PerPage = 0
-	all, err := items.List(ctx, countOpts)
-	if err != nil {
-		return int64(len(page))
-	}
-	return int64(len(all))
-}
-
-func digestPicksCount(ctx context.Context, items news.ItemRepository, opts news.ItemListOptions) int64 {
-	t := true
-	picksOpts := opts
-	picksOpts.InDigest = &t
-	picksOpts.Page = 0
-	picksOpts.PerPage = 0
-	picks, err := items.List(ctx, picksOpts)
-	if err != nil {
-		return 0
-	}
-	return int64(len(picks))
 }
 
 func trendingItems(ctx context.Context, items news.ItemRepository) []news.Item {

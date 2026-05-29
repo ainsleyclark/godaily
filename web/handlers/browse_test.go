@@ -37,9 +37,13 @@ func TestBrowse(t *testing.T) {
 		"List error": {
 			url: "/browse/",
 			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
-				items.EXPECT().
-					List(gomock.Any(), gomock.Any()).
-					Return(nil, errors.New("boom"))
+				// Queries now run concurrently, so the siblings may fire before
+				// the failing List cancels the group. Allow them all.
+				items.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("boom")).AnyTimes()
+				items.EXPECT().Count(gomock.Any()).Return(int64(0), nil).AnyTimes()
+				items.EXPECT().CountMatching(gomock.Any(), gomock.Any()).Return(int64(0), nil).AnyTimes()
+				items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil).AnyTimes()
+				items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil).AnyTimes()
 			},
 			wantStatus: http.StatusInternalServerError,
 		},
@@ -48,6 +52,7 @@ func TestBrowse(t *testing.T) {
 			mock: func(items *mocknews.MockItemRepository, issues *mockdigest.MockIssueRepository) {
 				items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{}, nil).AnyTimes()
 				items.EXPECT().Count(gomock.Any()).Return(int64(0), nil)
+				items.EXPECT().CountMatching(gomock.Any(), gomock.Any()).Return(int64(0), nil).AnyTimes()
 				items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil)
 				items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil)
 			},
@@ -62,6 +67,7 @@ func TestBrowse(t *testing.T) {
 					{ID: 2, Title: "HN: Some thread", Source: news.SourceHN, Tag: news.TagDiscussion, URL: "https://news.ycombinator.com/y"},
 				}, nil).AnyTimes()
 				items.EXPECT().Count(gomock.Any()).Return(int64(2), nil)
+				items.EXPECT().CountMatching(gomock.Any(), gomock.Any()).Return(int64(2), nil).AnyTimes()
 				items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{
 					{Source: news.SourceGoBlog, Count: 1},
 					{Source: news.SourceHN, Count: 1},
@@ -85,6 +91,12 @@ func TestBrowse(t *testing.T) {
 						return []news.Item{}, nil
 					}).AnyTimes()
 				items.EXPECT().Count(gomock.Any()).Return(int64(0), nil)
+				items.EXPECT().CountMatching(gomock.Any(), gomock.AssignableToTypeOf(news.ItemListOptions{})).
+					DoAndReturn(func(_ any, opts news.ItemListOptions) (int64, error) {
+						assert.Empty(t, opts.Sources, "invalid source should be dropped")
+						assert.Equal(t, news.ItemSortTop, opts.Sort)
+						return 0, nil
+					}).AnyTimes()
 				items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil)
 				items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil)
 			},

@@ -69,6 +69,9 @@ type ItemRepository interface {
 	Find(ctx context.Context, id int64) (Item, error)
 	List(ctx context.Context, opts ItemListOptions) ([]Item, error)
 	Count(ctx context.Context) (int64, error)
+	// CountMatching returns the number of items matching opts, ignoring its
+	// pagination fields. It is a cheap SELECT COUNT(*) for browse totals.
+	CountMatching(ctx context.Context, opts ItemListOptions) (int64, error)
 	SourceCounts(ctx context.Context) ([]SourceCount, error)
 	TagCounts(ctx context.Context) ([]TagCount, error)
 	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)

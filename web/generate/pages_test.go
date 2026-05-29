@@ -49,6 +49,7 @@ func TestOGImages(t *testing.T) {
 	items := mocknews.NewMockItemRepository(ctrl)
 	items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{}, nil).AnyTimes()
 	items.EXPECT().Count(gomock.Any()).Return(int64(0), nil).AnyTimes()
+	items.EXPECT().CountMatching(gomock.Any(), gomock.Any()).Return(int64(0), nil).AnyTimes()
 	items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil).AnyTimes()
 	items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil).AnyTimes()
 

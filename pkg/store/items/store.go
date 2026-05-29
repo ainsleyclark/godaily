@@ -55,11 +55,52 @@ func (s Store) Find(ctx context.Context, id int64) (news.Item, error) {
 //   - From/To set → score DESC
 //   - otherwise   → published DESC
 func (s Store) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item, error) {
-	var (
-		clauses []string
-		args    []any
-	)
+	clauses, args := browseWhere(opts)
 
+	var sb strings.Builder
+	sb.WriteString(`SELECT id, issue_id, source, title, url, tag,
+		author_name, author_username, author_avatar_url, author_profile_url,
+		score, summary, position, original_url, published
+		FROM items`)
+	if len(clauses) > 0 {
+		sb.WriteString(" WHERE ")
+		sb.WriteString(strings.Join(clauses, " AND "))
+	}
+	sb.WriteString(" ORDER BY ")
+	sb.WriteString(orderByClause(opts))
+
+	page := store.ListOptions{Page: opts.Page, PerPage: opts.PerPage}
+	sb.WriteString(" LIMIT ? OFFSET ?")
+	args = append(args, page.Limit(), page.Offset())
+
+	rows, err := s.db.QueryContext(ctx, sb.String(), args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close() //nolint:errcheck
+
+	out := make([]news.Item, 0)
+	for rows.Next() {
+		var i sqlc.Item
+		if err := rows.Scan(
+			&i.ID, &i.IssueID, &i.Source, &i.Title, &i.Url, &i.Tag,
+			&i.AuthorName, &i.AuthorUsername, &i.AuthorAvatarUrl, &i.AuthorProfileUrl,
+			&i.Score, &i.Summary, &i.Position, &i.OriginalUrl, &i.Published,
+		); err != nil {
+			return nil, err
+		}
+		out = append(out, transformItem(i))
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// browseWhere builds the shared WHERE clauses and bound arguments used by both
+// List and CountMatching, so a filtered page and its total count always apply
+// identical predicates. Pagination and sort are intentionally excluded.
+func browseWhere(opts news.ItemListOptions) (clauses []string, args []any) {
 	if opts.IssueID != nil {
 		clauses = append(clauses, "issue_id = ?")
 		args = append(args, *opts.IssueID)
@@ -106,44 +147,7 @@ func (s Store) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item
 		}
 	}
 
-	var sb strings.Builder
-	sb.WriteString(`SELECT id, issue_id, source, title, url, tag,
-		author_name, author_username, author_avatar_url, author_profile_url,
-		score, summary, position, original_url, published
-		FROM items`)
-	if len(clauses) > 0 {
-		sb.WriteString(" WHERE ")
-		sb.WriteString(strings.Join(clauses, " AND "))
-	}
-	sb.WriteString(" ORDER BY ")
-	sb.WriteString(orderByClause(opts))
-
-	page := store.ListOptions{Page: opts.Page, PerPage: opts.PerPage}
-	sb.WriteString(" LIMIT ? OFFSET ?")
-	args = append(args, page.Limit(), page.Offset())
-
-	rows, err := s.db.QueryContext(ctx, sb.String(), args...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close() //nolint:errcheck
-
-	out := make([]news.Item, 0)
-	for rows.Next() {
-		var i sqlc.Item
-		if err := rows.Scan(
-			&i.ID, &i.IssueID, &i.Source, &i.Title, &i.Url, &i.Tag,
-			&i.AuthorName, &i.AuthorUsername, &i.AuthorAvatarUrl, &i.AuthorProfileUrl,
-			&i.Score, &i.Summary, &i.Position, &i.OriginalUrl, &i.Published,
-		); err != nil {
-			return nil, err
-		}
-		out = append(out, transformItem(i))
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return clauses, args
 }
 
 func orderByClause(opts news.ItemListOptions) string {
@@ -210,6 +214,27 @@ func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 // Count returns the total number of items in the store.
 func (s Store) Count(ctx context.Context) (int64, error) {
 	return s.sqlc.ItemCount(ctx)
+}
+
+// CountMatching returns the number of items matching opts via a single
+// SELECT COUNT(*), applying the same WHERE predicates as List but ignoring
+// pagination and sort. It replaces pulling every matching row into memory
+// just to len() it.
+func (s Store) CountMatching(ctx context.Context, opts news.ItemListOptions) (int64, error) {
+	clauses, args := browseWhere(opts)
+
+	var sb strings.Builder
+	sb.WriteString("SELECT COUNT(*) FROM items")
+	if len(clauses) > 0 {
+		sb.WriteString(" WHERE ")
+		sb.WriteString(strings.Join(clauses, " AND "))
+	}
+
+	var count int64
+	if err := s.db.QueryRowContext(ctx, sb.String(), args...).Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 // SourceCounts returns the number of items grouped by source, ordered by count DESC.
