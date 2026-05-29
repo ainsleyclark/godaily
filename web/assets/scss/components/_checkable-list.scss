@@ -1,7 +1,24 @@
+@use '../abstracts/mixins' as *;
+
 .checkable-list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+
+	/* On mobile the filter sidebar collapses into the single-column flow above
+	   the results, so a ~20-row source list would push the actual stories far
+	   down the page. Lay the rows out in two columns and cap the height so the
+	   block stays compact and scrolls internally rather than dominating the
+	   viewport. */
+	@include mobile {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 6px;
+		max-height: min(240px, 42vh);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		-webkit-overflow-scrolling: touch;
+	}
 
 	&__row {
 		display: flex;
@@ -15,6 +32,9 @@
 		transition: background 0.12s, color 0.12s;
 
 		&:hover { background: var(--bg-soft); color: var(--text); }
+
+		/* Roomier tap target on touch devices. */
+		@include mobile { padding: 8px 6px; }
 	}
 	&__box {
 		width: 14px;
@@ -27,6 +47,12 @@
 		&--active { background: var(--accent); border-color: var(--accent); }
 	}
 	&__dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-	&__label { flex: 1; }
-	&__count { font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); }
+	&__label {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	&__count { font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); flex-shrink: 0; }
 }
