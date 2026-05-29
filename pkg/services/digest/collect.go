@@ -54,9 +54,10 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 		}
 		si := news.SourceItems{Source: src}
 
+		var zeroDates int
 		for _, item := range fetched {
 			if item.Published.IsZero() {
-				slog.ErrorContext(ctx, "Item has zero published date", "source", src, "title", item.Title)
+				zeroDates++
 				continue
 			}
 			// Sources that set Published: time.Now() (e.g. meetup) produce a
@@ -71,7 +72,7 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 			}
 		}
 
-		slog.InfoContext(ctx, "Date-filtered source", "source", src, "kept", len(si.Items), "total", len(fetched))
+		slog.InfoContext(ctx, "Collected source", "source", src, "kept", len(si.Items), "total", len(fetched), "zero_dates", zeroDates)
 		if len(si.Items) > 0 {
 			sort.SliceStable(si.Items, func(i, j int) bool {
 				return si.Items[i].Score > si.Items[j].Score
