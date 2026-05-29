@@ -88,6 +88,29 @@ func TestRedditChild_ShouldInclude(t *testing.T) {
 	}
 }
 
+func TestReddit_Fetch_Headers(t *testing.T) {
+	t.Parallel()
+
+	var got http.Header
+	s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		got = r.Header.Clone()
+		w.WriteHeader(http.StatusOK)
+		_, err := w.Write([]byte(redditSelfPostResponse))
+		assert.NoError(t, err)
+	}))
+	defer s.Close()
+
+	_, err := Reddit{url: s.URL}.Fetch(t.Context())
+	require.NoError(t, err)
+
+	// Reddit 403s requests without a browser-like fingerprint, so the fetch
+	// must carry a Chrome User-Agent, the Sec-Fetch hints and the anon cookie.
+	assert.Equal(t, redditUserAgent, got.Get("User-Agent"))
+	assert.Contains(t, got.Get("User-Agent"), "Chrome/")
+	assert.Equal(t, "navigate", got.Get("Sec-Fetch-Mode"))
+	assert.Equal(t, redditCookie, got.Get("Cookie"))
+}
+
 func TestReddit_Fetch(t *testing.T) {
 	t.Parallel()
 

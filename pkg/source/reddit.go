@@ -31,22 +31,59 @@ func init() {
 }
 
 const (
-	redditURL       = "https://www.reddit.com/r/golang/new.json?limit=25"
-	redditUserAgent = "godaily/1.0"
+	redditURL = "https://www.reddit.com/r/golang/new.json?limit=25"
+	// redditUserAgent mimics a real Chrome on Windows so it stays consistent
+	// with the Sec-CH-UA client hints below; Reddit 403s requests whose
+	// User-Agent and client hints don't look like a genuine browser.
+	redditUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+		"(KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
+	// redditCookie is a logged-out (anonymous) device identifier Reddit issues
+	// to browsers. It carries no account credentials. If Reddit tightens
+	// protection further, refresh it from a real browser request to reddit.com.
+	redditCookie = "loid=0000000000gniio6du.2.1637187642553.Z0FBQUFBQm54d2FCZDA3MFdzN2NN" +
+		"UDI1ZjdDV1hqbWlheTdBQlhvVlVEMFdTUERzWFlXeC1oZUtpaDVBRUVYM2pIVHFJZWdDcm8tMjZWeUhCdG9LN3" +
+		"FldVZUSkVCaVZrdHJ0VzZqWU90YllUdHBfb2g5WWdXUDJ4Q0w4QUtFWXdHdmdHdFJLb3dFVHI"
 )
 
 // NewReddit creates a Reddit client targeting r/golang.
 // If cfg.ScraperAPIKeys is set, requests are routed through ScraperAPI to avoid
 // IP blocks on restricted hosting environments (e.g. Vercel, GitHub Actions).
+// WithKeepHeaders ensures the browser-like headers below are forwarded to
+// Reddit rather than stripped by the proxy.
 func NewReddit(cfg env.Config) *Reddit {
-	return &Reddit{url: ingest.ScraperURL(cfg.ScraperAPIKeys, redditURL)}
+	return &Reddit{url: ingest.ScraperURL(cfg.ScraperAPIKeys, redditURL, ingest.WithKeepHeaders())}
+}
+
+// redditHeaders returns the browser-like request headers Reddit's .json
+// endpoint expects. Reddit 403s requests that don't carry a realistic browser
+// fingerprint, so we replicate Chrome's headers (and an anonymous cookie).
+//
+// Accept-Encoding is deliberately omitted: Go's transport adds gzip and
+// transparently decompresses the response, whereas setting it manually would
+// force us to decode the body ourselves before json.Unmarshal.
+func redditHeaders() http.Header {
+	return http.Header{
+		"User-Agent":                {redditUserAgent},
+		"Accept":                    {"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"},
+		"Accept-Language":           {"en-US,en;q=0.9"},
+		"Cache-Control":             {"no-cache"},
+		"Pragma":                    {"no-cache"},
+		"Priority":                  {"u=0, i"},
+		"Sec-Ch-Ua":                 {`"Chromium";v="148", "Google Chrome";v="148", "Not/A)Brand";v="99"`},
+		"Sec-Ch-Ua-Mobile":          {"?0"},
+		"Sec-Ch-Ua-Platform":        {`"Windows"`},
+		"Sec-Fetch-Dest":            {"document"},
+		"Sec-Fetch-Mode":            {"navigate"},
+		"Sec-Fetch-Site":            {"cross-site"},
+		"Sec-Fetch-User":            {"?1"},
+		"Upgrade-Insecure-Requests": {"1"},
+		"Cookie":                    {redditCookie},
+	}
 }
 
 // Fetch retrieves the latest posts from r/golang via the public JSON API.
 func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
-	listing, err := ingest.Fetch[redditListing](ctx, r.url, "reddit", json.Unmarshal, http.Header{
-		"User-Agent": {redditUserAgent},
-	})
+	listing, err := ingest.Fetch[redditListing](ctx, r.url, "reddit", json.Unmarshal, redditHeaders())
 	if err != nil {
 		return nil, err
 	}

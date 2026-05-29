@@ -23,6 +23,7 @@ func TestScraperURL(t *testing.T) {
 
 	tt := map[string]struct {
 		keys []string
+		opts []ScraperOption
 		want string
 	}{
 		"No keys returns target unchanged": {
@@ -37,12 +38,22 @@ func TestScraperURL(t *testing.T) {
 			keys: []string{"key_even", "key_odd"},
 			want: proxy([]string{"key_even", "key_odd"}[time.Now().UTC().Day()%2]),
 		},
+		"WithKeepHeaders adds keep_headers param": {
+			keys: []string{"key1"},
+			opts: []ScraperOption{WithKeepHeaders()},
+			want: fmt.Sprintf("%s?api_key=key1&keep_headers=true&premium=true&url=%s", scraperAPIBase, url.QueryEscape(target)),
+		},
+		"Options ignored when no keys": {
+			keys: nil,
+			opts: []ScraperOption{WithKeepHeaders()},
+			want: target,
+		},
 	}
 
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, ScraperURL(test.keys, target))
+			assert.Equal(t, test.want, ScraperURL(test.keys, target, test.opts...))
 		})
 	}
 }
