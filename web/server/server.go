@@ -49,6 +49,7 @@ func newKit(a *godaily.App) *webkit.Kit {
 	kit.Get("/privacy/", handlers.Privacy())
 	kit.Get("/issues/", handlers.Issues(a))
 	kit.Get("/issues/{slug}/", handlers.Digest(a))
+	kit.Get("/browse/", handlers.Browse(a))
 	kit.Static("/assets/", "web/dist/") // From where main.go is
 	kit.NotFound(func(c *webkit.Context) error {
 		return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))

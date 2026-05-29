@@ -1,0 +1,35 @@
+package components
+
+type AppliedChip struct {
+	Label       string
+	RemoveURL   string           // link that removes just this chip
+	Variant     string           // optional modifier, e.g. "digest"
+	RemoveAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+type AppliedFiltersProps struct {
+	Chips      []AppliedChip
+	ResetURL   string           // link that clears all filters
+	Label      string           // leading label, e.g. "Showing"
+	ResetAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ AppliedFilters(props AppliedFiltersProps) {
+	if len(props.Chips) > 0 {
+		<div class="applied-filters">
+			if props.Label != "" {
+				<span class="applied-filters__label">{ props.Label }</span>
+			}
+			for _, c := range props.Chips {
+				<span class={ "applied-filters__chip",
+					templ.KV("applied-filters__chip--"+c.Variant, c.Variant != "") }>
+					{ c.Label }
+					<a class="applied-filters__remove" href={ templ.SafeURL(c.RemoveURL) } aria-label={ "Remove " + c.Label } { c.RemoveAttrs... }>×</a>
+				</span>
+			}
+			if props.ResetURL != "" {
+				<a class="applied-filters__reset" href={ templ.SafeURL(props.ResetURL) } { props.ResetAttrs... }>Reset all</a>
+			}
+		</div>
+	}
+}

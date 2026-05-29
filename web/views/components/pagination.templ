@@ -1,0 +1,89 @@
+package components
+
+import (
+	"fmt"
+	"strconv"
+)
+
+type PaginationProps struct {
+	Page       int64
+	TotalPages int64
+	HrefFor    func(page int64) string
+	// AttrsFor optionally builds extra attributes (e.g. htmx) per page link.
+	AttrsFor func(page int64) templ.Attributes
+}
+
+// Pagination renders prev/next plus a windowed list of page numbers.
+// HrefFor builds the link for each page, letting callers preserve other
+// querystring state.
+templ Pagination(props PaginationProps) {
+	if props.TotalPages > 1 {
+		<nav class="pagination" aria-label="Pagination">
+			if props.Page > 1 {
+				<a class="pagination__btn pagination__btn--prev" href={ templ.SafeURL(props.HrefFor(props.Page - 1)) } rel="prev" { paginationAttrs(props, props.Page-1)... }>‹ Prev</a>
+			} else {
+				<span class="pagination__btn pagination__btn--disabled">‹ Prev</span>
+			}
+			for _, p := range paginationPages(props.Page, props.TotalPages) {
+				if p == 0 {
+					<span class="pagination__dots">…</span>
+				} else {
+					<a
+						class={ "pagination__btn", templ.KV("pagination__btn--active", p == props.Page) }
+						href={ templ.SafeURL(props.HrefFor(p)) }
+						aria-current?={ p == props.Page }
+						{ paginationAttrs(props, p)... }
+					>
+						{ strconv.FormatInt(p, 10) }
+					</a>
+				}
+			}
+			if props.Page < props.TotalPages {
+				<a class="pagination__btn pagination__btn--next" href={ templ.SafeURL(props.HrefFor(props.Page + 1)) } rel="next" { paginationAttrs(props, props.Page+1)... }>Next ›</a>
+			} else {
+				<span class="pagination__btn pagination__btn--disabled">Next ›</span>
+			}
+		</nav>
+	}
+}
+
+func paginationAttrs(props PaginationProps, page int64) templ.Attributes {
+	if props.AttrsFor == nil {
+		return nil
+	}
+	return props.AttrsFor(page)
+}
+
+// paginationPages returns the visible page numbers. 0 represents an ellipsis.
+// Window: first, last, current ±1.
+func paginationPages(current, total int64) []int64 {
+	if total <= 7 {
+		out := make([]int64, 0, total)
+		for i := int64(1); i <= total; i++ {
+			out = append(out, i)
+		}
+		return out
+	}
+	pages := []int64{1}
+	start := current - 1
+	end := current + 1
+	if start < 2 {
+		start = 2
+	}
+	if end > total-1 {
+		end = total - 1
+	}
+	if start > 2 {
+		pages = append(pages, 0)
+	}
+	for i := start; i <= end; i++ {
+		pages = append(pages, i)
+	}
+	if end < total-1 {
+		pages = append(pages, 0)
+	}
+	pages = append(pages, total)
+	return pages
+}
+
+var _ = fmt.Sprintf

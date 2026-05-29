@@ -1,0 +1,29 @@
+package components
+
+type TabProps struct {
+	Label  string
+	Href   string
+	Count  string // optional badge text
+	Active bool
+	Attrs  templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ Tabs(tabs []TabProps) {
+	<div class="tabs">
+		<div class="tabs__scroll">
+			for _, t := range tabs {
+				<a
+					class={ "tabs__tab", templ.KV("tabs__tab--active", t.Active) }
+					href={ templ.SafeURL(t.Href) }
+					aria-current?={ t.Active }
+					{ t.Attrs... }
+				>
+					{ t.Label }
+					if t.Count != "" {
+						<span class="tabs__count">{ t.Count }</span>
+					}
+				</a>
+			}
+		</div>
+	</div>
+}

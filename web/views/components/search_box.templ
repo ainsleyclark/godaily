@@ -1,0 +1,31 @@
+package components
+
+import "github.com/ainsleyclark/godaily/web/views/graphics/icons"
+
+type SearchBoxProps struct {
+	Action      string
+	Name        string
+	Value       string
+	Placeholder string
+	Hint        string           // optional keyboard hint, e.g. "⌘K"
+	Attrs       templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ SearchBox(props SearchBoxProps) {
+	<form class="search-box" method="get" action={ templ.SafeURL(props.Action) } { props.Attrs... }>
+		<span class="search-box__icon">
+			@icons.Search(16)
+		</span>
+		<input
+			class="search-box__input"
+			type="search"
+			name={ props.Name }
+			value={ props.Value }
+			placeholder={ props.Placeholder }
+			aria-label="Search"
+		/>
+		if props.Hint != "" {
+			<kbd class="search-box__hint">{ props.Hint }</kbd>
+		}
+	</form>
+}

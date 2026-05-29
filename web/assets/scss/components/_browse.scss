@@ -1,0 +1,75 @@
+@use '../abstracts/mixins' as *;
+
+/* Browse page uses a white canvas (override the global blue --bg). */
+body:has(.section.browse) {
+	background: var(--color-white);
+}
+
+/* The browse section sits directly under the sticky header and provides its
+   own internal spacing — trim the default section padding so the hero isn't
+   pushed down. A soft blue wash fades out past the hero, matching the home. */
+.section.browse {
+	padding-top: 3rem;
+	padding-bottom: 1.5rem;
+	position: relative;
+	/* No overflow:hidden here — would break position:sticky on the tabs row. */
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 300px;
+		background: linear-gradient(180deg,
+			var(--accent-wash-strong) 0%,
+			var(--accent-wash-soft) 45%,
+			transparent 100%);
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	/* Lift containers above the gradient without touching the tabs row — the
+	   tabs need to stay position:sticky, so we can't blanket-set position on
+	   every direct child. */
+	> .container {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+/* ── Browse layout ────────────────────────────────── */
+.browse {
+	&__layout {
+		display: grid;
+		grid-template-columns: 240px 1fr 280px;
+		gap: 28px;
+		padding: 1.5rem 0 3rem;
+
+		@include tablet { grid-template-columns: 220px 1fr; }
+		@include mobile { grid-template-columns: 1fr; }
+
+		/* No filter sidebar (empty archive): drop the left column. */
+		&--no-filters {
+			grid-template-columns: 1fr 280px;
+
+			@include tablet { grid-template-columns: 1fr; }
+			@include mobile { grid-template-columns: 1fr; }
+		}
+	}
+	&__main { min-width: 0; }
+}
+.browse-side { align-self: start; position: sticky; top: 124px; }
+.browse-trending {
+	align-self: start;
+	position: sticky;
+	top: 124px;
+
+	@include tablet { display: none; }
+	@include mobile { display: none; }
+
+	&__note {
+		font-size: 0.68rem;
+		color: var(--text-4);
+		margin-top: 8px;
+		line-height: 1.5;
+	}
+}

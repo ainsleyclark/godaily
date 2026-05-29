@@ -1,0 +1,43 @@
+.empty-state {
+	text-align: center;
+	padding: 4rem 1rem;
+	margin-top: 8px;
+	border: 1px dashed var(--border);
+	border-radius: 14px;
+	background: var(--bg-soft);
+
+	&__glyph {
+		width: 56px;
+		height: 56px;
+		margin: 0 auto 14px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 16px;
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+		color: var(--color-white);
+	}
+	&__title { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+	&__body {
+		font-size: 0.86rem;
+		color: var(--text-2);
+		margin: 6px auto 0;
+		max-width: 380px;
+		line-height: 1.55;
+	}
+	&__cta {
+		display: inline-block;
+		margin-top: 16px;
+		padding: 8px 16px;
+		border-radius: 8px;
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--accent-dark);
+		text-decoration: none;
+		background: var(--color-white);
+		border: 1px solid var(--accent-light);
+		transition: background 0.15s, border-color 0.15s;
+
+		&:hover { background: var(--accent-tint); border-color: var(--accent); }
+	}
+}

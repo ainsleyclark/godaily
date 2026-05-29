@@ -1,0 +1,27 @@
+package components
+
+import "fmt"
+
+type RankedItem struct {
+	Title string
+	Meta  string
+	Href  string
+}
+
+templ RankedList(items []RankedItem) {
+	<ol class="ranked-list">
+		for i, it := range items {
+			<li>
+				<a class="ranked-list__row" href={ templ.SafeURL(it.Href) }>
+					<span class="ranked-list__rank">{ fmt.Sprintf("%02d", i+1) }</span>
+					<span class="ranked-list__info">
+						<span class="ranked-list__title">{ it.Title }</span>
+						if it.Meta != "" {
+							<span class="ranked-list__meta">{ it.Meta }</span>
+						}
+					</span>
+				</a>
+			</li>
+		}
+	</ol>
+}

@@ -1,0 +1,26 @@
+package components
+
+import "github.com/ainsleyclark/godaily/web/views/graphics/icons"
+
+type EmptyStateProps struct {
+	Title    string
+	Body     string
+	CTALabel string
+	CTAURL   string
+	CTAAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ EmptyState(props EmptyStateProps) {
+	<div class="empty-state">
+		<div class="empty-state__glyph" aria-hidden="true">
+			@icons.Envelope(22)
+		</div>
+		<h3 class="empty-state__title">{ props.Title }</h3>
+		if props.Body != "" {
+			<p class="empty-state__body">{ props.Body }</p>
+		}
+		if props.CTALabel != "" && props.CTAURL != "" {
+			<a class="empty-state__cta" href={ templ.SafeURL(props.CTAURL) } { props.CTAAttrs... }>{ props.CTALabel }</a>
+		}
+	</div>
+}

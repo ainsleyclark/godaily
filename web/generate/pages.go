@@ -9,11 +9,14 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net/url"
 	"os"
 	"path/filepath"
 
 	"github.com/a-h/templ"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/web/handlers"
 	"github.com/ainsleyclark/godaily/web/og"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
@@ -21,7 +24,7 @@ import (
 
 // renderPages writes the homepage, thank-you page, issues archive, and all
 // individual issue pages to outDir. It calls repo.Find for each issue to load its full item list.
-func renderPages(ctx context.Context, repo digest.IssueRepository, w website, subscriberCount int64, outDir string) error {
+func renderPages(ctx context.Context, repo digest.IssueRepository, items news.ItemRepository, w website, subscriberCount int64, outDir string) error {
 	gen, err := og.New()
 	if err != nil {
 		return errors.Wrap(err, "creating OG image generator")
@@ -54,6 +57,16 @@ func renderPages(ctx context.Context, repo digest.IssueRepository, w website, su
 
 	if err := renderPageInDir(ctx, filepath.Join(outDir, "privacy"), pages.Privacy()); err != nil {
 		return errors.Wrap(err, "rendering privacy page")
+	}
+
+	// The browse page renders its initial (unfiltered) state statically; the
+	// client re-fetches filtered fragments from /api/browse on interaction.
+	browseProps, err := handlers.BuildBrowseProps(ctx, repo, items, url.Values{})
+	if err != nil {
+		return errors.Wrap(err, "building browse props")
+	}
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "browse"), pages.Browse(browseProps)); err != nil {
+		return errors.Wrap(err, "rendering browse page")
 	}
 
 	fullIssues := make([]digest.Issue, 0, len(w.Issues))

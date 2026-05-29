@@ -1,0 +1,23 @@
+package components
+
+type RangeButton struct {
+	Label  string
+	Href   string
+	Active bool
+	Attrs  templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ RangeButtons(buttons []RangeButton) {
+	<div class="range-buttons" role="group">
+		for _, b := range buttons {
+			<a
+				class={ "range-buttons__btn", templ.KV("range-buttons__btn--active", b.Active) }
+				href={ templ.SafeURL(b.Href) }
+				aria-current?={ b.Active }
+				{ b.Attrs... }
+			>
+				{ b.Label }
+			</a>
+		}
+	</div>
+}

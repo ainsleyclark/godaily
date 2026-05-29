@@ -16,7 +16,8 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
+	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
 	"github.com/ainsleyclark/godaily/web/generate"
 )
 
@@ -48,6 +49,7 @@ func TestSite(t *testing.T) {
 				filepath.Join("thank-you", "index.html"),
 				filepath.Join("unsubscribed", "index.html"),
 				filepath.Join("issues", "index.html"),
+				filepath.Join("browse", "index.html"),
 			},
 		},
 		"Happy path with issue": {
@@ -64,6 +66,7 @@ func TestSite(t *testing.T) {
 				filepath.Join("unsubscribed", "index.html"),
 				filepath.Join("issues", "index.html"),
 				filepath.Join("issues", issue.Slug, "index.html"),
+				filepath.Join("browse", "index.html"),
 				filepath.Join("og", "home.png"),
 				filepath.Join("og", "issues", issue.Slug+".png"),
 			},
@@ -99,6 +102,15 @@ func TestSite(t *testing.T) {
 			repo := mockdigest.NewMockIssueRepository(ctrl)
 			test.mock(repo)
 
+			// The browse page (rendered for cases that get past the early
+			// issue queries) pulls item data and the latest issue ID.
+			repo.EXPECT().Latest(gomock.Any(), 1).Return([]digest.Issue{}, nil).AnyTimes()
+			items := mocknews.NewMockItemRepository(ctrl)
+			items.EXPECT().List(gomock.Any(), gomock.Any()).Return([]news.Item{}, nil).AnyTimes()
+			items.EXPECT().Count(gomock.Any()).Return(int64(0), nil).AnyTimes()
+			items.EXPECT().SourceCounts(gomock.Any()).Return([]news.SourceCount{}, nil).AnyTimes()
+			items.EXPECT().TagCounts(gomock.Any()).Return([]news.TagCount{}, nil).AnyTimes()
+
 			outDir := t.TempDir()
 			staticDir := t.TempDir()
 			assetsDir := t.TempDir()
@@ -106,7 +118,7 @@ func TestSite(t *testing.T) {
 			// Write a sentinel asset file to verify copying.
 			require.NoError(t, os.WriteFile(filepath.Join(assetsDir, "app.css"), []byte("body{}"), 0o644))
 
-			err := generate.Site(t.Context(), repo, 0, outDir, staticDir, assetsDir)
+			err := generate.Site(t.Context(), repo, items, 0, outDir, staticDir, assetsDir)
 			assert.Equal(t, test.wantErr, err != nil)
 
 			for _, f := range test.wantFiles {

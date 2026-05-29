@@ -1,0 +1,26 @@
+package components
+
+type SideBlockProps struct {
+	Title       string
+	ActionLabel string           // optional right-aligned link text
+	ActionURL   string
+	Variant     string           // optional modifier appended as side-block--{variant}
+	ActionAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ SideBlock(props SideBlockProps) {
+	<section class={ "side-block",
+		templ.KV("side-block--"+props.Variant, props.Variant != "") }>
+		if props.Title != "" {
+			<h4 class="side-block__title">
+				<span>{ props.Title }</span>
+				if props.ActionLabel != "" && props.ActionURL != "" {
+					<a class="side-block__action" href={ templ.SafeURL(props.ActionURL) } { props.ActionAttrs... }>{ props.ActionLabel }</a>
+				}
+			</h4>
+		}
+		<div class="side-block__body">
+			{ children... }
+		</div>
+	</section>
+}

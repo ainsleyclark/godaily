@@ -1,0 +1,47 @@
+/* Masthead for filtered listing pages: kicker, h1, supporting copy, and an
+   optional aside slot (e.g. a search box). */
+.listing-hero {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+	padding: 0 0 1.2rem;
+
+	&__copy { max-width: 640px; }
+	&__kicker {
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+	&__title {
+		margin-top: 0.4rem;
+		font-size: clamp(1.9rem, 2.8vw, 2.3rem);
+		font-weight: 700;
+		line-height: 1.1;
+		letter-spacing: -0.025em;
+		color: var(--text);
+	}
+	&__accent { color: var(--accent); }
+	&__sub {
+		margin-top: 0.55rem;
+		font-size: 0.95rem;
+		color: var(--text-2);
+		line-height: 1.6;
+	}
+	&__inline-mark {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		vertical-align: -2px;
+		font-size: 0.78rem;
+		font-weight: 600;
+		padding: 1px 8px 1px 6px;
+		border-radius: 100px;
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+		color: var(--color-white);
+	}
+	&__aside { min-width: 280px; flex: 1; max-width: 480px; }
+}

@@ -1,0 +1,31 @@
+package components
+
+type ChipButtonProps struct {
+	Href    string // when set, renders as <a>
+	Active  bool
+	Variant string           // optional modifier name appended as chip-btn--{variant}
+	Attrs   templ.Attributes // optional extra attributes (e.g. htmx)
+}
+
+templ ChipButton(props ChipButtonProps) {
+	if props.Href != "" {
+		<a
+			class={ "chip-btn",
+				templ.KV("chip-btn--active", props.Active),
+				templ.KV("chip-btn--"+props.Variant, props.Variant != "") }
+			href={ templ.SafeURL(props.Href) }
+			{ props.Attrs... }
+		>
+			{ children... }
+		</a>
+	} else {
+		<button
+			type="button"
+			class={ "chip-btn",
+				templ.KV("chip-btn--active", props.Active),
+				templ.KV("chip-btn--"+props.Variant, props.Variant != "") }
+		>
+			{ children... }
+		</button>
+	}
+}

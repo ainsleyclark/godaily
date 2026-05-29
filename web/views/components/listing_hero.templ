@@ -1,0 +1,27 @@
+package components
+
+type ListingHeroProps struct {
+	Kicker string
+	Title  string
+	Sub    string
+}
+
+// ListingHero renders the masthead for a filtered listing page: a kicker,
+// h1, and supporting copy on the left. Pass children to slot additional
+// content (e.g. a search box) on the right.
+templ ListingHero(props ListingHeroProps) {
+	<header class="listing-hero">
+		<div class="listing-hero__copy">
+			if props.Kicker != "" {
+				<div class="listing-hero__kicker">{ props.Kicker }</div>
+			}
+			<h1 class="listing-hero__title">@templ.Raw(props.Title)</h1>
+			if props.Sub != "" {
+				<p class="listing-hero__sub">@templ.Raw(props.Sub)</p>
+			}
+		</div>
+		<div class="listing-hero__aside">
+			{ children... }
+		</div>
+	</header>
+}

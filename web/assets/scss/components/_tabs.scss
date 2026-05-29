@@ -1,0 +1,73 @@
+@use '../abstracts/mixins' as *;
+
+.tabs {
+	position: sticky;
+	top: 64px;
+	z-index: 50;
+	/* Solid white blends into the page canvas at rest and reliably obscures
+	   scrolled content when the row sticks under the header. */
+	background: var(--color-white);
+	border-bottom: 1px solid var(--border-soft);
+	margin-top: 1.6rem;
+
+	/* Right-edge fade hinting that the tab row scrolls horizontally. Pinned to
+	   the right edge of the centred max-width column so it lines up with the
+	   content, and ignores pointer events so tabs underneath stay clickable. */
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 1px;
+		right: max(0px, calc((100% - var(--container-max-width)) / 2));
+		width: 56px;
+		pointer-events: none;
+		background: linear-gradient(90deg, transparent 0%, var(--color-white) 85%);
+		z-index: 1;
+	}
+
+	&__scroll {
+		max-width: var(--container-max-width);
+		margin: 0 auto;
+		padding: 0 2rem;
+		display: flex;
+		gap: 0;
+		overflow-x: auto;
+		scrollbar-width: none;
+
+		@include mobile { padding: 0 var(--section-padding-x); }
+
+		&::-webkit-scrollbar { display: none; }
+	}
+	&__tab {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 14px 18px;
+		font-size: 0.88rem;
+		font-weight: 500;
+		color: var(--text-2);
+		text-decoration: none;
+		border-bottom: 2px solid transparent;
+		white-space: nowrap;
+		flex-shrink: 0;
+		transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+		&:hover { color: var(--text); background: var(--bg-soft); }
+		&--active {
+			color: var(--accent);
+			border-bottom-color: var(--accent);
+			font-weight: 600;
+		}
+	}
+	&__count {
+		font-size: 0.7rem;
+		padding: 1px 7px;
+		border-radius: 100px;
+		font-weight: 600;
+		background: var(--bg-soft);
+		color: var(--text-3);
+		font-family: var(--mono);
+
+		.tabs__tab--active & { background: var(--accent-light); color: var(--accent-dark); }
+	}
+}

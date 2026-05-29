@@ -36,8 +36,6 @@ type ItemListOptions struct {
     IssueID *int64
     From    *time.Time
     To      *time.Time
-
-    // Browse filters (all optional / zero = no filter)
     Sources   []Source   // OR-match across sources
     Tags      []Tag      // section tags (use Tag.Section() semantics)
     Search    string     // LIKE over title + summary
