@@ -106,9 +106,14 @@ templ BrowseTabsRegion(props BrowseProps) {
 }
 
 // BrowseSideRegion renders the filter sidebar (sources, date range, digest
-// toggle). The root <aside> carries id="browse-side" for out-of-band swaps.
+// toggle). On desktop it sits in the left column; on mobile the Drawer wrapper
+// turns it into an off-canvas panel opened from the toolbar's Filters button.
+// The wrapper and scrim live outside the swapped #browse-side aside, so the
+// drawer's open state survives the out-of-band filter swaps.
 templ BrowseSideRegion(props BrowseProps) {
-	@components.BrowseFilterSide(browseFilterSideProps(props))
+	@components.Drawer(components.DrawerProps{ID: "filter-drawer"}) {
+		@components.BrowseFilterSide(browseFilterSideProps(props))
+	}
 }
 
 // BrowseMain renders the results column: toolbar, applied filters, the item

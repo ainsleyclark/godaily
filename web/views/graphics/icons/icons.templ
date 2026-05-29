@@ -21,3 +21,25 @@ templ Envelope(size int) {
 		<polyline points="3 7 12 13 21 7"></polyline>
 	</svg>
 }
+
+// Sliders renders a filter/sliders glyph at the given pixel size. Used on the
+// mobile control that opens the filter drawer.
+templ Sliders(size int) {
+	<svg width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<line x1="4" y1="7" x2="20" y2="7"></line>
+		<line x1="4" y1="12" x2="20" y2="12"></line>
+		<line x1="4" y1="17" x2="20" y2="17"></line>
+		<circle cx="9" cy="7" r="2.4" fill="var(--color-white)"></circle>
+		<circle cx="15" cy="12" r="2.4" fill="var(--color-white)"></circle>
+		<circle cx="8" cy="17" r="2.4" fill="var(--color-white)"></circle>
+	</svg>
+}
+
+// Close renders an X glyph at the given pixel size. Used to dismiss the filter
+// drawer and other overlays.
+templ Close(size int) {
+	<svg width={ fmt.Sprintf("%d", size) } height={ fmt.Sprintf("%d", size) } viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<line x1="6" y1="6" x2="18" y2="18"></line>
+		<line x1="18" y1="6" x2="6" y2="18"></line>
+	</svg>
+}

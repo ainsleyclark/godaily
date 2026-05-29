@@ -5,19 +5,15 @@
 	margin: 0;
 	padding: 0;
 
-	/* On mobile the filter sidebar collapses into the single-column flow above
-	   the results, so a ~20-row source list would push the actual stories far
-	   down the page. Lay the rows out in two columns and cap the height so the
-	   block stays compact and scrolls internally rather than dominating the
-	   viewport. */
+	/* On mobile this list lives inside the filter drawer, which scrolls as a
+	   whole. Lay the ~20 source rows out in two columns so the block stays
+	   compact and the date-range/digest controls below it remain reachable
+	   without a long scroll. (No inner scroll cap — that would nest a second
+	   scroll region inside the drawer panel.) */
 	@include mobile {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		column-gap: 6px;
-		max-height: min(240px, 42vh);
-		overflow-y: auto;
-		overscroll-behavior: contain;
-		-webkit-overflow-scrolling: touch;
 	}
 
 	&__row {

@@ -13,6 +13,7 @@ import { initLogoTicker } from './logos';
 import { initHamburger } from './hamburger';
 import { initShareButtons } from './share';
 import { initBrowse } from './browse';
+import { initDrawers } from './drawer';
 
 document.addEventListener('DOMContentLoaded', () => {
 	initSubscribeForm();
@@ -21,4 +22,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	initHamburger();
 	initShareButtons();
 	initBrowse();
+	initDrawers();
 });

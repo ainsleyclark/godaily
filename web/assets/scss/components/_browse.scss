@@ -114,7 +114,18 @@ body:has(.section.browse) {
 	cursor: progress;
 }
 
-.browse-side { align-self: start; position: sticky; top: 124px; }
+/* The filter sidebar sticks alongside the results on desktop. Sticky is scoped
+   to desktop only — on mobile the layout is a single column and a sticky panel
+   would detach and float over the results as you scroll. There the sidebar is
+   driven by the Drawer wrapper instead (see components/_drawer.scss). */
+.browse-side {
+	align-self: start;
+
+	@include desktop {
+		position: sticky;
+		top: 124px;
+	}
+}
 .browse-trending {
 	align-self: start;
 	position: sticky;

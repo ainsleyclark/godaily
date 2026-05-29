@@ -26,7 +26,8 @@ type BrowseFilterSideProps struct {
 }
 
 templ BrowseFilterSide(props BrowseFilterSideProps) {
-	<aside id="browse-side" class="browse-side" { props.AsideAttrs... }>
+	<aside id="browse-side" class="browse-side" aria-label="Filters" { props.AsideAttrs... }>
+		@DrawerBar("Filters")
 		@digestToggleBlock(props)
 		@SideBlock(SideBlockProps{
 			Title:       "Sources",

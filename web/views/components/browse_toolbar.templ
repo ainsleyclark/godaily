@@ -32,6 +32,7 @@ type SelectOption struct {
 
 templ BrowseToolbar(props BrowseToolbarProps) {
 	<div class="browse-toolbar">
+		@DrawerTrigger("filter-drawer", "Filters")
 		@Segmented(props.Sort)
 		<form class="browse-toolbar__range" method="get" action={ templ.SafeURL(props.RangeFormAction) }>
 			if props.RangeSelectAttrs != nil {
