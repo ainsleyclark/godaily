@@ -47,10 +47,12 @@ type CollectResponse struct {
 type SubmitResponse struct {
 	// Received is the number of transformed items in the submitted payload.
 	Received int
-	// Persisted is the number of items that fell within the collection window
-	// and were saved.
+	// Persisted is the number of new items that fell within the collection
+	// window and were saved.
 	Persisted int
-	// Skipped is true when the source already had items in the window, so the
-	// submission was a no-op (re-submitting is idempotent).
-	Skipped bool
+	// Duplicates is the number of in-window items skipped because an item with
+	// the same (url, tag) already existed — either in the store or earlier in
+	// the same payload. Lets the endpoint be run repeatedly without creating
+	// duplicates.
+	Duplicates int
 }

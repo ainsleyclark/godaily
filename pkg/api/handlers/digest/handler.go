@@ -40,7 +40,6 @@ func New(a *godaily.App) *Handler {
 // registered at the root level in the mux, not here.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/collect", h.Collect, auth)
-	kit.Post("/submit-reddit", h.SubmitReddit, auth)
 	kit.Get("/build", h.Build, auth)
 	kit.Get("/send", h.Send, auth)
 	kit.Get("/preview", h.Preview, auth)
