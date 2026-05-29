@@ -1,0 +1,54 @@
+package components
+
+import "github.com/ainsleyclark/godaily/web/views/graphics/icons"
+
+// Drawer is a reusable off-canvas panel. On mobile its children slide in from
+// the side over a dimming scrim; on desktop the wrapper is layout-transparent
+// (display:contents) so the children flow in place — letting the same sidebar
+// markup serve as an inline column on desktop and a drawer on mobile.
+//
+// The wrapper and scrim are deliberately kept separate from the panel so they
+// can persist across htmx swaps: the caller may out-of-band swap the panel
+// (the children) by id without disturbing the open state held on this wrapper.
+//
+// Open/close is wired by drawer.ts via the data-attributes: a control marked
+// data-drawer-open="<ID>" opens this drawer; any element marked
+// data-drawer-close within it dismisses it.
+type DrawerProps struct {
+	ID string // matches the trigger's data-drawer-open target
+}
+
+templ Drawer(props DrawerProps) {
+	<div class="drawer" id={ props.ID } data-drawer>
+		<button class="drawer__scrim" type="button" data-drawer-close aria-label="Close" tabindex="-1"></button>
+		{ children... }
+	</div>
+}
+
+// DrawerTrigger renders the control that opens the drawer with the given id.
+// It is hidden on desktop (where the drawer's contents show inline) and shown
+// on mobile.
+templ DrawerTrigger(targetID, label string) {
+	<button
+		class="drawer-trigger"
+		type="button"
+		data-drawer-open={ targetID }
+		aria-controls={ targetID }
+		aria-expanded="false"
+	>
+		@icons.Sliders(15)
+		<span>{ label }</span>
+	</button>
+}
+
+// DrawerBar is the header strip shown at the top of a drawer panel on mobile:
+// a title plus a close button. It is hidden on desktop. Render it as the first
+// child inside the panel content.
+templ DrawerBar(title string) {
+	<div class="drawer__bar">
+		<span class="drawer__bar-title">{ title }</span>
+		<button class="drawer__bar-close" type="button" data-drawer-close aria-label="Close filters">
+			@icons.Close(16)
+		</button>
+	</div>
+}
