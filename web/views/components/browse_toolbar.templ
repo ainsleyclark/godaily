@@ -1,16 +1,25 @@
 package components
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/web/views/graphics/icons"
+)
 
 type BrowseToolbarProps struct {
-	Sort            []SegmentProps    // Hot / Top / New
-	RangeOptions    []SelectOption    // for the range dropdown
-	RangeName       string            // querystring name
+	Sort            []SegmentProps // Hot / Top / New
+	RangeOptions    []SelectOption // for the range dropdown
+	RangeName       string         // querystring name
 	RangeSelected   string
 	RangeFormAction string
+	// RangeSelectAttrs optionally adds attributes (e.g. htmx) to the range
+	// select. When set, the select drives updates directly and the native
+	// onchange submit is dropped (a <noscript> Apply button covers no-JS).
+	RangeSelectAttrs templ.Attributes
 
-	DigestOnly       bool
-	DigestToggleURL  string
+	DigestOnly      bool
+	DigestToggleURL string
+	DigestAttrs     templ.Attributes // optional extra attributes (e.g. htmx)
 
 	Matching int64
 }
@@ -25,11 +34,19 @@ templ BrowseToolbar(props BrowseToolbarProps) {
 	<div class="browse-toolbar">
 		@Segmented(props.Sort)
 		<form class="browse-toolbar__range" method="get" action={ templ.SafeURL(props.RangeFormAction) }>
-			<select class="chip-btn" name={ props.RangeName } onchange="this.form.submit()">
-				for _, o := range props.RangeOptions {
-					<option value={ o.Value } selected?={ o.Selected }>{ o.Label }</option>
-				}
-			</select>
+			if props.RangeSelectAttrs != nil {
+				<select class="chip-btn" name={ props.RangeName } { props.RangeSelectAttrs... }>
+					for _, o := range props.RangeOptions {
+						<option value={ o.Value } selected?={ o.Selected }>{ o.Label }</option>
+					}
+				</select>
+			} else {
+				<select class="chip-btn" name={ props.RangeName } onchange="this.form.submit()">
+					for _, o := range props.RangeOptions {
+						<option value={ o.Value } selected?={ o.Selected }>{ o.Label }</option>
+					}
+				</select>
+			}
 			<noscript>
 				<button type="submit" class="chip-btn">Apply</button>
 			</noscript>
@@ -38,11 +55,9 @@ templ BrowseToolbar(props BrowseToolbarProps) {
 			Href:    props.DigestToggleURL,
 			Active:  props.DigestOnly,
 			Variant: "digest",
+			Attrs:   props.DigestAttrs,
 		}) {
-			<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<path d="M3 6h18v12H3z"></path>
-				<polyline points="3 7 12 13 21 7"></polyline>
-			</svg>
+			@icons.Envelope(11)
 			<span>Only digest picks</span>
 		}
 		<div class="browse-toolbar__meta">{ matchingLabel(props.Matching) }</div>

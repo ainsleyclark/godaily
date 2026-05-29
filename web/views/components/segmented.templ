@@ -5,6 +5,7 @@ type SegmentProps struct {
 	Href   string
 	Icon   templ.Component // optional leading icon
 	Active bool
+	Attrs  templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ Segmented(segments []SegmentProps) {
@@ -14,6 +15,7 @@ templ Segmented(segments []SegmentProps) {
 				class={ "seg__btn", templ.KV("seg__btn--active", s.Active) }
 				href={ templ.SafeURL(s.Href) }
 				aria-current?={ s.Active }
+				{ s.Attrs... }
 			>
 				if s.Icon != nil {
 					@s.Icon

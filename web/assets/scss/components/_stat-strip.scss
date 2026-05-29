@@ -1,0 +1,38 @@
+@use '../abstracts/mixins' as *;
+
+.stat-strip {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 14px;
+	margin-top: 1.6rem;
+
+	@include mobile { grid-template-columns: repeat(2, 1fr); }
+}
+.stat {
+	background: var(--color-white);
+	border: 1px solid var(--border-soft);
+	border-radius: 12px;
+	padding: 14px 16px;
+
+	&__value {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--text);
+		letter-spacing: -0.02em;
+		font-feature-settings: 'tnum';
+	}
+	&__delta {
+		font-size: 0.72rem;
+		color: var(--good);
+		font-weight: 600;
+		margin-left: 6px;
+	}
+	&__label {
+		font-size: 0.74rem;
+		color: var(--text-3);
+		margin-top: 2px;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 600;
+	}
+}

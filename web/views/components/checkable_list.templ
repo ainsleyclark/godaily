@@ -6,6 +6,7 @@ type CheckableRow struct {
 	Href     string // anchor target that toggles this row's filter
 	DotColor string // optional swatch colour
 	Active   bool
+	Attrs    templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ CheckableList(rows []CheckableRow) {
@@ -15,6 +16,7 @@ templ CheckableList(rows []CheckableRow) {
 				<a
 					class={ "checkable-list__row", templ.KV("checkable-list__row--active", r.Active) }
 					href={ templ.SafeURL(r.Href) }
+					{ r.Attrs... }
 				>
 					<span class={ "checkable-list__box", templ.KV("checkable-list__box--active", r.Active) } aria-hidden="true"></span>
 					if r.DotColor != "" {

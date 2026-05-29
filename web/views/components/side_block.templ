@@ -2,9 +2,10 @@ package components
 
 type SideBlockProps struct {
 	Title       string
-	ActionLabel string // optional right-aligned link text
+	ActionLabel string           // optional right-aligned link text
 	ActionURL   string
-	Variant     string // optional modifier appended as side-block--{variant}
+	Variant     string           // optional modifier appended as side-block--{variant}
+	ActionAttrs templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ SideBlock(props SideBlockProps) {
@@ -14,7 +15,7 @@ templ SideBlock(props SideBlockProps) {
 			<h4 class="side-block__title">
 				<span>{ props.Title }</span>
 				if props.ActionLabel != "" && props.ActionURL != "" {
-					<a class="side-block__action" href={ templ.SafeURL(props.ActionURL) }>{ props.ActionLabel }</a>
+					<a class="side-block__action" href={ templ.SafeURL(props.ActionURL) } { props.ActionAttrs... }>{ props.ActionLabel }</a>
 				}
 			</h4>
 		}

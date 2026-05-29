@@ -4,27 +4,35 @@ import (
 	"fmt"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/web/views/graphics/icons"
 )
 
 type BrowseFilterSideProps struct {
-	Sources         []CheckableRow
-	Ranges          []RangeButton
-	ClearSourcesURL string
+	Sources           []CheckableRow
+	Ranges            []RangeButton
+	ClearSourcesURL   string
 	ClearSourcesCount int
+	ClearSourcesAttrs templ.Attributes // optional extra attributes (e.g. htmx)
 
-	DigestOnly      bool
-	DigestToggleURL string
-	DigestPicks     int64
-	TotalInScope    int64
+	DigestOnly        bool
+	DigestToggleURL   string
+	DigestToggleAttrs templ.Attributes // optional extra attributes (e.g. htmx)
+	DigestPicks       int64
+	TotalInScope      int64
+
+	// AsideAttrs adds attributes to the root <aside> (e.g. hx-swap-oob when
+	// re-rendered as an out-of-band fragment).
+	AsideAttrs templ.Attributes
 }
 
 templ BrowseFilterSide(props BrowseFilterSideProps) {
-	<aside class="browse-side">
+	<aside id="browse-side" class="browse-side" { props.AsideAttrs... }>
 		@digestToggleBlock(props)
 		@SideBlock(SideBlockProps{
 			Title:       "Sources",
 			ActionLabel: clearLabel(props.ClearSourcesCount),
 			ActionURL:   clearLink(props.ClearSourcesURL, props.ClearSourcesCount),
+			ActionAttrs: props.ClearSourcesAttrs,
 		}) {
 			@CheckableList(props.Sources)
 		}
@@ -36,12 +44,9 @@ templ BrowseFilterSide(props BrowseFilterSideProps) {
 
 templ digestToggleBlock(props BrowseFilterSideProps) {
 	<section class={ "side-block", "side-block--digest", templ.KV("side-block--digest-on", props.DigestOnly) }>
-		<a class={ "digest-toggle", templ.KV("digest-toggle--on", props.DigestOnly) } href={ templ.SafeURL(props.DigestToggleURL) }>
+		<a class={ "digest-toggle", templ.KV("digest-toggle--on", props.DigestOnly) } href={ templ.SafeURL(props.DigestToggleURL) } { props.DigestToggleAttrs... }>
 			<span class="digest-toggle__mark" aria-hidden="true">
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M3 6h18v12H3z"></path>
-					<polyline points="3 7 12 13 21 7"></polyline>
-				</svg>
+				@icons.Envelope(11)
 			</span>
 			<span class="digest-toggle__body">
 				<span class="digest-toggle__title">Only digest picks</span>
@@ -74,16 +79,21 @@ func clearLink(url string, n int) string {
 
 // BrowseSourcesToRows is a small helper for handlers/pages building source
 // rows from SourceCount aggregates. Each row needs a toggle URL the caller
-// computes via the filter URL builder.
-func BrowseSourcesToRows(counts []news.SourceCount, hrefFor func(news.Source) string, activeFor func(news.Source) bool) []CheckableRow {
+// computes via the filter URL builder; attrsFor optionally adds per-row
+// attributes (e.g. htmx) and may be nil.
+func BrowseSourcesToRows(counts []news.SourceCount, hrefFor func(news.Source) string, activeFor func(news.Source) bool, attrsFor func(news.Source) templ.Attributes) []CheckableRow {
 	rows := make([]CheckableRow, 0, len(counts))
 	for _, c := range counts {
-		rows = append(rows, CheckableRow{
+		row := CheckableRow{
 			Label:  c.Source.NiceName(),
 			Count:  fmt.Sprintf("%d", c.Count),
 			Href:   hrefFor(c.Source),
 			Active: activeFor(c.Source),
-		})
+		}
+		if attrsFor != nil {
+			row.Attrs = attrsFor(c.Source)
+		}
+		rows = append(rows, row)
 	}
 	return rows
 }

@@ -1,0 +1,85 @@
+@use '../abstracts/mixins' as *;
+
+.browse-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 0;
+	flex-wrap: wrap;
+
+	&__range { display: inline-flex; }
+	&__meta { margin-left: auto; font-size: 0.82rem; color: var(--text-3); }
+
+	@include mobile {
+		gap: 8px;
+		&__meta { width: 100%; margin-left: 0; order: 99; text-align: right; }
+	}
+}
+
+.seg {
+	display: inline-flex;
+	background: var(--bg-soft);
+	border: 1px solid var(--border-soft);
+	border-radius: 9px;
+	padding: 3px;
+
+	&__btn {
+		padding: 6px 11px;
+		font-size: 0.8rem;
+		color: var(--text-2);
+		text-decoration: none;
+		font-weight: 500;
+		border-radius: 6px;
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		transition: background 0.15s, color 0.15s;
+
+		&:hover { color: var(--text); }
+		&--active {
+			background: var(--color-white);
+			color: var(--accent-dark);
+			box-shadow: var(--shadow-seg-active);
+		}
+	}
+}
+
+.chip-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border-radius: 100px;
+	font-size: 0.8rem;
+	color: var(--text-2);
+	text-decoration: none;
+	background: var(--color-white);
+	border: 1px solid var(--border);
+	font-weight: 500;
+	font-family: var(--font);
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+
+	&:hover { border-color: var(--accent); color: var(--accent-dark); }
+	&--active {
+		background: var(--accent-tint);
+		border-color: var(--accent-light);
+		color: var(--accent-dark);
+	}
+	&--digest.chip-btn--active {
+		background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+		color: var(--color-white);
+		border-color: var(--accent-dark);
+		box-shadow: var(--shadow-accent-chip);
+	}
+}
+
+select.chip-btn {
+	padding-right: 28px;
+	/* Encoded chevron graphic; the colour lives inside the SVG asset, not as a
+	   Sass colour token. */
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='none' stroke='%234d6a7e' stroke-width='1.5' d='M1 1l4 4 4-4'/></svg>");
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+}

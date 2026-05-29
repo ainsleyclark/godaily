@@ -3,7 +3,8 @@ package components
 type ChipButtonProps struct {
 	Href    string // when set, renders as <a>
 	Active  bool
-	Variant string // optional modifier name appended as chip-btn--{variant}
+	Variant string           // optional modifier name appended as chip-btn--{variant}
+	Attrs   templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ ChipButton(props ChipButtonProps) {
@@ -13,6 +14,7 @@ templ ChipButton(props ChipButtonProps) {
 				templ.KV("chip-btn--active", props.Active),
 				templ.KV("chip-btn--"+props.Variant, props.Variant != "") }
 			href={ templ.SafeURL(props.Href) }
+			{ props.Attrs... }
 		>
 			{ children... }
 		</a>

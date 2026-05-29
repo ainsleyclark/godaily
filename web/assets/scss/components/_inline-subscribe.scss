@@ -1,0 +1,31 @@
+.inline-subscribe {
+	&__title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+	&__sub { font-size: 0.78rem; color: var(--text-2); line-height: 1.5; margin-bottom: 12px; }
+	&__form { display: flex; flex-direction: column; gap: 6px; }
+	&__input {
+		width: 100%;
+		padding: 8px 11px;
+		border: 1.5px solid var(--border);
+		background: var(--color-white);
+		border-radius: 7px;
+		font-family: var(--font);
+		font-size: 0.8rem;
+		outline: none;
+
+		&:focus { border-color: var(--accent); }
+	}
+	&__submit {
+		width: 100%;
+		background: var(--accent);
+		color: var(--color-white);
+		padding: 9px;
+		border: none;
+		border-radius: 7px;
+		font-family: var(--font);
+		font-weight: 600;
+		font-size: 0.82rem;
+		cursor: pointer;
+		box-shadow: var(--shadow-accent-submit);
+	}
+	&__hint { font-size: 0.74rem; color: var(--text-3); margin-top: 4px; }
+}

@@ -4,6 +4,7 @@ type RangeButton struct {
 	Label  string
 	Href   string
 	Active bool
+	Attrs  templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ RangeButtons(buttons []RangeButton) {
@@ -13,6 +14,7 @@ templ RangeButtons(buttons []RangeButton) {
 				class={ "range-buttons__btn", templ.KV("range-buttons__btn--active", b.Active) }
 				href={ templ.SafeURL(b.Href) }
 				aria-current?={ b.Active }
+				{ b.Attrs... }
 			>
 				{ b.Label }
 			</a>

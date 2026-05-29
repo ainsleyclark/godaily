@@ -5,6 +5,7 @@ type TabProps struct {
 	Href   string
 	Count  string // optional badge text
 	Active bool
+	Attrs  templ.Attributes // optional extra attributes (e.g. htmx)
 }
 
 templ Tabs(tabs []TabProps) {
@@ -15,6 +16,7 @@ templ Tabs(tabs []TabProps) {
 					class={ "tabs__tab", templ.KV("tabs__tab--active", t.Active) }
 					href={ templ.SafeURL(t.Href) }
 					aria-current?={ t.Active }
+					{ t.Attrs... }
 				>
 					{ t.Label }
 					if t.Count != "" {
