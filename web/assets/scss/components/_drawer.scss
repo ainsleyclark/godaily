@@ -34,7 +34,8 @@
 		}
 
 		/* The panel: anything that is a direct child of the drawer other than the
-		   scrim. In practice that's the sidebar <aside>. */
+		   scrim. In practice that's the sidebar <aside>. Full viewport height,
+		   scrolls vertically, never horizontally. */
 		.browse-side {
 			position: fixed;
 			top: 0;
@@ -43,10 +44,12 @@
 			z-index: 1001;
 			width: min(360px, 88vw);
 			max-width: 88vw;
+			height: 100dvh;
 			margin: 0;
 			padding: 0 14px 24px;
 			background: var(--color-white);
 			box-shadow: var(--shadow-card);
+			overflow-x: hidden;
 			overflow-y: auto;
 			overscroll-behavior: contain;
 			-webkit-overflow-scrolling: touch;
@@ -136,4 +139,27 @@
 /* Lock background scroll while a drawer is open. */
 body.drawer-open {
 	@include mobile { overflow: hidden; }
+}
+
+/* ── Escaping the stacking traps ─────────────────────
+   The drawer panel/scrim are position:fixed, but their paint order is still
+   resolved inside the nearest stacking-context ancestor. On /browse that's
+   .section.browse > .container (z-index:1), which sits *below* the sticky tabs
+   (z-index:50); and the whole section sits below the sticky header
+   (z-index:100). Without help the panel would be painted under both — the tabs
+   row punches through the middle of the open drawer.
+
+   While a drawer is open: lift the section above the header, and drop the inner
+   container's stacking context so the fixed panel/scrim join the section's
+   context and paint above the tabs. Scoped to mobile + the open state, so
+   normal scroll layering is untouched the rest of the time. */
+@include mobile {
+	body.drawer-open {
+		.section.browse {
+			z-index: 1000; // above the sticky header (z-index:100)
+		}
+		.section.browse > .container {
+			z-index: auto; // un-trap: let the fixed panel reach the section's context
+		}
+	}
 }
