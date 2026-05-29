@@ -7,7 +7,6 @@ package digest
 import (
 	"context"
 	"fmt"
-	"log/slog"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
@@ -59,8 +58,6 @@ func New(
 }
 
 func (s Service) fetchSource(ctx context.Context, source news.Source) ([]news.Item, error) {
-	slog.InfoContext(ctx, "Fetching source", "source", source)
-
 	fetcher, err := news.Get(source)
 	if err != nil {
 		return nil, fmt.Errorf("getting fetcher for %s: %w", source, err)
@@ -70,8 +67,6 @@ func (s Service) fetchSource(ctx context.Context, source news.Source) ([]news.It
 	if err != nil {
 		return nil, fmt.Errorf("fetching %s: %w", source, err)
 	}
-
-	slog.InfoContext(ctx, "Fetched from source", "source", source, "items", len(items))
 
 	return items, nil
 }
