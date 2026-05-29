@@ -15,10 +15,14 @@ const scraperAPIBase = "http://api.scraperapi.com"
 // ScraperURL proxies targetURL through ScraperAPI using the key selected by
 // day-of-month modulo, so each key is used on alternating days. Returns
 // targetURL unchanged when keys is empty.
+//
+// premium=true routes through ScraperAPI's residential proxy pool, which is
+// required for hosts that block datacenter IPs (e.g. reddit.com returns 403 on
+// standard proxies).
 func ScraperURL(keys []string, targetURL string) string {
 	if len(keys) == 0 {
 		return targetURL
 	}
 	key := keys[time.Now().UTC().Day()%len(keys)]
-	return fmt.Sprintf("%s?api_key=%s&url=%s", scraperAPIBase, key, url.QueryEscape(targetURL))
+	return fmt.Sprintf("%s?api_key=%s&premium=true&url=%s", scraperAPIBase, key, url.QueryEscape(targetURL))
 }
