@@ -57,17 +57,9 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 		for _, item := range fetched {
 			if item.Published.IsZero() {
 				slog.ErrorContext(ctx, "Item has zero published date", "source", src, "title", item.Title)
-				continue
 			}
-			// Sources that set Published: time.Now() (e.g. meetup) produce a
-			// timestamp that is always >= end (today midnight). Clamp those to
-			// start+1h so they land inside this window without the source needing
-			// to know anything about the pipeline's date expectations.
-			if !item.Published.Before(end) {
-				item.Published = start.Add(time.Hour)
-			}
-			if item.Published.After(start) {
-				si.Items = append(si.Items, item)
+			if clamped, ok := windowClamp(item, start, end); ok {
+				si.Items = append(si.Items, clamped)
 			}
 		}
 
@@ -114,4 +106,20 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 func collectWindow(now time.Time) (start, end time.Time) {
 	today := now.UTC().Truncate(24 * time.Hour)
 	return today.AddDate(0, 0, -1), today
+}
+
+// windowClamp adjusts an item's Published date to fit the collection window and
+// reports whether it should be kept. Items with a zero published date are
+// dropped. Future-dated items (Published >= end, e.g. sources that stamp
+// time.Now()) are clamped to start+1h so they land inside the window without
+// the source needing to know anything about the pipeline's date expectations.
+// Items published at or before start are dropped as out-of-window.
+func windowClamp(item news.Item, start, end time.Time) (news.Item, bool) {
+	if item.Published.IsZero() {
+		return item, false
+	}
+	if !item.Published.Before(end) {
+		item.Published = start.Add(time.Hour)
+	}
+	return item, item.Published.After(start)
 }

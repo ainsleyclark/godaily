@@ -16,6 +16,7 @@ import (
 // Service is the interface for the daily news aggregation pipeline.
 type Service interface {
 	Collect(ctx context.Context, opts CollectOptions) (CollectResponse, error)
+	Submit(ctx context.Context, source news.Source, items []news.Item) (SubmitResponse, error)
 	Build(ctx context.Context, date time.Time) error
 	SendPreview(ctx context.Context, date time.Time) error
 	SendDigest(ctx context.Context, date time.Time, force bool) error
@@ -39,4 +40,17 @@ type CollectOptions struct {
 type CollectResponse struct {
 	Sources []news.SourceItems
 	Errors  map[news.Source]error
+}
+
+// SubmitResponse is the result of a Submit call — manually supplying a source's
+// items (e.g. raw Reddit JSON) when its live fetch is blocked.
+type SubmitResponse struct {
+	// Received is the number of transformed items in the submitted payload.
+	Received int
+	// Persisted is the number of items that fell within the collection window
+	// and were saved.
+	Persisted int
+	// Skipped is true when the source already had items in the window, so the
+	// submission was a no-op (re-submitting is idempotent).
+	Skipped bool
 }

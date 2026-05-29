@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
@@ -47,6 +49,19 @@ func (r Reddit) Fetch(ctx context.Context) ([]news.Item, error) {
 	})
 	if err != nil {
 		return nil, err
+	}
+	return ingest.TransformAll(ctx, listing.Data.Children), nil
+}
+
+// ParseReddit decodes a raw r/golang listing payload (the exact JSON body
+// returned by https://www.reddit.com/r/golang/new.json) into transformed news
+// items. It runs the same transform pipeline as Fetch, so manually submitted
+// JSON is processed identically to a live fetch. Used by the submit endpoint
+// as a fallback when ScraperAPI is blocked.
+func ParseReddit(ctx context.Context, data []byte) ([]news.Item, error) {
+	var listing redditListing
+	if err := json.Unmarshal(data, &listing); err != nil {
+		return nil, errors.Wrap(err, "decoding reddit listing")
 	}
 	return ingest.TransformAll(ctx, listing.Data.Children), nil
 }
