@@ -5,8 +5,10 @@
 package digest
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
@@ -56,9 +58,14 @@ func (h *Handler) Collect(c *webkit.Context) error {
 	for _, si := range resp.Sources {
 		sources[string(si.Source)] = sourceResult{Count: len(si.Items)}
 	}
+	var errParts []string
 	for src, srcErr := range resp.Errors {
 		msg := srcErr.Error()
 		sources[string(src)] = sourceResult{Error: &msg}
+		errParts = append(errParts, fmt.Sprintf("• %s: %s", src, msg))
+	}
+	if len(errParts) > 0 {
+		h.slack.MustSend(ctx, "Source errors during collection:\n"+strings.Join(errParts, "\n"))
 	}
 
 	return api.OK(c, http.StatusOK, map[string]any{"sources": sources}, "Successfully collected sources")
