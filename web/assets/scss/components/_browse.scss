@@ -57,6 +57,63 @@ body:has(.section.browse) {
 	}
 	&__main { min-width: 0; }
 }
+
+/* ── HTMX loading feedback ──────────────────────────
+   Filter, tab, search and pagination clicks swap #browse-main over the
+   network. The query can take a beat, and without feedback the page looks
+   frozen. Two cues run together: the full-width LoadingBar component pinned
+   under the header (see components/_loading-bar.scss), and a centered spinner
+   over the dimmed, non-interactive results column. Both are driven by htmx —
+   the .htmx-indicator targets named in hx-indicator gain the .htmx-request
+   class for the lifetime of the request. */
+
+/* Centered spinner shown over the results while the next set loads. It lives
+   inside #browse-main so it's swapped out with the fresh markup; htmx adds
+   .htmx-request to #browse-main for the request's lifetime, which reveals it
+   and dims everything underneath. */
+#browse-main {
+	position: relative;
+}
+.browse__loader {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding-top: min(140px, 22vh);
+	opacity: 0;
+	pointer-events: none;
+	z-index: 3;
+	transition: opacity 0.15s ease;
+}
+.browse__spinner {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 3px solid var(--accent-light);
+	border-top-color: var(--accent);
+	animation: button-spin 0.7s linear infinite;
+}
+#browse-main.htmx-request {
+	pointer-events: none; /* block a second filter firing mid-swap */
+
+	/* Dim the results being replaced, but keep the toolbar and applied-filter
+	   chips crisp — those are the controls the user just acted on (e.g. the
+	   Hot/Top/New segment), so they should stay legible. */
+	> :not(.browse__loader):not(.browse-toolbar):not(.applied-filters) {
+		opacity: 0.4;
+		transition: opacity 0.15s ease;
+	}
+	.browse__loader { opacity: 1; }
+}
+
+/* The control that fired the request reads as busy. htmx disables it via
+   hx-disabled-elt for the duration, so this also reflects that state. */
+.browse [aria-disabled="true"],
+.browse :disabled {
+	cursor: progress;
+}
+
 .browse-side { align-self: start; position: sticky; top: 124px; }
 .browse-trending {
 	align-self: start;

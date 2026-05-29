@@ -1,0 +1,24 @@
+package components
+
+// LoadingBarProps configures a LoadingBar.
+type LoadingBarProps struct {
+	// ID is the element id, referenced by an hx-indicator attribute on the
+	// control(s) whose requests the bar should track.
+	ID string
+}
+
+// LoadingBar renders a full-width indeterminate loading bar pinned under the
+// header. It follows htmx's indicator convention: the .htmx-indicator class
+// keeps it hidden until a control naming it via hx-indicator fires a request,
+// at which point htmx adds .htmx-request and the bar sweeps. Styled in
+// components/_loading-bar.scss.
+templ LoadingBar(props LoadingBarProps) {
+	<div
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		class="loading-bar htmx-indicator"
+		role="progressbar"
+		aria-hidden="true"
+	></div>
+}

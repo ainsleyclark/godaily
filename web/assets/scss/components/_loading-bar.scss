@@ -1,0 +1,36 @@
+@use '../abstracts/mixins' as *;
+
+/* A full-width indeterminate loading bar that signals an in-flight request.
+   Driven by htmx's indicator convention: the element carries .htmx-indicator
+   (hidden at rest) and is named in an hx-indicator attribute, so htmx adds
+   .htmx-request for the request's lifetime.
+
+   Fixed positioning pins it flush under the sticky header (height 64px) no
+   matter the scroll position — a sticky element would otherwise sit at its
+   in-flow position until the page scrolls. */
+.loading-bar {
+	position: fixed;
+	top: 64px; /* header height */
+	left: 0;
+	right: 0;
+	z-index: 90; /* under the header (100), above page content and tabs (50) */
+	height: 3px;
+	pointer-events: none;
+	/* Full-width faint track with a brighter highlight sweeping across. */
+	background-color: var(--accent-light);
+	background-image: linear-gradient(90deg, transparent, var(--accent), transparent);
+	background-size: 45% 100%;
+	background-repeat: no-repeat;
+	background-position: -45% 0;
+	animation: loading-bar-sweep 1.1s ease-in-out infinite;
+
+	/* Don't burn frames sweeping an invisible bar on an idle page. */
+	&:not(.htmx-request) {
+		animation-play-state: paused;
+	}
+}
+
+@keyframes loading-bar-sweep {
+	0%   { background-position: -45% 0; }
+	100% { background-position: 145% 0; }
+}

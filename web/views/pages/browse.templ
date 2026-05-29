@@ -32,7 +32,15 @@ templ Browse(props BrowseProps) {
 		CanonicalURL: "https://godaily.dev/browse/",
 	}) {
 		@components.Header()
-		<section class="section browse" data-browse-app hx-target="#browse-main" hx-swap="outerHTML">
+		<section
+			class="section browse"
+			data-browse-app
+			hx-target="#browse-main"
+			hx-swap="outerHTML"
+			hx-indicator="#browse-progress, #browse-main"
+			hx-disabled-elt="this"
+		>
+			@components.LoadingBar(components.LoadingBarProps{ID: "browse-progress"})
 			@components.Container(false) {
 				@components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",
@@ -108,6 +116,9 @@ templ BrowseSideRegion(props BrowseProps) {
 // filter change.
 templ BrowseMain(props BrowseProps) {
 	<main id="browse-main" class="browse__main">
+		<div class="browse__loader" aria-hidden="true">
+			<span class="browse__spinner"></span>
+		</div>
 		@components.BrowseToolbar(browseToolbarProps(props))
 		@components.AppliedFilters(browseAppliedFilters(props))
 		if len(props.Items) == 0 {
