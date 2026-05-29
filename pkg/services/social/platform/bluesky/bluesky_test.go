@@ -12,6 +12,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -157,6 +158,39 @@ func TestClient_Post(t *testing.T) {
 
 		_, err := c.Post(context.Background(), platform.PostRequest{Text: "New release\n\nhttps://go.dev/dl\n#golang"})
 		require.NoError(t, err)
+	})
+
+	t.Run("Over-long text is capped to the grapheme limit", func(t *testing.T) {
+		t.Parallel()
+
+		var sentText string
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.server.createSession":
+				_, _ = w.Write([]byte(`{"accessJwt":"jwt","did":"did:plc:xyz"}`))
+			case "/xrpc/com.atproto.repo.createRecord":
+				body, _ := io.ReadAll(r.Body)
+				var got map[string]any
+				require.NoError(t, json.Unmarshal(body, &got))
+				record, ok := got["record"].(map[string]any)
+				require.True(t, ok)
+				sentText, _ = record["text"].(string)
+				_, _ = w.Write([]byte(`{"uri":"at://did:plc:xyz/app.bsky.feed.post/abc","cid":"x"}`))
+			default:
+				t.Fatalf("unexpected path %s", r.URL.Path)
+			}
+		}))
+		defer srv.Close()
+
+		c := New("godaily.bsky.social", "pw")
+		c.baseURL = srv.URL
+
+		// 523 graphemes, mirroring the real "got 523" production failure.
+		long := strings.Repeat("a", 523)
+		_, err := c.Post(context.Background(), platform.PostRequest{Text: long})
+		require.NoError(t, err)
+		assert.LessOrEqual(t, utf8.RuneCountInString(sentText), maxGraphemes,
+			"text sent to Bluesky must respect the grapheme limit")
 	})
 }
 

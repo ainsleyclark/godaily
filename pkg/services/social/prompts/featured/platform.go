@@ -61,8 +61,9 @@ func reframe(ctx context.Context, p ai.Prompter, cfg platformConfig, f Featured)
 	text = aiutil.SanitisePost(text)
 
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
-		slog.Warn("Social post exceeded char limit",
+		slog.Warn("Social post exceeded char limit; truncating",
 			"platform", cfg.name, "chars", n, "limit", cfg.charLimit)
+		text = aiutil.TruncatePost(text, cfg.charLimit)
 	}
 	return text, nil
 }

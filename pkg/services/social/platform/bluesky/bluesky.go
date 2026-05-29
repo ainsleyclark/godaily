@@ -24,12 +24,19 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
 
 // defaultBaseURL is the public Bluesky PDS that user accounts live on by
 // default. Self-hosted PDSes can override this via WithBaseURL.
 const defaultBaseURL = "https://bsky.social"
+
+// maxGraphemes is Bluesky's hard limit on app.bsky.feed.post text. The API
+// rejects anything longer with "grapheme too big". The generation layer aims
+// well under this, but we cap here as a last-resort backstop so an over-long
+// post degrades to a truncated one instead of a failed publish.
+const maxGraphemes = 300
 
 // Client posts to Bluesky via the AT Protocol XRPC HTTP API.
 type Client struct {
@@ -77,7 +84,10 @@ type (
 // req.Text by the rendering layer, and Bluesky renders them natively
 // without out-of-band annotations.
 func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
-	text := req.Text
+	// Cap the text before building facets so byte offsets stay aligned with
+	// the text we actually send. Bluesky counts graphemes; a rune is never
+	// fewer than one grapheme, so a rune-based cap can't exceed the limit.
+	text := aiutil.TruncatePost(req.Text, maxGraphemes)
 	session, err := c.createSession(ctx)
 	if err != nil {
 		return platform.PostResponse{}, errors.Wrap(err, "bluesky createSession")
