@@ -32,7 +32,15 @@ templ Browse(props BrowseProps) {
 		CanonicalURL: "https://godaily.dev/browse/",
 	}) {
 		@components.Header()
-		<section class="section browse" data-browse-app hx-target="#browse-main" hx-swap="outerHTML">
+		<section
+			class="section browse"
+			data-browse-app
+			hx-target="#browse-main"
+			hx-swap="outerHTML"
+			hx-indicator="#browse-progress, #browse-main"
+			hx-disabled-elt="this"
+		>
+			<div id="browse-progress" class="browse__progress htmx-indicator" role="progressbar" aria-hidden="true"></div>
 			@components.Container(false) {
 				@components.ListingHero(components.ListingHeroProps{
 					Kicker: "Browse the archive",
