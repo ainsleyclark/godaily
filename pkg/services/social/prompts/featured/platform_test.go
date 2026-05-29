@@ -8,6 +8,7 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -144,7 +145,7 @@ func TestReframe(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("Over-limit logs but still returns text", func(t *testing.T) {
+	t.Run("Over-limit text is truncated to the char limit", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -155,7 +156,8 @@ func TestReframe(t *testing.T) {
 
 		got, err := reframe(t.Context(), p, tiny, sampleFeatured())
 		require.NoError(t, err)
-		assert.Contains(t, got, "characters")
+		assert.LessOrEqual(t, utf8.RuneCountInString(got), tiny.charLimit,
+			"over-limit text must be truncated to the char limit")
 	})
 }
 

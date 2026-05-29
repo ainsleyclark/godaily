@@ -5,7 +5,9 @@
 package aiutil_test
 
 import (
+	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/stretchr/testify/assert"
 
@@ -34,6 +36,53 @@ func TestSanitisePost(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, tc.want, aiutil.SanitisePost(tc.in))
 		})
+	}
+}
+
+func TestTruncatePost(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in    string
+		limit int
+		want  string
+	}{
+		"Empty String":         {in: "", limit: 10, want: ""},
+		"Under Limit":          {in: "short", limit: 10, want: "short"},
+		"Exactly At Limit":     {in: "exactly10!", limit: 10, want: "exactly10!"},
+		"Word Boundary":        {in: "one two three four", limit: 10, want: "one two…"},
+		"Single Long Token":    {in: "abcdefghijklmnop", limit: 10, want: "abcdefghi…"},
+		"Zero Limit":           {in: "anything", limit: 0, want: ""},
+		"Negative Limit":       {in: "anything", limit: -5, want: ""},
+		"Trailing Space Trim":  {in: "aaaa bbbbbbbbbb", limit: 8, want: "aaaa…"},
+		"Multibyte Under":      {in: "café", limit: 4, want: "café"},
+		"Multibyte Truncation": {in: "héllo wörld foo", limit: 10, want: "héllo…"},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got := aiutil.TruncatePost(tc.in, tc.limit)
+			assert.Equal(t, tc.want, got)
+			if tc.limit > 0 {
+				assert.LessOrEqual(t, utf8.RuneCountInString(got), tc.limit,
+					"result must never exceed the rune limit")
+			}
+		})
+	}
+}
+
+// TestTruncatePost_NeverExceedsLimit guards the core invariant the Bluesky
+// 300-grapheme cap relies on: the result is always within the rune limit
+// regardless of input, so it can never exceed the platform grapheme limit.
+func TestTruncatePost_NeverExceedsLimit(t *testing.T) {
+	t.Parallel()
+
+	long := strings.Repeat("word ", 200) // 1000 chars
+	for _, limit := range []int{1, 10, 50, 280, 300, 500} {
+		got := aiutil.TruncatePost(long, limit)
+		assert.LessOrEqualf(t, utf8.RuneCountInString(got), limit,
+			"limit=%d produced %d runes", limit, utf8.RuneCountInString(got))
 	}
 }
 

@@ -62,8 +62,9 @@ var platformProfiles = map[social.Platform]platformProfile{
 
 // run executes one generate-and-parse cycle: it formats the kind-specific
 // system prompt with the platform's rules, calls the AI, parses the
-// {"text": "..."} JSON, and enforces the char limit (warn-only — we trust
-// the model not to over-shoot meaningfully).
+// {"text": "..."} JSON, and enforces the char limit by truncating any
+// over-shoot so platform APIs (e.g. Bluesky's 300-grapheme cap) never
+// reject the post.
 func run(
 	ctx context.Context,
 	p ai.Prompter,
@@ -99,8 +100,9 @@ func run(
 	text = aiutil.SanitisePost(text)
 
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
-		slog.Warn("Rotation post exceeded char limit",
+		slog.Warn("Rotation post exceeded char limit; truncating",
 			"platform", cfg.name, "chars", n, "limit", cfg.charLimit)
+		text = aiutil.TruncatePost(text, cfg.charLimit)
 	}
 	return text, nil
 }
