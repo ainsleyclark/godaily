@@ -400,6 +400,9 @@ components:
           type: integer
         image_url:
           type: string
+        in_digest:
+          description: true when the item is linked to a digest issue
+          type: boolean
         original_url:
           description: listing on the source platform (e.g. HN comments page), when
             different from URL
@@ -590,14 +593,8 @@ paths:
       - digest
   /digest/collect:
     get:
-      description: Fetches and ranks news from all registered sources. Skipped at
-        weekends unless force=true.
-      parameters:
-      - description: Force collection even at weekends
-        in: query
-        name: force
-        schema:
-          type: boolean
+      description: Fetches and ranks news from all registered sources. Runs every
+        day, including weekends.
       responses:
         "200":
           content:
@@ -749,6 +746,42 @@ paths:
       summary: Health check.
       tags:
       - health
+  /ingest/reddit:
+    post:
+      description: Fallback for when the live Reddit fetch is blocked (e.g. ScraperAPI
+        403). Accepts the raw JSON body returned by https://www.reddit.com/r/golang/new.json,
+        transforms it through the standard pipeline, and persists items that fall
+        within the current collection window. De-duplicates on (url, tag), so it is
+        safe to run repeatedly (e.g. on a schedule).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Items ingested, all duplicates, or none in window
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Unreadable or invalid Reddit JSON payload
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to ingest items
+      security:
+      - BearerAuth: []
+      summary: Manually ingest raw Reddit listing JSON.
+      tags:
+      - ingest
   /issues/{slug}:
     get:
       description: Returns a single digest issue identified by its date slug.

@@ -69,6 +69,22 @@ func TestCollect(t *testing.T) {
 		})
 	})
 
+	t.Run("Collects on a weekend", func(t *testing.T) {
+		t.Parallel()
+
+		synctest.Test(t, func(t *testing.T) {
+			// Fake clock starts on Saturday 2000-01-01 — collection still runs.
+			req := httptest.NewRequest(http.MethodGet, "/digest/collect", nil)
+			deps := setup(t, req)
+			deps.Runner.EXPECT().Collect(gomock.Any(), gomock.Any()).Return(digest.CollectResponse{}, nil)
+
+			err := deps.Handler.Collect(deps.Context)
+
+			assert.NoError(t, err)
+			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
+		})
+	})
+
 	t.Run("Collect error returns internal server error", func(t *testing.T) {
 		t.Parallel()
 
@@ -82,20 +98,6 @@ func TestCollect(t *testing.T) {
 			_ = deps.Handler.Collect(deps.Context)
 
 			assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
-		})
-	})
-
-	t.Run("Skips collect on weekend", func(t *testing.T) {
-		t.Parallel()
-
-		synctest.Test(t, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodGet, "/digest/collect", nil)
-			deps := setup(t, req)
-
-			err := deps.Handler.Collect(deps.Context)
-
-			assert.NoError(t, err)
-			assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 		})
 	})
 }

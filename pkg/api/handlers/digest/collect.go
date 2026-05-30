@@ -9,7 +9,6 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 
@@ -24,22 +23,15 @@ import (
 // Collect godoc
 //
 //	@Summary		Run the news collection pipeline.
-//	@Description	Fetches and ranks news from all registered sources. Skipped at weekends unless force=true.
+//	@Description	Fetches and ranks news from all registered sources. Runs every day, including weekends.
 //	@Tags			digest
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			force	query		bool			false	"Force collection even at weekends"
 //	@Success		200		{object}	api.MessageResponse	"Per-source collection results"
 //	@Failure		500		{object}	api.MessageResponse	"Failed to collect"
 //	@Router			/digest/collect [get]
 func (h *Handler) Collect(c *webkit.Context) error {
 	ctx := c.Context()
-	force := c.Request.URL.Query().Get("force") == "true"
-	if !force && api.IsWeekend(time.Now().UTC()) {
-		slog.InfoContext(ctx, "Skipping collect — weekend")
-		hook.Heartbeat(ctx, h.config.BetterStackCollectHeartbeatURL)
-		return api.OK(c, http.StatusOK, nil, "Skipped collect — weekend")
-	}
 
 	resp, err := h.runner.Collect(ctx, digest.CollectOptions{})
 	if err != nil {
