@@ -12,9 +12,15 @@
 #   location:    city / region — short, free text
 #   description: one sentence shown in the post
 #   handles:
-#     linkedin: company-or-group slug, e.g. "golang-london" → linkedin.com/groups/golang-london
+#     linkedin:
+#       slug: company-page-slug, e.g. "london-gophers" → linkedin.com/company/london-gophers
+#       urn:  urn:li:organization:<numeric-id>  # enables real inline @-mention; leave "" if unknown
 #     bluesky:  full handle, e.g. "golanglondon.bsky.social"
 #     mastodon: user@instance
+#
+# How to find the URN: open the public /company/<slug> page in a logged-in
+# browser, view source, and grep for "urn:li:organization:". Without a URN
+# the post falls back to a plain URL card (still clickable but not tagged).
 #
 # Leave any handle field blank ("") when unknown — the rotation falls
 # back to a no-mention template variant.
@@ -33,7 +39,9 @@
   location: London, UK
   description: London's Go user group — talks, workshops and pub nights.
   handles:
-    linkedin: london-gophers
+    linkedin:
+      slug: london-gophers
+      urn: urn:li:organization:90601734
     bluesky: ""
     mastodon: ""
 
@@ -43,7 +51,9 @@
   location: Paris, France
   description: Paris Gophers meet to share talks and lightning demos.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -53,7 +63,9 @@
   location: Berlin, Germany
   description: Berlin's Go meetup — one of Europe's largest Gopher communities.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -63,7 +75,9 @@
   location: Amsterdam, Netherlands
   description: Amsterdam Go user group with monthly talks and socials.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -73,7 +87,9 @@
   location: Munich, Germany
   description: Munich's Go programming language meetup.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -83,7 +99,9 @@
   location: Stockholm, Sweden
   description: The Stockholm Go community — talks and hack nights.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -93,7 +111,9 @@
   location: Helsinki, Finland
   description: Finland's Go meetup — friendly community, deep dives, pizza.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -103,7 +123,9 @@
   location: Copenhagen, Denmark
   description: Copenhagen's Go user group hosted across local engineering offices.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -113,7 +135,9 @@
   location: Zurich, Switzerland
   description: Zurich's Go user group — talks and Swiss Gopher socials.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -123,7 +147,9 @@
   location: Vienna, Austria
   description: Vienna's Go meetup community.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -133,7 +159,9 @@
   location: Warsaw, Poland
   description: The Warsaw Go community — monthly meetups and talks.
   handles:
-    linkedin: golang-warsaw-meetup
+    linkedin:
+      slug: golang-warsaw-meetup
+      urn: urn:li:organization:35513870
     bluesky: ""
     mastodon: ""
 
@@ -143,7 +171,9 @@
   location: Prague, Czech Republic
   description: Prague's Go user group.
   handles:
-    linkedin: prague-golang-meetup
+    linkedin:
+      slug: prague-golang-meetup
+      urn: urn:li:organization:89247233
     bluesky: ""
     mastodon: gomeetupprague@fosstodon.org
 
@@ -153,7 +183,9 @@
   location: Dublin, Ireland
   description: Dublin's Go meetup community.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -163,7 +195,9 @@
   location: Madrid, Spain
   description: Madrid's Go user group — talks in Spanish and English.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -173,7 +207,9 @@
   location: New York, NY, USA
   description: New York's Go user group — one of the largest in the US.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -183,7 +219,9 @@
   location: San Francisco Bay Area, CA, USA
   description: The Bay Area's home for Gophers — talks from working Go engineers.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -193,7 +231,9 @@
   location: Toronto, Canada
   description: Toronto's Go user group.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -203,7 +243,9 @@
   location: Sydney, Australia
   description: Sydney's Go user group — talks and lightning demos.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -213,7 +255,9 @@
   location: Melbourne, Australia
   description: Melbourne's Go programming meetup.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -223,7 +267,9 @@
   location: Singapore
   description: Singapore's Go user group.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -233,7 +279,9 @@
   location: Bangalore, India
   description: India's largest Go user group, based in Bangalore.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -243,7 +291,9 @@
   location: Tel Aviv, Israel
   description: Tel Aviv's Go community — monthly talks and hack nights.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -253,7 +303,9 @@
   location: Tokyo, Japan
   description: Tokyo's Go community, hosts of the long-running GoCon conference.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -263,7 +315,9 @@
   location: Seoul, South Korea
   description: South Korea's Go user group, organisers of GopherCon Korea.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: golangkorea.bsky.social
     mastodon: ""
 
@@ -273,7 +327,9 @@
   location: Buenos Aires, Argentina
   description: Argentina's Go community.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 
@@ -283,6 +339,8 @@
   location: São Paulo, Brazil
   description: Brazil's Go user group community.
   handles:
-    linkedin: golangsp
+    linkedin:
+      slug: golangsp
+      urn: urn:li:organization:35637186
     bluesky: ""
     mastodon: ""

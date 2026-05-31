@@ -21,9 +21,15 @@
 # rotation falls back to a no-mention template variant.
 #
 #   handles:
-#     linkedin: company-or-group-slug   # e.g. "gophercon-europe" → linkedin.com/company/gophercon-europe
-#     bluesky:  full-handle             # e.g. "gophercon.eu"
-#     mastodon: user@instance           # e.g. "gopher@hachyderm.io"
+#     linkedin:
+#       slug: company-page-slug                  # e.g. "gopherconeu" → linkedin.com/company/gopherconeu
+#       urn:  urn:li:organization:<numeric-id>   # enables real inline @-mention; leave "" if unknown
+#     bluesky:  full-handle                      # e.g. "gophercon.eu"
+#     mastodon: user@instance                    # e.g. "gopher@hachyderm.io"
+#
+# How to find the URN: open the public /company/<slug> page in a logged-in
+# browser, view source, and grep for "urn:li:organization:". Without a URN
+# the post falls back to a plain URL card (still clickable but not tagged).
 #
 # Adding a new conference:
 #   1. Add an entry below (slug must be unique).
@@ -44,7 +50,9 @@
   end_date: 2026-06-18
   description: "The European Go conference, bringing together Gophers from across the continent for workshops, talks, and networking."
   handles:
-    linkedin: gophercon-europe
+    linkedin:
+      slug: gopherconeu
+      urn: urn:li:organization:112502228
     bluesky: gopherconeu.bsky.social
     mastodon: ""
   notify_dates:
@@ -60,7 +68,9 @@
   end_date: 2026-08-13
   description: "The UK's annual Go conference at The Brewery, London. Workshops on August 11th."
   handles:
-    linkedin: gopherconuk
+    linkedin:
+      slug: gopherconuk
+      urn: urn:li:organization:36655793
     bluesky: ""
     mastodon: ""
   notify_dates:
@@ -76,7 +86,9 @@
   end_date: 2026-08-06
   description: "The flagship GopherCon conference, North America's largest gathering of Go developers."
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: gophercon.com
     mastodon: ""
   notify_dates:
@@ -92,7 +104,9 @@
   end_date: 2026-11-03
   description: "Italy's Go conference, co-located with RustLab in Bologna."
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: golab@mastodon.uno
   notify_dates:
@@ -108,7 +122,9 @@
   end_date: 2026-02-18
   description: "GopherCon Israel — the Go community conference in Israel."
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
   notify_dates:
@@ -124,7 +140,9 @@
   end_date: 2026-10-24
   description: "Africa's Go conference, celebrating the growing Go community across the continent."
   handles:
-    linkedin: gophercon-africa
+    linkedin:
+      slug: gophercon-africa
+      urn: urn:li:organization:104497180
     bluesky: ""
     mastodon: ""
   notify_dates:
@@ -140,7 +158,9 @@
   end_date: 2026-11-08
   description: "GopherCon Korea — South Korea's annual Go conference."
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: golangkorea.bsky.social
     mastodon: ""
   notify_dates:
@@ -156,7 +176,9 @@
   end_date: 2026-10-23
   description: "GoWest — a community-driven single-day Go conference in Utah."
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
   notify_dates:

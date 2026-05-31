@@ -32,9 +32,11 @@ const promoCycleLen = 3
 // {{.Mention}} resolves to:
 //   - Bluesky/Mastodon: "@handle" when configured (auto-tags the
 //     account), or {{.Name}} when not.
-//   - LinkedIn:         the company URL when configured (LinkedIn
-//     renders it as a clickable card and surfaces the share in the
-//     company's mentions feed), or {{.Name}} when not.
+//   - LinkedIn:         {{.Name}} when a URN is configured (the
+//     LinkedIn poster turns it into a real inline-mention tag via
+//     commentaryAnnotations), the company URL when only a slug is
+//     configured (renders as a clickable card), or {{.Name}} when
+//     neither is set.
 //
 // Keep the strings short — Bluesky caps at 300 chars and we want
 // headroom for long conference names.
@@ -69,30 +71,49 @@ type communityEntry struct {
 	EndDate     string           `yaml:"end_date,omitempty"`
 }
 
-// communityHandles groups the social handles per platform. Each field
-// holds the raw identifier (no leading @, no URL prefix); the candidate
-// formats them for the wire when building post text.
+// communityHandles groups the social handles per platform. Bluesky and
+// Mastodon hold the raw identifier (no leading @, no URL prefix); LinkedIn
+// is a nested object so we can carry both the public-page slug and the
+// numeric org URN.
 type communityHandles struct {
-	LinkedIn string `yaml:"linkedin"`
-	Bluesky  string `yaml:"bluesky"`
-	Mastodon string `yaml:"mastodon"`
+	LinkedIn linkedInHandle `yaml:"linkedin"`
+	Bluesky  string         `yaml:"bluesky"`
+	Mastodon string         `yaml:"mastodon"`
+}
+
+// linkedInHandle carries the two LinkedIn identifiers we care about.
+// Slug is the public /company/<slug> path used for the URL-card fallback.
+// URN is "urn:li:organization:<id>" used by the inline-mention annotator
+// to render a real @-tag in the post body.
+type linkedInHandle struct {
+	Slug string `yaml:"slug"`
+	URN  string `yaml:"urn"`
 }
 
 // mentions returns the per-platform identifier to splice into the post
 // body. Empty platforms are omitted so the template-render fallback
 // (use Name) kicks in.
 //
-// Note: the LinkedIn handle here is a public company-page URL, not a
-// urn:li:organization URN — community posts are template-rendered and
-// the URL is spliced into the visible text. They don't participate in
-// the annotation pipeline; DisplayName is intentionally left empty so
-// the LinkedIn poster skips them.
+// LinkedIn has two paths:
+//   - URN set: Handle carries the urn:li:organization, DisplayName carries
+//     the entry name so the LinkedIn poster's annotation pipeline can find
+//     the substring in commentary and emit a real inline-mention tag.
+//   - URN blank, slug set: Handle carries the public company URL with no
+//     DisplayName — LinkedIn renders it as a clickable card but it isn't
+//     an annotated mention.
 func (e communityEntry) mentions() []social.Mention {
 	var out []social.Mention
-	if e.Handles.LinkedIn != "" {
+	switch {
+	case e.Handles.LinkedIn.URN != "":
+		out = append(out, social.Mention{
+			Platform:    social.LinkedIn,
+			Handle:      e.Handles.LinkedIn.URN,
+			DisplayName: e.Name,
+		})
+	case e.Handles.LinkedIn.Slug != "":
 		out = append(out, social.Mention{
 			Platform: social.LinkedIn,
-			Handle:   "https://www.linkedin.com/company/" + e.Handles.LinkedIn,
+			Handle:   "https://www.linkedin.com/company/" + e.Handles.LinkedIn.Slug,
 		})
 	}
 	if e.Handles.Bluesky != "" {
@@ -190,7 +211,7 @@ func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform
 	}
 
 	mention := payload.Entry.Name
-	if m := cctx.Mention(p); m != "" {
+	if m := cctx.Mention(p); m != "" && !strings.HasPrefix(m, "urn:li:") {
 		mention = m
 	}
 
