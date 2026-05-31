@@ -181,7 +181,7 @@ func (s Store) CountFiltered(ctx context.Context, search string) (int64, error) 
 	return count, nil
 }
 
-func (s Store) AdminSetStatus(ctx context.Context, id int64, status string) (audience.Subscriber, error) {
+func (s Store) SetStatus(ctx context.Context, id int64, status string) (audience.Subscriber, error) {
 	var query string
 	switch status {
 	case "unsubscribed":

@@ -46,5 +46,5 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/preview", h.Preview, auth)
 	kit.Get("/issues", h.Issues, auth)
 	kit.Get("/subscribers", h.Subscribers, auth)
-	kit.Patch("/subscribers/:id", h.UpdateSubscriberStatus, auth)
+	kit.Patch("/subscribers/:id", h.UpdateSubscriber, auth)
 }

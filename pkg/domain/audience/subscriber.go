@@ -71,5 +71,5 @@ type SubscriberRepository interface {
 	// reminder is only ever sent once per subscriber.
 	MarkNudgeSent(ctx context.Context, id int64) error
 	CountFiltered(ctx context.Context, search string) (int64, error)
-	AdminSetStatus(ctx context.Context, id int64, status string) (Subscriber, error)
+	SetStatus(ctx context.Context, id int64, status string) (Subscriber, error)
 }

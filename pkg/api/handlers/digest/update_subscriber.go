@@ -16,30 +16,30 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// UpdateSubscriberStatusRequest is the request body for PATCH /digest/subscribers/:id.
-type UpdateSubscriberStatusRequest struct {
+// UpdateSubscriberRequest is the request body for PATCH /digest/subscribers/:id.
+type UpdateSubscriberRequest struct {
 	Status string `json:"status"`
 }
 
-// UpdateSubscriberStatusResponse is the response envelope.
-type UpdateSubscriberStatusResponse = api.Response[audience.Subscriber]
+// UpdateSubscriberResponse is the response envelope.
+type UpdateSubscriberResponse = api.Response[audience.Subscriber]
 
-// UpdateSubscriberStatus godoc
+// UpdateSubscriber godoc
 //
-//	@Summary		Update subscriber status.
-//	@Description	Updates the status of a subscriber by ID. Valid statuses: active, unsubscribed, suppressed.
+//	@Summary		Update a subscriber.
+//	@Description	Updates a subscriber by ID. Currently supports setting status: active, unsubscribed, suppressed.
 //	@Tags			digest
 //	@Accept			json
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			id		path		int								true	"Subscriber ID"
-//	@Param			body	body		UpdateSubscriberStatusRequest	true	"Status update"
-//	@Success		200		{object}	UpdateSubscriberStatusResponse	"Subscriber updated"
-//	@Failure		400		{object}	api.MessageResponse				"Invalid request"
-//	@Failure		404		{object}	api.MessageResponse				"Subscriber not found"
-//	@Failure		500		{object}	api.MessageResponse				"Failed to update subscriber"
+//	@Param			id		path		int							true	"Subscriber ID"
+//	@Param			body	body		UpdateSubscriberRequest		true	"Update payload"
+//	@Success		200		{object}	UpdateSubscriberResponse	"Subscriber updated"
+//	@Failure		400		{object}	api.MessageResponse			"Invalid request"
+//	@Failure		404		{object}	api.MessageResponse			"Subscriber not found"
+//	@Failure		500		{object}	api.MessageResponse			"Failed to update subscriber"
 //	@Router			/digest/subscribers/{id} [patch]
-func (h *Handler) UpdateSubscriberStatus(c *webkit.Context) error {
+func (h *Handler) UpdateSubscriber(c *webkit.Context) error {
 	ctx := c.Context()
 
 	idStr := c.Param("id")
@@ -48,7 +48,7 @@ func (h *Handler) UpdateSubscriberStatus(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, "Invalid subscriber ID")
 	}
 
-	var req UpdateSubscriberStatusRequest
+	var req UpdateSubscriberRequest
 	if err := c.BindJSON(&req); err != nil {
 		return api.Error(c, http.StatusBadRequest, "Invalid request body")
 	}
@@ -59,7 +59,7 @@ func (h *Handler) UpdateSubscriberStatus(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, "Invalid status: must be active, unsubscribed, or suppressed")
 	}
 
-	sub, err := h.subscribersRepo.AdminSetStatus(ctx, id, req.Status)
+	sub, err := h.subscribersRepo.SetStatus(ctx, id, req.Status)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Subscriber not found")

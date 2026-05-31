@@ -98,7 +98,7 @@ export const api = {
 	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
 	subscriberList: (page = 1, perPage = 50, search = '') =>
 		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery),
-	updateSubscriberStatus: async (id: number, status: string): Promise<Subscriber> => {
+	updateSubscriber: async (id: number, status: string): Promise<Subscriber> => {
 		const secret = getSecret();
 		const res = await fetch(buildUrl(`/api/digest/subscribers/${id}`), {
 			method: 'PATCH',

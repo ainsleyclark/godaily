@@ -68,7 +68,7 @@
 	async function setStatus(sub: Subscriber, status: string) {
 		updatingId = sub.id;
 		try {
-			const updated = await api.updateSubscriberStatus(sub.id, status);
+			const updated = await api.updateSubscriber(sub.id, status);
 			if (listData) {
 				listData = {
 					...listData,
