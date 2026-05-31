@@ -5,6 +5,7 @@
 package social
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 	"time"
@@ -14,6 +15,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
 // metricsSince is the look-back window for fetching social post stats.
@@ -51,6 +53,13 @@ func (h *Handler) Metrics(c *webkit.Context) error {
 		}
 
 		stats, err := fetcher.Stats(ctx, post.PostURL)
+		if errors.Is(err, platform.ErrPostUnavailable) {
+			// Expected when a post was deleted on the platform after we
+			// recorded it. Skip quietly rather than logging an error.
+			slog.WarnContext(ctx, "Social post no longer available, skipping",
+				"platform", post.Platform, "post_id", post.ID)
+			continue
+		}
 		if err != nil {
 			slog.ErrorContext(ctx, "Failed to fetch social stats",
 				"platform", post.Platform, "post_id", post.ID, "err", err)
