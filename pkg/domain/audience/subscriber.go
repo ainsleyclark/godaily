@@ -32,6 +32,12 @@ type Subscriber struct {
 // already registered as an active subscriber.
 var ErrAlreadySubscribed = errors.New("already subscribed")
 
+// UpdateParams holds the fields that can be changed via a PATCH update.
+// A nil pointer means "leave this field unchanged".
+type UpdateParams struct {
+	Status *string
+}
+
 //go:generate go run go.uber.org/mock/mockgen -package=mockaudience -destination=../../mocks/audience/Service.go . SubscriberService
 
 // SubscriberService defines the subscription lifecycle methods used by HTTP handlers
@@ -71,5 +77,5 @@ type SubscriberRepository interface {
 	// reminder is only ever sent once per subscriber.
 	MarkNudgeSent(ctx context.Context, id int64) error
 	CountFiltered(ctx context.Context, search string) (int64, error)
-	SetStatus(ctx context.Context, id int64, status string) (Subscriber, error)
+	Update(ctx context.Context, id int64, params UpdateParams) (Subscriber, error)
 }

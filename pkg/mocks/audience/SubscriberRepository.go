@@ -248,19 +248,19 @@ func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
-// SetStatus mocks base method.
-func (m *MockSubscriberRepository) SetStatus(ctx context.Context, id int64, status string) (audience.Subscriber, error) {
+// Update mocks base method.
+func (m *MockSubscriberRepository) Update(ctx context.Context, id int64, params audience.UpdateParams) (audience.Subscriber, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetStatus", ctx, id, status)
+	ret := m.ctrl.Call(m, "Update", ctx, id, params)
 	ret0, _ := ret[0].(audience.Subscriber)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SetStatus indicates an expected call of SetStatus.
-func (mr *MockSubscriberRepositoryMockRecorder) SetStatus(ctx, id, status any) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockSubscriberRepositoryMockRecorder) Update(ctx, id, params any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStatus", reflect.TypeOf((*MockSubscriberRepository)(nil).SetStatus), ctx, id, status)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockSubscriberRepository)(nil).Update), ctx, id, params)
 }
 
 // CountFiltered mocks base method.

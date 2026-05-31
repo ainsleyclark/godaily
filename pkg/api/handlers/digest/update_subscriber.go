@@ -59,7 +59,7 @@ func (h *Handler) UpdateSubscriber(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, "Invalid status: must be active, unsubscribed, or suppressed")
 	}
 
-	sub, err := h.subscribersRepo.SetStatus(ctx, id, req.Status)
+	sub, err := h.subscribersRepo.Update(ctx, id, audience.UpdateParams{Status: &req.Status})
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Subscriber not found")
