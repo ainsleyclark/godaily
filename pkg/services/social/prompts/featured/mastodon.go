@@ -17,11 +17,12 @@ var MastodonHashtags = []string{"#golang", "#go", "#programming"}
 const mastodonCharLimit = 500
 
 const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses hashtags actively for discovery — keep them.
+- The post must be worth reading even if the reader never clicks the link. The hook should give the concrete fact — version number, API name, the specific change — not just a vague prompt to click through.
 - Lead with the factual hook (Line 1). One or two short supporting lines for context.
 - Drop the URL on its own line. Mastodon renders it as a clickable link.
 - Strict structure (line breaks matter):
-    Line 1: factual hook
-    Line 2 (optional): one extra detail
+    Line 1: factual hook (be specific — name the version, the change, the date)
+    Line 2 (optional): one extra detail that adds context not visible from the link preview
     Line 3: blank
     Line 4: URL
     Line 5: hashtags from the list above

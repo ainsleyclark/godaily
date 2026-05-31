@@ -19,20 +19,25 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
-// ctaCooldown is the minimum gap between two signup CTAs. Posting more
-// than once a week feels spammy and trains followers to scroll past.
-const ctaCooldown = 7 * 24 * time.Hour
+// ctaCooldown is the minimum gap between two signup CTAs. Two weeks gives
+// enough breathing room that the ask stays present without dominating the feed.
+const ctaCooldown = 14 * 24 * time.Hour
 
 // ctaAngles is the rotating list of framings for the signup CTA. Each
 // angle is paired with the same target URL but produces a different post
 // because the AI prompt hangs the copy on the angle. Add to this list to
 // expand the rotation; the candidate picks deterministically.
+//
+// Angles lead with usefulness, not the ask. The subscription link is the
+// natural follow-through for someone who finds the content worth reading.
 var ctaAngles = []string{
 	"We read 20+ Go sources every morning so you don't have to.",
 	"One email a day, the best Go news from across the community. No fluff.",
-	"Save the half-hour of feed-scrolling. Get a curated Go digest in your inbox.",
+	"The Go release cycle, proposal tracker, and community blogs — one place, once a day.",
 	"Free, no spam, one email a day. The Go ecosystem distilled.",
 	"If you keep meaning to catch up on Go news, GoDaily does the legwork.",
+	"Proposals, releases, articles, conference news — daily, in one read.",
+	"The part of your morning routine that pays off in the afternoon.",
 }
 
 // CTA posts a "sign up to GoDaily" call to action, rotating through a

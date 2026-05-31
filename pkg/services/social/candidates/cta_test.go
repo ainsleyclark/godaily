@@ -38,8 +38,8 @@ func TestCTA_Eligible(t *testing.T) {
 			HasPostedKindSince(gomock.Any(), social.PostKindCTA, gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ context.Context, _ social.PostKind, platform string, since time.Time) (bool, error) {
 				assert.Equal(t, "bluesky", platform, "anchor platform must be bluesky")
-				assert.True(t, since.Equal(ctaNow.Add(-7*24*time.Hour)),
-					"since must be exactly 7 days before now, got %s", since)
+				assert.True(t, since.Equal(ctaNow.Add(-14*24*time.Hour)),
+					"since must be exactly 14 days before now, got %s", since)
 				return false, nil
 			})
 

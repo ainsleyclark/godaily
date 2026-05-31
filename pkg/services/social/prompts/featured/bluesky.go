@@ -17,11 +17,12 @@ var BlueskyHashtags = []string{"#golang"}
 const blueskyCharLimit = 300
 
 const blueskyGuidance = `- Bluesky users are heavily developer-focused. Speak like you're posting in a Go channel.
+- The post must be worth reading even if the reader never clicks the link. The hook (Line 1) should give them the concrete fact — version number, API name, the specific change — not just "something shipped".
 - Lead with the specific factual hook (Line 1). One supporting detail is welcome but not required.
 - Bluesky linkifies bare URLs automatically: drop the URL on its own line, no markdown.
 - Strict structure (line breaks matter):
-    Line 1: factual hook (what shipped, who shipped it, what's notable)
-    Line 2 (optional): one extra detail
+    Line 1: factual hook (what shipped, who shipped it, what's notable — be specific)
+    Line 2 (optional): one extra detail that adds context not visible from the link preview
     Line 3: blank
     Line 4: URL
     Line 5: hashtags from the list above

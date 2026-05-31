@@ -88,14 +88,22 @@ func buildCandidates(items []news.Item) []candidate {
 	return out
 }
 
-const featureSystem = `You select the single most engaging Go-community item
+const featureSystem = `You select the single most reshare-worthy Go-community item
 of the day to anchor a social media post.
 
 You will receive a JSON list of items already scored and filtered to today's
-shortlist. Pick the one item with the most engagement potential, biased
-heavily toward (in order): accepted/shipped language proposals, major
-releases, formal proposals, in-depth technical articles. A "discussion" or
-"trending" item is only acceptable if nothing more substantial is available.
+shortlist. Apply two filters in order:
+
+1. Substance first: bias heavily toward accepted/shipped language proposals,
+   major releases, formal proposals, and in-depth technical articles. A
+   "discussion" or "trending" item is only acceptable if nothing more
+   substantial is available.
+
+2. Reshare potential second: among items of similar substance, prefer the one
+   a senior Go developer would pass along to a colleague without needing to
+   explain why it matters. A clear concrete change (new API, removed footgun,
+   measurable performance gain) beats a vague announcement of equivalent
+   formal weight.
 
 If multiple items cover the same topic (same release, same proposal, same
 project), treat them as one and pick the canonical link.
@@ -107,8 +115,10 @@ Output strict JSON, schema:
   "source": string,        // copied verbatim from the chosen item
   "tag":    string,        // copied verbatim from the chosen item
   "hook":   string         // 1 short sentence, max 25 words, factual:
-                           //   what shipped/landed/dropped and why a Go dev
-                           //   would care. NO marketing language. NO emojis.
+                           //   what specifically changed and why a Go dev
+                           //   would care enough to share it. Name the
+                           //   concrete thing: version, API, metric, date.
+                           //   NO marketing language. NO emojis.
                            //   NO "exciting"/"huge"/"game-changer".
 }
 
