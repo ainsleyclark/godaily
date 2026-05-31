@@ -48,3 +48,41 @@ idea is tried, its impact is visible instead of inferred.
 This is not surveillance of readers and it does not compromise the "no
 tracking pixels" promise. The aim is to understand which *channels* work,
 at an aggregate level — not to follow individuals around the web.
+
+## How it works
+
+Attribution rides entirely on **Plausible**, which GoDaily already loads
+in production. Plausible reads standard `utm_*` query parameters off the
+landing URL and rolls visits up by source — so the whole mechanism is two
+small parts: tag the links we send out, and tell Plausible when a signup
+happens. No database columns, no per-reader tracking.
+
+**Tagged links.** Every GoDaily-owned link that leaves the product carries
+UTM parameters naming the channel it left through. The tagging is
+centralised in `pkg/utm` (`utm.Tag(url, source, medium, campaign)`):
+
+| Surface | utm_source | utm_medium | utm_campaign |
+| --- | --- | --- | --- |
+| Email digest issue link | `email` | `email` | `daily-digest` |
+| Share button — LinkedIn | `linkedin` | `share` | `issue-share` |
+| Share button — Bluesky | `bluesky` | `share` | `issue-share` |
+| Share button — X / Twitter | `twitter` | `share` | `issue-share` |
+| Share button — copy link | `copy` | `share` | `issue-share` |
+| Auto social CTA post | `social-<platform>` | `social` | `cta` |
+
+**The conversion.** When the homepage subscribe form submits successfully,
+the frontend fires a Plausible custom event, `Signup`, in the *same browser
+session* as the landing — so Plausible attributes it to the original
+`utm_source`. The double opt-in confirmation happens in a later session and
+is deliberately not the tracked event; tying it back would need plumbing
+that buys little over the submit signal.
+
+**One manual step.** Create a custom-event goal named **`Signup`** in the
+Plausible dashboard. Until that goal exists the event is sent but not
+counted; once it does, the goal can be broken down by source and campaign,
+and the question "where from?" finally has an answer.
+
+**What stays untagged.** The featured, recap, spotlight and new-source
+auto-posts link to *external* articles, not back to GoDaily, so they carry
+no UTM tags — there is nothing on the GoDaily side for them to attribute,
+and tagging someone else's URL would be rude noise.
