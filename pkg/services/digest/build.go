@@ -21,7 +21,9 @@ import (
 // Build loads collected items for the appropriate date window, ranks and
 // deduplicates them, runs AI synthesis, and persists a draft Issue with the
 // items associated. If a draft already exists for the date's slug it is deleted
-// and rebuilt. On any failure a Slack notification is sent.
+// and rebuilt. On a successful build it also fires the owner preview as a
+// best-effort side effect, so the build cron doubles as the preview cron.
+// On any failure a Slack notification is sent.
 func (s Service) Build(ctx context.Context, date time.Time) error {
 	today := date.UTC().Truncate(24 * time.Hour)
 	start, end := buildWindow(today)
@@ -85,6 +87,15 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 	}
 
 	slog.InfoContext(ctx, "Built draft issue", "slug", slug, "items", position)
+
+	// Preview is best-effort: a failed owner email must not fail the build,
+	// since the draft is already persisted and SendDigest can still run.
+	if previewErr := s.SendPreview(ctx, today); previewErr != nil {
+		slog.WarnContext(ctx, "Sending preview after build failed", "err", previewErr)
+		if s.slack != nil {
+			s.slack.MustSend(ctx, "Send preview after build failed: "+previewErr.Error())
+		}
+	}
 
 	return nil
 }

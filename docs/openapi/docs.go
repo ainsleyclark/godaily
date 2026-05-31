@@ -122,6 +122,28 @@ const docTemplate = `{
                 },
                 "type": "object"
             },
+            "SocialMetricsResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.SocialPostEngagement"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "SourceMetricsResponse": {
                 "properties": {
                     "data": {
@@ -436,6 +458,47 @@ const docTemplate = `{
                         "type": "string"
                     },
                     "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.SocialPostEngagement": {
+                "properties": {
+                    "comments": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "integer"
+                    },
+                    "impressions": {
+                        "type": "integer"
+                    },
+                    "issue_id": {
+                        "type": "integer"
+                    },
+                    "kind": {
+                        "type": "string"
+                    },
+                    "likes": {
+                        "type": "integer"
+                    },
+                    "platform": {
+                        "type": "string"
+                    },
+                    "post_url": {
+                        "type": "string"
+                    },
+                    "posted_at": {
+                        "type": "string"
+                    },
+                    "reposts": {
+                        "type": "integer"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "text": {
                         "type": "string"
                     }
                 },
@@ -811,7 +874,7 @@ const docTemplate = `{
         },
         "/digest/build": {
             "get": {
-                "description": "Assembles today's collected items into a draft digest issue. Skipped at weekends unless force=true.",
+                "description": "Assembles today's collected items into a draft digest issue and sends the owner preview as a best-effort follow-up. Skipped at weekends unless force=true.",
                 "parameters": [
                     {
                         "description": "Force build even at weekends",
@@ -984,42 +1047,6 @@ const docTemplate = `{
                     }
                 ],
                 "summary": "Send confirmation nudges.",
-                "tags": [
-                    "digest"
-                ]
-            }
-        },
-        "/digest/preview": {
-            "get": {
-                "description": "Sends the draft digest and AI synth suggestion to the owner ahead of the full subscriber send. Skipped at weekends.",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Successfully sent preview"
-                    },
-                    "500": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Failed to send preview"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "summary": "Send the digest preview to the owner.",
                 "tags": [
                     "digest"
                 ]
@@ -1601,6 +1628,78 @@ const docTemplate = `{
                     }
                 ],
                 "summary": "Send the weekly engagement roundup.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/social": {
+            "get": {
+                "description": "Returns social posts joined with their latest engagement counts (likes, reposts, comments, impressions), optionally filtered by date range.",
+                "parameters": [
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SocialMetricsResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved social metrics"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch social metrics"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Social post engagement metrics.",
                 "tags": [
                     "metrics"
                 ]
