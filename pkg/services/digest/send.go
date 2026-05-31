@@ -19,6 +19,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/store"
+	"github.com/ainsleyclark/godaily/pkg/utm"
 )
 
 // SendDigest loads the draft digest for the given date, sends it to all
@@ -39,7 +40,7 @@ func (s Service) SendDigest(ctx context.Context, date time.Time, force bool) err
 		return errors.Wrap(err, "listing active subscribers")
 	}
 
-	canonicalURL := env.AppURL + "/issues/" + issue.Slug + "/"
+	canonicalURL := utm.Tag(env.AppURL+"/issues/"+issue.Slug+"/", "email", "email", "daily-digest")
 
 	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
 

@@ -1,23 +1,33 @@
 package components
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/ainsleyclark/godaily/pkg/utm"
+)
+
+// shareURL tags the issue link with the per-platform UTM params so
+// Plausible can attribute subscribers back to the channel that shared it.
+func shareURL(canonicalURL, source string) string {
+	return utm.Tag(canonicalURL, source, "share", "issue-share")
+}
 
 func linkedInShareURL(canonicalURL string) templ.SafeURL {
-	return templ.SafeURL("https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(canonicalURL))
+	return templ.SafeURL("https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(shareURL(canonicalURL, "linkedin")))
 }
 
 func blueskyShareURL(canonicalURL, title string) templ.SafeURL {
-	return templ.SafeURL("https://bsky.app/intent/compose?text=" + url.QueryEscape(title+" "+canonicalURL))
+	return templ.SafeURL("https://bsky.app/intent/compose?text=" + url.QueryEscape(title+" "+shareURL(canonicalURL, "bluesky")))
 }
 
 func twitterShareURL(canonicalURL, title string) templ.SafeURL {
-	return templ.SafeURL("https://twitter.com/intent/tweet?url=" + url.QueryEscape(canonicalURL) + "&text=" + url.QueryEscape(title))
+	return templ.SafeURL("https://twitter.com/intent/tweet?url=" + url.QueryEscape(shareURL(canonicalURL, "twitter")) + "&text=" + url.QueryEscape(title))
 }
 
 templ ShareButtons(canonicalURL string, title string) {
 	<div class="share-buttons">
 		<span class="share-buttons__label">Share</span>
-		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Attrs: templ.Attributes{"data-share-copy": canonicalURL, "aria-label": "Copy link"}}) {
+		@Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Attrs: templ.Attributes{"data-share-copy": shareURL(canonicalURL, "copy"), "aria-label": "Copy link"}}) {
 			<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<path d="M6.5 9.5a3.536 3.536 0 0 0 5 0l2-2a3.536 3.536 0 0 0-5-5L7.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
 				<path d="M9.5 6.5a3.536 3.536 0 0 0-5 0l-2 2a3.536 3.536 0 0 0 5 5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>

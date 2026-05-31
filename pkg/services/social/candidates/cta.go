@@ -17,6 +17,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
+	"github.com/ainsleyclark/godaily/pkg/utm"
 )
 
 // ctaCooldown is the minimum gap between two signup CTAs. Posting more
@@ -82,6 +83,10 @@ func (c *CTA) Generate(ctx context.Context, p ai.Prompter, platform social.Platf
 	if !ok {
 		return "", errors.New("cta: payload missing")
 	}
+	// Tag per platform at generation time (the platform is unknown when
+	// Eligible builds the payload) so Plausible can split CTA conversions
+	// by the social channel that posted them.
+	payload.URL = utm.Tag(payload.URL, "social-"+platform.String(), "social", "cta")
 	return rotation.CTA(ctx, p, platform, payload)
 }
 

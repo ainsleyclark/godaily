@@ -8,18 +8,28 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/ainsleyclark/godaily/pkg/utm"
+)
+
+// shareURL tags the issue link with the per-platform UTM params so
+// Plausible can attribute subscribers back to the channel that shared it.
+func shareURL(canonicalURL, source string) string {
+	return utm.Tag(canonicalURL, source, "share", "issue-share")
+}
 
 func linkedInShareURL(canonicalURL string) templ.SafeURL {
-	return templ.SafeURL("https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(canonicalURL))
+	return templ.SafeURL("https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(shareURL(canonicalURL, "linkedin")))
 }
 
 func blueskyShareURL(canonicalURL, title string) templ.SafeURL {
-	return templ.SafeURL("https://bsky.app/intent/compose?text=" + url.QueryEscape(title+" "+canonicalURL))
+	return templ.SafeURL("https://bsky.app/intent/compose?text=" + url.QueryEscape(title+" "+shareURL(canonicalURL, "bluesky")))
 }
 
 func twitterShareURL(canonicalURL, title string) templ.SafeURL {
-	return templ.SafeURL("https://twitter.com/intent/tweet?url=" + url.QueryEscape(canonicalURL) + "&text=" + url.QueryEscape(title))
+	return templ.SafeURL("https://twitter.com/intent/tweet?url=" + url.QueryEscape(shareURL(canonicalURL, "twitter")) + "&text=" + url.QueryEscape(title))
 }
 
 func ShareButtons(canonicalURL string, title string) templ.Component {
@@ -65,7 +75,7 @@ func ShareButtons(canonicalURL string, title string) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Attrs: templ.Attributes{"data-share-copy": canonicalURL, "aria-label": "Copy link"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Button(ButtonProps{Variant: ButtonVariantGhost, Size: ButtonSizeSm, Attrs: templ.Attributes{"data-share-copy": shareURL(canonicalURL, "copy"), "aria-label": "Copy link"}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
