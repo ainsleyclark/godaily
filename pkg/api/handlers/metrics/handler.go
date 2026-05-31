@@ -17,6 +17,7 @@ type Handler struct {
 	issuesRepo     digest.IssueRepository
 	emailEvents    engagement.EmailEventRepository
 	metricsService engagement.MetricsService
+	socialMetrics  engagement.SocialMetricRepository
 }
 
 // New constructs a Handler from the application App.
@@ -26,6 +27,7 @@ func New(a *godaily.App) *Handler {
 		issuesRepo:     a.Repository.Issues,
 		emailEvents:    a.Repository.EmailEvents,
 		metricsService: a.Service.Metrics,
+		socialMetrics:  a.Repository.SocialMetrics,
 	}
 }
 
@@ -40,4 +42,5 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/trend", h.Trend, auth)
 	kit.Get("/subscribers", h.Subscribers, auth)
 	kit.Get("/roundup", h.Roundup, auth)
+	kit.Get("/social", h.Social, auth)
 }
