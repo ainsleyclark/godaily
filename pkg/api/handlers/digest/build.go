@@ -18,7 +18,7 @@ import (
 // Build godoc
 //
 //	@Summary		Build the draft digest.
-//	@Description	Assembles today's collected items into a draft digest issue. Skipped at weekends unless force=true.
+//	@Description	Assembles today's collected items into a draft digest issue and sends the owner preview as a best-effort follow-up. Skipped at weekends unless force=true.
 //	@Tags			digest
 //	@Produce		json
 //	@Security		BearerAuth
