@@ -11,7 +11,6 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"io"
 	"strings"
 
@@ -179,40 +178,6 @@ func (s Store) CountFiltered(ctx context.Context, search string) (int64, error) 
 		return 0, err
 	}
 	return count, nil
-}
-
-func (s Store) Update(ctx context.Context, id int64, params audience.UpdateParams) (audience.Subscriber, error) {
-	if params.Status != nil {
-		var query string
-		switch *params.Status {
-		case "unsubscribed":
-			query = "UPDATE subscribers SET unsubscribed_at = CURRENT_TIMESTAMP, bounced_at = NULL, suppressed_at = NULL WHERE id = ?"
-		case "active":
-			query = "UPDATE subscribers SET unsubscribed_at = NULL, bounced_at = NULL, suppressed_at = NULL, confirmed_at = CASE WHEN confirmed_at IS NULL THEN CURRENT_TIMESTAMP ELSE confirmed_at END WHERE id = ?"
-		case "suppressed":
-			query = "UPDATE subscribers SET suppressed_at = CURRENT_TIMESTAMP WHERE id = ?"
-		default:
-			return audience.Subscriber{}, fmt.Errorf("unknown status: %s", *params.Status)
-		}
-		res, err := s.db.ExecContext(ctx, query, id)
-		if err != nil {
-			return audience.Subscriber{}, err
-		}
-		n, err := res.RowsAffected()
-		if err != nil {
-			return audience.Subscriber{}, err
-		}
-		if n == 0 {
-			return audience.Subscriber{}, store.ErrNotFound
-		}
-	}
-	sub, err := s.sqlc.SubscriberByID(ctx, id)
-	if errors.Is(err, sql.ErrNoRows) {
-		return audience.Subscriber{}, store.ErrNotFound
-	} else if err != nil {
-		return audience.Subscriber{}, err
-	}
-	return transformSubscriber(sub), nil
 }
 
 func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Subscriber, error) {

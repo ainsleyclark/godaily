@@ -248,21 +248,6 @@ func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
-// Update mocks base method.
-func (m *MockSubscriberRepository) Update(ctx context.Context, id int64, params audience.UpdateParams) (audience.Subscriber, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", ctx, id, params)
-	ret0, _ := ret[0].(audience.Subscriber)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Update indicates an expected call of Update.
-func (mr *MockSubscriberRepositoryMockRecorder) Update(ctx, id, params any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockSubscriberRepository)(nil).Update), ctx, id, params)
-}
-
 // CountFiltered mocks base method.
 func (m *MockSubscriberRepository) CountFiltered(ctx context.Context, search string) (int64, error) {
 	m.ctrl.T.Helper()

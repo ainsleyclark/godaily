@@ -97,27 +97,5 @@ export const api = {
 	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
 	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
 	subscriberList: (page = 1, perPage = 50, search = '') =>
-		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery),
-	updateSubscriber: async (id: number, status: string): Promise<Subscriber> => {
-		const secret = getSecret();
-		const res = await fetch(buildUrl(`/api/digest/subscribers/${id}`), {
-			method: 'PATCH',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				...(secret ? { Authorization: `Bearer ${secret}` } : {})
-			},
-			body: JSON.stringify({ status })
-		});
-		if (res.status === 401) {
-			if (typeof window !== 'undefined') window.dispatchEvent(new Event('metrics:unauthorized'));
-			throw new ApiError(401, 'Unauthorized');
-		}
-		if (!res.ok) {
-			const text = await res.text().catch(() => '');
-			throw new ApiError(res.status, text || `HTTP ${res.status}`);
-		}
-		const body = (await res.json()) as { data: Subscriber };
-		return body.data;
-	}
+		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery)
 };
