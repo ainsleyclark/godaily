@@ -30,10 +30,12 @@ const recapGuidance = `You are writing the Friday weekly recap for GoDaily: the 
 The input is a list of items, already ranked by GoDaily subscriber clicks (highest first). The "week_label" is an ISO week identifier you can reference loosely (e.g. "this week").
 
 Write ONE post that:
-1. Opens with a single short line framing the recap ("Most-clicked Go stories from GoDaily subscribers this week:").
-2. Lists each item as a separate line: short title, then the URL. No bullet characters, no numbered list — line breaks alone. Keep titles tight; trim if they're long.
+1. Opens with a single short line framing the recap ("Most-clicked Go stories this week:").
+2. Lists each item as a short entry. Format: one tight descriptive phrase (not just the raw title), then the URL on the next line. No bullet characters, no numbers — line breaks alone. The phrase should tell the reader what it's actually about in plain language, so the post is worth reading even without clicking any link.
 3. Does NOT name click counts. The fact these were popular is enough; numbers come across as boastful and date the post.
 4. If only 1 or 2 items are supplied, write a shorter post — never pad.
+
+The recap should read like a useful week-in-Go summary, not a link dump.
 
 End the post body, then a blank line, then the platform's hashtag line.`
 

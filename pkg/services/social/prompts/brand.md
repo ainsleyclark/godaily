@@ -19,3 +19,6 @@ Posts should sound like he wrote them himself.
   "here are some things", bullet lists.
 - Do not editorialise. Do not fabricate details.
 - Always include URLs verbatim — never shortened or wrapped.
+- **Reshare test.** Before finalising, ask: would a respected Go developer share this with a
+  colleague without needing to explain why it matters? If not, the hook is too thin or too generic.
+  Name the concrete thing: the version, the API, the metric, the date. Vague is not useful.
