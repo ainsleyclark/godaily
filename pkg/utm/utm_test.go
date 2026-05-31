@@ -4,12 +4,16 @@
 
 package utm
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestTag(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
+	tt := map[string]struct {
 		rawURL   string
 		source   string
 		medium   string
@@ -53,14 +57,12 @@ func TestTag(t *testing.T) {
 		},
 	}
 
-	for name, tt := range tests {
+	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			got := Tag(tt.rawURL, tt.source, tt.medium, tt.campaign)
-			if got != tt.want {
-				t.Errorf("Tag() = %q, want %q", got, tt.want)
-			}
+			got := Tag(test.rawURL, test.source, test.medium, test.campaign)
+			assert.Equal(t, test.want, got)
 		})
 	}
 }
