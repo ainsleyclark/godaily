@@ -11,6 +11,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/urfave/cli/v3"
 )
 
@@ -43,7 +44,7 @@ func collectCmd(a *godaily.App) *cli.Command {
 				Sources: sources,
 			})
 			if err != nil {
-				a.Slack.MustSend(ctx, "Collect failed: "+err.Error())
+				a.Slack.MustSend(ctx, slack.Error("Collect failed (CLI)", err))
 				return err
 			}
 

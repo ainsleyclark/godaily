@@ -16,8 +16,10 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/engagement"
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	slacksdk "github.com/slack-go/slack"
 )
 
 var errBoom = errors.New("boom")
@@ -138,8 +140,8 @@ func TestService_Roundup(t *testing.T) {
 		repo.EXPECT().IssueList(gomock.Any(), gomock.Any(), "click_rate").Return(nil, nil)
 
 		var captured string
-		sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, msg string) error {
-			captured = msg
+		sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, req slack.Request) error {
+			captured = flattenRequest(req)
 			return nil
 		})
 
@@ -175,8 +177,8 @@ func TestService_Roundup(t *testing.T) {
 		}
 
 		var captured string
-		sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, msg string) error {
-			captured = msg
+		sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, req slack.Request) error {
+			captured = flattenRequest(req)
 			return nil
 		})
 
@@ -402,6 +404,35 @@ func TestFormatRoundup_LengthSanity(t *testing.T) {
 		Sources:   []engagement.SourceMetrics{{Source: "x", Clicks: 1}, {Source: "y", Clicks: 2}, {Source: "z", Clicks: 3}},
 		BestIssue: &engagement.IssueEngagement{Slug: "2026-05-22", ClickRate: 0.15, OpenRate: 0.5},
 	}
-	msg := formatRoundup(curr, Snapshot{})
-	assert.Less(t, len(msg), 4000, "message must fit in Slack's 4000-char limit")
+	req := roundupRequest(curr, Snapshot{})
+	assert.Less(t, len(flattenRequest(req)), 4000, "message must fit in Slack's 4000-char limit")
+}
+
+// flattenRequest concatenates the Request's Text + every section block's
+// text into one string for assertion convenience.
+func flattenRequest(req slack.Request) string {
+	var b strings.Builder
+	b.WriteString(req.Text)
+	for _, blk := range req.Blocks.BlockSet {
+		switch v := blk.(type) {
+		case *slacksdk.SectionBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slacksdk.HeaderBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slacksdk.ContextBlock:
+			for _, e := range v.ContextElements.Elements {
+				if t, ok := e.(*slacksdk.TextBlockObject); ok {
+					b.WriteString("\n")
+					b.WriteString(t.Text)
+				}
+			}
+		}
+	}
+	return b.String()
 }

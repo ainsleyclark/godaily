@@ -27,10 +27,6 @@
 			"schedule": "0 2 * * *"
 		},
 		{
-			"path": "/api/digest/preview/",
-			"schedule": "0 6 * * 1-5"
-		},
-		{
 			"path": "/api/digest/send/",
 			"schedule": "0 8 * * *"
 		},

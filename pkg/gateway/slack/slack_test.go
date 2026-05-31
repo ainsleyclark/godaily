@@ -33,7 +33,7 @@ func TestClient_Send(t *testing.T) {
 			},
 		}
 
-		got := s.Send(t.Context(), "message")
+		got := s.Send(t.Context(), Plain("message"))
 		assert.NoError(t, got)
 	})
 
@@ -46,9 +46,27 @@ func TestClient_Send(t *testing.T) {
 			},
 		}
 
-		got := s.Send(t.Context(), "message")
+		got := s.Send(t.Context(), Plain("message"))
 		want := "failed to send message to Slack channel 'id' at time 'timestamp': error"
 		assert.ErrorContains(t, got, want)
+	})
+
+	t.Run("Channel from client overrides request", func(t *testing.T) {
+		t.Parallel()
+
+		var seenChannel string
+		s := Client{
+			channel: "#configured",
+			slackSendFunc: func(_ context.Context, ch string, _ ...slack.MsgOption) (string, string, error) {
+				seenChannel = ch
+				return "", "", nil
+			},
+		}
+
+		req := Plain("message")
+		req.Channel = "#ignored"
+		assert.NoError(t, s.Send(t.Context(), req))
+		assert.Equal(t, "#configured", seenChannel)
 	})
 }
 
@@ -63,7 +81,7 @@ func TestClient_MustSend(t *testing.T) {
 		var buf bytes.Buffer
 		slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
 
-		s.MustSend(t.Context(), "message")
+		s.MustSend(t.Context(), Plain("message"))
 		assert.Equal(t, "", buf.String())
 	})
 
@@ -77,7 +95,27 @@ func TestClient_MustSend(t *testing.T) {
 		var buf bytes.Buffer
 		slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
 
-		s.MustSend(t.Context(), "message")
+		s.MustSend(t.Context(), Plain("message"))
 		assert.Contains(t, buf.String(), "Slack error")
+	})
+}
+
+func TestRequestToOptions(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Empty request", func(t *testing.T) {
+		t.Parallel()
+		assert.Empty(t, requestToOptions(Request{}))
+	})
+
+	t.Run("All fields", func(t *testing.T) {
+		t.Parallel()
+		opts := requestToOptions(Request{
+			Text:            "hello",
+			Blocks:          BlockSet{BlockSet: []Block{slack.NewDividerBlock()}},
+			Attachments:     []Attachment{{Color: ColorInfo}},
+			ThreadTimestamp: "1.0",
+		})
+		assert.Len(t, opts, 4)
 	})
 }

@@ -9,6 +9,7 @@ import (
 	"log/slog"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/urfave/cli/v3"
 )
 
@@ -19,7 +20,7 @@ func nudgeCmd(a *godaily.App) *cli.Command {
 		Action: func(ctx context.Context, _ *cli.Command) error {
 			sent, failed, err := a.Service.Subscribers.SendConfirmationNudges(ctx)
 			if err != nil {
-				a.Slack.MustSend(ctx, "Send confirmation nudges failed: "+err.Error())
+				a.Slack.MustSend(ctx, slack.Error("Send confirmation nudges failed", err))
 				return err
 			}
 			slog.InfoContext(ctx, "Sent confirmation nudges", "sent", sent, "failed", failed)

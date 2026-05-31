@@ -15,6 +15,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	// Register all news-source fetchers (lingua-go + scrapers) so the
 	// registry populates in this single binary.
 	_ "github.com/ainsleyclark/godaily/pkg/source"
@@ -35,7 +36,7 @@ func (h *Handler) Collect(c *webkit.Context) error {
 
 	resp, err := h.runner.Collect(ctx, digest.CollectOptions{})
 	if err != nil {
-		h.slack.MustSend(ctx, "Collect failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Collect failed", err))
 		slog.ErrorContext(ctx, "Collect failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to collect")
 	}
@@ -57,7 +58,7 @@ func (h *Handler) Collect(c *webkit.Context) error {
 		errParts = append(errParts, fmt.Sprintf("• %s: %s", src, msg))
 	}
 	if len(errParts) > 0 {
-		h.slack.MustSend(ctx, "Source errors during collection:\n"+strings.Join(errParts, "\n"))
+		h.slack.MustSend(ctx, slack.Warn("Source errors during collection", strings.Join(errParts, "\n")))
 	}
 
 	return api.OK(c, http.StatusOK, map[string]any{"sources": sources}, "Successfully collected sources")

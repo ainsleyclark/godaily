@@ -11,6 +11,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/pkg/errors"
@@ -51,7 +52,7 @@ func (s *Service) Post(ctx context.Context, opts social.PostOptions) ([]social.P
 
 	feat, err := featured.Feature(ctx, s.prompter, date, rows)
 	if err != nil {
-		s.notifyFailure(ctx, "AI feature pick failed: "+err.Error())
+		s.notifyFailure(ctx, slack.Error("AI feature pick failed", err))
 		return nil, errors.Wrap(err, "feature")
 	}
 

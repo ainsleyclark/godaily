@@ -58,7 +58,7 @@ func SourceWeight(s Source, t Tag) float64 {
 	case SourceRemoteOK:
 		return 1.0
 	case SourceMedium:
-		return 0.5
+		return 0.75
 	default:
 		return 1.0
 	}

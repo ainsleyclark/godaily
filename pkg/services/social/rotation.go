@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 )
 
@@ -47,7 +48,9 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 	for _, cand := range candidates {
 		cctx, ok, err := cand.Eligible(ctx, now)
 		if err != nil {
-			s.notifyFailure(ctx, "Rotation eligibility check failed for "+string(cand.Kind())+": "+err.Error())
+			s.notifyFailure(ctx, slack.Error(
+				"Rotation eligibility check failed — "+string(cand.Kind()), err,
+			))
 			return nil, errors.Wrapf(err, "eligibility for %s", cand.Kind())
 		}
 		if !ok {

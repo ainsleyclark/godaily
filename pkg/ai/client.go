@@ -82,13 +82,13 @@ func (c *Client) notifyComparison(ctx context.Context, primaryRaw []byte, primar
 		return
 	}
 	var b strings.Builder
-	b.WriteString("AI provider comparison\n\nAnthropic (primary):\n")
+	b.WriteString("*Anthropic (primary)*\n")
 	if primaryErr != nil {
 		b.WriteString("error: " + primaryErr.Error())
 	} else {
 		b.WriteString(renderForSlack(primaryRaw))
 	}
-	b.WriteString("\n\nGemini (fallback):\n")
+	b.WriteString("\n\n*Gemini (fallback)*\n")
 	switch {
 	case c.fallback == nil:
 		b.WriteString("not configured")
@@ -97,7 +97,7 @@ func (c *Client) notifyComparison(ctx context.Context, primaryRaw []byte, primar
 	default:
 		b.WriteString(renderForSlack(fallbackRaw))
 	}
-	c.notifier.MustSend(ctx, b.String())
+	c.notifier.MustSend(ctx, slack.Info("AI provider comparison", b.String()))
 }
 
 // renderForSlack extracts human-readable string fields from a JSON AI response.

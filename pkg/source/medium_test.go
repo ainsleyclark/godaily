@@ -12,9 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
 func TestMedium_Fetch(t *testing.T) {
@@ -62,7 +63,7 @@ func TestMedium_Fetch(t *testing.T) {
 					Author:    &news.Author{Name: "Andrei Boar"},
 					Snippet:   "Intro Continue reading on Medium »",
 					Tag:       news.TagArticle,
-					Score:     0.25, // no signal: weight 0.5 * constant 0.5
+					Score:     0.375,
 					Published: time.Date(2026, 4, 27, 19, 6, 22, 0, time.UTC),
 				}, items[0])
 			},

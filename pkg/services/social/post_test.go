@@ -12,6 +12,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
@@ -130,14 +131,14 @@ func TestService_Post(t *testing.T) {
 		var slackMsg string
 		f.slack.EXPECT().
 			MustSend(gomock.Any(), gomock.Any()).
-			Do(func(_ context.Context, m string) { slackMsg = m })
+			Do(func(_ context.Context, req slack.Request) { slackMsg = flattenSlackRequest(req) })
 
 		date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 		res, err := f.service().Post(t.Context(), social.PostOptions{Date: date})
 		require.Error(t, err)
 		require.Len(t, res, 1)
 		assert.Contains(t, res[0].Err.Error(), "API down")
-		assert.Contains(t, slackMsg, "bluesky")
+		assert.Contains(t, slackMsg, "Bluesky")
 	})
 
 	t.Run("Platforms Filter", func(t *testing.T) {
@@ -215,7 +216,7 @@ func TestService_Post(t *testing.T) {
 		var successMsg string
 		f.slack.EXPECT().
 			MustSend(gomock.Any(), gomock.Any()).
-			Do(func(_ context.Context, m string) { successMsg = m })
+			Do(func(_ context.Context, req slack.Request) { successMsg = flattenSlackRequest(req) })
 
 		date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
 		res, err := f.service().Post(t.Context(), social.PostOptions{Date: date})

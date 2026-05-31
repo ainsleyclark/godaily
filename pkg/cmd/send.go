@@ -10,6 +10,7 @@ import (
 	"time"
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/urfave/cli/v3"
 )
 
@@ -37,7 +38,7 @@ func sendCmd(a *godaily.App) *cli.Command {
 				date = d
 			}
 			if err := a.Service.Digest.SendDigest(ctx, date, cmd.Bool("force")); err != nil {
-				a.Slack.MustSend(ctx, "Send digest failed: "+err.Error())
+				a.Slack.MustSend(ctx, slack.Error("Send digest failed (CLI)", err))
 				return err
 			}
 			return nil

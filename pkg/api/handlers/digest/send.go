@@ -13,6 +13,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 // Send godoc
@@ -39,7 +40,7 @@ func (h *Handler) Send(c *webkit.Context) error {
 	today := now.Truncate(24 * time.Hour)
 
 	if err := h.runner.SendDigest(ctx, today, force); err != nil {
-		h.slack.MustSend(ctx, "Send digest failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Send digest failed", err))
 		slog.ErrorContext(ctx, "Send digest failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to send digest")
 	}

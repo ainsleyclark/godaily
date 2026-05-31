@@ -15,6 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -22,7 +23,9 @@ import (
 // Build loads collected items for the appropriate date window, ranks and
 // deduplicates them, runs AI synthesis, and persists a draft Issue with the
 // items associated. If a draft already exists for the date's slug it is deleted
-// and rebuilt. On any failure a Slack notification is sent.
+// and rebuilt. On a successful build it also fires the owner preview as a
+// best-effort side effect, so the build cron doubles as the preview cron.
+// On any failure a Slack notification is sent.
 func (s Service) Build(ctx context.Context, date time.Time) error {
 	today := date.UTC().Truncate(24 * time.Hour)
 	start, end := buildWindow(today)
@@ -87,6 +90,15 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 
 	slog.InfoContext(ctx, "Built draft issue", "slug", slug, "items", position)
 
+	// Preview is best-effort: a failed owner email must not fail the build,
+	// since the draft is already persisted and SendDigest can still run.
+	if previewErr := s.SendPreview(ctx, today); previewErr != nil {
+		slog.WarnContext(ctx, "Sending preview after build failed", "err", previewErr)
+		if s.slack != nil {
+			s.slack.MustSend(ctx, slack.Error("Send preview after build failed", previewErr))
+		}
+	}
+
 	return nil
 }
 
@@ -138,7 +150,7 @@ func groupIntoSections(items []news.Item) []news.SourceItems {
 
 func (s Service) buildErr(ctx context.Context, err error) error {
 	if s.slack != nil {
-		s.slack.MustSend(ctx, "Build failed: "+err.Error())
+		s.slack.MustSend(ctx, slack.Error("Build failed", err))
 	}
 	return err
 }
@@ -156,7 +168,7 @@ func (s Service) synthesiseDigestMeta(ctx context.Context, day time.Time, sectio
 	if err != nil {
 		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
 		if s.slack != nil {
-			s.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
+			s.slack.MustSend(ctx, slack.Error("AI synthesis failed", err))
 		}
 		return subject, ""
 	}
@@ -165,9 +177,9 @@ func (s Service) synthesiseDigestMeta(ctx context.Context, day time.Time, sectio
 	// separate pipeline steps, so this is a passive review window: the owner
 	// can catch anything off before the send job runs, with no obligation to.
 	if s.slack != nil {
-		s.slack.MustSend(ctx, fmt.Sprintf(
-			"Digest draft for %s\n\n*Subject:* %s\n\n*Intro:* %s",
-			day.Format("2006-01-02"), meta.Title, meta.Intro,
+		s.slack.MustSend(ctx, slack.Info(
+			"Digest draft for "+day.Format("2006-01-02"),
+			fmt.Sprintf("*Subject:* %s\n\n*Intro:* %s", meta.Title, meta.Intro),
 		))
 	}
 
