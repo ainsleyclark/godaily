@@ -76,7 +76,7 @@ func TestSourceWeight(t *testing.T) {
 		"Dev.to":                   {source: SourceDevTo, tag: TagArticle, want: 1.0},
 		"GolangBridge":             {source: SourceGolangBridge, tag: TagArticle, want: 1.0},
 		"YouTube":                  {source: SourceYouTube, tag: TagVideo, want: 1.0},
-		"Medium":                   {source: SourceMedium, tag: TagArticle, want: 0.5},
+		"Medium":                   {source: SourceMedium, tag: TagArticle, want: 0.75},
 	}
 
 	for name, test := range tt {
@@ -117,7 +117,7 @@ func TestScoreOf(t *testing.T) {
 		"GitHub Shipped floor carries":      {SourceGitHub, TagProposalShipped, 0, true, 0.85, 0.85},
 		"GitHub Proposal floor carries":     {SourceGitHub, TagProposal, 0, true, 0.75, 0.75},
 		"Go Blog no signal":                 {SourceGoBlog, TagArticle, 0, false, 1.0, 1.0},
-		"Medium no signal":                  {SourceMedium, TagArticle, 0, false, 0.25, 0.25},
+		"Medium no signal":                  {SourceMedium, TagArticle, 0, false, 0.375, 0.375},
 		"YouTube no signal":                 {SourceYouTube, TagVideo, 0, false, 0.5, 0.5},
 		"Dev.to zero engagement uses floor": {SourceDevTo, TagArticle, 0, true, 0.1, 0.1},
 		"GolangBridge mid-range views":      {SourceGolangBridge, TagArticle, 1000, true, 0.7, 0.95},

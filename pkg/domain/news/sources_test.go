@@ -53,7 +53,7 @@ func TestSource_Priority(t *testing.T) {
 		"JetBrains":          {source: SourceJetBrains, want: 14},
 		"Dev.to":             {source: SourceDevTo, want: 13},
 		"GolangBridge":       {source: SourceGolangBridge, want: 12},
-		"freeCodeCamp":       {source: SourceFreeCodeCamp, want: 11},
+		"freeCodeCamp":       {source: SourceFreeCodeCamp, want: 3},
 		"Meetup":             {source: SourceMeetup, want: 10},
 		"go podcast()":       {source: SourceGoPodcast, want: 9},
 		"Fallthrough":        {source: SourceFallthrough, want: 8},
@@ -61,7 +61,7 @@ func TestSource_Priority(t *testing.T) {
 		"YouTube":            {source: SourceYouTube, want: 6},
 		"Mastodon":           {source: SourceMastodon, want: 5},
 		"Awesome Go":         {source: SourceAwesomeGo, want: 4},
-		"Medium":             {source: SourceMedium, want: 3},
+		"Medium":             {source: SourceMedium, want: 11},
 		"HN Who's Hiring":    {source: SourceHNJobs, want: 24},
 		"Remote OK":          {source: SourceRemoteOK, want: 25},
 	}
@@ -90,15 +90,15 @@ func TestSource_Priority(t *testing.T) {
 		assert.Greater(t, SourceReddit.Priority(), SourceJetBrains.Priority())
 		assert.Greater(t, SourceJetBrains.Priority(), SourceDevTo.Priority())
 		assert.Greater(t, SourceDevTo.Priority(), SourceGolangBridge.Priority())
-		assert.Greater(t, SourceGolangBridge.Priority(), SourceFreeCodeCamp.Priority())
-		assert.Greater(t, SourceFreeCodeCamp.Priority(), SourceMeetup.Priority())
+		assert.Greater(t, SourceGolangBridge.Priority(), SourceMedium.Priority())
+		assert.Greater(t, SourceMedium.Priority(), SourceMeetup.Priority())
 		assert.Greater(t, SourceMeetup.Priority(), SourceGoPodcast.Priority())
 		assert.Greater(t, SourceGoPodcast.Priority(), SourceFallthrough.Priority())
 		assert.Greater(t, SourceFallthrough.Priority(), SourceArdanLabs.Priority())
 		assert.Greater(t, SourceArdanLabs.Priority(), SourceYouTube.Priority())
 		assert.Greater(t, SourceYouTube.Priority(), SourceMastodon.Priority())
 		assert.Greater(t, SourceMastodon.Priority(), SourceAwesomeGo.Priority())
-		assert.Greater(t, SourceAwesomeGo.Priority(), SourceMedium.Priority())
+		assert.Greater(t, SourceAwesomeGo.Priority(), SourceFreeCodeCamp.Priority())
 	})
 
 	t.Run("All Priorities Are Unique", func(t *testing.T) {
