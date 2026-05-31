@@ -15,7 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 func TestClient_Prompt(t *testing.T) {
