@@ -142,7 +142,7 @@
   handles:
     linkedin:
       slug: gophercon-africa
-      urn: ""
+      urn: urn:li:organization:104497180
     bluesky: ""
     mastodon: ""
   notify_dates:

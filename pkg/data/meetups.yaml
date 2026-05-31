@@ -41,7 +41,7 @@
   handles:
     linkedin:
       slug: london-gophers
-      urn: ""
+      urn: urn:li:organization:90601734
     bluesky: ""
     mastodon: ""
 
