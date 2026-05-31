@@ -6,6 +6,7 @@ package social
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -16,6 +17,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
@@ -24,6 +26,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
+	slacksdk "github.com/slack-go/slack"
 )
 
 // constReframer returns a reframer that always returns text.
@@ -85,6 +88,40 @@ func (f *fixture) stubReframer(p social.Platform, stub reframer) {
 		f.reframers = defaultReframers()
 	}
 	f.reframers[p] = stub
+}
+
+// flattenSlackRequest concatenates the Request's Text, every section /
+// header block's text, and every button's label + URL into one string.
+// Tests use it to assert on rich Slack messages with a single Contains.
+func flattenSlackRequest(req slack.Request) string {
+	var b strings.Builder
+	b.WriteString(req.Text)
+	for _, blk := range req.Blocks.BlockSet {
+		switch v := blk.(type) {
+		case *slacksdk.SectionBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slacksdk.HeaderBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slacksdk.ActionBlock:
+			for _, el := range v.Elements.ElementSet {
+				if btn, ok := el.(*slacksdk.ButtonBlockElement); ok {
+					b.WriteString("\n")
+					if btn.Text != nil {
+						b.WriteString(btn.Text.Text)
+						b.WriteString(" ")
+					}
+					b.WriteString(btn.URL)
+				}
+			}
+		}
+	}
+	return b.String()
 }
 
 // newMockPoster returns a Poster whose Platform() returns p.

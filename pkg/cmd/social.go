@@ -16,6 +16,7 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
@@ -119,7 +120,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				Platforms: platforms,
 			})
 			if err != nil {
-				a.Slack.MustSend(ctx, "Social publish CLI failed: "+err.Error())
+				a.Slack.MustSend(ctx, slack.Error("Social publish CLI failed", err))
 				printResults(results)
 				return err
 			}
@@ -177,7 +178,7 @@ func socialRotationCmd(a *godaily.App) *cli.Command {
 				ForceKind: social.PostKind(strings.TrimSpace(cmd.String("kind"))),
 			})
 			if err != nil {
-				a.Slack.MustSend(ctx, "Social rotation CLI failed: "+err.Error())
+				a.Slack.MustSend(ctx, slack.Error("Social rotation CLI failed", err))
 				printResults(results)
 				return err
 			}

@@ -15,6 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 // subscribeRequest is the body for POST /subscribe.
@@ -55,11 +56,11 @@ func (h *Handler) Subscribe(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to subscribe")
 	}
 
-	msg := "New subscriber: " + body.Email
+	line := body.Email
 	if count, err := h.subscribersRepo.CountActive(ctx); err == nil {
-		msg += fmt.Sprintf(" | Total subscribers: %d", count)
+		line += fmt.Sprintf(" · %d total active", count)
 	}
-	h.slack.MustSend(ctx, msg)
+	h.slack.MustSend(ctx, slack.Success("New subscriber", line))
 
 	return api.OK(c, http.StatusOK, nil, "Successfully subscribed")
 }

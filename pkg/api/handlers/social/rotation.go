@@ -14,6 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 // Rotation godoc
@@ -43,7 +44,7 @@ func (h *Handler) Rotation(c *webkit.Context) error {
 
 	results, err := h.social.Rotate(ctx, social.RotateOptions{Now: now})
 	if err != nil {
-		h.slack.MustSend(ctx, "Rotation post failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Rotation post failed", err))
 		slog.ErrorContext(ctx, "Rotation post failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to rotate")
 	}

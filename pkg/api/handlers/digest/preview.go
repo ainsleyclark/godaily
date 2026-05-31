@@ -13,6 +13,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 // Preview godoc
@@ -37,7 +38,7 @@ func (h *Handler) Preview(c *webkit.Context) error {
 	today := now.Truncate(24 * time.Hour)
 
 	if err := h.runner.SendPreview(ctx, today); err != nil {
-		h.slack.MustSend(ctx, "Send preview failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Send preview failed", err))
 		slog.ErrorContext(ctx, "Send preview failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to send preview")
 	}

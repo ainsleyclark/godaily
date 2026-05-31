@@ -14,6 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/hook"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 // Featured godoc
@@ -45,7 +46,7 @@ func (h *Handler) Featured(c *webkit.Context) error {
 
 	results, err := h.social.Post(ctx, social.PostOptions{Date: today})
 	if err != nil {
-		h.slack.MustSend(ctx, "Featured post failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Featured post failed", err))
 		slog.ErrorContext(ctx, "Featured post failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to post featured")
 	}

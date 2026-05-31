@@ -14,6 +14,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/source"
 )
 
@@ -48,7 +49,7 @@ func (h *Handler) Reddit(c *webkit.Context) error {
 
 	resp, err := h.runner.Submit(ctx, news.SourceReddit, items)
 	if err != nil {
-		h.slack.MustSend(ctx, "Reddit ingest failed: "+err.Error())
+		h.slack.MustSend(ctx, slack.Error("Reddit ingest failed", err))
 		slog.ErrorContext(ctx, "Reddit ingest failed", "err", err)
 		return api.Error(c, http.StatusInternalServerError, "Failed to ingest items")
 	}
