@@ -25,6 +25,14 @@ const (
 	ModelGeminiPro   = "gemini-2.5-pro"   // Gemini, highest quality
 )
 
+// Prompter abstracts a single AI prompt round-trip.
+// model selects the vendor model (use the Model* constants); system is the
+// task directive; user is the data payload.
+// Implementations must be safe for concurrent use.
+type Prompter interface {
+	Prompt(ctx context.Context, model, system, user string) ([]byte, error)
+}
+
 // isPremium reports whether the requested model selects the premium tier.
 func isPremium(model string) bool {
 	return model == ModelOpus || model == ModelGeminiPro
@@ -46,12 +54,4 @@ func geminiModelFor(model string) string {
 		return ModelGeminiPro
 	}
 	return ModelGeminiFlash
-}
-
-// Prompter abstracts a single AI prompt round-trip.
-// model selects the vendor model (use the Model* constants); system is the
-// task directive; user is the data payload.
-// Implementations must be safe for concurrent use.
-type Prompter interface {
-	Prompt(ctx context.Context, model, system, user string) ([]byte, error)
 }
