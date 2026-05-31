@@ -93,6 +93,23 @@ export interface SocialPostMetric {
 	impressions: number;
 }
 
+export interface Subscriber {
+	id: number;
+	email: string;
+	confirmed_at?: string;
+	unsubscribed_at?: string;
+	bounced_at?: string;
+	suppressed_at?: string;
+	created_at: string;
+}
+
+export interface PaginatedResponse<T> {
+	data: T[];
+	page: number;
+	per_page: number;
+	total: number;
+}
+
 export type Bucket = 'day' | 'week' | 'month';
 export type TrendMetric = 'unique_opens' | 'unique_clicks' | 'open_rate' | 'click_rate';
 

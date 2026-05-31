@@ -5,8 +5,10 @@ import type {
 	IssueEngagement,
 	ItemMetrics,
 	MetricsQuery,
+	PaginatedResponse,
 	SourceMetrics,
 	SocialPostMetric,
+	Subscriber,
 	SubscriberData,
 	SummaryStats,
 	TagMetrics,
@@ -93,5 +95,7 @@ export const api = {
 	sources: (q?: MetricsQuery) => request<SourceMetrics[]>('/api/metrics/sources', q),
 	trend: (q?: MetricsQuery) => request<TrendData>('/api/metrics/trend', q),
 	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
-	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q)
+	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
+	subscriberList: (page = 1, perPage = 50) =>
+		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage } as unknown as MetricsQuery)
 };
