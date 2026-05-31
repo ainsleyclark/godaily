@@ -20,7 +20,7 @@ import (
 	mockai "github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 	mocknews "github.com/ainsleyclark/godaily/pkg/mocks/news"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 	mocksocial "github.com/ainsleyclark/godaily/pkg/mocks/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"

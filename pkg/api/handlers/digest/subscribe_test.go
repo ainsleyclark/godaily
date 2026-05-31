@@ -17,7 +17,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	mockaudience "github.com/ainsleyclark/godaily/pkg/mocks/audience"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 func TestSubscribe(t *testing.T) {
