@@ -100,34 +100,19 @@ func TestClient_Prompt(t *testing.T) {
 		assert.Equal(t, "system text", capturedCfg.SystemInstruction.Parts[0].Text)
 	})
 
-	t.Run("Maps Requested Model To Gemini Line", func(t *testing.T) {
+	t.Run("Runs The Model It Is Given", func(t *testing.T) {
 		t.Parallel()
 
-		tests := map[string]struct {
-			requested string
-			want      string
-		}{
-			"empty defaults to flash": {requested: "", want: geminiFlash},
-			"sonnet maps to flash":    {requested: "claude-sonnet-4-6", want: geminiFlash},
-			"opus maps to pro":        {requested: "claude-opus-4-7", want: geminiPro},
+		var capturedModel string
+		gen := &captureGenerator{
+			resp:    textResponse("ok"),
+			onModel: func(model string) { capturedModel = model },
 		}
 
-		for name, tc := range tests {
-			t.Run(name, func(t *testing.T) {
-				t.Parallel()
-
-				var capturedModel string
-				gen := &captureGenerator{
-					resp:    textResponse("ok"),
-					onModel: func(model string) { capturedModel = model },
-				}
-
-				c := &Client{gen: gen}
-				_, err := c.Prompt(context.Background(), tc.requested, "sys", "user")
-				require.NoError(t, err)
-				assert.Equal(t, tc.want, capturedModel)
-			})
-		}
+		c := &Client{gen: gen}
+		_, err := c.Prompt(context.Background(), "gemini-2.5-pro", "sys", "user")
+		require.NoError(t, err)
+		assert.Equal(t, "gemini-2.5-pro", capturedModel)
 	})
 }
 

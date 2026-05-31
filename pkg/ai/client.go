@@ -22,6 +22,24 @@ type notifier interface {
 	MustSend(ctx context.Context, message string)
 }
 
+// Gemini model IDs the fallback is routed to. They live here, in the ai layer,
+// because mapping a requested model onto each provider's catalogue is the
+// Client's fan-out responsibility, not the provider's.
+const (
+	geminiFlash = "gemini-2.0-flash" // balanced default
+	geminiPro   = "gemini-2.5-pro"   // premium, mirrors an Opus-class request
+)
+
+// geminiModelFor maps the requested (primary/Anthropic) model onto the Gemini
+// model the fallback should run. Premium (Opus-class) requests map to Pro,
+// everything else to Flash.
+func geminiModelFor(model string) string {
+	if strings.HasPrefix(model, "claude-opus") {
+		return geminiPro
+	}
+	return geminiFlash
+}
+
 // Client chains a primary Prompter with an optional fallback.
 // It satisfies Prompter itself so it can be composed freely.
 type Client struct {
@@ -62,7 +80,7 @@ func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte
 		fallbackErr error
 	)
 	if c.fallback != nil {
-		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, model, system, user)
+		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, geminiModelFor(model), system, user)
 	}
 
 	c.notifyComparison(ctx, primaryRaw, primaryErr, fallbackRaw, fallbackErr)

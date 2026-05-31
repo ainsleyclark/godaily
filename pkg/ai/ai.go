@@ -12,10 +12,10 @@ import "context"
 
 //go:generate go run go.uber.org/mock/mockgen -package=mockai -destination=../mocks/ai/Prompter.go . Prompter
 
-// Model identifiers passed to Prompt. They are the real vendor model IDs,
-// exposed here so callers can name an actual model without importing a vendor
-// SDK. The Anthropic provider uses them verbatim; the Gemini fallback maps
-// them onto its own model line.
+// Model identifiers passed to Prompt. They are real vendor model IDs, exposed
+// here so callers can name an actual model without importing a vendor SDK. The
+// primary (Anthropic) provider runs them verbatim; the Client maps them onto
+// the fallback's model line when fanning a call out (see geminiModelFor).
 const (
 	ModelSonnet = "claude-sonnet-4-6" // balanced default
 	ModelOpus   = "claude-opus-4-7"   // highest quality, for the edition intro
