@@ -33,7 +33,7 @@
   location: London, UK
   description: London's Go user group — talks, workshops and pub nights.
   handles:
-    linkedin: ""
+    linkedin: london-gophers
     bluesky: ""
     mastodon: ""
 
@@ -155,7 +155,7 @@
   handles:
     linkedin: ""
     bluesky: ""
-    mastodon: ""
+    mastodon: gomeetupprague@fosstodon.org
 
 - slug: lisbon-gophers
   name: Lisbon Gophers
@@ -323,6 +323,6 @@
   location: São Paulo, Brazil
   description: Brazil's Go user group community.
   handles:
-    linkedin: ""
+    linkedin: golangsp
     bluesky: ""
     mastodon: ""
