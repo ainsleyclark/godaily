@@ -6,9 +6,16 @@ package platform
 
 import (
 	"context"
+	"errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 )
+
+// ErrPostUnavailable signals that a post no longer exists on its platform
+// (e.g. it was deleted after publishing), so engagement stats can never be
+// fetched for it. Callers should treat this as an expected, terminal
+// condition rather than a failure: skip the post without logging an error.
+var ErrPostUnavailable = errors.New("post no longer available on platform")
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/Poster.go github.com/ainsleyclark/godaily/pkg/services/social/platform Poster
 

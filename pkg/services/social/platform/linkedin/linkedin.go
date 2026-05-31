@@ -198,7 +198,16 @@ func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, err
 	if !httputil.Is2xx(resp.StatusCode) {
 		buf := new(bytes.Buffer)
 		_, _ = buf.ReadFrom(resp.Body)
-		return platform.Stats{}, fmt.Errorf("linkedin share statistics: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+		body := buf.String()
+		// A deleted post leaves its share URN in our store but LinkedIn can
+		// no longer resolve a backing activity for it, returning a 400 with
+		// this message. Surface it as a terminal "gone" condition so the
+		// caller can skip it quietly instead of treating it as a failure.
+		if resp.StatusCode == http.StatusBadRequest &&
+			strings.Contains(body, "Unable to get activityIds from any of the given shares") {
+			return platform.Stats{}, fmt.Errorf("linkedin share statistics: %s: %w", body, platform.ErrPostUnavailable)
+		}
+		return platform.Stats{}, fmt.Errorf("linkedin share statistics: %d %s: %s", resp.StatusCode, resp.Status, body)
 	}
 
 	var out struct {

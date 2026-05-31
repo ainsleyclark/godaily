@@ -7,6 +7,7 @@ package linkedin
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -244,6 +245,23 @@ func TestClient_Stats(t *testing.T) {
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "400")
 		assert.Contains(t, err.Error(), "Invalid param")
+	})
+
+	t.Run("Deleted post surfaces ErrPostUnavailable", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"message":"Unable to get activityIds from any of the given shares. Either the shares/ugcPosts do not have corresponding activities or the organizational entity did not post them.","status":400}`))
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:1")
+		c.baseURL = srv.URL
+
+		_, err := c.Stats(context.Background(), "https://www.linkedin.com/feed/update/urn:li:share:1/")
+		require.Error(t, err)
+		assert.True(t, errors.Is(err, platform.ErrPostUnavailable))
 	})
 
 	t.Run("Malformed URL errors before request", func(t *testing.T) {
