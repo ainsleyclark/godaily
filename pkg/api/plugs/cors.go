@@ -21,7 +21,7 @@ func CORS(next webkit.Handler) webkit.Handler {
 	return func(c *webkit.Context) error {
 		h := c.Response.Header()
 		h.Set("Access-Control-Allow-Origin", "*")
-		h.Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		h.Set("Access-Control-Allow-Methods", "GET, PATCH, OPTIONS")
 		h.Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept")
 		h.Set("Access-Control-Max-Age", "600")
 		if c.Request.Method == http.MethodOptions {
