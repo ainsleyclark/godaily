@@ -51,5 +51,5 @@ SELECT
 FROM social_posts sp
 LEFT JOIN social_metrics sm ON sm.social_post_id = sp.id
 WHERE (sqlc.narg('from') IS NULL OR sp.posted_at >= sqlc.narg('from'))
-  AND (sqlc.narg('to')   IS NULL OR sp.posted_at <= sqlc.narg('to'))
+  AND (sqlc.narg('to')   IS NULL OR sp.posted_at <  sqlc.narg('to'))
 ORDER BY sp.posted_at DESC;

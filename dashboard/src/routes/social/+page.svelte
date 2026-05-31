@@ -35,6 +35,13 @@
 
 	const platforms = $derived([...new Set((posts ?? []).map((p) => p.platform))].sort());
 
+	// Reset stale filter when the new dataset no longer contains the selected platform.
+	$effect(() => {
+		if (platformFilter !== 'all' && !platforms.includes(platformFilter)) {
+			platformFilter = 'all';
+		}
+	});
+
 	const filtered = $derived(
 		platformFilter === 'all' ? (posts ?? []) : (posts ?? []).filter((p) => p.platform === platformFilter)
 	);

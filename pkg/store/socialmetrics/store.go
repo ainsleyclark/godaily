@@ -68,7 +68,11 @@ func (s Store) List(ctx context.Context, f engagement.MetricsFilter) ([]engageme
 		fromArg = *f.From
 	}
 	if f.To != nil {
-		toArg = *f.To
+		// Bump by one day so the half-open bound covers the full selected end date.
+		// parseDateWindow parses YYYY-MM-DD as midnight; without this, posts made
+		// later that day would be excluded.
+		exclusive := f.To.AddDate(0, 0, 1)
+		toArg = exclusive
 	}
 	rows, err := s.sqlc.SocialPostsWithMetrics(ctx, sqlc.SocialPostsWithMetricsParams{
 		From: fromArg,

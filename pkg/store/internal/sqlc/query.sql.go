@@ -1048,7 +1048,7 @@ SELECT
 FROM social_posts sp
 LEFT JOIN social_metrics sm ON sm.social_post_id = sp.id
 WHERE (?1 IS NULL OR sp.posted_at >= ?1)
-  AND (?2   IS NULL OR sp.posted_at <= ?2)
+  AND (?2   IS NULL OR sp.posted_at <  ?2)
 ORDER BY sp.posted_at DESC
 `
 
