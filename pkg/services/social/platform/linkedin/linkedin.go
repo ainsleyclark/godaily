@@ -170,8 +170,12 @@ func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, err
 		return platform.Stats{}, errors.Wrap(err, "extracting share URN from post URL")
 	}
 
+	// The request declares X-Restli-Protocol-Version 2.0.0, so array query
+	// params must use the reduced List(...) encoding. The legacy indexed
+	// form (shares[0]=...) is rejected under 2.0.0 with a 400
+	// QUERY_PARAM_NOT_ALLOWED on fieldPath "shares[0]".
 	endpoint := fmt.Sprintf(
-		"%s/rest/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=%s&shares[0]=%s",
+		"%s/rest/organizationalEntityShareStatistics?q=organizationalEntity&organizationalEntity=%s&shares=List(%s)",
 		c.baseURL,
 		url.QueryEscape(c.authorURN),
 		url.QueryEscape(shareURN),

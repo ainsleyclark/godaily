@@ -32,6 +32,10 @@ import (
 // default. Self-hosted PDSes can override this via WithBaseURL.
 const defaultBaseURL = "https://bsky.social"
 
+// defaultAppViewURL is the public AppView used for read-only queries
+// (resolving handles and fetching post engagement). It needs no auth.
+const defaultAppViewURL = "https://public.api.bsky.app"
+
 // maxGraphemes is Bluesky's hard limit on app.bsky.feed.post text. The API
 // rejects anything longer with "grapheme too big". The generation layer aims
 // well under this, but we cap here as a last-resort backstop so an over-long
@@ -45,6 +49,7 @@ type Client struct {
 	httpClient  *http.Client
 	baseURL     string
 	publicURL   string // base for converting at:// URIs to https:// post URLs
+	appViewURL  string // public AppView base for read-only stat queries
 }
 
 // New creates a new Bluesky Client. handle is the user's full handle (e.g.
@@ -57,6 +62,7 @@ func New(handle, appPassword string) *Client {
 		httpClient:  gohttp.New(gohttp.WithTimeout(15 * time.Second)),
 		baseURL:     defaultBaseURL,
 		publicURL:   "https://bsky.app",
+		appViewURL:  defaultAppViewURL,
 	}
 }
 
@@ -216,13 +222,24 @@ func buildFacets(text string) []facet {
 // Stats fetches engagement counts for a Bluesky post via the public AppView
 // API. postURL must be a bsky.app URL of the form
 // https://bsky.app/profile/<handle>/post/<rkey>.
+//
+// The AppView's app.bsky.feed.getPosts requires the at:// URI authority to
+// be a DID — a handle-based URI silently returns an empty posts array (and
+// thus zero engagement). The stored post URL carries only the handle, so we
+// resolve it to a DID first.
 func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, error) {
-	atURI, err := c.atURIFromPostURL(postURL)
+	handle, rKey, err := parsePostURL(postURL)
 	if err != nil {
-		return platform.Stats{}, errors.Wrap(err, "deriving AT URI from post URL")
+		return platform.Stats{}, errors.Wrap(err, "parsing post URL")
 	}
 
-	endpoint := "https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?uris[]=" + url.QueryEscape(atURI)
+	did, err := c.resolveDID(ctx, handle)
+	if err != nil {
+		return platform.Stats{}, errors.Wrap(err, "resolving handle to DID")
+	}
+
+	atURI := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rKey)
+	endpoint := c.appViewURL + "/xrpc/app.bsky.feed.getPosts?uris[]=" + url.QueryEscape(atURI)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
 		return platform.Stats{}, errors.Wrap(err, "building request")
@@ -262,21 +279,54 @@ func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, err
 	}, nil
 }
 
-// atURIFromPostURL converts a bsky.app post URL to an at:// URI using the
-// client's handle. URL form: https://bsky.app/profile/<handle>/post/<rkey>.
-func (c *Client) atURIFromPostURL(postURL string) (string, error) {
+// parsePostURL extracts the handle and record key from a bsky.app post URL.
+// URL form: https://bsky.app/profile/<handle>/post/<rkey>.
+func parsePostURL(postURL string) (handle, rKey string, err error) {
 	u, err := url.Parse(postURL)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	// Path: /profile/<handle>/post/<rkey>
 	parts := strings.Split(strings.Trim(u.Path, "/"), "/")
 	if len(parts) != 4 || parts[0] != "profile" || parts[2] != "post" {
-		return "", fmt.Errorf("unexpected bsky.app post URL format: %s", postURL)
+		return "", "", fmt.Errorf("unexpected bsky.app post URL format: %s", postURL)
 	}
-	handle := parts[1]
-	rKey := parts[3]
-	return fmt.Sprintf("at://%s/app.bsky.feed.post/%s", handle, rKey), nil
+	return parts[1], parts[3], nil
+}
+
+// resolveDID resolves a Bluesky handle to its DID via the AppView's
+// com.atproto.identity.resolveHandle endpoint. getPosts only accepts
+// DID-based at:// URIs, so this step is required before fetching stats.
+func (c *Client) resolveDID(ctx context.Context, handle string) (string, error) {
+	endpoint := c.appViewURL + "/xrpc/com.atproto.identity.resolveHandle?handle=" + url.QueryEscape(handle)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return "", errors.Wrap(err, "building request")
+	}
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return "", errors.Wrap(err, "sending request")
+	}
+	defer resp.Body.Close()
+
+	if !httputil.Is2xx(resp.StatusCode) {
+		buf := new(bytes.Buffer)
+		_, _ = buf.ReadFrom(resp.Body)
+		return "", fmt.Errorf("identity.resolveHandle: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
+	}
+
+	var out struct {
+		DID string `json:"did"`
+	}
+	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return "", errors.Wrap(err, "decoding response")
+	}
+	if out.DID == "" {
+		return "", fmt.Errorf("resolveHandle returned empty DID for handle %q", handle)
+	}
+	return out.DID, nil
 }
 
 // postURLFromURI converts an at:// URI ("at://did:plc:xxx/app.bsky.feed.post/<rkey>")

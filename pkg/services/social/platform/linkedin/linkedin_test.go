@@ -177,6 +177,87 @@ func TestClient_Post_Annotation(t *testing.T) {
 	})
 }
 
+func TestClient_Stats(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Happy path returns engagement counts", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			assert.Equal(t, "/rest/organizationalEntityShareStatistics", r.URL.Path)
+			assert.Equal(t, "Bearer my-token", r.Header.Get("Authorization"))
+			assert.Equal(t, "2.0.0", r.Header.Get("X-Restli-Protocol-Version"))
+
+			q := r.URL.Query()
+			assert.Equal(t, "organizationalEntity", q.Get("q"))
+			assert.Equal(t, "urn:li:organization:99", q.Get("organizationalEntity"))
+			// Rest.li 2.0 array encoding — the legacy shares[0]= form is
+			// rejected with 400 QUERY_PARAM_NOT_ALLOWED.
+			assert.Equal(t, "List(urn:li:share:7234567890)", q.Get("shares"))
+			assert.Empty(t, q.Get("shares[0]"))
+
+			_, _ = w.Write([]byte(`{"elements":[{"totalShareStatistics":{` +
+				`"likeCount":19,"commentCount":4,"shareCount":5,"impressionCount":400,"clickCount":7}}]}`))
+		}))
+		defer srv.Close()
+
+		c := New("my-token", "urn:li:organization:99")
+		c.baseURL = srv.URL
+
+		got, err := c.Stats(
+			context.Background(),
+			"https://www.linkedin.com/feed/update/urn:li:share:7234567890/",
+		)
+		require.NoError(t, err)
+		assert.Equal(t, platform.Stats{Likes: 19, Reposts: 5, Comments: 4, Impressions: 400}, got)
+	})
+
+	t.Run("No elements yields zero stats", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			_, _ = w.Write([]byte(`{"elements":[]}`))
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:1")
+		c.baseURL = srv.URL
+
+		got, err := c.Stats(context.Background(), "https://www.linkedin.com/feed/update/urn:li:share:1/")
+		require.NoError(t, err)
+		assert.Equal(t, platform.Stats{}, got)
+	})
+
+	t.Run("Non-2xx surfaces body in error", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"message":"Invalid param"}`))
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:1")
+		c.baseURL = srv.URL
+
+		_, err := c.Stats(context.Background(), "https://www.linkedin.com/feed/update/urn:li:share:1/")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "400")
+		assert.Contains(t, err.Error(), "Invalid param")
+	})
+
+	t.Run("Malformed URL errors before request", func(t *testing.T) {
+		t.Parallel()
+
+		c := New("tok", "urn:li:organization:1")
+		c.baseURL = "http://127.0.0.1:1"
+
+		_, err := c.Stats(context.Background(), "https://www.linkedin.com/feed/update/not-a-urn/")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "share URN")
+	})
+}
+
 func TestBuildAnnotations(t *testing.T) {
 	t.Parallel()
 
