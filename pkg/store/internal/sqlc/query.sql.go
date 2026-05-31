@@ -1032,7 +1032,7 @@ func (q *Queries) SocialPostListSince(ctx context.Context, postedAt time.Time) (
 }
 
 const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers WHERE confirm_token = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at FROM subscribers WHERE confirm_token = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken sql.NullString) (Subscriber, error) {
@@ -1048,12 +1048,13 @@ func (q *Queries) SubscriberByConfirmToken(ctx context.Context, confirmToken sql
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
 
 const subscriberByEmail = `-- name: SubscriberByEmail :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers WHERE email = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at FROM subscribers WHERE email = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscriber, error) {
@@ -1069,12 +1070,13 @@ func (q *Queries) SubscriberByEmail(ctx context.Context, email string) (Subscrib
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
 
 const subscriberByID = `-- name: SubscriberByID :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers WHERE id = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at FROM subscribers WHERE id = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, error) {
@@ -1090,12 +1092,13 @@ func (q *Queries) SubscriberByID(ctx context.Context, id int64) (Subscriber, err
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
 
 const subscriberByUnsubscribeToken = `-- name: SubscriberByUnsubscribeToken :one
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at FROM subscribers WHERE unsubscribe_token = ? LIMIT 1
 `
 
 func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeToken string) (Subscriber, error) {
@@ -1111,6 +1114,7 @@ func (q *Queries) SubscriberByUnsubscribeToken(ctx context.Context, unsubscribeT
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
@@ -1120,7 +1124,7 @@ UPDATE subscribers
 SET confirmed_at = CURRENT_TIMESTAMP,
     confirm_token = NULL
 WHERE confirm_token = ? AND confirmed_at IS NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at
 `
 
 func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken sql.NullString) (Subscriber, error) {
@@ -1136,6 +1140,7 @@ func (q *Queries) SubscriberConfirm(ctx context.Context, confirmToken sql.NullSt
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
@@ -1160,7 +1165,7 @@ INSERT INTO subscribers (
 ) VALUES (
     ?, ?, ?
 )
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at
 `
 
 type SubscriberCreateParams struct {
@@ -1182,12 +1187,13 @@ func (q *Queries) SubscriberCreate(ctx context.Context, arg SubscriberCreatePara
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }
 
 const subscriberListActive = `-- name: SubscriberListActive :many
-SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers
+SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at FROM subscribers
 WHERE unsubscribed_at IS NULL
   AND confirmed_at IS NOT NULL
   AND bounced_at IS NULL
@@ -1214,6 +1220,7 @@ func (q *Queries) SubscriberListActive(ctx context.Context) ([]Subscriber, error
 			&i.ConfirmedAt,
 			&i.BouncedAt,
 			&i.SuppressedAt,
+			&i.ConfirmationNudgeSentAt,
 		); err != nil {
 			return nil, err
 		}
@@ -1250,6 +1257,17 @@ func (q *Queries) SubscriberMarkComplained(ctx context.Context, email string) er
 	return err
 }
 
+const subscriberMarkNudgeSent = `-- name: SubscriberMarkNudgeSent :exec
+UPDATE subscribers
+SET confirmation_nudge_sent_at = CURRENT_TIMESTAMP
+WHERE id = ? AND confirmation_nudge_sent_at IS NULL
+`
+
+func (q *Queries) SubscriberMarkNudgeSent(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, subscriberMarkNudgeSent, id)
+	return err
+}
+
 const subscriberMarkSuppressed = `-- name: SubscriberMarkSuppressed :exec
 UPDATE subscribers
 SET suppressed_at = CURRENT_TIMESTAMP
@@ -1268,7 +1286,7 @@ SET unsubscribed_at = NULL,
     confirm_token = ?,
     unsubscribe_token = ?
 WHERE email = ? AND unsubscribed_at IS NOT NULL
-RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at
+RETURNING id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at
 `
 
 type SubscriberReactivateParams struct {
@@ -1290,6 +1308,7 @@ func (q *Queries) SubscriberReactivate(ctx context.Context, arg SubscriberReacti
 		&i.ConfirmedAt,
 		&i.BouncedAt,
 		&i.SuppressedAt,
+		&i.ConfirmationNudgeSentAt,
 	)
 	return i, err
 }

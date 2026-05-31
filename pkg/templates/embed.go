@@ -24,6 +24,12 @@ var ConfirmHTML string
 //go:embed confirm.txt
 var ConfirmText string
 
+//go:embed nudge.html
+var NudgeHTML string
+
+//go:embed nudge.txt
+var NudgeText string
+
 //go:embed suggest.html
 var SuggestHTML string
 

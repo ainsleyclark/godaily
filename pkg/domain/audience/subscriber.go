@@ -22,7 +22,10 @@ type Subscriber struct {
 	UnsubscribedAt   *time.Time `json:"unsubscribed_at,omitempty"`
 	BouncedAt        *time.Time `json:"bounced_at,omitempty"`
 	SuppressedAt     *time.Time `json:"suppressed_at,omitempty"`
-	CreatedAt        time.Time  `json:"created_at"`
+	// ConfirmationNudgeSentAt records when the one-time reminder to confirm
+	// was sent, so an unconfirmed subscriber is never nudged more than once.
+	ConfirmationNudgeSentAt *time.Time `json:"confirmation_nudge_sent_at,omitempty"`
+	CreatedAt               time.Time  `json:"created_at"`
 }
 
 // ErrAlreadySubscribed is returned by Subscribe when the email address is
@@ -37,6 +40,9 @@ type SubscriberService interface {
 	Subscribe(ctx context.Context, email string) (Subscriber, error)
 	Confirm(ctx context.Context, token string) error
 	Unsubscribe(ctx context.Context, token string) error
+	// SendConfirmationNudges sends a one-time reminder to subscribers who
+	// signed up but never confirmed, returning how many were sent and failed.
+	SendConfirmationNudges(ctx context.Context) (sent, failed int, err error)
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
 	MarkSuppressed(ctx context.Context, email string) error
@@ -61,4 +67,7 @@ type SubscriberRepository interface {
 	MarkBounced(ctx context.Context, email string) error
 	MarkComplained(ctx context.Context, email string) error
 	MarkSuppressed(ctx context.Context, email string) error
+	// MarkNudgeSent stamps confirmation_nudge_sent_at so the confirmation
+	// reminder is only ever sent once per subscriber.
+	MarkNudgeSent(ctx context.Context, id int64) error
 }

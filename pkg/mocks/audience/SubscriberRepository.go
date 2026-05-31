@@ -205,6 +205,20 @@ func (mr *MockSubscriberRepositoryMockRecorder) MarkComplained(ctx, email any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkComplained", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkComplained), ctx, email)
 }
 
+// MarkNudgeSent mocks base method.
+func (m *MockSubscriberRepository) MarkNudgeSent(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MarkNudgeSent", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MarkNudgeSent indicates an expected call of MarkNudgeSent.
+func (mr *MockSubscriberRepositoryMockRecorder) MarkNudgeSent(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkNudgeSent", reflect.TypeOf((*MockSubscriberRepository)(nil).MarkNudgeSent), ctx, id)
+}
+
 // MarkSuppressed mocks base method.
 func (m *MockSubscriberRepository) MarkSuppressed(ctx context.Context, email string) error {
 	m.ctrl.T.Helper()

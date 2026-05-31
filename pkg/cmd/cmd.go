@@ -32,6 +32,7 @@ func Run() {
 			collectCmd(app),
 			previewCmd(app),
 			sendCmd(app),
+			nudgeCmd(app),
 			socialCmd(app),
 			runCmd(app),
 			serveCmd(app),
