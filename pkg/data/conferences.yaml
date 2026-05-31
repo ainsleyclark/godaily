@@ -45,7 +45,7 @@
   description: "The European Go conference, bringing together Gophers from across the continent for workshops, talks, and networking."
   handles:
     linkedin: gophercon-europe
-    bluesky: ""
+    bluesky: gopherconeu.bsky.social
     mastodon: ""
   notify_dates:
     - 2026-02-09  # announcement
@@ -60,7 +60,7 @@
   end_date: 2026-08-13
   description: "The UK's annual Go conference at The Brewery, London. Workshops on August 11th."
   handles:
-    linkedin: ""
+    linkedin: gopherconuk
     bluesky: ""
     mastodon: ""
   notify_dates:
@@ -77,7 +77,7 @@
   description: "The flagship GopherCon conference, North America's largest gathering of Go developers."
   handles:
     linkedin: ""
-    bluesky: ""
+    bluesky: gophercon.com
     mastodon: ""
   notify_dates:
     - 2026-02-16  # announcement
@@ -94,7 +94,7 @@
   handles:
     linkedin: ""
     bluesky: ""
-    mastodon: ""
+    mastodon: golab@mastodon.uno
   notify_dates:
     - 2026-05-04  # announcement
     - 2026-08-03  # ~3 months out
@@ -124,7 +124,7 @@
   end_date: 2026-10-24
   description: "Africa's Go conference, celebrating the growing Go community across the continent."
   handles:
-    linkedin: ""
+    linkedin: gophercon-africa
     bluesky: ""
     mastodon: ""
   notify_dates:
@@ -141,7 +141,7 @@
   description: "GopherCon Korea — South Korea's annual Go conference."
   handles:
     linkedin: ""
-    bluesky: ""
+    bluesky: golangkorea.bsky.social
     mastodon: ""
   notify_dates:
     - 2026-06-01  # announcement
