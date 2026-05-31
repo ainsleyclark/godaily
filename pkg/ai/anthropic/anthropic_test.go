@@ -136,7 +136,7 @@ func TestClient_Prompt(t *testing.T) {
 			Temperature *float64 `json:"temperature"`
 		}
 		require.NoError(t, json.Unmarshal(*captured, &req))
-		assert.Equal(t, string(defaultModel), req.Model)
+		assert.Equal(t, defaultModel, req.Model)
 		require.NotNil(t, req.Temperature)
 		assert.InDelta(t, temperature, *req.Temperature, 1e-9)
 	})

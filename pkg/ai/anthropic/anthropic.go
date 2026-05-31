@@ -37,8 +37,8 @@ func New(apiKey string, opts ...option.RequestOption) *Client {
 // using the given model (defaulting to Sonnet when empty). Returns the
 // concatenated text content bytes of the response.
 func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
-	m := anthropic.Model(model)
-	if model == "" {
+	m := model
+	if m == "" {
 		m = defaultModel
 	}
 
@@ -52,7 +52,7 @@ func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte
 	}
 	// Opus rejects sampling parameters; steer it via the prompt instead. Only
 	// the Sonnet-class default takes an explicit temperature.
-	if !strings.HasPrefix(string(m), "claude-opus") {
+	if !strings.HasPrefix(m, "claude-opus") {
 		params.Temperature = anthropic.Float(temperature)
 	}
 
