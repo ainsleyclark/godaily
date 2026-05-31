@@ -19,9 +19,13 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
-// ctaCooldown is the minimum gap between two signup CTAs. Two weeks gives
-// enough breathing room that the ask stays present without dominating the feed.
-const ctaCooldown = 14 * 24 * time.Hour
+// ctaCooldown is the lookback window for the CTA eligibility check. Using
+// 13 days rather than 14 accounts for the inclusive HasPostedKindSince query:
+// the rotation runs at a fixed time each Tuesday, so a post saved seconds
+// after the previous run falls inside a strict 14-day window on the next
+// Tuesday. 13 days ensures two consecutive Tuesdays (always exactly 14 days
+// apart) are always eligible.
+const ctaCooldown = 13 * 24 * time.Hour
 
 // ctaAngles is the rotating list of framings for the signup CTA. Each
 // angle is paired with the same target URL but produces a different post
