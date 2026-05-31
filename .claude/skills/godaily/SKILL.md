@@ -71,8 +71,7 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 | GET | `/api/issues/{slug}` | **Yes** | Fetch a single issue by date slug (e.g. `2026-05-15`) |
 | GET | `/api/items/{id}` | **Yes** | Fetch a single news item by numeric ID |
 | GET | `/api/digest/collect` | **Yes** | Trigger the news collection pipeline |
-| GET | `/api/digest/build` | **Yes** | Build today's collected items into a draft (`?force=true` to bypass weekend skip) |
-| GET | `/api/digest/preview` | **Yes** | Send the draft digest preview to the owner (skipped at weekends) |
+| GET | `/api/digest/build` | **Yes** | Build today's collected items into a draft and email the owner preview (`?force=true` to bypass weekend skip) |
 | GET | `/api/digest/send` | **Yes** | Send the current draft digest to all subscribers |
 | GET | `/api/digest/nudge` | **Yes** | Send confirmation reminder emails to unconfirmed subscribers |
 | GET | `/api/digest/subscribers` | **Yes** | List paginated subscribers |
@@ -198,8 +197,8 @@ Response includes a `sources` map showing per-source item counts and any errors.
 
 ### Build the draft digest
 
-Assembles today's collected items into a draft digest issue. Skipped on weekends unless
-`?force=true` is passed.
+Assembles today's collected items into a draft digest issue and emails the owner preview as a
+best-effort follow-up. Skipped on weekends unless `?force=true` is passed.
 
 ```bash
 source ~/.zshrc 2>/dev/null
@@ -213,22 +212,11 @@ curl -sf \
 
 Expected success: `{"ok": true, "message": "Successfully built digest"}`
 
----
-
-### Send the preview
-
-Sends the draft digest and AI synthesis suggestion to the owner ahead of the full subscriber send.
-Skipped at weekends.
+To re-send just the preview (without rebuilding), use the CLI:
 
 ```bash
-source ~/.zshrc 2>/dev/null
-BASE="${GODAILY_API_URL:-https://godaily.dev}"
-curl -sf \
-  -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/digest/preview" | jq .
+godaily preview --date 2026-05-31
 ```
-
-Expected success: `{"ok": true, "message": "Successfully sent preview"}`
 
 ---
 
