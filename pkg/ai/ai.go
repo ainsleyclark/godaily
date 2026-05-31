@@ -8,34 +8,44 @@
 // chaining Client.
 package ai
 
-import (
-	"context"
-	"strings"
-)
+import "context"
 
 //go:generate go run go.uber.org/mock/mockgen -package=mockai -destination=../mocks/ai/Prompter.go . Prompter
 
-// Model identifiers. The Model* values are caller-facing: passed to Prompt to
-// name an actual model without importing a vendor SDK, and run verbatim by the
-// primary (Anthropic) provider. The gemini* values are internal routing
-// targets the Client maps onto when fanning a call out to the Gemini fallback;
-// callers never pass them (an unmapped Gemini ID is invalid for the primary).
+// Model identifiers callers pass to Prompt. They are real vendor model IDs, so
+// callers name an actual model without importing a vendor SDK. A caller may
+// pass any of them; the Client routes the request to the matching model for
+// each provider (see anthropicModelFor / geminiModelFor), so the choice is
+// really a quality selection that works regardless of which provider runs it.
 const (
-	ModelSonnet = "claude-sonnet-4-6" // balanced default
-	ModelOpus   = "claude-opus-4-7"   // highest quality, for the edition intro
+	ModelSonnet = "claude-sonnet-4-6" // Anthropic, balanced default
+	ModelOpus   = "claude-opus-4-7"   // Anthropic, highest quality
 
-	geminiFlash = "gemini-2.0-flash" // fallback balanced default
-	geminiPro   = "gemini-2.5-pro"   // fallback premium, mirrors an Opus-class request
+	ModelGeminiFlash = "gemini-2.0-flash" // Gemini, balanced default
+	ModelGeminiPro   = "gemini-2.5-pro"   // Gemini, highest quality
 )
 
-// geminiModelFor maps the requested (primary/Anthropic) model onto the Gemini
-// model the fallback should run. Premium (Opus-class) requests map to Pro,
-// everything else to Flash.
-func geminiModelFor(model string) string {
-	if strings.HasPrefix(model, "claude-opus") {
-		return geminiPro
+// isPremium reports whether the requested model selects the premium tier.
+func isPremium(model string) bool {
+	return model == ModelOpus || model == ModelGeminiPro
+}
+
+// anthropicModelFor returns the Anthropic model the primary should run for the
+// requested model's tier.
+func anthropicModelFor(model string) string {
+	if isPremium(model) {
+		return ModelOpus
 	}
-	return geminiFlash
+	return ModelSonnet
+}
+
+// geminiModelFor returns the Gemini model the fallback should run for the
+// requested model's tier.
+func geminiModelFor(model string) string {
+	if isPremium(model) {
+		return ModelGeminiPro
+	}
+	return ModelGeminiFlash
 }
 
 // Prompter abstracts a single AI prompt round-trip.

@@ -55,7 +55,7 @@ func New(cfg env.Config, n notifier) *Client {
 // TODO: the dual-call comparison is temporary, kept while evaluating whether
 // Gemini can replace Anthropic. Drop it once a single provider is chosen.
 func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
-	primaryRaw, primaryErr := c.primary.Prompt(ctx, model, system, user)
+	primaryRaw, primaryErr := c.primary.Prompt(ctx, anthropicModelFor(model), system, user)
 
 	var (
 		fallbackRaw []byte

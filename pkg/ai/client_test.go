@@ -27,7 +27,7 @@ func TestClient_Prompt(t *testing.T) {
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("result"), nil)
-		fallback.EXPECT().Prompt(gomock.Any(), geminiFlash, "sys", "user").Return([]byte("fallback"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), ModelGeminiFlash, "sys", "user").Return([]byte("fallback"), nil)
 
 		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.NoError(t, err)
@@ -43,7 +43,7 @@ func TestClient_Prompt(t *testing.T) {
 		// The primary runs the requested model verbatim; the fallback runs the
 		// mapped Gemini equivalent (Opus-class maps to Pro).
 		primary.EXPECT().Prompt(gomock.Any(), ModelOpus, "sys", "user").Return([]byte("result"), nil)
-		fallback.EXPECT().Prompt(gomock.Any(), geminiPro, "sys", "user").Return([]byte("fallback"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), ModelGeminiPro, "sys", "user").Return([]byte("fallback"), nil)
 
 		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelOpus, "sys", "user")
 		require.NoError(t, err)
@@ -58,7 +58,7 @@ func TestClient_Prompt(t *testing.T) {
 		fallback := mockai.NewMockPrompter(ctrl)
 		slackMock := mockslack.NewMockSender(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("anthropic out"), nil)
-		fallback.EXPECT().Prompt(gomock.Any(), geminiFlash, "sys", "user").Return([]byte("gemini out"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), ModelGeminiFlash, "sys", "user").Return([]byte("gemini out"), nil)
 
 		var sent string
 		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).Do(func(_ context.Context, msg string) {
@@ -91,7 +91,7 @@ func TestClient_Prompt(t *testing.T) {
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("primary failed"))
-		fallback.EXPECT().Prompt(gomock.Any(), geminiFlash, "sys", "user").Return([]byte("fallback"), nil)
+		fallback.EXPECT().Prompt(gomock.Any(), ModelGeminiFlash, "sys", "user").Return([]byte("fallback"), nil)
 
 		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.NoError(t, err)
@@ -105,7 +105,7 @@ func TestClient_Prompt(t *testing.T) {
 		primary := mockai.NewMockPrompter(ctrl)
 		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("primary failed"))
-		fallback.EXPECT().Prompt(gomock.Any(), geminiFlash, "sys", "user").Return(nil, errors.New("fallback failed"))
+		fallback.EXPECT().Prompt(gomock.Any(), ModelGeminiFlash, "sys", "user").Return(nil, errors.New("fallback failed"))
 
 		_, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.Error(t, err)
