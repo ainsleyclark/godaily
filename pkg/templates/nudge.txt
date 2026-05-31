@@ -1,8 +1,8 @@
 {{ define "email-body-text" }}You're nearly subscribed to GoDaily
 
-A little while ago you signed up for GoDaily, but your subscription isn't active yet — there's one last step. Click the link below to confirm and you'll start receiving the daily digest.
+A little while ago you signed up for GoDaily, but your subscription isn't active yet. There's one last step: click the link below to confirm and you'll start receiving the daily digest.
 
 {{ .ConfirmURL }}
 
-Didn't sign up, or changed your mind? No problem — just ignore this email and you won't hear from us again.
+Didn't sign up, or changed your mind? No problem, just ignore this email and you won't hear from us again.
 {{ end }}

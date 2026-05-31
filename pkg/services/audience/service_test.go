@@ -226,7 +226,7 @@ func TestService_SendConfirmationNudges(t *testing.T) {
 		assert.Equal(t, 1, sent)
 		assert.Equal(t, 0, failed)
 		assert.True(t, sender.called)
-		assert.Equal(t, "Confirm your GoDaily subscription — one click left", sender.req.Subject)
+		assert.Equal(t, "Confirm your GoDaily subscription, one click left", sender.req.Subject)
 		assert.Contains(t, sender.req.Html, eligible.ConfirmToken)
 		assert.Equal(t, "<https://godaily.dev/api/unsubscribe/?token=unsub-tok>", sender.req.Headers["List-Unsubscribe"])
 	})

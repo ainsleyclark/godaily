@@ -206,7 +206,7 @@ func (s Service) sendNudge(ctx context.Context, to, confirmURL, unsubscribeURL s
 	return s.email.Send(ctx, email.SendEmailRequest{
 		From:    "GoDaily <digest@godaily.dev>",
 		To:      []string{to},
-		Subject: "Confirm your GoDaily subscription — one click left",
+		Subject: "Confirm your GoDaily subscription, one click left",
 		Html:    htmlBuf.String(),
 		Text:    textBuf.String(),
 		Headers: map[string]string{
