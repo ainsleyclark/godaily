@@ -31,6 +31,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/audience"
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	svcengagement "github.com/ainsleyclark/godaily/pkg/services/engagement"
@@ -75,8 +76,8 @@ func (s *spyEmail) SendBatch(_ context.Context, reqs []*email.SendEmailRequest) 
 // noopSlack satisfies slack.Sender without making any API calls.
 type noopSlack struct{}
 
-func (noopSlack) Send(_ context.Context, _ string) error { return nil }
-func (noopSlack) MustSend(_ context.Context, _ string)   {}
+func (noopSlack) Send(_ context.Context, _ slack.Request) error { return nil }
+func (noopSlack) MustSend(_ context.Context, _ slack.Request)   {}
 
 // seedRunner satisfies digest.Runner for E2E tests. Collect inserts fixed fake
 // items directly into the DB (bypassing real HTTP sources). Build and

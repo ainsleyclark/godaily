@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
@@ -45,8 +46,13 @@ func TestClient_Prompt(t *testing.T) {
 		fallback.EXPECT().Prompt(gomock.Any(), "sys", "user").Return([]byte("gemini out"), nil)
 
 		var sent string
-		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).Do(func(_ context.Context, msg string) {
-			sent = msg
+		slackMock.EXPECT().MustSend(gomock.Any(), gomock.Any()).Do(func(_ context.Context, req slack.Request) {
+			sent = req.Text
+			for _, blk := range req.Blocks.BlockSet {
+				if sec, ok := blk.(*slack.Section); ok && sec.Text != nil {
+					sent += "\n" + sec.Text.Text
+				}
+			}
 		})
 
 		got, err := (&Client{primary: primary, fallback: fallback, notifier: slackMock}).Prompt(context.Background(), "sys", "user")

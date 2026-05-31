@@ -19,6 +19,7 @@ import (
 
 	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	slacksdk "github.com/slack-go/slack"
 )
 
 const (
@@ -140,21 +141,45 @@ func (s *Service) Roundup(ctx context.Context) error {
 		return errors.Wrap(err, "gathering prior window")
 	}
 
-	return s.slack.Send(ctx, formatRoundup(curr, prev))
+	return s.slack.Send(ctx, roundupRequest(curr, prev))
 }
 
-// formatRoundup builds the Slack mrkdwn message from the current and prior
-// snapshots. The prior snapshot is used only for delta arrows.
-func formatRoundup(curr, prev Snapshot) string {
-	var b strings.Builder
+// roundupRequest builds the Slack block-kit message from the current and
+// prior snapshots. The prior snapshot is used only for delta arrows.
+func roundupRequest(curr, prev Snapshot) slack.Request {
 	dateRange := fmt.Sprintf("%s – %s",
 		curr.From.Format("2 Jan"), curr.To.Format("2 Jan"))
 
-	fmt.Fprintf(&b, "*GoDaily — Weekly Roundup* (%s)\n\n", dateRange)
+	blocks := []slack.Block{
+		slacksdk.NewHeaderBlock(plain("GoDaily — Weekly Roundup")),
+		slacksdk.NewContextBlock("", plain(dateRange)),
+		slacksdk.NewDividerBlock(),
+		section("*Headline*\n" + headlineLines(curr.Summary, prev.Summary)),
+		section("*Subscribers*\n" + subscriberLines(curr.Subs)),
+		section("*Top links*\n" + topLinkLines(curr.Items)),
+	}
 
-	// Headline.
-	cs, ps := curr.Summary, prev.Summary
-	b.WriteString("*Headline*\n")
+	if extras := tagSourceLine(curr); extras != "" {
+		blocks = append(blocks, slacksdk.NewContextBlock("", mrkdwn(extras)))
+	}
+
+	if curr.BestIssue != nil {
+		bi := curr.BestIssue
+		blocks = append(blocks, section(fmt.Sprintf(
+			"*Best issue*: %s — %.1f%% click rate, %.1f%% open rate",
+			bi.Slug, bi.ClickRate*100, bi.OpenRate*100,
+		)))
+	}
+
+	return slack.Request{
+		Text:        fmt.Sprintf("GoDaily — Weekly Roundup (%s)", dateRange),
+		Blocks:      slack.BlockSet{BlockSet: blocks},
+		Attachments: []slack.Attachment{{Color: slack.ColorInfo}},
+	}
+}
+
+func headlineLines(cs, ps engagement.SummaryStats) string {
+	var b strings.Builder
 	fmt.Fprintf(&b, "• Issues sent: %d  %s\n",
 		cs.IssuesSent, deltaCount(cs.IssuesSent, ps.IssuesSent))
 	fmt.Fprintf(&b, "• Delivered: %s  %s\n",
@@ -163,60 +188,62 @@ func formatRoundup(curr, prev Snapshot) string {
 		humanCount(cs.UniqueOpens), cs.OpenRate*100, deltaPoint(cs.OpenRate, ps.OpenRate))
 	fmt.Fprintf(&b, "• Clicks: %s unique / %.1f%% click rate  %s\n",
 		humanCount(cs.UniqueClicks), cs.ClickRate*100, deltaPoint(cs.ClickRate, ps.ClickRate))
-	fmt.Fprintf(&b, "• Bounced %d · Complained %d\n\n", cs.Bounced, cs.Complained)
+	fmt.Fprintf(&b, "• Bounced %d · Complained %d", cs.Bounced, cs.Complained)
+	return b.String()
+}
 
-	// Subscribers.
-	b.WriteString("*Subscribers*\n")
-	if sp, ok := lastSubscriberPoint(curr.Subs); ok {
-		fmt.Fprintf(&b, "• +%d new, %d confirmed, %d unsubscribed → net %s\n",
-			sp.New, sp.Confirmed, sp.Unsubscribed, signed(sp.NetChange))
-		fmt.Fprintf(&b, "• Active: %s\n\n", humanCount(sp.ActiveAtEnd))
-	} else {
-		b.WriteString("• No subscriber activity this week\n\n")
+func subscriberLines(d engagement.SubscriberData) string {
+	sp, ok := lastSubscriberPoint(d)
+	if !ok {
+		return "• No subscriber activity this week"
 	}
+	return fmt.Sprintf(
+		"• +%d new, %d confirmed, %d unsubscribed → net %s\n• Active: %s",
+		sp.New, sp.Confirmed, sp.Unsubscribed, signed(sp.NetChange), humanCount(sp.ActiveAtEnd),
+	)
+}
 
-	// Top links.
-	b.WriteString("*Top links*\n")
-	if len(curr.Items) == 0 {
-		b.WriteString("• No clicks recorded this week\n\n")
-	} else {
-		for i, it := range curr.Items {
-			fmt.Fprintf(&b, "%d. <%s|%s> — %d clicks · %s\n",
-				i+1, it.URL, it.Title, it.Clicks, it.Source)
-		}
-		b.WriteString("\n")
+func topLinkLines(items []engagement.ItemMetrics) string {
+	if len(items) == 0 {
+		return "• No clicks recorded this week"
 	}
+	parts := make([]string, len(items))
+	for i, it := range items {
+		parts[i] = fmt.Sprintf("%d. <%s|%s> — %d clicks · %s",
+			i+1, it.URL, it.Title, it.Clicks, it.Source)
+	}
+	return strings.Join(parts, "\n")
+}
 
-	// Top tags.
+func tagSourceLine(curr Snapshot) string {
+	var parts []string
 	if len(curr.Tags) > 0 {
-		b.WriteString("*Top tags*: ")
-		parts := make([]string, len(curr.Tags))
+		tags := make([]string, len(curr.Tags))
 		for i, t := range curr.Tags {
-			parts[i] = fmt.Sprintf("%s (%d)", t.Tag, t.Clicks)
+			tags[i] = fmt.Sprintf("%s (%d)", t.Tag, t.Clicks)
 		}
-		b.WriteString(strings.Join(parts, " · "))
-		b.WriteString("\n")
+		parts = append(parts, "*Top tags*: "+strings.Join(tags, " · "))
 	}
-
-	// Top sources.
 	if len(curr.Sources) > 0 {
-		b.WriteString("*Top sources*: ")
-		parts := make([]string, len(curr.Sources))
+		srcs := make([]string, len(curr.Sources))
 		for i, src := range curr.Sources {
-			parts[i] = fmt.Sprintf("%s (%d)", src.Source, src.Clicks)
+			srcs[i] = fmt.Sprintf("%s (%d)", src.Source, src.Clicks)
 		}
-		b.WriteString(strings.Join(parts, " · "))
-		b.WriteString("\n")
+		parts = append(parts, "*Top sources*: "+strings.Join(srcs, " · "))
 	}
+	return strings.Join(parts, "  ·  ")
+}
 
-	// Best issue.
-	if curr.BestIssue != nil {
-		bi := curr.BestIssue
-		fmt.Fprintf(&b, "\n*Best issue*: %s — %.1f%% click rate, %.1f%% open rate\n",
-			bi.Slug, bi.ClickRate*100, bi.OpenRate*100)
-	}
+func plain(text string) *slack.TextObject {
+	return slacksdk.NewTextBlockObject(slacksdk.PlainTextType, text, false, false)
+}
 
-	return strings.TrimRight(b.String(), "\n")
+func mrkdwn(text string) *slack.TextObject {
+	return slacksdk.NewTextBlockObject(slacksdk.MarkdownType, text, false, false)
+}
+
+func section(text string) *slack.Section {
+	return slacksdk.NewSectionBlock(mrkdwn(text), nil, nil)
 }
 
 // lastSubscriberPoint returns the most recent point in the series, if any.

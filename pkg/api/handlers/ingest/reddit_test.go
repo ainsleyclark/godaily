@@ -18,7 +18,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	mockslack "github.com/ainsleyclark/godaily/pkg/mocks/slack"
+	"github.com/ainsleyclark/godaily/pkg/mocks/slack"
 )
 
 // A minimal but valid r/golang listing payload. Uses a self-post (url points at

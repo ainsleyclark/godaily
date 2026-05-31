@@ -16,6 +16,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/templates"
@@ -86,7 +87,7 @@ func (s Service) SendSuggestion(ctx context.Context, date time.Time) error {
 	sug, err := prompts.Suggest(ctx, s.prompter, date, sections)
 	if err != nil {
 		if s.slack != nil {
-			s.slack.MustSend(ctx, "AI suggestion failed: "+err.Error())
+			s.slack.MustSend(ctx, slack.Error("AI suggestion failed", err))
 		}
 		return errors.Wrap(err, "synth")
 	}

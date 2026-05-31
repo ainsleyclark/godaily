@@ -14,6 +14,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -93,7 +94,7 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 	if previewErr := s.SendPreview(ctx, today); previewErr != nil {
 		slog.WarnContext(ctx, "Sending preview after build failed", "err", previewErr)
 		if s.slack != nil {
-			s.slack.MustSend(ctx, "Send preview after build failed: "+previewErr.Error())
+			s.slack.MustSend(ctx, slack.Error("Send preview after build failed", previewErr))
 		}
 	}
 
@@ -148,7 +149,7 @@ func groupIntoSections(items []news.Item) []news.SourceItems {
 
 func (s Service) buildErr(ctx context.Context, err error) error {
 	if s.slack != nil {
-		s.slack.MustSend(ctx, "Build failed: "+err.Error())
+		s.slack.MustSend(ctx, slack.Error("Build failed", err))
 	}
 	return err
 }
@@ -166,7 +167,7 @@ func (s Service) synthesiseDigestMeta(ctx context.Context, day time.Time, sectio
 	if err != nil {
 		slog.WarnContext(ctx, "Synth digest meta failed, using static subject", "err", err)
 		if s.slack != nil {
-			s.slack.MustSend(ctx, "AI synthesis failed: "+err.Error())
+			s.slack.MustSend(ctx, slack.Error("AI synthesis failed", err))
 		}
 		return subject, ""
 	}

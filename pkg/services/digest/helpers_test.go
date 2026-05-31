@@ -15,6 +15,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/mocks/audience"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
 	"github.com/ainsleyclark/godaily/pkg/store/items"
@@ -56,12 +57,12 @@ type mockSlack struct {
 	msgs []string
 }
 
-func (m *mockSlack) Send(_ context.Context, _ string) error {
+func (m *mockSlack) Send(_ context.Context, _ slack.Request) error {
 	return nil
 }
 
-func (m *mockSlack) MustSend(_ context.Context, message string) {
-	m.msgs = append(m.msgs, message)
+func (m *mockSlack) MustSend(_ context.Context, req slack.Request) {
+	m.msgs = append(m.msgs, req.Text)
 }
 
 // allRegistered returns a registry populated with mock fetchers for
