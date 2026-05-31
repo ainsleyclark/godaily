@@ -16,6 +16,9 @@
 	let loadingGrowth = $state(true);
 	let loadingList = $state(true);
 	let page = $state(1);
+	let search = $state('');
+	let searchInput = $state('');
+	let updatingId = $state<number | null>(null);
 	const perPage = 50;
 
 	async function loadGrowth() {
@@ -30,10 +33,10 @@
 		}
 	}
 
-	async function loadList(p: number) {
+	async function loadList(p: number, s: string) {
 		loadingList = true;
 		try {
-			listData = await api.subscriberList(p, perPage);
+			listData = await api.subscriberList(p, perPage, s);
 		} catch (e) {
 			if ((e as { status?: number }).status !== 401) toast.error('Failed to load subscriber list');
 		} finally {
@@ -47,8 +50,38 @@
 	});
 
 	$effect(() => {
-		void loadList(page);
+		void loadList(page, search);
 	});
+
+	function submitSearch(e: SubmitEvent) {
+		e.preventDefault();
+		search = searchInput.trim();
+		page = 1;
+	}
+
+	function clearSearch() {
+		searchInput = '';
+		search = '';
+		page = 1;
+	}
+
+	async function setStatus(sub: Subscriber, status: string) {
+		updatingId = sub.id;
+		try {
+			const updated = await api.updateSubscriberStatus(sub.id, status);
+			if (listData) {
+				listData = {
+					...listData,
+					data: listData.data.map((s) => (s.id === updated.id ? updated : s))
+				};
+			}
+			toast.success(`${sub.email} set to ${status}`);
+		} catch {
+			toast.error('Failed to update subscriber status');
+		} finally {
+			updatingId = null;
+		}
+	}
 
 	const points = $derived(growth?.points ?? []);
 
@@ -77,7 +110,19 @@
 		if (!s.confirmed_at) return { label: 'Pending', variant: 'outline' };
 		return { label: 'Active', variant: 'success' };
 	}
+
+	function availableStatuses(s: Subscriber): { value: string; label: string }[] {
+		const current = statusOf(s).label.toLowerCase();
+		const all = [
+			{ value: 'active', label: 'Active' },
+			{ value: 'unsubscribed', label: 'Unsubscribed' },
+			{ value: 'suppressed', label: 'Suppressed' }
+		];
+		return all.filter((st) => st.value !== current && current !== 'bounced');
+	}
 </script>
+
+<svelte:head><title>Subscribers | GoDaily Analytics</title></svelte:head>
 
 <div class="space-y-6">
 	<div>
@@ -116,46 +161,75 @@
 	<!-- Subscriber list -->
 	<Card>
 		<CardHeader>
-			<div class="flex items-center justify-between">
+			<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
 				<div>
 					<CardTitle>All subscribers</CardTitle>
 					<CardDescription>
 						{#if listData}
-							{formatCompact(listData.total)} total · page {page} of {totalPages}
+							{formatCompact(listData.total)} total{search ? ` matching "${search}"` : ''} · page {page} of {totalPages}
 						{:else}
 							Loading…
 						{/if}
 					</CardDescription>
 				</div>
-				{#if totalPages > 1}
-					<div class="flex items-center gap-2">
+				<div class="flex flex-wrap items-center gap-2">
+					<!-- Search -->
+					<form onsubmit={submitSearch} class="flex items-center gap-1.5">
+						<input
+							type="search"
+							bind:value={searchInput}
+							placeholder="Search email…"
+							class="border-border bg-background h-8 rounded-md border px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring w-44"
+						/>
 						<button
-							onclick={() => (page = Math.max(1, page - 1))}
-							disabled={page === 1}
-							class="rounded-md border px-3 py-1.5 text-xs disabled:opacity-40 hover:bg-accent"
+							type="submit"
+							class="border-border bg-background h-8 rounded-md border px-3 text-xs hover:bg-accent"
 						>
-							← Prev
+							Search
 						</button>
-						<button
-							onclick={() => (page = Math.min(totalPages, page + 1))}
-							disabled={page === totalPages}
-							class="rounded-md border px-3 py-1.5 text-xs disabled:opacity-40 hover:bg-accent"
-						>
-							Next →
-						</button>
-					</div>
-				{/if}
+						{#if search}
+							<button
+								type="button"
+								onclick={clearSearch}
+								class="border-border bg-background h-8 rounded-md border px-3 text-xs hover:bg-accent text-muted-foreground"
+							>
+								Clear
+							</button>
+						{/if}
+					</form>
+					<!-- Pagination -->
+					{#if totalPages > 1}
+						<div class="flex items-center gap-2">
+							<button
+								onclick={() => (page = Math.max(1, page - 1))}
+								disabled={page === 1 || loadingList}
+								class="rounded-md border px-3 py-1.5 text-xs disabled:opacity-40 hover:bg-accent"
+							>
+								← Prev
+							</button>
+							<button
+								onclick={() => (page = Math.min(totalPages, page + 1))}
+								disabled={page === totalPages || loadingList}
+								class="rounded-md border px-3 py-1.5 text-xs disabled:opacity-40 hover:bg-accent"
+							>
+								Next →
+							</button>
+						</div>
+					{/if}
+				</div>
 			</div>
 		</CardHeader>
 		<CardContent class="p-0">
-			{#if loadingList && !listData}
+			{#if loadingList}
 				<div class="space-y-2 p-4">
 					{#each Array(8) as _, i (i)}
 						<Skeleton class="h-10 w-full" />
 					{/each}
 				</div>
 			{:else if !listData?.data.length}
-				<div class="text-muted-foreground p-8 text-center text-sm">No subscribers found</div>
+				<div class="text-muted-foreground p-8 text-center text-sm">
+					{search ? `No subscribers matching "${search}"` : 'No subscribers found'}
+				</div>
 			{:else}
 				<Table>
 					<THead>
@@ -164,11 +238,13 @@
 							<TH>Status</TH>
 							<TH>Subscribed</TH>
 							<TH>Confirmed</TH>
+							<TH>Actions</TH>
 						</TR>
 					</THead>
 					<TBody>
 						{#each listData.data as s (s.id)}
 							{@const status = statusOf(s)}
+							{@const actions = availableStatuses(s)}
 							<TR>
 								<TD class="font-mono text-sm">{s.email}</TD>
 								<TD>
@@ -177,6 +253,24 @@
 								<TD class="text-muted-foreground text-xs">{formatDate(s.created_at)}</TD>
 								<TD class="text-muted-foreground text-xs">
 									{s.confirmed_at ? formatDate(s.confirmed_at) : '—'}
+								</TD>
+								<TD>
+									{#if updatingId === s.id}
+										<span class="text-muted-foreground text-xs">Saving…</span>
+									{:else if actions.length > 0}
+										<div class="flex flex-wrap gap-1">
+											{#each actions as action (action.value)}
+												<button
+													onclick={() => setStatus(s, action.value)}
+													class="rounded border px-2 py-0.5 text-xs hover:bg-accent transition-colors"
+												>
+													{action.label}
+												</button>
+											{/each}
+										</div>
+									{:else}
+										<span class="text-muted-foreground text-xs">—</span>
+									{/if}
 								</TD>
 							</TR>
 						{/each}

@@ -248,6 +248,36 @@ func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
+// AdminSetStatus mocks base method.
+func (m *MockSubscriberRepository) AdminSetStatus(ctx context.Context, id int64, status string) (audience.Subscriber, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AdminSetStatus", ctx, id, status)
+	ret0, _ := ret[0].(audience.Subscriber)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AdminSetStatus indicates an expected call of AdminSetStatus.
+func (mr *MockSubscriberRepositoryMockRecorder) AdminSetStatus(ctx, id, status any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdminSetStatus", reflect.TypeOf((*MockSubscriberRepository)(nil).AdminSetStatus), ctx, id, status)
+}
+
+// CountFiltered mocks base method.
+func (m *MockSubscriberRepository) CountFiltered(ctx context.Context, search string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountFiltered", ctx, search)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountFiltered indicates an expected call of CountFiltered.
+func (mr *MockSubscriberRepositoryMockRecorder) CountFiltered(ctx, search any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFiltered", reflect.TypeOf((*MockSubscriberRepository)(nil).CountFiltered), ctx, search)
+}
+
 // Unsubscribe mocks base method.
 func (m *MockSubscriberRepository) Unsubscribe(ctx context.Context, token string) error {
 	m.ctrl.T.Helper()

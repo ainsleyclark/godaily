@@ -13,6 +13,8 @@
 	let posts = $state<SocialPostMetric[] | null>(null);
 	let loading = $state(true);
 	let platformFilter = $state<string>('all');
+	let sortKey = $state<string>('posted_at');
+	let sortDir = $state<'asc' | 'desc'>('desc');
 
 	async function load() {
 		const q = toQueryParams($dateRange);
@@ -35,16 +37,38 @@
 
 	const platforms = $derived([...new Set((posts ?? []).map((p) => p.platform))].sort());
 
-	// Reset stale filter when the new dataset no longer contains the selected platform.
 	$effect(() => {
 		if (platformFilter !== 'all' && !platforms.includes(platformFilter)) {
 			platformFilter = 'all';
 		}
 	});
 
-	const filtered = $derived(
-		platformFilter === 'all' ? (posts ?? []) : (posts ?? []).filter((p) => p.platform === platformFilter)
-	);
+	function toggleSort(key: string) {
+		if (sortKey === key) {
+			sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+		} else {
+			sortKey = key;
+			sortDir = 'desc';
+		}
+	}
+
+	function sortIcon(key: string) {
+		if (sortKey !== key) return '↕';
+		return sortDir === 'asc' ? '↑' : '↓';
+	}
+
+	const filtered = $derived.by(() => {
+		let rows = platformFilter === 'all' ? (posts ?? []) : (posts ?? []).filter((p) => p.platform === platformFilter);
+		const dir = sortDir === 'asc' ? 1 : -1;
+		return [...rows].sort((a, b) => {
+			const av = (a as unknown as Record<string, unknown>)[sortKey];
+			const bv = (b as unknown as Record<string, unknown>)[sortKey];
+			if (typeof av === 'string' && typeof bv === 'string') {
+				return dir * av.localeCompare(bv);
+			}
+			return dir * (Number(av ?? 0) - Number(bv ?? 0));
+		});
+	});
 
 	const totals = $derived.by(() => {
 		const rows = posts ?? [];
@@ -70,6 +94,14 @@
 		return Object.entries(map)
 			.map(([platform, stats]) => ({ platform, ...stats }))
 			.sort((a, b) => b.impressions - a.impressions);
+	});
+
+	const platformGridClass = $derived.by(() => {
+		const n = byPlatform.length;
+		if (n <= 1) return 'grid-cols-1';
+		if (n === 2) return 'grid-cols-1 sm:grid-cols-2';
+		if (n === 3) return 'grid-cols-1 sm:grid-cols-3';
+		return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 	});
 
 	const platformColors: Record<string, string> = {
@@ -101,6 +133,8 @@
 		return 'secondary';
 	}
 </script>
+
+<svelte:head><title>Social | GoDaily Analytics</title></svelte:head>
 
 <div class="space-y-6">
 	<div>
@@ -139,7 +173,7 @@
 
 	<!-- By platform breakdown -->
 	{#if byPlatform.length > 0}
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+		<div class="grid gap-4 {platformGridClass}">
 			{#each byPlatform as p (p.platform)}
 				<Card>
 					<CardHeader class="pb-2">
@@ -224,11 +258,31 @@
 							<TH>Post</TH>
 							<TH>Platform</TH>
 							<TH>Kind</TH>
-							<TH class="text-right">Impressions</TH>
-							<TH class="text-right">Likes</TH>
-							<TH class="text-right">Reposts</TH>
-							<TH class="text-right">Comments</TH>
-							<TH>Date</TH>
+							<TH class="text-right">
+								<button onclick={() => toggleSort('impressions')} class="flex items-center gap-1 hover:text-foreground ml-auto">
+									Impressions <span class="text-muted-foreground">{sortIcon('impressions')}</span>
+								</button>
+							</TH>
+							<TH class="text-right">
+								<button onclick={() => toggleSort('likes')} class="flex items-center gap-1 hover:text-foreground ml-auto">
+									Likes <span class="text-muted-foreground">{sortIcon('likes')}</span>
+								</button>
+							</TH>
+							<TH class="text-right">
+								<button onclick={() => toggleSort('reposts')} class="flex items-center gap-1 hover:text-foreground ml-auto">
+									Reposts <span class="text-muted-foreground">{sortIcon('reposts')}</span>
+								</button>
+							</TH>
+							<TH class="text-right">
+								<button onclick={() => toggleSort('comments')} class="flex items-center gap-1 hover:text-foreground ml-auto">
+									Comments <span class="text-muted-foreground">{sortIcon('comments')}</span>
+								</button>
+							</TH>
+							<TH>
+								<button onclick={() => toggleSort('posted_at')} class="flex items-center gap-1 hover:text-foreground">
+									Date <span class="text-muted-foreground">{sortIcon('posted_at')}</span>
+								</button>
+							</TH>
 						</TR>
 					</THead>
 					<TBody>

@@ -28,6 +28,10 @@ type ListOptions struct {
 
 	// PerPage is the number of items per page. Zero uses the default (20).
 	PerPage int64
+
+	// Search is an optional substring filter applied to the email column.
+	// When non-empty, only rows whose email contains the value are returned.
+	Search string
 }
 
 // Limit returns the SQL LIMIT value for this page.
