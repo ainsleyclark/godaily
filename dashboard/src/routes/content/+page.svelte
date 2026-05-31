@@ -19,6 +19,8 @@
 	let search = $state('');
 	let tagFilter = $state('all');
 	let sourceFilter = $state('all');
+	let sortKey = $state<string>('clicks');
+	let sortDir = $state<'asc' | 'desc'>('desc');
 
 	async function load() {
 		const q = toQueryParams($dateRange);
@@ -44,6 +46,20 @@
 	const allTags = $derived([...new Set((items ?? []).map((i) => i.tag).filter(Boolean))].sort());
 	const allSources = $derived([...new Set((items ?? []).map((i) => i.source).filter(Boolean))].sort());
 
+	function toggleSort(key: string) {
+		if (sortKey === key) {
+			sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+		} else {
+			sortKey = key;
+			sortDir = 'desc';
+		}
+	}
+
+	function sortIcon(key: string) {
+		if (sortKey !== key) return '↕';
+		return sortDir === 'asc' ? '↑' : '↓';
+	}
+
 	const filtered = $derived.by(() => {
 		let rows = items ?? [];
 		if (tagFilter !== 'all') rows = rows.filter((r) => r.tag === tagFilter);
@@ -54,12 +70,22 @@
 				(r) => r.title.toLowerCase().includes(q) || r.source.toLowerCase().includes(q)
 			);
 		}
-		return rows;
+		const dir = sortDir === 'asc' ? 1 : -1;
+		return [...rows].sort((a, b) => {
+			const av = (a as unknown as Record<string, unknown>)[sortKey];
+			const bv = (b as unknown as Record<string, unknown>)[sortKey];
+			if (typeof av === 'string' && typeof bv === 'string') {
+				return dir * av.localeCompare(bv);
+			}
+			return dir * (Number(av ?? 0) - Number(bv ?? 0));
+		});
 	});
 
 	const totalClicks = $derived((items ?? []).reduce((s, r) => s + r.clicks, 0));
 	const maxClicks = $derived(Math.max(1, ...(items ?? []).map((r) => r.clicks)));
 </script>
+
+<svelte:head><title>Content | GoDaily Analytics</title></svelte:head>
 
 <div class="space-y-6">
 	<div>
@@ -149,10 +175,26 @@
 				<Table>
 					<THead>
 						<TR>
-							<TH>Title</TH>
-							<TH>Tag</TH>
-							<TH>Source</TH>
-							<TH class="text-right">Clicks</TH>
+							<TH>
+								<button onclick={() => toggleSort('title')} class="flex items-center gap-1 hover:text-foreground">
+									Title <span class="text-muted-foreground">{sortIcon('title')}</span>
+								</button>
+							</TH>
+							<TH>
+								<button onclick={() => toggleSort('tag')} class="flex items-center gap-1 hover:text-foreground">
+									Tag <span class="text-muted-foreground">{sortIcon('tag')}</span>
+								</button>
+							</TH>
+							<TH>
+								<button onclick={() => toggleSort('source')} class="flex items-center gap-1 hover:text-foreground">
+									Source <span class="text-muted-foreground">{sortIcon('source')}</span>
+								</button>
+							</TH>
+							<TH class="text-right">
+								<button onclick={() => toggleSort('clicks')} class="flex items-center gap-1 hover:text-foreground ml-auto">
+									Clicks <span class="text-muted-foreground">{sortIcon('clicks')}</span>
+								</button>
+							</TH>
 							<TH class="text-right w-32">Share</TH>
 						</TR>
 					</THead>

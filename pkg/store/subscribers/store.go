@@ -169,12 +169,27 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
+func (s Store) CountFiltered(ctx context.Context, search string) (int64, error) {
+	var count int64
+	if search == "" {
+		return s.CountAll(ctx)
+	}
+	if err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM subscribers WHERE email LIKE ?", "%"+search+"%").Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Subscriber, error) {
-	rows, err := s.db.QueryContext(
-		ctx,
-		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
-		opts.Limit(), opts.Offset(),
-	)
+	query := "SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at, created_at FROM subscribers"
+	args := make([]any, 0, 3)
+	if opts.Search != "" {
+		query += " WHERE email LIKE ?"
+		args = append(args, "%"+opts.Search+"%")
+	}
+	query += " ORDER BY id ASC LIMIT ? OFFSET ?"
+	args = append(args, opts.Limit(), opts.Offset())
+	rows, err := s.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}

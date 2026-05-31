@@ -120,6 +120,8 @@
 	});
 </script>
 
+<svelte:head><title>Dashboard | GoDaily Analytics</title></svelte:head>
+
 <div class="space-y-6">
 	<!-- Hero stats -->
 	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

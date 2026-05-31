@@ -6,6 +6,7 @@ package digest
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 
@@ -33,6 +34,7 @@ func (h *Handler) Subscribers(c *webkit.Context) error {
 	ctx := c.Context()
 	r := c.Request
 
+	search := strings.TrimSpace(r.URL.Query().Get("search"))
 	page := api.QueryInt(r, "page", api.DefaultPage)
 	perPage := api.QueryInt(r, "per_page", api.DefaultPerPage)
 
@@ -43,12 +45,12 @@ func (h *Handler) Subscribers(c *webkit.Context) error {
 		perPage = api.DefaultPerPage
 	}
 
-	total, err := h.subscribersRepo.CountAll(ctx)
+	total, err := h.subscribersRepo.CountFiltered(ctx, search)
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to count subscribers")
 	}
 
-	subs, err := h.subscribersRepo.List(ctx, store.ListOptions{Page: page, PerPage: perPage})
+	subs, err := h.subscribersRepo.List(ctx, store.ListOptions{Page: page, PerPage: perPage, Search: search})
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to list subscribers")
 	}

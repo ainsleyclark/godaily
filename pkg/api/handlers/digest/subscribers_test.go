@@ -49,7 +49,7 @@ func TestSubscribers(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(3), nil)
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(3), nil)
 		deps.Subscribers.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]audience.Subscriber{
 			{ID: 1, Email: "a@example.com"},
 			{ID: 2, Email: "b@example.com"},
@@ -65,7 +65,7 @@ func TestSubscribers(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?page=2&per_page=5")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(50), nil)
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(50), nil)
 		deps.Subscribers.EXPECT().List(gomock.Any(), store.ListOptions{Page: 2, PerPage: 5}).Return([]audience.Subscriber{}, nil)
 
 		err := deps.Handler.Subscribers(deps.Context)
@@ -74,11 +74,11 @@ func TestSubscribers(t *testing.T) {
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 	})
 
-	t.Run("CountAll error returns internal server error", func(t *testing.T) {
+	t.Run("CountFiltered error returns internal server error", func(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(0), errors.New("db error"))
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(0), errors.New("db error"))
 
 		_ = deps.Handler.Subscribers(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
@@ -88,7 +88,7 @@ func TestSubscribers(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(1), nil)
 		deps.Subscribers.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_ = deps.Handler.Subscribers(deps.Context)
@@ -99,7 +99,7 @@ func TestSubscribers(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?page=abc")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(1), nil)
 		deps.Subscribers.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]audience.Subscriber{}, nil)
 
 		err := deps.Handler.Subscribers(deps.Context)
@@ -112,7 +112,7 @@ func TestSubscribers(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?per_page=999")
-		deps.Subscribers.EXPECT().CountAll(gomock.Any()).Return(int64(1), nil)
+		deps.Subscribers.EXPECT().CountFiltered(gomock.Any(), "").Return(int64(1), nil)
 		deps.Subscribers.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]audience.Subscriber{}, nil)
 
 		err := deps.Handler.Subscribers(deps.Context)

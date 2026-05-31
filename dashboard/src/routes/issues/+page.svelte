@@ -75,6 +75,8 @@
 	}
 </script>
 
+<svelte:head><title>Issues | GoDaily Analytics</title></svelte:head>
+
 <div class="space-y-6">
 	<div>
 		<h1 class="text-xl font-semibold tracking-tight">Issues</h1>

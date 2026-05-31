@@ -248,6 +248,21 @@ func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
 }
 
+// CountFiltered mocks base method.
+func (m *MockSubscriberRepository) CountFiltered(ctx context.Context, search string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountFiltered", ctx, search)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountFiltered indicates an expected call of CountFiltered.
+func (mr *MockSubscriberRepositoryMockRecorder) CountFiltered(ctx, search any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFiltered", reflect.TypeOf((*MockSubscriberRepository)(nil).CountFiltered), ctx, search)
+}
+
 // Unsubscribe mocks base method.
 func (m *MockSubscriberRepository) Unsubscribe(ctx context.Context, token string) error {
 	m.ctrl.T.Helper()

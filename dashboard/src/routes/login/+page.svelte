@@ -34,6 +34,8 @@
 	}
 </script>
 
+<svelte:head><title>Login | GoDaily Analytics</title></svelte:head>
+
 <div class="flex min-h-[calc(100vh-3rem)] items-center justify-center">
 	<Card class="w-full max-w-sm">
 		<CardHeader>

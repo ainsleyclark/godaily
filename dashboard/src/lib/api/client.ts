@@ -96,6 +96,6 @@ export const api = {
 	trend: (q?: MetricsQuery) => request<TrendData>('/api/metrics/trend', q),
 	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
 	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
-	subscriberList: (page = 1, perPage = 50) =>
-		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage } as unknown as MetricsQuery)
+	subscriberList: (page = 1, perPage = 50, search = '') =>
+		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery)
 };
