@@ -32,7 +32,9 @@ const (
   description: Alpha conference.
   end_date: "2099-01-01"
   handles:
-    linkedin: alpha-conf
+    linkedin:
+      slug: alpha-conf
+      urn: urn:li:organization:111
     bluesky: alpha-conf.example
     mastodon: ""
 - slug: bravo-conf
@@ -42,7 +44,9 @@ const (
   description: Bravo conference.
   end_date: "2099-06-01"
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 - slug: past-conf
@@ -52,7 +56,9 @@ const (
   description: This conference has already happened.
   end_date: "2000-01-01"
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 `
@@ -64,7 +70,9 @@ const (
   location: London
   description: Alpha meetup.
   handles:
-    linkedin: alpha-meetup-group
+    linkedin:
+      slug: alpha-meetup-group
+      urn: ""
     bluesky: ""
     mastodon: ""
 - slug: bravo-meetup
@@ -73,7 +81,9 @@ const (
   location: Paris
   description: Bravo meetup.
   handles:
-    linkedin: ""
+    linkedin:
+      slug: ""
+      urn: ""
     bluesky: ""
     mastodon: ""
 `
@@ -157,7 +167,7 @@ func TestCommunity_Eligible(t *testing.T) {
 		require.True(t, ok)
 		assert.Equal(t, fmt.Sprintf("community:alpha-conf:%d", year), cctx.Subject)
 		assert.Equal(t, "@alpha-conf.example", cctx.Mention(social.Bluesky))
-		assert.Equal(t, "https://www.linkedin.com/company/alpha-conf", cctx.Mention(social.LinkedIn))
+		assert.Equal(t, "urn:li:organization:111", cctx.Mention(social.LinkedIn))
 	})
 
 	t.Run("Rotates past already-posted entry", func(t *testing.T) {
@@ -241,6 +251,27 @@ func TestCommunity_Generate(t *testing.T) {
 		assert.Contains(t, out, "https://www.linkedin.com/company/alpha-meetup-group")
 		assert.Contains(t, out, "https://alpha-meetup.example")
 		assert.Contains(t, out, "Alpha meetup.")
+	})
+
+	t.Run("Uses entry name in body when LinkedIn URN is configured", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		posts := mocksocial.NewMockPostRepository(ctrl)
+
+		year := wedConf.Year()
+		posts.EXPECT().
+			HasPostedBySubject(gomock.Any(), fmt.Sprintf("community:alpha-conf:%d", year), "bluesky").
+			Return(false, nil)
+
+		c := candidates.NewCommunity([]byte(confsYAML), []byte(meetupsYAML), posts)
+		cctx, ok, err := c.Eligible(context.Background(), wedConf)
+		require.NoError(t, err)
+		require.True(t, ok)
+
+		out, err := c.Generate(context.Background(), nil, social.LinkedIn, cctx)
+		require.NoError(t, err)
+		assert.Contains(t, out, "Alpha Conf")
+		assert.NotContains(t, out, "urn:li:")
+		assert.NotContains(t, out, "linkedin.com/company/alpha-conf")
 	})
 
 	t.Run("Falls back to plain name when platform has no mention", func(t *testing.T) {
