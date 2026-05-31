@@ -194,6 +194,112 @@ func TestClient_Post(t *testing.T) {
 	})
 }
 
+func TestClient_Stats(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Resolves handle to DID then fetches engagement", func(t *testing.T) {
+		t.Parallel()
+
+		var resolveHits, getPostsHits int
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.identity.resolveHandle":
+				resolveHits++
+				assert.Equal(t, "godaily.dev", r.URL.Query().Get("handle"))
+				_, _ = w.Write([]byte(`{"did":"did:plc:xyz"}`))
+
+			case "/xrpc/app.bsky.feed.getPosts":
+				getPostsHits++
+				// The URI must use the resolved DID, not the handle.
+				assert.Equal(t, "at://did:plc:xyz/app.bsky.feed.post/3kabcdef", r.URL.Query().Get("uris[]"))
+				_, _ = w.Write([]byte(`{"posts":[{"likeCount":12,"repostCount":3,"replyCount":5}]}`))
+
+			default:
+				t.Fatalf("unexpected path %s", r.URL.Path)
+			}
+		}))
+		defer srv.Close()
+
+		c := New("godaily.dev", "pw")
+		c.appViewURL = srv.URL
+
+		got, err := c.Stats(context.Background(), "https://bsky.app/profile/godaily.dev/post/3kabcdef")
+		require.NoError(t, err)
+		assert.Equal(t, platform.Stats{Likes: 12, Reposts: 3, Comments: 5}, got)
+		assert.Equal(t, 1, resolveHits)
+		assert.Equal(t, 1, getPostsHits)
+	})
+
+	t.Run("Empty posts array yields zero stats", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/xrpc/com.atproto.identity.resolveHandle":
+				_, _ = w.Write([]byte(`{"did":"did:plc:xyz"}`))
+			case "/xrpc/app.bsky.feed.getPosts":
+				_, _ = w.Write([]byte(`{"posts":[]}`))
+			default:
+				t.Fatalf("unexpected path %s", r.URL.Path)
+			}
+		}))
+		defer srv.Close()
+
+		c := New("godaily.dev", "pw")
+		c.appViewURL = srv.URL
+
+		got, err := c.Stats(context.Background(), "https://bsky.app/profile/godaily.dev/post/abc")
+		require.NoError(t, err)
+		assert.Equal(t, platform.Stats{}, got)
+	})
+
+	t.Run("Malformed post URL errors before any request", func(t *testing.T) {
+		t.Parallel()
+
+		c := New("godaily.dev", "pw")
+		c.appViewURL = "http://127.0.0.1:1" // must not be hit
+
+		_, err := c.Stats(context.Background(), "https://bsky.app/not/a/post")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "parsing post URL")
+	})
+
+	t.Run("Handle resolution failure surfaces", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"error":"InvalidRequest"}`))
+		}))
+		defer srv.Close()
+
+		c := New("godaily.dev", "pw")
+		c.appViewURL = srv.URL
+
+		_, err := c.Stats(context.Background(), "https://bsky.app/profile/godaily.dev/post/abc")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "resolving handle to DID")
+	})
+}
+
+func TestParsePostURL(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Happy path", func(t *testing.T) {
+		t.Parallel()
+		handle, rKey, err := parsePostURL("https://bsky.app/profile/godaily.dev/post/3kabcdef")
+		require.NoError(t, err)
+		assert.Equal(t, "godaily.dev", handle)
+		assert.Equal(t, "3kabcdef", rKey)
+	})
+
+	t.Run("Unexpected format errors", func(t *testing.T) {
+		t.Parallel()
+		_, _, err := parsePostURL("https://bsky.app/profile/godaily.dev")
+		require.Error(t, err)
+	})
+}
+
 func TestPostURLFromURI(t *testing.T) {
 	t.Parallel()
 
