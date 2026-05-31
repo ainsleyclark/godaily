@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { ArrowUpRight, ArrowDownRight } from '@lucide/svelte';
 
 	interface Props {
 		label: string;
@@ -42,13 +43,9 @@
 						class={`inline-flex items-center gap-0.5 rounded-md border px-1.5 py-0.5 text-xs font-medium ${deltaColor}`}
 					>
 						{#if delta.direction === 'up'}
-							<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-								<path d="M7 17L17 7M17 7H8M17 7v9" />
-							</svg>
+							<ArrowUpRight class="h-3 w-3" strokeWidth={2.5} />
 						{:else if delta.direction === 'down'}
-							<svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-								<path d="M17 7L7 17M7 17h9M7 17V8" />
-							</svg>
+							<ArrowDownRight class="h-3 w-3" strokeWidth={2.5} />
 						{/if}
 						{delta.value}
 					</span>
