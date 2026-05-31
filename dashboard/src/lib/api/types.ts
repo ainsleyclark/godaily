@@ -78,6 +78,21 @@ export interface SubscriberData {
 	points: SubscriberPoint[];
 }
 
+export interface SocialPostMetric {
+	id: number;
+	issue_id?: number;
+	kind: string;
+	subject?: string;
+	platform: string;
+	text: string;
+	post_url?: string;
+	posted_at: string;
+	likes: number;
+	reposts: number;
+	comments: number;
+	impressions: number;
+}
+
 export type Bucket = 'day' | 'week' | 'month';
 export type TrendMetric = 'unique_opens' | 'unique_clicks' | 'open_rate' | 'click_rate';
 

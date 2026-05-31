@@ -1031,6 +1031,83 @@ func (q *Queries) SocialPostListSince(ctx context.Context, postedAt time.Time) (
 	return items, nil
 }
 
+const socialPostsWithMetrics = `-- name: SocialPostsWithMetrics :many
+SELECT
+    sp.id,
+    sp.issue_id,
+    sp.kind,
+    sp.subject,
+    sp.platform,
+    sp.text,
+    sp.post_url,
+    sp.posted_at,
+    COALESCE(sm.likes, 0)       AS likes,
+    COALESCE(sm.reposts, 0)     AS reposts,
+    COALESCE(sm.comments, 0)    AS comments,
+    COALESCE(sm.impressions, 0) AS impressions
+FROM social_posts sp
+LEFT JOIN social_metrics sm ON sm.social_post_id = sp.id
+WHERE (?1 IS NULL OR sp.posted_at >= ?1)
+  AND (?2   IS NULL OR sp.posted_at <= ?2)
+ORDER BY sp.posted_at DESC
+`
+
+type SocialPostsWithMetricsParams struct {
+	From interface{} `json:"from"`
+	To   interface{} `json:"to"`
+}
+
+type SocialPostsWithMetricsRow struct {
+	ID          int64          `json:"id"`
+	IssueID     *int64         `json:"issue_id"`
+	Kind        string         `json:"kind"`
+	Subject     sql.NullString `json:"subject"`
+	Platform    string         `json:"platform"`
+	Text        string         `json:"text"`
+	PostUrl     sql.NullString `json:"post_url"`
+	PostedAt    time.Time      `json:"posted_at"`
+	Likes       int64          `json:"likes"`
+	Reposts     int64          `json:"reposts"`
+	Comments    int64          `json:"comments"`
+	Impressions int64          `json:"impressions"`
+}
+
+func (q *Queries) SocialPostsWithMetrics(ctx context.Context, arg SocialPostsWithMetricsParams) ([]SocialPostsWithMetricsRow, error) {
+	rows, err := q.db.QueryContext(ctx, socialPostsWithMetrics, arg.From, arg.To)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []SocialPostsWithMetricsRow{}
+	for rows.Next() {
+		var i SocialPostsWithMetricsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Kind,
+			&i.Subject,
+			&i.Platform,
+			&i.Text,
+			&i.PostUrl,
+			&i.PostedAt,
+			&i.Likes,
+			&i.Reposts,
+			&i.Comments,
+			&i.Impressions,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const subscriberByConfirmToken = `-- name: SubscriberByConfirmToken :one
 SELECT id, email, unsubscribe_token, unsubscribed_at, created_at, confirm_token, confirmed_at, bounced_at, suppressed_at FROM subscribers WHERE confirm_token = ? LIMIT 1
 `

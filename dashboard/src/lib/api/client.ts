@@ -6,6 +6,7 @@ import type {
 	ItemMetrics,
 	MetricsQuery,
 	SourceMetrics,
+	SocialPostMetric,
 	SubscriberData,
 	SummaryStats,
 	TagMetrics,
@@ -91,5 +92,6 @@ export const api = {
 	tags: (q?: MetricsQuery) => request<TagMetrics[]>('/api/metrics/tags', q),
 	sources: (q?: MetricsQuery) => request<SourceMetrics[]>('/api/metrics/sources', q),
 	trend: (q?: MetricsQuery) => request<TrendData>('/api/metrics/trend', q),
-	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q)
+	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
+	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q)
 };

@@ -114,6 +114,43 @@ func (s Store) List(ctx context.Context, opts social.PostListOptions) ([]social.
 	return out, nil
 }
 
+// ListWithMetrics returns posts joined with their latest social engagement
+// counts, filtered by an optional posted_at date range.
+func (s Store) ListWithMetrics(ctx context.Context, from, to *time.Time) ([]social.PostWithMetrics, error) {
+	var fromArg, toArg interface{}
+	if from != nil {
+		fromArg = *from
+	}
+	if to != nil {
+		toArg = *to
+	}
+	rows, err := s.sqlc.SocialPostsWithMetrics(ctx, sqlc.SocialPostsWithMetricsParams{
+		From: fromArg,
+		To:   toArg,
+	})
+	if err != nil {
+		return nil, err
+	}
+	out := make([]social.PostWithMetrics, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, social.PostWithMetrics{
+			ID:          r.ID,
+			IssueID:     r.IssueID,
+			Kind:        social.PostKind(r.Kind),
+			Subject:     r.Subject.String,
+			Platform:    r.Platform,
+			Text:        r.Text,
+			PostURL:     r.PostUrl.String,
+			PostedAt:    r.PostedAt,
+			Likes:       r.Likes,
+			Reposts:     r.Reposts,
+			Comments:    r.Comments,
+			Impressions: r.Impressions,
+		})
+	}
+	return out, nil
+}
+
 func transform(r sqlc.SocialPost) social.Post {
 	return social.Post{
 		ID:       r.ID,
