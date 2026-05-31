@@ -31,7 +31,8 @@
 	const maxValue = $derived(series.length ? Math.max(...series.map((p) => p.value), 0) : 0);
 	const minValue = $derived(series.length ? Math.min(...series.map((p) => p.value), 0) : 0);
 
-	const W = 600;
+	let containerW = $state(600);
+	const W = $derived(containerW || 600);
 	const H = 240;
 	const PAD = { top: 16, right: 16, bottom: 32, left: 48 };
 
@@ -147,10 +148,10 @@
 				No data
 			</div>
 		{:else}
+			<div class="w-full" bind:clientWidth={containerW}>
 			<svg
 				viewBox="0 0 {W} {H}"
 				class="h-[240px] w-full"
-				preserveAspectRatio="none"
 				role="img"
 				aria-label="Engagement trend chart"
 				onmouseleave={() => (hover = null)}
@@ -223,6 +224,7 @@
 					/>
 				{/each}
 			</svg>
+			</div>
 			{#if hover !== null}
 				<div class="text-muted-foreground mt-2 flex justify-between text-xs">
 					<span>{formatDateShort(series[hover].date.toISOString())}</span>

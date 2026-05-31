@@ -12,7 +12,8 @@
 
 	const points = $derived(data?.points ?? []);
 
-	const W = 600;
+	let containerW = $state(600);
+	const W = $derived(containerW || 600);
 	const H = 220;
 	const PAD = { top: 16, right: 16, bottom: 28, left: 44 };
 
@@ -90,10 +91,10 @@
 				No data
 			</div>
 		{:else}
+			<div class="w-full" bind:clientWidth={containerW}>
 			<svg
 				viewBox="0 0 {W} {H}"
 				class="h-[220px] w-full"
-				preserveAspectRatio="none"
 				role="img"
 				aria-label="Subscriber growth chart"
 				onmouseleave={() => (hover = null)}
@@ -155,6 +156,7 @@
 					/>
 				{/each}
 			</svg>
+			</div>
 			<div class="text-muted-foreground mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
 				<span class="flex items-center gap-1.5">
 					<span class="inline-block h-2 w-2 rounded-sm" style="background:var(--chart-2)"></span>
