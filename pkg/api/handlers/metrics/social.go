@@ -11,7 +11,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 
 	"github.com/ainsleyclark/godaily/pkg/api"
-	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 )
 
 type socialRequest struct {
@@ -25,7 +25,7 @@ func (req socialRequest) validate() error {
 }
 
 // SocialMetricsResponse is the response envelope for GET /metrics/social.
-type SocialMetricsResponse = api.Response[[]social.PostWithMetrics] //@name SocialMetricsResponse
+type SocialMetricsResponse = api.Response[[]engagement.SocialPostEngagement] //@name SocialMetricsResponse
 
 // Social godoc
 //
@@ -57,7 +57,7 @@ func (h *Handler) Social(c *webkit.Context) error {
 		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
 
-	posts, err := h.socialPosts.ListWithMetrics(ctx, from, to)
+	posts, err := h.socialMetrics.List(ctx, engagement.MetricsFilter{From: from, To: to})
 	if err != nil {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch social metrics")
 	}

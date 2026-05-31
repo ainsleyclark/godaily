@@ -41,6 +41,21 @@ func (m *MockSocialMetricRepository) EXPECT() *MockSocialMetricRepositoryMockRec
 	return m.recorder
 }
 
+// List mocks base method.
+func (m *MockSocialMetricRepository) List(ctx context.Context, f engagement.MetricsFilter) ([]engagement.SocialPostEngagement, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx, f)
+	ret0, _ := ret[0].([]engagement.SocialPostEngagement)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockSocialMetricRepositoryMockRecorder) List(ctx, f any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockSocialMetricRepository)(nil).List), ctx, f)
+}
+
 // ListBySocialPostID mocks base method.
 func (m *MockSocialMetricRepository) ListBySocialPostID(ctx context.Context, socialPostID int64) ([]engagement.SocialMetric, error) {
 	m.ctrl.T.Helper()

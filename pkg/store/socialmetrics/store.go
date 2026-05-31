@@ -55,12 +55,49 @@ func (s Store) ListBySocialPostID(ctx context.Context, socialPostID int64) ([]en
 	}
 	out := make([]engagement.SocialMetric, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, transform(r))
+		out = append(out, transformMetric(r))
 	}
 	return out, nil
 }
 
-func transform(r sqlc.SocialMetric) engagement.SocialMetric {
+// List returns social posts joined with their latest engagement counts,
+// filtered by the date range in f.
+func (s Store) List(ctx context.Context, f engagement.MetricsFilter) ([]engagement.SocialPostEngagement, error) {
+	var fromArg, toArg interface{}
+	if f.From != nil {
+		fromArg = *f.From
+	}
+	if f.To != nil {
+		toArg = *f.To
+	}
+	rows, err := s.sqlc.SocialPostsWithMetrics(ctx, sqlc.SocialPostsWithMetricsParams{
+		From: fromArg,
+		To:   toArg,
+	})
+	if err != nil {
+		return nil, err
+	}
+	out := make([]engagement.SocialPostEngagement, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, engagement.SocialPostEngagement{
+			ID:          r.ID,
+			IssueID:     r.IssueID,
+			Kind:        r.Kind,
+			Subject:     r.Subject.String,
+			Platform:    r.Platform,
+			Text:        r.Text,
+			PostURL:     r.PostUrl.String,
+			PostedAt:    r.PostedAt,
+			Likes:       r.Likes,
+			Reposts:     r.Reposts,
+			Comments:    r.Comments,
+			Impressions: r.Impressions,
+		})
+	}
+	return out, nil
+}
+
+func transformMetric(r sqlc.SocialMetric) engagement.SocialMetric {
 	return engagement.SocialMetric{
 		ID:           r.ID,
 		SocialPostID: r.SocialPostID,

@@ -8,7 +8,6 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
 
@@ -18,7 +17,7 @@ type Handler struct {
 	issuesRepo     digest.IssueRepository
 	emailEvents    engagement.EmailEventRepository
 	metricsService engagement.MetricsService
-	socialPosts    social.PostRepository
+	socialMetrics  engagement.SocialMetricRepository
 }
 
 // New constructs a Handler from the application App.
@@ -28,7 +27,7 @@ func New(a *godaily.App) *Handler {
 		issuesRepo:     a.Repository.Issues,
 		emailEvents:    a.Repository.EmailEvents,
 		metricsService: a.Service.Metrics,
-		socialPosts:    a.Repository.SocialPosts,
+		socialMetrics:  a.Repository.SocialMetrics,
 	}
 }
 

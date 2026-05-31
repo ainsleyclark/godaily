@@ -116,18 +116,3 @@ func (mr *MockPostRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockPostRepository)(nil).List), ctx, opts)
 }
-
-// ListWithMetrics mocks base method.
-func (m *MockPostRepository) ListWithMetrics(ctx context.Context, from, to *time.Time) ([]social.PostWithMetrics, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListWithMetrics", ctx, from, to)
-	ret0, _ := ret[0].([]social.PostWithMetrics)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListWithMetrics indicates an expected call of ListWithMetrics.
-func (mr *MockPostRepositoryMockRecorder) ListWithMetrics(ctx, from, to any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListWithMetrics", reflect.TypeOf((*MockPostRepository)(nil).ListWithMetrics), ctx, from, to)
-}

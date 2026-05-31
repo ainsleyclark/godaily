@@ -83,8 +83,4 @@ type PostRepository interface {
 
 	// List returns social posts filtered by opts. At least one option must be set.
 	List(ctx context.Context, opts PostListOptions) ([]Post, error)
-
-	// ListWithMetrics returns social posts joined with their latest engagement
-	// counts, optionally filtered by posted_at range.
-	ListWithMetrics(ctx context.Context, from, to *time.Time) ([]PostWithMetrics, error)
 }
