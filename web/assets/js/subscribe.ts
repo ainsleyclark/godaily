@@ -6,6 +6,14 @@
  * an inline error state.
  */
 
+declare global {
+	interface Window {
+		// Plausible's queue stub. Present only in production, where the
+		// analytics script is loaded; the optional call below no-ops in dev.
+		plausible?: (...args: unknown[]) => void;
+	}
+}
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function initSubscribeForm(): void {
@@ -43,6 +51,9 @@ async function handleSubmit(event: Event): Promise<void> {
 		});
 
 		if (res.ok) {
+			// Fire the Plausible Signup goal in the same session as the
+			// landing so it's attributed to the originating utm_source.
+			window.plausible?.('Signup');
 			window.location.href = '/thank-you/?email=' + encodeURIComponent(value);
 		} else if (res.status === 409) {
 			resetButton(button, hint, originalText, "You're already subscribed.");
