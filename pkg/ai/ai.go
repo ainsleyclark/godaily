@@ -4,35 +4,27 @@
 
 // Package ai provides a transport-only abstraction for AI prompt round-trips.
 // Domain logic (prompt building, response parsing, Go-news types) lives in
-// pkg/digest/prompts; this package only defines the Prompter/Provider
-// interfaces and the chaining Client.
+// pkg/digest/prompts; this package only defines the Prompter interface and the
+// chaining Client.
 package ai
 
 import "context"
 
-//go:generate go run go.uber.org/mock/mockgen -package=mockai -destination=../mocks/ai/Prompter.go . Prompter,Provider
+//go:generate go run go.uber.org/mock/mockgen -package=mockai -destination=../mocks/ai/Prompter.go . Prompter
 
-// Model identifiers passed to PromptWithModel. They are the real vendor model
-// IDs, exposed here so callers can name an actual model without importing a
-// vendor SDK. The Anthropic provider uses them verbatim; the Gemini fallback
-// maps them onto its own model line.
+// Model identifiers passed to Prompt. They are the real vendor model IDs,
+// exposed here so callers can name an actual model without importing a vendor
+// SDK. The Anthropic provider uses them verbatim; the Gemini fallback maps
+// them onto its own model line.
 const (
 	ModelSonnet = "claude-sonnet-4-6" // balanced default
 	ModelOpus   = "claude-opus-4-7"   // highest quality, for the edition intro
 )
 
-// Prompter is the caller-facing abstraction services depend on.
-// system is the task directive; user is the data payload.
-// Prompt uses the default model; PromptWithModel opts into a specific one.
+// Prompter abstracts a single AI prompt round-trip.
+// model selects the vendor model (use the Model* constants); system is the
+// task directive; user is the data payload.
 // Implementations must be safe for concurrent use.
 type Prompter interface {
-	Prompt(ctx context.Context, system, user string) ([]byte, error)
-	PromptWithModel(ctx context.Context, model, system, user string) ([]byte, error)
-}
-
-// Provider is the low-level, model-aware round-trip implemented by each vendor
-// (Anthropic, Gemini). It is internal to the ai layer: the chaining Client
-// composes Providers and satisfies the caller-facing Prompter.
-type Provider interface {
 	Prompt(ctx context.Context, model, system, user string) ([]byte, error)
 }

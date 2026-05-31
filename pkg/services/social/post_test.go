@@ -72,7 +72,7 @@ func TestService_Post(t *testing.T) {
 
 		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(featureJSON(), nil)
 
 		f.posts.EXPECT().HasPosted(gomock.Any(), int64(42), "bluesky").Return(true, nil)
@@ -97,7 +97,7 @@ func TestService_Post(t *testing.T) {
 
 		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(featureJSON(), nil)
 		// posts.HasPosted + posts.Create must NOT be called in dry-run.
 
@@ -122,7 +122,7 @@ func TestService_Post(t *testing.T) {
 
 		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(featureJSON(), nil)
 		f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
 
@@ -156,7 +156,7 @@ func TestService_Post(t *testing.T) {
 
 		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
-		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		f.prompter.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(featureJSON(), nil)
 		f.posts.EXPECT().HasPosted(gomock.Any(), gomock.Any(), "mastodon").Return(false, nil)
 		f.posts.EXPECT().Create(gomock.Any(), gomock.Any()).Return(social.Post{}, nil)
@@ -193,7 +193,7 @@ func TestService_Post(t *testing.T) {
 		f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").Return(issue, nil)
 		f.items.EXPECT().List(gomock.Any(), gomock.Any()).Return(sampleItems(), nil)
 		f.prompter.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(featureJSON(), nil)
 
 		f.posts.EXPECT().

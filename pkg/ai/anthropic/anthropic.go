@@ -22,7 +22,7 @@ const (
 	temperature  = 0.4
 )
 
-// Client satisfies ai.Provider using the Anthropic Messages API.
+// Client satisfies ai.Prompter using the Anthropic Messages API.
 type Client struct {
 	client anthropic.Client
 }

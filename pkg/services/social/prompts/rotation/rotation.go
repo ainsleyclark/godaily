@@ -87,7 +87,7 @@ func run(
 		return "", err
 	}
 
-	raw, err := p.Prompt(ctx, system, user)
+	raw, err := p.Prompt(ctx, ai.ModelSonnet, system, user)
 	if err != nil {
 		return "", errors.Wrap(err, "ai")
 	}

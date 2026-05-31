@@ -122,7 +122,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 
 		m := &mockEmail{}
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return(validJSON("first-post", "second-post", "third-post"), nil)
 		agg := Service{email: m, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
@@ -237,7 +237,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		t.Cleanup(func() { suggestHTMLTmpl = orig })
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("p"), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(validJSON("p"), nil)
 		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
@@ -264,7 +264,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic down"))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("anthropic down"))
 		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, issues: issueRepo, items: itemRepo}
 
 		err = agg.SendSuggestion(t.Context(), date)
@@ -291,7 +291,7 @@ func TestAggregator_SendSuggestion(t *testing.T) {
 		require.NoError(t, err)
 
 		p := mockai.NewMockPrompter(gomock.NewController(t))
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("rate limited"))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("rate limited"))
 		sl := &mockSlack{}
 		agg := Service{email: &mockEmail{}, adminEmailAddress: "to@example.com", prompter: p, slack: sl, issues: issueRepo, items: itemRepo}
 

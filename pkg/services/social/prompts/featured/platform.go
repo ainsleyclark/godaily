@@ -48,7 +48,7 @@ func reframe(ctx context.Context, p ai.Prompter, cfg platformConfig, f Featured)
 		string(payload),
 	)
 
-	raw, err := p.Prompt(ctx, system, user)
+	raw, err := p.Prompt(ctx, ai.ModelSonnet, system, user)
 	if err != nil {
 		return "", errors.Wrap(err, "ai")
 	}

@@ -70,7 +70,7 @@ func TestSynthesise(t *testing.T) {
 
 			p := mockai.NewMockPrompter(gomock.NewController(t))
 			if len(test.sections) > 0 {
-				p.EXPECT().PromptWithModel(gomock.Any(), ai.ModelOpus, gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
+				p.EXPECT().Prompt(gomock.Any(), ai.ModelOpus, gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
 			}
 			got, err := Synthesise(context.Background(), p, day, test.sections)
 			if test.wantErr != "" {

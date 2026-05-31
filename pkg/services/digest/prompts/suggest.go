@@ -65,7 +65,7 @@ func Suggest(ctx context.Context, p ai.Prompter, day time.Time, sections []news.
 		return Suggestion{}, ErrNoItems
 	}
 	user := buildUserPrompt(day, items)
-	raw, err := p.Prompt(ctx, buildSuggestSystem(), user)
+	raw, err := p.Prompt(ctx, ai.ModelSonnet, buildSuggestSystem(), user)
 	if err != nil {
 		return Suggestion{}, errors.Wrap(err, "ai")
 	}

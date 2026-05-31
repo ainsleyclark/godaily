@@ -89,7 +89,7 @@ func TestFeature(t *testing.T) {
 
 		resp := `{"title":"Go 1.30 released","url":"https://go.dev/blog/go1.30","source":"go_release","tag":"release","hook":"Go 1.30 ships generic type inference improvements that simplify constraints."}`
 		p.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return([]byte(resp), nil)
 
 		got, err := Feature(t.Context(), p, day, items)
@@ -108,7 +108,7 @@ func TestFeature(t *testing.T) {
 		p := mockai.NewMockPrompter(ctrl)
 
 		fenced := "```json\n" + `{"title":"t","url":"u","source":"s","tag":"article","hook":"h"}` + "\n```"
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(fenced), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(fenced), nil)
 
 		got, err := Feature(t.Context(), p, day, items)
 		require.NoError(t, err)
@@ -120,7 +120,7 @@ func TestFeature(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("boom"))
 
 		_, err := Feature(t.Context(), p, day, items)
 		require.Error(t, err)
@@ -132,7 +132,7 @@ func TestFeature(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte("  "), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte("  "), nil)
 
 		_, err := Feature(t.Context(), p, day, items)
 		require.Error(t, err)
@@ -143,7 +143,7 @@ func TestFeature(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return([]byte(`{"title":"t","url":"","source":"s","tag":"article","hook":"h"}`), nil)
 
 		_, err := Feature(context.Background(), p, day, items)

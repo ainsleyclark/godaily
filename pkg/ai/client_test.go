@@ -24,24 +24,24 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
-		fallback := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("result"), nil)
 		fallback.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("fallback"), nil)
 
-		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
+		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("result"), got)
 	})
 
-	t.Run("PromptWithModel Passes Model Through", func(t *testing.T) {
+	t.Run("Passes Model Through", func(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelOpus, "sys", "user").Return([]byte("result"), nil)
 
-		got, err := (&Client{primary: primary}).PromptWithModel(context.Background(), ModelOpus, "sys", "user")
+		got, err := (&Client{primary: primary}).Prompt(context.Background(), ModelOpus, "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("result"), got)
 	})
@@ -50,8 +50,8 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
-		fallback := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
 		slackMock := mockslack.NewMockSender(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("anthropic out"), nil)
 		fallback.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("gemini out"), nil)
@@ -61,7 +61,7 @@ func TestClient_Prompt(t *testing.T) {
 			sent = msg
 		})
 
-		got, err := (&Client{primary: primary, fallback: fallback, notifier: slackMock}).Prompt(context.Background(), "sys", "user")
+		got, err := (&Client{primary: primary, fallback: fallback, notifier: slackMock}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("anthropic out"), got)
 		assert.Contains(t, sent, "anthropic out")
@@ -72,10 +72,10 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("primary failed"))
 
-		_, err := (&Client{primary: primary}).Prompt(context.Background(), "sys", "user")
+		_, err := (&Client{primary: primary}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "primary failed")
 	})
@@ -84,12 +84,12 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
-		fallback := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("primary failed"))
 		fallback.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return([]byte("fallback"), nil)
 
-		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
+		got, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.NoError(t, err)
 		assert.Equal(t, []byte("fallback"), got)
 	})
@@ -98,12 +98,12 @@ func TestClient_Prompt(t *testing.T) {
 		t.Parallel()
 
 		ctrl := gomock.NewController(t)
-		primary := mockai.NewMockProvider(ctrl)
-		fallback := mockai.NewMockProvider(ctrl)
+		primary := mockai.NewMockPrompter(ctrl)
+		fallback := mockai.NewMockPrompter(ctrl)
 		primary.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("primary failed"))
 		fallback.EXPECT().Prompt(gomock.Any(), ModelSonnet, "sys", "user").Return(nil, errors.New("fallback failed"))
 
-		_, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), "sys", "user")
+		_, err := (&Client{primary: primary, fallback: fallback}).Prompt(context.Background(), ModelSonnet, "sys", "user")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "fallback failed")
 	})

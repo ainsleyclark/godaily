@@ -147,7 +147,7 @@ func Feature(ctx context.Context, p ai.Prompter, day time.Time, items []news.Ite
 		day.Format("2006-01-02"), string(payload),
 	)
 
-	raw, err := p.Prompt(ctx, featureSystem, user)
+	raw, err := p.Prompt(ctx, ai.ModelSonnet, featureSystem, user)
 	if err != nil {
 		return Featured{}, errors.Wrap(err, "ai")
 	}
