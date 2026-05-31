@@ -97,6 +97,22 @@ func (mr *MockSubscriberServiceMockRecorder) MarkSuppressed(ctx, email any) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MarkSuppressed", reflect.TypeOf((*MockSubscriberService)(nil).MarkSuppressed), ctx, email)
 }
 
+// SendConfirmationNudges mocks base method.
+func (m *MockSubscriberService) SendConfirmationNudges(ctx context.Context) (int, int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendConfirmationNudges", ctx)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// SendConfirmationNudges indicates an expected call of SendConfirmationNudges.
+func (mr *MockSubscriberServiceMockRecorder) SendConfirmationNudges(ctx any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendConfirmationNudges", reflect.TypeOf((*MockSubscriberService)(nil).SendConfirmationNudges), ctx)
+}
+
 // Subscribe mocks base method.
 func (m *MockSubscriberService) Subscribe(ctx context.Context, email string) (audience.Subscriber, error) {
 	m.ctrl.T.Helper()

@@ -54,6 +54,11 @@ sql:
               type: "Time"
               import: "time"
               pointer: true
+          - column: "subscribers.confirmation_nudge_sent_at"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true
           - column: "email_events.occurred_at"
             go_type: "time.Time"
           - column: "email_events.created_at"

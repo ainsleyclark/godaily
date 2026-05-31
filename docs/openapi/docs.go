@@ -297,6 +297,10 @@ const docTemplate = `{
                     "confirm_token": {
                         "type": "string"
                     },
+                    "confirmation_nudge_sent_at": {
+                        "description": "ConfirmationNudgeSentAt records when the one-time reminder to confirm\nwas sent, so an unconfirmed subscriber is never nudged more than once.",
+                        "type": "string"
+                    },
                     "confirmed_at": {
                         "type": "string"
                     },
@@ -944,6 +948,42 @@ const docTemplate = `{
                     }
                 ],
                 "summary": "List digest issues.",
+                "tags": [
+                    "digest"
+                ]
+            }
+        },
+        "/digest/nudge": {
+            "get": {
+                "description": "Sends a one-time reminder to subscribers who signed up but never confirmed.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully sent confirmation nudges"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to send confirmation nudges"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Send confirmation nudges.",
                 "tags": [
                     "digest"
                 ]

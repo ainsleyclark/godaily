@@ -54,6 +54,11 @@ UPDATE subscribers
 SET suppressed_at = CURRENT_TIMESTAMP
 WHERE email = ? AND suppressed_at IS NULL;
 
+-- name: SubscriberMarkNudgeSent :exec
+UPDATE subscribers
+SET confirmation_nudge_sent_at = CURRENT_TIMESTAMP
+WHERE id = ? AND confirmation_nudge_sent_at IS NULL;
+
 -- name: SubscriberListActive :many
 SELECT * FROM subscribers
 WHERE unsubscribed_at IS NULL

@@ -73,13 +73,14 @@ type SocialPost struct {
 }
 
 type Subscriber struct {
-	ID               int64          `json:"id"`
-	Email            string         `json:"email"`
-	UnsubscribeToken string         `json:"unsubscribe_token"`
-	UnsubscribedAt   *time.Time     `json:"unsubscribed_at"`
-	CreatedAt        time.Time      `json:"created_at"`
-	ConfirmToken     sql.NullString `json:"confirm_token"`
-	ConfirmedAt      *time.Time     `json:"confirmed_at"`
-	BouncedAt        *time.Time     `json:"bounced_at"`
-	SuppressedAt     *time.Time     `json:"suppressed_at"`
+	ID                      int64          `json:"id"`
+	Email                   string         `json:"email"`
+	UnsubscribeToken        string         `json:"unsubscribe_token"`
+	UnsubscribedAt          *time.Time     `json:"unsubscribed_at"`
+	CreatedAt               time.Time      `json:"created_at"`
+	ConfirmToken            sql.NullString `json:"confirm_token"`
+	ConfirmedAt             *time.Time     `json:"confirmed_at"`
+	BouncedAt               *time.Time     `json:"bounced_at"`
+	SuppressedAt            *time.Time     `json:"suppressed_at"`
+	ConfirmationNudgeSentAt *time.Time     `json:"confirmation_nudge_sent_at"`
 }

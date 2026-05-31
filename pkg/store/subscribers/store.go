@@ -153,6 +153,10 @@ func (s Store) MarkSuppressed(ctx context.Context, email string) error {
 	return s.sqlc.SubscriberMarkSuppressed(ctx, strings.ToLower(strings.TrimSpace(email)))
 }
 
+func (s Store) MarkNudgeSent(ctx context.Context, id int64) error {
+	return s.sqlc.SubscriberMarkNudgeSent(ctx, id)
+}
+
 func (s Store) CountActive(ctx context.Context) (int64, error) {
 	return s.sqlc.SubscriberCountActive(ctx)
 }
@@ -168,7 +172,7 @@ func (s Store) CountAll(ctx context.Context) (int64, error) {
 func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Subscriber, error) {
 	rows, err := s.db.QueryContext(
 		ctx,
-		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
+		"SELECT id, email, unsubscribe_token, COALESCE(confirm_token,''), confirmed_at, unsubscribed_at, bounced_at, suppressed_at, confirmation_nudge_sent_at, created_at FROM subscribers ORDER BY id ASC LIMIT ? OFFSET ?",
 		opts.Limit(), opts.Offset(),
 	)
 	if err != nil {
@@ -181,10 +185,11 @@ func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Sub
 		var (
 			sub                                    audience.Subscriber
 			confirmedAt, unsubscribedAt, bouncedAt sql.NullTime
+			suppressedAt, nudgeSentAt              sql.NullTime
 		)
 		if err := rows.Scan(
 			&sub.ID, &sub.Email, &sub.UnsubscribeToken, &sub.ConfirmToken,
-			&confirmedAt, &unsubscribedAt, &bouncedAt, &sub.CreatedAt,
+			&confirmedAt, &unsubscribedAt, &bouncedAt, &suppressedAt, &nudgeSentAt, &sub.CreatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -196,6 +201,12 @@ func (s Store) List(ctx context.Context, opts store.ListOptions) ([]audience.Sub
 		}
 		if bouncedAt.Valid {
 			sub.BouncedAt = &bouncedAt.Time
+		}
+		if suppressedAt.Valid {
+			sub.SuppressedAt = &suppressedAt.Time
+		}
+		if nudgeSentAt.Valid {
+			sub.ConfirmationNudgeSentAt = &nudgeSentAt.Time
 		}
 		out = append(out, sub)
 	}
@@ -217,15 +228,16 @@ func (s Store) ListActive(ctx context.Context) ([]audience.Subscriber, error) {
 
 func transformSubscriber(s sqlc.Subscriber) audience.Subscriber {
 	return audience.Subscriber{
-		ID:               s.ID,
-		Email:            s.Email,
-		UnsubscribeToken: s.UnsubscribeToken,
-		ConfirmToken:     s.ConfirmToken.String,
-		ConfirmedAt:      s.ConfirmedAt,
-		UnsubscribedAt:   s.UnsubscribedAt,
-		BouncedAt:        s.BouncedAt,
-		SuppressedAt:     s.SuppressedAt,
-		CreatedAt:        s.CreatedAt,
+		ID:                      s.ID,
+		Email:                   s.Email,
+		UnsubscribeToken:        s.UnsubscribeToken,
+		ConfirmToken:            s.ConfirmToken.String,
+		ConfirmedAt:             s.ConfirmedAt,
+		UnsubscribedAt:          s.UnsubscribedAt,
+		BouncedAt:               s.BouncedAt,
+		SuppressedAt:            s.SuppressedAt,
+		ConfirmationNudgeSentAt: s.ConfirmationNudgeSentAt,
+		CreatedAt:               s.CreatedAt,
 	}
 }
 
