@@ -177,6 +177,6 @@ func TestBuildDigestSystem(t *testing.T) {
 
 	got := buildDigestSystem()
 	assert.Contains(t, got, digestSystemIntro)
-	assert.Contains(t, got, "## Style guide")
-	assert.Contains(t, got, "Voice & style guide")
+	assert.Contains(t, got, introStyleMD)
+	assert.Contains(t, got, "Editorial voice guide")
 }

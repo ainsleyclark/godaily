@@ -22,20 +22,20 @@ type notifier interface {
 	MustSend(ctx context.Context, message string)
 }
 
-// Client chains a primary Prompter with an optional fallback.
-// It satisfies Prompter itself so it can be composed freely.
+// Client chains a primary Provider with an optional fallback.
+// It satisfies the caller-facing Prompter so it can be composed freely.
 type Client struct {
-	primary  Prompter
-	fallback Prompter
+	primary  Provider
+	fallback Provider
 	notifier notifier
 }
 
 // New constructs a Client from config, using Anthropic as the primary
-// Prompter and Gemini as an optional fallback when GeminiAPIKey is set.
+// Provider and Gemini as an optional fallback when GeminiAPIKey is set.
 // n receives a side-by-side comparison of both providers' output.
 func New(cfg env.Config, n notifier) *Client {
 	primary := anthropic.New(cfg.AnthropicAPIKey)
-	var fallback Prompter
+	var fallback Provider
 	if cfg.GeminiAPIKey != "" {
 		g, err := gemini.New(cfg.GeminiAPIKey)
 		if err != nil {
@@ -47,21 +47,28 @@ func New(cfg env.Config, n notifier) *Client {
 	return &Client{primary: primary, fallback: fallback, notifier: n}
 }
 
-// Prompt calls the primary (Anthropic) and fallback (Gemini) prompters, posts
-// a side-by-side comparison of their output to Slack, then returns the
-// primary's result. The fallback's result is used only when the primary fails.
+// Prompt is the default-model entry point. It delegates to PromptWithModel
+// using ModelSonnet, the balanced default for high-volume tasks.
+func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
+	return c.PromptWithModel(ctx, ModelSonnet, system, user)
+}
+
+// PromptWithModel calls the primary (Anthropic) and fallback (Gemini)
+// providers with the given model, posts a side-by-side comparison of their
+// output to Slack, then returns the primary's result. The fallback's result is
+// used only when the primary fails.
 //
 // TODO: the dual-call comparison is temporary, kept while evaluating whether
 // Gemini can replace Anthropic. Drop it once a single provider is chosen.
-func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	primaryRaw, primaryErr := c.primary.Prompt(ctx, system, user)
+func (c *Client) PromptWithModel(ctx context.Context, model, system, user string) ([]byte, error) {
+	primaryRaw, primaryErr := c.primary.Prompt(ctx, model, system, user)
 
 	var (
 		fallbackRaw []byte
 		fallbackErr error
 	)
 	if c.fallback != nil {
-		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, system, user)
+		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, model, system, user)
 	}
 
 	c.notifyComparison(ctx, primaryRaw, primaryErr, fallbackRaw, fallbackErr)

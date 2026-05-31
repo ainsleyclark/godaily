@@ -9,12 +9,31 @@ package gemini
 import (
 	"context"
 	"log/slog"
+	"strings"
 
 	"github.com/pkg/errors"
 	"google.golang.org/genai"
 )
 
-const geminiModel = "gemini-2.0-flash"
+const (
+	// geminiFlash is the balanced default, used for everything except the
+	// premium-tier requests.
+	geminiFlash = "gemini-2.0-flash"
+	// geminiPro is the higher-quality model the fallback uses when the caller
+	// asked for a premium (Opus-class) model upstream.
+	geminiPro = "gemini-2.5-pro"
+)
+
+// modelFor maps a caller-supplied model ID (an Anthropic ID such as
+// "claude-opus-4-7") onto a Gemini model. Gemini cannot run Claude models, so
+// it mirrors the requested quality: a premium (Opus-class) request maps to
+// Pro, everything else to Flash.
+func modelFor(model string) string {
+	if strings.HasPrefix(model, "claude-opus") {
+		return geminiPro
+	}
+	return geminiFlash
+}
 
 // contentGenerator abstracts genai.Models to allow test doubles.
 type contentGenerator interface {
@@ -39,15 +58,20 @@ func New(apiKey string) (*Client, error) {
 }
 
 // Prompt sends system and user prompts to Gemini and returns the first
-// candidate's text content bytes.
-func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	slog.InfoContext(ctx, "Calling Gemini fallback",
+// candidate's text content bytes. model is the caller-supplied (Anthropic) ID,
+// mapped onto Gemini's own model line via modelFor.
+func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
+	geminiModel := modelFor(model)
+
+	slog.InfoContext(
+		ctx, "Calling Gemini fallback",
 		"model", geminiModel,
 		"system_len", len(system),
 		"user_len", len(user),
 	)
 
-	resp, err := c.gen.GenerateContent(ctx, geminiModel,
+	resp, err := c.gen.GenerateContent(
+		ctx, geminiModel,
 		[]*genai.Content{
 			{Role: "user", Parts: []*genai.Part{genai.NewPartFromText(user)}},
 		},
@@ -60,7 +84,8 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 		},
 	)
 	if err != nil {
-		slog.ErrorContext(ctx, "Gemini API request failed",
+		slog.ErrorContext(
+			ctx, "Gemini API request failed",
 			"model", geminiModel,
 			"err", err,
 		)
@@ -72,7 +97,8 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 		if len(resp.Candidates) > 0 {
 			finishReason = string(resp.Candidates[0].FinishReason)
 		}
-		slog.WarnContext(ctx, "Gemini returned empty candidates",
+		slog.WarnContext(
+			ctx, "Gemini returned empty candidates",
 			"model", geminiModel,
 			"finish_reason", finishReason,
 		)
@@ -80,7 +106,8 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 	}
 
 	text := resp.Text()
-	slog.InfoContext(ctx, "Gemini fallback response received",
+	slog.InfoContext(
+		ctx, "Gemini fallback response received",
 		"model", geminiModel,
 		"response_len", len(text),
 	)

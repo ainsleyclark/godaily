@@ -15,10 +15,17 @@ import (
 )
 
 // styleMD is the embedded voice guide that the model must follow when
-// drafting posts.
+// drafting social posts.
 //
 //go:embed style.md
 var styleMD string
+
+// introStyleMD is the embedded editorial voice guide for the digest email
+// intro. It is dry and grounded like styleMD, but in email-paragraph form
+// rather than the social-post form (no hashtags, line breaks, or char cap).
+//
+//go:embed intro-style.md
+var introStyleMD string
 
 // promptItem is the wire shape sent to the model — a stripped-down
 // projection of news.Item that drops fields irrelevant to a post
