@@ -63,7 +63,7 @@ func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
 		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		li := linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ownerLinkedInMemberURN)
+		li := linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ownerLinkedInMemberID)
 		out[social.LinkedIn] = selfEngagementFetcher{
 			inner:   li,
 			checker: li,

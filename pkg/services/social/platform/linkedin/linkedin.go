@@ -286,7 +286,7 @@ func (c *Client) HasLiked(ctx context.Context, postURL string) (bool, error) {
 		}
 
 		for _, el := range body.Elements {
-			if el.Actor == c.memberURN {
+			if strings.Contains(el.Actor, c.memberURN) {
 				return true, nil
 			}
 		}
@@ -345,7 +345,7 @@ func (c *Client) HasReposted(ctx context.Context, postURL string) (bool, error) 
 		}
 
 		for _, el := range body.Elements {
-			if el.Author == c.memberURN {
+			if strings.Contains(el.Author, c.memberURN) {
 				return true, nil
 			}
 		}

@@ -379,20 +379,20 @@ func TestBuildAnnotations(t *testing.T) {
 func TestClient_HasLiked(t *testing.T) {
 	t.Parallel()
 
-	const memberURN = "urn:li:person:abc123"
+	const memberID = "abc123EncodedId"
 	const postURL = "https://www.linkedin.com/feed/update/urn:li:share:7234567890/"
 
-	t.Run("Returns true when member URN found in first page", func(t *testing.T) {
+	t.Run("Returns true when member ID found in first page", func(t *testing.T) {
 		t.Parallel()
 
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "/rest/reactions", r.URL.Path)
 			assert.Equal(t, "entity", r.URL.Query().Get("q"))
-			_, _ = w.Write([]byte(`{"paging":{"total":1},"elements":[{"actor":"urn:li:person:abc123"}]}`))
+			_, _ = w.Write([]byte(`{"paging":{"total":1},"elements":[{"actor":"urn:li:person:abc123EncodedId"}]}`))
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = srv.URL
 
 		got, err := c.HasLiked(context.Background(), postURL)
@@ -400,7 +400,23 @@ func TestClient_HasLiked(t *testing.T) {
 		assert.True(t, got)
 	})
 
-	t.Run("Returns false when member URN not present", func(t *testing.T) {
+	t.Run("Matches regardless of URN prefix", func(t *testing.T) {
+		t.Parallel()
+
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			_, _ = w.Write([]byte(`{"paging":{"total":1},"elements":[{"actor":"urn:li:fsd_profile:abc123EncodedId"}]}`))
+		}))
+		defer srv.Close()
+
+		c := New("tok", "urn:li:organization:1", memberID)
+		c.baseURL = srv.URL
+
+		got, err := c.HasLiked(context.Background(), postURL)
+		require.NoError(t, err)
+		assert.True(t, got)
+	})
+
+	t.Run("Returns false when member ID not present", func(t *testing.T) {
 		t.Parallel()
 
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
@@ -408,7 +424,7 @@ func TestClient_HasLiked(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = srv.URL
 
 		got, err := c.HasLiked(context.Background(), postURL)
@@ -434,12 +450,12 @@ func TestClient_HasLiked(t *testing.T) {
 			if r.URL.Query().Get("start") == "0" {
 				_, _ = w.Write([]byte(`{"paging":{"total":2},"elements":[{"actor":"urn:li:person:other"}]}`))
 			} else {
-				_, _ = w.Write([]byte(`{"paging":{"total":2},"elements":[{"actor":"urn:li:person:abc123"}]}`))
+				_, _ = w.Write([]byte(`{"paging":{"total":2},"elements":[{"actor":"urn:li:person:abc123EncodedId"}]}`))
 			}
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = srv.URL
 
 		got, err := c.HasLiked(context.Background(), postURL)
@@ -451,7 +467,7 @@ func TestClient_HasLiked(t *testing.T) {
 	t.Run("Transport error surfaces as error", func(t *testing.T) {
 		t.Parallel()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = "http://127.0.0.1:1"
 
 		_, err := c.HasLiked(context.Background(), postURL)
@@ -462,20 +478,20 @@ func TestClient_HasLiked(t *testing.T) {
 func TestClient_HasReposted(t *testing.T) {
 	t.Parallel()
 
-	const memberURN = "urn:li:person:abc123"
+	const memberID = "abc123EncodedId"
 	const postURL = "https://www.linkedin.com/feed/update/urn:li:share:7234567890/"
 
-	t.Run("Returns true when member URN found in reshares", func(t *testing.T) {
+	t.Run("Returns true when member ID found in reshares", func(t *testing.T) {
 		t.Parallel()
 
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			assert.Equal(t, "/rest/shares", r.URL.Path)
 			assert.Equal(t, "sharesOfShare", r.URL.Query().Get("q"))
-			_, _ = w.Write([]byte(`{"paging":{"total":1},"elements":[{"author":"urn:li:person:abc123"}]}`))
+			_, _ = w.Write([]byte(`{"paging":{"total":1},"elements":[{"author":"urn:li:person:abc123EncodedId"}]}`))
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = srv.URL
 
 		got, err := c.HasReposted(context.Background(), postURL)
@@ -483,7 +499,7 @@ func TestClient_HasReposted(t *testing.T) {
 		assert.True(t, got)
 	})
 
-	t.Run("Returns false when member URN not present", func(t *testing.T) {
+	t.Run("Returns false when member ID not present", func(t *testing.T) {
 		t.Parallel()
 
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
@@ -491,7 +507,7 @@ func TestClient_HasReposted(t *testing.T) {
 		}))
 		defer srv.Close()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = srv.URL
 
 		got, err := c.HasReposted(context.Background(), postURL)
@@ -511,7 +527,7 @@ func TestClient_HasReposted(t *testing.T) {
 	t.Run("Transport error surfaces as error", func(t *testing.T) {
 		t.Parallel()
 
-		c := New("tok", "urn:li:organization:1", memberURN)
+		c := New("tok", "urn:li:organization:1", memberID)
 		c.baseURL = "http://127.0.0.1:1"
 
 		_, err := c.HasReposted(context.Background(), postURL)
