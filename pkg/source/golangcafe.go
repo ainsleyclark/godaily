@@ -17,16 +17,19 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
 )
 
-// GolangCafe scrapes the Golang.cafe job board. The site sits behind Cloudflare
-// and 404s its /rss feed to datacenter proxies, but the listing page renders,
-// and — being SEO-tuned for Google Jobs — embeds a schema.org JobPosting
-// JSON-LD block for each listing. We parse those structured blocks rather than
-// brittle markup. The board is Go-only, so every posting is relevant.
+// GolangCafe scrapes the Golang.cafe job board. The site is a SvelteKit app
+// behind Vercel bot protection, and its /rss feed 404s to proxies, but the
+// listing page embeds the full set of listings as a SvelteKit hydration
+// payload — a `jobPosts` array carrying explicit title/company/location/
+// salary/remote/date fields. We parse that structured payload (richer and
+// less brittle than the rendered markup); the JSON-LD on the page only lists
+// bare job URLs, and the canonical /jobs/<slug> links live in the anchors,
+// which we cross-reference by id. The board is Go-only, so every posting is
+// relevant.
 //
 // ScraperAPI is used WITHOUT keep_headers so the proxy presents its own
-// browser-like identity to Cloudflare (forwarding our godaily User-Agent is
-// what the /rss feed rejected). Without keys it falls back to a direct request,
-// which Cloudflare is liable to block.
+// browser-like identity to clear Vercel's challenge; the data lives in the
+// initial HTML, so no JS rendering is needed.
 type GolangCafe struct {
 	url string
 	now func() time.Time
@@ -41,7 +44,7 @@ func init() {
 const golangCafeURL = "https://golang.cafe"
 
 // NewGolangCafe creates a Golang.cafe scraper, proxying through ScraperAPI
-// (standard pool) when keys are available to clear Cloudflare.
+// (standard pool) when keys are available to clear Vercel's bot protection.
 func NewGolangCafe(cfg env.Config) *GolangCafe {
 	return &GolangCafe{
 		url: ingest.ScraperURL(cfg.ScraperAPIKeys, golangCafeURL, ingest.WithoutPremium()),
@@ -49,32 +52,48 @@ func NewGolangCafe(cfg env.Config) *GolangCafe {
 	}
 }
 
-// Fetch scrapes the listing page and returns each JobPosting JSON-LD block as a
-// news item.
+// Fetch scrapes the listing page and returns its embedded job payload as items.
 func (g GolangCafe) Fetch(ctx context.Context) ([]news.Item, error) {
 	doc, err := ingest.FetchHTML(ctx, g.url, "golang cafe")
 	if err != nil {
 		return nil, err
 	}
+
+	raw := extractGolangCafeJobs(doc)
+	urls := golangCafeJobURLs(doc)
 	now := g.now().UTC()
-	var jobs []golangCafeJob
-	doc.Find(`script[type="application/ld+json"]`).Each(func(_ int, s *goquery.Selection) {
-		for _, jp := range jobPostingsFromJSONLD([]byte(s.Text())) {
-			jobs = append(jobs, newGolangCafeJob(jp, now))
-		}
-	})
+
+	jobs := make([]golangCafeJob, 0, len(raw))
+	for _, r := range raw {
+		jobs = append(jobs, newGolangCafeJob(r, urls, now))
+	}
 	return ingest.TransformAll(ctx, jobs), nil
 }
 
+// golangCafeRawJob mirrors the fields we need from a SvelteKit `jobPosts`
+// entry. Unknown fields (imageId, tags, websites, image, …) are ignored.
+type golangCafeRawJob struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	Company    string `json:"company"`
+	Location   string `json:"location"`
+	Link       string `json:"link"`
+	Currency   string `json:"currency"`
+	Remote     string `json:"remote"`
+	SalaryFrom string `json:"salaryFrom"`
+	SalaryTo   string `json:"salaryTo"`
+	Date       int64  `json:"date"`
+}
+
 type golangCafeJob struct {
-	title    string
-	url      string
-	company  string
-	location string
-	salary   string
-	remote   bool
-	ageDays  int
-	now      time.Time
+	title     string
+	company   string
+	location  string
+	url       string
+	salary    string
+	remote    bool
+	ageDays   int
+	published time.Time
 }
 
 func (j golangCafeJob) ShouldInclude() bool   { return j.title != "" && j.url != "" }
@@ -95,204 +114,217 @@ func (j golangCafeJob) Transform() news.Item {
 		Title:     buildJobTitle(j.company, j.title, j.location),
 		URL:       j.url,
 		Author:    author,
-		Snippet:   j.salary, // golang.cafe always discloses a range
+		Snippet:   j.salary,
 		Tag:       news.TagJobs,
 		Score:     score,
-		Published: j.now,
+		Published: j.published,
 	}
 }
 
-// newGolangCafeJob projects a parsed JobPosting object onto our intermediate
-// type, deriving remote status from the location, jobLocationType, and the
-// presence of applicantLocationRequirements.
-func newGolangCafeJob(jp map[string]any, now time.Time) golangCafeJob {
-	location := jsonLDLocation(jp["jobLocation"])
-	remote := isRemote(location) ||
-		strings.EqualFold(jsonLDString(jp["jobLocationType"]), "TELECOMMUTE") ||
-		jp["applicantLocationRequirements"] != nil
-	if location == "" && remote {
-		location = "Remote"
+// newGolangCafeJob projects a raw payload entry onto our intermediate type,
+// resolving the canonical /jobs/<slug> URL by id and stamping the real posting
+// date so the digest's recency window can age out stale listings.
+func newGolangCafeJob(r golangCafeRawJob, urls map[string]string, now time.Time) golangCafeJob {
+	url := urls[r.ID]
+	if url == "" && strings.HasPrefix(r.Link, "http") {
+		url = r.Link // fall back to the application URL when no canonical link
 	}
+
+	published := now
+	if r.Date > 0 {
+		published = time.UnixMilli(r.Date).UTC()
+	}
+	ageDays := int(now.Sub(published).Hours() / 24)
+	if ageDays < 0 {
+		ageDays = 0
+	}
+
 	return golangCafeJob{
-		title:    strings.TrimSpace(jsonLDString(jp["title"])),
-		url:      strings.TrimSpace(jsonLDString(jp["url"])),
-		company:  jsonLDCompany(jp["hiringOrganization"]),
-		location: location,
-		salary:   jsonLDSalary(jp["baseSalary"]),
-		remote:   remote,
-		ageDays:  jsonLDAgeDays(now, jsonLDString(jp["datePosted"])),
-		now:      now,
+		title:     strings.TrimSpace(r.Title),
+		company:   strings.TrimSpace(r.Company),
+		location:  strings.TrimSpace(r.Location),
+		url:       url,
+		salary:    golangCafeSalary(r.Currency, r.SalaryFrom, r.SalaryTo),
+		remote:    r.Remote != "" && r.Remote != "on_site",
+		ageDays:   ageDays,
+		published: published,
 	}
 }
 
-// jsonLDAgeDays parses a JobPosting datePosted ("2006-01-02" or RFC3339) into
-// whole days since now, floored at zero.
-func jsonLDAgeDays(now time.Time, datePosted string) int {
-	datePosted = strings.TrimSpace(datePosted)
-	if datePosted == "" {
-		return 0
+// golangCafeSalary renders the payload's currency symbol and salary bounds as
+// e.g. "£90k–£120k", a single-bound variant, or "" when undisclosed. The
+// payload's currency is already a symbol ("$", "£", "€").
+func golangCafeSalary(currency, from, to string) string {
+	f := digitsToInt(from)
+	t := digitsToInt(to)
+	if f == 0 && t == 0 {
+		return ""
 	}
-	posted, err := time.Parse("2006-01-02", datePosted)
-	if err != nil {
-		posted, err = time.Parse(time.RFC3339, datePosted)
-		if err != nil {
-			return 0
-		}
+	sym := strings.TrimSpace(currency)
+	if sym == "" {
+		sym = "$"
 	}
-	days := int(now.Sub(posted.UTC()).Hours() / 24)
-	if days < 0 {
-		return 0
+	switch {
+	case f > 0 && t > 0:
+		return sym + formatThousands(float64(f)) + "–" + sym + formatThousands(float64(t))
+	case f > 0:
+		return sym + formatThousands(float64(f)) + "+"
+	default:
+		return "up to " + sym + formatThousands(float64(t))
 	}
-	return days
 }
 
-// jobPostingsFromJSONLD parses a JSON-LD script body and returns every
-// schema.org JobPosting object found anywhere within it — handling a top-level
-// object or array, an @graph wrapper, or an ItemList's nested items.
-func jobPostingsFromJSONLD(raw []byte) []map[string]any {
-	var root any
-	if json.Unmarshal(raw, &root) != nil {
-		return nil
-	}
-	var out []map[string]any
-	var walk func(n any)
-	walk = func(n any) {
-		switch t := n.(type) {
-		case map[string]any:
-			if jsonLDTypeIs(t["@type"], "JobPosting") {
-				out = append(out, t)
-			}
-			for _, v := range t {
-				walk(v)
-			}
-		case []any:
-			for _, v := range t {
-				walk(v)
-			}
+// digitsToInt parses an integer from a string that may carry spaces or other
+// separators (the payload formats salaries as e.g. "200 000").
+func digitsToInt(s string) int {
+	var b strings.Builder
+	for _, r := range s {
+		if r >= '0' && r <= '9' {
+			b.WriteRune(r)
 		}
 	}
-	walk(root)
+	if b.Len() == 0 {
+		return 0
+	}
+	n, _ := strconv.Atoi(b.String())
+	return n
+}
+
+// golangCafeJobURLs maps a job id to its canonical /jobs/<slug> URL by reading
+// the listing anchors, whose slug always ends in the id.
+func golangCafeJobURLs(doc *goquery.Document) map[string]string {
+	out := map[string]string{}
+	doc.Find("a[href]").Each(func(_ int, s *goquery.Selection) {
+		href, _ := s.Attr("href")
+		if !strings.HasPrefix(href, "/jobs/") {
+			return
+		}
+		slug := strings.TrimPrefix(href, "/jobs/")
+		if i := strings.LastIndex(slug, "-"); i >= 0 && i+1 < len(slug) {
+			out[slug[i+1:]] = golangCafeURL + href
+		}
+	})
 	return out
 }
 
-// jsonLDTypeIs reports whether a JSON-LD @type (a string or array of strings)
-// contains want, case-insensitively.
-func jsonLDTypeIs(v any, want string) bool {
-	switch t := v.(type) {
-	case string:
-		return strings.EqualFold(t, want)
-	case []any:
-		for _, e := range t {
-			if s, ok := e.(string); ok && strings.EqualFold(s, want) {
-				return true
+// extractGolangCafeJobs finds the SvelteKit hydration script and decodes its
+// `jobPosts` array. The payload is a JS object literal (unquoted keys), so we
+// isolate the array and quote its keys before unmarshalling.
+func extractGolangCafeJobs(doc *goquery.Document) []golangCafeRawJob {
+	var jobs []golangCafeRawJob
+	doc.Find("script").EachWithBreak(func(_ int, s *goquery.Selection) bool {
+		txt := s.Text()
+		idx := strings.Index(txt, "jobPosts:")
+		if idx < 0 {
+			return true
+		}
+		rel := strings.IndexByte(txt[idx:], '[')
+		if rel < 0 {
+			return true
+		}
+		arr, ok := extractJSArray(txt[idx+rel:])
+		if !ok {
+			return true
+		}
+		if err := json.Unmarshal([]byte(jsObjectToJSON(arr)), &jobs); err != nil {
+			return true // keep scanning; another script might carry it
+		}
+		return false
+	})
+	return jobs
+}
+
+// extractJSArray returns the balanced "[ … ]" beginning at s[0], tracking string
+// literals so brackets inside descriptions don't terminate it early.
+func extractJSArray(s string) (string, bool) {
+	if len(s) == 0 || s[0] != '[' {
+		return "", false
+	}
+	depth, inStr, esc := 0, false, false
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if inStr {
+			switch {
+			case esc:
+				esc = false
+			case c == '\\':
+				esc = true
+			case c == '"':
+				inStr = false
+			}
+			continue
+		}
+		switch c {
+		case '"':
+			inStr = true
+		case '[', '{':
+			depth++
+		case ']', '}':
+			depth--
+			if depth == 0 {
+				return s[:i+1], true
 			}
 		}
 	}
-	return false
+	return "", false
 }
 
-func jsonLDString(v any) string {
-	s, _ := v.(string)
-	return s
-}
-
-// jsonLDFirstMap returns v as a map, or the first map element when v is an array
-// (JSON-LD fields are routinely either a single object or a list of them).
-func jsonLDFirstMap(v any) map[string]any {
-	switch t := v.(type) {
-	case map[string]any:
-		return t
-	case []any:
-		for _, e := range t {
-			if m, ok := e.(map[string]any); ok {
-				return m
+// jsObjectToJSON quotes the unquoted identifier keys in a JS object literal so
+// it parses as JSON. It is string-aware, so identifiers inside string values
+// (e.g. "Salary:" in a description) are left untouched, and bareword values
+// like true/false/null pass through unquoted.
+func jsObjectToJSON(s string) string {
+	var b strings.Builder
+	b.Grow(len(s) + len(s)/16)
+	inStr, esc := false, false
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if inStr {
+			b.WriteByte(c)
+			switch {
+			case esc:
+				esc = false
+			case c == '\\':
+				esc = true
+			case c == '"':
+				inStr = false
 			}
+			continue
 		}
-	}
-	return nil
-}
-
-// jsonLDCompany reads hiringOrganization, which may be a bare string or an
-// Organization object with a name.
-func jsonLDCompany(v any) string {
-	if s := strings.TrimSpace(jsonLDString(v)); s != "" {
-		return s
-	}
-	if m := jsonLDFirstMap(v); m != nil {
-		return strings.TrimSpace(jsonLDString(m["name"]))
-	}
-	return ""
-}
-
-// jsonLDLocation reads jobLocation, preferring the most specific address part
-// available (locality, then region, then country).
-func jsonLDLocation(v any) string {
-	m := jsonLDFirstMap(v)
-	if m == nil {
-		return ""
-	}
-	addr := jsonLDFirstMap(m["address"])
-	if addr == nil {
-		return strings.TrimSpace(jsonLDString(m["name"]))
-	}
-	for _, k := range []string{"addressLocality", "addressRegion", "addressCountry"} {
-		if s := strings.TrimSpace(jsonLDString(addr[k])); s != "" {
-			return s
+		if c == '"' {
+			inStr = true
+			b.WriteByte(c)
+			continue
 		}
+		if isIdentStart(c) {
+			j := i
+			for j < len(s) && isIdentPart(s[j]) {
+				j++
+			}
+			ident := s[i:j]
+			k := j
+			for k < len(s) && (s[k] == ' ' || s[k] == '\t' || s[k] == '\n' || s[k] == '\r') {
+				k++
+			}
+			if k < len(s) && s[k] == ':' {
+				b.WriteByte('"')
+				b.WriteString(ident)
+				b.WriteByte('"')
+			} else {
+				b.WriteString(ident)
+			}
+			i = j - 1
+			continue
+		}
+		b.WriteByte(c)
 	}
-	return ""
+	return b.String()
 }
 
-// jsonLDSalary renders a baseSalary MonetaryAmount as e.g. "$120k–$160k", or a
-// single-bound variant, or "" when no numeric range is present.
-func jsonLDSalary(v any) string {
-	m := jsonLDFirstMap(v)
-	if m == nil {
-		return ""
-	}
-	val := jsonLDFirstMap(m["value"])
-	if val == nil {
-		return ""
-	}
-	minV := jsonLDNumber(val["minValue"])
-	maxV := jsonLDNumber(val["maxValue"])
-	sym := currencySymbol(jsonLDString(m["currency"]))
-	switch {
-	case minV > 0 && maxV > 0:
-		return sym + formatThousands(minV) + "–" + sym + formatThousands(maxV)
-	case minV > 0:
-		return sym + formatThousands(minV) + "+"
-	case maxV > 0:
-		return "up to " + sym + formatThousands(maxV)
-	default:
-		return ""
-	}
+func isIdentStart(c byte) bool {
+	return c == '_' || c == '$' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
-// jsonLDNumber coerces a JSON-LD numeric field, which may arrive as a number or
-// a comma-formatted string.
-func jsonLDNumber(v any) float64 {
-	switch t := v.(type) {
-	case float64:
-		return t
-	case string:
-		f, _ := strconv.ParseFloat(strings.ReplaceAll(strings.TrimSpace(t), ",", ""), 64)
-		return f
-	}
-	return 0
-}
-
-// currencySymbol maps an ISO currency code to its symbol, defaulting to "$" when
-// absent and falling back to the code itself for anything unmapped.
-func currencySymbol(code string) string {
-	switch strings.ToUpper(strings.TrimSpace(code)) {
-	case "USD", "":
-		return "$"
-	case "GBP":
-		return "£"
-	case "EUR":
-		return "€"
-	default:
-		return code + " "
-	}
+func isIdentPart(c byte) bool {
+	return isIdentStart(c) || (c >= '0' && c <= '9')
 }
