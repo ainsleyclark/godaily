@@ -761,7 +761,11 @@ const docTemplate = `{
                     "go_vuln",
                     "freecodecamp",
                     "hacker_news_jobs",
-                    "remote_ok"
+                    "remote_ok",
+                    "remotive",
+                    "we_work_remotely",
+                    "golang_cafe",
+                    "golang_projects"
                 ],
                 "type": "string",
                 "x-enum-varnames": [
@@ -789,7 +793,11 @@ const docTemplate = `{
                     "SourceGoVuln",
                     "SourceFreeCodeCamp",
                     "SourceHNJobs",
-                    "SourceRemoteOK"
+                    "SourceRemoteOK",
+                    "SourceRemotive",
+                    "SourceWeWorkRemotely",
+                    "SourceGolangCafe",
+                    "SourceGolangProjects"
                 ]
             },
             "news.Tag": {

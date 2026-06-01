@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+
+<channel>
+<atom:link href="https://www.golangprojects.com/rss.xml" rel="self" type="application/rss+xml" />
+  <title>Golangprojects.com</title>
+  <link>https://www.golangprojects.com</link>
+  <description>#golang #jobs only. The goal being to bring companies and developers together that like #go</description>
+<image>
+  <url>https://www.golangprojects.com/img/golangprojects_gopher.png</url>
+  <title>Golangprojects.com</title>
+  <link>https://www.golangprojects.com</link>
+</image>  <item>
+<guid>https://www.golangprojects.com/golang-go-job-gxd-Remote-Senior-Golang-Developer-Milano-TRE-ALTAMIRA-Srl-remotework.html</guid>
+<title>Senior Golang Developer @ TRE ALTAMIRA Srl</title>
+    <link>https://www.golangprojects.com/golang-go-job-gxd-Remote-Senior-Golang-Developer-Milano-TRE-ALTAMIRA-Srl-remotework.html</link>
+    <description>Remote - About Us 
+
+TRE ALTAMIRA, part of the CLS Group, is the global leader in satellite radar data processing. We are a multidisciplinary team with leading-edge knowledge of SAR and InSAR applications. Our patented radar imagery processing algorithms provide displacement mea...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gxc-Remote-Europe-Tooling-Engineer-Unikraft-remotework.html</guid>
+<title>Tooling Engineer @ Unikraft</title>
+    <link>https://www.golangprojects.com/golang-go-job-gxc-Remote-Europe-Tooling-Engineer-Unikraft-remotework.html</link>
+    <description>Remote - Europe, CET ±2hrs · Fully Remote
+
+Help build the DX for the cloud rebuilt from scratch — CLIs, SDKs, and integrations that make millions-of-users-on-a-few-servers feel effortless.
+
+The cloud is broken: it’s wasteful, slow, awfully expensive, and burdened with le...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gxb-Remote-Europe-Senior-Software-Engineer-Cast-AI-remotework.html</guid>
+<title>Senior Software Engineer @ Cast AI</title>
+    <link>https://www.golangprojects.com/golang-go-job-gxb-Remote-Europe-Senior-Software-Engineer-Cast-AI-remotework.html</link>
+    <description>Remote - We are hiring across multiple teams!
+As a Senior Software Engineer, you will have the opportunity to work on different key features of our product. We are currently hiring Senior Software Engineers for the following teams:
+
+– Workload Optimization – Automates work...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gxa-Remote-Senior-Backend-Engineer-Go-Remote-UK-Remote-within-UK-Vistas-Recruitment-remotework.html</guid>
+<title>Senior Backend Engineer (Go) - Remote UK @ Vistas Recruitment</title>
+    <link>https://www.golangprojects.com/golang-go-job-gxa-Remote-Senior-Backend-Engineer-Go-Remote-UK-Remote-within-UK-Vistas-Recruitment-remotework.html</link>
+    <description>Remote - Want to make the most of AI as part of the development process?Would you describe yourself as an engineer who owns product outcomes, not just code?Want to work in a small, well-established, profitable and secure company, set for growth?Want to work remotely within the ...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gwz-Remote-Full-stack-Staff-Engineer-backend-leaning-Join-Inc-remotework.html</guid>
+<title>Full-stack Staff Engineer (backend leaning) @ Join, Inc.</title>
+    <link>https://www.golangprojects.com/golang-go-job-gwz-Remote-Full-stack-Staff-Engineer-backend-leaning-Join-Inc-remotework.html</link>
+    <description>Oakland, United States - Multiple Roles: Frontend-Heavy, Fullstack, Backend-Heavy
+
+About Us
+Join is a leading provider of innovative SaaS solutions for the construction industry. Join brings together contractors, owners, and design teams to facilitate better decision-making throughout the pro...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-remote-job-gmk-Remote-Europe-Senior-Backend-Engineer-Build-AI-Agents-Salesforge-remotejob.html</guid>
+<title>Senior Backend Engineer - Build AI Agents @ Salesforge</title>
+    <link>https://www.golangprojects.com/golang-remote-job-gmk-Remote-Europe-Senior-Backend-Engineer-Build-AI-Agents-Salesforge-remotejob.html</link>
+    <description>Remote - Most sales tools help you send emails. We’re building something different.
+
+At Salesforge, we’re creating autonomous AI agents that can:
+
+Find the right prospects
+Generate highly personalized outreach
+Run conversations
+And book meetings
+
+All without human invo...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gwx-Remote-Senior-Product-Engineer-Go-Remote-UK-Remote-within-UK-Vistas-Recruitment-remotework.html</guid>
+<title>Senior Product Engineer (Go) - Remote UK @ Vistas Recruitment</title>
+    <link>https://www.golangprojects.com/golang-go-job-gwx-Remote-Senior-Product-Engineer-Go-Remote-UK-Remote-within-UK-Vistas-Recruitment-remotework.html</link>
+    <description>Remote - Want to make the most of AI as part of the development process?Would you describe yourself as an engineer who owns product outcomes, not just code?Want to work in a small, well-established, profitable and secure company, set for growth?Want to work remotely within the ...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gww-Founding-Engineer-Golang-Berlin-GlassFlow.html</guid>
+<title>Founding Engineer - Golang @ GlassFlow</title>
+    <link>https://www.golangprojects.com/golang-go-job-gww-Founding-Engineer-Golang-Berlin-GlassFlow.html</link>
+    <description>Berlin, Germany - GlassFlow is a startup building the open-source data streaming infra for the next generation of developers and AI companies: Easy to use, massively scalable and optimized for the AI era.
+
+We’re a Berlin startup with a Silicon Valley mentality, backed with $4.8m from ...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gwu-Remote-Europe-Senior-Software-Engineer-Karpenter-Cast-AI-remotework.html</guid>
+<title>Senior Software Engineer – Karpenter @ Cast AI</title>
+    <link>https://www.golangprojects.com/golang-go-job-gwu-Remote-Europe-Senior-Software-Engineer-Karpenter-Cast-AI-remotework.html</link>
+    <description>Remote - Why Cast AI?
+Cast AI is an automation platform that operates cloud-native and AI infrastructure at scale. By embedding autonomous decision-making directly into Kubernetes and cloud environments, Cast AI continuously optimizes performance, reliability, and efficiency in...</description>
+    
+</item>   <item>
+<guid>https://www.golangprojects.com/golang-go-job-gwt-Remote-Europe-Senior-Software-Engineer-Reporting-Cast-AI-remotework.html</guid>
+<title>Senior Software Engineer – Reporting @ Cast AI</title>
+    <link>https://www.golangprojects.com/golang-go-job-gwt-Remote-Europe-Senior-Software-Engineer-Reporting-Cast-AI-remotework.html</link>
+    <description>Remote - Why Cast AI?
+Cast AI is an automation platform that operates cloud-native and AI infrastructure at scale. By embedding autonomous decision-making directly into Kubernetes and cloud environments, Cast AI continuously optimizes performance, reliability, and efficiency in...</description>
+    
+</item>   </channel></rss>      

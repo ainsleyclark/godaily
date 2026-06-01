@@ -516,6 +516,10 @@ components:
       - freecodecamp
       - hacker_news_jobs
       - remote_ok
+      - remotive
+      - we_work_remotely
+      - golang_cafe
+      - golang_projects
       type: string
       x-enum-varnames:
       - SourceDevTo
@@ -543,6 +547,10 @@ components:
       - SourceFreeCodeCamp
       - SourceHNJobs
       - SourceRemoteOK
+      - SourceRemotive
+      - SourceWeWorkRemotely
+      - SourceGolangCafe
+      - SourceGolangProjects
     news.Tag:
       description: source-specific hint ("proposal-accepted", "trending", "official")
       enum:

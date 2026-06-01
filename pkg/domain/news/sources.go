@@ -52,6 +52,10 @@ const (
 	SourceFreeCodeCamp   Source = "freecodecamp"
 	SourceHNJobs         Source = "hacker_news_jobs"
 	SourceRemoteOK       Source = "remote_ok"
+	SourceRemotive       Source = "remotive"
+	SourceWeWorkRemotely Source = "we_work_remotely"
+	SourceGolangCafe     Source = "golang_cafe"
+	SourceGolangProjects Source = "golang_projects"
 )
 
 // Sources defines a list of all source types.
@@ -81,6 +85,10 @@ var Sources = []Source{
 	SourceFreeCodeCamp,
 	SourceHNJobs,
 	SourceRemoteOK,
+	SourceRemotive,
+	SourceWeWorkRemotely,
+	SourceGolangCafe,
+	SourceGolangProjects,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -142,6 +150,10 @@ var sourcePriorities = map[Source]int{
 	SourceGoVuln:         23,
 	SourceHNJobs:         24,
 	SourceRemoteOK:       25,
+	SourceGolangCafe:     26,
+	SourceGolangProjects: 27,
+	SourceWeWorkRemotely: 28,
+	SourceRemotive:       29,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -177,6 +189,10 @@ var sourceNiceNames = map[Source]string{
 	SourceFreeCodeCamp:   "freeCodeCamp",
 	SourceHNJobs:         "HN Who's Hiring",
 	SourceRemoteOK:       "Remote OK",
+	SourceRemotive:       "Remotive",
+	SourceWeWorkRemotely: "We Work Remotely",
+	SourceGolangCafe:     "Golang.cafe",
+	SourceGolangProjects: "Golangprojects",
 }
 
 // NiceName returns a formatted string of the source.
@@ -214,6 +230,10 @@ var sourceEmojis = map[Source]string{
 	SourceFreeCodeCamp:   "🎓",
 	SourceHNJobs:         "💼",
 	SourceRemoteOK:       "🌍",
+	SourceRemotive:       "🧑‍💻",
+	SourceWeWorkRemotely: "🏠",
+	SourceGolangCafe:     "☕",
+	SourceGolangProjects: "🧰",
 }
 
 // Emoji returns the display emoji for the source.
@@ -282,6 +302,10 @@ var sourceShortLabels = map[Source]string{
 	SourceFreeCodeCamp:   "FCC",
 	SourceHNJobs:         "HN",
 	SourceRemoteOK:       "RO",
+	SourceRemotive:       "RM",
+	SourceWeWorkRemotely: "WWR",
+	SourceGolangCafe:     "GC",
+	SourceGolangProjects: "GP",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,
