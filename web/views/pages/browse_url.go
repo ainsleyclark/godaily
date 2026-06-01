@@ -29,13 +29,28 @@ type BrowseFilterState struct {
 // the route registered in web/server/server.go.
 const BrowseBasePath = "/browse/"
 
+// BrowseTagURL returns the canonical path-style URL for a tag landing page,
+// e.g. "/browse/releases/".
+func BrowseTagURL(tag news.Tag) string {
+	return BrowseBasePath + string(tag) + "/"
+}
+
 // BrowseURL builds a URL for the browse page from the given filter state.
 // Pass override funcs to mutate the state for a single link.
+// When the resulting state is a canonical tag landing (only Tab set, all else
+// at defaults) it returns the path-style URL via BrowseTagURL.
 func BrowseURL(state BrowseFilterState, overrides ...func(*BrowseFilterState)) string {
 	s := state
 	s.Sources = append([]string(nil), state.Sources...)
 	for _, o := range overrides {
 		o(&s)
+	}
+
+	if s.Tab != "" && s.Tab != "all" && len(s.Sources) == 0 && s.Query == "" &&
+		(s.Sort == "" || s.Sort == string(news.ItemSortHot)) &&
+		(s.Range == "" || s.Range == "week") &&
+		!s.Digest && s.Page <= 1 {
+		return BrowseTagURL(news.Tag(s.Tab))
 	}
 
 	v := url.Values{}

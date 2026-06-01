@@ -68,6 +68,15 @@ func renderPages(ctx context.Context, repo digest.IssueRepository, items news.It
 	if err := renderPageInDir(ctx, filepath.Join(outDir, "browse"), pages.Browse(browseProps)); err != nil {
 		return errors.Wrap(err, "rendering browse page")
 	}
+	for _, tag := range news.SectionTags {
+		tagProps, tagErr := handlers.BuildBrowseProps(ctx, repo, items, url.Values{"tab": []string{string(tag)}})
+		if tagErr != nil {
+			return fmt.Errorf("building browse props for tag %s: %w", tag, tagErr)
+		}
+		if tagErr = renderPageInDir(ctx, filepath.Join(outDir, "browse", string(tag)), pages.Browse(tagProps)); tagErr != nil {
+			return fmt.Errorf("rendering browse/%s page: %w", tag, tagErr)
+		}
+	}
 
 	fullIssues := make([]digest.Issue, 0, len(w.Issues))
 	for _, issue := range w.Issues {

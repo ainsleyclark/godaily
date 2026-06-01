@@ -28,10 +28,33 @@ const (
 	digestSendMinute = 30
 )
 
-// Browse handles the /browse/ archive page.
+// Browse handles the /browse/ archive page. A request with only ?tab=X
+// (no other params) issues a 301 to the canonical path /browse/{tag}/.
 func Browse(a *godaily.App) webkit.Handler {
 	return func(c *webkit.Context) error {
-		props, err := BuildBrowseProps(c.Request.Context(), a.Repository.Issues, a.Repository.Items, c.Request.URL.Query())
+		q := c.Request.URL.Query()
+		if tab := q.Get("tab"); tab != "" && validSectionTag(tab) && len(q) == 1 {
+			return c.Redirect(http.StatusMovedPermanently, pages.BrowseTagURL(news.Tag(tab)))
+		}
+		props, err := BuildBrowseProps(c.Request.Context(), a.Repository.Issues, a.Repository.Items, q)
+		if err != nil {
+			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
+		}
+		return c.Render(pages.Browse(props))
+	}
+}
+
+// BrowseTag handles /browse/{tag}/ — the canonical path-style landing page
+// for a section tag. Unknown tags return 404.
+func BrowseTag(a *godaily.App) webkit.Handler {
+	return func(c *webkit.Context) error {
+		tag := c.Param("tag")
+		if !validSectionTag(tag) {
+			return c.RenderWithStatus(http.StatusNotFound, pages.Error(http.StatusNotFound))
+		}
+		q := c.Request.URL.Query()
+		q.Set("tab", tag)
+		props, err := BuildBrowseProps(c.Request.Context(), a.Repository.Issues, a.Repository.Items, q)
 		if err != nil {
 			return c.RenderWithStatus(http.StatusInternalServerError, pages.Error(http.StatusInternalServerError))
 		}

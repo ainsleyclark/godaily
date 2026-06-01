@@ -23,6 +23,7 @@ type PageMeta struct {
 	SchemaJSON   string    // pre-serialised JSON-LD; rendered in <head> when non-empty
 	IsArticle    bool      // renders og:type=article and article:published_time
 	ArticleDate  time.Time // used when IsArticle is true
+	NoIndex      bool      // renders <meta name="robots" content="noindex,follow"> when true
 }
 
 func (m PageMeta) title() string {
@@ -58,6 +59,9 @@ templ Base(meta PageMeta) {
 			<meta name="description" content={ meta.description() }/>
 			if meta.CanonicalURL != "" {
 				<link rel="canonical" href={ meta.CanonicalURL }/>
+			}
+			if meta.NoIndex {
+				<meta name="robots" content="noindex,follow"/>
 			}
 			<!-- Open Graph -->
 			if meta.IsArticle {

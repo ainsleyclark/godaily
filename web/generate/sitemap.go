@@ -9,7 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
 
@@ -40,7 +42,15 @@ func sitemap(w website, outDir string) error {
 		URLs: []sitemapURL{
 			home,
 			{Loc: env.AppURL + "/issues/", Priority: "0.9"},
+			{Loc: env.AppURL + "/browse/", Priority: "0.7"},
 		},
+	}
+
+	for _, tag := range news.SectionTags {
+		set.URLs = append(set.URLs, sitemapURL{
+			Loc:      env.AppURL + pages.BrowseTagURL(tag),
+			Priority: "0.7",
+		})
 	}
 
 	for _, issue := range w.Issues {
