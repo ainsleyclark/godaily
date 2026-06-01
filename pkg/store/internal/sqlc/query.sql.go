@@ -638,8 +638,12 @@ func (q *Queries) ItemTagCounts(ctx context.Context) ([]ItemTagCountsRow, error)
 const itemUnlinkFromIssue = `-- name: ItemUnlinkFromIssue :execrows
 UPDATE items
 SET issue_id = NULL, position = 0
-WHERE id = ?1
-  AND issue_id = ?2
+WHERE items.id = ?1
+  AND items.issue_id = ?2
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  )
 `
 
 type ItemUnlinkFromIssueParams struct {
@@ -658,8 +662,12 @@ func (q *Queries) ItemUnlinkFromIssue(ctx context.Context, arg ItemUnlinkFromIss
 const itemUpdatePosition = `-- name: ItemUpdatePosition :execrows
 UPDATE items
 SET position = ?1
-WHERE id = ?2
-  AND issue_id = ?3
+WHERE items.id = ?2
+  AND items.issue_id = ?3
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  )
 `
 
 type ItemUpdatePositionParams struct {

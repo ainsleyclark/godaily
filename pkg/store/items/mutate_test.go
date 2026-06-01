@@ -163,4 +163,30 @@ func TestReorderInIssue(t *testing.T) {
 		err := s.ReorderInIssue(ctx, issue.ID, []int64{a})
 		assert.ErrorIs(t, err, store.ErrNotFound)
 	})
+
+	t.Run("Status flip between calls is caught by per-row guard", func(t *testing.T) {
+		// Simulates the SendDigest race: the caller starts an edit against a
+		// draft, but the issue is flipped to 'sent' before the write lands.
+		// The EXISTS guard on the UPDATE means no positions are mutated and
+		// we report the precise 409-equivalent error.
+		issue := mkIssue(t, "2026-06-06", digest.IssueStatusDraft)
+		a := mkItem(t, issue.ID, 0, "https://example.com/j")
+		b := mkItem(t, issue.ID, 1, "https://example.com/k")
+
+		// Flip status to 'sent' (out-of-band; mirrors what SendDigest does).
+		_, err := is.UpdateStatus(ctx, issue.ID, digest.IssueStatusSent, time.Now())
+		require.NoError(t, err)
+
+		// Reorder should now refuse and leave positions intact.
+		err = s.ReorderInIssue(ctx, issue.ID, []int64{b, a})
+		assert.ErrorIs(t, err, digest.ErrIssueNotDraft)
+		assert.Equal(t, []int64{a, b}, listIDs(t, issue.ID), "positions must be unchanged")
+
+		// Same for Unlink: also refused, item stays linked.
+		err = s.UnlinkFromIssue(ctx, issue.ID, a)
+		assert.ErrorIs(t, err, digest.ErrIssueNotDraft)
+		got, err := s.Find(ctx, a)
+		require.NoError(t, err)
+		assert.True(t, got.InDigest, "item must still be linked")
+	})
 }

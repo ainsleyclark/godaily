@@ -214,15 +214,11 @@ func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 }
 
 // UnlinkFromIssue clears items.issue_id for the given (issueID, itemID) pair,
-// leaving the row in the raw pool. The parent issue must exist and be in
-// draft status; otherwise this returns store.ErrNotFound or
-// digest.ErrIssueNotDraft. A pair that does not match a current link is
-// treated as not-found.
+// leaving the row in the raw pool. The UPDATE statement itself enforces the
+// draft-status precondition via an EXISTS subquery, so a concurrent SendDigest
+// flipping status mid-flight cannot let the write through. On a no-op the
+// reason is disambiguated with a follow-up status read.
 func (s Store) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error {
-	if err := s.assertIssueDraft(ctx, issueID); err != nil {
-		return err
-	}
-
 	rows, err := s.sqlc.ItemUnlinkFromIssue(ctx, sqlc.ItemUnlinkFromIssueParams{
 		ItemID:  itemID,
 		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
@@ -230,30 +226,19 @@ func (s Store) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error
 	if err != nil {
 		return err
 	}
-	if rows == 0 {
-		return store.ErrNotFound
+	if rows == 1 {
+		return nil
 	}
-	return nil
+	return s.disambiguateMissingItemWrite(ctx, issueID)
 }
 
 // ReorderInIssue rewrites the position of each linked item using the supplied
 // order. The set of ids must match exactly what is currently linked to the
 // issue; partial or extraneous ids are rejected with store.ErrNotFound. The
-// parent issue must be in draft status. The whole operation runs in a
-// transaction so a partial failure leaves no half-applied order.
+// whole operation runs inside a transaction, and every per-row UPDATE carries
+// its own EXISTS guard against the issues table, so a status change racing
+// against this call cannot half-apply a reorder onto a non-draft issue.
 func (s Store) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs []int64) error {
-	if err := s.assertIssueDraft(ctx, issueID); err != nil {
-		return err
-	}
-
-	current, err := s.sqlc.ItemIDsByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
-	if err != nil {
-		return err
-	}
-	if !sameIDSet(current, orderedItemIDs) {
-		return store.ErrNotFound
-	}
-
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -261,6 +246,23 @@ func (s Store) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs
 	defer tx.Rollback() //nolint:errcheck
 
 	q := s.sqlc.WithTx(tx)
+
+	// Validate the submitted id set matches the issue's current linked items
+	// inside the same transaction the writes happen in. This gives a precise
+	// "wrong set of ids" error before any UPDATE fires.
+	current, err := q.ItemIDsByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
+	if err != nil {
+		return err
+	}
+	if len(current) == 0 {
+		// No linked items: either the issue has none, or the issue doesn't
+		// exist. Disambiguate using the status read.
+		return s.disambiguateMissingItemWrite(ctx, issueID)
+	}
+	if !sameIDSet(current, orderedItemIDs) {
+		return store.ErrNotFound
+	}
+
 	for idx, itemID := range orderedItemIDs {
 		rows, err := q.ItemUpdatePosition(ctx, sqlc.ItemUpdatePositionParams{
 			Position: int64(idx),
@@ -271,15 +273,20 @@ func (s Store) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs
 			return fmt.Errorf("update position for item %d: %w", itemID, err)
 		}
 		if rows != 1 {
-			return store.ErrNotFound
+			// Either the issue's status flipped between the id-set read and
+			// this UPDATE, or the link disappeared. Resolve the cause via a
+			// status check (still inside the tx — it will be rolled back).
+			return s.disambiguateMissingItemWrite(ctx, issueID)
 		}
 	}
 	return tx.Commit()
 }
 
-// assertIssueDraft returns store.ErrNotFound if the issue is missing, or
-// digest.ErrIssueNotDraft if it exists but is not in draft status.
-func (s Store) assertIssueDraft(ctx context.Context, issueID int64) error {
+// disambiguateMissingItemWrite explains why a guarded item UPDATE matched no
+// rows. It is only called on the miss path — the happy path never reads
+// status, so there is no TOCTOU window in the success case. The returned
+// error is the best available reason at the time of the follow-up read.
+func (s Store) disambiguateMissingItemWrite(ctx context.Context, issueID int64) error {
 	status, err := s.sqlc.IssueStatusByID(ctx, issueID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -290,7 +297,7 @@ func (s Store) assertIssueDraft(ctx context.Context, issueID int64) error {
 	if status != string(digest.IssueStatusDraft) {
 		return digest.ErrIssueNotDraft
 	}
-	return nil
+	return store.ErrNotFound
 }
 
 // sameIDSet reports whether a and b contain the same int64 values, ignoring
