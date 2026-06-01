@@ -11,7 +11,6 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 // IssueListResponse is the response envelope for GET /digest/issues.
@@ -44,34 +43,19 @@ func (h *Handler) Issues(c *webkit.Context) error {
 		perPage = api.DefaultPerPage
 	}
 
-	opts := store.ListOptions{Page: page, PerPage: perPage}
-	statusParam := r.URL.Query().Get("status")
+	opts := digest.IssueListOptions{Page: page, PerPage: perPage}
+	if s := r.URL.Query().Get("status"); s != "" {
+		status := digest.IssueStatus(s)
+		opts.Status = &status
+	}
 
-	var (
-		total  int64
-		issues []digest.Issue
-		err    error
-	)
-
-	if statusParam != "" {
-		status := digest.IssueStatus(statusParam)
-		total, err = h.issuesRepo.CountByStatus(ctx, status)
-		if err != nil {
-			return api.Error(c, http.StatusInternalServerError, "Failed to count issues")
-		}
-		issues, err = h.issuesRepo.ListByStatus(ctx, status, opts)
-		if err != nil {
-			return api.Error(c, http.StatusInternalServerError, "Failed to list issues")
-		}
-	} else {
-		total, err = h.issuesRepo.Count(ctx)
-		if err != nil {
-			return api.Error(c, http.StatusInternalServerError, "Failed to count issues")
-		}
-		issues, err = h.issuesRepo.List(ctx, opts)
-		if err != nil {
-			return api.Error(c, http.StatusInternalServerError, "Failed to list issues")
-		}
+	total, err := h.issuesRepo.Count(ctx, opts)
+	if err != nil {
+		return api.Error(c, http.StatusInternalServerError, "Failed to count issues")
+	}
+	issues, err := h.issuesRepo.List(ctx, opts)
+	if err != nil {
+		return api.Error(c, http.StatusInternalServerError, "Failed to list issues")
 	}
 
 	return api.OK(c, http.StatusOK, api.PaginatedResponse[digest.Issue]{

@@ -87,6 +87,21 @@ func (mr *MockSubscriberRepositoryMockRecorder) CountAll(ctx any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountAll", reflect.TypeOf((*MockSubscriberRepository)(nil).CountAll), ctx)
 }
 
+// CountFiltered mocks base method.
+func (m *MockSubscriberRepository) CountFiltered(ctx context.Context, search string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountFiltered", ctx, search)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountFiltered indicates an expected call of CountFiltered.
+func (mr *MockSubscriberRepositoryMockRecorder) CountFiltered(ctx, search any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFiltered", reflect.TypeOf((*MockSubscriberRepository)(nil).CountFiltered), ctx, search)
+}
+
 // Create mocks base method.
 func (m *MockSubscriberRepository) Create(ctx context.Context, email string) (audience.Subscriber, error) {
 	m.ctrl.T.Helper()
@@ -246,21 +261,6 @@ func (m *MockSubscriberRepository) Reactivate(ctx context.Context, email string)
 func (mr *MockSubscriberRepositoryMockRecorder) Reactivate(ctx, email any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reactivate", reflect.TypeOf((*MockSubscriberRepository)(nil).Reactivate), ctx, email)
-}
-
-// CountFiltered mocks base method.
-func (m *MockSubscriberRepository) CountFiltered(ctx context.Context, search string) (int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountFiltered", ctx, search)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CountFiltered indicates an expected call of CountFiltered.
-func (mr *MockSubscriberRepositoryMockRecorder) CountFiltered(ctx, search any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountFiltered", reflect.TypeOf((*MockSubscriberRepository)(nil).CountFiltered), ctx, search)
 }
 
 // Unsubscribe mocks base method.

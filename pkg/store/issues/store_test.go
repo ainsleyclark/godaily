@@ -86,11 +86,30 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		got, err := s.List(ctx, store.ListOptions{})
-		require.NoError(t, err)
-		require.Len(t, got, 1)
-		assert.Equal(t, mock.Slug, got[0].Slug)
-		assert.Equal(t, mock.Subject, got[0].Subject)
+		t.Log("No filter returns all issues")
+		{
+			got, err := s.List(ctx, digest.IssueListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, 1)
+			assert.Equal(t, mock.Slug, got[0].Slug)
+			assert.Equal(t, mock.Subject, got[0].Subject)
+		}
+
+		t.Log("Filters by status when set")
+		{
+			sent := digest.IssueStatusSent
+			got, err := s.List(ctx, digest.IssueListOptions{Status: &sent})
+			require.NoError(t, err)
+			require.Len(t, got, 1)
+		}
+
+		t.Log("Filters out non-matching status")
+		{
+			draft := digest.IssueStatusDraft
+			got, err := s.List(ctx, digest.IssueListOptions{Status: &draft})
+			require.NoError(t, err)
+			assert.Empty(t, got)
+		}
 	})
 
 	t.Run("Latest", func(t *testing.T) {
@@ -112,9 +131,64 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("Count", func(t *testing.T) {
-		got, err := s.Count(ctx)
+		t.Log("No filter counts all issues")
+		{
+			got, err := s.Count(ctx, digest.IssueListOptions{})
+			require.NoError(t, err)
+			assert.Equal(t, int64(1), got)
+		}
+
+		t.Log("Filters by status when set")
+		{
+			sent := digest.IssueStatusSent
+			got, err := s.Count(ctx, digest.IssueListOptions{Status: &sent})
+			require.NoError(t, err)
+			assert.Equal(t, int64(1), got)
+		}
+	})
+
+	t.Run("Update", func(t *testing.T) {
+		draft, err := s.Create(ctx, digest.Issue{
+			Slug:    "2026-05-01",
+			Subject: "Original",
+			Summary: "Original summary",
+			Status:  digest.IssueStatusDraft,
+			SentAt:  mock.SentAt,
+		})
 		require.NoError(t, err)
-		assert.Equal(t, int64(1), got)
+
+		t.Log("Happy path updates subject and summary on a draft")
+		{
+			got, err := s.Update(ctx, digest.Issue{
+				ID:      draft.ID,
+				Subject: "New subject",
+				Summary: "New summary",
+			})
+			require.NoError(t, err)
+			assert.Equal(t, draft.ID, got.ID)
+			assert.Equal(t, "New subject", got.Subject)
+			assert.Equal(t, "New summary", got.Summary)
+			assert.Equal(t, digest.IssueStatusDraft, got.Status)
+			assert.NotNil(t, got.Items)
+		}
+
+		t.Log("Rejects update on a non-draft issue")
+		{
+			_, err := s.Update(ctx, digest.Issue{
+				ID:      mock.ID,
+				Subject: "Should not apply",
+				Summary: "",
+			})
+			require.Error(t, err)
+			assert.ErrorIs(t, err, digest.ErrIssueNotDraft)
+		}
+
+		t.Log("Returns ErrNotFound for unknown ID")
+		{
+			_, err := s.Update(ctx, digest.Issue{ID: 9999, Subject: "x"})
+			require.Error(t, err)
+			assert.ErrorIs(t, err, store.ErrNotFound)
+		}
 	})
 
 	t.Run("UpdateStatus", func(t *testing.T) {
@@ -163,9 +237,15 @@ func TestIssues_Store(t *testing.T) {
 			assert.Error(t, err)
 		}
 
+		t.Log("Update")
+		{
+			_, err := s.Update(ctx, digest.Issue{ID: 1, Subject: "x"})
+			assert.Error(t, err)
+		}
+
 		t.Log("Count")
 		{
-			_, err := s.Count(ctx)
+			_, err := s.Count(ctx, digest.IssueListOptions{})
 			assert.Error(t, err)
 		}
 	})

@@ -16,7 +16,6 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
 func TestIssues(t *testing.T) {
@@ -49,8 +48,9 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(2), nil)
-		deps.Issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]digest.Issue{
+		opts := digest.IssueListOptions{Page: 1, PerPage: 20}
+		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(2), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{
 			{ID: 1, Slug: "2026-01-01"},
 			{ID: 2, Slug: "2026-01-02"},
 		}, nil)
@@ -65,8 +65,9 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?page=2&per_page=10")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(50), nil)
-		deps.Issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 2, PerPage: 10}).Return([]digest.Issue{}, nil)
+		opts := digest.IssueListOptions{Page: 2, PerPage: 10}
+		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(50), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
 		err := deps.Handler.Issues(deps.Context)
 
@@ -78,7 +79,7 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(0), errors.New("db error"))
+		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(0), errors.New("db error"))
 
 		_ = deps.Handler.Issues(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
@@ -88,7 +89,7 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(1), nil)
+		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(1), nil)
 		deps.Issues.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_ = deps.Handler.Issues(deps.Context)
@@ -99,8 +100,9 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?page=abc")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(1), nil)
-		deps.Issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]digest.Issue{}, nil)
+		opts := digest.IssueListOptions{Page: 1, PerPage: 20}
+		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(1), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
 		err := deps.Handler.Issues(deps.Context)
 
@@ -112,8 +114,9 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?per_page=999")
-		deps.Issues.EXPECT().Count(gomock.Any()).Return(int64(1), nil)
-		deps.Issues.EXPECT().List(gomock.Any(), store.ListOptions{Page: 1, PerPage: 20}).Return([]digest.Issue{}, nil)
+		opts := digest.IssueListOptions{Page: 1, PerPage: 20}
+		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(1), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
 		err := deps.Handler.Issues(deps.Context)
 
@@ -125,8 +128,10 @@ func TestIssues(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?status=draft")
-		deps.Issues.EXPECT().CountByStatus(gomock.Any(), digest.IssueStatus("draft")).Return(int64(1), nil)
-		deps.Issues.EXPECT().ListByStatus(gomock.Any(), digest.IssueStatus("draft"), store.ListOptions{Page: 1, PerPage: 20}).Return([]digest.Issue{
+		draft := digest.IssueStatus("draft")
+		opts := digest.IssueListOptions{Status: &draft, Page: 1, PerPage: 20}
+		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(1), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{
 			{ID: 1, Slug: "2026-01-01", Status: "draft"},
 		}, nil)
 
@@ -136,22 +141,22 @@ func TestIssues(t *testing.T) {
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 	})
 
-	t.Run("CountByStatus error returns internal server error", func(t *testing.T) {
+	t.Run("Count with status error returns internal server error", func(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?status=draft")
-		deps.Issues.EXPECT().CountByStatus(gomock.Any(), digest.IssueStatus("draft")).Return(int64(0), errors.New("db error"))
+		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(0), errors.New("db error"))
 
 		_ = deps.Handler.Issues(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
 	})
 
-	t.Run("ListByStatus error returns internal server error", func(t *testing.T) {
+	t.Run("List with status error returns internal server error", func(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "?status=draft")
-		deps.Issues.EXPECT().CountByStatus(gomock.Any(), digest.IssueStatus("draft")).Return(int64(1), nil)
-		deps.Issues.EXPECT().ListByStatus(gomock.Any(), digest.IssueStatus("draft"), gomock.Any()).Return(nil, errors.New("db error"))
+		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(1), nil)
+		deps.Issues.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_ = deps.Handler.Issues(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)

@@ -204,11 +204,12 @@ func (q *Queries) IssueBySlug(ctx context.Context, slug string) (Issue, error) {
 }
 
 const issueCount = `-- name: IssueCount :one
-SELECT COUNT(*) FROM issues WHERE status = 'sent'
+SELECT COUNT(*) FROM issues
+WHERE (?1 IS NULL OR status = ?1)
 `
 
-func (q *Queries) IssueCount(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, issueCount)
+func (q *Queries) IssueCount(ctx context.Context, status interface{}) (int64, error) {
+	row := q.db.QueryRowContext(ctx, issueCount, status)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
@@ -253,18 +254,19 @@ func (q *Queries) IssueCreate(ctx context.Context, arg IssueCreateParams) (Issue
 
 const issueList = `-- name: IssueList :many
 SELECT id, slug, sent_at, subject, summary, status FROM issues
-WHERE status = 'sent'
+WHERE (?1 IS NULL OR status = ?1)
 ORDER BY sent_at DESC
-LIMIT ? OFFSET ?
+LIMIT ?3 OFFSET ?2
 `
 
 type IssueListParams struct {
-	Limit  int64 `json:"limit"`
-	Offset int64 `json:"offset"`
+	Status interface{} `json:"status"`
+	Offset int64       `json:"offset"`
+	Limit  int64       `json:"limit"`
 }
 
 func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, error) {
-	rows, err := q.db.QueryContext(ctx, issueList, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, issueList, arg.Status, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}
@@ -291,6 +293,32 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 		return nil, err
 	}
 	return items, nil
+}
+
+const issueUpdate = `-- name: IssueUpdate :one
+UPDATE issues SET subject = ?, summary = ?
+WHERE id = ? AND status = 'draft'
+RETURNING id, slug, sent_at, subject, summary, status
+`
+
+type IssueUpdateParams struct {
+	Subject string         `json:"subject"`
+	Summary sql.NullString `json:"summary"`
+	ID      int64          `json:"id"`
+}
+
+func (q *Queries) IssueUpdate(ctx context.Context, arg IssueUpdateParams) (Issue, error) {
+	row := q.db.QueryRowContext(ctx, issueUpdate, arg.Subject, arg.Summary, arg.ID)
+	var i Issue
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.SentAt,
+		&i.Subject,
+		&i.Summary,
+		&i.Status,
+	)
+	return i, err
 }
 
 const issueUpdateStatus = `-- name: IssueUpdateStatus :one
