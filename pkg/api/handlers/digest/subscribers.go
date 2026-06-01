@@ -25,8 +25,9 @@ type SubscriberListResponse = api.Response[api.PaginatedResponse[audience.Subscr
 //	@Tags			digest
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			page		query		int	false	"Page number (default 1)"
-//	@Param			per_page	query		int	false	"Items per page (default 20, max 100)"
+//	@Param			page		query		int		false	"Page number (default 1)"
+//	@Param			per_page	query		int		false	"Items per page (default 20, max 100)"
+//	@Param			search		query		string	false	"Filter by email substring"
 //	@Success		200			{object}	SubscriberListResponse											"Successfully retrieved subscribers"
 //	@Failure		500			{object}	api.MessageResponse												"Failed to list subscribers"
 //	@Router			/digest/subscribers [get]

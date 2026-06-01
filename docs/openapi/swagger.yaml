@@ -39,6 +39,13 @@ components:
         status:
           type: integer
       type: object
+    IssueUpdateRequest:
+      properties:
+        subject:
+          type: string
+        summary:
+          type: string
+      type: object
     ItemMetricsResponse:
       properties:
         data:
@@ -699,6 +706,104 @@ paths:
       summary: List digest issues.
       tags:
       - digest
+  /digest/issues/{id}:
+    get:
+      description: Returns a single digest issue, including its items grouped for
+        rendering.
+      parameters:
+      - description: Issue ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+          description: Successfully retrieved issue
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: ID must be a positive integer
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Issue not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to fetch issue
+      security:
+      - BearerAuth: []
+      summary: Fetch a digest issue by ID.
+      tags:
+      - digest
+    patch:
+      description: Updates the subject and summary of a draft issue. Returns 409 if
+        the issue is not in draft status.
+      parameters:
+      - description: Issue ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/IssueUpdateRequest'
+                description: Fields to update
+                summary: body
+        description: Fields to update
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssueResponse'
+          description: Successfully updated issue
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Issue not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Issue is not a draft
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to update issue
+      security:
+      - BearerAuth: []
+      summary: Update a draft digest issue.
+      tags:
+      - digest
   /digest/nudge:
     get:
       description: Sends a one-time reminder to subscribers who signed up but never
@@ -763,6 +868,11 @@ paths:
         name: per_page
         schema:
           type: integer
+      - description: Filter by email substring
+        in: query
+        name: search
+        schema:
+          type: string
       responses:
         "200":
           content:
