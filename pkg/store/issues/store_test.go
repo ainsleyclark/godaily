@@ -12,9 +12,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
+	"github.com/ainsleyclark/godaily/pkg/store/items"
 )
 
 func TestIssues_Store(t *testing.T) {
@@ -65,6 +67,24 @@ func TestIssues_Store(t *testing.T) {
 			_, err := s.Find(ctx, 999)
 			require.Error(t, err)
 			assert.Equal(t, store.ErrNotFound, err)
+		}
+
+		t.Log("Linked items are marked InDigest with their position")
+		{
+			itemsStore := items.New(db)
+			_, err := itemsStore.Create(ctx, &mock.ID, 1, news.Item{
+				Source: news.SourceHN,
+				Tag:    news.TagDiscussion,
+				Title:  "A linked item",
+				URL:    "https://example.com/linked",
+			})
+			require.NoError(t, err)
+
+			got, err := s.Find(ctx, mock.ID)
+			require.NoError(t, err)
+			require.Len(t, got.Items, 1)
+			assert.True(t, got.Items[0].InDigest, "items fetched for an issue must be marked InDigest")
+			assert.Equal(t, int64(1), got.Items[0].Position)
 		}
 	})
 
