@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package slackcard
+package slackkit
 
 import (
 	"strings"
@@ -17,18 +17,27 @@ import (
 
 func TestBlockquote(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "> one\n> two", blockquote("one\ntwo"))
-	assert.Equal(t, "> trimmed", blockquote("  trimmed  "))
-
-	long := strings.Repeat("a", maxText+50)
-	got := blockquote(long)
-	assert.True(t, strings.HasSuffix(got, "…"), "long text should be truncated with an ellipsis")
-	assert.LessOrEqual(t, len([]rune(strings.TrimPrefix(got, "> "))), maxText+1)
+	assert.Equal(t, "> one\n> two", Blockquote("one\ntwo"))
+	assert.Equal(t, "> trimmed", Blockquote("  trimmed  "))
 }
 
-func TestSection_Accessory(t *testing.T) {
+func TestTruncate(t *testing.T) {
 	t.Parallel()
-	blk := section(Row{
+	assert.Equal(t, "short", Truncate("short", 10))
+	got := Truncate(strings.Repeat("a", 50), 10)
+	assert.True(t, strings.HasSuffix(got, "…"))
+	assert.LessOrEqual(t, len([]rune(got)), 11)
+}
+
+func TestCodeBlock(t *testing.T) {
+	t.Parallel()
+	assert.Empty(t, CodeBlock(""))
+	assert.Equal(t, "```\nhi\n```", CodeBlock("hi"))
+}
+
+func TestRow_Accessory(t *testing.T) {
+	t.Parallel()
+	blk := row(Row{
 		Heading: "Bluesky",
 		Text:    "hello world",
 		Button:  &slack.LinkButton{Label: "View on Bluesky", URL: "https://bsky.app/x", Style: "primary"},
@@ -40,6 +49,22 @@ func TestSection_Accessory(t *testing.T) {
 	require.NotNil(t, sec.Accessory.ButtonElement)
 	assert.Equal(t, "https://bsky.app/x", sec.Accessory.ButtonElement.URL)
 	assert.Equal(t, slackgo.Style("primary"), sec.Accessory.ButtonElement.Style)
+}
+
+func TestRow_TruncatesLongText(t *testing.T) {
+	t.Parallel()
+	blk := row(Row{Text: strings.Repeat("a", maxText+50)})
+	sec := blk.(*slackgo.SectionBlock)
+	assert.True(t, strings.HasSuffix(sec.Text.Text, "…"))
+}
+
+func TestFields(t *testing.T) {
+	t.Parallel()
+	blk := Fields("*Headline*", []string{"*A*\n1", "*B*\n2"})
+	sec, ok := blk.(*slackgo.SectionBlock)
+	require.True(t, ok)
+	assert.Equal(t, "*Headline*", sec.Text.Text)
+	require.Len(t, sec.Fields, 2)
 }
 
 func TestBuild_Structure(t *testing.T) {

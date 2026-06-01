@@ -14,7 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackcard"
+	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/pkg/errors"
 )
@@ -231,7 +231,7 @@ func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []so
 	if pc.subject != "" {
 		fallback += " - " + pc.subject
 	}
-	closing := slackcard.Context(fmt.Sprintf(
+	closing := slackkit.Context(fmt.Sprintf(
 		"Posted to %d %s  ·  <https://godaily.dev|godaily.dev>",
 		len(posted), plural(len(posted), "platform", "platforms"),
 	))
@@ -247,14 +247,14 @@ func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []so
 				Style: "primary",
 			})
 		}
-		s.slack.MustSend(ctx, slackcard.Build(title, contextLine, fallback, slack.ColorSuccess,
-			[]slackcard.Row{{Text: posted[0].Text}}, slack.ButtonRow(buttons), closing))
+		s.slack.MustSend(ctx, slackkit.Build(title, contextLine, fallback, slack.ColorSuccess,
+			[]slackkit.Row{{Text: posted[0].Text}}, slack.ButtonRow(buttons), closing))
 		return
 	}
 
-	rows := make([]slackcard.Row, 0, len(posted))
+	rows := make([]slackkit.Row, 0, len(posted))
 	for _, r := range posted {
-		rows = append(rows, slackcard.Row{
+		rows = append(rows, slackkit.Row{
 			Heading: platformLabel(r.Platform),
 			Text:    r.Text,
 			Button: &slack.LinkButton{
@@ -264,7 +264,7 @@ func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []so
 			},
 		})
 	}
-	s.slack.MustSend(ctx, slackcard.Build(title, contextLine, fallback, slack.ColorSuccess, rows, closing))
+	s.slack.MustSend(ctx, slackkit.Build(title, contextLine, fallback, slack.ColorSuccess, rows, closing))
 }
 
 // successContext builds the issue context line for the publish card: the

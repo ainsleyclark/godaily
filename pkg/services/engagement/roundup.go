@@ -20,7 +20,7 @@ import (
 	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	slacksdk "github.com/slack-go/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
 )
 
 const (
@@ -152,37 +152,36 @@ func roundupRequest(curr, prev Snapshot) slack.Request {
 		curr.From.Format("2 Jan"), curr.To.Format("2 Jan"))
 
 	blocks := []slack.Block{
-		slacksdk.NewHeaderBlock(plain("Weekly Roundup")),
-		slacksdk.NewContextBlock("", mrkdwn("GoDaily  ·  "+dateRange)),
-		slacksdk.NewDividerBlock(),
-		fieldsSection("*Headline*", headlineFields(curr.Summary, prev.Summary)),
-		slacksdk.NewContextBlock("", mrkdwn(fmt.Sprintf(
-			"Bounced %d  ·  Complained %d", curr.Summary.Bounced, curr.Summary.Complained))),
+		slackkit.Header("Weekly Roundup"),
+		slackkit.Context("GoDaily  ·  " + dateRange),
+		slackkit.Divider(),
+		slackkit.Fields("*Headline*", headlineFields(curr.Summary, prev.Summary)),
+		slackkit.Context(fmt.Sprintf(
+			"Bounced %d  ·  Complained %d", curr.Summary.Bounced, curr.Summary.Complained)),
 		subscriberBlock(curr.Subs),
-		slacksdk.NewDividerBlock(),
-		section("*Top links*\n" + topLinkLines(curr.Items)),
+		slackkit.Divider(),
+		slackkit.Section("*Top links*\n" + topLinkLines(curr.Items)),
 	}
 
 	if extras := tagSourceLine(curr); extras != "" {
-		blocks = append(blocks, slacksdk.NewContextBlock("", mrkdwn(extras)))
+		blocks = append(blocks, slackkit.Context(extras))
 	}
 
 	if curr.BestIssue != nil {
 		bi := curr.BestIssue
 		text := fmt.Sprintf("*Best issue:* %s  ·  %.1f%% click rate  ·  %.1f%% open rate",
 			bi.Slug, bi.ClickRate*100, bi.OpenRate*100)
-		blocks = append(blocks, slacksdk.NewSectionBlock(mrkdwn(text), nil,
-			accessoryButton("View analytics", fmt.Sprintf("%s/issues/%d", env.DashboardURL, bi.IssueID))))
+		blocks = append(blocks, slackkit.SectionWithButton(text, slack.LinkButton{
+			Label: "View analytics",
+			URL:   fmt.Sprintf("%s/issues/%d", env.DashboardURL, bi.IssueID),
+		}))
 	}
 
-	blocks = append(blocks, slacksdk.NewContextBlock("",
-		mrkdwn(fmt.Sprintf("<%s|Open the dashboard>", env.DashboardURL))))
+	blocks = append(blocks, slackkit.Context(
+		fmt.Sprintf("<%s|Open the dashboard>", env.DashboardURL)))
 
-	return slack.Request{
-		Text:        fmt.Sprintf("GoDaily Weekly Roundup (%s)", dateRange),
-		Blocks:      slack.BlockSet{BlockSet: blocks},
-		Attachments: []slack.Attachment{{Color: slack.ColorInfo}},
-	}
+	return slackkit.Message(
+		fmt.Sprintf("GoDaily Weekly Roundup (%s)", dateRange), slack.ColorInfo, blocks)
 }
 
 // headlineFields returns the four headline KPIs as two-column section
@@ -201,9 +200,9 @@ func headlineFields(cs, ps engagement.SummaryStats) []string {
 func subscriberBlock(d engagement.SubscriberData) slack.Block {
 	sp, ok := lastSubscriberPoint(d)
 	if !ok {
-		return section("*Subscribers*\nNo subscriber activity this week")
+		return slackkit.Section("*Subscribers*\nNo subscriber activity this week")
 	}
-	return fieldsSection("*Subscribers*", []string{
+	return slackkit.Fields("*Subscribers*", []string{
 		fmt.Sprintf("*New*\n+%d", sp.New),
 		fmt.Sprintf("*Net change*\n%s", signed(sp.NetChange)),
 		fmt.Sprintf("*Confirmed*\n%d", sp.Confirmed),
@@ -240,35 +239,6 @@ func tagSourceLine(curr Snapshot) string {
 		parts = append(parts, "*Top sources*: "+strings.Join(srcs, " · "))
 	}
 	return strings.Join(parts, "  ·  ")
-}
-
-func plain(text string) *slack.TextObject {
-	return slacksdk.NewTextBlockObject(slacksdk.PlainTextType, text, false, false)
-}
-
-func mrkdwn(text string) *slack.TextObject {
-	return slacksdk.NewTextBlockObject(slacksdk.MarkdownType, text, false, false)
-}
-
-func section(text string) *slack.Section {
-	return slacksdk.NewSectionBlock(mrkdwn(text), nil, nil)
-}
-
-// fieldsSection renders a titled section whose body is a list of two-column
-// markdown fields.
-func fieldsSection(title string, fields []string) *slack.Section {
-	objs := make([]*slack.TextObject, len(fields))
-	for i, f := range fields {
-		objs[i] = mrkdwn(f)
-	}
-	return slacksdk.NewSectionBlock(mrkdwn(title), objs, nil)
-}
-
-// accessoryButton builds a section accessory link button.
-func accessoryButton(label, url string) *slack.Accessory {
-	btn := slacksdk.NewButtonBlockElement("", url, plain(label))
-	btn.URL = url
-	return slacksdk.NewAccessory(btn)
 }
 
 // lastSubscriberPoint returns the most recent point in the series, if any.

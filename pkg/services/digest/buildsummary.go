@@ -9,10 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	slackgo "github.com/slack-go/slack"
-
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
 )
 
 // buildSummaryDraft describes one drafted social post for the build
@@ -42,20 +41,15 @@ type buildSummaryInput struct {
 // a "View issue" button, shows the AI intro as a blockquote, and lists each
 // drafted post with an "Edit" deep-link into the dashboard.
 //
-// Lives in the digest service (not the slack gateway) because the body
-// composition is domain-aware: it knows about digest issues, social
-// post kinds, and the dashboard URL. The slack gateway stays a plain
-// send-channel.
+// The body composition is domain-aware (it knows about digest issues,
+// social post kinds, and the dashboard URL); the block-kit plumbing comes
+// from the shared slackkit package.
 func buildSummary(in buildSummaryInput) slack.Request {
 	blocks := make([]slack.Block, 0, 5+len(in.Drafts))
-	blocks = append(blocks, slackgo.NewHeaderBlock(
-		slackgo.NewTextBlockObject(slackgo.PlainTextType, "Digest ready for review", false, false),
-	))
+	blocks = append(blocks, slackkit.Header("Digest ready for review"))
 
 	if ctxLine := summaryContext(in); ctxLine != "" {
-		blocks = append(blocks, slackgo.NewContextBlock("",
-			slackgo.NewTextBlockObject(slackgo.MarkdownType, ctxLine, false, false),
-		))
+		blocks = append(blocks, slackkit.Context(ctxLine))
 	}
 
 	// Subject line, with a "View issue" button when the issue exists.
@@ -64,55 +58,41 @@ func buildSummary(in buildSummaryInput) slack.Request {
 		if subject == "" {
 			subject = "Digest drafted"
 		}
-		var acc *slack.Accessory
 		if in.IssueID > 0 {
-			acc = accessoryButton("View issue", fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID), "primary")
+			blocks = append(blocks, slackkit.SectionWithButton("*"+subject+"*", slack.LinkButton{
+				Label: "View issue",
+				URL:   fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID),
+				Style: "primary",
+			}))
+		} else {
+			blocks = append(blocks, slackkit.Section("*"+subject+"*"))
 		}
-		blocks = append(blocks, slackgo.NewSectionBlock(
-			slackgo.NewTextBlockObject(slackgo.MarkdownType, "*"+subject+"*", false, false),
-			nil, acc,
-		))
 	}
 
 	if in.Intro != "" {
-		blocks = append(blocks, slackgo.NewSectionBlock(
-			slackgo.NewTextBlockObject(slackgo.MarkdownType, blockquote(in.Intro), false, false),
-			nil, nil,
-		))
+		blocks = append(blocks, slackkit.Section(slackkit.Blockquote(in.Intro)))
 	}
 
 	if len(in.Drafts) > 0 {
-		blocks = append(blocks, slackgo.NewDividerBlock())
+		blocks = append(blocks, slackkit.Divider())
 		for _, group := range groupDrafts(in.Drafts) {
-			blocks = append(blocks, slackgo.NewSectionBlock(
-				slackgo.NewTextBlockObject(slackgo.MarkdownType,
-					fmt.Sprintf("*%s · %s*\n%s", titleCase(group.Kind), titleCase(group.Platform), codeBlock(group.Text)),
-					false, false),
-				nil,
-				accessoryButton("Edit", fmt.Sprintf("%s/social/drafts?id=%d", env.DashboardURL, group.ID), ""),
-			))
+			text := fmt.Sprintf("*%s · %s*\n%s",
+				titleCase(group.Kind), titleCase(group.Platform), slackkit.CodeBlock(group.Text))
+			blocks = append(blocks, slackkit.SectionWithButton(text, slack.LinkButton{
+				Label: "Edit",
+				URL:   fmt.Sprintf("%s/social/drafts?id=%d", env.DashboardURL, group.ID),
+			}))
 		}
 	}
 
-	blocks = append(blocks, slackgo.NewContextBlock("",
-		slackgo.NewTextBlockObject(slackgo.MarkdownType,
-			"Auto-publishes at 11:00 UTC unless cancelled from the dashboard.",
-			false, false),
-	))
+	blocks = append(blocks, slackkit.Context(
+		"Auto-publishes at 11:00 UTC unless cancelled from the dashboard."))
 
 	fallback := "Digest ready for review"
 	if in.Subject != "" {
 		fallback += " - " + in.Subject
 	}
-
-	return slack.Request{
-		Text:   fallback,
-		Blocks: slack.BlockSet{BlockSet: blocks},
-		Attachments: []slack.Attachment{{
-			Color:    slack.ColorInfo,
-			Fallback: fallback,
-		}},
-	}
+	return slackkit.Message(fallback, slack.ColorInfo, blocks)
 }
 
 // summaryContext builds the one-line meta context under the header:
@@ -133,18 +113,6 @@ func summaryContext(in buildSummaryInput) string {
 	return strings.Join(parts, "  ·  ")
 }
 
-// accessoryButton builds a section accessory link button.
-func accessoryButton(label, url, style string) *slack.Accessory {
-	btn := slackgo.NewButtonBlockElement("", url,
-		slackgo.NewTextBlockObject(slackgo.PlainTextType, label, false, false),
-	)
-	btn.URL = url
-	if style != "" {
-		btn.Style = slackgo.Style(style)
-	}
-	return slackgo.NewAccessory(btn)
-}
-
 // distinctPlatforms counts the unique platforms across a draft slice.
 func distinctPlatforms(drafts []buildSummaryDraft) int {
 	seen := make(map[string]struct{}, len(drafts))
@@ -154,31 +122,12 @@ func distinctPlatforms(drafts []buildSummaryDraft) int {
 	return len(seen)
 }
 
-// blockquote prefixes every line so multi-line text renders as one
-// continuous Slack blockquote.
-func blockquote(text string) string {
-	lines := strings.Split(strings.TrimSpace(text), "\n")
-	for i, l := range lines {
-		lines[i] = "> " + l
-	}
-	return strings.Join(lines, "\n")
-}
-
 // plural returns one when n == 1 and many otherwise.
 func plural(n int, one, many string) string {
 	if n == 1 {
 		return one
 	}
 	return many
-}
-
-// codeBlock wraps text in a Slack fenced code block so multi-line drafts
-// render with monospace + their own border.
-func codeBlock(text string) string {
-	if text == "" {
-		return ""
-	}
-	return "```\n" + text + "\n```"
 }
 
 func titleCase(s string) string {
