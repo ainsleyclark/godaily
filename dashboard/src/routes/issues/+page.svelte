@@ -41,7 +41,7 @@
 			const q = toQueryParams($dateRange);
 			const [issuesPage, eng] = await Promise.all([
 				api.digestIssues(status, 1, 200),
-				api.issues({ ...q, limit: 200 }).catch(() => [] as IssueEngagement[])
+				api.issues({ ...q, limit: 100 }).catch(() => [] as IssueEngagement[])
 			]);
 			engagement = eng;
 			const bySlug = new Map(eng.map((e) => [e.slug, e]));

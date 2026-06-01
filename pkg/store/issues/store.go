@@ -209,13 +209,19 @@ func issueFromRows(i sqlc.Issue, rawItems []sqlc.Item) digest.Issue {
 
 func transformItem(i sqlc.Item) news.Item {
 	out := news.Item{
-		ID:      i.ID,
-		Source:  news.Source(i.Source),
-		Tag:     news.Tag(i.Tag),
-		Title:   i.Title,
-		URL:     i.Url,
-		Snippet: i.Summary.String,
-		Score:   i.Score.Float64,
+		ID:          i.ID,
+		Source:      news.Source(i.Source),
+		Tag:         news.Tag(i.Tag),
+		Title:       i.Title,
+		URL:         i.Url,
+		OriginalURL: i.OriginalUrl.String,
+		Snippet:     i.Summary.String,
+		Score:       i.Score.Float64,
+		Position:    i.Position,
+		InDigest:    i.IssueID.Valid,
+	}
+	if i.Published != nil {
+		out.Published = *i.Published
 	}
 	if i.AuthorName.Valid || i.AuthorUsername.Valid || i.AuthorAvatarUrl.Valid || i.AuthorProfileUrl.Valid {
 		out.Author = &news.Author{
