@@ -69,24 +69,28 @@ func jobFeedAgeDays(now time.Time, pubDate string) int {
 	return days
 }
 
-// jobRoleAt splits a "<Role> at <Company>" job title into its parts, trimming
-// any trailing location/salary suffix from the company (" - …", " | …", " (…)").
-// Returns an empty company and the whole title as the role when there is no
-// " at " separator — Go-only boards still rank fine without a company, they just
-// won't take part in cross-source de-duplication.
+// jobRoleAt splits a "<Role> @ <Company>" or "<Role> at <Company>" job title
+// into its parts, trimming any trailing location/salary suffix from the company
+// (" - …", " | …", " (…)"). Non-breaking spaces — which Golangprojects pads its
+// "@" separator with — are normalised to regular spaces first. Returns an empty
+// company and the whole title as the role when no separator is present; Go-only
+// boards still rank fine without a company, they just won't take part in
+// cross-source de-duplication.
 func jobRoleAt(title string) (company, role string) {
-	title = strings.TrimSpace(title)
-	const sep = " at "
-	i := strings.Index(title, sep)
-	if i <= 0 {
-		return "", title
-	}
-	role = strings.TrimSpace(title[:i])
-	company = strings.TrimSpace(title[i+len(sep):])
-	for _, d := range []string{" - ", " | ", " · ", " ("} {
-		if j := strings.Index(company, d); j > 0 {
-			company = strings.TrimSpace(company[:j])
+	title = strings.TrimSpace(strings.ReplaceAll(title, "\u00a0", " "))
+	for _, sep := range []string{" @ ", " at "} {
+		i := strings.Index(title, sep)
+		if i <= 0 {
+			continue
 		}
+		role = strings.TrimSpace(title[:i])
+		company = strings.TrimSpace(title[i+len(sep):])
+		for _, d := range []string{" - ", " | ", " · ", " ("} {
+			if j := strings.Index(company, d); j > 0 {
+				company = strings.TrimSpace(company[:j])
+			}
+		}
+		return company, role
 	}
-	return company, role
+	return "", title
 }

@@ -19,13 +19,13 @@ const golangProjectsFixture = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <item>
-      <title>Go Developer at Gamma GmbH - Remote</title>
+      <title>Senior Golang Developer @ TRE ALTAMIRA Srl - Remote</title>
       <link>https://www.golangprojects.com/job/1</link>
       <description>Remote Go role, salary €90k.</description>
       <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
     </item>
     <item>
-      <title>Platform Engineer at Delta</title>
+      <title>Platform Engineer @ Delta</title>
       <link>https://www.golangprojects.com/job/2</link>
       <description>On-site platform work.</description>
       <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
@@ -68,10 +68,11 @@ func TestGolangProjects_Fetch(t *testing.T) {
 				dev := items[0]
 				assert.Equal(t, news.SourceGolangProjects, dev.Source)
 				assert.Equal(t, news.TagJobs, dev.Tag)
-				assert.Equal(t, "Gamma GmbH · Go Developer", dev.Title)
+				// "Role @ Company - Location" → "Company · Role", suffix trimmed.
+				assert.Equal(t, "TRE ALTAMIRA Srl · Senior Golang Developer", dev.Title)
 				assert.Equal(t, "https://www.golangprojects.com/job/1", dev.URL)
 				require.NotNil(t, dev.Author)
-				assert.Equal(t, "Gamma GmbH", dev.Author.Name)
+				assert.Equal(t, "TRE ALTAMIRA Srl", dev.Author.Name)
 				assert.Equal(t, fixedNow(), dev.Published)
 
 				platform := items[1]
@@ -103,7 +104,9 @@ func TestJobRoleAt(t *testing.T) {
 		wantRole    string
 	}{
 		"Role at company":       {title: "Go Developer at Acme", wantCompany: "Acme", wantRole: "Go Developer"},
-		"Trailing dash suffix":  {title: "Go Developer at Acme - Remote", wantCompany: "Acme", wantRole: "Go Developer"},
+		"At sign separator":     {title: "Go Developer @ Acme", wantCompany: "Acme", wantRole: "Go Developer"},
+		"Non-breaking @ spaces": {title: "Senior Go Developer\u00a0@\u00a0Acme Srl", wantCompany: "Acme Srl", wantRole: "Senior Go Developer"},
+		"Trailing dash suffix":  {title: "Go Developer @ Acme - Remote", wantCompany: "Acme", wantRole: "Go Developer"},
 		"Trailing paren suffix": {title: "Go Developer at Acme (Berlin)", wantCompany: "Acme", wantRole: "Go Developer"},
 		"No separator":          {title: "Go Developer", wantCompany: "", wantRole: "Go Developer"},
 	}
