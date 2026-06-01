@@ -40,6 +40,11 @@ sql:
               pointer: true
           - column: "social_posts.posted_at"
             go_type: "time.Time"
+          - column: "social_posts.published_at"
+            go_type:
+              type: "Time"
+              import: "time"
+              pointer: true
           - column: "social_posts.issue_id"
             go_type:
               type: "int64"

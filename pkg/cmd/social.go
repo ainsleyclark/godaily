@@ -79,16 +79,18 @@ func socialPostCmd(app *godaily.App) *cli.Command {
 	}
 }
 
-// socialPublishCmd runs the full AI-driven pipeline: picks the day's best
-// item, generates per-platform copy, and posts (or dry-runs) to each platform.
+// socialPublishCmd runs the full AI-driven pipeline end-to-end: drafts
+// per-platform copy via AI, then immediately publishes the drafts. Each
+// stage's results are printed so dry-runs surface generated text without
+// promoting anything.
 func socialPublishCmd(a *godaily.App) *cli.Command {
 	return &cli.Command{
 		Name:  "publish",
-		Usage: "Generate and publish AI-crafted posts for today's digest.",
+		Usage: "Draft and publish AI-crafted posts for today's digest.",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "dry-run",
-				Usage: "Generate posts via AI but skip platform HTTP and DB writes.",
+				Usage: "Generate drafts via AI but skip persisting them and skip platform HTTP.",
 			},
 			&cli.StringSliceFlag{
 				Name:  "platform",
@@ -114,18 +116,31 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				return err
 			}
 
-			results, err := a.Service.Social.Post(ctx, social.PostOptions{
+			opts := social.PostOptions{
 				Date:      date,
 				DryRun:    cmd.Bool("dry-run"),
 				Platforms: platforms,
-			})
-			if err != nil {
-				a.Slack.MustSend(ctx, slack.Error("Social publish CLI failed", err))
-				printResults(results)
-				return err
 			}
 
-			printResults(results)
+			draftResults, err := a.Service.Social.DraftFeatured(ctx, opts)
+			if err != nil {
+				a.Slack.MustSend(ctx, slack.Error("Social draft CLI failed", err))
+				printResults(draftResults)
+				return err
+			}
+			printResults(draftResults)
+
+			if opts.DryRun {
+				return nil
+			}
+
+			publishResults, err := a.Service.Social.PublishDrafts(ctx, opts)
+			if err != nil {
+				a.Slack.MustSend(ctx, slack.Error("Social publish CLI failed", err))
+				printResults(publishResults)
+				return err
+			}
+			printResults(publishResults)
 			return nil
 		},
 	}

@@ -57,6 +57,20 @@ func (mr *MockPostRepositoryMockRecorder) Create(ctx, p any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockPostRepository)(nil).Create), ctx, p)
 }
 
+// DeleteDraftsByIssue mocks base method.
+func (m *MockPostRepository) DeleteDraftsByIssue(ctx context.Context, issueID int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteDraftsByIssue", ctx, issueID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteDraftsByIssue indicates an expected call of DeleteDraftsByIssue.
+func (mr *MockPostRepositoryMockRecorder) DeleteDraftsByIssue(ctx, issueID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDraftsByIssue", reflect.TypeOf((*MockPostRepository)(nil).DeleteDraftsByIssue), ctx, issueID)
+}
+
 // HasPosted mocks base method.
 func (m *MockPostRepository) HasPosted(ctx context.Context, issueID int64, platform string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -115,4 +129,19 @@ func (m *MockPostRepository) List(ctx context.Context, opts social.PostListOptio
 func (mr *MockPostRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockPostRepository)(nil).List), ctx, opts)
+}
+
+// UpdateStatus mocks base method.
+func (m *MockPostRepository) UpdateStatus(ctx context.Context, id int64, status social.PostStatus, publishedAt *time.Time, postURL string) (social.Post, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStatus", ctx, id, status, publishedAt, postURL)
+	ret0, _ := ret[0].(social.Post)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateStatus indicates an expected call of UpdateStatus.
+func (mr *MockPostRepositoryMockRecorder) UpdateStatus(ctx, id, status, publishedAt, postURL any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockPostRepository)(nil).UpdateStatus), ctx, id, status, publishedAt, postURL)
 }

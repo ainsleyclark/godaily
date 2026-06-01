@@ -12,6 +12,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
@@ -26,12 +27,14 @@ type Service struct {
 	items             news.ItemRepository
 	subscribers       audience.SubscriberRepository
 	slack             slack.Sender
+	social            social.Service
 }
 
 var _ digest.Service = (*Service)(nil)
 
 // New creates a new Service, validating that all news sources have
-// registered fetchers.
+// registered fetchers. socialSvc is optional and may be nil — when nil,
+// Build skips the social-drafting side effect.
 func New(
 	emailSender email.BatchSender,
 	adminEmail string,
@@ -40,6 +43,7 @@ func New(
 	issues digest.IssueRepository,
 	items news.ItemRepository,
 	subscribers audience.SubscriberRepository,
+	socialSvc social.Service,
 ) (*Service, error) {
 	if news.HasSources() {
 		if err := news.Validate(); err != nil {
@@ -54,6 +58,7 @@ func New(
 		items:             items,
 		subscribers:       subscribers,
 		slack:             slack,
+		social:            socialSvc,
 	}, nil
 }
 

@@ -15,6 +15,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
@@ -96,6 +97,19 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 		slog.WarnContext(ctx, "Sending preview after build failed", "err", previewErr)
 		if s.slack != nil {
 			s.slack.MustSend(ctx, slack.Error("Send preview after build failed", previewErr))
+		}
+	}
+
+	// Draft featured social posts as a best-effort side effect. A failed
+	// AI draft must not fail the build — the email digest still ships at
+	// 08:00 and the 11:00 social cron will simply find no drafts to
+	// publish. social is optional and may be unset in tests.
+	if s.social != nil {
+		if _, draftErr := s.social.DraftFeatured(ctx, social.PostOptions{Date: today}); draftErr != nil {
+			slog.WarnContext(ctx, "Drafting featured social after build failed", "err", draftErr)
+			if s.slack != nil {
+				s.slack.MustSend(ctx, slack.Error("Draft featured social after build failed", draftErr))
+			}
 		}
 	}
 

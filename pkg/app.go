@@ -121,11 +121,6 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
 	aiClient := ai.New(config, slackClient)
 
-	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore)
-	if err != nil {
-		return nil, teardown, err
-	}
-
 	socialSvc, err := socialsvc.New(
 		config,
 		aiClient,
@@ -135,6 +130,11 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		repo.Metrics,
 		slackClient,
 	)
+	if err != nil {
+		return nil, teardown, err
+	}
+
+	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore, socialSvc)
 	if err != nil {
 		return nil, teardown, err
 	}
