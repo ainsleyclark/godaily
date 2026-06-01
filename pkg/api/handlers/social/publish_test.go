@@ -23,7 +23,9 @@ import (
 	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 )
 
-// newHandlerNoPosters builds a Handler with a real social.Service that has no posters configured.
+// newHandlerNoPosters builds a Handler with a real social.Service that
+// has no posters configured. Used to exercise the weekend / not-wired
+// short-circuits without a real DB.
 func newHandlerNoPosters(t *testing.T) *Handler {
 	t.Helper()
 
@@ -47,7 +49,7 @@ func newHandlerNoPosters(t *testing.T) *Handler {
 	}
 }
 
-func TestHandleFeatured(t *testing.T) {
+func TestHandlePublish(t *testing.T) {
 	t.Parallel()
 
 	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
@@ -55,28 +57,10 @@ func TestHandleFeatured(t *testing.T) {
 
 		h := newHandlerNoPosters(t)
 		rec := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodGet, "/social/featured", nil)
+		req := httptest.NewRequest(http.MethodGet, "/social/publish", nil)
 		ctx := webkit.NewContext(rec, req)
 
-		err := h.Featured(ctx)
-
-		assert.NoError(t, err)
-		assert.Equal(t, http.StatusOK, rec.Code)
-	})
-}
-
-func TestHandleRotation(t *testing.T) {
-	t.Parallel()
-
-	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
-		t.Parallel()
-
-		h := newHandlerNoPosters(t)
-		rec := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodGet, "/social/rotation", nil)
-		ctx := webkit.NewContext(rec, req)
-
-		err := h.Rotation(ctx)
+		err := h.Publish(ctx)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)

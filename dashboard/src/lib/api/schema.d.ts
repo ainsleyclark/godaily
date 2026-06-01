@@ -1490,7 +1490,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/social/featured": {
+    "/social/drafts": {
         parameters: {
             query?: never;
             header?: never;
@@ -1498,8 +1498,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Post the featured social update.
-         * @description Posts today's featured social update across platforms. Skipped at weekends and outside the chosen 10-minute slot; idempotent via the social_posts table.
+         * List pending social drafts.
+         * @description Returns every row in social_posts with status='draft' (any kind, any platform). The dashboard renders these in the Drafts tab so an operator can review and edit before the 11:00 publish cron.
          */
         get: {
             parameters: {
@@ -1510,16 +1510,16 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description Posted, or skipped (weekend/wrong slot/not wired) */
+                /** @description Successfully listed drafts */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Response"];
+                        "application/json": components["schemas"]["SocialDraftListResponse"];
                     };
                 };
-                /** @description Failed to post featured */
+                /** @description Failed to list drafts */
                 500: {
                     headers: {
                         [name: string]: unknown;
@@ -1532,6 +1532,167 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/social/drafts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Edit a social draft's text.
+         * @description Replaces the text body of a draft social post. Only rows with status='draft' may be edited; the request is rejected with 409 if the row has already been published, errored, or cancelled.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Social post ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            /** @description Replacement text */
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never> | components["schemas"]["SocialDraftUpdateRequest"];
+                };
+            };
+            responses: {
+                /** @description Updated draft */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["social.Post"];
+                    };
+                };
+                /** @description Invalid request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Draft not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Row is no longer a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to update draft */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/social/drafts/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a social draft so the publish cron skips it.
+         * @description Transitions a draft row to status='cancelled'. The publish cron filters cancelled rows out and rotation idempotency counts them as "already handled", preventing tomorrow's build from regenerating the same subject.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Social post ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Cancelled draft */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["social.Post"];
+                    };
+                };
+                /** @description Invalid request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Draft not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Row is no longer a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to cancel draft */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1586,7 +1747,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/social/rotation": {
+    "/social/publish": {
         parameters: {
             query?: never;
             header?: never;
@@ -1594,8 +1755,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Post a rotation social update.
-         * @description Posts the next rotating social update across platforms. Skipped at weekends or when the social service is not wired.
+         * Publish every pending social draft.
+         * @description Walks every row with status='draft' (any kind, any platform) and posts it to its platform. Cancelled rows are skipped. Idempotent via row status transitions. Skipped at weekends.
          */
         get: {
             parameters: {
@@ -1606,7 +1767,7 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description Rotated, or skipped (weekend/not wired) */
+                /** @description Published, or skipped (weekend/not wired) */
                 200: {
                     headers: {
                         [name: string]: unknown;
@@ -1615,7 +1776,7 @@ export interface paths {
                         "application/json": components["schemas"]["Response"];
                     };
                 };
-                /** @description Failed to rotate */
+                /** @description Failed to publish drafts */
                 500: {
                     headers: {
                         [name: string]: unknown;
@@ -1955,6 +2116,12 @@ export interface components {
             message?: string;
             status?: number;
         };
+        SocialDraftListResponse: {
+            items?: components["schemas"]["social.Post"][];
+        };
+        SocialDraftUpdateRequest: {
+            text?: string;
+        };
         SocialMetricsResponse: {
             data?: components["schemas"]["engagement.SocialPostEngagement"][];
             error?: boolean;
@@ -2166,6 +2333,23 @@ export interface components {
          * @enum {string}
          */
         "news.Tag": "article" | "tutorial" | "proposal" | "proposal_accepted" | "proposal_shipped" | "video" | "podcast" | "release" | "security" | "discussion" | "trending" | "event" | "conference" | "conference_reminder" | "conference_alert" | "jobs";
+        "social.Post": {
+            id?: number;
+            issue_id?: number;
+            kind?: components["schemas"]["social.PostKind"];
+            mention_source?: string;
+            platform?: string;
+            post_url?: string;
+            posted_at?: string;
+            published_at?: string;
+            status?: components["schemas"]["social.PostStatus"];
+            subject?: string;
+            text?: string;
+        };
+        /** @enum {string} */
+        "social.PostKind": "featured" | "new_source" | "recap" | "spotlight" | "cta" | "community";
+        /** @enum {string} */
+        "social.PostStatus": "draft" | "published" | "error" | "cancelled";
     };
     responses: never;
     parameters: never;

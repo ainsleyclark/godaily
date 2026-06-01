@@ -18,12 +18,17 @@ import (
 
 // Rotate walks the day's candidate list (or just ForceKind), picks the
 // first eligible one, and publishes it across the configured platforms.
+// Kept for manual CLI invocation (--kind) only; the cron path now uses
+// DraftAll + PublishDrafts so every rotation post passes through the
+// same edit window as the daily featured slot.
 //
-//   - Tuesday: new_source → spotlight → cta → no-op.
+// Day-of-week rules (also drive DraftAll on the matching weekday):
+//
+//   - Monday: recap (the previous week's top-clicks). Moved off Friday
+//     so the metric window covers a complete Mon–Fri + weekend.
 //   - Wednesday: community (a Go conference or meetup), 2:1 meetup:conf
 //     rotation through the curated lists in pkg/data.
-//   - Friday: recap (only). No fallback — Friday is recap day; if there's
-//     no click data, the slot stays quiet.
+//   - Friday: new_source → spotlight → cta → no-op.
 //   - Other days: no-op unless ForceKind is set.
 func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
 	if !s.hasPosters() {
@@ -102,17 +107,17 @@ func (s *Service) pickCandidates(opts social.RotateOptions) ([]candidate.Candida
 
 	weekday := opts.Now.UTC().Weekday()
 	switch weekday {
-	case time.Tuesday:
+	case time.Monday:
+		return orderedByKinds(s.candidates, social.PostKindRecap), nil
+	case time.Wednesday:
+		return orderedByKinds(s.candidates, social.PostKindCommunity), nil
+	case time.Friday:
 		return orderedByKinds(
 			s.candidates,
 			social.PostKindNewSource,
 			social.PostKindSpotlight,
 			social.PostKindCTA,
 		), nil
-	case time.Wednesday:
-		return orderedByKinds(s.candidates, social.PostKindCommunity), nil
-	case time.Friday:
-		return orderedByKinds(s.candidates, social.PostKindRecap), nil
 	default:
 		return nil, nil
 	}
@@ -133,12 +138,14 @@ func orderedByKinds(all []candidate.Candidate, kinds ...social.PostKind) []candi
 
 // subjectIdempotency returns a skipIfPosted check keyed off the
 // candidate's Subject. An empty subject disables the check (caller is
-// trusting the candidate's own eligibility logic).
+// trusting the candidate's own eligibility logic). Cancelled rows count
+// as "already handled" so a deliberately-skipped draft is not
+// regenerated on the next build.
 func subjectIdempotency(posts social.PostRepository, subject string) func(ctx context.Context, platform string) (bool, error) {
 	if subject == "" {
 		return nil
 	}
 	return func(ctx context.Context, platform string) (bool, error) {
-		return posts.HasPostedBySubject(ctx, subject, platform)
+		return posts.HasPostedOrCancelledBySubject(ctx, subject, platform)
 	}
 }

@@ -92,6 +92,19 @@ components:
         status:
           type: integer
       type: object
+    SocialDraftListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/social.Post'
+          type: array
+          uniqueItems: false
+      type: object
+    SocialDraftUpdateRequest:
+      properties:
+        text:
+          type: string
+      type: object
     SocialMetricsResponse:
       properties:
         data:
@@ -592,6 +605,59 @@ components:
       - TagConferenceReminder
       - TagConferenceAlert
       - TagJobs
+    social.Post:
+      properties:
+        id:
+          type: integer
+        issue_id:
+          type: integer
+        kind:
+          $ref: '#/components/schemas/social.PostKind'
+        mention_source:
+          type: string
+        platform:
+          type: string
+        post_url:
+          type: string
+        posted_at:
+          type: string
+        published_at:
+          type: string
+        status:
+          $ref: '#/components/schemas/social.PostStatus'
+        subject:
+          type: string
+        text:
+          type: string
+      type: object
+    social.PostKind:
+      enum:
+      - featured
+      - new_source
+      - recap
+      - spotlight
+      - cta
+      - community
+      type: string
+      x-enum-varnames:
+      - PostKindFeatured
+      - PostKindNewSource
+      - PostKindRecap
+      - PostKindSpotlight
+      - PostKindCTA
+      - PostKindCommunity
+    social.PostStatus:
+      enum:
+      - draft
+      - published
+      - error
+      - cancelled
+      type: string
+      x-enum-varnames:
+      - PostStatusDraft
+      - PostStatusPublished
+      - PostStatusError
+      - PostStatusCancelled
   securitySchemes:
     BearerAuth:
       description: Bearer token supplied in the Authorization header.
@@ -1571,27 +1637,134 @@ paths:
       summary: Engagement time series.
       tags:
       - metrics
-  /social/featured:
+  /social/drafts:
     get:
-      description: Posts today's featured social update across platforms. Skipped
-        at weekends and outside the chosen 10-minute slot; idempotent via the social_posts
-        table.
+      description: Returns every row in social_posts with status='draft' (any kind,
+        any platform). The dashboard renders these in the Drafts tab so an operator
+        can review and edit before the 11:00 publish cron.
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
-          description: Posted, or skipped (weekend/wrong slot/not wired)
+                $ref: '#/components/schemas/SocialDraftListResponse'
+          description: Successfully listed drafts
         "500":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Response'
-          description: Failed to post featured
+          description: Failed to list drafts
       security:
       - BearerAuth: []
-      summary: Post the featured social update.
+      summary: List pending social drafts.
+      tags:
+      - social
+  /social/drafts/{id}:
+    patch:
+      description: Replaces the text body of a draft social post. Only rows with status='draft'
+        may be edited; the request is rejected with 409 if the row has already been
+        published, errored, or cancelled.
+      parameters:
+      - description: Social post ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/SocialDraftUpdateRequest'
+                description: Replacement text
+                summary: body
+        description: Replacement text
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/social.Post'
+          description: Updated draft
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Draft not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Row is no longer a draft
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to update draft
+      security:
+      - BearerAuth: []
+      summary: Edit a social draft's text.
+      tags:
+      - social
+  /social/drafts/{id}/cancel:
+    post:
+      description: Transitions a draft row to status='cancelled'. The publish cron
+        filters cancelled rows out and rotation idempotency counts them as "already
+        handled", preventing tomorrow's build from regenerating the same subject.
+      parameters:
+      - description: Social post ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/social.Post'
+          description: Cancelled draft
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Draft not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Row is no longer a draft
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to cancel draft
+      security:
+      - BearerAuth: []
+      summary: Cancel a social draft so the publish cron skips it.
       tags:
       - social
   /social/metrics:
@@ -1617,26 +1790,27 @@ paths:
       summary: Refresh social post metrics.
       tags:
       - social
-  /social/rotation:
+  /social/publish:
     get:
-      description: Posts the next rotating social update across platforms. Skipped
-        at weekends or when the social service is not wired.
+      description: Walks every row with status='draft' (any kind, any platform) and
+        posts it to its platform. Cancelled rows are skipped. Idempotent via row status
+        transitions. Skipped at weekends.
       responses:
         "200":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Response'
-          description: Rotated, or skipped (weekend/not wired)
+          description: Published, or skipped (weekend/not wired)
         "500":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Response'
-          description: Failed to rotate
+          description: Failed to publish drafts
       security:
       - BearerAuth: []
-      summary: Post a rotation social update.
+      summary: Publish every pending social draft.
       tags:
       - social
   /subscribe:

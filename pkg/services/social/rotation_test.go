@@ -91,15 +91,17 @@ func newRotationFixture(t *testing.T, cands ...candidate.Candidate) rotationFixt
 
 var (
 	// Calendar reference points for the day-routing tests. All at 15:00
-	// UTC — the scheduled rotation time.
-	tueAt15 = time.Date(2026, 5, 19, 15, 0, 0, 0, time.UTC) // Tuesday
+	// UTC — the scheduled rotation time. Day assignment:
+	//   Mon → recap, Wed → community, Fri → new_source/spotlight/cta.
+	monAt15 = time.Date(2026, 5, 18, 15, 0, 0, 0, time.UTC) // Monday (recap)
+	tueAt15 = time.Date(2026, 5, 19, 15, 0, 0, 0, time.UTC) // Tuesday (no-op day)
 	wedAt15 = time.Date(2026, 5, 20, 15, 0, 0, 0, time.UTC) // Wednesday (community)
 	thuAt15 = time.Date(2026, 5, 21, 15, 0, 0, 0, time.UTC) // Thursday (no-op day)
-	friAt15 = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC) // Friday
+	friAt15 = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC) // Friday (rotation)
 )
 
 func TestService_Rotate(t *testing.T) {
-	t.Run("Tuesday dry-run picks first eligible candidate", func(t *testing.T) {
+	t.Run("Friday dry-run picks first eligible candidate", func(t *testing.T) {
 		newSrc := &fakeCandidate{kind: social.PostKindNewSource, eligible: false}
 		spot := &fakeCandidate{
 			kind:     social.PostKindSpotlight,
@@ -110,14 +112,14 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: true}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindSpotlight, res[0].Kind)
 		assert.Equal(t, "Follow @ardanlabs for great Go content.", res[0].Text)
 	})
 
-	t.Run("Tuesday falls through to CTA when others ineligible", func(t *testing.T) {
+	t.Run("Friday falls through to CTA when others ineligible", func(t *testing.T) {
 		newSrc := &fakeCandidate{kind: social.PostKindNewSource, eligible: false}
 		spot := &fakeCandidate{kind: social.PostKindSpotlight, eligible: false}
 		cta := &fakeCandidate{
@@ -128,25 +130,25 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindCTA, res[0].Kind)
 	})
 
-	t.Run("Tuesday with no eligible candidates is a no-op", func(t *testing.T) {
+	t.Run("Friday with no eligible candidates is a no-op", func(t *testing.T) {
 		newSrc := &fakeCandidate{kind: social.PostKindNewSource, eligible: false}
 		spot := &fakeCandidate{kind: social.PostKindSpotlight, eligible: false}
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: false}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
 		require.NoError(t, err)
 		assert.Empty(t, res)
 	})
 
-	t.Run("Friday ignores Tuesday candidates and no-ops without recap", func(t *testing.T) {
-		// Even though all three Tuesday candidates are eligible, Friday
+	t.Run("Monday ignores Friday candidates and no-ops without recap", func(t *testing.T) {
+		// Even though all three Friday candidates are eligible, Monday
 		// must ignore them. With no recap candidate registered, this is
 		// a no-op.
 		newSrc := &fakeCandidate{kind: social.PostKindNewSource, eligible: true, text: "x"}
@@ -154,12 +156,12 @@ func TestService_Rotate(t *testing.T) {
 		cta := &fakeCandidate{kind: social.PostKindCTA, eligible: true, text: "z"}
 		f := newRotationFixture(t, newSrc, spot, cta)
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: monAt15, DryRun: true})
 		require.NoError(t, err)
-		assert.Empty(t, res, "Friday without recap registered must no-op")
+		assert.Empty(t, res, "Monday without recap registered must no-op")
 	})
 
-	t.Run("Friday runs recap when eligible", func(t *testing.T) {
+	t.Run("Monday runs recap when eligible", func(t *testing.T) {
 		rec := &fakeCandidate{
 			kind:     social.PostKindRecap,
 			eligible: true,
@@ -168,13 +170,22 @@ func TestService_Rotate(t *testing.T) {
 		}
 		f := newRotationFixture(t, rec)
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15, DryRun: true})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: monAt15, DryRun: true})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindRecap, res[0].Kind)
 	})
 
-	t.Run("Non-rotation day is a no-op", func(t *testing.T) {
+	t.Run("Tuesday is a no-op day", func(t *testing.T) {
+		always := &fakeCandidate{kind: social.PostKindNewSource, eligible: true, text: "x"}
+		f := newRotationFixture(t, always)
+
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15, DryRun: true})
+		require.NoError(t, err)
+		assert.Empty(t, res, "Tuesday is not a rotation day")
+	})
+
+	t.Run("Thursday is a no-op day", func(t *testing.T) {
 		always := &fakeCandidate{kind: social.PostKindNewSource, eligible: true, text: "x"}
 		f := newRotationFixture(t, always)
 
@@ -256,7 +267,7 @@ func TestService_Rotate(t *testing.T) {
 		require.NoError(t, err)
 		svc.candidates = []candidate.Candidate{&fakeCandidate{kind: social.PostKindCTA, eligible: true}}
 
-		res, err := svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
+		res, err := svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15})
 		require.NoError(t, err)
 		assert.Empty(t, res)
 	})
@@ -271,7 +282,7 @@ func TestService_Rotate(t *testing.T) {
 		f := newRotationFixture(t, spot)
 
 		f.posts.EXPECT().
-			HasPostedBySubject(gomock.Any(), "spotlight:ardanlabs", "bluesky").
+			HasPostedOrCancelledBySubject(gomock.Any(), "spotlight:ardanlabs", "bluesky").
 			Return(false, nil)
 		f.poster.EXPECT().
 			Post(gomock.Any(), platform.PostRequest{Text: "Follow @ardanlabs for great Go content."}).
@@ -287,14 +298,14 @@ func TestService_Rotate(t *testing.T) {
 				return p, nil
 			})
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.Equal(t, social.PostKindSpotlight, res[0].Kind)
 		assert.Equal(t, "https://bsky.app/x", res[0].PostURL)
 	})
 
-	t.Run("Wet run skips when subject already posted", func(t *testing.T) {
+	t.Run("Wet run skips when subject already posted or cancelled", func(t *testing.T) {
 		spot := &fakeCandidate{
 			kind:     social.PostKindSpotlight,
 			eligible: true,
@@ -304,11 +315,11 @@ func TestService_Rotate(t *testing.T) {
 		f := newRotationFixture(t, spot)
 
 		f.posts.EXPECT().
-			HasPostedBySubject(gomock.Any(), "spotlight:ardanlabs", "bluesky").
+			HasPostedOrCancelledBySubject(gomock.Any(), "spotlight:ardanlabs", "bluesky").
 			Return(true, nil)
 		// No Post(), no Create() — the platform is skipped.
 
-		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: tueAt15})
+		res, err := f.svc.Rotate(context.Background(), social.RotateOptions{Now: friAt15})
 		require.NoError(t, err)
 		require.Len(t, res, 1)
 		assert.True(t, res[0].Skipped, "platform should report Skipped when already posted")

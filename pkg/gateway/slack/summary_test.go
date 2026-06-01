@@ -1,0 +1,145 @@
+// Copyright (c) 2026 godaily (Ainsley Clark) All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package slack
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/slack-go/slack"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestBuildSummary(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Header + subject + intro + items render", func(t *testing.T) {
+		t.Parallel()
+
+		req := BuildSummary(BuildSummaryInput{
+			IssueDate: "2026-06-01",
+			IssueID:   42,
+			Subject:   "GoDaily — June 1",
+			Intro:     "A handful of generics improvements landed.",
+			ItemCount: 12,
+		})
+
+		flat := flatten(req)
+		assert.Contains(t, flat, "Digest 2026-06-01")
+		assert.Contains(t, flat, "GoDaily — June 1")
+		assert.Contains(t, flat, "A handful of generics improvements landed.")
+		assert.Contains(t, flat, "12")
+	})
+
+	t.Run("View issue button uses dashboard URL with issue id", func(t *testing.T) {
+		t.Parallel()
+
+		req := BuildSummary(BuildSummaryInput{
+			IssueDate: "2026-06-01",
+			IssueID:   42,
+			Subject:   "x",
+		})
+		assert.Contains(t, flatten(req), "/issues/42")
+		assert.Contains(t, flatten(req), DashboardURL)
+	})
+
+	t.Run("Each draft renders kind, platform, text and an Edit button", func(t *testing.T) {
+		t.Parallel()
+
+		req := BuildSummary(BuildSummaryInput{
+			IssueDate: "2026-06-01",
+			IssueID:   42,
+			Drafts: []BuildSummaryDraft{
+				{ID: 1, Kind: "featured", Platform: "bluesky", Text: "draft body for bluesky"},
+				{ID: 2, Kind: "featured", Platform: "linkedin", Text: "draft body for linkedin"},
+				{ID: 3, Kind: "recap", Platform: "bluesky", Text: "this week’s top clicks"},
+			},
+		})
+		flat := flatten(req)
+
+		assert.Contains(t, flat, "Featured · Bluesky")
+		assert.Contains(t, flat, "Featured · Linkedin")
+		assert.Contains(t, flat, "Recap · Bluesky")
+		assert.Contains(t, flat, "draft body for bluesky")
+		assert.Contains(t, flat, "this week’s top clicks")
+
+		assert.Contains(t, flat, "/social/drafts?id=1")
+		assert.Contains(t, flat, "/social/drafts?id=2")
+		assert.Contains(t, flat, "/social/drafts?id=3")
+	})
+
+	t.Run("Drafts are emitted in stable kind+platform order", func(t *testing.T) {
+		t.Parallel()
+
+		req := BuildSummary(BuildSummaryInput{
+			IssueDate: "2026-06-01",
+			Drafts: []BuildSummaryDraft{
+				{ID: 3, Kind: "recap", Platform: "linkedin", Text: "r-li"},
+				{ID: 1, Kind: "featured", Platform: "bluesky", Text: "f-bs"},
+				{ID: 2, Kind: "featured", Platform: "linkedin", Text: "f-li"},
+			},
+		})
+		flat := flatten(req)
+		// featured Bluesky must appear before featured LinkedIn before recap LinkedIn
+		i1 := strings.Index(flat, "f-bs")
+		i2 := strings.Index(flat, "f-li")
+		i3 := strings.Index(flat, "r-li")
+		require.True(t, i1 < i2 && i2 < i3, "drafts not in stable order: %d %d %d", i1, i2, i3)
+	})
+
+	t.Run("Footer mentions auto-publish window", func(t *testing.T) {
+		t.Parallel()
+		req := BuildSummary(BuildSummaryInput{IssueDate: "2026-06-01"})
+		assert.Contains(t, flatten(req), "Auto-publishes")
+	})
+
+	t.Run("Attachment is Info-coloured", func(t *testing.T) {
+		t.Parallel()
+		req := BuildSummary(BuildSummaryInput{IssueDate: "2026-06-01"})
+		require.Len(t, req.Attachments, 1)
+		assert.Equal(t, ColorInfo, req.Attachments[0].Color)
+	})
+}
+
+// flatten concatenates every block's text + every button's URL into one
+// string so we can run a simple Contains over the rendered message.
+func flatten(req Request) string {
+	var b strings.Builder
+	b.WriteString(req.Text)
+	for _, blk := range req.Blocks.BlockSet {
+		switch v := blk.(type) {
+		case *slack.SectionBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slack.HeaderBlock:
+			if v.Text != nil {
+				b.WriteString("\n")
+				b.WriteString(v.Text.Text)
+			}
+		case *slack.ContextBlock:
+			for _, el := range v.ContextElements.Elements {
+				if t, ok := el.(*slack.TextBlockObject); ok {
+					b.WriteString("\n")
+					b.WriteString(t.Text)
+				}
+			}
+		case *slack.ActionBlock:
+			for _, el := range v.Elements.ElementSet {
+				if btn, ok := el.(*slack.ButtonBlockElement); ok {
+					b.WriteString("\n")
+					if btn.Text != nil {
+						b.WriteString(btn.Text.Text)
+						b.WriteString(" ")
+					}
+					b.WriteString(btn.URL)
+				}
+			}
+		}
+	}
+	return b.String()
+}

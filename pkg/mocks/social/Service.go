@@ -41,19 +41,19 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// DraftFeatured mocks base method.
-func (m *MockService) DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+// DraftAll mocks base method.
+func (m *MockService) DraftAll(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DraftFeatured", ctx, opts)
+	ret := m.ctrl.Call(m, "DraftAll", ctx, opts)
 	ret0, _ := ret[0].([]social.PostResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// DraftFeatured indicates an expected call of DraftFeatured.
-func (mr *MockServiceMockRecorder) DraftFeatured(ctx, opts any) *gomock.Call {
+// DraftAll indicates an expected call of DraftAll.
+func (mr *MockServiceMockRecorder) DraftAll(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftFeatured", reflect.TypeOf((*MockService)(nil).DraftFeatured), ctx, opts)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftAll", reflect.TypeOf((*MockService)(nil).DraftAll), ctx, opts)
 }
 
 // PublishDrafts mocks base method.

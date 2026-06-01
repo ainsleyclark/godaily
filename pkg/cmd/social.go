@@ -122,7 +122,7 @@ func socialPublishCmd(a *godaily.App) *cli.Command {
 				Platforms: platforms,
 			}
 
-			draftResults, err := a.Service.Social.DraftFeatured(ctx, opts)
+			draftResults, err := a.Service.Social.DraftAll(ctx, opts)
 			if err != nil {
 				a.Slack.MustSend(ctx, slack.Error("Social draft CLI failed", err))
 				printResults(draftResults)

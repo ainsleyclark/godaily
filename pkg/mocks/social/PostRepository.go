@@ -71,6 +71,35 @@ func (mr *MockPostRepositoryMockRecorder) DeleteDraftsByIssue(ctx, issueID any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDraftsByIssue", reflect.TypeOf((*MockPostRepository)(nil).DeleteDraftsByIssue), ctx, issueID)
 }
 
+// DeleteDraftsByKind mocks base method.
+func (m *MockPostRepository) DeleteDraftsByKind(ctx context.Context, kind social.PostKind) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteDraftsByKind", ctx, kind)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteDraftsByKind indicates an expected call of DeleteDraftsByKind.
+func (mr *MockPostRepositoryMockRecorder) DeleteDraftsByKind(ctx, kind any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDraftsByKind", reflect.TypeOf((*MockPostRepository)(nil).DeleteDraftsByKind), ctx, kind)
+}
+
+// Find mocks base method.
+func (m *MockPostRepository) Find(ctx context.Context, id int64) (social.Post, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Find", ctx, id)
+	ret0, _ := ret[0].(social.Post)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Find indicates an expected call of Find.
+func (mr *MockPostRepositoryMockRecorder) Find(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockPostRepository)(nil).Find), ctx, id)
+}
+
 // HasPosted mocks base method.
 func (m *MockPostRepository) HasPosted(ctx context.Context, issueID int64, platform string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -116,6 +145,21 @@ func (mr *MockPostRepositoryMockRecorder) HasPostedKindSince(ctx, kind, platform
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedKindSince", reflect.TypeOf((*MockPostRepository)(nil).HasPostedKindSince), ctx, kind, platform, since)
 }
 
+// HasPostedOrCancelledBySubject mocks base method.
+func (m *MockPostRepository) HasPostedOrCancelledBySubject(ctx context.Context, subject, platform string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPostedOrCancelledBySubject", ctx, subject, platform)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HasPostedOrCancelledBySubject indicates an expected call of HasPostedOrCancelledBySubject.
+func (mr *MockPostRepositoryMockRecorder) HasPostedOrCancelledBySubject(ctx, subject, platform any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedOrCancelledBySubject", reflect.TypeOf((*MockPostRepository)(nil).HasPostedOrCancelledBySubject), ctx, subject, platform)
+}
+
 // List mocks base method.
 func (m *MockPostRepository) List(ctx context.Context, opts social.PostListOptions) ([]social.Post, error) {
 	m.ctrl.T.Helper()
@@ -131,17 +175,17 @@ func (mr *MockPostRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockPostRepository)(nil).List), ctx, opts)
 }
 
-// UpdateStatus mocks base method.
-func (m *MockPostRepository) UpdateStatus(ctx context.Context, id int64, status social.PostStatus, publishedAt *time.Time, postURL string) (social.Post, error) {
+// Update mocks base method.
+func (m *MockPostRepository) Update(ctx context.Context, id int64, u social.PostUpdate) (social.Post, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateStatus", ctx, id, status, publishedAt, postURL)
+	ret := m.ctrl.Call(m, "Update", ctx, id, u)
 	ret0, _ := ret[0].(social.Post)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UpdateStatus indicates an expected call of UpdateStatus.
-func (mr *MockPostRepositoryMockRecorder) UpdateStatus(ctx, id, status, publishedAt, postURL any) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockPostRepositoryMockRecorder) Update(ctx, id, u any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockPostRepository)(nil).UpdateStatus), ctx, id, status, publishedAt, postURL)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockPostRepository)(nil).Update), ctx, id, u)
 }

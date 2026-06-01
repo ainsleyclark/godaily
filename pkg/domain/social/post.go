@@ -53,6 +53,12 @@ const (
 	// stays visible (text intact) so a future retry can revert it to
 	// Draft and republish.
 	PostStatusError PostStatus = "error"
+
+	// PostStatusCancelled marks a draft the operator chose to skip from
+	// the dashboard before the publish cron fires. PublishDrafts ignores
+	// these; rotation idempotency treats them as "already handled" so
+	// tomorrow's build does not regenerate the same subject.
+	PostStatusCancelled PostStatus = "cancelled"
 )
 
 // PostKind classifies what flavour of social post a row represents.
@@ -90,10 +96,22 @@ type PostListOptions struct {
 	IssueID *int64
 	// Since restricts results to posts with posted_at >= Since, newest first.
 	Since *time.Time
-	// Status restricts to a single lifecycle state (draft, published, error).
+	// Status restricts to a single lifecycle state (draft, published, error, cancelled).
 	Status *PostStatus
 	// Platform restricts to a single platform (bluesky, linkedin, mastodon).
 	Platform *string
+}
+
+// PostUpdate is the partial-update payload accepted by Update. Only
+// non-nil fields are written; everything else is preserved. One struct
+// covers every mutation point: the publish step transitions a draft to
+// published (Status + PublishedAt + PostURL) or to errored (Status); the
+// dashboard sets Text on an edit; the cancel action sets Status alone.
+type PostUpdate struct {
+	Text        *string
+	Status      *PostStatus
+	PublishedAt *time.Time
+	PostURL     *string
 }
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/PostRepository.go . PostRepository
@@ -104,10 +122,18 @@ type PostRepository interface {
 	// and platform. Used by the daily featured slot.
 	HasPosted(ctx context.Context, issueID int64, platform string) (bool, error)
 
-	// HasPostedBySubject reports whether any row exists with the given
-	// subject and platform. Used by rotation candidates that key off a
-	// stable subject (release tag, source slug, recap week, cta variant).
+	// HasPostedBySubject reports whether any published row exists with
+	// the given subject and platform. Used by rotation candidates that
+	// key off a stable subject (release tag, source slug, recap week,
+	// cta variant).
 	HasPostedBySubject(ctx context.Context, subject, platform string) (bool, error)
+
+	// HasPostedOrCancelledBySubject reports whether any row in a final
+	// state (published OR cancelled) exists with the given subject and
+	// platform. Treating cancelled as "already handled" prevents the
+	// build cron from regenerating a draft the operator deliberately
+	// skipped.
+	HasPostedOrCancelledBySubject(ctx context.Context, subject, platform string) (bool, error)
 
 	// HasPostedKindSince reports whether any row of the given kind on the
 	// given platform was posted at or after since. Used to throttle the
@@ -117,15 +143,26 @@ type PostRepository interface {
 	// Create persists a new social post record.
 	Create(ctx context.Context, p Post) (Post, error)
 
-	// UpdateStatus transitions a row to a new lifecycle state. It is the
-	// single mutation point used by the publish step to mark a draft as
-	// published (with PublishedAt + PostURL) or as errored.
-	UpdateStatus(ctx context.Context, id int64, status PostStatus, publishedAt *time.Time, postURL string) (Post, error)
+	// Find returns the row with the given id. Returns store.ErrNotFound
+	// when no row matches.
+	Find(ctx context.Context, id int64) (Post, error)
+
+	// Update applies a partial mutation to one row. Only non-nil fields
+	// of PostUpdate are written; everything else is preserved. Used by
+	// the publish step (status + published_at + post_url), the dashboard
+	// edit endpoint (text), and the cancel endpoint (status).
+	Update(ctx context.Context, id int64, u PostUpdate) (Post, error)
 
 	// DeleteDraftsByIssue removes any draft rows associated with the
 	// issue. Build calls this before regenerating drafts so a re-run for
 	// the same day cleanly replaces the previous attempt.
 	DeleteDraftsByIssue(ctx context.Context, issueID int64) error
+
+	// DeleteDraftsByKind removes any draft rows of the given kind that
+	// have no issue_id. Build calls this before regenerating rotation
+	// drafts so a re-run for the same kind cleanly replaces the previous
+	// attempt.
+	DeleteDraftsByKind(ctx context.Context, kind PostKind) error
 
 	// List returns social posts filtered by opts. At least one option must be set.
 	List(ctx context.Context, opts PostListOptions) ([]Post, error)

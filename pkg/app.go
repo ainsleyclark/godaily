@@ -134,7 +134,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 		return nil, teardown, err
 	}
 
-	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, subsStore, socialSvc)
+	aggregator, err := digestsvc.New(emailSender, config.EmailSendAddress, aiClient, slackClient, issueStore, repo.Items, socialPostsStore, subsStore, socialSvc)
 	if err != nil {
 		return nil, teardown, err
 	}

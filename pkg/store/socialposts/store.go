@@ -16,6 +16,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/sqlc"
 )
@@ -56,6 +57,17 @@ func (s Store) HasPostedBySubject(ctx context.Context, subject, platform string)
 	})
 }
 
+// HasPostedOrCancelledBySubject reports whether any row in a final state
+// (published OR cancelled) exists with the given subject and platform.
+// Cancelled rows count as "already handled" so a re-run does not
+// regenerate a draft the operator deliberately skipped.
+func (s Store) HasPostedOrCancelledBySubject(ctx context.Context, subject, platform string) (bool, error) {
+	return s.sqlc.SocialPostExistsOrCancelledBySubject(ctx, sqlc.SocialPostExistsOrCancelledBySubjectParams{
+		Subject:  dbtypes.NullString(subject),
+		Platform: platform,
+	})
+}
+
 // HasPostedKindSince reports whether any published row of the given kind
 // on the given platform was posted at or after since.
 func (s Store) HasPostedKindSince(ctx context.Context, kind social.PostKind, platform string, since time.Time) (bool, error) {
@@ -64,6 +76,18 @@ func (s Store) HasPostedKindSince(ctx context.Context, kind social.PostKind, pla
 		Platform: platform,
 		PostedAt: since,
 	})
+}
+
+// Find returns the row with the given id.
+func (s Store) Find(ctx context.Context, id int64) (social.Post, error) {
+	row, err := s.sqlc.SocialPostGet(ctx, id)
+	if errors.Is(err, sql.ErrNoRows) {
+		return social.Post{}, store.ErrNotFound
+	}
+	if err != nil {
+		return social.Post{}, err
+	}
+	return transform(row), nil
 }
 
 // Create persists a new social post record. PostedAt defaults to now when
@@ -101,15 +125,25 @@ func (s Store) Create(ctx context.Context, p social.Post) (social.Post, error) {
 	return transform(row), nil
 }
 
-// UpdateStatus transitions a row's status, published_at, and post_url.
-// Used by the publish step to mark drafts as published or errored.
-func (s Store) UpdateStatus(ctx context.Context, id int64, status social.PostStatus, publishedAt *time.Time, postURL string) (social.Post, error) {
-	row, err := s.sqlc.SocialPostUpdateStatus(ctx, sqlc.SocialPostUpdateStatusParams{
-		Status:      string(status),
-		PublishedAt: publishedAt,
-		PostUrl:     dbtypes.NullString(postURL),
-		ID:          id,
-	})
+// Update applies a partial mutation to one row. Only non-nil fields of u
+// are written; everything else is preserved. Backed by a COALESCE update
+// so the publish, edit, and cancel paths share one SQL statement.
+func (s Store) Update(ctx context.Context, id int64, u social.PostUpdate) (social.Post, error) {
+	params := sqlc.SocialPostUpdateParams{ID: id}
+	if u.Text != nil {
+		params.Text = dbtypes.NullString(*u.Text)
+	}
+	if u.Status != nil {
+		params.Status = dbtypes.NullString(string(*u.Status))
+	}
+	if u.PublishedAt != nil {
+		params.PublishedAt = u.PublishedAt
+	}
+	if u.PostURL != nil {
+		params.PostUrl = dbtypes.NullString(*u.PostURL)
+	}
+
+	row, err := s.sqlc.SocialPostUpdate(ctx, params)
 	if err != nil {
 		return social.Post{}, err
 	}
@@ -120,6 +154,13 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status social.PostSta
 func (s Store) DeleteDraftsByIssue(ctx context.Context, issueID int64) error {
 	id := issueID
 	return s.sqlc.SocialPostDeleteDraftsByIssue(ctx, &id)
+}
+
+// DeleteDraftsByKind removes any draft rows of the given kind with no
+// issue_id. Used by the build cron to wipe leftover rotation drafts
+// before regenerating them.
+func (s Store) DeleteDraftsByKind(ctx context.Context, kind social.PostKind) error {
+	return s.sqlc.SocialPostDeleteDraftsByKind(ctx, string(kind))
 }
 
 // List returns social posts filtered by opts. At least one filter must be set.

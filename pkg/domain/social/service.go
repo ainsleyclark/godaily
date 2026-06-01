@@ -8,35 +8,38 @@ import "context"
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../mocks/social/Service.go . Service
 
-// Service drives both legs of the daily featured pipeline and the
-// Tue/Wed/Fri rotation.
+// Service drives the social media pipeline. Every post — featured and
+// rotation — flows through the same generate-then-publish lifecycle so a
+// human can review (and edit) drafts before they go live:
 //
-// The featured pipeline is split in two so a human can review (and in
-// future edit) drafts between them:
-//
-//  1. DraftFeatured runs at digest Build time (02:00). It picks the day's
+//  1. DraftAll runs at digest Build time (02:00). It picks the day's
 //     featured item, reframes for each configured platform, and writes a
-//     draft row per platform to social_posts.
-//  2. PublishDrafts runs at the social cron (11:00). It loads today's
-//     drafts, posts each to its platform, and updates the row to
-//     published (or error).
+//     draft row per platform to social_posts. On rotation days
+//     (Mon/Wed/Fri) it also generates the rotation post for that day as
+//     a draft.
+//  2. PublishDrafts runs at the publish cron (11:00). It walks every
+//     draft row regardless of kind, posts each to its platform, and
+//     updates the row to published (or error).
 //
-// Rotation stays a single-shot generate+publish call because it depends
-// on late-day data (Friday recap clicks) and same-day candidate
-// eligibility.
+// Rotate is kept for manual CLI invocation only — passing ForceKind
+// drives a specific candidate end-to-end (generate + immediate publish)
+// without going through the draft window.
 type Service interface {
-	// DraftFeatured generates and persists draft featured posts for the
-	// issue dated opts.Date, one per configured platform. No platform send
-	// happens here. Safe to re-run for the same date: existing drafts
-	// for that issue are cleared first.
-	DraftFeatured(ctx context.Context, opts PostOptions) ([]PostResult, error)
+	// DraftAll generates and persists every social draft owed for the
+	// day: one featured draft per configured platform, plus the
+	// rotation draft for the day's weekday (recap on Mon, community on
+	// Wed, new_source/spotlight/cta on Fri). No platform send happens
+	// here. Safe to re-run for the same date: existing drafts are
+	// cleared first.
+	DraftAll(ctx context.Context, opts PostOptions) ([]PostResult, error)
 
-	// PublishDrafts loads today's draft featured posts and publishes
-	// each to its platform, transitioning the rows to published (or
-	// error on per-platform failures).
+	// PublishDrafts loads every draft row (any kind) and publishes each
+	// to its platform, transitioning the rows to published (or error on
+	// per-platform failures). Cancelled rows are skipped.
 	PublishDrafts(ctx context.Context, opts PostOptions) ([]PostResult, error)
 
-	// Rotate runs the day-aware rotation slot (recap, spotlight, cta,
-	// self_release, community) for the wall clock in opts.Now.
+	// Rotate is the manual CLI entry point — passing ForceKind drives a
+	// specific candidate end-to-end without going through the draft
+	// window. The cron path uses DraftAll + PublishDrafts.
 	Rotate(ctx context.Context, opts RotateOptions) ([]PostResult, error)
 }

@@ -10,11 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -32,28 +30,12 @@ func TestService_PublishDrafts(t *testing.T) {
 		assert.Empty(t, res)
 	})
 
-	t.Run("Issue Not Found Returns Empty", func(t *testing.T) {
-		t.Parallel()
-
-		f := newFixture(t)
-		f.posters = []platform.Poster{newMockPoster(f.ctrl, social.Bluesky)}
-
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).
-			Return(digest.Issue{}, store.ErrNotFound)
-
-		date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
-		res, err := f.service().PublishDrafts(t.Context(), social.PostOptions{Date: date})
-		require.NoError(t, err)
-		assert.Empty(t, res)
-	})
-
 	t.Run("No Drafts Returns Empty", func(t *testing.T) {
 		t.Parallel()
 
 		f := newFixture(t)
 		f.posters = []platform.Poster{newMockPoster(f.ctrl, social.Bluesky)}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, nil)
 
 		date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
@@ -67,10 +49,9 @@ func TestService_PublishDrafts(t *testing.T) {
 
 		f := newFixture(t)
 		bluesky := newMockPoster(f.ctrl, social.Bluesky)
-		// poster.Post and posts.UpdateStatus must NOT be called.
+		// poster.Post and posts.Update must NOT be called.
 		f.posters = []platform.Poster{bluesky}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return([]social.Post{
 			{ID: 1, Platform: "bluesky", Text: "draft text", Status: social.PostStatusDraft},
 		}, nil)
@@ -90,13 +71,18 @@ func TestService_PublishDrafts(t *testing.T) {
 		bluesky.EXPECT().Post(gomock.Any(), gomock.Any()).Return(platform.PostResponse{}, errors.New("API down"))
 		f.posters = []platform.Poster{bluesky}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return([]social.Post{
 			{ID: 7, Platform: "bluesky", Text: "draft", Status: social.PostStatusDraft},
 		}, nil)
 		f.posts.EXPECT().
-			UpdateStatus(gomock.Any(), int64(7), social.PostStatusError, gomock.Nil(), "").
-			Return(social.Post{}, nil)
+			Update(gomock.Any(), int64(7), gomock.Any()).
+			DoAndReturn(func(_ context.Context, _ int64, u social.PostUpdate) (social.Post, error) {
+				require.NotNil(t, u.Status)
+				assert.Equal(t, social.PostStatusError, *u.Status)
+				assert.Nil(t, u.PublishedAt)
+				assert.Nil(t, u.PostURL)
+				return social.Post{}, nil
+			})
 
 		var slackMsg string
 		f.slack.EXPECT().
@@ -122,23 +108,25 @@ func TestService_PublishDrafts(t *testing.T) {
 		)
 		f.posters = []platform.Poster{bluesky}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-20").Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ context.Context, opts social.PostListOptions) ([]social.Post, error) {
-				require.NotNil(t, opts.IssueID)
-				assert.Equal(t, int64(42), *opts.IssueID)
 				require.NotNil(t, opts.Status)
 				assert.Equal(t, social.PostStatusDraft, *opts.Status)
+				assert.Nil(t, opts.IssueID, "PublishDrafts must not scope by issue")
 				return []social.Post{
 					{ID: 11, Platform: "bluesky", Text: "publish me", Status: social.PostStatusDraft},
 				}, nil
 			})
 
 		f.posts.EXPECT().
-			UpdateStatus(gomock.Any(), int64(11), social.PostStatusPublished, gomock.Any(), "https://bsky.app/profile/godaily/post/abc").
-			DoAndReturn(func(_ context.Context, _ int64, _ social.PostStatus, publishedAt *time.Time, _ string) (social.Post, error) {
-				require.NotNil(t, publishedAt)
-				assert.WithinDuration(t, time.Now().UTC(), *publishedAt, 5*time.Second)
+			Update(gomock.Any(), int64(11), gomock.Any()).
+			DoAndReturn(func(_ context.Context, _ int64, u social.PostUpdate) (social.Post, error) {
+				require.NotNil(t, u.Status)
+				assert.Equal(t, social.PostStatusPublished, *u.Status)
+				require.NotNil(t, u.PublishedAt)
+				assert.WithinDuration(t, time.Now().UTC(), *u.PublishedAt, 5*time.Second)
+				require.NotNil(t, u.PostURL)
+				assert.Equal(t, "https://bsky.app/profile/godaily/post/abc", *u.PostURL)
 				return social.Post{}, nil
 			})
 
@@ -163,7 +151,6 @@ func TestService_PublishDrafts(t *testing.T) {
 		// Only bluesky is wired; the draft is for mastodon.
 		f.posters = []platform.Poster{newMockPoster(f.ctrl, social.Bluesky)}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return([]social.Post{
 			{ID: 9, Platform: "mastodon", Text: "orphan", Status: social.PostStatusDraft},
 		}, nil)
@@ -186,14 +173,17 @@ func TestService_PublishDrafts(t *testing.T) {
 		)
 		f.posters = []platform.Poster{bluesky, mastodon}
 
-		f.issues.EXPECT().FindBySlug(gomock.Any(), gomock.Any()).Return(sampleIssue(), nil)
 		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return([]social.Post{
 			{ID: 1, Platform: "bluesky", Text: "bsky", Status: social.PostStatusDraft},
 			{ID: 2, Platform: "mastodon", Text: "masto", Status: social.PostStatusDraft},
 		}, nil)
 		f.posts.EXPECT().
-			UpdateStatus(gomock.Any(), int64(2), social.PostStatusPublished, gomock.Any(), gomock.Any()).
-			Return(social.Post{}, nil)
+			Update(gomock.Any(), int64(2), gomock.Any()).
+			DoAndReturn(func(_ context.Context, _ int64, u social.PostUpdate) (social.Post, error) {
+				require.NotNil(t, u.Status)
+				assert.Equal(t, social.PostStatusPublished, *u.Status)
+				return social.Post{}, nil
+			})
 
 		f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())
 
