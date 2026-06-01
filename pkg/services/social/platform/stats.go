@@ -11,6 +11,7 @@ import (
 )
 
 //go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/StatFetcher.go github.com/ainsleyclark/godaily/pkg/services/social/platform StatFetcher
+//go:generate go run go.uber.org/mock/mockgen -package=mocksocial -destination=../../../mocks/social/ReactionChecker.go github.com/ainsleyclark/godaily/pkg/services/social/platform ReactionChecker
 
 // StatFetcher fetches engagement stats for a published post by its URL.
 type StatFetcher interface {
@@ -20,6 +21,14 @@ type StatFetcher interface {
 	// Stats returns the current engagement counts for the post at postURL.
 	// postURL is the canonical web URL stored in social_posts.post_url.
 	Stats(ctx context.Context, postURL string) (Stats, error)
+}
+
+// ReactionChecker verifies whether the account owner personally engaged with
+// a post. Implementations query the platform's per-member reaction APIs so
+// engagement is only deducted when it actually happened.
+type ReactionChecker interface {
+	HasLiked(ctx context.Context, postURL string) (bool, error)
+	HasReposted(ctx context.Context, postURL string) (bool, error)
 }
 
 // Stats holds the engagement counts returned by a platform for a single post.

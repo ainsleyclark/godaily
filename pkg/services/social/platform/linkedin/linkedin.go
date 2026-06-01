@@ -40,6 +40,7 @@ const (
 type Client struct {
 	token      string
 	authorURN  string
+	memberURN  string
 	httpClient *http.Client
 	baseURL    string
 	apiVersion string
@@ -47,12 +48,14 @@ type Client struct {
 
 // New creates a new LinkedIn Client. authorURN is the URN of the entity that
 // authored the post (e.g. "urn:li:organization:12345" for an organisation
-// page). apiVersion sets the LinkedIn-Version header — pass "" to use
-// defaultAPIVersion.
-func New(token, authorURN string) *Client {
+// page). memberURN is the personal member URN used to check whether the owner
+// engaged with a post (e.g. "urn:li:person:abcXYZ"); pass "" to skip reaction
+// checking.
+func New(token, authorURN, memberURN string) *Client {
 	return &Client{
 		token:      token,
 		authorURN:  authorURN,
+		memberURN:  memberURN,
 		httpClient: gohttp.New(gohttp.WithTimeout(15 * time.Second)),
 		baseURL:    defaultBaseURL,
 		apiVersion: defaultAPIVersion,
@@ -234,6 +237,124 @@ func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, err
 		Comments:    s.CommentCount,
 		Impressions: s.ImpressionCount,
 	}, nil
+}
+
+// HasLiked reports whether the member whose URN was provided at construction
+// has liked the post at postURL. It pages through the reactions endpoint until
+// the member is found or all reactions are exhausted. Returns false, nil when
+// memberURN is empty.
+func (c *Client) HasLiked(ctx context.Context, postURL string) (bool, error) {
+	if c.memberURN == "" {
+		return false, nil
+	}
+	shareURN, err := urnFromPostURL(postURL)
+	if err != nil {
+		return false, errors.Wrap(err, "extracting share URN")
+	}
+	start := 0
+	const pageSize = 100
+	for {
+		endpoint := fmt.Sprintf(
+			"%s/rest/reactions?q=entity&entity=%s&count=%d&start=%d",
+			c.baseURL, url.QueryEscape(shareURN), pageSize, start,
+		)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		if err != nil {
+			return false, errors.Wrap(err, "building reactions request")
+		}
+		req.Header.Set("Authorization", "Bearer "+c.token)
+		req.Header.Set("LinkedIn-Version", c.apiVersion)
+		req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
+
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return false, errors.Wrap(err, "fetching reactions")
+		}
+
+		var body struct {
+			Paging struct {
+				Total int `json:"total"`
+			} `json:"paging"`
+			Elements []struct {
+				Actor string `json:"actor"`
+			} `json:"elements"`
+		}
+		decodeErr := json.NewDecoder(resp.Body).Decode(&body)
+		_ = resp.Body.Close()
+		if decodeErr != nil {
+			return false, errors.Wrap(decodeErr, "decoding reactions response")
+		}
+
+		for _, el := range body.Elements {
+			if strings.Contains(el.Actor, c.memberURN) {
+				return true, nil
+			}
+		}
+
+		start += len(body.Elements)
+		if len(body.Elements) == 0 || start >= body.Paging.Total {
+			return false, nil
+		}
+	}
+}
+
+// HasReposted reports whether the member whose URN was provided at construction
+// has reposted the post at postURL. It queries the shares-of-share endpoint and
+// pages until the member's authorship is found or all reshares are exhausted.
+// Returns false, nil when memberURN is empty.
+func (c *Client) HasReposted(ctx context.Context, postURL string) (bool, error) {
+	if c.memberURN == "" {
+		return false, nil
+	}
+	shareURN, err := urnFromPostURL(postURL)
+	if err != nil {
+		return false, errors.Wrap(err, "extracting share URN")
+	}
+	start := 0
+	const pageSize = 100
+	for {
+		endpoint := fmt.Sprintf(
+			"%s/rest/shares?q=sharesOfShare&shareUrn=%s&count=%d&start=%d",
+			c.baseURL, url.QueryEscape(shareURN), pageSize, start,
+		)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		if err != nil {
+			return false, errors.Wrap(err, "building reshares request")
+		}
+		req.Header.Set("Authorization", "Bearer "+c.token)
+		req.Header.Set("LinkedIn-Version", c.apiVersion)
+		req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
+
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return false, errors.Wrap(err, "fetching reshares")
+		}
+
+		var body struct {
+			Paging struct {
+				Total int `json:"total"`
+			} `json:"paging"`
+			Elements []struct {
+				Author string `json:"author"`
+			} `json:"elements"`
+		}
+		decodeErr := json.NewDecoder(resp.Body).Decode(&body)
+		_ = resp.Body.Close()
+		if decodeErr != nil {
+			return false, errors.Wrap(decodeErr, "decoding reshares response")
+		}
+
+		for _, el := range body.Elements {
+			if strings.Contains(el.Author, c.memberURN) {
+				return true, nil
+			}
+		}
+
+		start += len(body.Elements)
+		if len(body.Elements) == 0 || start >= body.Paging.Total {
+			return false, nil
+		}
+	}
 }
 
 // urnFromPostURL extracts the share URN from a LinkedIn feed update URL.
