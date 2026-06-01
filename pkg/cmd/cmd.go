@@ -38,6 +38,7 @@ func Run() {
 			serveCmd(app),
 			sourcesCmd(app),
 			synthCmd(app),
+			introCmd(app),
 			migrateCmd(app),
 			fetchCmd(app),
 			generateCmd(app),

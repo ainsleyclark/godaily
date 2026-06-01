@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	model       = anthropic.ModelClaudeSonnet4_6
-	maxTokens   = int64(1024)
-	temperature = 0.4
+	defaultModel = anthropic.ModelClaudeSonnet4_6
+	maxTokens    = int64(1024)
+	temperature  = 0.4
 )
 
 // Client satisfies ai.Prompter using the Anthropic Messages API.
@@ -33,23 +33,35 @@ func New(apiKey string, opts ...option.RequestOption) *Client {
 	return &Client{client: anthropic.NewClient(allOpts...)}
 }
 
-// Prompt sends system as a single TextBlockParam and user as the user message.
-// Returns the concatenated text content bytes of the response.
-func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	slog.InfoContext(
-		ctx, "Calling Anthropic",
-		"model", model,
-		"max_tokens", maxTokens,
-	)
-	resp, err := c.client.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:       model,
-		MaxTokens:   maxTokens,
-		Temperature: anthropic.Float(temperature),
-		System:      []anthropic.TextBlockParam{{Text: system}},
+// Prompt sends system as a single TextBlockParam and user as the user message,
+// using the given model (defaulting to Sonnet when empty). Returns the
+// concatenated text content bytes of the response.
+func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
+	m := model
+	if m == "" {
+		m = defaultModel
+	}
+
+	params := anthropic.MessageNewParams{
+		Model:     m,
+		MaxTokens: maxTokens,
+		System:    []anthropic.TextBlockParam{{Text: system}},
 		Messages: []anthropic.MessageParam{
 			anthropic.NewUserMessage(anthropic.NewTextBlock(user)),
 		},
-	})
+	}
+	// Opus rejects sampling parameters; steer it via the prompt instead. Only
+	// the Sonnet-class default takes an explicit temperature.
+	if !strings.HasPrefix(m, "claude-opus") {
+		params.Temperature = anthropic.Float(temperature)
+	}
+
+	slog.InfoContext(
+		ctx, "Calling Anthropic",
+		"model", m,
+		"max_tokens", maxTokens,
+	)
+	resp, err := c.client.Messages.New(ctx, params)
 	if err != nil {
 		return nil, errors.Wrap(err, "anthropic")
 	}

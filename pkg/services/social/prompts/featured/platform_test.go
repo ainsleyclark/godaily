@@ -88,7 +88,7 @@ func TestReframe(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		p.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return([]byte(`{"text":"  Go 1.30 ships generic improvements.\n\nhttps://go.dev/blog/go1.30\n#golang  "}`), nil)
 
 		got, err := reframe(t.Context(), p, cfg, sampleFeatured())
@@ -104,7 +104,7 @@ func TestReframe(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		fenced := "```json\n" + `{"text":"hello"}` + "\n```"
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(fenced), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(fenced), nil)
 
 		got, err := reframe(t.Context(), p, cfg, sampleFeatured())
 		require.NoError(t, err)
@@ -116,7 +116,7 @@ func TestReframe(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("network down"))
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("network down"))
 
 		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
 		require.Error(t, err)
@@ -128,7 +128,7 @@ func TestReframe(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte("   "), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte("   "), nil)
 
 		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
 		require.Error(t, err)
@@ -139,7 +139,7 @@ func TestReframe(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(`{"text":""}`), nil)
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]byte(`{"text":""}`), nil)
 
 		_, err := reframe(t.Context(), p, cfg, sampleFeatured())
 		require.Error(t, err)
@@ -151,7 +151,7 @@ func TestReframe(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		tiny := platformConfig{name: "X", charLimit: 5, hashtags: nil, guidance: "g"}
-		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
+		p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			Return([]byte(`{"text":"this is well over five characters"}`), nil)
 
 		got, err := reframe(t.Context(), p, tiny, sampleFeatured())
@@ -170,8 +170,8 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		p.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "Bluesky")
 				assert.Contains(t, system, "300 characters")
 				assert.Contains(t, system, "#golang")
@@ -188,8 +188,8 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		p.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "LinkedIn")
 				assert.Contains(t, system, "1300 characters")
 				for _, tag := range LinkedInHashtags {
@@ -208,8 +208,8 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		defer ctrl.Finish()
 		p := mockai.NewMockPrompter(ctrl)
 		p.EXPECT().
-			Prompt(gomock.Any(), gomock.Any(), gomock.Any()).
-			DoAndReturn(func(_ any, system, _ string) ([]byte, error) {
+			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "Mastodon")
 				assert.Contains(t, system, "500 characters")
 				assert.Contains(t, system, "#go")

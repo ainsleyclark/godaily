@@ -95,7 +95,7 @@ func TestSuggest(t *testing.T) {
 
 			p := mockai.NewMockPrompter(gomock.NewController(t))
 			if len(test.sections) > 0 {
-				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
+				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(test.raw, test.promptErr)
 			}
 			got, err := Suggest(context.Background(), p, day, test.sections)
 			if test.wantErr != "" {

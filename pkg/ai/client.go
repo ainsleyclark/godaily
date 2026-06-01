@@ -17,24 +17,18 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
-// notifier posts an AI-provider comparison to a chat channel.
-// It is satisfied by *slack.Client.
-type notifier interface {
-	MustSend(ctx context.Context, req slack.Request)
-}
-
 // Client chains a primary Prompter with an optional fallback.
 // It satisfies Prompter itself so it can be composed freely.
 type Client struct {
 	primary  Prompter
 	fallback Prompter
-	notifier notifier
+	notifier slack.Sender
 }
 
 // New constructs a Client from config, using Anthropic as the primary
 // Prompter and Gemini as an optional fallback when GeminiAPIKey is set.
 // n receives a side-by-side comparison of both providers' output.
-func New(cfg env.Config, n notifier) *Client {
+func New(cfg env.Config, s slack.Sender) *Client {
 	primary := anthropic.New(cfg.AnthropicAPIKey)
 	var fallback Prompter
 	if cfg.GeminiAPIKey != "" {
@@ -45,24 +39,25 @@ func New(cfg env.Config, n notifier) *Client {
 			fallback = g
 		}
 	}
-	return &Client{primary: primary, fallback: fallback, notifier: n}
+	return &Client{primary: primary, fallback: fallback, notifier: s}
 }
 
-// Prompt calls the primary (Anthropic) and fallback (Gemini) prompters, posts
-// a side-by-side comparison of their output to Slack, then returns the
-// primary's result. The fallback's result is used only when the primary fails.
+// Prompt calls the primary (Anthropic) and fallback (Gemini) prompters with
+// the given model, posts a side-by-side comparison of their output to Slack,
+// then returns the primary's result. The fallback's result is used only when
+// the primary fails.
 //
 // TODO: the dual-call comparison is temporary, kept while evaluating whether
 // Gemini can replace Anthropic. Drop it once a single provider is chosen.
-func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	primaryRaw, primaryErr := c.primary.Prompt(ctx, system, user)
+func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
+	primaryRaw, primaryErr := c.primary.Prompt(ctx, anthropicModelFor(model), system, user)
 
 	var (
 		fallbackRaw []byte
 		fallbackErr error
 	)
 	if c.fallback != nil {
-		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, system, user)
+		fallbackRaw, fallbackErr = c.fallback.Prompt(ctx, geminiModelFor(model), system, user)
 	}
 
 	c.notifyComparison(ctx, primaryRaw, primaryErr, fallbackRaw, fallbackErr)

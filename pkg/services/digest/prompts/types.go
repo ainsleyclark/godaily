@@ -39,7 +39,7 @@ type (
 	// DigestMeta is the structured output returned by Synthesise.
 	DigestMeta struct {
 		Title string `json:"title"` // ≤80 chars — email subject / card title
-		Intro string `json:"intro"` // 1–2 sentence digest intro paragraph
+		Intro string `json:"intro"` // short first-person editorial paragraph (~2–4 sentences)
 	}
 )
 

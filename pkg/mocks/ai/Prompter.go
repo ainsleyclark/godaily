@@ -41,16 +41,16 @@ func (m *MockPrompter) EXPECT() *MockPrompterMockRecorder {
 }
 
 // Prompt mocks base method.
-func (m *MockPrompter) Prompt(ctx context.Context, system, user string) ([]byte, error) {
+func (m *MockPrompter) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Prompt", ctx, system, user)
+	ret := m.ctrl.Call(m, "Prompt", ctx, model, system, user)
 	ret0, _ := ret[0].([]byte)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Prompt indicates an expected call of Prompt.
-func (mr *MockPrompterMockRecorder) Prompt(ctx, system, user any) *gomock.Call {
+func (mr *MockPrompterMockRecorder) Prompt(ctx, model, system, user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Prompt", reflect.TypeOf((*MockPrompter)(nil).Prompt), ctx, system, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Prompt", reflect.TypeOf((*MockPrompter)(nil).Prompt), ctx, model, system, user)
 }

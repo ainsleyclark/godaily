@@ -68,7 +68,7 @@ func TestClient_Prompt(t *testing.T) {
 
 		c := New("test", option.WithBaseURL(srv.URL), option.WithMaxRetries(0))
 
-		_, err := c.Prompt(context.Background(), "system text", "user payload")
+		_, err := c.Prompt(context.Background(), "", "system text", "user payload")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "anthropic")
 	})
@@ -80,7 +80,7 @@ func TestClient_Prompt(t *testing.T) {
 
 		c := New("test", option.WithBaseURL(srv.URL))
 
-		got, err := c.Prompt(context.Background(), "system text", "user payload")
+		got, err := c.Prompt(context.Background(), "", "system text", "user payload")
 		require.NoError(t, err)
 		assert.Equal(t, `{"post":"hello"}`, string(got))
 	})
@@ -92,7 +92,7 @@ func TestClient_Prompt(t *testing.T) {
 
 		c := New("test", option.WithBaseURL(srv.URL))
 
-		_, err := c.Prompt(context.Background(), "You are a helpful assistant.", "user data")
+		_, err := c.Prompt(context.Background(), "", "You are a helpful assistant.", "user data")
 		require.NoError(t, err)
 
 		var req struct {
@@ -119,5 +119,44 @@ func TestClient_Prompt(t *testing.T) {
 		assert.Equal(t, "user", req.Messages[0].Role)
 		require.Len(t, req.Messages[0].Content, 1)
 		assert.Equal(t, "user data", req.Messages[0].Content[0].Text)
+	})
+
+	t.Run("Default Model Sends Temperature", func(t *testing.T) {
+		t.Parallel()
+
+		srv, captured := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse("ok"))
+
+		c := New("test", option.WithBaseURL(srv.URL))
+
+		_, err := c.Prompt(context.Background(), "", "system text", "user payload")
+		require.NoError(t, err)
+
+		var req struct {
+			Model       string   `json:"model"`
+			Temperature *float64 `json:"temperature"`
+		}
+		require.NoError(t, json.Unmarshal(*captured, &req))
+		assert.Equal(t, defaultModel, req.Model)
+		require.NotNil(t, req.Temperature)
+		assert.InDelta(t, temperature, *req.Temperature, 1e-9)
+	})
+
+	t.Run("Opus Model Omits Temperature", func(t *testing.T) {
+		t.Parallel()
+
+		srv, captured := fakeAnthropicServer(t, http.StatusOK, validAnthropicResponse("ok"))
+
+		c := New("test", option.WithBaseURL(srv.URL))
+
+		_, err := c.Prompt(context.Background(), "claude-opus-4-7", "system text", "user payload")
+		require.NoError(t, err)
+
+		var req struct {
+			Model       string   `json:"model"`
+			Temperature *float64 `json:"temperature"`
+		}
+		require.NoError(t, json.Unmarshal(*captured, &req))
+		assert.Equal(t, "claude-opus-4-7", req.Model)
+		assert.Nil(t, req.Temperature, "Opus must not receive a temperature param")
 	})
 }

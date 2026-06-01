@@ -14,8 +14,6 @@ import (
 	"google.golang.org/genai"
 )
 
-const geminiModel = "gemini-2.0-flash"
-
 // contentGenerator abstracts genai.Models to allow test doubles.
 type contentGenerator interface {
 	GenerateContent(ctx context.Context, model string, contents []*genai.Content, cfg *genai.GenerateContentConfig) (*genai.GenerateContentResponse, error)
@@ -39,15 +37,18 @@ func New(apiKey string) (*Client, error) {
 }
 
 // Prompt sends system and user prompts to Gemini and returns the first
-// candidate's text content bytes.
-func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error) {
-	slog.InfoContext(ctx, "Calling Gemini fallback",
-		"model", geminiModel,
+// candidate's text content bytes. model is a Gemini model ID; the ai.Client
+// maps the requested model onto Gemini's line before calling here.
+func (c *Client) Prompt(ctx context.Context, model, system, user string) ([]byte, error) {
+	slog.InfoContext(
+		ctx, "Calling Gemini fallback",
+		"model", model,
 		"system_len", len(system),
 		"user_len", len(user),
 	)
 
-	resp, err := c.gen.GenerateContent(ctx, geminiModel,
+	resp, err := c.gen.GenerateContent(
+		ctx, model,
 		[]*genai.Content{
 			{Role: "user", Parts: []*genai.Part{genai.NewPartFromText(user)}},
 		},
@@ -60,8 +61,9 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 		},
 	)
 	if err != nil {
-		slog.ErrorContext(ctx, "Gemini API request failed",
-			"model", geminiModel,
+		slog.ErrorContext(
+			ctx, "Gemini API request failed",
+			"model", model,
 			"err", err,
 		)
 		return nil, errors.Wrap(err, "gemini: generate content")
@@ -72,16 +74,18 @@ func (c *Client) Prompt(ctx context.Context, system, user string) ([]byte, error
 		if len(resp.Candidates) > 0 {
 			finishReason = string(resp.Candidates[0].FinishReason)
 		}
-		slog.WarnContext(ctx, "Gemini returned empty candidates",
-			"model", geminiModel,
+		slog.WarnContext(
+			ctx, "Gemini returned empty candidates",
+			"model", model,
 			"finish_reason", finishReason,
 		)
 		return nil, errors.New("gemini: empty candidates in response")
 	}
 
 	text := resp.Text()
-	slog.InfoContext(ctx, "Gemini fallback response received",
-		"model", geminiModel,
+	slog.InfoContext(
+		ctx, "Gemini fallback response received",
+		"model", model,
 		"response_len", len(text),
 	)
 	return []byte(text), nil
