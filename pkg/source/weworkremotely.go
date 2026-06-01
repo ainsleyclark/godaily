@@ -19,8 +19,8 @@ import (
 // WeWorkRemotely fetches remote programming jobs from We Work Remotely's RSS
 // feed and keeps the ones that mention Go. The category feed is not Go-specific
 // (it covers the whole programming category), so listings are filtered on a
-// whole-word Go match in the title or description. A custom User-Agent is sent
-// because the default Go agent is blocked.
+// whole-word Go match in the title. A custom User-Agent is sent because the
+// default Go agent is blocked.
 type WeWorkRemotely struct {
 	url string
 	now func() time.Time
@@ -56,10 +56,11 @@ func (w WeWorkRemotely) Fetch(ctx context.Context) ([]news.Item, error) {
 }
 
 func (i wwrItem) ShouldInclude() bool {
-	if strings.TrimSpace(i.Link) == "" {
-		return false
-	}
-	return hasGoWord(i.Title) || hasGoWord(i.Description)
+	// Match Go only in the title. The programming-category feed isn't
+	// Go-specific, and matching the description lets the common English word
+	// "go" in marketing copy ("ready to go", "go further") drag in unrelated
+	// roles — every one of a sample run's hits was a false positive.
+	return strings.TrimSpace(i.Link) != "" && hasGoWord(i.Title)
 }
 
 func (i wwrItem) EnrichmentURL() string { return i.Link }

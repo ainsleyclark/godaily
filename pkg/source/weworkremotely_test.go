@@ -15,8 +15,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// wwrFixture covers a Go job in the title, a Go match only in the description,
-// and a non-Go job that must be filtered out.
+// wwrFixture covers a Go job named in the title (kept) and a role whose
+// description merely contains the English word "go" (dropped — only the title
+// is matched, to avoid prose false positives).
 const wwrFixture = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
@@ -27,15 +28,9 @@ const wwrFixture = `<?xml version="1.0" encoding="UTF-8"?>
       <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
     </item>
     <item>
-      <title>Beta Ltd: Backend Engineer</title>
+      <title>Beta Ltd: Platform Product Manager</title>
       <link>https://weworkremotely.com/jobs/2</link>
-      <description>Work with golang and postgres.</description>
-      <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>NoFun: Rust Engineer</title>
-      <link>https://weworkremotely.com/jobs/3</link>
-      <description>Systems programming in Rust.</description>
+      <description>Ready to go further with us and grow your career.</description>
       <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
     </item>
   </channel>
@@ -71,7 +66,9 @@ func TestWeWorkRemotely_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 2) // Rust listing filtered out.
+				// Only the title-matched Go role survives; the "go further"
+				// prose listing is dropped.
+				require.Len(t, items, 1)
 
 				goEng := items[0]
 				assert.Equal(t, news.SourceWeWorkRemotely, goEng.Source)
@@ -82,11 +79,6 @@ func TestWeWorkRemotely_Fetch(t *testing.T) {
 				require.NotNil(t, goEng.Author)
 				assert.Equal(t, "Acme Corp", goEng.Author.Name)
 				assert.Equal(t, fixedNow(), goEng.Published)
-
-				backend := items[1]
-				// Go only in the description: role has no Go, so no go-title boost.
-				assert.Equal(t, "Beta Ltd · Backend Engineer", backend.Title)
-				assert.Less(t, backend.Score, goEng.Score)
 			},
 		},
 	}

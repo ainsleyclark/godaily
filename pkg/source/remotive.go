@@ -16,8 +16,11 @@ import (
 )
 
 // Remotive fetches Go-relevant remote roles from the Remotive public jobs API.
-// The API is unauthenticated and scoped to the software-development category;
-// it is then filtered down to listings that mention Go in the title or tags.
+// The API is unauthenticated; the search=golang query narrows server-side to
+// listings mentioning Go in the title or description. Results are then kept only
+// when Go appears as a whole word in the title — Remotive's per-job tags are an
+// unreliable kitchen-sink (agency/marketplace listings tag every language), so
+// they can't be trusted as a relevance signal.
 // Remotive asks consumers to fetch no more than a few times a day (well within
 // the once-per-window collection) and to credit it as the source, which the
 // NiceName / link in the rendered digest does.
@@ -32,15 +35,15 @@ func init() {
 	news.Register(news.SourceRemotive, func(cfg env.Config) news.Fetcher { return NewRemotive(cfg) })
 }
 
-const remotiveURL = "https://remotive.com/api/remote-jobs?category=software-dev"
+const remotiveURL = "https://remotive.com/api/remote-jobs?search=golang"
 
-// NewRemotive creates a Remotive client scoped to software-development roles.
+// NewRemotive creates a Remotive client scoped to Go listings via the search filter.
 func NewRemotive(_ env.Config) *Remotive {
 	return &Remotive{url: remotiveURL, now: time.Now}
 }
 
-// Fetch retrieves software-development roles from Remotive and returns the
-// Go-relevant ones as news items.
+// Fetch retrieves the Go search results from Remotive and returns the listings
+// that name Go in the title as news items.
 func (r Remotive) Fetch(ctx context.Context) ([]news.Item, error) {
 	headers := http.Header{"User-Agent": []string{"godaily/1.0 (+https://godaily.dev)"}}
 	resp, err := ingest.Fetch[remotiveResponse](ctx, r.url, "remotive", json.Unmarshal, headers)
@@ -78,10 +81,8 @@ func remotiveAgeDays(now time.Time, published string) int {
 }
 
 func (j remotiveJob) ShouldInclude() bool {
-	if j.Title == "" || j.URL == "" {
-		return false
-	}
-	return hasGoWord(j.Title) || tagsContainGo(j.Tags)
+	// Trust only a whole-word Go match in the title; the tag list is noise.
+	return j.Title != "" && j.URL != "" && hasGoWord(j.Title)
 }
 
 func (j remotiveJob) EnrichmentURL() string { return "" }
@@ -126,14 +127,13 @@ type (
 		Jobs []remotiveJob `json:"jobs"`
 	}
 	remotiveJob struct {
-		ID              int      `json:"id"`
-		URL             string   `json:"url"`
-		Title           string   `json:"title"`
-		Company         string   `json:"company_name"`
-		Location        string   `json:"candidate_required_location"`
-		Salary          string   `json:"salary"`
-		PublicationDate string   `json:"publication_date"`
-		Tags            []string `json:"tags"`
+		ID              int    `json:"id"`
+		URL             string `json:"url"`
+		Title           string `json:"title"`
+		Company         string `json:"company_name"`
+		Location        string `json:"candidate_required_location"`
+		Salary          string `json:"salary"`
+		PublicationDate string `json:"publication_date"`
 
 		ageDays int       // populated by Fetch before TransformAll runs
 		now     time.Time // snapshot of collection time, used as Published
