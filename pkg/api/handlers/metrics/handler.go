@@ -36,6 +36,7 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/summary", h.Summary, auth)
 	kit.Get("/issues", h.Issues, auth)
 	kit.Get("/issues/{slug}", h.IssueBySlug, auth)
+	kit.Get("/issues/{slug}/trend", h.IssueTrend, auth)
 	kit.Get("/items", h.Items, auth)
 	kit.Get("/tags", h.Tags, auth)
 	kit.Get("/sources", h.Sources, auth)

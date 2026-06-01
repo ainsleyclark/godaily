@@ -5,6 +5,7 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import type { paths } from './schema';
 import type {
 	DigestIssue,
+	IssueDetail,
 	IssueEngagement,
 	IssueStatus,
 	ItemMetrics,
@@ -116,6 +117,16 @@ export const api = {
 		unwrap<IssueEngagement[]>(
 			client.GET('/metrics/issues', {
 				params: { query: { from: q?.from, to: q?.to, limit: q?.limit } }
+			})
+		),
+	issueDetail: (slug: string) =>
+		unwrap<IssueDetail>(
+			client.GET('/metrics/issues/{slug}', { params: { path: { slug } } })
+		),
+	issueTrend: (slug: string, q?: MetricsQuery) =>
+		unwrap<TrendData>(
+			client.GET('/metrics/issues/{slug}/trend', {
+				params: { path: { slug }, query: { metric: q?.metric, bucket: q?.bucket, from: q?.from, to: q?.to } }
 			})
 		),
 	items: (q?: MetricsQuery) =>

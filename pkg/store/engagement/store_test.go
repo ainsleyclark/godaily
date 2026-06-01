@@ -52,6 +52,25 @@ func insertSubscriberAt(t *testing.T, ctx context.Context, db *sql.DB, email str
 	require.NoError(t, err)
 }
 
+// insertEmailEventAt inserts an email event with occurred_at written as an
+// RFC3339 string. The modernc sqlite driver used in tests stores a bound
+// time.Time via Go's time.Time.String() layout, which SQLite's strftime cannot
+// bucket; production (Turso) stores RFC3339 text, which it can. Writing the
+// timestamp as a string here mirrors production storage so the trend bucketing
+// is exercised faithfully.
+func insertEmailEventAt(t *testing.T, ctx context.Context, db *sql.DB, issueID, subID int64, email, eventType, url, eventID string, occurredAt time.Time) {
+	t.Helper()
+
+	_, err := db.ExecContext(
+		ctx,
+		`INSERT INTO email_events
+		    (issue_id, subscriber_id, email, event_type, url, event_id, occurred_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+		issueID, subID, email, eventType, url, eventID, occurredAt.Format(time.RFC3339),
+	)
+	require.NoError(t, err)
+}
+
 func ptr(t time.Time) *time.Time { return &t }
 
 func TestMetrics_Store(t *testing.T) {
@@ -244,6 +263,51 @@ func TestMetrics_Store(t *testing.T) {
 		assert.Equal(t, int64(5), totalNew)
 	})
 
+	// IssueTrend is exercised against a dedicated issue seeded via direct inserts
+	// so occurred_at is stored as RFC3339 text (matching production/Turso) and can
+	// be bucketed by strftime under the modernc test driver.
+	trendIssue, err := issues.New(db).Create(ctx, digest.Issue{
+		Slug:    "2026-05-20",
+		Subject: "GoDaily - May 20, 2026",
+		Status:  digest.IssueStatusSent,
+		SentAt:  now.Add(-4 * 24 * time.Hour),
+	})
+	require.NoError(t, err)
+
+	occurredAt := now.Add(-3 * 24 * time.Hour)
+	insertEmailEventAt(t, ctx, db, trendIssue.ID, subA.ID, "a@example.com", "delivered", "", "t-del-a", occurredAt)
+	insertEmailEventAt(t, ctx, db, trendIssue.ID, subB.ID, "b@example.com", "delivered", "", "t-del-b", occurredAt)
+	insertEmailEventAt(t, ctx, db, trendIssue.ID, subA.ID, "a@example.com", "clicked", item.URL, "t-click-a", occurredAt)
+	insertEmailEventAt(t, ctx, db, trendIssue.ID, subB.ID, "b@example.com", "clicked", item.URL, "t-click-b", occurredAt)
+
+	t.Run("IssueTrend scopes to the issue and sums to its clicks", func(t *testing.T) {
+		got, err := s.IssueTrend(ctx, trendIssue.ID, filter, "unique_clicks", "day")
+		require.NoError(t, err)
+		assert.Equal(t, "unique_clicks", got.Metric)
+		assert.Equal(t, "day", got.Bucket)
+		assert.NotEmpty(t, got.Points, "window is zero-filled across the filter range")
+
+		var total float64
+		var delivered int64
+		for _, p := range got.Points {
+			total += p.Value
+			delivered += p.Delivered
+		}
+		assert.Equal(t, 2.0, total, "subA + subB each clicked once (unique)")
+		assert.Equal(t, int64(2), delivered, "both delivered events fall in the window")
+	})
+
+	t.Run("IssueTrend excludes other issues", func(t *testing.T) {
+		got, err := s.IssueTrend(ctx, trendIssue.ID+999, filter, "unique_clicks", "day")
+		require.NoError(t, err)
+
+		var total float64
+		for _, p := range got.Points {
+			total += p.Value
+		}
+		assert.Zero(t, total, "no events belong to the unknown issue")
+	})
+
 	// MUST be last: closing the DB makes every subsequent query fail.
 	t.Run("Query error on closed DB", func(t *testing.T) {
 		require.NoError(t, db.Close())
@@ -281,6 +345,12 @@ func TestMetrics_Store(t *testing.T) {
 		t.Log("SubscriberGrowth")
 		{
 			_, err := s.SubscriberGrowth(ctx, filter, "day")
+			assert.Error(t, err)
+		}
+
+		t.Log("IssueTrend")
+		{
+			_, err := s.IssueTrend(ctx, issue.ID, filter, "unique_clicks", "day")
 			assert.Error(t, err)
 		}
 	})

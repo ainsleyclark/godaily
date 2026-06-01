@@ -28,6 +28,9 @@ export type TrendData = DeepRequired<Schemas['engagement.TrendData']>;
 export type SubscriberPoint = DeepRequired<Schemas['engagement.SubscriberPoint']>;
 export type SubscriberData = DeepRequired<Schemas['engagement.SubscriberData']>;
 export type SocialPostMetric = DeepRequired<Schemas['engagement.SocialPostEngagement']>;
+export type IssueStats = DeepRequired<Schemas['engagement.IssueStats']>;
+export type LinkClicks = DeepRequired<Schemas['engagement.LinkClicks']>;
+export type IssueDetail = DeepRequired<Schemas['metrics.IssueDetail']>;
 export type Subscriber = DeepRequired<Schemas['audience.Subscriber']>;
 
 export type IssueStatus = Schemas['digest.IssueStatus'];
