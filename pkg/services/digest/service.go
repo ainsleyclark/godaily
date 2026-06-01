@@ -39,20 +39,11 @@ type Service struct {
 	socialDrafter     SocialDrafter
 }
 
-// SetSocialDrafter wires the social drafter so Build can generate draft
-// social posts as part of the digest pipeline. Optional — when unset,
-// Build skips the drafting step. Called from app bootstrap after the
-// social service is constructed (since social depends on the issue
-// store the digest service uses, both services share repos but neither
-// depends on the other at construction time).
-func (s *Service) SetSocialDrafter(d SocialDrafter) {
-	s.socialDrafter = d
-}
-
 var _ digest.Service = (*Service)(nil)
 
 // New creates a new Service, validating that all news sources have
-// registered fetchers.
+// registered fetchers. socialDrafter is optional and may be nil — when
+// nil, Build skips the drafting side effect.
 func New(
 	emailSender email.BatchSender,
 	adminEmail string,
@@ -61,6 +52,7 @@ func New(
 	issues digest.IssueRepository,
 	items news.ItemRepository,
 	subscribers audience.SubscriberRepository,
+	socialDrafter SocialDrafter,
 ) (*Service, error) {
 	if news.HasSources() {
 		if err := news.Validate(); err != nil {
@@ -75,6 +67,7 @@ func New(
 		items:             items,
 		subscribers:       subscribers,
 		slack:             slack,
+		socialDrafter:     socialDrafter,
 	}, nil
 }
 
