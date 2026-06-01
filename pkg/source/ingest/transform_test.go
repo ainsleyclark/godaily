@@ -62,6 +62,10 @@ func TestSanitise(t *testing.T) {
 		"Link mid-sentence":    {input: "built on [testing.T](https://pkg.go.dev/testing) package", want: "built on testing.T package"},
 		"Multiple links":       {input: "[A](https://a.com) and [B](https://b.com)", want: "A and B"},
 		"Collapsed whitespace": {input: "foo   \n  bar", want: "foo bar"},
+		"Zero-width entity":    {input: "Hello &#x200B; world", want: "Hello world"},
+		"Zero-width char":      {input: "Hello ​ world", want: "Hello world"},
+		"Entity then heading":  {input: "&#x200B;\n## Title", want: "Title"},
+		"Numeric entity":       {input: "caf&#233;", want: "café"},
 	}
 
 	for name, test := range tt {
