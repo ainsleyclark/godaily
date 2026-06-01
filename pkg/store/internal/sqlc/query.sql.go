@@ -884,21 +884,24 @@ func (q *Queries) SocialMetricUpsert(ctx context.Context, arg SocialMetricUpsert
 
 const socialPostCreate = `-- name: SocialPostCreate :one
 INSERT INTO social_posts (
-    issue_id, kind, subject, platform, text, post_url, posted_at
+    issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source
 ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, issue_id, kind, subject, platform, text, post_url, posted_at
+RETURNING id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source
 `
 
 type SocialPostCreateParams struct {
-	IssueID  *int64         `json:"issue_id"`
-	Kind     string         `json:"kind"`
-	Subject  sql.NullString `json:"subject"`
-	Platform string         `json:"platform"`
-	Text     string         `json:"text"`
-	PostUrl  sql.NullString `json:"post_url"`
-	PostedAt time.Time      `json:"posted_at"`
+	IssueID       *int64         `json:"issue_id"`
+	Kind          string         `json:"kind"`
+	Subject       sql.NullString `json:"subject"`
+	Platform      string         `json:"platform"`
+	Text          string         `json:"text"`
+	PostUrl       sql.NullString `json:"post_url"`
+	PostedAt      time.Time      `json:"posted_at"`
+	Status        string         `json:"status"`
+	PublishedAt   *time.Time     `json:"published_at"`
+	MentionSource sql.NullString `json:"mention_source"`
 }
 
 func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreateParams) (SocialPost, error) {
@@ -910,6 +913,9 @@ func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreatePara
 		arg.Text,
 		arg.PostUrl,
 		arg.PostedAt,
+		arg.Status,
+		arg.PublishedAt,
+		arg.MentionSource,
 	)
 	var i SocialPost
 	err := row.Scan(
@@ -921,14 +927,26 @@ func (q *Queries) SocialPostCreate(ctx context.Context, arg SocialPostCreatePara
 		&i.Text,
 		&i.PostUrl,
 		&i.PostedAt,
+		&i.Status,
+		&i.PublishedAt,
+		&i.MentionSource,
 	)
 	return i, err
+}
+
+const socialPostDeleteDraftsByIssue = `-- name: SocialPostDeleteDraftsByIssue :exec
+DELETE FROM social_posts WHERE issue_id = ? AND status = 'draft'
+`
+
+func (q *Queries) SocialPostDeleteDraftsByIssue(ctx context.Context, issueID *int64) error {
+	_, err := q.db.ExecContext(ctx, socialPostDeleteDraftsByIssue, issueID)
+	return err
 }
 
 const socialPostExists = `-- name: SocialPostExists :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
-    WHERE issue_id = ? AND platform = ? AND kind = 'featured'
+    WHERE issue_id = ? AND platform = ? AND kind = 'featured' AND status = 'published'
 ) AS exists_flag
 `
 
@@ -947,7 +965,7 @@ func (q *Queries) SocialPostExists(ctx context.Context, arg SocialPostExistsPara
 const socialPostExistsBySubject = `-- name: SocialPostExistsBySubject :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
-    WHERE subject = ? AND platform = ?
+    WHERE subject = ? AND platform = ? AND status = 'published'
 ) AS exists_flag
 `
 
@@ -966,7 +984,7 @@ func (q *Queries) SocialPostExistsBySubject(ctx context.Context, arg SocialPostE
 const socialPostExistsKindSince = `-- name: SocialPostExistsKindSince :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
-    WHERE kind = ? AND platform = ? AND posted_at >= ?
+    WHERE kind = ? AND platform = ? AND posted_at >= ? AND status = 'published'
 ) AS exists_flag
 `
 
@@ -983,14 +1001,29 @@ func (q *Queries) SocialPostExistsKindSince(ctx context.Context, arg SocialPostE
 	return exists_flag, err
 }
 
-const socialPostListByIssue = `-- name: SocialPostListByIssue :many
-SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at FROM social_posts
-WHERE issue_id = ?
-ORDER BY posted_at ASC
+const socialPostList = `-- name: SocialPostList :many
+SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source FROM social_posts
+WHERE (?1 IS NULL OR issue_id = ?1)
+  AND (?2    IS NULL OR posted_at >= ?2)
+  AND (?3   IS NULL OR status    = ?3)
+  AND (?4 IS NULL OR platform  = ?4)
+ORDER BY posted_at DESC, id DESC
 `
 
-func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID *int64) ([]SocialPost, error) {
-	rows, err := q.db.QueryContext(ctx, socialPostListByIssue, issueID)
+type SocialPostListParams struct {
+	IssueID  interface{} `json:"issue_id"`
+	Since    interface{} `json:"since"`
+	Status   interface{} `json:"status"`
+	Platform interface{} `json:"platform"`
+}
+
+func (q *Queries) SocialPostList(ctx context.Context, arg SocialPostListParams) ([]SocialPost, error) {
+	rows, err := q.db.QueryContext(ctx, socialPostList,
+		arg.IssueID,
+		arg.Since,
+		arg.Status,
+		arg.Platform,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -1007,6 +1040,9 @@ func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID *int64) ([]
 			&i.Text,
 			&i.PostUrl,
 			&i.PostedAt,
+			&i.Status,
+			&i.PublishedAt,
+			&i.MentionSource,
 		); err != nil {
 			return nil, err
 		}
@@ -1021,42 +1057,42 @@ func (q *Queries) SocialPostListByIssue(ctx context.Context, issueID *int64) ([]
 	return items, nil
 }
 
-const socialPostListSince = `-- name: SocialPostListSince :many
-SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at FROM social_posts
-WHERE posted_at >= ?
-ORDER BY posted_at DESC
+const socialPostUpdateStatus = `-- name: SocialPostUpdateStatus :one
+UPDATE social_posts
+SET status = ?, published_at = ?, post_url = ?
+WHERE id = ?
+RETURNING id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source
 `
 
-func (q *Queries) SocialPostListSince(ctx context.Context, postedAt time.Time) ([]SocialPost, error) {
-	rows, err := q.db.QueryContext(ctx, socialPostListSince, postedAt)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []SocialPost{}
-	for rows.Next() {
-		var i SocialPost
-		if err := rows.Scan(
-			&i.ID,
-			&i.IssueID,
-			&i.Kind,
-			&i.Subject,
-			&i.Platform,
-			&i.Text,
-			&i.PostUrl,
-			&i.PostedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+type SocialPostUpdateStatusParams struct {
+	Status      string         `json:"status"`
+	PublishedAt *time.Time     `json:"published_at"`
+	PostUrl     sql.NullString `json:"post_url"`
+	ID          int64          `json:"id"`
+}
+
+func (q *Queries) SocialPostUpdateStatus(ctx context.Context, arg SocialPostUpdateStatusParams) (SocialPost, error) {
+	row := q.db.QueryRowContext(ctx, socialPostUpdateStatus,
+		arg.Status,
+		arg.PublishedAt,
+		arg.PostUrl,
+		arg.ID,
+	)
+	var i SocialPost
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.Kind,
+		&i.Subject,
+		&i.Platform,
+		&i.Text,
+		&i.PostUrl,
+		&i.PostedAt,
+		&i.Status,
+		&i.PublishedAt,
+		&i.MentionSource,
+	)
+	return i, err
 }
 
 const socialPostsWithMetrics = `-- name: SocialPostsWithMetrics :many
@@ -1077,6 +1113,7 @@ FROM social_posts sp
 LEFT JOIN social_metrics sm ON sm.social_post_id = sp.id
 WHERE (?1 IS NULL OR sp.posted_at >= ?1)
   AND (?2   IS NULL OR sp.posted_at <  ?2)
+  AND sp.status = 'published'
 ORDER BY sp.posted_at DESC
 `
 

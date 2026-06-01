@@ -138,6 +138,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	if err != nil {
 		return nil, teardown, err
 	}
+	aggregator.SetSocialDrafter(socialSvc)
 
 	subscriberSvc := audiencesvc.New(subsStore, issueStore, emailSender)
 

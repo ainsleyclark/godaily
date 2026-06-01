@@ -12,9 +12,19 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
+
+// SocialDrafter is the narrow slice of the social service that Build
+// uses to generate draft social posts alongside the digest issue. Kept
+// as a one-method interface so app wiring can pass the full social
+// service without dragging the rest of its surface into the digest
+// package.
+type SocialDrafter interface {
+	DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error)
+}
 
 // Service fetches Go news from all registered sources and optionally
 // sends the digest via email.
@@ -26,6 +36,17 @@ type Service struct {
 	items             news.ItemRepository
 	subscribers       audience.SubscriberRepository
 	slack             slack.Sender
+	socialDrafter     SocialDrafter
+}
+
+// SetSocialDrafter wires the social drafter so Build can generate draft
+// social posts as part of the digest pipeline. Optional — when unset,
+// Build skips the drafting step. Called from app bootstrap after the
+// social service is constructed (since social depends on the issue
+// store the digest service uses, both services share repos but neither
+// depends on the other at construction time).
+func (s *Service) SetSocialDrafter(d SocialDrafter) {
+	s.socialDrafter = d
 }
 
 var _ digest.Service = (*Service)(nil)

@@ -44,11 +44,11 @@ func (h *Handler) Featured(c *webkit.Context) error {
 		return api.OK(c, http.StatusOK, nil, "Skipped featured — service not wired")
 	}
 
-	results, err := h.social.Post(ctx, social.PostOptions{Date: today})
+	results, err := h.social.PublishDrafts(ctx, social.PostOptions{Date: today})
 	if err != nil {
-		h.slack.MustSend(ctx, slack.Error("Featured post failed", err))
-		slog.ErrorContext(ctx, "Featured post failed", "err", err)
-		return api.Error(c, http.StatusInternalServerError, "Failed to post featured")
+		h.slack.MustSend(ctx, slack.Error("Featured publish failed", err))
+		slog.ErrorContext(ctx, "Featured publish failed", "err", err)
+		return api.Error(c, http.StatusInternalServerError, "Failed to publish featured")
 	}
 
 	slog.InfoContext(ctx, "Featured run complete", "platforms", len(results))

@@ -41,19 +41,34 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
-// Post mocks base method.
-func (m *MockService) Post(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+// DraftFeatured mocks base method.
+func (m *MockService) DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Post", ctx, opts)
+	ret := m.ctrl.Call(m, "DraftFeatured", ctx, opts)
 	ret0, _ := ret[0].([]social.PostResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Post indicates an expected call of Post.
-func (mr *MockServiceMockRecorder) Post(ctx, opts any) *gomock.Call {
+// DraftFeatured indicates an expected call of DraftFeatured.
+func (mr *MockServiceMockRecorder) DraftFeatured(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Post", reflect.TypeOf((*MockService)(nil).Post), ctx, opts)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftFeatured", reflect.TypeOf((*MockService)(nil).DraftFeatured), ctx, opts)
+}
+
+// PublishDrafts mocks base method.
+func (m *MockService) PublishDrafts(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PublishDrafts", ctx, opts)
+	ret0, _ := ret[0].([]social.PostResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PublishDrafts indicates an expected call of PublishDrafts.
+func (mr *MockServiceMockRecorder) PublishDrafts(ctx, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublishDrafts", reflect.TypeOf((*MockService)(nil).PublishDrafts), ctx, opts)
 }
 
 // Rotate mocks base method.
