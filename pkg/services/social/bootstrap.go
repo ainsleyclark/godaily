@@ -27,7 +27,7 @@ func buildPosters(c env.Config) []platform.Poster {
 		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN))
+		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ""))
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
@@ -63,10 +63,10 @@ func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
 		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
+		li := linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ownerLinkedInMemberURN)
 		out[social.LinkedIn] = selfEngagementFetcher{
-			inner:   linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN),
-			likes:   1,
-			reposts: 1,
+			inner:   li,
+			checker: li,
 		}
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
