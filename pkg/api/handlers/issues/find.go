@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package digest
+package issues
 
 import (
 	"errors"
@@ -16,32 +16,39 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// IssueResponse is the response envelope for GET /digest/issues/{id}.
+// IssueResponse is the response envelope for GET /issues/{key}.
 type IssueResponse = api.Response[digest.Issue] //@name IssueResponse
 
-// IssueByID godoc
+// Find godoc
 //
-//	@Summary		Fetch a digest issue by ID.
-//	@Description	Returns a single digest issue, including its items grouped for rendering.
-//	@Tags			digest
+//	@Summary		Fetch a digest issue by ID or slug.
+//	@Description	Returns a single digest issue, including its items. The {key} path parameter is interpreted as a numeric issue ID if it parses as a positive integer; otherwise it is treated as a slug.
+//	@Tags			issues
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			id	path		int				true	"Issue ID"
+//	@Param			key	path		string			true	"Issue ID (numeric) or slug"
 //	@Success		200	{object}	IssueResponse	"Successfully retrieved issue"
-//	@Failure		400	{object}	api.MessageResponse	"ID must be a positive integer"
+//	@Failure		400	{object}	api.MessageResponse	"Key is required"
 //	@Failure		404	{object}	api.MessageResponse	"Issue not found"
 //	@Failure		500	{object}	api.MessageResponse	"Failed to fetch issue"
-//	@Router			/digest/issues/{id} [get]
-func (h *Handler) IssueByID(c *webkit.Context) error {
+//	@Router			/issues/{key} [get]
+func (h *Handler) Find(c *webkit.Context) error {
 	ctx := c.Context()
 
-	raw := c.Param("id")
-	id, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil || id < 1 {
-		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
+	key := c.Param("key")
+	if key == "" {
+		return api.Error(c, http.StatusBadRequest, "Key is required")
 	}
 
-	issue, err := h.issuesRepo.Find(ctx, id)
+	var (
+		issue digest.Issue
+		err   error
+	)
+	if id, parseErr := strconv.ParseInt(key, 10, 64); parseErr == nil && id > 0 {
+		issue, err = h.issuesRepo.Find(ctx, id)
+	} else {
+		issue, err = h.issuesRepo.FindBySlug(ctx, key)
+	}
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return api.Error(c, http.StatusNotFound, "Issue not found")

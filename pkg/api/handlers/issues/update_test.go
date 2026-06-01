@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package digest
+package issues
 
 import (
 	"context"
@@ -22,7 +22,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-func TestUpdateIssue(t *testing.T) {
+func TestUpdate(t *testing.T) {
 	t.Parallel()
 
 	type Test struct {
@@ -38,7 +38,7 @@ func TestUpdateIssue(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		issues := mockdigest.NewMockIssueRepository(ctrl)
 		rec := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodPatch, "/digest/issues/"+id, strings.NewReader(body))
+		req := httptest.NewRequest(http.MethodPatch, "/issues/"+id, strings.NewReader(body))
 		req.Header.Set("Content-Type", "application/json")
 		rctx := chi.NewRouteContext()
 		rctx.URLParams.Add("id", id)
@@ -60,7 +60,7 @@ func TestUpdateIssue(t *testing.T) {
 			Update(gomock.Any(), digest.Issue{ID: 42, Subject: "New title", Summary: "New intro"}).
 			Return(digest.Issue{ID: 42, Subject: "New title", Summary: "New intro", Status: digest.IssueStatusDraft}, nil)
 
-		err := deps.Handler.UpdateIssue(deps.Context)
+		err := deps.Handler.Update(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
@@ -74,7 +74,7 @@ func TestUpdateIssue(t *testing.T) {
 			Update(gomock.Any(), digest.Issue{ID: 7, Subject: "Hello", Summary: "there"}).
 			Return(digest.Issue{ID: 7, Subject: "Hello", Summary: "there", Status: digest.IssueStatusDraft}, nil)
 
-		err := deps.Handler.UpdateIssue(deps.Context)
+		err := deps.Handler.Update(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
@@ -84,7 +84,7 @@ func TestUpdateIssue(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "42", `{"subject":"   ","summary":"x"}`)
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
 	})
 
@@ -92,7 +92,7 @@ func TestUpdateIssue(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "42", `not json`)
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
 	})
 
@@ -100,7 +100,7 @@ func TestUpdateIssue(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "abc", `{"subject":"x"}`)
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusBadRequest, deps.Recorder.Code)
 	})
 
@@ -110,7 +110,7 @@ func TestUpdateIssue(t *testing.T) {
 		deps := setup(t, "99", `{"subject":"x"}`)
 		deps.Issues.EXPECT().Update(gomock.Any(), gomock.Any()).Return(digest.Issue{}, store.ErrNotFound)
 
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusNotFound, deps.Recorder.Code)
 	})
 
@@ -120,7 +120,7 @@ func TestUpdateIssue(t *testing.T) {
 		deps := setup(t, "5", `{"subject":"x"}`)
 		deps.Issues.EXPECT().Update(gomock.Any(), gomock.Any()).Return(digest.Issue{}, digest.ErrIssueNotDraft)
 
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusConflict, deps.Recorder.Code)
 	})
 
@@ -130,7 +130,7 @@ func TestUpdateIssue(t *testing.T) {
 		deps := setup(t, "5", `{"subject":"x"}`)
 		deps.Issues.EXPECT().Update(gomock.Any(), gomock.Any()).Return(digest.Issue{}, errors.New("db error"))
 
-		_ = deps.Handler.UpdateIssue(deps.Context)
+		_ = deps.Handler.Update(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
 	})
 }

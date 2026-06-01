@@ -130,6 +130,20 @@ func (mr *MockItemRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockItemRepository)(nil).List), ctx, opts)
 }
 
+// ReorderInIssue mocks base method.
+func (m *MockItemRepository) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs []int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReorderInIssue", ctx, issueID, orderedItemIDs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ReorderInIssue indicates an expected call of ReorderInIssue.
+func (mr *MockItemRepositoryMockRecorder) ReorderInIssue(ctx, issueID, orderedItemIDs any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderInIssue", reflect.TypeOf((*MockItemRepository)(nil).ReorderInIssue), ctx, issueID, orderedItemIDs)
+}
+
 // SourceCounts mocks base method.
 func (m *MockItemRepository) SourceCounts(ctx context.Context) ([]news.SourceCount, error) {
 	m.ctrl.T.Helper()
@@ -158,4 +172,18 @@ func (m *MockItemRepository) TagCounts(ctx context.Context) ([]news.TagCount, er
 func (mr *MockItemRepositoryMockRecorder) TagCounts(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TagCounts", reflect.TypeOf((*MockItemRepository)(nil).TagCounts), ctx)
+}
+
+// UnlinkFromIssue mocks base method.
+func (m *MockItemRepository) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnlinkFromIssue", ctx, issueID, itemID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnlinkFromIssue indicates an expected call of UnlinkFromIssue.
+func (mr *MockItemRepositoryMockRecorder) UnlinkFromIssue(ctx, issueID, itemID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnlinkFromIssue", reflect.TypeOf((*MockItemRepository)(nil).UnlinkFromIssue), ctx, issueID, itemID)
 }

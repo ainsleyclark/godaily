@@ -94,6 +94,14 @@ func (s *CachingStore) DeleteByIssue(ctx context.Context, issueID int64) error {
 	return s.repo.DeleteByIssue(ctx, issueID)
 }
 
+func (s *CachingStore) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error {
+	return s.repo.UnlinkFromIssue(ctx, issueID, itemID)
+}
+
+func (s *CachingStore) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs []int64) error {
+	return s.repo.ReorderInIssue(ctx, issueID, orderedItemIDs)
+}
+
 // getCached unmarshals the JSON value at key into dst, returning true on a hit.
 func (s *CachingStore) getCached(ctx context.Context, key string, dst any) bool {
 	var raw []byte

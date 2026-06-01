@@ -23,6 +23,7 @@ type Item struct {
 	Comments    int       `json:"comments"`
 	Score       float64   `json:"score"` // per-source relevance/popularity, normalised across sources
 	Published   time.Time `json:"published"`
+	Position    int64     `json:"position"`  // ordering within a digest issue; 0 when not linked
 	InDigest    bool      `json:"in_digest"` // true when the item is linked to a digest issue
 }
 
@@ -76,6 +77,16 @@ type ItemRepository interface {
 	TagCounts(ctx context.Context) ([]TagCount, error)
 	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)
 	DeleteByIssue(ctx context.Context, issueID int64) error
+	// UnlinkFromIssue clears the items.issue_id for the given (issueID, itemID) pair.
+	// The item row is preserved (it remains in the raw pool, in_digest=false). Fails
+	// with digest.ErrIssueNotDraft if the issue is not in draft status, and with
+	// store.ErrNotFound if the issue or the link does not exist.
+	UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error
+	// ReorderInIssue rewrites the position of each item within the issue using
+	// the supplied order — orderedItemIDs[i] gets position i. The set must match
+	// the full list of currently linked items exactly; partial reorders are
+	// rejected. Fails with digest.ErrIssueNotDraft if the issue is not draft.
+	ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs []int64) error
 }
 
 // Author holds identity information about the person or entity that

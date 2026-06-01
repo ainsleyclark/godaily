@@ -8,9 +8,11 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtypes"
@@ -211,6 +213,105 @@ func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 	return s.sqlc.ItemDeleteByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
 }
 
+// UnlinkFromIssue clears items.issue_id for the given (issueID, itemID) pair,
+// leaving the row in the raw pool. The parent issue must exist and be in
+// draft status; otherwise this returns store.ErrNotFound or
+// digest.ErrIssueNotDraft. A pair that does not match a current link is
+// treated as not-found.
+func (s Store) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error {
+	if err := s.assertIssueDraft(ctx, issueID); err != nil {
+		return err
+	}
+
+	rows, err := s.sqlc.ItemUnlinkFromIssue(ctx, sqlc.ItemUnlinkFromIssueParams{
+		ItemID:  itemID,
+		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return store.ErrNotFound
+	}
+	return nil
+}
+
+// ReorderInIssue rewrites the position of each linked item using the supplied
+// order. The set of ids must match exactly what is currently linked to the
+// issue; partial or extraneous ids are rejected with store.ErrNotFound. The
+// parent issue must be in draft status. The whole operation runs in a
+// transaction so a partial failure leaves no half-applied order.
+func (s Store) ReorderInIssue(ctx context.Context, issueID int64, orderedItemIDs []int64) error {
+	if err := s.assertIssueDraft(ctx, issueID); err != nil {
+		return err
+	}
+
+	current, err := s.sqlc.ItemIDsByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
+	if err != nil {
+		return err
+	}
+	if !sameIDSet(current, orderedItemIDs) {
+		return store.ErrNotFound
+	}
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback() //nolint:errcheck
+
+	q := s.sqlc.WithTx(tx)
+	for idx, itemID := range orderedItemIDs {
+		rows, err := q.ItemUpdatePosition(ctx, sqlc.ItemUpdatePositionParams{
+			Position: int64(idx),
+			ItemID:   itemID,
+			IssueID:  sql.NullInt64{Int64: issueID, Valid: true},
+		})
+		if err != nil {
+			return fmt.Errorf("update position for item %d: %w", itemID, err)
+		}
+		if rows != 1 {
+			return store.ErrNotFound
+		}
+	}
+	return tx.Commit()
+}
+
+// assertIssueDraft returns store.ErrNotFound if the issue is missing, or
+// digest.ErrIssueNotDraft if it exists but is not in draft status.
+func (s Store) assertIssueDraft(ctx context.Context, issueID int64) error {
+	status, err := s.sqlc.IssueStatusByID(ctx, issueID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return store.ErrNotFound
+		}
+		return err
+	}
+	if status != string(digest.IssueStatusDraft) {
+		return digest.ErrIssueNotDraft
+	}
+	return nil
+}
+
+// sameIDSet reports whether a and b contain the same int64 values, ignoring
+// order. Used to validate a reorder request before mutating anything.
+func sameIDSet(a, b []int64) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	counts := make(map[int64]int, len(a))
+	for _, v := range a {
+		counts[v]++
+	}
+	for _, v := range b {
+		if counts[v] == 0 {
+			return false
+		}
+		counts[v]--
+	}
+	return true
+}
+
 // Count returns the total number of items in the store.
 func (s Store) Count(ctx context.Context) (int64, error) {
 	return s.sqlc.ItemCount(ctx)
@@ -290,6 +391,7 @@ func transformItem(i sqlc.Item) news.Item {
 		OriginalURL: i.OriginalUrl.String,
 		Snippet:     i.Summary.String,
 		Score:       i.Score.Float64,
+		Position:    i.Position,
 		InDigest:    i.IssueID.Valid,
 	}
 	if i.Published != nil {

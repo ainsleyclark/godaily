@@ -8,6 +8,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import DigestPreview from '$lib/components/digest-preview.svelte';
+	import DigestEditor from '$lib/components/digest-editor.svelte';
 	import { ArrowLeft, ExternalLink } from '@lucide/svelte';
 	import { formatDate } from '$lib/utils/format';
 	import { toast } from 'svelte-sonner';
@@ -17,6 +18,7 @@
 	let issue = $state<DigestIssue | null>(null);
 	let loading = $state(true);
 	let saving = $state(false);
+	let mutatingItems = $state(false);
 
 	let subject = $state('');
 	let summary = $state('');
@@ -70,6 +72,35 @@
 		if (status === 'sent') return 'success';
 		if (status === 'error') return 'destructive';
 		return 'secondary';
+	}
+
+	async function reorderItems(orderedIds: number[]) {
+		if (!issue || !isDraft || mutatingItems) return;
+		const snapshot = issue;
+		mutatingItems = true;
+		try {
+			issue = await api.reorderDigestItems(snapshot.id, orderedIds);
+		} catch (e) {
+			issue = snapshot;
+			toast.error((e as Error).message || 'Failed to reorder items');
+		} finally {
+			mutatingItems = false;
+		}
+	}
+
+	async function deleteItem(itemId: number) {
+		if (!issue || !isDraft || mutatingItems) return;
+		const snapshot = issue;
+		mutatingItems = true;
+		try {
+			issue = await api.deleteDigestItem(snapshot.id, itemId);
+			toast.success('Item removed');
+		} catch (e) {
+			issue = snapshot;
+			toast.error((e as Error).message || 'Failed to remove item');
+		} finally {
+			mutatingItems = false;
+		}
 	}
 </script>
 
@@ -147,10 +178,19 @@
 
 		<Card>
 			<CardHeader>
-				<CardTitle>Preview ({issue.items?.length ?? 0} items)</CardTitle>
+				<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({issue.items?.length ?? 0} items)</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<DigestPreview items={issue.items ?? []} />
+				{#if isDraft}
+					<DigestEditor
+						items={issue.items ?? []}
+						busy={mutatingItems}
+						onReorder={reorderItems}
+						onDelete={deleteItem}
+					/>
+				{:else}
+					<DigestPreview items={issue.items ?? []} />
+				{/if}
 			</CardContent>
 		</Card>
 	{/if}

@@ -12,6 +12,9 @@ SELECT * FROM issues WHERE slug = ? LIMIT 1;
 -- name: IssueByID :one
 SELECT * FROM issues WHERE id = ? LIMIT 1;
 
+-- name: IssueStatusByID :one
+SELECT status FROM issues WHERE id = ? LIMIT 1;
+
 -- name: IssueList :many
 SELECT * FROM issues
 WHERE (sqlc.narg('status') IS NULL OR status = sqlc.narg('status'))
