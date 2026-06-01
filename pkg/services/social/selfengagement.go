@@ -14,17 +14,24 @@ import (
 
 // ownerLinkedInMemberURN is Ainsley Clark's personal LinkedIn member URN.
 //
-// To find yours:
-//  1. Visit https://www.linkedin.com/developers/tools/oauth/token-inspector
-//     and paste your personal access token.
-//  2. The "id" value in the decoded token data is your numeric member ID.
-//  3. Alternatively, call GET https://api.linkedin.com/rest/me with your
-//     token — the "id" field gives the same numeric ID.
-//  4. Confirm the URN format by making a GET /rest/reactions?q=entity&entity=<share-urn>
-//     on a post you have liked and noting the "actor" field — it will be
-//     either "urn:li:person:<encodedId>" or "urn:li:member:<numericId>".
-//     Use whatever format the API returns for your account.
-const ownerLinkedInMemberURN = "urn:li:person:REPLACE_ME"
+// To find it, run this with your personal LinkedIn OAuth token:
+//
+//	curl -H "Authorization: Bearer <token>" \
+//	     -H "LinkedIn-Version: 202601" \
+//	     https://api.linkedin.com/rest/me
+//
+// The "id" field in the JSON response is your numeric member ID.
+// Plug it in as "urn:li:member:<id>" — e.g. "urn:li:member:123456789".
+//
+// If that doesn't match (reactions API sometimes returns urn:li:person:<encodedId>
+// instead), like one of GoDaily's posts and call:
+//
+//	curl -H "Authorization: Bearer <token>" \
+//	     -H "LinkedIn-Version: 202601" \
+//	     "https://api.linkedin.com/rest/reactions?q=entity&entity=<share-urn>"
+//
+// Check the "actor" field on your reaction — use that exact URN format.
+const ownerLinkedInMemberURN = "urn:li:member:REPLACE_ME"
 
 // selfEngagementFetcher wraps a StatFetcher and subtracts the account
 // owner's own engagement from the returned counts. LinkedIn's stats
