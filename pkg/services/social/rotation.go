@@ -70,7 +70,14 @@ func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]soci
 			kind:      cand.Kind(),
 			subject:   cctx.Subject,
 			generate: func(ctx context.Context, p social.Platform) (string, error) {
-				return cand.Generate(ctx, s.prompter, p, cctx)
+				text, err := cand.Generate(ctx, s.prompter, p, cctx)
+				if err != nil {
+					return "", err
+				}
+				if cctx.Kind == social.PostKindNewSource || cctx.Kind == social.PostKindRecap {
+					text = appendSubscribeLine(text, p, string(cctx.Kind))
+				}
+				return text, nil
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
 			mentions:     cctx.Mentions,
