@@ -1,0 +1,152 @@
+[
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Itential, Inc. · Software Development Engineer II - Automation · Atlanta, Georgia",
+		"url": "https://golang.cafe/jobs/Itential-Inc-Software-Development-Engineer-II-Automation-QZ40HOfrYeGygBtR6Uru",
+		"author": {
+			"name": "Itential, Inc."
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.22424999999999998,
+		"published": "2026-04-30T14:25:09.874Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Developer Infra Startup · Senior / Staff Systems Engineer · New York",
+		"url": "https://golang.cafe/jobs/Developer-Infra-Startup-Senior-Staff-Systems-Engineer-Id14Bla7a6FGuJqhbhVW",
+		"author": {
+			"name": "Developer Infra Startup"
+		},
+		"snippet": "$200k–$300k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-04-28T13:35:45.876Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Industrial AI Company · Engineering Manager / Tech Lead · London",
+		"url": "https://golang.cafe/jobs/Industrial-AI-Company-Engineering-Manager-Tech-Lead-gzeO5w4FhwuLKOZsV8jt",
+		"author": {
+			"name": "Industrial AI Company"
+		},
+		"snippet": "£90k–£95k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-04-03T10:10:13.836Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Cargoplot B.V. · Medior / Senior Golang dev at a fast growing Logistics startup · Amsterdam",
+		"url": "https://golang.cafe/jobs/Cargoplot-BV-Medior-Senior-Golang-dev-at-a-fast-growing-Logistics-startup-gCMTmtxRsfmQMYQDHqe1",
+		"author": {
+			"name": "Cargoplot B.V."
+		},
+		"snippet": "€60k–€90k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-04-02T10:03:01.426Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "AscendFS Inc. · Senior Full-Stack Product Engineer · Toronto, Ontario",
+		"url": "https://golang.cafe/jobs/AscendFS-Inc-Senior-Full-Stack-Product-Engineer-nbodUSvKFNCCuWP6nukt",
+		"author": {
+			"name": "AscendFS Inc."
+		},
+		"snippet": "$150k–$170k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-03-30T21:10:48.664Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Infra Automation Scaleup · Senior Database Systems Engineer · Remote",
+		"url": "https://golang.cafe/jobs/Infra-Automation-Scaleup-Senior-Database-Systems-Engineer-IHpu7JcS3FwGcn9wO4rp",
+		"author": {
+			"name": "Infra Automation Scaleup"
+		},
+		"snippet": "€78k–€120k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-03-24T10:35:10.676Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Observability Scaleup · Site Reliability Engineer · Remote",
+		"url": "https://golang.cafe/jobs/Observability-Scaleup-Site-Reliability-Engineer-tTkarwXD9KW6knnlt4Kg",
+		"author": {
+			"name": "Observability Scaleup"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.22424999999999998,
+		"published": "2026-02-25T15:39:13.377Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "TextQL · Senior Software Engineer – Data Systems / Platform / Infrastructure · New York City",
+		"url": "https://golang.cafe/jobs/TextQL-Senior-Software-Engineer-Data-Systems-Platform-Infrastructure-7WioYUERrmuUgpus6x9d",
+		"author": {
+			"name": "TextQL"
+		},
+		"snippet": "$300k–$450k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.23399999999999999,
+		"published": "2026-01-28T00:27:03.571Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Database Startup · Senior Infrastructure Engineer · Remote",
+		"url": "https://golang.cafe/jobs/Database-Startup-Senior-Infrastructure-Engineer-bymnYUIhXKzsJqsgl5L0",
+		"author": {
+			"name": "Database Startup"
+		},
+		"snippet": "$200k–$250k",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.2691,
+		"published": "2026-01-20T11:26:42.058Z",
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "golang_cafe",
+		"title": "Ready4S · Expert Golang Developer · Remote",
+		"url": "https://golang.cafe/jobs/Ready4S-Expert-Golang-Developer-PqlKP5dfgDuWK4WYAr3U",
+		"author": {
+			"name": "Ready4S"
+		},
+		"snippet": "",
+		"tag": "jobs",
+		"comments": 0,
+		"score": 0.22424999999999998,
+		"published": "2025-12-08T13:40:26.027Z",
+		"in_digest": false
+	}
+]
