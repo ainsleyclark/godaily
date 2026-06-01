@@ -36,6 +36,7 @@ type promptItem struct {
 	URL     string  `json:"url"`
 	Author  string  `json:"author,omitempty"`
 	Tag     string  `json:"tag,omitempty"`
+	Section string  `json:"section,omitempty"` // canonical section name, for headline priority
 	Snippet string  `json:"snippet,omitempty"`
 	Score   float64 `json:"score"`
 }
@@ -76,6 +77,7 @@ func filterItems(sections []news.SourceItems, cfg filterConfig) []promptItem {
 				URL:     it.URL,
 				Author:  it.Author.String(),
 				Tag:     string(it.Tag),
+				Section: it.Tag.Title(),
 				Snippet: it.Snippet,
 				Score:   it.Score,
 			})

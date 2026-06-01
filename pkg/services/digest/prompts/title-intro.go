@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -32,8 +33,9 @@ Output strict JSON, schema:
 }
 
 Picking the headline item (for the title):
-- Prefer high-signal Go sources for the headline: releases, security advisories, accepted/shipped/open proposals on golang/go, and the official Go blog. Pick the highest-ranked item from these when one is in the top few.
-- Only headline a discussion thread (Reddit, Hacker News, Lobsters, golang-nuts) when no release, proposal, or official post is present in the top items.
+- Each item carries a "section". Lead with an item from the highest-priority section present, using this order (highest first): %s.
+- Within the chosen section, pick the highest-scored item.
+- Severity override: lead with a Security item ahead of its section rank ONLY when the advisory is genuinely major (broad impact, a core package, or remote code execution). A routine or low-severity advisory (a panic or resource-exhaustion bug in a single non-core package) must NOT bury a Release, Proposal, or official Go blog post.
 
 Writing the title:
 - A factual, punchy headline built from the single biggest item. State what shipped or was proposed. No mood or editorial framing (never "a quiet day"), no hype, no clickbait, no questions.
@@ -54,7 +56,19 @@ NON-NEGOTIABLE — these protect the brand:
 Output the JSON object alone. No prose, no markdown fences, no commentary.`
 
 func buildDigestSystem() string {
-	return digestSystemIntro + "\n\n## Voice & style guide\n\n" + introStyleMD
+	return fmt.Sprintf(digestSystemIntro, sectionOrder()) +
+		"\n\n## Voice & style guide\n\n" + introStyleMD
+}
+
+// sectionOrder renders the canonical section priority (news.SectionTags) as a
+// comma-separated list of display names, so the headline rule stays in sync
+// with the digest's own section ordering rather than hardcoding a preference.
+func sectionOrder() string {
+	names := make([]string, 0, len(news.SectionTags))
+	for _, tag := range news.SectionTags {
+		names = append(names, tag.Title())
+	}
+	return strings.Join(names, ", ")
 }
 
 // Synthesise builds the digest-meta prompt, calls p, and parses the response.

@@ -57,8 +57,6 @@ view over breadth.
 
 ## Shape
 
-## Shape
-
 A single short paragraph. Open on the most important item and why it matters,
 then connect one or two others only if there is a genuine thread. Plain prose,
 no headers, no bullet list, no links.

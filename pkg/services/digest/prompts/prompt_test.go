@@ -176,7 +176,11 @@ func TestBuildDigestSystem(t *testing.T) {
 	t.Parallel()
 
 	got := buildDigestSystem()
-	assert.Contains(t, got, digestSystemIntro)
 	assert.Contains(t, got, introStyleMD)
 	assert.Contains(t, got, "Editorial voice guide")
+	// The section order is injected from news.SectionTags, so Proposals must
+	// appear ahead of Security in the rendered headline rule.
+	assert.Contains(t, got, sectionOrder())
+	assert.Less(t, strings.Index(got, "Proposals"), strings.Index(got, "Security"))
+	assert.NotContains(t, got, "%s")
 }
