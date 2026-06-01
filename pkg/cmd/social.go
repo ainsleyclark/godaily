@@ -155,7 +155,7 @@ func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, e
 		all[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		all[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		all[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, "")
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		all[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
