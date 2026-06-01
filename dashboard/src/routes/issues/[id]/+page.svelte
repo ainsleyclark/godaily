@@ -28,6 +28,9 @@
 		issue !== null && (subject !== issue.subject || summary !== (issue.summary ?? ''))
 	);
 
+	const inDigestItems = $derived((issue?.items ?? []).filter((item) => item.in_digest));
+	const notInDigestItems = $derived((issue?.items ?? []).filter((item) => !item.in_digest));
+
 	async function load() {
 		loading = true;
 		try {
@@ -178,20 +181,31 @@
 
 		<Card>
 			<CardHeader>
-				<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({issue.items?.length ?? 0} items)</CardTitle>
+				<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({inDigestItems.length} items)</CardTitle>
 			</CardHeader>
 			<CardContent>
 				{#if isDraft}
 					<DigestEditor
-						items={issue.items ?? []}
+						items={inDigestItems}
 						busy={mutatingItems}
 						onReorder={reorderItems}
 						onDelete={deleteItem}
 					/>
 				{:else}
-					<DigestPreview items={issue.items ?? []} />
+					<DigestPreview items={inDigestItems} />
 				{/if}
 			</CardContent>
 		</Card>
+
+		{#if notInDigestItems.length > 0}
+			<Card>
+				<CardHeader>
+					<CardTitle>Not included ({notInDigestItems.length} items)</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<DigestPreview items={notInDigestItems} />
+				</CardContent>
+			</Card>
+		{/if}
 	{/if}
 </div>
