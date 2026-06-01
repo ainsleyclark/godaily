@@ -152,197 +152,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/digest/issues": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List digest issues.
-         * @description Returns a paginated list of digest issues, optionally filtered by status.
-         */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description Filter by issue status (e.g. draft, sent) */
-                    status?: string;
-                    /** @description Page number (default 1) */
-                    page?: number;
-                    /** @description Items per page (default 20, max 100) */
-                    per_page?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully retrieved issues */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["IssueListResponse"];
-                    };
-                };
-                /** @description Failed to list issues */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/digest/issues/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Fetch a digest issue by ID.
-         * @description Returns a single digest issue, including its items grouped for rendering.
-         */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description Issue ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Successfully retrieved issue */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["IssueResponse"];
-                    };
-                };
-                /** @description ID must be a positive integer */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-                /** @description Issue not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-                /** @description Failed to fetch issue */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update a draft digest issue.
-         * @description Updates the subject and summary of a draft issue. Returns 409 if the issue is not in draft status.
-         */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description Issue ID */
-                    id: number;
-                };
-                cookie?: never;
-            };
-            /** @description Fields to update */
-            requestBody: {
-                content: {
-                    "application/json": Record<string, never> | components["schemas"]["IssueUpdateRequest"];
-                };
-            };
-            responses: {
-                /** @description Successfully updated issue */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["IssueResponse"];
-                    };
-                };
-                /** @description Invalid request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-                /** @description Issue not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-                /** @description Issue is not a draft */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-                /** @description Failed to update issue */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Response"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
     "/digest/nudge": {
         parameters: {
             query?: never;
@@ -597,7 +406,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/issues/{slug}": {
+    "/issues": {
         parameters: {
             query?: never;
             header?: never;
@@ -605,16 +414,317 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Fetch an issue by slug.
-         * @description Returns a single digest issue identified by its date slug.
+         * List digest issues.
+         * @description Returns a paginated list of digest issues, optionally filtered by status.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filter by issue status (e.g. draft, sent) */
+                    status?: string;
+                    /** @description Page number (default 1) */
+                    page?: number;
+                    /** @description Items per page (default 20, max 100) */
+                    per_page?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully retrieved issues */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["IssueListResponse"];
+                    };
+                };
+                /** @description Failed to list issues */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a draft digest issue.
+         * @description Updates the subject and summary of a draft issue. Returns 409 if the issue is not in draft status.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Issue ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            /** @description Fields to update */
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never> | components["schemas"]["IssueUpdateRequest"];
+                };
+            };
+            responses: {
+                /** @description Successfully updated issue */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["IssueResponse"];
+                    };
+                };
+                /** @description Invalid request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue is not a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to update issue */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/issues/{id}/items/{itemID}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Unlink a digest item from a draft issue.
+         * @description Removes an item from a draft issue by clearing items.issue_id. The item row is preserved in the raw pool and can be re-included by a future build. Returns the refreshed issue. Returns 409 if the issue is not in draft status.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Issue ID */
+                    id: number;
+                    /** @description Item ID */
+                    itemID: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully unlinked item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["IssueResponse"];
+                    };
+                };
+                /** @description Invalid id or itemID */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue or item not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue is not a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to unlink item */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/issues/{id}/items/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Reorder digest items within a draft issue.
+         * @description Rewrites the position of each item in the issue using the supplied order — item_ids[i] becomes position i. The submitted ids must exactly match the set of items currently linked to the issue; partial reorders are rejected. Returns the refreshed issue. Returns 409 if the issue is not in draft status.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Issue ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            /** @description Ordered list of item IDs */
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never> | components["schemas"]["ItemReorderRequest"];
+                };
+            };
+            responses: {
+                /** @description Successfully reordered items */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["IssueResponse"];
+                    };
+                };
+                /** @description Invalid request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue or item not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue is not a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to reorder items */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/issues/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch a digest issue by ID or slug.
+         * @description Returns a single digest issue, including its items. The {key} path parameter is interpreted as a numeric issue ID if it parses as a positive integer; otherwise it is treated as a slug.
          */
         get: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description Issue date slug */
-                    slug: string;
+                    /** @description Issue ID (numeric) or slug */
+                    key: string;
                 };
                 cookie?: never;
             };
@@ -629,7 +739,7 @@ export interface paths {
                         "application/json": components["schemas"]["IssueResponse"];
                     };
                 };
-                /** @description Slug is required */
+                /** @description Key is required */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -1828,6 +1938,9 @@ export interface components {
             message?: string;
             status?: number;
         };
+        ItemReorderRequest: {
+            item_ids?: number[];
+        };
         ItemResponse: {
             data?: components["schemas"]["news.Item"];
             error?: boolean;
@@ -2034,6 +2147,8 @@ export interface components {
             in_digest?: boolean;
             /** @description listing on the source platform (e.g. HN comments page), when different from URL */
             original_url?: string;
+            /** @description ordering within a digest issue; 0 when not linked */
+            position?: number;
             published?: string;
             /** @description per-source relevance/popularity, normalised across sources */
             score?: number;

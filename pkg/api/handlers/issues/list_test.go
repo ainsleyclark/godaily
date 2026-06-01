@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package digest
+package issues
 
 import (
 	"errors"
@@ -18,7 +18,7 @@ import (
 	mockdigest "github.com/ainsleyclark/godaily/pkg/mocks/digest"
 )
 
-func TestIssues(t *testing.T) {
+func TestList(t *testing.T) {
 	t.Parallel()
 
 	type Test struct {
@@ -34,7 +34,7 @@ func TestIssues(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		issues := mockdigest.NewMockIssueRepository(ctrl)
 		rec := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodGet, "/digest/issues"+query, nil)
+		req := httptest.NewRequest(http.MethodGet, "/issues"+query, nil)
 
 		return Test{
 			Handler:  &Handler{issuesRepo: issues},
@@ -55,7 +55,7 @@ func TestIssues(t *testing.T) {
 			{ID: 2, Slug: "2026-01-02"},
 		}, nil)
 
-		err := deps.Handler.Issues(deps.Context)
+		err := deps.Handler.List(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
@@ -69,30 +69,30 @@ func TestIssues(t *testing.T) {
 		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(50), nil)
 		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
-		err := deps.Handler.Issues(deps.Context)
+		err := deps.Handler.List(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
 	})
 
-	t.Run("Count error returns internal server error", func(t *testing.T) {
+	t.Run("Count error returns 500", func(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
 		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(0), errors.New("db error"))
 
-		_ = deps.Handler.Issues(deps.Context)
+		_ = deps.Handler.List(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
 	})
 
-	t.Run("List error returns internal server error", func(t *testing.T) {
+	t.Run("List error returns 500", func(t *testing.T) {
 		t.Parallel()
 
 		deps := setup(t, "")
 		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(1), nil)
 		deps.Issues.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
 
-		_ = deps.Handler.Issues(deps.Context)
+		_ = deps.Handler.List(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
 	})
 
@@ -104,7 +104,7 @@ func TestIssues(t *testing.T) {
 		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(1), nil)
 		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
-		err := deps.Handler.Issues(deps.Context)
+		err := deps.Handler.List(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
@@ -118,7 +118,7 @@ func TestIssues(t *testing.T) {
 		deps.Issues.EXPECT().Count(gomock.Any(), opts).Return(int64(1), nil)
 		deps.Issues.EXPECT().List(gomock.Any(), opts).Return([]digest.Issue{}, nil)
 
-		err := deps.Handler.Issues(deps.Context)
+		err := deps.Handler.List(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
@@ -135,30 +135,9 @@ func TestIssues(t *testing.T) {
 			{ID: 1, Slug: "2026-01-01", Status: "draft"},
 		}, nil)
 
-		err := deps.Handler.Issues(deps.Context)
+		err := deps.Handler.List(deps.Context)
 
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, deps.Recorder.Code)
-	})
-
-	t.Run("Count with status error returns internal server error", func(t *testing.T) {
-		t.Parallel()
-
-		deps := setup(t, "?status=draft")
-		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(0), errors.New("db error"))
-
-		_ = deps.Handler.Issues(deps.Context)
-		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
-	})
-
-	t.Run("List with status error returns internal server error", func(t *testing.T) {
-		t.Parallel()
-
-		deps := setup(t, "?status=draft")
-		deps.Issues.EXPECT().Count(gomock.Any(), gomock.Any()).Return(int64(1), nil)
-		deps.Issues.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
-
-		_ = deps.Handler.Issues(deps.Context)
-		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)
 	})
 }

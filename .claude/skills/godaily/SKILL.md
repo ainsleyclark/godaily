@@ -67,8 +67,11 @@ BASE="${GODAILY_API_URL:-https://godaily.dev}"
 | Method | Path | Auth | Purpose |
 |--------|------|------|---------|
 | GET | `/api/healthz` | No | API health check |
-| GET | `/api/digest/issues` | **Yes** | List paginated digest issues (filter by `?status=`) |
-| GET | `/api/issues/{slug}` | **Yes** | Fetch a single issue by date slug (e.g. `2026-05-15`) |
+| GET | `/api/issues` | **Yes** | List paginated digest issues (filter by `?status=`) |
+| GET | `/api/issues/{key}` | **Yes** | Fetch a single issue by numeric ID or date slug (e.g. `42` or `2026-05-15`) |
+| PATCH | `/api/issues/{id}` | **Yes** | Update subject/summary on a draft issue (409 if not draft) |
+| DELETE | `/api/issues/{id}/items/{itemID}` | **Yes** | Unlink an item from a draft issue (409 if not draft) |
+| PATCH | `/api/issues/{id}/items/reorder` | **Yes** | Reorder items within a draft issue (409 if not draft) |
 | GET | `/api/items/{id}` | **Yes** | Fetch a single news item by numeric ID |
 | GET | `/api/digest/collect` | **Yes** | Trigger the news collection pipeline |
 | GET | `/api/digest/build` | **Yes** | Build today's collected items into a draft and email the owner preview (`?force=true` to bypass weekend skip) |
@@ -121,7 +124,7 @@ source ~/.zshrc 2>/dev/null
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/digest/issues?page=1&per_page=10" | jq .
+  "$BASE/api/issues?page=1&per_page=10" | jq .
 ```
 
 Response shape:
@@ -142,17 +145,18 @@ When presenting: show total count, then for each issue: slug, subject, status, a
 
 ---
 
-### Get issue by slug
+### Get issue by ID or slug
 
-Fetch a single digest issue by its date slug (format: `YYYY-MM-DD`). Auth required.
+Fetch a single digest issue. The `{key}` path param accepts either a numeric ID
+or a date slug (format: `YYYY-MM-DD`). Auth required.
 
 ```bash
 source ~/.zshrc 2>/dev/null
 BASE="${GODAILY_API_URL:-https://godaily.dev}"
-SLUG="2026-05-15"
+KEY="2026-05-15"   # or a numeric id like 42
 curl -sf \
   -H "Authorization: Bearer $GODAILY_API_KEY" \
-  "$BASE/api/issues/$SLUG" | jq .
+  "$BASE/api/issues/$KEY" | jq .
 ```
 
 The response includes the issue metadata plus an `items` array of news items. When presenting:

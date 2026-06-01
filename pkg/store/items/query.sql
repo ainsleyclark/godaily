@@ -30,6 +30,29 @@ ORDER BY position ASC;
 -- name: ItemDeleteByIssue :exec
 DELETE FROM items WHERE issue_id = ?;
 
+-- name: ItemUnlinkFromIssue :execrows
+UPDATE items
+SET issue_id = NULL, position = 0
+WHERE items.id = sqlc.arg('item_id')
+  AND items.issue_id = sqlc.arg('issue_id')
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  );
+
+-- name: ItemUpdatePosition :execrows
+UPDATE items
+SET position = sqlc.arg('position')
+WHERE items.id = sqlc.arg('item_id')
+  AND items.issue_id = sqlc.arg('issue_id')
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  );
+
+-- name: ItemIDsByIssue :many
+SELECT id FROM items WHERE issue_id = ? ORDER BY position ASC;
+
 -- name: ItemCount :one
 SELECT COUNT(*) FROM items;
 

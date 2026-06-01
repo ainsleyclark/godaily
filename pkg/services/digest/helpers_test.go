@@ -110,6 +110,10 @@ func (e errItemRepo) SourceCounts(_ context.Context) ([]news.SourceCount, error)
 	return nil, e.err
 }
 func (e errItemRepo) TagCounts(_ context.Context) ([]news.TagCount, error) { return nil, e.err }
+func (e errItemRepo) UnlinkFromIssue(_ context.Context, _, _ int64) error  { return e.err }
+func (e errItemRepo) ReorderInIssue(_ context.Context, _ int64, _ []int64) error {
+	return e.err
+}
 
 func newTestStores(t *testing.T) (*issues.Store, *items.Store) {
 	t.Helper()

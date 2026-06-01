@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package digest
+package issues
 
 import (
 	"encoding/json"
@@ -18,17 +18,17 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// IssueUpdateRequest is the JSON body accepted by PATCH /digest/issues/{id}.
+// IssueUpdateRequest is the JSON body accepted by PATCH /issues/{id}.
 type IssueUpdateRequest struct {
 	Subject string `json:"subject"`
 	Summary string `json:"summary"`
 } //@name IssueUpdateRequest
 
-// UpdateIssue godoc
+// Update godoc
 //
 //	@Summary		Update a draft digest issue.
 //	@Description	Updates the subject and summary of a draft issue. Returns 409 if the issue is not in draft status.
-//	@Tags			digest
+//	@Tags			issues
 //	@Accept			json
 //	@Produce		json
 //	@Security		BearerAuth
@@ -39,8 +39,8 @@ type IssueUpdateRequest struct {
 //	@Failure		404		{object}	api.MessageResponse	"Issue not found"
 //	@Failure		409		{object}	api.MessageResponse	"Issue is not a draft"
 //	@Failure		500		{object}	api.MessageResponse	"Failed to update issue"
-//	@Router			/digest/issues/{id} [patch]
-func (h *Handler) UpdateIssue(c *webkit.Context) error {
+//	@Router			/issues/{id} [patch]
+func (h *Handler) Update(c *webkit.Context) error {
 	ctx := c.Context()
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)

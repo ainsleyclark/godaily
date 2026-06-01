@@ -295,6 +295,17 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 	return items, nil
 }
 
+const issueStatusByID = `-- name: IssueStatusByID :one
+SELECT status FROM issues WHERE id = ? LIMIT 1
+`
+
+func (q *Queries) IssueStatusByID(ctx context.Context, id int64) (string, error) {
+	row := q.db.QueryRowContext(ctx, issueStatusByID, id)
+	var status string
+	err := row.Scan(&status)
+	return status, err
+}
+
 const issueUpdate = `-- name: IssueUpdate :one
 UPDATE issues SET subject = ?, summary = ?
 WHERE id = ? AND status = 'draft'
@@ -482,6 +493,33 @@ func (q *Queries) ItemFindByURLInIssue(ctx context.Context, arg ItemFindByURLInI
 	return id, err
 }
 
+const itemIDsByIssue = `-- name: ItemIDsByIssue :many
+SELECT id FROM items WHERE issue_id = ? ORDER BY position ASC
+`
+
+func (q *Queries) ItemIDsByIssue(ctx context.Context, issueID sql.NullInt64) ([]int64, error) {
+	rows, err := q.db.QueryContext(ctx, itemIDsByIssue, issueID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []int64{}
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const itemListByIssue = `-- name: ItemListByIssue :many
 SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
 WHERE issue_id = ?
@@ -595,6 +633,55 @@ func (q *Queries) ItemTagCounts(ctx context.Context) ([]ItemTagCountsRow, error)
 		return nil, err
 	}
 	return items, nil
+}
+
+const itemUnlinkFromIssue = `-- name: ItemUnlinkFromIssue :execrows
+UPDATE items
+SET issue_id = NULL, position = 0
+WHERE items.id = ?1
+  AND items.issue_id = ?2
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  )
+`
+
+type ItemUnlinkFromIssueParams struct {
+	ItemID  int64         `json:"item_id"`
+	IssueID sql.NullInt64 `json:"issue_id"`
+}
+
+func (q *Queries) ItemUnlinkFromIssue(ctx context.Context, arg ItemUnlinkFromIssueParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, itemUnlinkFromIssue, arg.ItemID, arg.IssueID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const itemUpdatePosition = `-- name: ItemUpdatePosition :execrows
+UPDATE items
+SET position = ?1
+WHERE items.id = ?2
+  AND items.issue_id = ?3
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = items.issue_id AND issues.status = 'draft'
+  )
+`
+
+type ItemUpdatePositionParams struct {
+	Position int64         `json:"position"`
+	ItemID   int64         `json:"item_id"`
+	IssueID  sql.NullInt64 `json:"issue_id"`
+}
+
+func (q *Queries) ItemUpdatePosition(ctx context.Context, arg ItemUpdatePositionParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, itemUpdatePosition, arg.Position, arg.ItemID, arg.IssueID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }
 
 const metricsItemList = `-- name: MetricsItemList :many

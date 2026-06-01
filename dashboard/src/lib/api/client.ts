@@ -161,14 +161,27 @@ export const api = {
 		),
 	digestIssues: (status?: IssueStatus, page = 1, perPage = 100) =>
 		unwrap<PaginatedResponse<DigestIssue>>(
-			client.GET('/digest/issues', {
+			client.GET('/issues', {
 				params: { query: { page, per_page: perPage, ...(status ? { status } : {}) } }
 			})
 		),
 	digestIssueById: (id: number) =>
-		unwrap<DigestIssue>(client.GET('/digest/issues/{id}', { params: { path: { id } } })),
-	updateDigestIssue: (id: number, body: { subject: string; summary: string }) =>
 		unwrap<DigestIssue>(
-			client.PATCH('/digest/issues/{id}', { params: { path: { id } }, body })
+			client.GET('/issues/{key}', { params: { path: { key: String(id) } } })
+		),
+	updateDigestIssue: (id: number, body: { subject: string; summary: string }) =>
+		unwrap<DigestIssue>(client.PATCH('/issues/{id}', { params: { path: { id } }, body })),
+	deleteDigestItem: (issueId: number, itemId: number) =>
+		unwrap<DigestIssue>(
+			client.DELETE('/issues/{id}/items/{itemID}', {
+				params: { path: { id: issueId, itemID: itemId } }
+			})
+		),
+	reorderDigestItems: (issueId: number, itemIds: number[]) =>
+		unwrap<DigestIssue>(
+			client.PATCH('/issues/{id}/items/reorder', {
+				params: { path: { id: issueId } },
+				body: { item_ids: itemIds }
+			})
 		)
 };

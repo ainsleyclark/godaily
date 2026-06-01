@@ -59,7 +59,7 @@ test.describe.serial('full production pipeline', () => {
     const res = await request.get('/api/digest/build?force=true', { headers: AUTH });
     expect(res.status()).toBe(200);
     const issues = (await (
-      await request.get('/api/digest/issues?status=draft', { headers: AUTH })
+      await request.get('/api/issues?status=draft', { headers: AUTH })
     ).json()) as { data: Array<{ status: string }> };
     expect(issues.data.some((i) => i.status === 'draft')).toBe(true);
   });
@@ -70,7 +70,7 @@ test.describe.serial('full production pipeline', () => {
     const digest = await waitForEmail('GoDaily');
     expect(digest.html.includes('href=')).toBe(true);
     const issues = (await (
-      await request.get('/api/digest/issues', { headers: AUTH })
+      await request.get('/api/issues', { headers: AUTH })
     ).json()) as { data: Array<{ status: string }> };
     expect(issues.data[0].status).toBe('sent');
   });

@@ -92,6 +92,18 @@
                 },
                 "type": "object"
             },
+            "ItemReorderRequest": {
+                "properties": {
+                    "item_ids": {
+                        "items": {
+                            "type": "integer"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    }
+                },
+                "type": "object"
+            },
             "ItemResponse": {
                 "properties": {
                     "data": {
@@ -686,6 +698,10 @@
                         "description": "listing on the source platform (e.g. HN comments page), when different from URL",
                         "type": "string"
                     },
+                    "position": {
+                        "description": "ordering within a digest issue; 0 when not linked",
+                        "type": "integer"
+                    },
                     "published": {
                         "type": "string"
                     },
@@ -958,230 +974,6 @@
                 ]
             }
         },
-        "/digest/issues": {
-            "get": {
-                "description": "Returns a paginated list of digest issues, optionally filtered by status.",
-                "parameters": [
-                    {
-                        "description": "Filter by issue status (e.g. draft, sent)",
-                        "in": "query",
-                        "name": "status",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Page number (default 1)",
-                        "in": "query",
-                        "name": "page",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "description": "Items per page (default 20, max 100)",
-                        "in": "query",
-                        "name": "per_page",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/IssueListResponse"
-                                }
-                            }
-                        },
-                        "description": "Successfully retrieved issues"
-                    },
-                    "500": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Failed to list issues"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "summary": "List digest issues.",
-                "tags": [
-                    "digest"
-                ]
-            }
-        },
-        "/digest/issues/{id}": {
-            "get": {
-                "description": "Returns a single digest issue, including its items grouped for rendering.",
-                "parameters": [
-                    {
-                        "description": "Issue ID",
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/IssueResponse"
-                                }
-                            }
-                        },
-                        "description": "Successfully retrieved issue"
-                    },
-                    "400": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "ID must be a positive integer"
-                    },
-                    "404": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Issue not found"
-                    },
-                    "500": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Failed to fetch issue"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "summary": "Fetch a digest issue by ID.",
-                "tags": [
-                    "digest"
-                ]
-            },
-            "patch": {
-                "description": "Updates the subject and summary of a draft issue. Returns 409 if the issue is not in draft status.",
-                "parameters": [
-                    {
-                        "description": "Issue ID",
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "oneOf": [
-                                    {
-                                        "type": "object"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/IssueUpdateRequest",
-                                        "summary": "body",
-                                        "description": "Fields to update"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "description": "Fields to update",
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/IssueResponse"
-                                }
-                            }
-                        },
-                        "description": "Successfully updated issue"
-                    },
-                    "400": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Invalid request"
-                    },
-                    "404": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Issue not found"
-                    },
-                    "409": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Issue is not a draft"
-                    },
-                    "500": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Response"
-                                }
-                            }
-                        },
-                        "description": "Failed to update issue"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "summary": "Update a draft digest issue.",
-                "tags": [
-                    "digest"
-                ]
-            }
-        },
         "/digest/nudge": {
             "get": {
                 "description": "Sends a one-time reminder to subscribers who signed up but never confirmed.",
@@ -1402,14 +1194,356 @@
                 ]
             }
         },
-        "/issues/{slug}": {
+        "/issues": {
             "get": {
-                "description": "Returns a single digest issue identified by its date slug.",
+                "description": "Returns a paginated list of digest issues, optionally filtered by status.",
                 "parameters": [
                     {
-                        "description": "Issue date slug",
+                        "description": "Filter by issue status (e.g. draft, sent)",
+                        "in": "query",
+                        "name": "status",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Page number (default 1)",
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Items per page (default 20, max 100)",
+                        "in": "query",
+                        "name": "per_page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueListResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved issues"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to list issues"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "List digest issues.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
+        "/issues/{id}": {
+            "patch": {
+                "description": "Updates the subject and summary of a draft issue. Returns 409 if the issue is not in draft status.",
+                "parameters": [
+                    {
+                        "description": "Issue ID",
                         "in": "path",
-                        "name": "slug",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/IssueUpdateRequest",
+                                        "summary": "body",
+                                        "description": "Fields to update"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "description": "Fields to update",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully updated issue"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue not found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue is not a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to update issue"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Update a draft digest issue.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
+        "/issues/{id}/items/reorder": {
+            "patch": {
+                "description": "Rewrites the position of each item in the issue using the supplied order — item_ids[i] becomes position i. The submitted ids must exactly match the set of items currently linked to the issue; partial reorders are rejected. Returns the refreshed issue. Returns 409 if the issue is not in draft status.",
+                "parameters": [
+                    {
+                        "description": "Issue ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/ItemReorderRequest",
+                                        "summary": "body",
+                                        "description": "Ordered list of item IDs"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "description": "Ordered list of item IDs",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully reordered items"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue or item not found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue is not a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to reorder items"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Reorder digest items within a draft issue.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
+        "/issues/{id}/items/{itemID}": {
+            "delete": {
+                "description": "Removes an item from a draft issue by clearing items.issue_id. The item row is preserved in the raw pool and can be re-included by a future build. Returns the refreshed issue. Returns 409 if the issue is not in draft status.",
+                "parameters": [
+                    {
+                        "description": "Issue ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Item ID",
+                        "in": "path",
+                        "name": "itemID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully unlinked item"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid id or itemID"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue or item not found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue is not a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to unlink item"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Unlink a digest item from a draft issue.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
+        "/issues/{key}": {
+            "get": {
+                "description": "Returns a single digest issue, including its items. The {key} path parameter is interpreted as a numeric issue ID if it parses as a positive integer; otherwise it is treated as a slug.",
+                "parameters": [
+                    {
+                        "description": "Issue ID (numeric) or slug",
+                        "in": "path",
+                        "name": "key",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1435,7 +1569,7 @@
                                 }
                             }
                         },
-                        "description": "Slug is required"
+                        "description": "Key is required"
                     },
                     "404": {
                         "content": {
@@ -1463,7 +1597,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "summary": "Fetch an issue by slug.",
+                "summary": "Fetch a digest issue by ID or slug.",
                 "tags": [
                     "issues"
                 ]
