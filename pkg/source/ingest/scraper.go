@@ -24,6 +24,15 @@ func WithKeepHeaders() ScraperOption {
 	return func(v url.Values) { v.Set("keep_headers", "true") }
 }
 
+// WithoutPremium routes through ScraperAPI's standard datacenter proxy pool
+// rather than the residential (premium) pool ScraperURL uses by default. It is
+// cheaper in credits — use it for hosts that only need a non-default IP and a
+// header pass-through (e.g. a Cloudflare-fronted RSS feed) rather than the full
+// residential treatment reddit.com requires.
+func WithoutPremium() ScraperOption {
+	return func(v url.Values) { v.Set("premium", "false") }
+}
+
 // ScraperURL proxies targetURL through ScraperAPI using the key selected by
 // day-of-month modulo, so each key is used on alternating days. Returns
 // targetURL unchanged when keys is empty.

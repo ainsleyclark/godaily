@@ -19,6 +19,11 @@ import (
 // GolangCafe fetches Go roles from the Golang.cafe job board RSS feed. The board
 // is Go-only (no recruiters, clear salary ranges), so every listing is relevant
 // and no Go keyword filter is applied — items are kept on a non-empty link.
+//
+// Golang.cafe sits behind Cloudflare and 429s direct datacenter requests, so
+// when ScraperAPI keys are configured the feed is fetched through the standard
+// (non-premium) proxy pool with the request headers forwarded. Without keys it
+// falls back to a direct request, which works locally but is liable to 429.
 type GolangCafe struct {
 	url string
 	now func() time.Time
@@ -32,9 +37,11 @@ func init() {
 
 const golangCafeURL = "https://golang.cafe/rss"
 
-// NewGolangCafe creates a Golang.cafe RSS client.
-func NewGolangCafe(_ env.Config) *GolangCafe {
-	return &GolangCafe{url: golangCafeURL, now: time.Now}
+// NewGolangCafe creates a Golang.cafe RSS client, proxying through ScraperAPI
+// (standard pool) when keys are available to clear Cloudflare.
+func NewGolangCafe(cfg env.Config) *GolangCafe {
+	url := ingest.ScraperURL(cfg.ScraperAPIKeys, golangCafeURL, ingest.WithKeepHeaders(), ingest.WithoutPremium())
+	return &GolangCafe{url: url, now: time.Now}
 }
 
 // Fetch retrieves Go roles from the Golang.cafe RSS feed.

@@ -30,7 +30,7 @@ func init() {
 	news.Register(news.SourceGolangProjects, func(cfg env.Config) news.Fetcher { return NewGolangProjects(cfg) })
 }
 
-const golangProjectsURL = "https://www.golangprojects.com/rss/jobs.xml"
+const golangProjectsURL = "https://www.golangprojects.com/rss.xml"
 
 // NewGolangProjects creates a Golangprojects RSS client.
 func NewGolangProjects(_ env.Config) *GolangProjects {
