@@ -31,7 +31,7 @@ import (
 //	     "https://api.linkedin.com/rest/reactions?q=entity&entity=<share-urn>"
 //
 // Check the "actor" field on your reaction — use that exact URN format.
-const ownerLinkedInMemberURN = "urn:li:member:REPLACE_ME"
+const ownerLinkedInMemberURN = "urn:li:person:ACoAABmJE4IBOoNt3FvzgLxwuVL6aWFKmeSLk0M"
 
 // selfEngagementFetcher wraps a StatFetcher and subtracts the account
 // owner's own engagement from the returned counts. LinkedIn's stats
