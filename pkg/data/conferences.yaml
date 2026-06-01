@@ -120,7 +120,7 @@
   location: Israel
   start_date: 2026-02-18
   end_date: 2026-02-18
-  description: "GopherCon Israel — the Go community conference in Israel."
+  description: "GopherCon Israel: the Go community conference in Israel."
   handles:
     linkedin:
       slug: ""
@@ -156,7 +156,7 @@
   location: Seoul, South Korea
   start_date: 2026-11-08
   end_date: 2026-11-08
-  description: "GopherCon Korea — South Korea's annual Go conference."
+  description: "GopherCon Korea: South Korea's annual Go conference."
   handles:
     linkedin:
       slug: ""
@@ -174,7 +174,7 @@
   location: Lehi, UT, USA
   start_date: 2026-10-23
   end_date: 2026-10-23
-  description: "GoWest — a community-driven single-day Go conference in Utah."
+  description: "GoWest: a community-driven single-day Go conference in Utah."
   handles:
     linkedin:
       slug: ""

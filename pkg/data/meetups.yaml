@@ -37,7 +37,7 @@
   name: London Gophers
   url: https://www.meetup.com/londongophers/
   location: London, UK
-  description: London's Go user group — talks, workshops and pub nights.
+  description: London's Go user group, talks, workshops and pub nights.
   handles:
     linkedin:
       slug: london-gophers
@@ -61,7 +61,7 @@
   name: GDG Berlin Golang
   url: https://www.meetup.com/golang-users-berlin/
   location: Berlin, Germany
-  description: Berlin's Go meetup — one of Europe's largest Gopher communities.
+  description: Berlin's Go meetup, one of Europe's largest Gopher communities.
   handles:
     linkedin:
       slug: ""
@@ -97,7 +97,7 @@
   name: Go Stockholm
   url: https://www.meetup.com/Go-Stockholm/
   location: Stockholm, Sweden
-  description: The Stockholm Go community — talks and hack nights.
+  description: The Stockholm Go community, talks and hack nights.
   handles:
     linkedin:
       slug: ""
@@ -109,7 +109,7 @@
   name: Helsinki Gophers
   url: https://www.meetup.com/Helsinki-Gophers/
   location: Helsinki, Finland
-  description: Finland's Go meetup — friendly community, deep dives, pizza.
+  description: Finland's Go meetup, friendly community, deep dives, pizza.
   handles:
     linkedin:
       slug: ""
@@ -133,7 +133,7 @@
   name: Zurich Gophers
   url: https://www.meetup.com/zurich-gophers/
   location: Zurich, Switzerland
-  description: Zurich's Go user group — talks and Swiss Gopher socials.
+  description: Zurich's Go user group, talks and Swiss Gopher socials.
   handles:
     linkedin:
       slug: ""
@@ -157,7 +157,7 @@
   name: Golang Warsaw
   url: https://www.meetup.com/golang-warsaw/
   location: Warsaw, Poland
-  description: The Warsaw Go community — monthly meetups and talks.
+  description: The Warsaw Go community, monthly meetups and talks.
   handles:
     linkedin:
       slug: golang-warsaw-meetup
@@ -193,7 +193,7 @@
   name: GoMAD - Madrid Go UG
   url: https://www.meetup.com/go-mad/
   location: Madrid, Spain
-  description: Madrid's Go user group — talks in Spanish and English.
+  description: Madrid's Go user group, talks in Spanish and English.
   handles:
     linkedin:
       slug: ""
@@ -205,7 +205,7 @@
   name: GolangNYC
   url: https://www.meetup.com/golanguagenewyork/
   location: New York, NY, USA
-  description: New York's Go user group — one of the largest in the US.
+  description: New York's Go user group, one of the largest in the US.
   handles:
     linkedin:
       slug: ""
@@ -217,7 +217,7 @@
   name: GoSF
   url: https://www.meetup.com/golangsf/
   location: San Francisco Bay Area, CA, USA
-  description: The Bay Area's home for Gophers — talks from working Go engineers.
+  description: The Bay Area's home for Gophers, talks from working Go engineers.
   handles:
     linkedin:
       slug: ""
@@ -241,7 +241,7 @@
   name: Sydney Golang
   url: https://www.meetup.com/golang-syd/
   location: Sydney, Australia
-  description: Sydney's Go user group — talks and lightning demos.
+  description: Sydney's Go user group, talks and lightning demos.
   handles:
     linkedin:
       slug: ""
@@ -289,7 +289,7 @@
   name: Go Israel
   url: https://www.meetup.com/go-israel/
   location: Tel Aviv, Israel
-  description: Tel Aviv's Go community — monthly talks and hack nights.
+  description: Tel Aviv's Go community, monthly talks and hack nights.
   handles:
     linkedin:
       slug: ""
