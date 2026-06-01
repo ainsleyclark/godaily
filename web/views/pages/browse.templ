@@ -26,11 +26,7 @@ type BrowseProps struct {
 }
 
 templ Browse(props BrowseProps) {
-	@layouts.Base(layouts.PageMeta{
-		Title:        "Browse all Go news — GoDaily",
-		Description:  "The full firehose of Go news the GoDaily pipeline has collected. Filter by source, section, and date — and see which stories made the digest.",
-		CanonicalURL: "https://godaily.dev/browse/",
-	}) {
+	@layouts.Base(browsePageMeta(props)) {
 		@components.Header()
 		<section
 			class="section browse"
@@ -42,11 +38,7 @@ templ Browse(props BrowseProps) {
 		>
 			@components.LoadingBar(components.LoadingBarProps{ID: "browse-progress"})
 			@components.Container(false) {
-				@components.ListingHero(components.ListingHeroProps{
-					Kicker: "Browse the archive",
-					Title:  "The full firehose, with <span class=\"listing-hero__accent\">digest picks</span> marked.",
-					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"listing-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
-				}) {
+				@components.ListingHero(browseHeroProps(props.State)) {
 					@components.SearchBox(components.SearchBoxProps{
 						Action:      BrowseBasePath,
 						Name:        "q",
@@ -151,9 +143,15 @@ templ BrowseMain(props BrowseProps) {
 }
 
 // browseAPIURL maps a public /browse/ link to its /api/browse fragment
-// equivalent, preserving the querystring.
+// equivalent. Path-form canonical URLs (e.g. /browse/releases/) are converted
+// to query-string form (/api/browse?tab=releases) since the fragment endpoint
+// only accepts query params.
 func browseAPIURL(pageURL string) string {
-	return "/api/browse" + strings.TrimPrefix(pageURL, BrowseBasePath)
+	suffix := strings.TrimPrefix(pageURL, BrowseBasePath)
+	if suffix != "" && !strings.HasPrefix(suffix, "?") {
+		return "/api/browse?tab=" + strings.TrimSuffix(suffix, "/")
+	}
+	return "/api/browse" + suffix
 }
 
 // hxNav builds the htmx attributes for a filter control: it issues the

@@ -37,6 +37,11 @@ func TestSitemap(t *testing.T) {
 				`https://godaily.dev/`,
 				`<priority>1.0</priority>`,
 				`urlset`,
+				`https://godaily.dev/browse/`,
+				`https://godaily.dev/browse/release/`,
+				`https://godaily.dev/browse/article/`,
+				`https://godaily.dev/browse/jobs/`,
+				`<priority>0.7</priority>`,
 			},
 		},
 		"With issues": {
@@ -44,9 +49,12 @@ func TestSitemap(t *testing.T) {
 			outDir: func(t *testing.T) string { t.Helper(); return t.TempDir() },
 			checks: []string{
 				`https://godaily.dev/`,
+				`https://godaily.dev/browse/`,
+				`https://godaily.dev/browse/release/`,
 				`https://godaily.dev/issues/2026-04-28/`,
 				`<lastmod>2026-04-28</lastmod>`,
 				`<priority>0.8</priority>`,
+				`<priority>0.7</priority>`,
 			},
 		},
 		"Write error": {

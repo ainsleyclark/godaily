@@ -115,11 +115,7 @@ func Browse(props BrowseProps) templ.Component {
 					}
 					return nil
 				})
-				templ_7745c5c3_Err = components.ListingHero(components.ListingHeroProps{
-					Kicker: "Browse the archive",
-					Title:  "The full firehose, with <span class=\"listing-hero__accent\">digest picks</span> marked.",
-					Sub:    "Everything our pipeline collected. Use the section tabs and filters to narrow — look for the <span class=\"listing-hero__inline-mark\">In digest</span> badge to see which stories actually made it into the newsletter.",
-				}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = components.ListingHero(browseHeroProps(props.State)).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -227,11 +223,7 @@ func Browse(props BrowseProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "Browse all Go news — GoDaily",
-			Description:  "The full firehose of Go news the GoDaily pipeline has collected. Filter by source, section, and date — and see which stories made the digest.",
-			CanonicalURL: "https://godaily.dev/browse/",
-		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layouts.Base(browsePageMeta(props)).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -459,9 +451,15 @@ func BrowseMain(props BrowseProps) templ.Component {
 }
 
 // browseAPIURL maps a public /browse/ link to its /api/browse fragment
-// equivalent, preserving the querystring.
+// equivalent. Path-form canonical URLs (e.g. /browse/releases/) are converted
+// to query-string form (/api/browse?tab=releases) since the fragment endpoint
+// only accepts query params.
 func browseAPIURL(pageURL string) string {
-	return "/api/browse" + strings.TrimPrefix(pageURL, BrowseBasePath)
+	suffix := strings.TrimPrefix(pageURL, BrowseBasePath)
+	if suffix != "" && !strings.HasPrefix(suffix, "?") {
+		return "/api/browse?tab=" + strings.TrimSuffix(suffix, "/")
+	}
+	return "/api/browse" + suffix
 }
 
 // hxNav builds the htmx attributes for a filter control: it issues the
