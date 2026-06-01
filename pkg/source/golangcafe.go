@@ -19,11 +19,6 @@ import (
 // GolangCafe fetches Go roles from the Golang.cafe job board RSS feed. The board
 // is Go-only (no recruiters, clear salary ranges), so every listing is relevant
 // and no Go keyword filter is applied — items are kept on a non-empty link.
-//
-// NOTE: Golang.cafe blocks the sandbox egress, so the exact feed path and item
-// shape below could not be verified here. Validate golangCafeURL and the wwr/rss
-// item fields against the live feed before relying on it in production; an
-// incorrect URL fails the fetch gracefully (the source is skipped and logged).
 type GolangCafe struct {
 	url string
 	now func() time.Time

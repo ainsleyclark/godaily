@@ -19,11 +19,6 @@ import (
 // GolangProjects fetches Go roles from the Golangprojects job board RSS feed.
 // The board is Go-only, so every listing is relevant and no Go keyword filter
 // is applied — items are kept on a non-empty link.
-//
-// NOTE: Golangprojects blocks the sandbox egress, so the exact feed URL and item
-// shape below could not be verified here. Validate golangProjectsURL and the
-// item fields against the live feed before relying on it in production; an
-// incorrect URL fails the fetch gracefully (the source is skipped and logged).
 type GolangProjects struct {
 	url string
 	now func() time.Time
