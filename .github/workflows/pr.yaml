@@ -119,3 +119,42 @@ jobs:
         run: |
           go install github.com/securego/gosec/v2/cmd/gosec@latest
           gosec -exclude-generated ./...
+
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dashboard dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: dashboard
+
+      - name: Regenerate OpenAPI contract and TypeScript types
+        run: |
+          make openapi
+          cd dashboard && pnpm gen:api
+
+      - name: Fail if generated contract or types are stale
+        run: |
+          if ! git diff --exit-code docs/openapi dashboard/src/lib/api/schema.d.ts; then
+            echo "::error::OpenAPI contract or dashboard types are out of date. Run 'make openapi-ts' and commit the result."
+            exit 1
+          fi
+
+      - name: Type-check dashboard
+        run: pnpm check
+        working-directory: dashboard
+        env:
+          PUBLIC_API_BASE_URL: https://godaily.dev

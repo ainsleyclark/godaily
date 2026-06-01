@@ -7,6 +7,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
+    "gen:api": "openapi-typescript ../docs/openapi/swagger.yaml -o ./src/lib/api/schema.d.ts",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
@@ -14,6 +15,7 @@
     "@sveltejs/kit": "^2.61.1",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tailwindcss/vite": "^4.3.0",
+    "openapi-typescript": "^7.13.0",
     "svelte": "^5.55.9",
     "svelte-check": "^4.4.8",
     "tailwindcss": "^4.3.0",
@@ -25,6 +27,7 @@
     "@lucide/svelte": "^1.17.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "openapi-fetch": "^0.17.0",
     "svelte-sonner": "^1.0.0",
     "tailwind-merge": "^3.0.1",
     "tailwind-variants": "^1.0.0"

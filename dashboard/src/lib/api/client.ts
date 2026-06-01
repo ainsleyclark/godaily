@@ -1,6 +1,8 @@
 import { dev } from '$app/environment';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import { getSecret } from '$lib/stores/auth';
+import createClient, { type Middleware } from 'openapi-fetch';
+import type { paths } from './schema';
 import type {
 	DigestIssue,
 	IssueEngagement,
@@ -8,8 +10,8 @@ import type {
 	ItemMetrics,
 	MetricsQuery,
 	PaginatedResponse,
-	SourceMetrics,
 	SocialPostMetric,
+	SourceMetrics,
 	Subscriber,
 	SubscriberData,
 	SummaryStats,
@@ -26,80 +28,62 @@ export class ApiError extends Error {
 }
 
 function baseUrl(): string {
-	if (dev) return ''; // use vite proxy
-	return PUBLIC_API_BASE_URL || 'https://godaily.dev';
+	// The OpenAPI contract documents paths under the /api base path, but swaggo
+	// emits an empty server URL so the generated `paths` keys omit it — fold
+	// /api into the client base. In dev we stay origin-relative so Vite's /api
+	// proxy forwards the request.
+	if (dev) return '/api';
+	return `${PUBLIC_API_BASE_URL || 'https://godaily.dev'}/api`;
 }
 
-function buildUrl(path: string, query?: MetricsQuery): string {
-	const url = new URL(`${baseUrl()}${path}`, typeof window === 'undefined' ? 'http://x' : window.location.origin);
-	if (query) {
-		for (const [k, v] of Object.entries(query)) {
-			if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
+const middleware: Middleware = {
+	onRequest({ request }) {
+		// Vercel's trailingSlash:true would otherwise 308-redirect the request,
+		// which browsers reject on CORS preflights — land on the canonical URL.
+		const url = new URL(request.url);
+		if (!url.pathname.endsWith('/')) {
+			url.pathname += '/';
+			request = new Request(url, request);
 		}
-	}
-	// Vercel's trailingSlash:true would otherwise 308-redirect the request,
-	// which browsers reject for CORS preflights. Land on the canonical URL.
-	if (!url.pathname.endsWith('/')) url.pathname += '/';
-	// keep absolute path-only when in dev (vite proxy)
-	if (dev) return `${url.pathname}${url.search}`;
-	return url.toString();
-}
-
-async function request<T>(
-	path: string,
-	query?: MetricsQuery,
-	overrideSecret?: string
-): Promise<T> {
-	const secret = overrideSecret ?? getSecret();
-	const res = await fetch(buildUrl(path, query), {
-		headers: {
-			Accept: 'application/json',
-			...(secret ? { Authorization: `Bearer ${secret}` } : {})
+		request.headers.set('Accept', 'application/json');
+		// Don't clobber a per-call Authorization header (used to validate a
+		// freshly entered secret before it's stored).
+		if (!request.headers.has('Authorization')) {
+			const secret = getSecret();
+			if (secret) request.headers.set('Authorization', `Bearer ${secret}`);
 		}
-	});
-	if (res.status === 401) {
-		if (typeof window !== 'undefined' && !overrideSecret) {
+		return request;
+	},
+	onResponse({ response }) {
+		if (response.status === 401 && typeof window !== 'undefined') {
 			window.dispatchEvent(new Event('metrics:unauthorized'));
 		}
-		throw new ApiError(401, 'Unauthorized');
+		return response;
 	}
-	if (!res.ok) {
-		const text = await res.text().catch(() => '');
-		throw new ApiError(res.status, text || `HTTP ${res.status}`);
-	}
-	const body = (await res.json()) as { data: T };
-	return body.data;
-}
+};
 
-async function mutate<T>(path: string, method: 'POST' | 'PATCH' | 'PUT' | 'DELETE', body?: unknown): Promise<T> {
-	const secret = getSecret();
-	const url = buildUrl(path);
-	const res = await fetch(url, {
-		method,
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			...(secret ? { Authorization: `Bearer ${secret}` } : {})
-		},
-		body: body === undefined ? undefined : JSON.stringify(body)
-	});
-	if (res.status === 401) {
-		if (typeof window !== 'undefined') window.dispatchEvent(new Event('metrics:unauthorized'));
-		throw new ApiError(401, 'Unauthorized');
+const client = createClient<paths>({ baseUrl: baseUrl() });
+client.use(middleware);
+
+type FetchResult = { data?: unknown; error?: unknown; response: Response };
+
+// Unwraps the `{ data, error, message }` API envelope, surfacing the inner
+// payload and converting non-2xx responses into ApiError.
+async function unwrap<T>(p: Promise<FetchResult>): Promise<T> {
+	const { data, response } = await p;
+	if (!response.ok) {
+		if (response.status === 401) throw new ApiError(401, 'Unauthorized');
+		const body = await response
+			.clone()
+			.json()
+			.catch(() => null);
+		const message =
+			(body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
+				? body.message
+				: '') || `HTTP ${response.status}`;
+		throw new ApiError(response.status, message);
 	}
-	if (!res.ok) {
-		const text = await res.text().catch(() => '');
-		let message = text || `HTTP ${res.status}`;
-		try {
-			const parsed = JSON.parse(text) as { message?: string };
-			if (parsed.message) message = parsed.message;
-		} catch {
-			// not JSON — fall through to raw text
-		}
-		throw new ApiError(res.status, message);
-	}
-	const json = (await res.json()) as { data: T };
-	return json.data;
+	return (data as { data: T }).data;
 }
 
 async function login(password: string): Promise<{ token: string }> {
@@ -121,20 +105,70 @@ async function login(password: string): Promise<{ token: string }> {
 export const api = {
 	login,
 	summary: (q?: MetricsQuery, secret?: string) =>
-		request<SummaryStats>('/api/metrics/summary', q, secret),
-	issues: (q?: MetricsQuery) => request<IssueEngagement[]>('/api/metrics/issues', q),
-	items: (q?: MetricsQuery) => request<ItemMetrics[]>('/api/metrics/items', q),
-	tags: (q?: MetricsQuery) => request<TagMetrics[]>('/api/metrics/tags', q),
-	sources: (q?: MetricsQuery) => request<SourceMetrics[]>('/api/metrics/sources', q),
-	trend: (q?: MetricsQuery) => request<TrendData>('/api/metrics/trend', q),
-	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
-	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
+		unwrap<SummaryStats>(
+			client.GET('/metrics/summary', {
+				params: { query: { from: q?.from, to: q?.to } },
+				...(secret ? { headers: { Authorization: `Bearer ${secret}` } } : {})
+			})
+		),
+	issues: (q?: MetricsQuery) =>
+		unwrap<IssueEngagement[]>(
+			client.GET('/metrics/issues', {
+				params: { query: { from: q?.from, to: q?.to, limit: q?.limit } }
+			})
+		),
+	items: (q?: MetricsQuery) =>
+		unwrap<ItemMetrics[]>(
+			client.GET('/metrics/items', {
+				params: { query: { from: q?.from, to: q?.to, limit: q?.limit } }
+			})
+		),
+	tags: (q?: MetricsQuery) =>
+		unwrap<TagMetrics[]>(
+			client.GET('/metrics/tags', {
+				params: { query: { from: q?.from, to: q?.to, limit: q?.limit } }
+			})
+		),
+	sources: (q?: MetricsQuery) =>
+		unwrap<SourceMetrics[]>(
+			client.GET('/metrics/sources', {
+				params: { query: { from: q?.from, to: q?.to, limit: q?.limit } }
+			})
+		),
+	trend: (q?: MetricsQuery) =>
+		unwrap<TrendData>(
+			client.GET('/metrics/trend', {
+				params: { query: { from: q?.from, to: q?.to, metric: q?.metric, bucket: q?.bucket } }
+			})
+		),
+	subscribers: (q?: MetricsQuery) =>
+		unwrap<SubscriberData>(
+			client.GET('/metrics/subscribers', {
+				params: { query: { from: q?.from, to: q?.to, bucket: q?.bucket } }
+			})
+		),
+	social: (q?: MetricsQuery) =>
+		unwrap<SocialPostMetric[]>(
+			client.GET('/metrics/social', {
+				params: { query: { from: q?.from, to: q?.to } }
+			})
+		),
 	subscriberList: (page = 1, perPage = 50, search = '') =>
-		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery),
+		unwrap<PaginatedResponse<Subscriber>>(
+			client.GET('/digest/subscribers', {
+				params: { query: { page, per_page: perPage, ...(search ? { search } : {}) } }
+			})
+		),
 	digestIssues: (status?: IssueStatus, page = 1, perPage = 100) =>
-		request<PaginatedResponse<DigestIssue>>('/api/digest/issues', { page, per_page: perPage, ...(status ? { status } : {}) } as unknown as MetricsQuery),
+		unwrap<PaginatedResponse<DigestIssue>>(
+			client.GET('/digest/issues', {
+				params: { query: { page, per_page: perPage, ...(status ? { status } : {}) } }
+			})
+		),
 	digestIssueById: (id: number) =>
-		request<DigestIssue>(`/api/digest/issues/${id}`),
+		unwrap<DigestIssue>(client.GET('/digest/issues/{id}', { params: { path: { id } } })),
 	updateDigestIssue: (id: number, body: { subject: string; summary: string }) =>
-		mutate<DigestIssue>(`/api/digest/issues/${id}`, 'PATCH', body)
+		unwrap<DigestIssue>(
+			client.PATCH('/digest/issues/{id}', { params: { path: { id } }, body })
+		)
 };

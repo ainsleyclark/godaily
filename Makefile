@@ -58,6 +58,10 @@ openapi: # Generate the OpenAPI 3.1 contract into docs/openapi
 	go tool swag init --v3.1 -g pkg/api/openapi.go -d ./ -o docs/openapi --parseInternal --parseDependency
 .PHONY: openapi
 
+openapi-ts: openapi # Regenerate the contract, then the dashboard's TypeScript types from it
+	cd dashboard && pnpm install --frozen-lockfile && pnpm gen:api
+.PHONY: openapi-ts
+
 conferences-check: # Fetch go.dev/wiki/Conferences and print any conferences not in conferences.yaml
 	go run ./cmd/conferences-check/... -yaml pkg/data/conferences.yaml
 .PHONY: conferences-check

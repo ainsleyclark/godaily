@@ -21,6 +21,29 @@ When you change any `.sql` file under `pkg/store/*/query.sql` or add a migration
    sqlc generate
    ```
 
+### OpenAPI → dashboard types
+
+The OpenAPI 3.1 contract (`docs/openapi/swagger.{yaml,json}`) is generated from
+the swag annotations on the API handlers via `make openapi`. The SvelteKit
+dashboard consumes that contract: `dashboard/src/lib/api/schema.d.ts` is
+generated from the spec by `openapi-typescript` (`pnpm gen:api`), and the typed
+HTTP client in `dashboard/src/lib/api/client.ts` is built on `openapi-fetch`.
+
+`schema.d.ts` is fully generated — **never hand-edit it**. Friendly type aliases
+live in `dashboard/src/lib/api/types.ts`.
+
+When you change any API handler's swag annotations (params, response shapes,
+new routes), regenerate both the contract and the dashboard types together:
+
+```
+make openapi-ts
+```
+
+CI fails if either the committed contract or `schema.d.ts` is out of date, so
+always commit the regenerated files. Because swag does not emit `required`
+markers, every field in `schema.d.ts` is optional; `types.ts` asserts presence
+for response payloads — model genuine optionality on the Go struct instead.
+
 ### Mocks (gomock)
 
 `pkg/mocks/` is fully generated. When you add or remove a method on any interface that has a `//go:generate` directive, run:
