@@ -280,7 +280,7 @@ func (c *Client) HasLiked(ctx context.Context, postURL string) (bool, error) {
 			} `json:"elements"`
 		}
 		decodeErr := json.NewDecoder(resp.Body).Decode(&body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if decodeErr != nil {
 			return false, errors.Wrap(decodeErr, "decoding reactions response")
 		}
@@ -339,7 +339,7 @@ func (c *Client) HasReposted(ctx context.Context, postURL string) (bool, error) 
 			} `json:"elements"`
 		}
 		decodeErr := json.NewDecoder(resp.Body).Decode(&body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if decodeErr != nil {
 			return false, errors.Wrap(decodeErr, "decoding reshares response")
 		}
