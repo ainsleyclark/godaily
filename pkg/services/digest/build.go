@@ -17,6 +17,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/digest/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/digest/prompts"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -134,7 +135,7 @@ func (s Service) sendbuildSummary(ctx context.Context, issue digest.Issue, itemC
 		return
 	}
 
-	summary := buildSummary(buildSummaryInput{
+	summary := slackdata.BuildSummary(slackdata.Summary{
 		IssueDate: issue.Slug,
 		IssueID:   issue.ID,
 		Subject:   issue.Subject,
@@ -145,10 +146,10 @@ func (s Service) sendbuildSummary(ctx context.Context, issue digest.Issue, itemC
 	s.slack.MustSend(ctx, summary)
 }
 
-func toSummaryDrafts(rows []social.Post) []buildSummaryDraft {
-	out := make([]buildSummaryDraft, 0, len(rows))
+func toSummaryDrafts(rows []social.Post) []slackdata.Draft {
+	out := make([]slackdata.Draft, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, buildSummaryDraft{
+		out = append(out, slackdata.Draft{
 			ID:       r.ID,
 			Kind:     string(r.Kind),
 			Platform: r.Platform,

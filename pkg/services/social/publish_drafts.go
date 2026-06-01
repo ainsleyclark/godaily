@@ -16,7 +16,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
@@ -89,7 +89,7 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "poster.Post")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Publishing %s %s draft failed", platformLabel(p), draft.Kind), err,
+				fmt.Sprintf("Publishing %s %s draft failed", slackdata.PlatformLabel(p), draft.Kind), err,
 			))
 			errStatus := social.PostStatusError
 			if _, uerr := s.posts.Update(ctx, draft.ID, social.PostUpdate{Status: &errStatus}); uerr != nil {
@@ -110,7 +110,7 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "marking draft published")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Recording %s publish failed", platformLabel(p)), err,
+				fmt.Sprintf("Recording %s publish failed", slackdata.PlatformLabel(p)), err,
 			))
 			results = append(results, res)
 			continue
@@ -131,42 +131,15 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 	return results, nil
 }
 
-// notifyPublishSummary pings Slack once per PublishDrafts run with a rich
-// card: one section per published draft showing its kind, platform and the
-// live post copy, each with a button linking to the post.
+// notifyPublishSummary pings Slack once per PublishDrafts run with the
+// "drafts published" card.
 func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
-
-	rows := make([]slackkit.Row, 0, len(results))
-	for _, r := range results {
-		if r.Err != nil || r.Skipped || r.PostURL == "" {
-			continue
-		}
-		heading := platformLabel(r.Platform)
-		if k := kindLabel(r.Kind); k != "" {
-			heading = k + "  ·  " + heading
-		}
-		rows = append(rows, slackkit.Row{
-			Heading: heading,
-			Text:    r.Text,
-			Button: &slack.LinkButton{
-				Label: "View post",
-				URL:   r.PostURL,
-				Style: "primary",
-			},
-		})
+	if req, ok := slackdata.DraftsPublished(date, results); ok {
+		s.slack.MustSend(ctx, req)
 	}
-	if len(rows) == 0 {
-		return
-	}
-
-	day := date.Format("2006-01-02")
-	title := "Social drafts published"
-	contextLine := fmt.Sprintf("%d %s now live for *%s*", len(rows), plural(len(rows), "post", "posts"), day)
-	fallback := fmt.Sprintf("%s - %d post(s) live for %s", title, len(rows), day)
-	s.slack.MustSend(ctx, slackkit.Build(title, contextLine, fallback, slack.ColorSuccess, rows))
 }
 
 // postersByPlatformMap inverts the posters slice for O(1) lookup at

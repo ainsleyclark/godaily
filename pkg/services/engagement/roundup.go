@@ -11,16 +11,13 @@ package engagement
 
 import (
 	"context"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
 
 	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
+	"github.com/ainsleyclark/godaily/pkg/services/engagement/internal/slackdata"
 )
 
 const (
@@ -142,198 +139,15 @@ func (s *Service) Roundup(ctx context.Context) error {
 		return errors.Wrap(err, "gathering prior window")
 	}
 
-	return s.slack.Send(ctx, roundupRequest(curr, prev))
-}
-
-// roundupRequest builds the Slack block-kit message from the current and
-// prior snapshots. The prior snapshot is used only for delta arrows.
-func roundupRequest(curr, prev Snapshot) slack.Request {
-	dateRange := fmt.Sprintf("%s – %s",
-		curr.From.Format("2 Jan"), curr.To.Format("2 Jan"))
-
-	blocks := []slack.Block{
-		slackkit.Header("Weekly Roundup"),
-		slackkit.Context("GoDaily  ·  " + dateRange),
-		slackkit.Divider(),
-		slackkit.Fields("*Headline*", headlineFields(curr.Summary, prev.Summary)),
-		slackkit.Context(fmt.Sprintf(
-			"Bounced %d  ·  Complained %d", curr.Summary.Bounced, curr.Summary.Complained)),
-		subscriberBlock(curr.Subs),
-		slackkit.Divider(),
-		slackkit.Section("*Top links*\n" + topLinkLines(curr.Items)),
-	}
-
-	if extras := tagSourceLine(curr); extras != "" {
-		blocks = append(blocks, slackkit.Context(extras))
-	}
-
-	if curr.BestIssue != nil {
-		bi := curr.BestIssue
-		text := fmt.Sprintf("*Best issue:* %s  ·  %.1f%% click rate  ·  %.1f%% open rate",
-			bi.Slug, bi.ClickRate*100, bi.OpenRate*100)
-		blocks = append(blocks, slackkit.SectionWithButton(text, slack.LinkButton{
-			Label: "View analytics",
-			URL:   fmt.Sprintf("%s/issues/%d", env.DashboardURL, bi.IssueID),
-		}))
-	}
-
-	blocks = append(blocks, slackkit.Context(
-		fmt.Sprintf("<%s|Open the dashboard>", env.DashboardURL)))
-
-	return slackkit.Message(
-		fmt.Sprintf("GoDaily Weekly Roundup (%s)", dateRange), slack.ColorInfo, blocks)
-}
-
-// headlineFields returns the four headline KPIs as two-column section
-// fields, each annotated with its delta versus the prior window.
-func headlineFields(cs, ps engagement.SummaryStats) []string {
-	return []string{
-		fmt.Sprintf("*Issues sent*\n%d  %s", cs.IssuesSent, deltaCount(cs.IssuesSent, ps.IssuesSent)),
-		fmt.Sprintf("*Delivered*\n%s  %s", humanCount(cs.Delivered), deltaCount(cs.Delivered, ps.Delivered)),
-		fmt.Sprintf("*Open rate*\n%.1f%%  %s", cs.OpenRate*100, deltaPoint(cs.OpenRate, ps.OpenRate)),
-		fmt.Sprintf("*Click rate*\n%.1f%%  %s", cs.ClickRate*100, deltaPoint(cs.ClickRate, ps.ClickRate)),
-	}
-}
-
-// subscriberBlock renders the subscriber stats as a fields section, or a
-// single line when there was no activity in the window.
-func subscriberBlock(d engagement.SubscriberData) slack.Block {
-	sp, ok := lastSubscriberPoint(d)
-	if !ok {
-		return slackkit.Section("*Subscribers*\nNo subscriber activity this week")
-	}
-	return slackkit.Fields("*Subscribers*", []string{
-		fmt.Sprintf("*New*\n+%d", sp.New),
-		fmt.Sprintf("*Net change*\n%s", signed(sp.NetChange)),
-		fmt.Sprintf("*Confirmed*\n%d", sp.Confirmed),
-		fmt.Sprintf("*Active*\n%s", humanCount(sp.ActiveAtEnd)),
-	})
-}
-
-func topLinkLines(items []engagement.ItemMetrics) string {
-	if len(items) == 0 {
-		return "• No clicks recorded this week"
-	}
-	parts := make([]string, len(items))
-	for i, it := range items {
-		parts[i] = fmt.Sprintf("%d. <%s|%s>  ·  %d clicks  ·  %s",
-			i+1, it.URL, it.Title, it.Clicks, it.Source)
-	}
-	return strings.Join(parts, "\n")
-}
-
-func tagSourceLine(curr Snapshot) string {
-	var parts []string
-	if len(curr.Tags) > 0 {
-		tags := make([]string, len(curr.Tags))
-		for i, t := range curr.Tags {
-			tags[i] = fmt.Sprintf("%s (%d)", t.Tag, t.Clicks)
-		}
-		parts = append(parts, "*Top tags*: "+strings.Join(tags, " · "))
-	}
-	if len(curr.Sources) > 0 {
-		srcs := make([]string, len(curr.Sources))
-		for i, src := range curr.Sources {
-			srcs[i] = fmt.Sprintf("%s (%d)", src.Source, src.Clicks)
-		}
-		parts = append(parts, "*Top sources*: "+strings.Join(srcs, " · "))
-	}
-	return strings.Join(parts, "  ·  ")
-}
-
-// lastSubscriberPoint returns the most recent point in the series, if any.
-func lastSubscriberPoint(d engagement.SubscriberData) (engagement.SubscriberPoint, bool) {
-	if len(d.Points) == 0 {
-		return engagement.SubscriberPoint{}, false
-	}
-	return d.Points[len(d.Points)-1], true
-}
-
-// deltaCount returns a directional percentage delta for two counts, e.g.
-// "(↑ +12%)". When the prior value is zero, percentages are meaningless, so
-// the absolute change is shown instead ("(new)" / "(–N)").
-func deltaCount(curr, prev int64) string {
-	if prev == 0 {
-		switch {
-		case curr == 0:
-			return "(–)"
-		case curr > 0:
-			return "(new)"
-		default:
-			return fmt.Sprintf("(%s)", signed(curr))
-		}
-	}
-	pct := (float64(curr) - float64(prev)) / float64(prev) * 100
-	return formatDelta(pct, "%")
-}
-
-// deltaPoint returns a percentage-point delta for two rates expressed as
-// 0..1 fractions, e.g. "(↑ +2.1pp)".
-func deltaPoint(curr, prev float64) string {
-	if curr == 0 && prev == 0 {
-		return "(–)"
-	}
-	return formatDelta((curr-prev)*100, "pp")
-}
-
-// formatDelta renders a signed delta with an arrow and a unit suffix.
-func formatDelta(v float64, unit string) string {
-	switch {
-	case v > 0:
-		return fmt.Sprintf("(↑ +%.1f%s)", v, unit)
-	case v < 0:
-		return fmt.Sprintf("(↓ %.1f%s)", v, unit)
-	default:
-		return "(–)"
-	}
-}
-
-// signed formats an int64 with an explicit + sign for non-negative values.
-func signed(n int64) string {
-	if n >= 0 {
-		return fmt.Sprintf("+%d", n)
-	}
-	return fmt.Sprintf("%d", n)
-}
-
-// humanCount formats a count, using thousands separators for values under
-// 10,000 and a compact "k" suffix above that.
-func humanCount(n int64) string {
-	if n < 10_000 {
-		return addThousandsSep(n)
-	}
-	return fmt.Sprintf("%.1fk", float64(n)/1000)
-}
-
-// addThousandsSep inserts commas into an integer's decimal representation.
-func addThousandsSep(n int64) string {
-	s := fmt.Sprintf("%d", n)
-	neg := strings.HasPrefix(s, "-")
-	if neg {
-		s = s[1:]
-	}
-	if len(s) <= 3 {
-		if neg {
-			return "-" + s
-		}
-		return s
-	}
-	var b strings.Builder
-	first := len(s) % 3
-	if first > 0 {
-		b.WriteString(s[:first])
-		if len(s) > first {
-			b.WriteString(",")
-		}
-	}
-	for i := first; i < len(s); i += 3 {
-		b.WriteString(s[i : i+3])
-		if i+3 < len(s) {
-			b.WriteString(",")
-		}
-	}
-	if neg {
-		return "-" + b.String()
-	}
-	return b.String()
+	return s.slack.Send(ctx, slackdata.Roundup(slackdata.RoundupData{
+		From:        curr.From,
+		To:          curr.To,
+		Summary:     curr.Summary,
+		PrevSummary: prev.Summary,
+		Subs:        curr.Subs,
+		Items:       curr.Items,
+		Tags:        curr.Tags,
+		Sources:     curr.Sources,
+		BestIssue:   curr.BestIssue,
+	}))
 }

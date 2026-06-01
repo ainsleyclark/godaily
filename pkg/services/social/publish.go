@@ -9,12 +9,10 @@ import (
 	stderrors "errors"
 	"fmt"
 	"log/slog"
-	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
-	"github.com/ainsleyclark/godaily/pkg/services/internal/slackkit"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/pkg/errors"
 )
@@ -72,7 +70,7 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]social.PostResu
 		if res.Err != nil {
 			errs = append(errs, fmt.Errorf("%s: %w", res.Platform, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Social %s → %s failed", pc.kind, platformLabel(res.Platform)),
+				fmt.Sprintf("Social %s → %s failed", pc.kind, slackdata.PlatformLabel(res.Platform)),
 				res.Err,
 			))
 		}
@@ -202,105 +200,15 @@ func (s *Service) notifyFailure(ctx context.Context, req slack.Request) {
 	}
 }
 
-// notifySuccess pings Slack once per publish run with a rich card showing,
-// per platform that posted successfully, the live post copy and a button
-// linking to it. Skipped (idempotent) and failed platforms are omitted;
-// failures are already covered by notifyFailure inside the loop. When every
-// platform shares identical copy the card collapses to a single quote plus
-// a button row. A no-op when no platform succeeded or when the slack sender
-// is not configured.
+// notifySuccess pings Slack once per publish run with the "post published"
+// card. Skipped (idempotent) and failed platforms are omitted; failures are
+// already covered by notifyFailure inside the loop. A no-op when no platform
+// succeeded or when the slack sender is not configured.
 func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
-
-	posted := make([]social.PostResult, 0, len(results))
-	for _, r := range results {
-		if r.Err != nil || r.Skipped || r.PostURL == "" {
-			continue
-		}
-		posted = append(posted, r)
-	}
-	if len(posted) == 0 {
-		return
-	}
-
-	title := "Social post published: " + kindLabel(pc.kind)
-	contextLine := successContext(pc)
-	fallback := title
-	if pc.subject != "" {
-		fallback += " - " + pc.subject
-	}
-	closing := slackkit.Context(fmt.Sprintf(
-		"Posted to %d %s  ·  <https://godaily.dev|godaily.dev>",
-		len(posted), plural(len(posted), "platform", "platforms"),
-	))
-
-	// Auto-collapse when every platform shares the same copy: one quote
-	// plus a button row instead of repeating identical text per platform.
-	if sameCopy(posted) {
-		buttons := make([]slack.LinkButton, 0, len(posted))
-		for _, r := range posted {
-			buttons = append(buttons, slack.LinkButton{
-				Label: "View on " + platformLabel(r.Platform),
-				URL:   r.PostURL,
-				Style: "primary",
-			})
-		}
-		s.slack.MustSend(ctx, slackkit.Build(title, contextLine, fallback, slack.ColorSuccess,
-			[]slackkit.Row{{Text: posted[0].Text}}, slack.ButtonRow(buttons), closing))
-		return
-	}
-
-	rows := make([]slackkit.Row, 0, len(posted))
-	for _, r := range posted {
-		rows = append(rows, slackkit.Row{
-			Heading: platformLabel(r.Platform),
-			Text:    r.Text,
-			Button: &slack.LinkButton{
-				Label: "View on " + platformLabel(r.Platform),
-				URL:   r.PostURL,
-				Style: "primary",
-			},
-		})
-	}
-	s.slack.MustSend(ctx, slackkit.Build(title, contextLine, fallback, slack.ColorSuccess, rows, closing))
-}
-
-// successContext builds the issue context line for the publish card: the
-// issue subject and, when known, a link to the issue in the dashboard.
-func successContext(pc publishCtx) string {
-	parts := make([]string, 0, 2)
-	if pc.subject != "" {
-		parts = append(parts, "*Issue:* "+pc.subject)
-	}
-	if pc.issueID != nil {
-		parts = append(parts, fmt.Sprintf("<%s/issues/%d|Issue #%d>", env.DashboardURL, *pc.issueID, *pc.issueID))
-	}
-	return strings.Join(parts, "  ·  ")
-}
-
-// sameCopy reports whether every result carries identical post text.
-func sameCopy(results []social.PostResult) bool {
-	for _, r := range results[1:] {
-		if r.Text != results[0].Text {
-			return false
-		}
-	}
-	return true
-}
-
-// platformLabel returns the human-friendly name for a platform used in
-// Slack notifications.
-func platformLabel(p social.Platform) string {
-	switch p {
-	case social.Bluesky:
-		return "Bluesky"
-	case social.LinkedIn:
-		return "LinkedIn"
-	case social.Mastodon:
-		return "Mastodon"
-	default:
-		return string(p)
+	if req, ok := slackdata.PostPublished(pc.kind, pc.subject, pc.issueID, results); ok {
+		s.slack.MustSend(ctx, req)
 	}
 }

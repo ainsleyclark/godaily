@@ -15,6 +15,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/featured"
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
@@ -112,7 +113,7 @@ func (s *Service) draftFeatured(ctx context.Context, opts social.PostOptions) ([
 			res.Err = fmt.Errorf("no reframer registered for platform %s", p)
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Drafting %s failed", platformLabel(p)), res.Err,
+				fmt.Sprintf("Drafting %s failed", slackdata.PlatformLabel(p)), res.Err,
 			))
 			results = append(results, res)
 			continue
@@ -123,7 +124,7 @@ func (s *Service) draftFeatured(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "reframer")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Drafting %s failed", platformLabel(p)), res.Err,
+				fmt.Sprintf("Drafting %s failed", slackdata.PlatformLabel(p)), res.Err,
 			))
 			results = append(results, res)
 			continue
@@ -148,7 +149,7 @@ func (s *Service) draftFeatured(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "persisting draft")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Persisting %s draft failed", platformLabel(p)), res.Err,
+				fmt.Sprintf("Persisting %s draft failed", slackdata.PlatformLabel(p)), res.Err,
 			))
 			results = append(results, res)
 			continue
