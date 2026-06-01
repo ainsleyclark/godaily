@@ -9,8 +9,10 @@ import (
 	stderrors "errors"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/pkg/errors"
@@ -199,38 +201,92 @@ func (s *Service) notifyFailure(ctx context.Context, req slack.Request) {
 	}
 }
 
-// notifySuccess pings Slack once per publish run with a clickable button
-// per platform that posted successfully. Skipped (idempotent) and failed
-// platforms are omitted; failures are already covered by notifyFailure
-// inside the loop. A no-op when no platform succeeded or when the slack
-// sender is not configured.
+// notifySuccess pings Slack once per publish run with a rich card showing,
+// per platform that posted successfully, the live post copy and a button
+// linking to it. Skipped (idempotent) and failed platforms are omitted;
+// failures are already covered by notifyFailure inside the loop. When every
+// platform shares identical copy the card collapses to a single quote plus
+// a button row. A no-op when no platform succeeded or when the slack sender
+// is not configured.
 func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
 
-	buttons := make([]slack.LinkButton, 0, len(results))
+	posted := make([]social.PostResult, 0, len(results))
 	for _, r := range results {
 		if r.Err != nil || r.Skipped || r.PostURL == "" {
 			continue
 		}
-		buttons = append(buttons, slack.LinkButton{
-			Label: "View on " + platformLabel(r.Platform),
-			URL:   r.PostURL,
-			Style: "primary",
-		})
+		posted = append(posted, r)
 	}
-	if len(buttons) == 0 {
+	if len(posted) == 0 {
 		return
 	}
 
-	title := fmt.Sprintf("Social post published — %s", pc.kind)
-	body := pc.subject
-	if body == "" {
-		body = fmt.Sprintf("Posted to %d platform(s).", len(buttons))
+	title := "Social post published: " + kindLabel(pc.kind)
+	contextLine := successContext(pc)
+	fallback := title
+	if pc.subject != "" {
+		fallback += " - " + pc.subject
+	}
+	closing := contextBlock(fmt.Sprintf(
+		"Posted to %d %s  ·  <https://godaily.dev|godaily.dev>",
+		len(posted), plural(len(posted), "platform", "platforms"),
+	))
+
+	// Auto-collapse when every platform shares the same copy: one quote
+	// plus a button row instead of repeating identical text per platform.
+	if sameCopy(posted) {
+		buttons := make([]slack.LinkButton, 0, len(posted))
+		for _, r := range posted {
+			buttons = append(buttons, slack.LinkButton{
+				Label: "View on " + platformLabel(r.Platform),
+				URL:   r.PostURL,
+				Style: "primary",
+			})
+		}
+		s.slack.MustSend(ctx, socialCard(title, contextLine, fallback, slack.ColorSuccess,
+			[]cardRow{{text: posted[0].Text}}, slack.ButtonRow(buttons), closing))
+		return
 	}
 
-	s.slack.MustSend(ctx, slack.Success(title, body, buttons...))
+	rows := make([]cardRow, 0, len(posted))
+	for _, r := range posted {
+		rows = append(rows, cardRow{
+			heading: platformLabel(r.Platform),
+			text:    r.Text,
+			button: &slack.LinkButton{
+				Label: "View on " + platformLabel(r.Platform),
+				URL:   r.PostURL,
+				Style: "primary",
+			},
+		})
+	}
+	s.slack.MustSend(ctx, socialCard(title, contextLine, fallback, slack.ColorSuccess, rows, closing))
+}
+
+// successContext builds the issue context line for the publish card: the
+// issue subject and, when known, a link to the issue in the dashboard.
+func successContext(pc publishCtx) string {
+	parts := make([]string, 0, 2)
+	if pc.subject != "" {
+		parts = append(parts, "*Issue:* "+pc.subject)
+	}
+	if pc.issueID != nil {
+		parts = append(parts, fmt.Sprintf("<%s/issues/%d|Issue #%d>", env.DashboardURL, *pc.issueID, *pc.issueID))
+	}
+	return strings.Join(parts, "  ·  ")
+}
+
+// sameCopy reports whether every result carries identical post text.
+func sameCopy(results []social.PostResult) bool {
+	for _, r := range results[1:] {
+		if r.Text != results[0].Text {
+			return false
+		}
+	}
+	return true
 }
 
 // platformLabel returns the human-friendly name for a platform used in

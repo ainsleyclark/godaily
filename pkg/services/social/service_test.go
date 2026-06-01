@@ -103,10 +103,26 @@ func flattenSlackRequest(req slack.Request) string {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
 			}
+			if v.Accessory != nil && v.Accessory.ButtonElement != nil {
+				btn := v.Accessory.ButtonElement
+				b.WriteString("\n")
+				if btn.Text != nil {
+					b.WriteString(btn.Text.Text)
+					b.WriteString(" ")
+				}
+				b.WriteString(btn.URL)
+			}
 		case *slacksdk.HeaderBlock:
 			if v.Text != nil {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
+			}
+		case *slacksdk.ContextBlock:
+			for _, el := range v.ContextElements.Elements {
+				if txt, ok := el.(*slacksdk.TextBlockObject); ok {
+					b.WriteString("\n")
+					b.WriteString(txt.Text)
+				}
 			}
 		case *slacksdk.ActionBlock:
 			for _, el := range v.Elements.ElementSet {

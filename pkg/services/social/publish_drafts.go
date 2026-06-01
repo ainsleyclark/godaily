@@ -130,31 +130,42 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 	return results, nil
 }
 
-// notifyPublishSummary pings Slack once per PublishDrafts run with a
-// clickable button per platform+kind that posted successfully.
+// notifyPublishSummary pings Slack once per PublishDrafts run with a rich
+// card: one section per published draft showing its kind, platform and the
+// live post copy, each with a button linking to the post.
 func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
 
-	buttons := make([]slack.LinkButton, 0, len(results))
+	rows := make([]cardRow, 0, len(results))
 	for _, r := range results {
 		if r.Err != nil || r.Skipped || r.PostURL == "" {
 			continue
 		}
-		buttons = append(buttons, slack.LinkButton{
-			Label: fmt.Sprintf("%s · %s", r.Kind, platformLabel(r.Platform)),
-			URL:   r.PostURL,
-			Style: "primary",
+		heading := platformLabel(r.Platform)
+		if k := kindLabel(r.Kind); k != "" {
+			heading = k + "  ·  " + heading
+		}
+		rows = append(rows, cardRow{
+			heading: heading,
+			text:    r.Text,
+			button: &slack.LinkButton{
+				Label: "View post",
+				URL:   r.PostURL,
+				Style: "primary",
+			},
 		})
 	}
-	if len(buttons) == 0 {
+	if len(rows) == 0 {
 		return
 	}
 
+	day := date.Format("2006-01-02")
 	title := "Social drafts published"
-	body := fmt.Sprintf("%d post(s) live for %s.", len(buttons), date.Format("2006-01-02"))
-	s.slack.MustSend(ctx, slack.Success(title, body, buttons...))
+	contextLine := fmt.Sprintf("%d %s now live for *%s*", len(rows), plural(len(rows), "post", "posts"), day)
+	fallback := fmt.Sprintf("%s - %d post(s) live for %s", title, len(rows), day)
+	s.slack.MustSend(ctx, socialCard(title, contextLine, fallback, slack.ColorSuccess, rows))
 }
 
 // postersByPlatformMap inverts the posters slice for O(1) lookup at
