@@ -17,15 +17,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
-// SocialDrafter is the narrow slice of the social service that Build
-// uses to generate draft social posts alongside the digest issue. Kept
-// as a one-method interface so app wiring can pass the full social
-// service without dragging the rest of its surface into the digest
-// package.
-type SocialDrafter interface {
-	DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error)
-}
-
 // Service fetches Go news from all registered sources and optionally
 // sends the digest via email.
 type Service struct {
@@ -36,14 +27,14 @@ type Service struct {
 	items             news.ItemRepository
 	subscribers       audience.SubscriberRepository
 	slack             slack.Sender
-	socialDrafter     SocialDrafter
+	social            social.Service
 }
 
 var _ digest.Service = (*Service)(nil)
 
 // New creates a new Service, validating that all news sources have
-// registered fetchers. socialDrafter is optional and may be nil — when
-// nil, Build skips the drafting side effect.
+// registered fetchers. socialSvc is optional and may be nil — when nil,
+// Build skips the social-drafting side effect.
 func New(
 	emailSender email.BatchSender,
 	adminEmail string,
@@ -52,7 +43,7 @@ func New(
 	issues digest.IssueRepository,
 	items news.ItemRepository,
 	subscribers audience.SubscriberRepository,
-	socialDrafter SocialDrafter,
+	socialSvc social.Service,
 ) (*Service, error) {
 	if news.HasSources() {
 		if err := news.Validate(); err != nil {
@@ -67,7 +58,7 @@ func New(
 		items:             items,
 		subscribers:       subscribers,
 		slack:             slack,
-		socialDrafter:     socialDrafter,
+		social:            socialSvc,
 	}, nil
 }
 

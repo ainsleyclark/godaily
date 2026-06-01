@@ -103,9 +103,9 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 	// Draft featured social posts as a best-effort side effect. A failed
 	// AI draft must not fail the build — the email digest still ships at
 	// 08:00 and the 11:00 social cron will simply find no drafts to
-	// publish. SocialDrafter is optional and may be unset in tests.
-	if s.socialDrafter != nil {
-		if _, draftErr := s.socialDrafter.DraftFeatured(ctx, social.PostOptions{Date: today}); draftErr != nil {
+	// publish. social is optional and may be unset in tests.
+	if s.social != nil {
+		if _, draftErr := s.social.DraftFeatured(ctx, social.PostOptions{Date: today}); draftErr != nil {
 			slog.WarnContext(ctx, "Drafting featured social after build failed", "err", draftErr)
 			if s.slack != nil {
 				s.slack.MustSend(ctx, slack.Error("Draft featured social after build failed", draftErr))
