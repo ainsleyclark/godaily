@@ -40,7 +40,7 @@ test.describe.serial('pipeline state assertions', () => {
     const res = await request.post('/api/e2e/pipeline/build');
     expect(res.status()).toBe(200);
 
-    const issuesRes = await request.get('/api/digest/issues?status=draft', { headers: AUTH });
+    const issuesRes = await request.get('/api/issues?status=draft', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
     const issuesBody = await issuesRes.json();
     expect(issuesBody.data.total).toBeGreaterThan(0);
@@ -69,7 +69,7 @@ test.describe.serial('pipeline state assertions', () => {
     ).toBe(true);
 
     // Public issues API must now return the issue as 'sent'.
-    const issuesRes = await request.get('/api/digest/issues', { headers: AUTH });
+    const issuesRes = await request.get('/api/issues', { headers: AUTH });
     expect(issuesRes.status()).toBe(200);
     const issuesBody = await issuesRes.json();
     expect(issuesBody.data.total).toBeGreaterThan(0);
