@@ -64,7 +64,7 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (digest.Issue, error
 }
 
 func (s Store) List(ctx context.Context, opts store.ListOptions) ([]digest.Issue, error) {
-	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{Limit: opts.Limit(), Offset: opts.Offset()})
+	rows, err := s.sqlc.IssueListAll(ctx, sqlc.IssueListAllParams{Limit: opts.Limit(), Offset: opts.Offset()})
 	if err != nil {
 		return nil, err
 	}

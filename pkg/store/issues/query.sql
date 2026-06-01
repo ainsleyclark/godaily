@@ -18,6 +18,11 @@ WHERE status = 'sent'
 ORDER BY sent_at DESC
 LIMIT ? OFFSET ?;
 
+-- name: IssueListAll :many
+SELECT * FROM issues
+ORDER BY sent_at DESC
+LIMIT ? OFFSET ?;
+
 -- name: IssueUpdateStatus :one
 UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING *;
 
@@ -27,4 +32,4 @@ WHERE id = ? AND status = 'draft'
 RETURNING *;
 
 -- name: IssueCount :one
-SELECT COUNT(*) FROM issues WHERE status = 'sent';
+SELECT COUNT(*) FROM issues;

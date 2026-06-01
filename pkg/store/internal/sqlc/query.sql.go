@@ -204,7 +204,7 @@ func (q *Queries) IssueBySlug(ctx context.Context, slug string) (Issue, error) {
 }
 
 const issueCount = `-- name: IssueCount :one
-SELECT COUNT(*) FROM issues WHERE status = 'sent'
+SELECT COUNT(*) FROM issues
 `
 
 func (q *Queries) IssueCount(ctx context.Context) (int64, error) {
@@ -265,6 +265,47 @@ type IssueListParams struct {
 
 func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, error) {
 	rows, err := q.db.QueryContext(ctx, issueList, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Issue{}
+	for rows.Next() {
+		var i Issue
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.SentAt,
+			&i.Subject,
+			&i.Summary,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const issueListAll = `-- name: IssueListAll :many
+SELECT id, slug, sent_at, subject, summary, status FROM issues
+ORDER BY sent_at DESC
+LIMIT ? OFFSET ?
+`
+
+type IssueListAllParams struct {
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
+}
+
+func (q *Queries) IssueListAll(ctx context.Context, arg IssueListAllParams) ([]Issue, error) {
+	rows, err := q.db.QueryContext(ctx, issueListAll, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
