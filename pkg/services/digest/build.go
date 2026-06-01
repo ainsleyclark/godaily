@@ -112,7 +112,7 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 				s.slack.MustSend(ctx, slack.Error("Draft social posts after build failed", draftErr))
 			}
 		}
-		s.sendBuildSummary(ctx, created, position)
+		s.sendbuildSummary(ctx, created, position)
 	}
 
 	return nil
@@ -122,7 +122,7 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 // build: digest meta + every draft awaiting publish with an "Edit"
 // deep-link into the dashboard. Best-effort — a Slack failure must not
 // fail the build.
-func (s Service) sendBuildSummary(ctx context.Context, issue digest.Issue, itemCount int) {
+func (s Service) sendbuildSummary(ctx context.Context, issue digest.Issue, itemCount int) {
 	if s.slack == nil || s.posts == nil {
 		return
 	}
@@ -134,7 +134,7 @@ func (s Service) sendBuildSummary(ctx context.Context, issue digest.Issue, itemC
 		return
 	}
 
-	summary := BuildSummary(BuildSummaryInput{
+	summary := buildSummary(buildSummaryInput{
 		IssueDate: issue.Slug,
 		IssueID:   issue.ID,
 		Subject:   issue.Subject,
@@ -145,10 +145,10 @@ func (s Service) sendBuildSummary(ctx context.Context, issue digest.Issue, itemC
 	s.slack.MustSend(ctx, summary)
 }
 
-func toSummaryDrafts(rows []social.Post) []BuildSummaryDraft {
-	out := make([]BuildSummaryDraft, 0, len(rows))
+func toSummaryDrafts(rows []social.Post) []buildSummaryDraft {
+	out := make([]buildSummaryDraft, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, BuildSummaryDraft{
+		out = append(out, buildSummaryDraft{
 			ID:       r.ID,
 			Kind:     string(r.Kind),
 			Platform: r.Platform,

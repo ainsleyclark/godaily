@@ -5,12 +5,8 @@
 package social
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/ainsleydev/webkit/pkg/webkit"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
@@ -24,8 +20,9 @@ import (
 )
 
 // newHandlerNoPosters builds a Handler with a real social.Service that
-// has no posters configured. Used to exercise the weekend / not-wired
-// short-circuits without a real DB.
+// has no posters configured. Both publish handlers (featured and
+// rotation) share this fixture for their weekend / not-wired
+// short-circuit assertions.
 func newHandlerNoPosters(t *testing.T) *Handler {
 	t.Helper()
 
@@ -47,22 +44,4 @@ func newHandlerNoPosters(t *testing.T) *Handler {
 		slack:  slackMock,
 		config: &env.Config{},
 	}
-}
-
-func TestHandlePublish(t *testing.T) {
-	t.Parallel()
-
-	t.Run("No posters configured short-circuits to OK", func(t *testing.T) {
-		t.Parallel()
-
-		h := newHandlerNoPosters(t)
-		rec := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodGet, "/social/publish", nil)
-		ctx := webkit.NewContext(rec, req)
-
-		err := h.Publish(ctx)
-
-		assert.NoError(t, err)
-		assert.Equal(t, http.StatusOK, rec.Code)
-	})
 }

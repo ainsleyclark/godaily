@@ -16,29 +16,29 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
-// BuildSummaryDraft describes one drafted social post for the build
-// summary Slack card. One BuildSummary call accepts a slice of these
+// buildSummaryDraft describes one drafted social post for the build
+// summary Slack card. One buildSummary call accepts a slice of these
 // covering every kind+platform combination produced by DraftAll.
-type BuildSummaryDraft struct {
+type buildSummaryDraft struct {
 	ID       int64
 	Kind     string
 	Platform string
 	Text     string
 }
 
-// BuildSummaryInput is the payload BuildSummary renders. IssueID powers
+// buildSummaryInput is the payload buildSummary renders. IssueID powers
 // the "View issue" deep-link and may be 0 when only rotation posts were
 // drafted.
-type BuildSummaryInput struct {
+type buildSummaryInput struct {
 	IssueDate string
 	IssueID   int64
 	Subject   string
 	Intro     string
 	ItemCount int
-	Drafts    []BuildSummaryDraft
+	Drafts    []buildSummaryDraft
 }
 
-// BuildSummary renders the rich Slack card emitted by the digest build
+// buildSummary renders the rich Slack card emitted by the digest build
 // cron at the end of a successful run. The card shows the issue's
 // subject + intro + item count and, per platform, the drafted text with
 // an "Edit" button deep-linking into the dashboard.
@@ -47,7 +47,7 @@ type BuildSummaryInput struct {
 // composition is domain-aware: it knows about digest issues, social
 // post kinds, and the dashboard URL. The slack gateway stays a plain
 // send-channel.
-func BuildSummary(in BuildSummaryInput) slack.Request {
+func buildSummary(in buildSummaryInput) slack.Request {
 	header := "📰 Digest " + in.IssueDate + " — drafts ready for review"
 
 	blocks := make([]slack.Block, 0, 4+2*len(in.Drafts))
@@ -106,7 +106,7 @@ func BuildSummary(in BuildSummaryInput) slack.Request {
 	}
 }
 
-func summaryBody(in BuildSummaryInput) string {
+func summaryBody(in buildSummaryInput) string {
 	parts := make([]string, 0, 3)
 	if in.Subject != "" {
 		parts = append(parts, "*Subject:* "+in.Subject)
@@ -138,8 +138,8 @@ func titleCase(s string) string {
 
 // groupDrafts returns drafts in a stable order (kind ASC, platform ASC)
 // so the same build emits the same Slack message on re-run.
-func groupDrafts(drafts []BuildSummaryDraft) []BuildSummaryDraft {
-	out := append([]BuildSummaryDraft(nil), drafts...)
+func groupDrafts(drafts []buildSummaryDraft) []buildSummaryDraft {
+	out := append([]buildSummaryDraft(nil), drafts...)
 	sort.SliceStable(out, func(i, j int) bool {
 		if out[i].Kind != out[j].Kind {
 			return out[i].Kind < out[j].Kind

@@ -43,7 +43,8 @@ func New(a *godaily.App) *Handler {
 // delegated to the drafts subpackage so its richer lifecycle (list /
 // edit / cancel + per-row status checks) stays self-contained.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
-	kit.Get("/publish", h.Publish, auth)
+	kit.Get("/publish/featured", h.PublishFeatured, auth)
+	kit.Get("/publish/rotation", h.PublishRotation, auth)
 	kit.Get("/metrics", h.Metrics, auth)
 	kit.Group("/drafts", func(k *webkit.Kit) { h.drafts.Routes(k, auth) })
 }

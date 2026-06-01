@@ -19,6 +19,14 @@ type PostOptions struct {
 	// empty, every configured poster runs. Unknown platforms are ignored
 	// with a log line.
 	Platforms []Platform
+
+	// Kinds optionally restricts PublishDrafts to draft rows whose Kind
+	// matches one of these values. Empty means publish every kind. The
+	// featured publish cron passes [PostKindFeatured]; the rotation
+	// publish cron passes every non-featured kind, keeping the two cron
+	// slots independent so a 15:00 run never accidentally promotes a
+	// featured draft the 11:00 slot missed.
+	Kinds []PostKind
 }
 
 // PostResult summarises one platform's outcome.

@@ -80,7 +80,7 @@ func (s Store) HasPostedKindSince(ctx context.Context, kind social.PostKind, pla
 
 // Find returns the row with the given id.
 func (s Store) Find(ctx context.Context, id int64) (social.Post, error) {
-	row, err := s.sqlc.SocialPostGet(ctx, id)
+	row, err := s.sqlc.SocialPostFind(ctx, id)
 	if errors.Is(err, sql.ErrNoRows) {
 		return social.Post{}, store.ErrNotFound
 	}

@@ -38,7 +38,7 @@ WHERE (sqlc.narg('issue_id') IS NULL OR issue_id = sqlc.narg('issue_id'))
   AND (sqlc.narg('platform') IS NULL OR platform  = sqlc.narg('platform'))
 ORDER BY posted_at DESC, id DESC;
 
--- name: SocialPostGet :one
+-- name: SocialPostFind :one
 SELECT * FROM social_posts WHERE id = ?;
 
 -- name: SocialPostUpdate :one

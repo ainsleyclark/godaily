@@ -1116,12 +1116,12 @@ func (q *Queries) SocialPostExistsOrCancelledBySubject(ctx context.Context, arg 
 	return exists_flag, err
 }
 
-const socialPostGet = `-- name: SocialPostGet :one
+const socialPostFind = `-- name: SocialPostFind :one
 SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source FROM social_posts WHERE id = ?
 `
 
-func (q *Queries) SocialPostGet(ctx context.Context, id int64) (SocialPost, error) {
-	row := q.db.QueryRowContext(ctx, socialPostGet, id)
+func (q *Queries) SocialPostFind(ctx context.Context, id int64) (SocialPost, error) {
+	row := q.db.QueryRowContext(ctx, socialPostFind, id)
 	var i SocialPost
 	err := row.Scan(
 		&i.ID,

@@ -1747,7 +1747,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/social/publish": {
+    "/social/publish/featured": {
         parameters: {
             query?: never;
             header?: never;
@@ -1755,8 +1755,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Publish every pending social draft.
-         * @description Walks every row with status='draft' (any kind, any platform) and posts it to its platform. Cancelled rows are skipped. Idempotent via row status transitions. Skipped at weekends.
+         * Publish featured social drafts.
+         * @description Publishes the day's featured draft rows (one per configured platform) — recap and other rotation kinds are left untouched so the 15:00 rotation slot picks them up. Skipped at weekends.
          */
         get: {
             parameters: {
@@ -1776,7 +1776,55 @@ export interface paths {
                         "application/json": components["schemas"]["Response"];
                     };
                 };
-                /** @description Failed to publish drafts */
+                /** @description Failed to publish featured drafts */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/social/publish/rotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Publish rotation social drafts.
+         * @description Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. Skipped at weekends.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Published, or skipped (weekend/not wired) */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to publish rotation drafts */
                 500: {
                     headers: {
                         [name: string]: unknown;

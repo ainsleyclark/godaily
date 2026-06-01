@@ -1790,11 +1790,11 @@ paths:
       summary: Refresh social post metrics.
       tags:
       - social
-  /social/publish:
+  /social/publish/featured:
     get:
-      description: Walks every row with status='draft' (any kind, any platform) and
-        posts it to its platform. Cancelled rows are skipped. Idempotent via row status
-        transitions. Skipped at weekends.
+      description: Publishes the day's featured draft rows (one per configured platform)
+        — recap and other rotation kinds are left untouched so the 15:00 rotation
+        slot picks them up. Skipped at weekends.
       responses:
         "200":
           content:
@@ -1807,10 +1807,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Response'
-          description: Failed to publish drafts
+          description: Failed to publish featured drafts
       security:
       - BearerAuth: []
-      summary: Publish every pending social draft.
+      summary: Publish featured social drafts.
+      tags:
+      - social
+  /social/publish/rotation:
+    get:
+      description: Publishes the day's rotation drafts (recap on Monday, community
+        on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately
+        excluded — they belong to the 11:00 cron. Skipped at weekends.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Published, or skipped (weekend/not wired)
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Failed to publish rotation drafts
+      security:
+      - BearerAuth: []
+      summary: Publish rotation social drafts.
       tags:
       - social
   /subscribe:

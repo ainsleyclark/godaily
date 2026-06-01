@@ -35,8 +35,12 @@
 			"schedule": "0 9 * * *"
 		},
 		{
-			"path": "/api/social/publish/",
+			"path": "/api/social/publish/featured/",
 			"schedule": "0 11 * * *"
+		},
+		{
+			"path": "/api/social/publish/rotation/",
+			"schedule": "0 15 * * 1,3,5"
 		},
 		{
 			"path": "/api/social/metrics/",

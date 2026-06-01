@@ -22,7 +22,7 @@ func TestBuildSummary(t *testing.T) {
 	t.Run("Header + subject + intro + items render", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(BuildSummaryInput{
+		req := buildSummary(buildSummaryInput{
 			IssueDate: "2026-06-01",
 			IssueID:   42,
 			Subject:   "GoDaily — June 1",
@@ -40,7 +40,7 @@ func TestBuildSummary(t *testing.T) {
 	t.Run("View issue button uses dashboard URL with issue id", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(BuildSummaryInput{
+		req := buildSummary(buildSummaryInput{
 			IssueDate: "2026-06-01",
 			IssueID:   42,
 			Subject:   "x",
@@ -52,10 +52,10 @@ func TestBuildSummary(t *testing.T) {
 	t.Run("Each draft renders kind, platform, text and an Edit button", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(BuildSummaryInput{
+		req := buildSummary(buildSummaryInput{
 			IssueDate: "2026-06-01",
 			IssueID:   42,
-			Drafts: []BuildSummaryDraft{
+			Drafts: []buildSummaryDraft{
 				{ID: 1, Kind: "featured", Platform: "bluesky", Text: "draft body for bluesky"},
 				{ID: 2, Kind: "featured", Platform: "linkedin", Text: "draft body for linkedin"},
 				{ID: 3, Kind: "recap", Platform: "bluesky", Text: "this week’s top clicks"},
@@ -77,9 +77,9 @@ func TestBuildSummary(t *testing.T) {
 	t.Run("Drafts are emitted in stable kind+platform order", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(BuildSummaryInput{
+		req := buildSummary(buildSummaryInput{
 			IssueDate: "2026-06-01",
-			Drafts: []BuildSummaryDraft{
+			Drafts: []buildSummaryDraft{
 				{ID: 3, Kind: "recap", Platform: "linkedin", Text: "r-li"},
 				{ID: 1, Kind: "featured", Platform: "bluesky", Text: "f-bs"},
 				{ID: 2, Kind: "featured", Platform: "linkedin", Text: "f-li"},
@@ -94,13 +94,13 @@ func TestBuildSummary(t *testing.T) {
 
 	t.Run("Footer mentions auto-publish window", func(t *testing.T) {
 		t.Parallel()
-		req := BuildSummary(BuildSummaryInput{IssueDate: "2026-06-01"})
+		req := buildSummary(buildSummaryInput{IssueDate: "2026-06-01"})
 		assert.Contains(t, flatten(req), "Auto-publishes")
 	})
 
 	t.Run("Attachment is Info-coloured", func(t *testing.T) {
 		t.Parallel()
-		req := BuildSummary(BuildSummaryInput{IssueDate: "2026-06-01"})
+		req := buildSummary(buildSummaryInput{IssueDate: "2026-06-01"})
 		require.Len(t, req.Attachments, 1)
 		assert.Equal(t, slack.ColorInfo, req.Attachments[0].Color)
 	})

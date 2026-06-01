@@ -42,6 +42,9 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 	if err != nil {
 		return nil, errors.Wrap(err, "loading drafts")
 	}
+	if kindsFilter := kindFilter(opts.Kinds); kindsFilter != nil {
+		drafts = filterByKinds(drafts, kindsFilter)
+	}
 	if len(drafts) == 0 {
 		slog.InfoContext(ctx, "No drafts to publish")
 		return nil, nil
@@ -173,6 +176,33 @@ func platformFilter(wanted []social.Platform) map[social.Platform]bool {
 	out := make(map[social.Platform]bool, len(wanted))
 	for _, p := range wanted {
 		out[p] = true
+	}
+	return out
+}
+
+// kindFilter returns a set keyed by PostKind for fast membership checks,
+// or nil when no kind restriction applies (publish every kind).
+func kindFilter(wanted []social.PostKind) map[social.PostKind]bool {
+	if len(wanted) == 0 {
+		return nil
+	}
+	out := make(map[social.PostKind]bool, len(wanted))
+	for _, k := range wanted {
+		out[k] = true
+	}
+	return out
+}
+
+// filterByKinds returns the subset of rows whose Kind is in wanted.
+// In-memory filtering is fine: today's draft set is small (one row per
+// configured platform per drafted kind — order-of-magnitude single
+// digits) and the alternative is paying the cost of a sqlc IN-clause.
+func filterByKinds(rows []social.Post, wanted map[social.PostKind]bool) []social.Post {
+	out := make([]social.Post, 0, len(rows))
+	for _, r := range rows {
+		if wanted[r.Kind] {
+			out = append(out, r)
+		}
 	}
 	return out
 }
