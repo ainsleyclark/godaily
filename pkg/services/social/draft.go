@@ -9,7 +9,6 @@ import (
 	stderrors "errors"
 	"fmt"
 	"log/slog"
-	"time"
 
 	"github.com/pkg/errors"
 
@@ -20,21 +19,49 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// DraftFeatured runs the AI half of the featured pipeline: it loads the
-// issue for opts.Date, picks the day's featured item, reframes it for
-// each configured platform, and writes one draft row per platform to
-// social_posts. No platform HTTP happens here. Existing drafts for the
-// issue are cleared first so a re-run of Build for the same date cleanly
-// replaces the previous attempt.
+// DraftAll runs the AI half of every social pipeline at digest Build
+// time. It generates one featured draft per configured platform for
+// today's issue and — on rotation days — generates the rotation draft
+// for that weekday. No platform HTTP happens here.
+//
+// Re-running for the same date is safe: existing featured drafts for
+// the issue are cleared first, and stale rotation drafts of the
+// candidate's kind are wiped before regeneration. Subjects already
+// published OR cancelled are skipped via HasPostedOrCancelledBySubject
+// so a deliberately-cancelled rotation does not come back.
 //
 // On opts.DryRun, the AI work runs end-to-end but no draft rows are
 // persisted — useful for CLI smoke tests.
-func (s *Service) DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+func (s *Service) DraftAll(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	if !s.hasPosters() {
 		slog.InfoContext(ctx, "Skipping draft — no posters configured")
 		return nil, nil
 	}
 
+	var all []social.PostResult
+	var errs []error
+
+	featuredResults, ferr := s.draftFeatured(ctx, opts)
+	all = append(all, featuredResults...)
+	if ferr != nil {
+		errs = append(errs, ferr)
+	}
+
+	rotationResults, rerr := s.draftRotation(ctx, opts)
+	all = append(all, rotationResults...)
+	if rerr != nil {
+		errs = append(errs, rerr)
+	}
+
+	if len(errs) > 0 {
+		return all, stderrors.Join(errs...)
+	}
+	return all, nil
+}
+
+// draftFeatured generates draft featured rows for opts.Date. Internal to
+// the Service — callers go through DraftAll.
+func (s *Service) draftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	date := opts.Date.UTC()
 	slug := date.Format("2006-01-02")
 
@@ -51,7 +78,7 @@ func (s *Service) DraftFeatured(ctx context.Context, opts social.PostOptions) ([
 		return nil, errors.Wrap(err, "loading items")
 	}
 	if len(rows) == 0 {
-		slog.InfoContext(ctx, "Skipping draft — no items for issue", "issue", issue.ID)
+		slog.InfoContext(ctx, "Skipping featured draft — no items for issue", "issue", issue.ID)
 		return nil, nil
 	}
 
@@ -127,11 +154,9 @@ func (s *Service) DraftFeatured(ctx context.Context, opts social.PostOptions) ([
 			continue
 		}
 
-		slog.InfoContext(ctx, "Social draft persisted", "platform", p, "chars", len(text))
+		slog.InfoContext(ctx, "Featured draft persisted", "platform", p, "chars", len(text))
 		results = append(results, res)
 	}
-
-	s.notifyDraftSuccess(ctx, date, results)
 
 	if len(errs) > 0 {
 		return results, stderrors.Join(errs...)
@@ -139,37 +164,67 @@ func (s *Service) DraftFeatured(ctx context.Context, opts social.PostOptions) ([
 	return results, nil
 }
 
-// notifyDraftSuccess pings Slack once per DraftFeatured run with the
-// drafted text per platform, mirroring the digest preview Slack ping.
-// Acts as a passive review window: the owner can spot anything off
-// before the 11:00 publish cron fires.
-func (s *Service) notifyDraftSuccess(ctx context.Context, date time.Time, results []social.PostResult) {
-	if s.slack == nil {
-		return
+// draftRotation walks the day's rotation candidates, picks the first
+// eligible one, and persists a draft row per configured platform. Mirrors
+// Rotate but with draftOnly=true so no platform HTTP happens. The
+// publish cron picks the rows up at 11:00.
+func (s *Service) draftRotation(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	if len(s.candidates) == 0 {
+		return nil, nil
 	}
 
-	type preview struct {
-		platform string
-		text     string
+	now := opts.Date.UTC()
+	candidates := s.pickCandidates(now.Weekday())
+	if len(candidates) == 0 {
+		return nil, nil
 	}
-	var previews []preview
-	for _, r := range results {
-		if r.Err != nil || r.Text == "" {
+
+	for _, cand := range candidates {
+		cctx, ok, err := cand.Eligible(ctx, now)
+		if err != nil {
+			s.notifyFailure(ctx, slack.Error(
+				"Rotation eligibility check failed — "+string(cand.Kind()), err,
+			))
+			return nil, errors.Wrapf(err, "eligibility for %s", cand.Kind())
+		}
+		if !ok {
+			slog.InfoContext(ctx, "Rotation candidate not eligible", "kind", string(cand.Kind()))
 			continue
 		}
-		previews = append(previews, preview{platform: platformLabel(r.Platform), text: r.Text})
-	}
-	if len(previews) == 0 {
-		return
+
+		slog.InfoContext(
+			ctx, "Rotation candidate eligible — drafting",
+			"kind", string(cand.Kind()), "subject", cctx.Subject,
+		)
+
+		if !opts.DryRun {
+			if derr := s.posts.DeleteDraftsByKind(ctx, cand.Kind()); derr != nil {
+				return nil, errors.Wrapf(derr, "clearing draft rows for %s", cand.Kind())
+			}
+		}
+
+		wanted := selectPosters(s.posters, opts.Platforms)
+		return s.publish(ctx, publishCtx{
+			platforms: wanted,
+			dryRun:    opts.DryRun,
+			draftOnly: true,
+			kind:      cand.Kind(),
+			subject:   cctx.Subject,
+			generate: func(ctx context.Context, p social.Platform) (string, error) {
+				text, err := cand.Generate(ctx, s.prompter, p, cctx)
+				if err != nil {
+					return "", err
+				}
+				if cctx.Kind == social.PostKindNewSource || cctx.Kind == social.PostKindRecap {
+					text = appendSubscribeLine(text, p, string(cctx.Kind))
+				}
+				return text, nil
+			},
+			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
+			mentions:     cctx.Mentions,
+		})
 	}
 
-	body := ""
-	for _, p := range previews {
-		body += fmt.Sprintf("*%s*\n%s\n\n", p.platform, p.text)
-	}
-
-	s.slack.MustSend(ctx, slack.Info(
-		"Social drafts for "+date.Format("2006-01-02"),
-		body,
-	))
+	slog.InfoContext(ctx, "Rotation: no eligible candidate to draft", "weekday", now.Weekday())
+	return nil, nil
 }

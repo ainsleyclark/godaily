@@ -1030,6 +1030,15 @@ func (q *Queries) SocialPostDeleteDraftsByIssue(ctx context.Context, issueID *in
 	return err
 }
 
+const socialPostDeleteDraftsByKind = `-- name: SocialPostDeleteDraftsByKind :exec
+DELETE FROM social_posts WHERE issue_id IS NULL AND kind = ? AND status = 'draft'
+`
+
+func (q *Queries) SocialPostDeleteDraftsByKind(ctx context.Context, kind string) error {
+	_, err := q.db.ExecContext(ctx, socialPostDeleteDraftsByKind, kind)
+	return err
+}
+
 const socialPostExists = `-- name: SocialPostExists :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
@@ -1088,6 +1097,48 @@ func (q *Queries) SocialPostExistsKindSince(ctx context.Context, arg SocialPostE
 	return exists_flag, err
 }
 
+const socialPostExistsOrCancelledBySubject = `-- name: SocialPostExistsOrCancelledBySubject :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE subject = ? AND platform = ? AND status IN ('published', 'cancelled')
+) AS exists_flag
+`
+
+type SocialPostExistsOrCancelledBySubjectParams struct {
+	Subject  sql.NullString `json:"subject"`
+	Platform string         `json:"platform"`
+}
+
+func (q *Queries) SocialPostExistsOrCancelledBySubject(ctx context.Context, arg SocialPostExistsOrCancelledBySubjectParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, socialPostExistsOrCancelledBySubject, arg.Subject, arg.Platform)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
+const socialPostFind = `-- name: SocialPostFind :one
+SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source FROM social_posts WHERE id = ?
+`
+
+func (q *Queries) SocialPostFind(ctx context.Context, id int64) (SocialPost, error) {
+	row := q.db.QueryRowContext(ctx, socialPostFind, id)
+	var i SocialPost
+	err := row.Scan(
+		&i.ID,
+		&i.IssueID,
+		&i.Kind,
+		&i.Subject,
+		&i.Platform,
+		&i.Text,
+		&i.PostUrl,
+		&i.PostedAt,
+		&i.Status,
+		&i.PublishedAt,
+		&i.MentionSource,
+	)
+	return i, err
+}
+
 const socialPostList = `-- name: SocialPostList :many
 SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source FROM social_posts
 WHERE (?1 IS NULL OR issue_id = ?1)
@@ -1144,22 +1195,27 @@ func (q *Queries) SocialPostList(ctx context.Context, arg SocialPostListParams) 
 	return items, nil
 }
 
-const socialPostUpdateStatus = `-- name: SocialPostUpdateStatus :one
+const socialPostUpdate = `-- name: SocialPostUpdate :one
 UPDATE social_posts
-SET status = ?, published_at = ?, post_url = ?
-WHERE id = ?
+SET text         = COALESCE(?1,         text),
+    status       = COALESCE(?2,       status),
+    published_at = COALESCE(?3, published_at),
+    post_url     = COALESCE(?4,     post_url)
+WHERE id = ?5
 RETURNING id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source
 `
 
-type SocialPostUpdateStatusParams struct {
-	Status      string         `json:"status"`
+type SocialPostUpdateParams struct {
+	Text        sql.NullString `json:"text"`
+	Status      sql.NullString `json:"status"`
 	PublishedAt *time.Time     `json:"published_at"`
 	PostUrl     sql.NullString `json:"post_url"`
 	ID          int64          `json:"id"`
 }
 
-func (q *Queries) SocialPostUpdateStatus(ctx context.Context, arg SocialPostUpdateStatusParams) (SocialPost, error) {
-	row := q.db.QueryRowContext(ctx, socialPostUpdateStatus,
+func (q *Queries) SocialPostUpdate(ctx context.Context, arg SocialPostUpdateParams) (SocialPost, error) {
+	row := q.db.QueryRowContext(ctx, socialPostUpdate,
+		arg.Text,
 		arg.Status,
 		arg.PublishedAt,
 		arg.PostUrl,

@@ -10,6 +10,7 @@ import type {
 	ItemMetrics,
 	MetricsQuery,
 	PaginatedResponse,
+	SocialPost,
 	SocialPostMetric,
 	SourceMetrics,
 	Subscriber,
@@ -183,5 +184,17 @@ export const api = {
 				params: { path: { id: issueId } },
 				body: { item_ids: itemIds }
 			})
+		),
+	socialDrafts: () =>
+		unwrap<{ items: SocialPost[] }>(client.GET('/social/drafts', {})).then(
+			(payload) => payload.items
+		),
+	updateSocialDraft: (id: number, text: string) =>
+		unwrap<SocialPost>(
+			client.PATCH('/social/drafts/{id}', { params: { path: { id } }, body: { text } })
+		),
+	cancelSocialDraft: (id: number) =>
+		unwrap<SocialPost>(
+			client.POST('/social/drafts/{id}/cancel', { params: { path: { id } } })
 		)
 };

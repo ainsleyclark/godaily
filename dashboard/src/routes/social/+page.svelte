@@ -137,9 +137,17 @@
 <svelte:head><title>Social | GoDaily Analytics</title></svelte:head>
 
 <div class="space-y-6">
-	<div>
-		<h1 class="text-xl font-semibold tracking-tight">Social</h1>
-		<p class="text-muted-foreground text-sm mt-1">Engagement metrics for social posts across all platforms</p>
+	<div class="flex items-start justify-between gap-4">
+		<div>
+			<h1 class="text-xl font-semibold tracking-tight">Social</h1>
+			<p class="text-muted-foreground text-sm mt-1">Engagement metrics for social posts across all platforms</p>
+		</div>
+		<a
+			href="/social/drafts"
+			class="bg-primary text-primary-foreground hover:opacity-90 inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium"
+		>
+			Drafts →
+		</a>
 	</div>
 
 	<!-- Summary KPIs -->

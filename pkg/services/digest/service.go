@@ -25,6 +25,7 @@ type Service struct {
 	prompter          ai.Prompter
 	issues            digest.IssueRepository
 	items             news.ItemRepository
+	posts             social.PostRepository
 	subscribers       audience.SubscriberRepository
 	slack             slack.Sender
 	social            social.Service
@@ -34,7 +35,8 @@ var _ digest.Service = (*Service)(nil)
 
 // New creates a new Service, validating that all news sources have
 // registered fetchers. socialSvc is optional and may be nil — when nil,
-// Build skips the social-drafting side effect.
+// Build skips the social-drafting side effect. posts is also optional —
+// without it Build cannot emit the rich post-build Slack summary.
 func New(
 	emailSender email.BatchSender,
 	adminEmail string,
@@ -42,6 +44,7 @@ func New(
 	slack slack.Sender,
 	issues digest.IssueRepository,
 	items news.ItemRepository,
+	posts social.PostRepository,
 	subscribers audience.SubscriberRepository,
 	socialSvc social.Service,
 ) (*Service, error) {
@@ -56,6 +59,7 @@ func New(
 		prompter:          prompter,
 		issues:            issues,
 		items:             items,
+		posts:             posts,
 		subscribers:       subscribers,
 		slack:             slack,
 		social:            socialSvc,

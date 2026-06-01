@@ -35,6 +35,10 @@ export type DigestAuthor = DeepRequired<Schemas['news.Author']>;
 export type DigestItem = DeepRequired<Schemas['news.Item']>;
 export type DigestIssue = DeepRequired<Schemas['digest.Issue']>;
 
+export type SocialPost = DeepRequired<Schemas['social.Post']>;
+export type SocialPostKind = Schemas['social.PostKind'];
+export type SocialPostStatus = Schemas['social.PostStatus'];
+
 export interface PaginatedResponse<T> {
 	data: T[];
 	page: number;

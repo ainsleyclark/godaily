@@ -100,20 +100,62 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 		}
 	}
 
-	// Draft featured social posts as a best-effort side effect. A failed
-	// AI draft must not fail the build — the email digest still ships at
-	// 08:00 and the 11:00 social cron will simply find no drafts to
-	// publish. social is optional and may be unset in tests.
+	// Draft every social post (featured + rotation, where applicable)
+	// as a best-effort side effect. A failed AI draft must not fail the
+	// build — the email digest still ships at 08:00 and the 11:00
+	// publish cron will simply find no drafts to publish. social is
+	// optional and may be unset in tests.
 	if s.social != nil {
-		if _, draftErr := s.social.DraftFeatured(ctx, social.PostOptions{Date: today}); draftErr != nil {
-			slog.WarnContext(ctx, "Drafting featured social after build failed", "err", draftErr)
+		if _, draftErr := s.social.DraftAll(ctx, social.PostOptions{Date: today}); draftErr != nil {
+			slog.WarnContext(ctx, "Drafting social posts after build failed", "err", draftErr)
 			if s.slack != nil {
-				s.slack.MustSend(ctx, slack.Error("Draft featured social after build failed", draftErr))
+				s.slack.MustSend(ctx, slack.Error("Draft social posts after build failed", draftErr))
 			}
 		}
+		s.sendbuildSummary(ctx, created, position)
 	}
 
 	return nil
+}
+
+// sendBuildSummary fires the rich Slack card at the end of a successful
+// build: digest meta + every draft awaiting publish with an "Edit"
+// deep-link into the dashboard. Best-effort — a Slack failure must not
+// fail the build.
+func (s Service) sendbuildSummary(ctx context.Context, issue digest.Issue, itemCount int) {
+	if s.slack == nil || s.posts == nil {
+		return
+	}
+
+	draftStatus := social.PostStatusDraft
+	drafts, err := s.posts.List(ctx, social.PostListOptions{Status: &draftStatus})
+	if err != nil {
+		slog.WarnContext(ctx, "Loading drafts for build summary failed", "err", err)
+		return
+	}
+
+	summary := buildSummary(buildSummaryInput{
+		IssueDate: issue.Slug,
+		IssueID:   issue.ID,
+		Subject:   issue.Subject,
+		Intro:     issue.Summary,
+		ItemCount: itemCount,
+		Drafts:    toSummaryDrafts(drafts),
+	})
+	s.slack.MustSend(ctx, summary)
+}
+
+func toSummaryDrafts(rows []social.Post) []buildSummaryDraft {
+	out := make([]buildSummaryDraft, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, buildSummaryDraft{
+			ID:       r.ID,
+			Kind:     string(r.Kind),
+			Platform: r.Platform,
+			Text:     r.Text,
+		})
+	}
+	return out
 }
 
 // buildWindow returns the date range of items to include in the digest.

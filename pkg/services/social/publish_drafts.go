@@ -17,14 +17,16 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
-	"github.com/ainsleyclark/godaily/pkg/store"
 )
 
-// PublishDrafts runs the platform half of the featured pipeline: it loads
-// today's draft featured posts and publishes each to its platform. On
-// success the row transitions to status='published' with post_url and
-// published_at populated; on failure it transitions to status='error' so
-// a later retry can flip it back to draft.
+// PublishDrafts walks every row with status='draft' and posts each to
+// its platform, transitioning the row to published (or error). It is the
+// single publish path for both featured and rotation kinds — the build
+// cron generates every draft at 02:00, this runs at 11:00 to actually
+// send them.
+//
+// Cancelled rows are filtered server-side by the status filter and so
+// are never picked up.
 //
 // opts.Platforms restricts which platforms to publish. opts.DryRun is
 // honored as a defensive no-op so CLI dry-runs do not accidentally
@@ -35,28 +37,16 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 		return nil, nil
 	}
 
-	date := opts.Date.UTC()
-	slug := date.Format("2006-01-02")
-
-	issue, err := s.issues.FindBySlug(ctx, slug)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			slog.InfoContext(ctx, "No digest found — skipping publish", "slug", slug)
-			return nil, nil
-		}
-		return nil, errors.Wrap(err, "loading digest")
-	}
-
 	draftStatus := social.PostStatusDraft
-	drafts, err := s.posts.List(ctx, social.PostListOptions{
-		IssueID: &issue.ID,
-		Status:  &draftStatus,
-	})
+	drafts, err := s.posts.List(ctx, social.PostListOptions{Status: &draftStatus})
 	if err != nil {
 		return nil, errors.Wrap(err, "loading drafts")
 	}
+	if kindsFilter := kindFilter(opts.Kinds); kindsFilter != nil {
+		drafts = filterByKinds(drafts, kindsFilter)
+	}
 	if len(drafts) == 0 {
-		slog.InfoContext(ctx, "No drafts to publish", "issue", issue.ID)
+		slog.InfoContext(ctx, "No drafts to publish")
 		return nil, nil
 	}
 
@@ -98,9 +88,10 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "poster.Post")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Publishing %s draft failed", platformLabel(p)), err,
+				fmt.Sprintf("Publishing %s %s draft failed", platformLabel(p), draft.Kind), err,
 			))
-			if _, uerr := s.posts.UpdateStatus(ctx, draft.ID, social.PostStatusError, nil, ""); uerr != nil {
+			errStatus := social.PostStatusError
+			if _, uerr := s.posts.Update(ctx, draft.ID, social.PostUpdate{Status: &errStatus}); uerr != nil {
 				slog.WarnContext(ctx, "Failed to mark draft as errored", "id", draft.ID, "err", uerr)
 			}
 			results = append(results, res)
@@ -109,7 +100,12 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 		res.PostURL = result.PostURL
 
 		now := time.Now().UTC()
-		if _, err = s.posts.UpdateStatus(ctx, draft.ID, social.PostStatusPublished, &now, result.PostURL); err != nil {
+		publishedStatus := social.PostStatusPublished
+		if _, err = s.posts.Update(ctx, draft.ID, social.PostUpdate{
+			Status:      &publishedStatus,
+			PublishedAt: &now,
+			PostURL:     &result.PostURL,
+		}); err != nil {
 			res.Err = errors.Wrap(err, "marking draft published")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
@@ -119,18 +115,46 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			continue
 		}
 
-		slog.InfoContext(ctx, "Social draft published", "platform", p, "url", result.PostURL)
+		slog.InfoContext(ctx, "Social draft published",
+			"platform", p, "kind", string(draft.Kind), "url", result.PostURL)
 		results = append(results, res)
 	}
 
 	if !opts.DryRun {
-		s.notifySuccess(ctx, publishCtx{kind: social.PostKindFeatured, subject: "Featured for " + slug}, results)
+		s.notifyPublishSummary(ctx, opts.Date.UTC(), results)
 	}
 
 	if len(errs) > 0 {
 		return results, stderrors.Join(errs...)
 	}
 	return results, nil
+}
+
+// notifyPublishSummary pings Slack once per PublishDrafts run with a
+// clickable button per platform+kind that posted successfully.
+func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, results []social.PostResult) {
+	if s.slack == nil {
+		return
+	}
+
+	buttons := make([]slack.LinkButton, 0, len(results))
+	for _, r := range results {
+		if r.Err != nil || r.Skipped || r.PostURL == "" {
+			continue
+		}
+		buttons = append(buttons, slack.LinkButton{
+			Label: fmt.Sprintf("%s · %s", r.Kind, platformLabel(r.Platform)),
+			URL:   r.PostURL,
+			Style: "primary",
+		})
+	}
+	if len(buttons) == 0 {
+		return
+	}
+
+	title := "Social drafts published"
+	body := fmt.Sprintf("%d post(s) live for %s.", len(buttons), date.Format("2006-01-02"))
+	s.slack.MustSend(ctx, slack.Success(title, body, buttons...))
 }
 
 // postersByPlatformMap inverts the posters slice for O(1) lookup at
@@ -152,6 +176,33 @@ func platformFilter(wanted []social.Platform) map[social.Platform]bool {
 	out := make(map[social.Platform]bool, len(wanted))
 	for _, p := range wanted {
 		out[p] = true
+	}
+	return out
+}
+
+// kindFilter returns a set keyed by PostKind for fast membership checks,
+// or nil when no kind restriction applies (publish every kind).
+func kindFilter(wanted []social.PostKind) map[social.PostKind]bool {
+	if len(wanted) == 0 {
+		return nil
+	}
+	out := make(map[social.PostKind]bool, len(wanted))
+	for _, k := range wanted {
+		out[k] = true
+	}
+	return out
+}
+
+// filterByKinds returns the subset of rows whose Kind is in wanted.
+// In-memory filtering is fine: today's draft set is small (one row per
+// configured platform per drafted kind — order-of-magnitude single
+// digits) and the alternative is paying the cost of a sqlc IN-clause.
+func filterByKinds(rows []social.Post, wanted map[social.PostKind]bool) []social.Post {
+	out := make([]social.Post, 0, len(rows))
+	for _, r := range rows {
+		if wanted[r.Kind] {
+			out = append(out, r)
+		}
 	}
 	return out
 }

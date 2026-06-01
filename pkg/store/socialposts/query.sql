@@ -18,6 +18,12 @@ SELECT EXISTS (
     WHERE subject = ? AND platform = ? AND status = 'published'
 ) AS exists_flag;
 
+-- name: SocialPostExistsOrCancelledBySubject :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE subject = ? AND platform = ? AND status IN ('published', 'cancelled')
+) AS exists_flag;
+
 -- name: SocialPostExistsKindSince :one
 SELECT EXISTS (
     SELECT 1 FROM social_posts
@@ -32,14 +38,23 @@ WHERE (sqlc.narg('issue_id') IS NULL OR issue_id = sqlc.narg('issue_id'))
   AND (sqlc.narg('platform') IS NULL OR platform  = sqlc.narg('platform'))
 ORDER BY posted_at DESC, id DESC;
 
--- name: SocialPostUpdateStatus :one
+-- name: SocialPostFind :one
+SELECT * FROM social_posts WHERE id = ?;
+
+-- name: SocialPostUpdate :one
 UPDATE social_posts
-SET status = ?, published_at = ?, post_url = ?
-WHERE id = ?
+SET text         = COALESCE(sqlc.narg('text'),         text),
+    status       = COALESCE(sqlc.narg('status'),       status),
+    published_at = COALESCE(sqlc.narg('published_at'), published_at),
+    post_url     = COALESCE(sqlc.narg('post_url'),     post_url)
+WHERE id = sqlc.arg('id')
 RETURNING *;
 
 -- name: SocialPostDeleteDraftsByIssue :exec
 DELETE FROM social_posts WHERE issue_id = ? AND status = 'draft';
+
+-- name: SocialPostDeleteDraftsByKind :exec
+DELETE FROM social_posts WHERE issue_id IS NULL AND kind = ? AND status = 'draft';
 
 -- name: SocialPostsWithMetrics :many
 SELECT

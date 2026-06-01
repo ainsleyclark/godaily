@@ -145,6 +145,26 @@ const docTemplate = `{
                 },
                 "type": "object"
             },
+            "SocialDraftListResponse": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/social.Post"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    }
+                },
+                "type": "object"
+            },
+            "SocialDraftUpdateRequest": {
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "SocialMetricsResponse": {
                 "properties": {
                     "data": {
@@ -843,6 +863,78 @@ const docTemplate = `{
                     "TagConferenceReminder",
                     "TagConferenceAlert",
                     "TagJobs"
+                ]
+            },
+            "social.Post": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "issue_id": {
+                        "type": "integer"
+                    },
+                    "kind": {
+                        "$ref": "#/components/schemas/social.PostKind"
+                    },
+                    "mention_source": {
+                        "type": "string"
+                    },
+                    "platform": {
+                        "type": "string"
+                    },
+                    "post_url": {
+                        "type": "string"
+                    },
+                    "posted_at": {
+                        "type": "string"
+                    },
+                    "published_at": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/social.PostStatus"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "social.PostKind": {
+                "enum": [
+                    "featured",
+                    "new_source",
+                    "recap",
+                    "spotlight",
+                    "cta",
+                    "community"
+                ],
+                "type": "string",
+                "x-enum-varnames": [
+                    "PostKindFeatured",
+                    "PostKindNewSource",
+                    "PostKindRecap",
+                    "PostKindSpotlight",
+                    "PostKindCTA",
+                    "PostKindCommunity"
+                ]
+            },
+            "social.PostStatus": {
+                "enum": [
+                    "draft",
+                    "published",
+                    "error",
+                    "cancelled"
+                ],
+                "type": "string",
+                "x-enum-varnames": [
+                    "PostStatusDraft",
+                    "PostStatusPublished",
+                    "PostStatusError",
+                    "PostStatusCancelled"
                 ]
             }
         },
@@ -2428,19 +2520,19 @@ const docTemplate = `{
                 ]
             }
         },
-        "/social/featured": {
+        "/social/drafts": {
             "get": {
-                "description": "Posts today's featured social update across platforms. Skipped at weekends and outside the chosen 10-minute slot; idempotent via the social_posts table.",
+                "description": "Returns every row in social_posts with status='draft' (any kind, any platform). The dashboard renders these in the Drafts tab so an operator can review and edit before the 11:00 publish cron.",
                 "responses": {
                     "200": {
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Response"
+                                    "$ref": "#/components/schemas/SocialDraftListResponse"
                                 }
                             }
                         },
-                        "description": "Posted, or skipped (weekend/wrong slot/not wired)"
+                        "description": "Successfully listed drafts"
                     },
                     "500": {
                         "content": {
@@ -2450,7 +2542,7 @@ const docTemplate = `{
                                 }
                             }
                         },
-                        "description": "Failed to post featured"
+                        "description": "Failed to list drafts"
                     }
                 },
                 "security": [
@@ -2458,7 +2550,181 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "summary": "Post the featured social update.",
+                "summary": "List pending social drafts.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/social/drafts/{id}": {
+            "patch": {
+                "description": "Replaces the text body of a draft social post. Only rows with status='draft' may be edited; the request is rejected with 409 if the row has already been published, errored, or cancelled.",
+                "parameters": [
+                    {
+                        "description": "Social post ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/SocialDraftUpdateRequest",
+                                        "summary": "body",
+                                        "description": "Replacement text"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "description": "Replacement text",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/social.Post"
+                                }
+                            }
+                        },
+                        "description": "Updated draft"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Draft not found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Row is no longer a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to update draft"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Edit a social draft's text.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/social/drafts/{id}/cancel": {
+            "post": {
+                "description": "Transitions a draft row to status='cancelled'. The publish cron filters cancelled rows out and rotation idempotency counts them as \"already handled\", preventing tomorrow's build from regenerating the same subject.",
+                "parameters": [
+                    {
+                        "description": "Social post ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/social.Post"
+                                }
+                            }
+                        },
+                        "description": "Cancelled draft"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid request"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Draft not found"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Row is no longer a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to cancel draft"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Cancel a social draft so the publish cron skips it.",
                 "tags": [
                     "social"
                 ]
@@ -2500,9 +2766,9 @@ const docTemplate = `{
                 ]
             }
         },
-        "/social/rotation": {
+        "/social/publish/featured": {
             "get": {
-                "description": "Posts the next rotating social update across platforms. Skipped at weekends or when the social service is not wired.",
+                "description": "Publishes the day's featured draft rows (one per configured platform) — recap and other rotation kinds are left untouched so the 15:00 rotation slot picks them up. Skipped at weekends.",
                 "responses": {
                     "200": {
                         "content": {
@@ -2512,7 +2778,7 @@ const docTemplate = `{
                                 }
                             }
                         },
-                        "description": "Rotated, or skipped (weekend/not wired)"
+                        "description": "Published, or skipped (weekend/not wired)"
                     },
                     "500": {
                         "content": {
@@ -2522,7 +2788,7 @@ const docTemplate = `{
                                 }
                             }
                         },
-                        "description": "Failed to rotate"
+                        "description": "Failed to publish featured drafts"
                     }
                 },
                 "security": [
@@ -2530,7 +2796,43 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "summary": "Post a rotation social update.",
+                "summary": "Publish featured social drafts.",
+                "tags": [
+                    "social"
+                ]
+            }
+        },
+        "/social/publish/rotation": {
+            "get": {
+                "description": "Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. Skipped at weekends.",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Published, or skipped (weekend/not wired)"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to publish rotation drafts"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Publish rotation social drafts.",
                 "tags": [
                     "social"
                 ]

@@ -156,7 +156,7 @@ func main() {
 
 	// The aggregator uses the non-cached issueStore so SendDigest can find a
 	// freshly-built draft without a cache miss. nil prompter → static subject.
-	aggregator, err := digestsvc.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, subsStore, nil)
+	aggregator, err := digestsvc.New(spy, "admin@e2e.test", nil, noopSlack{}, issueStore, itemStore, nil, subsStore, nil)
 	if err != nil {
 		log.Fatalf("create aggregator: %v", err)
 	}

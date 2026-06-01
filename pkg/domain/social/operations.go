@@ -19,6 +19,14 @@ type PostOptions struct {
 	// empty, every configured poster runs. Unknown platforms are ignored
 	// with a log line.
 	Platforms []Platform
+
+	// Kinds optionally restricts PublishDrafts to draft rows whose Kind
+	// matches one of these values. Empty means publish every kind. The
+	// featured publish cron passes [PostKindFeatured]; the rotation
+	// publish cron passes every non-featured kind, keeping the two cron
+	// slots independent so a 15:00 run never accidentally promotes a
+	// featured draft the 11:00 slot missed.
+	Kinds []PostKind
 }
 
 // PostResult summarises one platform's outcome.
@@ -32,24 +40,4 @@ type PostResult struct {
 	// Skipped is true when this platform was already posted for the same
 	// idempotency key (issue or subject) on this run.
 	Skipped bool
-}
-
-// RotateOptions controls a single Rotate invocation.
-type RotateOptions struct {
-	// Now is the wall clock used to pick the day's candidate list. Tuesday
-	// runs the self_release/spotlight/cta rotation; Friday runs recap only.
-	// Any other day is a no-op.
-	Now time.Time
-
-	// DryRun runs the candidate's full pipeline (eligibility + AI
-	// generation) but skips platform HTTP and the social_posts insert.
-	DryRun bool
-
-	// Platforms optionally restricts which configured posters run.
-	Platforms []Platform
-
-	// ForceKind, when non-empty, bypasses the day-aware routing and runs
-	// the named candidate's Eligible check directly. Used by the CLI to
-	// test a specific kind out-of-band.
-	ForceKind PostKind
 }

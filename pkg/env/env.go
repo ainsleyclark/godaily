@@ -16,6 +16,11 @@ import (
 // AppURL is the canonical production URL for godaily.
 const AppURL = "https://godaily.dev"
 
+// DashboardURL is the public base URL of the GoDaily admin dashboard.
+// Hard-coded rather than threaded through config: there is exactly one
+// dashboard per deployment and the URL never differs by environment.
+const DashboardURL = "https://analytics.godaily.dev"
+
 // Config holds all environment variables consumed by the service.
 // Optional fields are left empty if unset; callers guard against the zero value.
 type Config struct {

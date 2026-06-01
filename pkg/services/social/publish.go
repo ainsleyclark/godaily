@@ -17,14 +17,26 @@ import (
 )
 
 // publishCtx bundles the inputs of one publish() loop. Each rotation
-// candidate produces one of these on its way through Rotate; the featured
-// path constructs one inline.
+// candidate produces one of these on its way through Rotate or DraftAll;
+// the featured path constructs one inline.
 type publishCtx struct {
 	platforms []platform.Poster
 	dryRun    bool
 	kind      social.PostKind
 	issueID   *int64
 	subject   string
+
+	// draftOnly, when true, skips the platform HTTP call and persists
+	// the generated text with status='draft' instead of 'published'. The
+	// build cron uses this so a human can review every post before the
+	// publish cron fires.
+	draftOnly bool
+
+	// mentionSource, when non-empty, is persisted on the draft row so
+	// PublishDrafts can re-attach the platform mentions at publish time
+	// without re-running the AI feature pick. Only meaningful when
+	// draftOnly is true.
+	mentionSource string
 
 	// generate returns the post text for a given platform. Candidates may
 	// ignore the platform and return identical text everywhere; the
@@ -63,7 +75,11 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]social.PostResu
 		}
 	}
 
-	if !pc.dryRun {
+	// notifySuccess emits the "post is live" Slack ping. Draft writes
+	// don't go live, so the per-kind notification is suppressed; the
+	// build cron emits one summary Slack message covering every drafted
+	// kind at once.
+	if !pc.dryRun && !pc.draftOnly {
 		s.notifySuccess(ctx, pc, results)
 	}
 
@@ -103,6 +119,26 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 	if pc.dryRun {
 		slog.InfoContext(
 			ctx, "Dry-run: skipping post + DB write",
+			"platform", p, "kind", string(pc.kind), "chars", len(text),
+		)
+		return res
+	}
+
+	if pc.draftOnly {
+		if _, err = s.posts.Create(ctx, social.Post{
+			IssueID:       pc.issueID,
+			Kind:          pc.kind,
+			Subject:       pc.subject,
+			Platform:      p.String(),
+			Text:          text,
+			Status:        social.PostStatusDraft,
+			MentionSource: pc.mentionSource,
+		}); err != nil {
+			res.Err = errors.Wrap(err, "persisting draft")
+			return res
+		}
+		slog.InfoContext(
+			ctx, "Social draft persisted",
 			"platform", p, "kind", string(pc.kind), "chars", len(text),
 		)
 		return res
