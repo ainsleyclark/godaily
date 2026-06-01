@@ -129,6 +129,27 @@ func (s Store) Delete(ctx context.Context, id int64) (digest.Issue, error) {
 	return issueFromRows(i, nil), nil
 }
 
+func (s Store) Update(ctx context.Context, issue digest.Issue) (digest.Issue, error) {
+	current, err := s.sqlc.IssueByID(ctx, issue.ID)
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		return digest.Issue{}, store.ErrNotFound
+	} else if err != nil {
+		return digest.Issue{}, err
+	}
+	if current.Status != digest.IssueStatusDraft.String() {
+		return digest.Issue{}, digest.ErrIssueNotDraft
+	}
+	i, err := s.sqlc.IssueUpdate(ctx, sqlc.IssueUpdateParams{
+		ID:      issue.ID,
+		Subject: issue.Subject,
+		Summary: sql.NullString{String: issue.Summary, Valid: true},
+	})
+	if err != nil {
+		return digest.Issue{}, err
+	}
+	return s.withItems(ctx, i)
+}
+
 func (s Store) UpdateStatus(ctx context.Context, id int64, status digest.IssueStatus, sentAt time.Time) (digest.Issue, error) {
 	i, err := s.sqlc.IssueUpdateStatus(ctx, sqlc.IssueUpdateStatusParams{
 		ID:     id,

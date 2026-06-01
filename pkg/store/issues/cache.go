@@ -70,6 +70,16 @@ func (s *CachingStore) Delete(ctx context.Context, id int64) (digest.Issue, erro
 	return issue, nil
 }
 
+func (s *CachingStore) Update(ctx context.Context, issue digest.Issue) (digest.Issue, error) {
+	updated, err := s.repo.Update(ctx, issue)
+	if err != nil {
+		return digest.Issue{}, err
+	}
+	_ = s.cache.Delete(ctx, fmt.Sprintf("issue:id:%d", updated.ID))
+	_ = s.cache.Delete(ctx, fmt.Sprintf("issue:slug:%s", updated.Slug))
+	return updated, nil
+}
+
 func (s *CachingStore) UpdateStatus(ctx context.Context, id int64, status digest.IssueStatus, sentAt time.Time) (digest.Issue, error) {
 	issue, err := s.repo.UpdateStatus(ctx, id, status, sentAt)
 	if err != nil {

@@ -293,6 +293,30 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 	return items, nil
 }
 
+const issueUpdate = `-- name: IssueUpdate :one
+UPDATE issues SET subject = ?, summary = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, status
+`
+
+type IssueUpdateParams struct {
+	Subject string         `json:"subject"`
+	Summary sql.NullString `json:"summary"`
+	ID      int64          `json:"id"`
+}
+
+func (q *Queries) IssueUpdate(ctx context.Context, arg IssueUpdateParams) (Issue, error) {
+	row := q.db.QueryRowContext(ctx, issueUpdate, arg.Subject, arg.Summary, arg.ID)
+	var i Issue
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.SentAt,
+		&i.Subject,
+		&i.Summary,
+		&i.Status,
+	)
+	return i, err
+}
+
 const issueUpdateStatus = `-- name: IssueUpdateStatus :one
 UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, status
 `

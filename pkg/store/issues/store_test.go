@@ -117,6 +117,50 @@ func TestIssues_Store(t *testing.T) {
 		assert.Equal(t, int64(1), got)
 	})
 
+	t.Run("Update", func(t *testing.T) {
+		draft, err := s.Create(ctx, digest.Issue{
+			Slug:    "2026-05-01",
+			Subject: "Original",
+			Summary: "Original summary",
+			Status:  digest.IssueStatusDraft,
+			SentAt:  mock.SentAt,
+		})
+		require.NoError(t, err)
+
+		t.Log("Happy path updates subject and summary on a draft")
+		{
+			got, err := s.Update(ctx, digest.Issue{
+				ID:      draft.ID,
+				Subject: "New subject",
+				Summary: "New summary",
+			})
+			require.NoError(t, err)
+			assert.Equal(t, draft.ID, got.ID)
+			assert.Equal(t, "New subject", got.Subject)
+			assert.Equal(t, "New summary", got.Summary)
+			assert.Equal(t, digest.IssueStatusDraft, got.Status)
+			assert.NotNil(t, got.Items)
+		}
+
+		t.Log("Rejects update on a non-draft issue")
+		{
+			_, err := s.Update(ctx, digest.Issue{
+				ID:      mock.ID,
+				Subject: "Should not apply",
+				Summary: "",
+			})
+			require.Error(t, err)
+			assert.ErrorIs(t, err, digest.ErrIssueNotDraft)
+		}
+
+		t.Log("Returns ErrNotFound for unknown ID")
+		{
+			_, err := s.Update(ctx, digest.Issue{ID: 9999, Subject: "x"})
+			require.Error(t, err)
+			assert.ErrorIs(t, err, store.ErrNotFound)
+		}
+	})
+
 	t.Run("UpdateStatus", func(t *testing.T) {
 		t.Log("Happy path")
 		{
@@ -160,6 +204,12 @@ func TestIssues_Store(t *testing.T) {
 		t.Log("UpdateStatus")
 		{
 			_, err := s.UpdateStatus(ctx, 1, digest.IssueStatusSent, mock.SentAt)
+			assert.Error(t, err)
+		}
+
+		t.Log("Update")
+		{
+			_, err := s.Update(ctx, digest.Issue{ID: 1, Subject: "x"})
 			assert.Error(t, err)
 		}
 

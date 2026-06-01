@@ -2,7 +2,9 @@ import { dev } from '$app/environment';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import { getSecret } from '$lib/stores/auth';
 import type {
+	DigestIssue,
 	IssueEngagement,
+	IssueStatus,
 	ItemMetrics,
 	MetricsQuery,
 	PaginatedResponse,
@@ -69,6 +71,37 @@ async function request<T>(
 	return body.data;
 }
 
+async function mutate<T>(path: string, method: 'POST' | 'PATCH' | 'PUT' | 'DELETE', body?: unknown): Promise<T> {
+	const secret = getSecret();
+	const url = buildUrl(path);
+	const res = await fetch(url, {
+		method,
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			...(secret ? { Authorization: `Bearer ${secret}` } : {})
+		},
+		body: body === undefined ? undefined : JSON.stringify(body)
+	});
+	if (res.status === 401) {
+		if (typeof window !== 'undefined') window.dispatchEvent(new Event('metrics:unauthorized'));
+		throw new ApiError(401, 'Unauthorized');
+	}
+	if (!res.ok) {
+		const text = await res.text().catch(() => '');
+		let message = text || `HTTP ${res.status}`;
+		try {
+			const parsed = JSON.parse(text) as { message?: string };
+			if (parsed.message) message = parsed.message;
+		} catch {
+			// not JSON — fall through to raw text
+		}
+		throw new ApiError(res.status, message);
+	}
+	const json = (await res.json()) as { data: T };
+	return json.data;
+}
+
 async function login(password: string): Promise<{ token: string }> {
 	// Hits the dashboard's own SvelteKit server endpoint (same origin), not the
 	// Go API — so the password and API secret stay server-side.
@@ -97,5 +130,11 @@ export const api = {
 	subscribers: (q?: MetricsQuery) => request<SubscriberData>('/api/metrics/subscribers', q),
 	social: (q?: MetricsQuery) => request<SocialPostMetric[]>('/api/metrics/social', q),
 	subscriberList: (page = 1, perPage = 50, search = '') =>
-		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery)
+		request<PaginatedResponse<Subscriber>>('/api/digest/subscribers', { page, per_page: perPage, ...(search ? { search } : {}) } as unknown as MetricsQuery),
+	digestIssues: (status?: IssueStatus, page = 1, perPage = 100) =>
+		request<PaginatedResponse<DigestIssue>>('/api/digest/issues', { page, per_page: perPage, ...(status ? { status } : {}) } as unknown as MetricsQuery),
+	digestIssueById: (id: number) =>
+		request<DigestIssue>(`/api/digest/issues/${id}`),
+	updateDigestIssue: (id: number, body: { subject: string; summary: string }) =>
+		mutate<DigestIssue>(`/api/digest/issues/${id}`, 'PATCH', body)
 };

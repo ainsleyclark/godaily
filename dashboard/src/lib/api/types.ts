@@ -103,6 +103,41 @@ export interface Subscriber {
 	created_at: string;
 }
 
+export type IssueStatus = 'draft' | 'sent' | 'error';
+
+export interface DigestAuthor {
+	name?: string;
+	username?: string;
+	avatar_url?: string;
+	profile_url?: string;
+}
+
+export interface DigestItem {
+	id: number;
+	source: string;
+	tag: string;
+	title: string;
+	url: string;
+	original_url?: string;
+	image_url?: string;
+	snippet: string;
+	score: number;
+	comments?: number;
+	published?: string;
+	in_digest?: boolean;
+	author?: DigestAuthor;
+}
+
+export interface DigestIssue {
+	id: number;
+	slug: string;
+	subject: string;
+	summary?: string;
+	status: IssueStatus;
+	sent_at: string;
+	items: DigestItem[];
+}
+
 export interface PaginatedResponse<T> {
 	data: T[];
 	page: number;

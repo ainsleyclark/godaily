@@ -178,6 +178,21 @@ func (mr *MockIssueRepositoryMockRecorder) ListByStatus(ctx, status, opts any) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByStatus", reflect.TypeOf((*MockIssueRepository)(nil).ListByStatus), ctx, status, opts)
 }
 
+// Update mocks base method.
+func (m *MockIssueRepository) Update(ctx context.Context, issue digest.Issue) (digest.Issue, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, issue)
+	ret0, _ := ret[0].(digest.Issue)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockIssueRepositoryMockRecorder) Update(ctx, issue any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIssueRepository)(nil).Update), ctx, issue)
+}
+
 // UpdateStatus mocks base method.
 func (m *MockIssueRepository) UpdateStatus(ctx context.Context, id int64, status digest.IssueStatus, sentAt time.Time) (digest.Issue, error) {
 	m.ctrl.T.Helper()
