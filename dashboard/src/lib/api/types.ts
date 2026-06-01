@@ -1,142 +1,39 @@
-export interface SummaryStats {
-	from: string;
-	to: string;
-	issues_sent: number;
-	delivered: number;
-	unique_opens: number;
-	total_opens: number;
-	unique_clicks: number;
-	total_clicks: number;
-	bounced: number;
-	complained: number;
-	open_rate: number;
-	click_rate: number;
-	unique_subscribers_engaged: number;
-}
+// Public type aliases for the dashboard, derived from the OpenAPI contract.
+//
+// `schema.d.ts` is generated from `docs/openapi/swagger.yaml` (run `pnpm gen:api`).
+// Treat it as the source of truth and re-export friendly names here rather than
+// importing the verbose `components['schemas']['package.Type']` keys directly.
+import type { components } from './schema';
 
-export interface IssueEngagement {
-	issue_id: number;
-	slug: string;
-	sent_at: string;
-	delivered: number;
-	unique_opens: number;
-	total_opens: number;
-	unique_clicks: number;
-	total_clicks: number;
-	bounced: number;
-	complained: number;
-	delayed?: number;
-	failed?: number;
-	suppressed?: number;
-	open_rate: number;
-	click_rate: number;
-}
+type Schemas = components['schemas'];
 
-export interface ItemMetrics {
-	item_id: number;
-	title: string;
-	url: string;
-	tag: string;
-	source: string;
-	clicks: number;
-}
+// swaggo/swag does not emit `required` markers, so every property in the
+// generated schema is optional. The API always populates these response
+// fields, so we assert their presence here to keep call sites ergonomic. If a
+// field is genuinely optional, model it on the Go struct (e.g. omitempty) and
+// document it — don't loosen things by hand in this file.
+type DeepRequired<T> = T extends (infer U)[]
+	? DeepRequired<U>[]
+	: T extends object
+		? { [K in keyof T]-?: DeepRequired<T[K]> }
+		: T;
 
-export interface TagMetrics {
-	tag: string;
-	clicks: number;
-}
+export type SummaryStats = DeepRequired<Schemas['engagement.SummaryStats']>;
+export type IssueEngagement = DeepRequired<Schemas['engagement.IssueEngagement']>;
+export type ItemMetrics = DeepRequired<Schemas['engagement.ItemMetrics']>;
+export type TagMetrics = DeepRequired<Schemas['engagement.TagMetrics']>;
+export type SourceMetrics = DeepRequired<Schemas['engagement.SourceMetrics']>;
+export type TrendPoint = DeepRequired<Schemas['engagement.TrendPoint']>;
+export type TrendData = DeepRequired<Schemas['engagement.TrendData']>;
+export type SubscriberPoint = DeepRequired<Schemas['engagement.SubscriberPoint']>;
+export type SubscriberData = DeepRequired<Schemas['engagement.SubscriberData']>;
+export type SocialPostMetric = DeepRequired<Schemas['engagement.SocialPostEngagement']>;
+export type Subscriber = DeepRequired<Schemas['audience.Subscriber']>;
 
-export interface SourceMetrics {
-	source: string;
-	clicks: number;
-}
-
-export interface TrendPoint {
-	bucket_start: string;
-	value: number;
-	delivered: number;
-}
-
-export interface TrendData {
-	metric: string;
-	bucket: string;
-	points: TrendPoint[];
-}
-
-export interface SubscriberPoint {
-	bucket_start: string;
-	new: number;
-	confirmed: number;
-	unsubscribed: number;
-	lost: number;
-	net_change: number;
-	active_at_end: number;
-}
-
-export interface SubscriberData {
-	bucket: string;
-	points: SubscriberPoint[];
-}
-
-export interface SocialPostMetric {
-	id: number;
-	issue_id?: number;
-	kind: string;
-	subject?: string;
-	platform: string;
-	text: string;
-	post_url?: string;
-	posted_at: string;
-	likes: number;
-	reposts: number;
-	comments: number;
-	impressions: number;
-}
-
-export interface Subscriber {
-	id: number;
-	email: string;
-	confirmed_at?: string;
-	unsubscribed_at?: string;
-	bounced_at?: string;
-	suppressed_at?: string;
-	created_at: string;
-}
-
-export type IssueStatus = 'draft' | 'sent' | 'error';
-
-export interface DigestAuthor {
-	name?: string;
-	username?: string;
-	avatar_url?: string;
-	profile_url?: string;
-}
-
-export interface DigestItem {
-	id: number;
-	source: string;
-	tag: string;
-	title: string;
-	url: string;
-	original_url?: string;
-	image_url?: string;
-	snippet: string;
-	score: number;
-	comments?: number;
-	published?: string;
-	in_digest?: boolean;
-	author?: DigestAuthor;
-}
-
-export interface DigestIssue {
-	id: number;
-	slug: string;
-	subject: string;
-	summary?: string;
-	status: IssueStatus;
-	sent_at: string;
-	items: DigestItem[];
-}
+export type IssueStatus = Schemas['digest.IssueStatus'];
+export type DigestAuthor = DeepRequired<Schemas['news.Author']>;
+export type DigestItem = DeepRequired<Schemas['news.Item']>;
+export type DigestIssue = DeepRequired<Schemas['digest.Issue']>;
 
 export interface PaginatedResponse<T> {
 	data: T[];
@@ -145,6 +42,8 @@ export interface PaginatedResponse<T> {
 	total: number;
 }
 
+// Dashboard-only query helper. Not part of the API contract — the client maps
+// these onto each endpoint's documented query parameters.
 export type Bucket = 'day' | 'week' | 'month';
 export type TrendMetric = 'unique_opens' | 'unique_clicks' | 'open_rate' | 'click_rate';
 
