@@ -102,6 +102,25 @@ func TestFilterItems(t *testing.T) {
 				assert.Equal(t, 0.6, items[3].Score)
 			},
 		},
+		"Section Priority Beats Score": {
+			// A high-scoring security item must not outrank or crowd out a
+			// lower-scoring proposal: proposals are a higher-priority section.
+			sections: []news.SourceItems{
+				{Source: news.SourceGoVuln, Items: []news.Item{
+					{Source: news.SourceGoVuln, Title: "vuln", URL: "https://v", Tag: news.TagSecurity, Score: 0.99},
+				}},
+				{Source: news.SourceGitHub, Items: []news.Item{
+					{Source: news.SourceGitHub, Title: "prop", URL: "https://p", Tag: news.TagProposal, Score: 0.10},
+				}},
+			},
+			cfg: filterConfig{topPerSource: 3, totalCap: 1},
+			want: func(t *testing.T, items []promptItem) {
+				t.Helper()
+				require.Len(t, items, 1)
+				assert.Equal(t, "Proposals", items[0].Section)
+				assert.Equal(t, "prop", items[0].Title)
+			},
+		},
 		"Copies All Item Fields": {
 			sections: []news.SourceItems{{
 				Source: news.SourceGoBlog,
@@ -124,6 +143,7 @@ func TestFilterItems(t *testing.T) {
 				assert.Equal(t, "https://u", items[0].URL)
 				assert.Equal(t, "a", items[0].Author)
 				assert.Equal(t, "article", items[0].Tag)
+				assert.Equal(t, "Articles", items[0].Section)
 				assert.Equal(t, "snip", items[0].Snippet)
 				assert.Equal(t, 0.5, items[0].Score)
 			},
