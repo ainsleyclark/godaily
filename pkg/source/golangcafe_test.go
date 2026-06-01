@@ -15,32 +15,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// golangCafeFixture has one listing with salary/remote markers and one bare
-// listing whose title doesn't even mention Go — on a Go-only board it is still
-// kept (no keyword filter).
-const golangCafeFixture = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <item>
-      <title>Senior Go Engineer at Acme Corp - Remote ($120k - $160k)</title>
-      <link>https://golang.cafe/job/1</link>
-      <description>Build distributed systems in Go.</description>
-      <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Backend Developer at Beta Ltd</title>
-      <link>https://golang.cafe/job/2</link>
-      <description>Join our backend team.</description>
-      <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>Missing link is dropped</title>
-      <link></link>
-      <description>No link.</description>
-      <pubDate>Mon, 30 Dec 2024 10:00:00 +0000</pubDate>
-    </item>
-  </channel>
-</rss>`
+// golangCafeFixture is a listing page carrying two JobPosting JSON-LD blocks
+// (one with a salary range, one without) plus an unrelated WebSite block that
+// must be ignored. The second posting is nested inside an ItemList to exercise
+// the recursive walk.
+const golangCafeFixture = `<!DOCTYPE html><html><head>
+<script type="application/ld+json">
+{"@context":"https://schema.org/","@type":"WebSite","name":"Golang Cafe","url":"https://golang.cafe"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org/","@type":"JobPosting","title":"Senior Go Engineer","datePosted":"2024-12-30","hiringOrganization":{"@type":"Organization","name":"Acme Corp"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"London"}},"baseSalary":{"@type":"MonetaryAmount","currency":"GBP","value":{"@type":"QuantitativeValue","minValue":90000,"maxValue":120000,"unitText":"YEAR"}},"url":"https://golang.cafe/job/senior-go-engineer"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org/","@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"JobPosting","title":"Backend Go Developer","datePosted":"2024-12-30","hiringOrganization":{"@type":"Organization","name":"Beta Ltd"},"jobLocationType":"TELECOMMUTE","applicantLocationRequirements":{"@type":"Country","name":"Worldwide"},"url":"https://golang.cafe/job/backend-go-developer"}}]}
+</script>
+</head><body></body></html>`
 
 func TestGolangCafe_Fetch(t *testing.T) {
 	t.Parallel()
@@ -65,6 +54,7 @@ func TestGolangCafe_Fetch(t *testing.T) {
 		},
 		"OK": {
 			stub: func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "text/html")
 				w.WriteHeader(http.StatusOK)
 				_, err := w.Write([]byte(golangCafeFixture))
 				require.NoError(t, err)
@@ -72,21 +62,28 @@ func TestGolangCafe_Fetch(t *testing.T) {
 			want: func(t *testing.T, items []news.Item, err error) {
 				t.Helper()
 				require.NoError(t, err)
-				require.Len(t, items, 2) // Listing with empty link dropped.
+				// Both JobPostings parsed; the WebSite block ignored.
+				require.Len(t, items, 2)
 
-				senior := items[0]
-				assert.Equal(t, news.SourceGolangCafe, senior.Source)
-				assert.Equal(t, news.TagJobs, senior.Tag)
-				assert.Equal(t, "Acme Corp · Senior Go Engineer", senior.Title)
-				assert.Equal(t, "https://golang.cafe/job/1", senior.URL)
+				byTitle := map[string]news.Item{}
+				for _, it := range items {
+					assert.Equal(t, news.SourceGolangCafe, it.Source)
+					assert.Equal(t, news.TagJobs, it.Tag)
+					assert.Equal(t, fixedNow(), it.Published)
+					byTitle[it.Title] = it
+				}
+
+				senior, ok := byTitle["Acme Corp · Senior Go Engineer · London"]
+				require.True(t, ok, "salaried posting should be present")
+				assert.Equal(t, "https://golang.cafe/job/senior-go-engineer", senior.URL)
 				require.NotNil(t, senior.Author)
 				assert.Equal(t, "Acme Corp", senior.Author.Name)
-				assert.Equal(t, fixedNow(), senior.Published)
+				assert.Equal(t, "£90k–£120k", senior.Snippet)
 
-				// Go-only board: a non-Go title is still kept and ranked.
-				backend := items[1]
-				assert.Equal(t, "Beta Ltd · Backend Developer", backend.Title)
-				assert.Less(t, backend.Score, senior.Score)
+				// Nested-in-ItemList posting; remote via applicantLocationRequirements.
+				backend, ok := byTitle["Beta Ltd · Backend Go Developer · Remote"]
+				require.True(t, ok, "ItemList-nested posting should be present")
+				assert.Empty(t, backend.Snippet) // no salary disclosed
 			},
 		},
 	}
@@ -99,6 +96,39 @@ func TestGolangCafe_Fetch(t *testing.T) {
 
 			got, err := GolangCafe{url: s.URL, now: fixedNow}.Fetch(t.Context())
 			test.want(t, got, err)
+		})
+	}
+}
+
+func TestGolangCafe_JSONLDSalary(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		base any
+		want string
+	}{
+		"USD range": {
+			base: map[string]any{"currency": "USD", "value": map[string]any{"minValue": 120000.0, "maxValue": 160000.0}},
+			want: "$120k–$160k",
+		},
+		"EUR min only": {
+			base: map[string]any{"currency": "EUR", "value": map[string]any{"minValue": 80000.0}},
+			want: "€80k+",
+		},
+		"String numbers": {
+			base: map[string]any{"currency": "GBP", "value": map[string]any{"minValue": "90,000", "maxValue": "120,000"}},
+			want: "£90k–£120k",
+		},
+		"No value": {
+			base: map[string]any{"currency": "USD"},
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, jsonLDSalary(test.base))
 		})
 	}
 }
