@@ -79,7 +79,7 @@
 </script>
 
 <div class="space-y-6">
-	<div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
 		<KpiCard label="Delivered" value={formatCompact(stats?.delivered)} {loading} />
 		<KpiCard label="Open rate" value={formatPercent(stats?.open_rate)} {loading} />
 		<KpiCard label="Click rate" value={formatPercent(stats?.click_rate)} {loading} />
@@ -90,7 +90,7 @@
 	<EngagementTrend data={trend} loading={trendLoading} {metric} {onMetricChange} />
 
 	<div class="grid gap-6 lg:grid-cols-2">
-		<Card>
+		<Card class="min-w-0">
 			<CardHeader>
 				<CardTitle>Engagement funnel</CardTitle>
 			</CardHeader>
@@ -118,6 +118,8 @@
 			</CardContent>
 		</Card>
 
-		<TopLinks data={detail?.links ?? null} {loading} />
+		<div class="min-w-0">
+			<TopLinks data={detail?.links ?? null} {loading} />
+		</div>
 	</div>
 </div>

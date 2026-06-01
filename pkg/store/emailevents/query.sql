@@ -28,12 +28,18 @@ FROM email_events
 WHERE issue_id = ?;
 
 -- name: EmailEventTopLinks :many
-SELECT url, COUNT(*) AS clicks
-FROM email_events
-WHERE issue_id = ?
-  AND event_type = 'clicked'
-  AND url IS NOT NULL
-  AND url != ''
-GROUP BY url
+SELECT
+    e.url        AS url,
+    it.title     AS title,
+    it.tag       AS tag,
+    it.source    AS source,
+    COUNT(*)     AS clicks
+FROM email_events e
+LEFT JOIN items it ON it.id = e.item_id
+WHERE e.issue_id = ?
+  AND e.event_type = 'clicked'
+  AND e.url IS NOT NULL
+  AND e.url != ''
+GROUP BY e.url, it.title, it.tag, it.source
 ORDER BY clicks DESC
 LIMIT ?;

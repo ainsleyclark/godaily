@@ -35,7 +35,20 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	var err error
 
 	if strings.HasPrefix(url, "file:") {
-		db, err = sql.Open("sqlite", url)
+		// Store bound time.Time values as "2006-01-02 15:04:05.999999999-07:00",
+		// matching exactly what the libsql/Turso driver persists in production
+		// (see libsql hrana value.go). The modernc default is time.Time.String()
+		// ("… +0000 UTC"), which SQLite's date functions cannot parse — so without
+		// this the local/dev/test DB stores timestamps in a format that diverges
+		// from production and breaks datetime()-based time-window comparisons.
+		sep := "?"
+		if strings.Contains(url, "?") {
+			sep = "&"
+		}
+		// _timezone=UTC keeps timestamps in UTC when scanned back out, matching the
+		// rest of the codebase (which works exclusively in UTC) and the default
+		// time.Time.String() round-trip behaviour this replaces.
+		db, err = sql.Open("sqlite", url+sep+"_time_format=sqlite&_timezone=UTC")
 	} else {
 		url = url + "?authToken=" + token
 		db, err = sql.Open("libsql", url)

@@ -140,8 +140,13 @@ type IssueStats struct {
 	ClickRate    float64 `json:"click_rate"`
 }
 
-// LinkClicks counts clicks for a single link within an issue.
+// LinkClicks counts clicks for a single link within an issue. Title, Tag and
+// Source are resolved from the linked news item when the click maps to one;
+// they are empty for links that don't (e.g. footer or CTA links).
 type LinkClicks struct {
 	URL    string `json:"url"`
+	Title  string `json:"title,omitempty"`
+	Tag    string `json:"tag,omitempty"`
+	Source string `json:"source,omitempty"`
 	Clicks int64  `json:"clicks"`
 }

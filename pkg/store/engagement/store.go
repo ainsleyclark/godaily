@@ -453,15 +453,24 @@ WHERE confirmed_at IS NOT NULL
 }
 
 // timeConditions returns an AND fragment and positional args for optional from/to bounds.
+//
+// Both sides of the comparison are wrapped in SQLite's datetime() so the bound
+// (an RFC3339 string) and the stored column compare as normalised UTC instants
+// rather than as raw text. This matters because the libsql/Turso driver persists
+// a bound time.Time as "2006-01-02 15:04:05.999999999-07:00" (space-separated,
+// numeric offset), which does not sort lexically against an RFC3339 "…T…Z"
+// bound. Without datetime() the comparison silently drops every row whose date
+// equals the bound's date — e.g. a just-sent issue whose events all land on the
+// from-boundary day, collapsing its trend to zero.
 func timeConditions(f engagement.MetricsFilter, col string) (string, []any) {
 	var parts []string
 	var args []any
 	if f.From != nil {
-		parts = append(parts, col+" >= ?")
+		parts = append(parts, "datetime("+col+") >= datetime(?)")
 		args = append(args, f.From.Format(time.RFC3339))
 	}
 	if f.To != nil {
-		parts = append(parts, col+" < ?")
+		parts = append(parts, "datetime("+col+") < datetime(?)")
 		args = append(args, f.To.Format(time.RFC3339))
 	}
 	if len(parts) == 0 {

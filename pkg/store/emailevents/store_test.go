@@ -14,9 +14,11 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/store/emailevents"
 	"github.com/ainsleyclark/godaily/pkg/store/internal/dbtest"
 	"github.com/ainsleyclark/godaily/pkg/store/issues"
+	"github.com/ainsleyclark/godaily/pkg/store/items"
 	"github.com/ainsleyclark/godaily/pkg/store/subscribers"
 )
 
@@ -134,6 +136,60 @@ func TestEmailEvents_Store(t *testing.T) {
 		assert.Equal(t, "https://go.dev", got[0].URL)
 		assert.Equal(t, int64(2), got[0].Clicks)
 		assert.Equal(t, int64(1), got[1].Clicks)
+	})
+
+	t.Run("TopLinks enriches links with item title, tag and source", func(t *testing.T) {
+		item, err := items.New(db).Create(ctx, &issue.ID, 1, news.Item{
+			Source: "The Go Blog",
+			Tag:    "language",
+			Title:  "Go 1.26 released",
+			URL:    "https://go.dev/blog/go1.26",
+		})
+		require.NoError(t, err)
+
+		mustCreate(t, ctx, s, engagement.EmailEvent{
+			IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com",
+			Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "evt_click_item_a",
+		})
+		mustCreate(t, ctx, s, engagement.EmailEvent{
+			IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com",
+			Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "evt_click_item_b",
+		})
+
+		got, err := s.TopLinks(ctx, issue.ID, 10)
+		require.NoError(t, err)
+
+		var found *engagement.LinkClicks
+		for i := range got {
+			if got[i].URL == item.URL {
+				found = &got[i]
+				break
+			}
+		}
+		require.NotNil(t, found, "the item link should appear in the top links")
+		assert.Equal(t, "Go 1.26 released", found.Title)
+		assert.Equal(t, "language", found.Tag)
+		assert.Equal(t, "The Go Blog", found.Source)
+		assert.Equal(t, int64(2), found.Clicks)
+	})
+
+	t.Run("TopLinks leaves metadata empty for links without an item", func(t *testing.T) {
+		// https://go.dev was clicked earlier without an ItemID, so it has no
+		// resolved item and its title/tag/source stay empty.
+		got, err := s.TopLinks(ctx, issue.ID, 10)
+		require.NoError(t, err)
+
+		var found *engagement.LinkClicks
+		for i := range got {
+			if got[i].URL == "https://go.dev" {
+				found = &got[i]
+				break
+			}
+		}
+		require.NotNil(t, found)
+		assert.Empty(t, found.Title)
+		assert.Empty(t, found.Tag)
+		assert.Empty(t, found.Source)
 	})
 
 	t.Run("TopLinks respects the limit", func(t *testing.T) {

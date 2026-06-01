@@ -104,7 +104,13 @@ func (s Store) TopLinks(ctx context.Context, issueID int64, limit int64) ([]enga
 
 	out := make([]engagement.LinkClicks, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, engagement.LinkClicks{URL: r.Url.String, Clicks: r.Clicks})
+		out = append(out, engagement.LinkClicks{
+			URL:    r.Url.String,
+			Title:  r.Title.String,
+			Tag:    r.Tag.String,
+			Source: r.Source.String,
+			Clicks: r.Clicks,
+		})
 	}
 	return out, nil
 }
