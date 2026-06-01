@@ -16,6 +16,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
@@ -88,7 +89,7 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "poster.Post")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Publishing %s %s draft failed", platformLabel(p), draft.Kind), err,
+				fmt.Sprintf("Publishing %s %s draft failed", slackdata.PlatformLabel(p), draft.Kind), err,
 			))
 			errStatus := social.PostStatusError
 			if _, uerr := s.posts.Update(ctx, draft.ID, social.PostUpdate{Status: &errStatus}); uerr != nil {
@@ -109,7 +110,7 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			res.Err = errors.Wrap(err, "marking draft published")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Recording %s publish failed", platformLabel(p)), err,
+				fmt.Sprintf("Recording %s publish failed", slackdata.PlatformLabel(p)), err,
 			))
 			results = append(results, res)
 			continue
@@ -130,31 +131,15 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 	return results, nil
 }
 
-// notifyPublishSummary pings Slack once per PublishDrafts run with a
-// clickable button per platform+kind that posted successfully.
+// notifyPublishSummary pings Slack once per PublishDrafts run with the
+// "drafts published" card.
 func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
-
-	buttons := make([]slack.LinkButton, 0, len(results))
-	for _, r := range results {
-		if r.Err != nil || r.Skipped || r.PostURL == "" {
-			continue
-		}
-		buttons = append(buttons, slack.LinkButton{
-			Label: fmt.Sprintf("%s · %s", r.Kind, platformLabel(r.Platform)),
-			URL:   r.PostURL,
-			Style: "primary",
-		})
+	if req, ok := slackdata.DraftsPublished(date, results); ok {
+		s.slack.MustSend(ctx, req)
 	}
-	if len(buttons) == 0 {
-		return
-	}
-
-	title := "Social drafts published"
-	body := fmt.Sprintf("%d post(s) live for %s.", len(buttons), date.Format("2006-01-02"))
-	s.slack.MustSend(ctx, slack.Success(title, body, buttons...))
 }
 
 // postersByPlatformMap inverts the posters slice for O(1) lookup at

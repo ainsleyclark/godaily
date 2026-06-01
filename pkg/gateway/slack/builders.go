@@ -42,14 +42,47 @@ func Warn(title, body string) Request {
 	return build(title, body, ColorWarn, nil)
 }
 
-// Error builds a red message from an error. The err is rendered as the
-// body of the section block.
+// Error builds a red message from an error. The err is rendered as a
+// monospaced code block so stack traces, SQL and JSON stay legible.
 func Error(title string, err error) Request {
-	body := ""
-	if err != nil {
-		body = err.Error()
+	return ErrorWithContext(title, err, "")
+}
+
+// ErrorWithContext is Error with a trailing context line; use it to
+// attach cheap provenance (route, timestamp, identifiers) below the error
+// body. The context line is omitted when empty.
+func ErrorWithContext(title string, err error, context string) Request {
+	blocks := make([]Block, 0, 3)
+	if title != "" {
+		blocks = append(blocks, slack.NewHeaderBlock(
+			slack.NewTextBlockObject(slack.PlainTextType, title, false, false),
+		))
 	}
-	return build(title, body, ColorError, nil)
+
+	fallback := title
+	if err != nil {
+		msg := err.Error()
+		blocks = append(blocks, slack.NewSectionBlock(
+			slack.NewTextBlockObject(slack.MarkdownType, "```\n"+msg+"\n```", false, false),
+			nil, nil,
+		))
+		if fallback != "" {
+			fallback += ": "
+		}
+		fallback += msg
+	}
+
+	if context != "" {
+		blocks = append(blocks, slack.NewContextBlock("",
+			slack.NewTextBlockObject(slack.MarkdownType, context, false, false),
+		))
+	}
+
+	return Request{
+		Text:        fallback,
+		Blocks:      BlockSet{BlockSet: blocks},
+		Attachments: []Attachment{{Color: ColorError, Fallback: fallback}},
+	}
 }
 
 // build assembles the Request used by every coloured builder. The header
@@ -75,7 +108,7 @@ func build(title, body, color string, btns []LinkButton) Request {
 	fallback := title
 	if body != "" {
 		if fallback != "" {
-			fallback += " — "
+			fallback += " - "
 		}
 		fallback += body
 	}

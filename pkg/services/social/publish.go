@@ -12,6 +12,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/pkg/errors"
 )
@@ -69,7 +70,7 @@ func (s *Service) publish(ctx context.Context, pc publishCtx) ([]social.PostResu
 		if res.Err != nil {
 			errs = append(errs, fmt.Errorf("%s: %w", res.Platform, res.Err))
 			s.notifyFailure(ctx, slack.Error(
-				fmt.Sprintf("Social %s → %s failed", pc.kind, platformLabel(res.Platform)),
+				fmt.Sprintf("Social %s → %s failed", pc.kind, slackdata.PlatformLabel(res.Platform)),
 				res.Err,
 			))
 		}
@@ -199,51 +200,15 @@ func (s *Service) notifyFailure(ctx context.Context, req slack.Request) {
 	}
 }
 
-// notifySuccess pings Slack once per publish run with a clickable button
-// per platform that posted successfully. Skipped (idempotent) and failed
-// platforms are omitted; failures are already covered by notifyFailure
-// inside the loop. A no-op when no platform succeeded or when the slack
-// sender is not configured.
+// notifySuccess pings Slack once per publish run with the "post published"
+// card. Skipped (idempotent) and failed platforms are omitted; failures are
+// already covered by notifyFailure inside the loop. A no-op when no platform
+// succeeded or when the slack sender is not configured.
 func (s *Service) notifySuccess(ctx context.Context, pc publishCtx, results []social.PostResult) {
 	if s.slack == nil {
 		return
 	}
-
-	buttons := make([]slack.LinkButton, 0, len(results))
-	for _, r := range results {
-		if r.Err != nil || r.Skipped || r.PostURL == "" {
-			continue
-		}
-		buttons = append(buttons, slack.LinkButton{
-			Label: "View on " + platformLabel(r.Platform),
-			URL:   r.PostURL,
-			Style: "primary",
-		})
-	}
-	if len(buttons) == 0 {
-		return
-	}
-
-	title := fmt.Sprintf("Social post published — %s", pc.kind)
-	body := pc.subject
-	if body == "" {
-		body = fmt.Sprintf("Posted to %d platform(s).", len(buttons))
-	}
-
-	s.slack.MustSend(ctx, slack.Success(title, body, buttons...))
-}
-
-// platformLabel returns the human-friendly name for a platform used in
-// Slack notifications.
-func platformLabel(p social.Platform) string {
-	switch p {
-	case social.Bluesky:
-		return "Bluesky"
-	case social.LinkedIn:
-		return "LinkedIn"
-	case social.Mastodon:
-		return "Mastodon"
-	default:
-		return string(p)
+	if req, ok := slackdata.PostPublished(pc.kind, pc.subject, pc.issueID, results); ok {
+		s.slack.MustSend(ctx, req)
 	}
 }

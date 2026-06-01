@@ -31,7 +31,7 @@ func TestSuccess_WithButtons(t *testing.T) {
 		URL:   "https://linkedin.com/y",
 	})
 
-	assert.Equal(t, "Posted — the body", r.Text)
+	assert.Equal(t, "Posted - the body", r.Text)
 	assert.Len(t, r.Attachments, 1)
 	assert.Equal(t, ColorSuccess, r.Attachments[0].Color)
 	assert.Len(t, r.Blocks.BlockSet, 3)
@@ -52,9 +52,24 @@ func TestSuccess_WithButtons(t *testing.T) {
 func TestError(t *testing.T) {
 	t.Parallel()
 	r := Error("Boom", errors.New("the cause"))
-	assert.Equal(t, "Boom — the cause", r.Text)
+	assert.Equal(t, "Boom: the cause", r.Text)
 	assert.Equal(t, ColorError, r.Attachments[0].Color)
 	assert.Len(t, r.Blocks.BlockSet, 2)
+
+	section, ok := r.Blocks.BlockSet[1].(*slack.SectionBlock)
+	assert.True(t, ok, "second block should be a section block")
+	assert.Equal(t, "```\nthe cause\n```", section.Text.Text)
+}
+
+func TestErrorWithContext(t *testing.T) {
+	t.Parallel()
+	r := ErrorWithContext("Boom", errors.New("the cause"), "`POST /x` · now")
+	assert.Equal(t, "Boom: the cause", r.Text)
+	assert.Len(t, r.Blocks.BlockSet, 3)
+
+	ctx, ok := r.Blocks.BlockSet[2].(*slack.ContextBlock)
+	assert.True(t, ok, "third block should be a context block")
+	assert.Equal(t, "`POST /x` · now", ctx.ContextElements.Elements[0].(*slack.TextBlockObject).Text)
 }
 
 func TestError_NilErr(t *testing.T) {

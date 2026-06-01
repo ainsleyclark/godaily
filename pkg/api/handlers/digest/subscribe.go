@@ -12,6 +12,7 @@ import (
 	"net/mail"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
+	slackgo "github.com/slack-go/slack"
 
 	"github.com/ainsleyclark/godaily/pkg/api"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
@@ -56,11 +57,24 @@ func (h *Handler) Subscribe(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to subscribe")
 	}
 
-	line := body.Email
-	if count, err := h.subscribersRepo.CountActive(ctx); err == nil {
-		line += fmt.Sprintf(" · %d total active", count)
+	fields := []*slackgo.TextBlockObject{
+		slackgo.NewTextBlockObject(slackgo.MarkdownType, "*Email:*\n"+body.Email, false, false),
 	}
-	h.slack.MustSend(ctx, slack.Success("New subscriber", line))
+	if count, err := h.subscribersRepo.CountActive(ctx); err == nil {
+		fields = append(fields, slackgo.NewTextBlockObject(slackgo.MarkdownType,
+			fmt.Sprintf("*Total active:*\n%d", count), false, false))
+	}
+	fallback := "New subscriber: " + body.Email
+	h.slack.MustSend(ctx, slack.Request{
+		Text: fallback,
+		Blocks: slack.BlockSet{BlockSet: []slack.Block{
+			slackgo.NewHeaderBlock(slackgo.NewTextBlockObject(slackgo.PlainTextType, "New subscriber", false, false)),
+			slackgo.NewSectionBlock(nil, fields, nil),
+			slackgo.NewContextBlock("", slackgo.NewTextBlockObject(slackgo.MarkdownType,
+				"Pending confirmation  ·  double opt-in email sent", false, false)),
+		}},
+		Attachments: []slack.Attachment{{Color: slack.ColorSuccess, Fallback: fallback}},
+	})
 
 	return api.OK(c, http.StatusOK, nil, "Successfully subscribed")
 }
