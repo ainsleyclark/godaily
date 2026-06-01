@@ -67,89 +67,65 @@ func browseStateIsClean(s BrowseFilterState) bool {
 		s.Page <= 1
 }
 
+var tagTitles = map[news.Tag]string{
+	news.TagRelease:    "Every <span class=\"listing-hero__accent\">Go release</span>, ranked.",
+	news.TagProposal:   "Go <span class=\"listing-hero__accent\">proposals</span>, tracked.",
+	news.TagConference: "Go <span class=\"listing-hero__accent\">conferences</span>, upcoming and past.",
+	news.TagDiscussion: "Go <span class=\"listing-hero__accent\">discussions</span>, ranked by engagement.",
+	news.TagEvent:      "Go <span class=\"listing-hero__accent\">events</span>, from meetups to workshops.",
+	news.TagArticle:    "Go <span class=\"listing-hero__accent\">articles</span>, ranked by what people share.",
+	news.TagTutorial:   "Go <span class=\"listing-hero__accent\">tutorials</span>, from beginner to expert.",
+	news.TagVideo:      "Go <span class=\"listing-hero__accent\">videos</span>, talks, and screencasts.",
+	news.TagTrending:   "<span class=\"listing-hero__accent\">Trending</span> Go stories, updated daily.",
+	news.TagSecurity:   "Go <span class=\"listing-hero__accent\">security</span> advisories and CVEs.",
+	news.TagJobs:       "Go <span class=\"listing-hero__accent\">jobs</span>, worldwide.",
+}
+
+var tagSubs = map[news.Tag]string{
+	news.TagRelease:    "Every release, RC, and patch in one place. Use the filters to narrow by date or source.",
+	news.TagProposal:   "Language proposals, library additions, and toolchain changes — from open to shipped.",
+	news.TagConference: "Calls for papers, schedules, talk recordings, and recaps from the Go conference circuit.",
+	news.TagDiscussion: "The most-upvoted Go threads from Hacker News, Reddit, and community forums.",
+	news.TagEvent:      "Meetups, workshops, and community events happening around the world.",
+	news.TagArticle:    "In-depth engineering posts, analysis, and community writing — ranked by what people actually share.",
+	news.TagTutorial:   "Hands-on walkthroughs for all skill levels. Filter by source to find your preferred format.",
+	news.TagVideo:      "Conference talks, screencasts, and video tutorials from across the Go community.",
+	news.TagTrending:   "The most-shared stories across developer communities right now — updated as they surface.",
+	news.TagSecurity:   "Vulnerability disclosures, CVEs, security advisories, and patched releases.",
+	news.TagJobs:       "Engineering roles at companies hiring Go developers worldwide, collected daily.",
+}
+
+var tagDescs = map[news.Tag]string{
+	news.TagRelease:    "Every Go release, RC, beta, and patch tracked as it lands. Ranked by community reaction and delivered in the GoDaily daily digest.",
+	news.TagProposal:   "Active Go proposals from the issue tracker: new language features, standard library additions, and toolchain changes, from open to shipped.",
+	news.TagConference: "GopherCon, GoLab, and every other Go conference — calls for papers, schedules, talk recordings, and recaps.",
+	news.TagDiscussion: "The most-upvoted Go threads from Hacker News, Reddit, and community forums, ranked by engagement.",
+	news.TagEvent:      "Go meetups, workshops, and local community events from around the world.",
+	news.TagArticle:    "In-depth Go articles, engineering deep dives, and thoughtful analysis from across the community.",
+	news.TagTutorial:   "Step-by-step Go tutorials, walkthroughs, and practical guides for Go developers of all skill levels.",
+	news.TagVideo:      "Go conference talks, video tutorials, and screencasts from across the community.",
+	news.TagTrending:   "The most-shared Go stories across Hacker News, Reddit, and social media, updated daily.",
+	news.TagSecurity:   "Go vulnerability disclosures, CVEs, security advisories, and patched releases.",
+	news.TagJobs:       "Go engineering roles at companies hiring worldwide, collected and ranked by GoDaily.",
+}
+
 func browseTagTitle(tag news.Tag) string {
-	switch tag {
-	case news.TagRelease:
-		return "Every <span class=\"listing-hero__accent\">Go release</span>, ranked."
-	case news.TagProposal:
-		return "Go <span class=\"listing-hero__accent\">proposals</span>, tracked."
-	case news.TagConference:
-		return "Go <span class=\"listing-hero__accent\">conferences</span>, upcoming and past."
-	case news.TagDiscussion:
-		return "Go <span class=\"listing-hero__accent\">discussions</span>, ranked by engagement."
-	case news.TagEvent:
-		return "Go <span class=\"listing-hero__accent\">events</span>, from meetups to workshops."
-	case news.TagArticle:
-		return "Go <span class=\"listing-hero__accent\">articles</span>, ranked by what people share."
-	case news.TagTutorial:
-		return "Go <span class=\"listing-hero__accent\">tutorials</span>, from beginner to expert."
-	case news.TagVideo:
-		return "Go <span class=\"listing-hero__accent\">videos</span>, talks, and screencasts."
-	case news.TagTrending:
-		return "<span class=\"listing-hero__accent\">Trending</span> Go stories, updated daily."
-	case news.TagSecurity:
-		return "Go <span class=\"listing-hero__accent\">security</span> advisories and CVEs."
-	case news.TagJobs:
-		return "Go <span class=\"listing-hero__accent\">jobs</span>, worldwide."
-	default:
-		return tag.Title() + " — Go news."
+	if s, ok := tagTitles[tag]; ok {
+		return s
 	}
+	return tag.Title() + " — Go news."
 }
 
 func browseTagSub(tag news.Tag) string {
-	switch tag {
-	case news.TagRelease:
-		return "Every release, RC, and patch in one place. Use the filters to narrow by date or source."
-	case news.TagProposal:
-		return "Language proposals, library additions, and toolchain changes — from open to shipped."
-	case news.TagConference:
-		return "Calls for papers, schedules, talk recordings, and recaps from the Go conference circuit."
-	case news.TagDiscussion:
-		return "The most-upvoted Go threads from Hacker News, Reddit, and community forums."
-	case news.TagEvent:
-		return "Meetups, workshops, and community events happening around the world."
-	case news.TagArticle:
-		return "In-depth engineering posts, analysis, and community writing — ranked by what people actually share."
-	case news.TagTutorial:
-		return "Hands-on walkthroughs for all skill levels. Filter by source to find your preferred format."
-	case news.TagVideo:
-		return "Conference talks, screencasts, and video tutorials from across the Go community."
-	case news.TagTrending:
-		return "The most-shared stories across developer communities right now — updated as they surface."
-	case news.TagSecurity:
-		return "Vulnerability disclosures, CVEs, security advisories, and patched releases."
-	case news.TagJobs:
-		return "Engineering roles at companies hiring Go developers worldwide, collected daily."
-	default:
-		return "Browse Go news filtered by " + tag.Title() + "."
+	if s, ok := tagSubs[tag]; ok {
+		return s
 	}
+	return "Browse Go news filtered by " + tag.Title() + "."
 }
 
 func browseTagDesc(tag news.Tag) string {
-	switch tag {
-	case news.TagRelease:
-		return "Every Go release, RC, beta, and patch tracked as it lands. Ranked by community reaction and delivered in the GoDaily daily digest."
-	case news.TagProposal:
-		return "Active Go proposals from the issue tracker: new language features, standard library additions, and toolchain changes, from open to shipped."
-	case news.TagConference:
-		return "GopherCon, GoLab, and every other Go conference — calls for papers, schedules, talk recordings, and recaps."
-	case news.TagDiscussion:
-		return "The most-upvoted Go threads from Hacker News, Reddit, and community forums, ranked by engagement."
-	case news.TagEvent:
-		return "Go meetups, workshops, and local community events from around the world."
-	case news.TagArticle:
-		return "In-depth Go articles, engineering deep dives, and thoughtful analysis from across the community."
-	case news.TagTutorial:
-		return "Step-by-step Go tutorials, walkthroughs, and practical guides for Go developers of all skill levels."
-	case news.TagVideo:
-		return "Go conference talks, video tutorials, and screencasts from across the community."
-	case news.TagTrending:
-		return "The most-shared Go stories across Hacker News, Reddit, and social media, updated daily."
-	case news.TagSecurity:
-		return "Go vulnerability disclosures, CVEs, security advisories, and patched releases."
-	case news.TagJobs:
-		return "Go engineering roles at companies hiring worldwide, collected and ranked by GoDaily."
-	default:
-		return "Browse Go news filtered by " + tag.Title() + ", ranked and collected by the GoDaily pipeline."
+	if s, ok := tagDescs[tag]; ok {
+		return s
 	}
+	return "Browse Go news filtered by " + tag.Title() + ", ranked and collected by the GoDaily pipeline."
 }
