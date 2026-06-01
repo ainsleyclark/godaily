@@ -119,7 +119,7 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 
 	emailSender := email.New(config.ResendToken)
 	slackClient := slack.New(config.SlackToken, config.SlackChannel)
-	aiClient := ai.New(config, slackClient)
+	aiClient := ai.New(config)
 
 	socialSvc, err := socialsvc.New(
 		config,
