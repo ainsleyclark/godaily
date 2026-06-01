@@ -15,7 +15,6 @@ import (
 	time "time"
 
 	digest "github.com/ainsleyclark/godaily/pkg/domain/digest"
-	store "github.com/ainsleyclark/godaily/pkg/store"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -44,33 +43,18 @@ func (m *MockIssueRepository) EXPECT() *MockIssueRepositoryMockRecorder {
 }
 
 // Count mocks base method.
-func (m *MockIssueRepository) Count(ctx context.Context) (int64, error) {
+func (m *MockIssueRepository) Count(ctx context.Context, opts digest.IssueListOptions) (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Count", ctx)
+	ret := m.ctrl.Call(m, "Count", ctx, opts)
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Count indicates an expected call of Count.
-func (mr *MockIssueRepositoryMockRecorder) Count(ctx any) *gomock.Call {
+func (mr *MockIssueRepositoryMockRecorder) Count(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Count", reflect.TypeOf((*MockIssueRepository)(nil).Count), ctx)
-}
-
-// CountByStatus mocks base method.
-func (m *MockIssueRepository) CountByStatus(ctx context.Context, status digest.IssueStatus) (int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CountByStatus", ctx, status)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CountByStatus indicates an expected call of CountByStatus.
-func (mr *MockIssueRepositoryMockRecorder) CountByStatus(ctx, status any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountByStatus", reflect.TypeOf((*MockIssueRepository)(nil).CountByStatus), ctx, status)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Count", reflect.TypeOf((*MockIssueRepository)(nil).Count), ctx, opts)
 }
 
 // Create mocks base method.
@@ -149,7 +133,7 @@ func (mr *MockIssueRepositoryMockRecorder) Latest(ctx, limit any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIssueRepository) List(ctx context.Context, opts store.ListOptions) ([]digest.Issue, error) {
+func (m *MockIssueRepository) List(ctx context.Context, opts digest.IssueListOptions) ([]digest.Issue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, opts)
 	ret0, _ := ret[0].([]digest.Issue)
@@ -161,21 +145,6 @@ func (m *MockIssueRepository) List(ctx context.Context, opts store.ListOptions) 
 func (mr *MockIssueRepositoryMockRecorder) List(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIssueRepository)(nil).List), ctx, opts)
-}
-
-// ListByStatus mocks base method.
-func (m *MockIssueRepository) ListByStatus(ctx context.Context, status digest.IssueStatus, opts store.ListOptions) ([]digest.Issue, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListByStatus", ctx, status, opts)
-	ret0, _ := ret[0].([]digest.Issue)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListByStatus indicates an expected call of ListByStatus.
-func (mr *MockIssueRepositoryMockRecorder) ListByStatus(ctx, status, opts any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByStatus", reflect.TypeOf((*MockIssueRepository)(nil).ListByStatus), ctx, status, opts)
 }
 
 // Update mocks base method.

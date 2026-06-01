@@ -86,11 +86,30 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("List", func(t *testing.T) {
-		got, err := s.List(ctx, store.ListOptions{})
-		require.NoError(t, err)
-		require.Len(t, got, 1)
-		assert.Equal(t, mock.Slug, got[0].Slug)
-		assert.Equal(t, mock.Subject, got[0].Subject)
+		t.Log("No filter returns all issues")
+		{
+			got, err := s.List(ctx, digest.IssueListOptions{})
+			require.NoError(t, err)
+			require.Len(t, got, 1)
+			assert.Equal(t, mock.Slug, got[0].Slug)
+			assert.Equal(t, mock.Subject, got[0].Subject)
+		}
+
+		t.Log("Filters by status when set")
+		{
+			sent := digest.IssueStatusSent
+			got, err := s.List(ctx, digest.IssueListOptions{Status: &sent})
+			require.NoError(t, err)
+			require.Len(t, got, 1)
+		}
+
+		t.Log("Filters out non-matching status")
+		{
+			draft := digest.IssueStatusDraft
+			got, err := s.List(ctx, digest.IssueListOptions{Status: &draft})
+			require.NoError(t, err)
+			assert.Empty(t, got)
+		}
 	})
 
 	t.Run("Latest", func(t *testing.T) {
@@ -112,9 +131,20 @@ func TestIssues_Store(t *testing.T) {
 	})
 
 	t.Run("Count", func(t *testing.T) {
-		got, err := s.Count(ctx)
-		require.NoError(t, err)
-		assert.Equal(t, int64(1), got)
+		t.Log("No filter counts all issues")
+		{
+			got, err := s.Count(ctx, digest.IssueListOptions{})
+			require.NoError(t, err)
+			assert.Equal(t, int64(1), got)
+		}
+
+		t.Log("Filters by status when set")
+		{
+			sent := digest.IssueStatusSent
+			got, err := s.Count(ctx, digest.IssueListOptions{Status: &sent})
+			require.NoError(t, err)
+			assert.Equal(t, int64(1), got)
+		}
 	})
 
 	t.Run("Update", func(t *testing.T) {
@@ -215,7 +245,7 @@ func TestIssues_Store(t *testing.T) {
 
 		t.Log("Count")
 		{
-			_, err := s.Count(ctx)
+			_, err := s.Count(ctx, digest.IssueListOptions{})
 			assert.Error(t, err)
 		}
 	})

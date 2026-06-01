@@ -14,14 +14,9 @@ SELECT * FROM issues WHERE id = ? LIMIT 1;
 
 -- name: IssueList :many
 SELECT * FROM issues
-WHERE status = 'sent'
+WHERE (sqlc.narg('status') IS NULL OR status = sqlc.narg('status'))
 ORDER BY sent_at DESC
-LIMIT ? OFFSET ?;
-
--- name: IssueListAll :many
-SELECT * FROM issues
-ORDER BY sent_at DESC
-LIMIT ? OFFSET ?;
+LIMIT sqlc.arg('limit') OFFSET sqlc.arg('offset');
 
 -- name: IssueUpdateStatus :one
 UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING *;
@@ -32,4 +27,5 @@ WHERE id = ? AND status = 'draft'
 RETURNING *;
 
 -- name: IssueCount :one
-SELECT COUNT(*) FROM issues;
+SELECT COUNT(*) FROM issues
+WHERE (sqlc.narg('status') IS NULL OR status = sqlc.narg('status'));

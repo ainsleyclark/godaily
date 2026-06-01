@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleydev/webkit/pkg/cache"
 )
 
@@ -40,16 +39,8 @@ func (s *CachingStore) FindBySlug(ctx context.Context, slug string) (digest.Issu
 	})
 }
 
-func (s *CachingStore) List(ctx context.Context, opts store.ListOptions) ([]digest.Issue, error) {
+func (s *CachingStore) List(ctx context.Context, opts digest.IssueListOptions) ([]digest.Issue, error) {
 	return s.repo.List(ctx, opts)
-}
-
-func (s *CachingStore) ListByStatus(ctx context.Context, status digest.IssueStatus, opts store.ListOptions) ([]digest.Issue, error) {
-	return s.repo.ListByStatus(ctx, status, opts)
-}
-
-func (s *CachingStore) CountByStatus(ctx context.Context, status digest.IssueStatus) (int64, error) {
-	return s.repo.CountByStatus(ctx, status)
 }
 
 func (s *CachingStore) Latest(ctx context.Context, limit int) ([]digest.Issue, error) {
@@ -91,8 +82,8 @@ func (s *CachingStore) UpdateStatus(ctx context.Context, id int64, status digest
 	return issue, nil
 }
 
-func (s *CachingStore) Count(ctx context.Context) (int64, error) {
-	return s.repo.Count(ctx)
+func (s *CachingStore) Count(ctx context.Context, opts digest.IssueListOptions) (int64, error) {
+	return s.repo.Count(ctx, opts)
 }
 
 // cachedLookup gets an issue from cache (JSON bytes) or falls through to fetch.

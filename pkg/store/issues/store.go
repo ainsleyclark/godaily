@@ -63,8 +63,12 @@ func (s Store) withItems(ctx context.Context, i sqlc.Issue) (digest.Issue, error
 	return issueFromRows(i, items), nil
 }
 
-func (s Store) List(ctx context.Context, opts store.ListOptions) ([]digest.Issue, error) {
-	rows, err := s.sqlc.IssueListAll(ctx, sqlc.IssueListAllParams{Limit: opts.Limit(), Offset: opts.Offset()})
+func (s Store) List(ctx context.Context, opts digest.IssueListOptions) ([]digest.Issue, error) {
+	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{
+		Status: statusArg(opts.Status),
+		Limit:  opts.Limit(),
+		Offset: opts.Offset(),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -75,12 +79,22 @@ func (s Store) List(ctx context.Context, opts store.ListOptions) ([]digest.Issue
 	return out, nil
 }
 
+// statusArg returns the sqlc.narg('status') value: nil for no filter, the
+// status string otherwise.
+func statusArg(s *digest.IssueStatus) any {
+	if s == nil {
+		return nil
+	}
+	return s.String()
+}
+
 func (s Store) Latest(ctx context.Context, limit int) ([]digest.Issue, error) {
 	if limit <= 0 {
 		return nil, nil
 	}
 
 	rows, err := s.sqlc.IssueList(ctx, sqlc.IssueListParams{
+		Status: digest.IssueStatusSent.String(),
 		Limit:  int64(limit),
 		Offset: 0,
 	})
@@ -167,51 +181,13 @@ func (s Store) UpdateStatus(ctx context.Context, id int64, status digest.IssueSt
 	return issueFromRows(i, nil), nil
 }
 
-func (s Store) ListByStatus(ctx context.Context, status digest.IssueStatus, opts store.ListOptions) ([]digest.Issue, error) {
-	rows, err := s.db.QueryContext(
-		ctx,
-		"SELECT id, slug, sent_at, subject, COALESCE(summary,''), status FROM issues WHERE status = ? ORDER BY sent_at DESC LIMIT ? OFFSET ?",
-		status.String(), opts.Limit(), opts.Offset(),
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var out []digest.Issue
-	for rows.Next() {
-		var (
-			i      digest.Issue
-			sentAt time.Time
-		)
-		if err := rows.Scan(&i.ID, &i.Slug, &sentAt, &i.Subject, &i.Summary, &i.Status); err != nil {
-			return nil, err
-		}
-		i.SentAt = sentAt
-		i.Items = []news.Item{}
-		out = append(out, i)
-	}
-	return out, rows.Err()
-}
-
-func (s Store) CountByStatus(ctx context.Context, status digest.IssueStatus) (int64, error) {
-	var count int64
-	err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM issues WHERE status = ?", status.String()).Scan(&count)
-	if err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
-func (s Store) Count(ctx context.Context) (int64, error) {
-	count, err := s.sqlc.IssueCount(ctx)
-
+func (s Store) Count(ctx context.Context, opts digest.IssueListOptions) (int64, error) {
+	count, err := s.sqlc.IssueCount(ctx, statusArg(opts.Status))
 	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return 0, nil
 	} else if err != nil {
 		return 0, err
 	}
-
 	return count, nil
 }
 

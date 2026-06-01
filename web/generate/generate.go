@@ -14,7 +14,6 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
-	"github.com/ainsleyclark/godaily/pkg/store"
 	"github.com/ainsleyclark/godaily/web/views/pages"
 	"github.com/pkg/errors"
 )
@@ -34,7 +33,8 @@ func Site(ctx context.Context, repo digest.IssueRepository, items news.ItemRepos
 		return errors.Wrap(err, "creating output directory")
 	}
 
-	allIssues, err := repo.List(ctx, store.ListOptions{})
+	sent := digest.IssueStatusSent
+	allIssues, err := repo.List(ctx, digest.IssueListOptions{Status: &sent})
 	if err != nil {
 		return errors.Wrap(err, "listing issues")
 	}
