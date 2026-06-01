@@ -159,6 +159,10 @@ var (
 	htmlTagRe = regexp.MustCompile(`<[^>]*>`)
 	mdLinkRe  = regexp.MustCompile(`\[([^\]]+)\]\([^)]+\)`)
 	mdNoiseRe = regexp.MustCompile("(?m)```[^`]*```|`[^`]*`|[#*_~]+")
+	// zeroWidthRe matches zero-width and invisible formatting characters that
+	// Reddit content commonly embeds (often as the entity &#x200B;): ZWSP,
+	// ZWNJ, ZWJ, word joiner, and the BOM/ZWNBSP.
+	zeroWidthRe = regexp.MustCompile(`[\x{200B}\x{200C}\x{200D}\x{2060}\x{FEFF}]`)
 )
 
 // isSelfContent reports whether an item is self-promotional content that should
@@ -175,14 +179,20 @@ func isSelfContent(i news.Item) bool {
 	return strings.TrimPrefix(parsed.Hostname(), "www.") == "godaily.dev"
 }
 
-// sanitise produces a clean, single-line snippet: strips HTML tags, collapses
-// markdown links to their visible text, strips remaining markdown syntax
-// (code fences, inline code, emphasis markers), unescapes HTML entities, and
-// collapses runs of whitespace into a single space.
+// sanitise produces a clean, single-line snippet: strips HTML tags, unescapes
+// HTML entities, collapses markdown links to their visible text, strips
+// remaining markdown syntax (code fences, inline code, emphasis markers),
+// removes zero-width characters, and collapses runs of whitespace into a
+// single space.
+//
+// Unescaping happens before markdown stripping so numeric entities aren't
+// mangled: e.g. the zero-width-space entity &#x200B; would otherwise have its
+// '#' replaced by mdNoiseRe, leaving a visible "& x200B;" in the snippet.
 func sanitise(s string) string {
 	s = htmlTagRe.ReplaceAllString(s, " ")
+	s = html.UnescapeString(s)
 	s = mdLinkRe.ReplaceAllString(s, "$1")
 	s = mdNoiseRe.ReplaceAllString(s, " ")
-	s = html.UnescapeString(s)
+	s = zeroWidthRe.ReplaceAllString(s, "")
 	return strings.Join(strings.Fields(s), " ")
 }
