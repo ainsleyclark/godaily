@@ -130,24 +130,28 @@ func (s Store) Delete(ctx context.Context, id int64) (digest.Issue, error) {
 }
 
 func (s Store) Update(ctx context.Context, issue digest.Issue) (digest.Issue, error) {
-	current, err := s.sqlc.IssueByID(ctx, issue.ID)
-	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return digest.Issue{}, store.ErrNotFound
-	} else if err != nil {
-		return digest.Issue{}, err
-	}
-	if current.Status != digest.IssueStatusDraft.String() {
-		return digest.Issue{}, digest.ErrIssueNotDraft
-	}
+	// The UPDATE is constrained to draft rows in SQL so the guard is
+	// atomic — a concurrent send cannot flip the row to 'sent' between a
+	// read-check and the write.
 	i, err := s.sqlc.IssueUpdate(ctx, sqlc.IssueUpdateParams{
 		ID:      issue.ID,
 		Subject: issue.Subject,
 		Summary: sql.NullString{String: issue.Summary, Valid: true},
 	})
-	if err != nil {
+	if err == nil {
+		return s.withItems(ctx, i)
+	}
+	if !errors.Is(err, sql.ErrNoRows) {
 		return digest.Issue{}, err
 	}
-	return s.withItems(ctx, i)
+	// No rows matched — either the issue doesn't exist or it isn't a draft.
+	if _, err := s.sqlc.IssueByID(ctx, issue.ID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return digest.Issue{}, store.ErrNotFound
+		}
+		return digest.Issue{}, err
+	}
+	return digest.Issue{}, digest.ErrIssueNotDraft
 }
 
 func (s Store) UpdateStatus(ctx context.Context, id int64, status digest.IssueStatus, sentAt time.Time) (digest.Issue, error) {

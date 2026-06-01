@@ -294,7 +294,9 @@ func (q *Queries) IssueList(ctx context.Context, arg IssueListParams) ([]Issue, 
 }
 
 const issueUpdate = `-- name: IssueUpdate :one
-UPDATE issues SET subject = ?, summary = ? WHERE id = ? RETURNING id, slug, sent_at, subject, summary, status
+UPDATE issues SET subject = ?, summary = ?
+WHERE id = ? AND status = 'draft'
+RETURNING id, slug, sent_at, subject, summary, status
 `
 
 type IssueUpdateParams struct {

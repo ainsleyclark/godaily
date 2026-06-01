@@ -22,7 +22,9 @@ LIMIT ? OFFSET ?;
 UPDATE issues SET status = ?, sent_at = ? WHERE id = ? RETURNING *;
 
 -- name: IssueUpdate :one
-UPDATE issues SET subject = ?, summary = ? WHERE id = ? RETURNING *;
+UPDATE issues SET subject = ?, summary = ?
+WHERE id = ? AND status = 'draft'
+RETURNING *;
 
 -- name: IssueCount :one
 SELECT COUNT(*) FROM issues WHERE status = 'sent';
