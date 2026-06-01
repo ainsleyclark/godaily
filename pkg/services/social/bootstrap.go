@@ -63,7 +63,11 @@ func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
 		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
 	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN)
+		out[social.LinkedIn] = selfEngagementFetcher{
+			inner:   linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN),
+			likes:   1,
+			reposts: 1,
+		}
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
