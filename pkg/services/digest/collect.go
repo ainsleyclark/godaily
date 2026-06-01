@@ -78,6 +78,12 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 		return results[i].Source.Priority() > results[j].Source.Priority()
 	})
 
+	// Collapse the same role cross-posted to multiple job boards. Done here,
+	// before persistence, because each board gives a distinct apply URL so the
+	// (url, tag) de-dup downstream can't catch them. Sections are already in
+	// priority order, so ties keep the higher-priority source's listing.
+	results = news.DedupeJobs(results)
+
 	resp := digest.CollectResponse{Sources: results, Errors: sourceErrs}
 
 	if opts.DryRun || len(results) == 0 {

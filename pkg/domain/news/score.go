@@ -55,7 +55,11 @@ func SourceWeight(s Source, t Tag) float64 {
 		return 1.2
 	case SourceHNJobs:
 		return 1.4
-	case SourceRemoteOK:
+	case SourceGolangCafe, SourceGolangProjects:
+		// Go-only boards: every listing is on-topic, so weight them above the
+		// broad remote boards that need keyword filtering.
+		return 1.3
+	case SourceRemoteOK, SourceRemotive, SourceWeWorkRemotely:
 		return 1.0
 	case SourceMedium:
 		return 0.75
