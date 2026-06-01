@@ -174,10 +174,7 @@ func (s *Service) draftRotation(ctx context.Context, opts social.PostOptions) ([
 	}
 
 	now := opts.Date.UTC()
-	candidates, err := s.pickCandidates(social.RotateOptions{Now: now})
-	if err != nil {
-		return nil, err
-	}
+	candidates := s.pickCandidates(now.Weekday())
 	if len(candidates) == 0 {
 		return nil, nil
 	}

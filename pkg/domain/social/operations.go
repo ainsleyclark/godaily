@@ -33,23 +33,3 @@ type PostResult struct {
 	// idempotency key (issue or subject) on this run.
 	Skipped bool
 }
-
-// RotateOptions controls a single Rotate invocation.
-type RotateOptions struct {
-	// Now is the wall clock used to pick the day's candidate list. Tuesday
-	// runs the self_release/spotlight/cta rotation; Friday runs recap only.
-	// Any other day is a no-op.
-	Now time.Time
-
-	// DryRun runs the candidate's full pipeline (eligibility + AI
-	// generation) but skips platform HTTP and the social_posts insert.
-	DryRun bool
-
-	// Platforms optionally restricts which configured posters run.
-	Platforms []Platform
-
-	// ForceKind, when non-empty, bypasses the day-aware routing and runs
-	// the named candidate's Eligible check directly. Used by the CLI to
-	// test a specific kind out-of-band.
-	ForceKind PostKind
-}

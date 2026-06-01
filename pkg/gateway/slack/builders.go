@@ -69,7 +69,7 @@ func build(title, body, color string, btns []LinkButton) Request {
 		))
 	}
 	if len(btns) > 0 {
-		blocks = append(blocks, buttonRow(btns))
+		blocks = append(blocks, ButtonRow(btns))
 	}
 
 	fallback := title
@@ -90,8 +90,11 @@ func build(title, body, color string, btns []LinkButton) Request {
 	}
 }
 
-// buttonRow turns a slice of LinkButtons into a single Slack action block.
-func buttonRow(btns []LinkButton) *Action {
+// ButtonRow turns a slice of LinkButtons into a single Slack action
+// block. Exported so service-layer builders that compose richer messages
+// (interleaved section + action rows) can build buttons without
+// re-importing slack-go directly.
+func ButtonRow(btns []LinkButton) *Action {
 	elements := make([]slack.BlockElement, 0, len(btns))
 	for i, b := range btns {
 		btn := slack.NewButtonBlockElement(

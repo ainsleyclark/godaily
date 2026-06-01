@@ -134,7 +134,7 @@ func (s Service) sendBuildSummary(ctx context.Context, issue digest.Issue, itemC
 		return
 	}
 
-	summary := slack.BuildSummary(slack.BuildSummaryInput{
+	summary := BuildSummary(BuildSummaryInput{
 		IssueDate: issue.Slug,
 		IssueID:   issue.ID,
 		Subject:   issue.Subject,
@@ -145,10 +145,10 @@ func (s Service) sendBuildSummary(ctx context.Context, issue digest.Issue, itemC
 	s.slack.MustSend(ctx, summary)
 }
 
-func toSummaryDrafts(rows []social.Post) []slack.BuildSummaryDraft {
-	out := make([]slack.BuildSummaryDraft, 0, len(rows))
+func toSummaryDrafts(rows []social.Post) []BuildSummaryDraft {
+	out := make([]BuildSummaryDraft, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, slack.BuildSummaryDraft{
+		out = append(out, BuildSummaryDraft{
 			ID:       r.ID,
 			Kind:     string(r.Kind),
 			Platform: r.Platform,

@@ -70,18 +70,3 @@ func (mr *MockServiceMockRecorder) PublishDrafts(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublishDrafts", reflect.TypeOf((*MockService)(nil).PublishDrafts), ctx, opts)
 }
-
-// Rotate mocks base method.
-func (m *MockService) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Rotate", ctx, opts)
-	ret0, _ := ret[0].([]social.PostResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Rotate indicates an expected call of Rotate.
-func (mr *MockServiceMockRecorder) Rotate(ctx, opts any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Rotate", reflect.TypeOf((*MockService)(nil).Rotate), ctx, opts)
-}

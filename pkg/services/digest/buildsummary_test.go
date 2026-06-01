@@ -2,15 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package slack
+package digest
 
 import (
 	"strings"
 	"testing"
 
-	"github.com/slack-go/slack"
+	slackgo "github.com/slack-go/slack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
 func TestBuildSummary(t *testing.T) {
@@ -43,7 +46,7 @@ func TestBuildSummary(t *testing.T) {
 			Subject:   "x",
 		})
 		assert.Contains(t, flatten(req), "/issues/42")
-		assert.Contains(t, flatten(req), DashboardURL)
+		assert.Contains(t, flatten(req), env.DashboardURL)
 	})
 
 	t.Run("Each draft renders kind, platform, text and an Edit button", func(t *testing.T) {
@@ -83,7 +86,6 @@ func TestBuildSummary(t *testing.T) {
 			},
 		})
 		flat := flatten(req)
-		// featured Bluesky must appear before featured LinkedIn before recap LinkedIn
 		i1 := strings.Index(flat, "f-bs")
 		i2 := strings.Index(flat, "f-li")
 		i3 := strings.Index(flat, "r-li")
@@ -100,37 +102,37 @@ func TestBuildSummary(t *testing.T) {
 		t.Parallel()
 		req := BuildSummary(BuildSummaryInput{IssueDate: "2026-06-01"})
 		require.Len(t, req.Attachments, 1)
-		assert.Equal(t, ColorInfo, req.Attachments[0].Color)
+		assert.Equal(t, slack.ColorInfo, req.Attachments[0].Color)
 	})
 }
 
 // flatten concatenates every block's text + every button's URL into one
 // string so we can run a simple Contains over the rendered message.
-func flatten(req Request) string {
+func flatten(req slack.Request) string {
 	var b strings.Builder
 	b.WriteString(req.Text)
 	for _, blk := range req.Blocks.BlockSet {
 		switch v := blk.(type) {
-		case *slack.SectionBlock:
+		case *slackgo.SectionBlock:
 			if v.Text != nil {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
 			}
-		case *slack.HeaderBlock:
+		case *slackgo.HeaderBlock:
 			if v.Text != nil {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
 			}
-		case *slack.ContextBlock:
+		case *slackgo.ContextBlock:
 			for _, el := range v.ContextElements.Elements {
-				if t, ok := el.(*slack.TextBlockObject); ok {
+				if t, ok := el.(*slackgo.TextBlockObject); ok {
 					b.WriteString("\n")
 					b.WriteString(t.Text)
 				}
 			}
-		case *slack.ActionBlock:
+		case *slackgo.ActionBlock:
 			for _, el := range v.Elements.ElementSet {
-				if btn, ok := el.(*slack.ButtonBlockElement); ok {
+				if btn, ok := el.(*slackgo.ButtonBlockElement); ok {
 					b.WriteString("\n")
 					if btn.Text != nil {
 						b.WriteString(btn.Text.Text)

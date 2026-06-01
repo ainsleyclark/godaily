@@ -6,120 +6,39 @@ package social
 
 import (
 	"context"
-	"log/slog"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
-	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 )
 
-// Rotate walks the day's candidate list (or just ForceKind), picks the
-// first eligible one, and publishes it across the configured platforms.
-// Kept for manual CLI invocation (--kind) only; the cron path now uses
-// DraftAll + PublishDrafts so every rotation post passes through the
-// same edit window as the daily featured slot.
+// pickCandidates returns the rotation candidate list for the day, or
+// nil when the day is not a rotation day. The DraftAll path walks the
+// returned slice and stops at the first eligible candidate.
 //
-// Day-of-week rules (also drive DraftAll on the matching weekday):
+// Day-of-week rules:
 //
 //   - Monday: recap (the previous week's top-clicks). Moved off Friday
 //     so the metric window covers a complete Mon–Fri + weekend.
 //   - Wednesday: community (a Go conference or meetup), 2:1 meetup:conf
 //     rotation through the curated lists in pkg/data.
 //   - Friday: new_source → spotlight → cta → no-op.
-//   - Other days: no-op unless ForceKind is set.
-func (s *Service) Rotate(ctx context.Context, opts social.RotateOptions) ([]social.PostResult, error) {
-	if !s.hasPosters() {
-		slog.InfoContext(ctx, "Skipping rotation — no posters configured")
-		return nil, nil
-	}
-	if len(s.candidates) == 0 {
-		slog.InfoContext(ctx, "Skipping rotation — no candidates registered")
-		return nil, nil
-	}
-
-	candidates, err := s.pickCandidates(opts)
-	if err != nil {
-		return nil, err
-	}
-	if len(candidates) == 0 {
-		slog.InfoContext(ctx, "Skipping rotation — wrong day", "weekday", opts.Now.UTC().Weekday())
-		return nil, nil
-	}
-
-	now := opts.Now.UTC()
-	for _, cand := range candidates {
-		cctx, ok, err := cand.Eligible(ctx, now)
-		if err != nil {
-			s.notifyFailure(ctx, slack.Error(
-				"Rotation eligibility check failed — "+string(cand.Kind()), err,
-			))
-			return nil, errors.Wrapf(err, "eligibility for %s", cand.Kind())
-		}
-		if !ok {
-			slog.InfoContext(ctx, "Rotation candidate not eligible", "kind", string(cand.Kind()))
-			continue
-		}
-
-		slog.InfoContext(
-			ctx, "Rotation candidate eligible",
-			"kind", string(cand.Kind()), "subject", cctx.Subject, "url", cctx.URL,
-		)
-
-		wanted := selectPosters(s.posters, opts.Platforms)
-		return s.publish(ctx, publishCtx{
-			platforms: wanted,
-			dryRun:    opts.DryRun,
-			kind:      cand.Kind(),
-			subject:   cctx.Subject,
-			generate: func(ctx context.Context, p social.Platform) (string, error) {
-				text, err := cand.Generate(ctx, s.prompter, p, cctx)
-				if err != nil {
-					return "", err
-				}
-				if cctx.Kind == social.PostKindNewSource || cctx.Kind == social.PostKindRecap {
-					text = appendSubscribeLine(text, p, string(cctx.Kind))
-				}
-				return text, nil
-			},
-			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
-			mentions:     cctx.Mentions,
-		})
-	}
-
-	slog.InfoContext(ctx, "Rotation: no eligible candidate", "weekday", now.Weekday())
-
-	return nil, nil
-}
-
-// pickCandidates returns the candidate list for the day, or honors
-// ForceKind. Returns nil when the day is not a rotation day.
-func (s *Service) pickCandidates(opts social.RotateOptions) ([]candidate.Candidate, error) {
-	if opts.ForceKind != "" {
-		c := candidateByKind(s.candidates, opts.ForceKind)
-		if c == nil {
-			return nil, errors.Errorf("no candidate registered for kind %q", opts.ForceKind)
-		}
-		return []candidate.Candidate{c}, nil
-	}
-
-	weekday := opts.Now.UTC().Weekday()
+//   - Other days: no-op.
+func (s *Service) pickCandidates(weekday time.Weekday) []candidate.Candidate {
 	switch weekday {
 	case time.Monday:
-		return orderedByKinds(s.candidates, social.PostKindRecap), nil
+		return orderedByKinds(s.candidates, social.PostKindRecap)
 	case time.Wednesday:
-		return orderedByKinds(s.candidates, social.PostKindCommunity), nil
+		return orderedByKinds(s.candidates, social.PostKindCommunity)
 	case time.Friday:
 		return orderedByKinds(
 			s.candidates,
 			social.PostKindNewSource,
 			social.PostKindSpotlight,
 			social.PostKindCTA,
-		), nil
+		)
 	default:
-		return nil, nil
+		return nil
 	}
 }
 

@@ -20,10 +20,6 @@ import "context"
 //  2. PublishDrafts runs at the publish cron (11:00). It walks every
 //     draft row regardless of kind, posts each to its platform, and
 //     updates the row to published (or error).
-//
-// Rotate is kept for manual CLI invocation only — passing ForceKind
-// drives a specific candidate end-to-end (generate + immediate publish)
-// without going through the draft window.
 type Service interface {
 	// DraftAll generates and persists every social draft owed for the
 	// day: one featured draft per configured platform, plus the
@@ -37,9 +33,4 @@ type Service interface {
 	// to its platform, transitioning the rows to published (or error on
 	// per-platform failures). Cancelled rows are skipped.
 	PublishDrafts(ctx context.Context, opts PostOptions) ([]PostResult, error)
-
-	// Rotate is the manual CLI entry point — passing ForceKind drives a
-	// specific candidate end-to-end without going through the draft
-	// window. The cron path uses DraftAll + PublishDrafts.
-	Rotate(ctx context.Context, opts RotateOptions) ([]PostResult, error)
 }

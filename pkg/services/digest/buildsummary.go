@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package slack
+package digest
 
 import (
 	"fmt"
@@ -10,13 +10,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/slack-go/slack"
-)
+	slackgo "github.com/slack-go/slack"
 
-// DashboardURL is the public base URL of the GoDaily admin dashboard.
-// Hard-coded rather than threaded through config: there is exactly one
-// dashboard per deployment and the URL never differs by environment.
-const DashboardURL = "https://godaily.dev/dashboard"
+	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+)
 
 // BuildSummaryDraft describes one drafted social post for the build
 // summary Slack card. One BuildSummary call accepts a slice of these
@@ -45,49 +43,50 @@ type BuildSummaryInput struct {
 // subject + intro + item count and, per platform, the drafted text with
 // an "Edit" button deep-linking into the dashboard.
 //
-// The publish cron at 11:00 promotes every draft, so the operator's
-// review window is the gap between build (02:00) and publish (11:00).
-func BuildSummary(in BuildSummaryInput) Request {
+// Lives in the digest service (not the slack gateway) because the body
+// composition is domain-aware: it knows about digest issues, social
+// post kinds, and the dashboard URL. The slack gateway stays a plain
+// send-channel.
+func BuildSummary(in BuildSummaryInput) slack.Request {
 	header := "📰 Digest " + in.IssueDate + " — drafts ready for review"
 
-	blocks := make([]Block, 0, 4+2*len(in.Drafts))
-	blocks = append(blocks, slack.NewHeaderBlock(
-		slack.NewTextBlockObject(slack.PlainTextType, header, false, false),
+	blocks := make([]slack.Block, 0, 4+2*len(in.Drafts))
+	blocks = append(blocks, slackgo.NewHeaderBlock(
+		slackgo.NewTextBlockObject(slackgo.PlainTextType, header, false, false),
 	))
 
-	summary := summaryBody(in)
-	if summary != "" {
-		blocks = append(blocks, slack.NewSectionBlock(
-			slack.NewTextBlockObject(slack.MarkdownType, summary, false, false),
+	if body := summaryBody(in); body != "" {
+		blocks = append(blocks, slackgo.NewSectionBlock(
+			slackgo.NewTextBlockObject(slackgo.MarkdownType, body, false, false),
 			nil, nil,
 		))
 	}
 
 	if in.IssueID > 0 {
-		blocks = append(blocks, buttonRow([]LinkButton{{
+		blocks = append(blocks, slack.ButtonRow([]slack.LinkButton{{
 			Label: "View issue",
-			URL:   fmt.Sprintf("%s/issues/%d", DashboardURL, in.IssueID),
+			URL:   fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID),
 		}}))
 	}
 
 	if len(in.Drafts) > 0 {
-		blocks = append(blocks, slack.NewDividerBlock())
+		blocks = append(blocks, slackgo.NewDividerBlock())
 		for _, group := range groupDrafts(in.Drafts) {
-			blocks = append(blocks, slack.NewSectionBlock(
-				slack.NewTextBlockObject(slack.MarkdownType,
+			blocks = append(blocks, slackgo.NewSectionBlock(
+				slackgo.NewTextBlockObject(slackgo.MarkdownType,
 					fmt.Sprintf("*%s · %s*\n%s", titleCase(group.Kind), titleCase(group.Platform), codeBlock(group.Text)),
 					false, false),
 				nil, nil,
 			))
-			blocks = append(blocks, buttonRow([]LinkButton{{
+			blocks = append(blocks, slack.ButtonRow([]slack.LinkButton{{
 				Label: "Edit",
-				URL:   fmt.Sprintf("%s/social/drafts?id=%d", DashboardURL, group.ID),
+				URL:   fmt.Sprintf("%s/social/drafts?id=%d", env.DashboardURL, group.ID),
 			}}))
 		}
 	}
 
-	blocks = append(blocks, slack.NewContextBlock("",
-		slack.NewTextBlockObject(slack.MarkdownType,
+	blocks = append(blocks, slackgo.NewContextBlock("",
+		slackgo.NewTextBlockObject(slackgo.MarkdownType,
 			"Auto-publishes at 11:00 UTC unless cancelled from the dashboard.",
 			false, false),
 	))
@@ -97,11 +96,11 @@ func BuildSummary(in BuildSummaryInput) Request {
 		fallback += " — " + in.Subject
 	}
 
-	return Request{
+	return slack.Request{
 		Text:   fallback,
-		Blocks: BlockSet{BlockSet: blocks},
-		Attachments: []Attachment{{
-			Color:    ColorInfo,
+		Blocks: slack.BlockSet{BlockSet: blocks},
+		Attachments: []slack.Attachment{{
+			Color:    slack.ColorInfo,
 			Fallback: fallback,
 		}},
 	}
