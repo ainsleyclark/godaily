@@ -3,7 +3,13 @@
 // license that can be found in the LICENSE file.
 
 // gen-examples fetches live data from every registered source and writes the
-// results to internal/examples/rendered and internal/examples/raw. Run via:
+// results to examples/rendered and examples/raw.
+//
+// Pass -source to regenerate a single source. Pass -replay <file> together with
+// -source to run a saved raw capture (e.g. a Wayback Machine snapshot of a
+// feed) through the real Fetch/filter/transform pipeline instead of fetching
+// live — useful for verifying how a source's listings would render on a past
+// day when the upstream API exposes no date parameter.
 package main
 
 import (
@@ -27,7 +33,21 @@ import (
 
 func main() {
 	only := flag.String("source", "", "regenerate only this source (e.g. golang_nuts)")
+	replay := flag.String("replay", "", "replay a saved raw response file (e.g. a Wayback snapshot) through the pipeline instead of fetching live; requires -source")
 	flag.Parse()
+
+	if *replay != "" && *only == "" {
+		log.Fatal("-replay requires -source to identify which source the file belongs to")
+	}
+
+	var replayBody []byte
+	if *replay != "" {
+		b, err := os.ReadFile(*replay)
+		if err != nil {
+			log.Fatalf("read replay file: %v", err)
+		}
+		replayBody = b
+	}
 
 	ctx := context.Background()
 
@@ -58,8 +78,17 @@ func main() {
 			continue
 		}
 
-		rec := &recordingTransport{base: http.DefaultTransport}
-		ingest.SetHTTPClient(&http.Client{Transport: rec})
+		// In replay mode the HTTP client serves the captured file for every
+		// request, so the real parse/filter/transform runs against past-day
+		// data; otherwise record the live response for the raw example.
+		var rec *recordingTransport
+		if *replay != "" {
+			ct := replayContentType(*replay)
+			ingest.SetHTTPClient(&http.Client{Transport: &staticTransport{body: replayBody, contentType: ct}})
+		} else {
+			rec = &recordingTransport{base: http.DefaultTransport}
+			ingest.SetHTTPClient(&http.Client{Transport: rec})
+		}
 
 		items, err := fetcher.Fetch(ctx)
 		if err != nil {
@@ -67,9 +96,13 @@ func main() {
 			continue
 		}
 
+		if *replay != "" {
+			slog.Info("Replayed", "source", s, "file", *replay, "items", len(items))
+		}
+
 		// Write raw API response. The extension is chosen from the recorded
 		// Content-Type so HTML/XML sources don't masquerade as .json.
-		if rec.body != nil {
+		if rec != nil && rec.body != nil {
 			ext, body := rawExtAndBody(rec.contentType, rec.body)
 			rawPath := filepath.Join(rawDir, string(s)+"."+ext)
 			if err := os.WriteFile(rawPath, body, 0o600); err != nil {
@@ -117,6 +150,38 @@ func (r *recordingTransport) RoundTrip(req *http.Request) (*http.Response, error
 		r.contentType = resp.Header.Get("Content-Type")
 	}
 	return resp, readErr
+}
+
+// staticTransport serves the same captured body for every request, used by
+// -replay so a saved (e.g. archived) response runs through the real pipeline.
+// Follow-up enrichment calls receive the same body, which is harmless for
+// verifying source parsing and filtering.
+type staticTransport struct {
+	body        []byte
+	contentType string
+}
+
+func (t *staticTransport) RoundTrip(_ *http.Request) (*http.Response, error) {
+	return &http.Response{
+		StatusCode: http.StatusOK,
+		Header:     http.Header{"Content-Type": {t.contentType}},
+		Body:       io.NopCloser(bytes.NewReader(t.body)),
+	}, nil
+}
+
+// replayContentType infers a Content-Type from the replay file's extension so
+// sources that branch on it (HTML vs XML vs JSON) parse the capture correctly.
+func replayContentType(path string) string {
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".json":
+		return "application/json"
+	case ".xml", ".rss", ".atom":
+		return "application/xml"
+	case ".html", ".htm":
+		return "text/html"
+	default:
+		return "text/plain"
+	}
 }
 
 // rawExtAndBody picks a file extension and (where useful) reformats the body
