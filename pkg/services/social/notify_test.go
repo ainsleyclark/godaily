@@ -11,45 +11,17 @@ import (
 
 	slacksdk "github.com/slack-go/slack"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 )
 
-func TestBlockquote(t *testing.T) {
-	t.Parallel()
-	assert.Equal(t, "> one\n> two", blockquote("one\ntwo"))
-	assert.Equal(t, "> trimmed", blockquote("  trimmed  "))
-
-	long := strings.Repeat("a", maxCardText+50)
-	got := blockquote(long)
-	assert.True(t, strings.HasSuffix(got, "…"), "long text should be truncated with an ellipsis")
-	assert.LessOrEqual(t, len([]rune(strings.TrimPrefix(got, "> "))), maxCardText+1)
-}
-
 func TestKindLabel(t *testing.T) {
 	t.Parallel()
 	assert.Equal(t, "Featured", kindLabel(social.PostKindFeatured))
 	assert.Equal(t, "New source", kindLabel(social.PostKindNewSource))
 	assert.Empty(t, kindLabel(""))
-}
-
-func TestSectionRow_Accessory(t *testing.T) {
-	t.Parallel()
-	blk := sectionRow(cardRow{
-		heading: "Bluesky",
-		text:    "hello world",
-		button:  &slack.LinkButton{Label: "View on Bluesky", URL: "https://bsky.app/x", Style: "primary"},
-	})
-	section, ok := blk.(*slacksdk.SectionBlock)
-	require.True(t, ok)
-	assert.Equal(t, "*Bluesky*\n> hello world", section.Text.Text)
-	require.NotNil(t, section.Accessory)
-	require.NotNil(t, section.Accessory.ButtonElement)
-	assert.Equal(t, "https://bsky.app/x", section.Accessory.ButtonElement.URL)
-	assert.Equal(t, slacksdk.Style("primary"), section.Accessory.ButtonElement.Style)
 }
 
 // TestNotifySuccess_PerPlatform asserts that when platforms carry distinct

@@ -147,16 +147,17 @@ func TestService_Roundup(t *testing.T) {
 
 		require.NoError(t, svc.Roundup(context.Background()))
 
-		assert.Contains(t, captured, "GoDaily — Weekly Roundup")
+		assert.Contains(t, captured, "Weekly Roundup")
 		assert.Contains(t, captured, "17 May – 24 May")
-		assert.Contains(t, captured, "Issues sent: 7")
-		assert.Contains(t, captured, "Delivered: 1,243")
-		assert.Contains(t, captured, "↑")             // delivered went up vs prior
-		assert.Contains(t, captured, "Active: 1,312") // subscriber active count
+		assert.Contains(t, captured, "Issues sent")
+		assert.Contains(t, captured, "Delivered")
+		assert.Contains(t, captured, "1,243") // delivered count
+		assert.Contains(t, captured, "↑")     // delivered went up vs prior
+		assert.Contains(t, captured, "1,312") // subscriber active count
 		assert.Contains(t, captured, "<https://go.dev/blog/go1.24|Go 1.24 released>")
 		assert.Contains(t, captured, "Top tags*: ai (88)")
 		assert.Contains(t, captured, "Top sources*: HN (120)")
-		assert.Contains(t, captured, "Best issue*: 2026-05-22")
+		assert.Contains(t, captured, "Best issue:* 2026-05-22")
 	})
 
 	t.Run("Handles empty data gracefully", func(t *testing.T) {
@@ -419,6 +420,10 @@ func flattenRequest(req slack.Request) string {
 			if v.Text != nil {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
+			}
+			for _, f := range v.Fields {
+				b.WriteString("\n")
+				b.WriteString(f.Text)
 			}
 		case *slacksdk.HeaderBlock:
 			if v.Text != nil {

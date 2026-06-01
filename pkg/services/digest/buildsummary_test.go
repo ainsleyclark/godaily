@@ -31,7 +31,8 @@ func TestBuildSummary(t *testing.T) {
 		})
 
 		flat := flatten(req)
-		assert.Contains(t, flat, "Digest 2026-06-01")
+		assert.Contains(t, flat, "Digest ready for review")
+		assert.Contains(t, flat, "2026-06-01")
 		assert.Contains(t, flat, "GoDaily — June 1")
 		assert.Contains(t, flat, "A handful of generics improvements landed.")
 		assert.Contains(t, flat, "12")
@@ -117,6 +118,15 @@ func flatten(req slack.Request) string {
 			if v.Text != nil {
 				b.WriteString("\n")
 				b.WriteString(v.Text.Text)
+			}
+			if v.Accessory != nil && v.Accessory.ButtonElement != nil {
+				btn := v.Accessory.ButtonElement
+				b.WriteString("\n")
+				if btn.Text != nil {
+					b.WriteString(btn.Text.Text)
+					b.WriteString(" ")
+				}
+				b.WriteString(btn.URL)
 			}
 		case *slackgo.HeaderBlock:
 			if v.Text != nil {

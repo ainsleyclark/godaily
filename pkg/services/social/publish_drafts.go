@@ -16,6 +16,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackcard"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 )
 
@@ -138,7 +139,7 @@ func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, resu
 		return
 	}
 
-	rows := make([]cardRow, 0, len(results))
+	rows := make([]slackcard.Row, 0, len(results))
 	for _, r := range results {
 		if r.Err != nil || r.Skipped || r.PostURL == "" {
 			continue
@@ -147,10 +148,10 @@ func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, resu
 		if k := kindLabel(r.Kind); k != "" {
 			heading = k + "  ·  " + heading
 		}
-		rows = append(rows, cardRow{
-			heading: heading,
-			text:    r.Text,
-			button: &slack.LinkButton{
+		rows = append(rows, slackcard.Row{
+			Heading: heading,
+			Text:    r.Text,
+			Button: &slack.LinkButton{
 				Label: "View post",
 				URL:   r.PostURL,
 				Style: "primary",
@@ -165,7 +166,7 @@ func (s *Service) notifyPublishSummary(ctx context.Context, date time.Time, resu
 	title := "Social drafts published"
 	contextLine := fmt.Sprintf("%d %s now live for *%s*", len(rows), plural(len(rows), "post", "posts"), day)
 	fallback := fmt.Sprintf("%s - %d post(s) live for %s", title, len(rows), day)
-	s.slack.MustSend(ctx, socialCard(title, contextLine, fallback, slack.ColorSuccess, rows))
+	s.slack.MustSend(ctx, slackcard.Build(title, contextLine, fallback, slack.ColorSuccess, rows))
 }
 
 // postersByPlatformMap inverts the posters slice for O(1) lookup at

@@ -18,6 +18,7 @@ import (
 	"github.com/pkg/errors"
 
 	engagement "github.com/ainsleyclark/godaily/pkg/domain/engagement"
+	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	slacksdk "github.com/slack-go/slack"
 )
@@ -151,11 +152,14 @@ func roundupRequest(curr, prev Snapshot) slack.Request {
 		curr.From.Format("2 Jan"), curr.To.Format("2 Jan"))
 
 	blocks := []slack.Block{
-		slacksdk.NewHeaderBlock(plain("GoDaily — Weekly Roundup")),
-		slacksdk.NewContextBlock("", plain(dateRange)),
+		slacksdk.NewHeaderBlock(plain("Weekly Roundup")),
+		slacksdk.NewContextBlock("", mrkdwn("GoDaily  ·  "+dateRange)),
 		slacksdk.NewDividerBlock(),
-		section("*Headline*\n" + headlineLines(curr.Summary, prev.Summary)),
-		section("*Subscribers*\n" + subscriberLines(curr.Subs)),
+		fieldsSection("*Headline*", headlineFields(curr.Summary, prev.Summary)),
+		slacksdk.NewContextBlock("", mrkdwn(fmt.Sprintf(
+			"Bounced %d  ·  Complained %d", curr.Summary.Bounced, curr.Summary.Complained))),
+		subscriberBlock(curr.Subs),
+		slacksdk.NewDividerBlock(),
 		section("*Top links*\n" + topLinkLines(curr.Items)),
 	}
 
@@ -165,42 +169,46 @@ func roundupRequest(curr, prev Snapshot) slack.Request {
 
 	if curr.BestIssue != nil {
 		bi := curr.BestIssue
-		blocks = append(blocks, section(fmt.Sprintf(
-			"*Best issue*: %s — %.1f%% click rate, %.1f%% open rate",
-			bi.Slug, bi.ClickRate*100, bi.OpenRate*100,
-		)))
+		text := fmt.Sprintf("*Best issue:* %s  ·  %.1f%% click rate  ·  %.1f%% open rate",
+			bi.Slug, bi.ClickRate*100, bi.OpenRate*100)
+		blocks = append(blocks, slacksdk.NewSectionBlock(mrkdwn(text), nil,
+			accessoryButton("View analytics", fmt.Sprintf("%s/issues/%d", env.DashboardURL, bi.IssueID))))
 	}
 
+	blocks = append(blocks, slacksdk.NewContextBlock("",
+		mrkdwn(fmt.Sprintf("<%s|Open the dashboard>", env.DashboardURL))))
+
 	return slack.Request{
-		Text:        fmt.Sprintf("GoDaily — Weekly Roundup (%s)", dateRange),
+		Text:        fmt.Sprintf("GoDaily Weekly Roundup (%s)", dateRange),
 		Blocks:      slack.BlockSet{BlockSet: blocks},
 		Attachments: []slack.Attachment{{Color: slack.ColorInfo}},
 	}
 }
 
-func headlineLines(cs, ps engagement.SummaryStats) string {
-	var b strings.Builder
-	fmt.Fprintf(&b, "• Issues sent: %d  %s\n",
-		cs.IssuesSent, deltaCount(cs.IssuesSent, ps.IssuesSent))
-	fmt.Fprintf(&b, "• Delivered: %s  %s\n",
-		humanCount(cs.Delivered), deltaCount(cs.Delivered, ps.Delivered))
-	fmt.Fprintf(&b, "• Opens: %s unique / %.1f%% open rate  %s\n",
-		humanCount(cs.UniqueOpens), cs.OpenRate*100, deltaPoint(cs.OpenRate, ps.OpenRate))
-	fmt.Fprintf(&b, "• Clicks: %s unique / %.1f%% click rate  %s\n",
-		humanCount(cs.UniqueClicks), cs.ClickRate*100, deltaPoint(cs.ClickRate, ps.ClickRate))
-	fmt.Fprintf(&b, "• Bounced %d · Complained %d", cs.Bounced, cs.Complained)
-	return b.String()
+// headlineFields returns the four headline KPIs as two-column section
+// fields, each annotated with its delta versus the prior window.
+func headlineFields(cs, ps engagement.SummaryStats) []string {
+	return []string{
+		fmt.Sprintf("*Issues sent*\n%d  %s", cs.IssuesSent, deltaCount(cs.IssuesSent, ps.IssuesSent)),
+		fmt.Sprintf("*Delivered*\n%s  %s", humanCount(cs.Delivered), deltaCount(cs.Delivered, ps.Delivered)),
+		fmt.Sprintf("*Open rate*\n%.1f%%  %s", cs.OpenRate*100, deltaPoint(cs.OpenRate, ps.OpenRate)),
+		fmt.Sprintf("*Click rate*\n%.1f%%  %s", cs.ClickRate*100, deltaPoint(cs.ClickRate, ps.ClickRate)),
+	}
 }
 
-func subscriberLines(d engagement.SubscriberData) string {
+// subscriberBlock renders the subscriber stats as a fields section, or a
+// single line when there was no activity in the window.
+func subscriberBlock(d engagement.SubscriberData) slack.Block {
 	sp, ok := lastSubscriberPoint(d)
 	if !ok {
-		return "• No subscriber activity this week"
+		return section("*Subscribers*\nNo subscriber activity this week")
 	}
-	return fmt.Sprintf(
-		"• +%d new, %d confirmed, %d unsubscribed → net %s\n• Active: %s",
-		sp.New, sp.Confirmed, sp.Unsubscribed, signed(sp.NetChange), humanCount(sp.ActiveAtEnd),
-	)
+	return fieldsSection("*Subscribers*", []string{
+		fmt.Sprintf("*New*\n+%d", sp.New),
+		fmt.Sprintf("*Net change*\n%s", signed(sp.NetChange)),
+		fmt.Sprintf("*Confirmed*\n%d", sp.Confirmed),
+		fmt.Sprintf("*Active*\n%s", humanCount(sp.ActiveAtEnd)),
+	})
 }
 
 func topLinkLines(items []engagement.ItemMetrics) string {
@@ -209,7 +217,7 @@ func topLinkLines(items []engagement.ItemMetrics) string {
 	}
 	parts := make([]string, len(items))
 	for i, it := range items {
-		parts[i] = fmt.Sprintf("%d. <%s|%s> — %d clicks · %s",
+		parts[i] = fmt.Sprintf("%d. <%s|%s>  ·  %d clicks  ·  %s",
 			i+1, it.URL, it.Title, it.Clicks, it.Source)
 	}
 	return strings.Join(parts, "\n")
@@ -244,6 +252,23 @@ func mrkdwn(text string) *slack.TextObject {
 
 func section(text string) *slack.Section {
 	return slacksdk.NewSectionBlock(mrkdwn(text), nil, nil)
+}
+
+// fieldsSection renders a titled section whose body is a list of two-column
+// markdown fields.
+func fieldsSection(title string, fields []string) *slack.Section {
+	objs := make([]*slack.TextObject, len(fields))
+	for i, f := range fields {
+		objs[i] = mrkdwn(f)
+	}
+	return slacksdk.NewSectionBlock(mrkdwn(title), objs, nil)
+}
+
+// accessoryButton builds a section accessory link button.
+func accessoryButton(label, url string) *slack.Accessory {
+	btn := slacksdk.NewButtonBlockElement("", url, plain(label))
+	btn.URL = url
+	return slacksdk.NewAccessory(btn)
 }
 
 // lastSubscriberPoint returns the most recent point in the series, if any.
