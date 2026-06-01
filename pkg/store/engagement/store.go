@@ -273,6 +273,58 @@ ORDER BY bucket_start ASC`
 	}, nil
 }
 
+// IssueTrend returns a zero-filled time-series for a single issue.
+//
+// It mirrors Trend but scopes the aggregation to one issue via an issue_id
+// predicate. Raw SQL is required for the same reason as Trend: the bucketing
+// expression in SELECT and GROUP BY is chosen at runtime and cannot be bound
+// as a sqlc parameter.
+func (s *Store) IssueTrend(ctx context.Context, issueID int64, f engagement.MetricsFilter, metric, bucket string) (engagement.TrendData, error) {
+	bucketExpr := trendBucketSQL(bucket)
+	conds, timeArgs := timeConditions(f, "e.occurred_at")
+
+	// issueID binds the first ? in the WHERE clause, so it must precede the
+	// time-condition args.
+	args := append([]any{issueID}, timeArgs...)
+
+	query := /* #nosec G202 -- bucketExpr is a hard-coded string from trendBucketSQL, conds uses only ? placeholders */ `
+SELECT
+    ` + bucketExpr + ` AS bucket_start,
+    COUNT(CASE          WHEN e.event_type = 'delivered' THEN 1               END) AS delivered,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'opened'    THEN e.subscriber_id END) AS unique_opens,
+    COUNT(CASE          WHEN e.event_type = 'opened'    THEN 1               END) AS total_opens,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'clicked'   THEN e.subscriber_id END) AS unique_clicks,
+    COUNT(CASE          WHEN e.event_type = 'clicked'   THEN 1               END) AS total_clicks
+FROM email_events e
+WHERE e.issue_id = ?` + conds + `
+GROUP BY bucket_start
+ORDER BY bucket_start ASC`
+
+	rows, err := s.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		return engagement.TrendData{}, err
+	}
+	defer rows.Close()
+
+	byDate := make(map[string]trendBucket)
+	for rows.Next() {
+		var tb trendBucket
+		if err = rows.Scan(&tb.bucketStart, &tb.delivered, &tb.uniqueOpens, &tb.totalOpens, &tb.uniqueClicks, &tb.totalClicks); err != nil {
+			return engagement.TrendData{}, err
+		}
+		byDate[tb.bucketStart] = tb
+	}
+	if err = rows.Err(); err != nil {
+		return engagement.TrendData{}, err
+	}
+
+	return engagement.TrendData{
+		Metric: metric,
+		Bucket: bucket,
+		Points: buildTrendPoints(f, bucket, byDate, metric),
+	}, nil
+}
+
 // subscriberBucket holds raw subscriber event counts for a single time bucket.
 type subscriberBucket struct {
 	bucketStart  string

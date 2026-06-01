@@ -942,7 +942,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Response"];
+                        "application/json": components["schemas"]["IssueDetailResponse"];
                     };
                 };
                 /** @description Slug is required */
@@ -964,6 +964,86 @@ export interface paths {
                     };
                 };
                 /** @description Failed to fetch issue metrics */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/metrics/issues/{slug}/trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Single-issue engagement time series.
+         * @description Returns a time series for one issue's chosen engagement metric, bucketed by day or week. When no window is supplied it defaults to the issue's send date through now.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Relative window: day, week, month, year, all */
+                    period?: string;
+                    /** @description Start date (YYYY-MM-DD) */
+                    from?: string;
+                    /** @description End date (YYYY-MM-DD) */
+                    to?: string;
+                    /** @description Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate */
+                    metric?: string;
+                    /** @description Bucket: day or week */
+                    bucket?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description Issue date slug */
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully retrieved issue trend data */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TrendResponse"];
+                    };
+                };
+                /** @description Invalid query parameters */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to fetch issue trend data */
                 500: {
                     headers: {
                         [name: string]: unknown;
@@ -2115,6 +2195,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        IssueDetailResponse: {
+            data?: components["schemas"]["metrics.IssueDetail"];
+            error?: boolean;
+            /** @example User formatted message from the API */
+            message?: string;
+            status?: number;
+        };
         IssueListResponse: {
             data?: components["schemas"]["api.PaginatedResponse-digest_Issue"];
             error?: boolean;
@@ -2279,12 +2366,31 @@ export interface components {
             unique_clicks?: number;
             unique_opens?: number;
         };
+        "engagement.IssueStats": {
+            bounced?: number;
+            click_rate?: number;
+            complained?: number;
+            delayed?: number;
+            delivered?: number;
+            failed?: number;
+            issue_id?: number;
+            open_rate?: number;
+            suppressed?: number;
+            total_clicks?: number;
+            total_opens?: number;
+            unique_clicks?: number;
+            unique_opens?: number;
+        };
         "engagement.ItemMetrics": {
             clicks?: number;
             item_id?: number;
             source?: string;
             tag?: string;
             title?: string;
+            url?: string;
+        };
+        "engagement.LinkClicks": {
+            clicks?: number;
             url?: string;
         };
         "engagement.SocialPostEngagement": {
@@ -2346,6 +2452,10 @@ export interface components {
             bucket_start?: string;
             delivered?: number;
             value?: number;
+        };
+        "metrics.IssueDetail": {
+            links?: components["schemas"]["engagement.LinkClicks"][];
+            stats?: components["schemas"]["engagement.IssueStats"];
         };
         "news.Author": {
             avatar_url?: string;

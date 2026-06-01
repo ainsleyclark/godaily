@@ -9,11 +9,15 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import DigestPreview from '$lib/components/digest-preview.svelte';
 	import DigestEditor from '$lib/components/digest-editor.svelte';
+	import IssuePerformance from '$lib/components/issue-performance.svelte';
 	import { ArrowLeft, ExternalLink } from '@lucide/svelte';
 	import { formatDate } from '$lib/utils/format';
 	import { toast } from 'svelte-sonner';
 
 	const issueId = $derived(Number(page.params.id));
+
+	type Tab = 'content' | 'performance';
+	let activeTab = $state<Tab>('content');
 
 	let issue = $state<DigestIssue | null>(null);
 	let loading = $state(true);
@@ -24,6 +28,8 @@
 	let summary = $state('');
 
 	const isDraft = $derived(issue?.status === 'draft');
+	// Performance only makes sense once an issue has been sent and accrued events.
+	const showPerformance = $derived(issue?.status === 'sent');
 	const dirty = $derived(
 		issue !== null && (subject !== issue.subject || summary !== (issue.summary ?? ''))
 	);
@@ -148,64 +154,86 @@
 	{:else if !issue}
 		<div class="text-muted-foreground p-8 text-center text-sm">Issue not found</div>
 	{:else}
-		<Card>
-			<CardHeader>
-				<CardTitle>{isDraft ? 'Edit fields' : 'Issue fields'}</CardTitle>
-			</CardHeader>
-			<CardContent class="space-y-4">
-				<div class="space-y-1.5">
-					<label for="subject" class="text-sm font-medium">Subject</label>
-					<Input
-						id="subject"
-						bind:value={subject}
-						disabled={!isDraft}
-						placeholder="Email subject and page title"
-					/>
-				</div>
-				<div class="space-y-1.5">
-					<label for="summary" class="text-sm font-medium">Summary</label>
-					<textarea
-						id="summary"
-						bind:value={summary}
-						disabled={!isDraft}
-						rows="3"
-						class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
-						placeholder="Optional intro paragraph"
-					></textarea>
-				</div>
-				{#if !isDraft}
-					<p class="text-muted-foreground text-xs">Only draft issues can be edited.</p>
-				{/if}
-			</CardContent>
-		</Card>
+		{#if showPerformance}
+			<div class="bg-secondary/40 flex w-fit items-center rounded-md p-0.5">
+				{#each [{ id: 'content', label: 'Content' }, { id: 'performance', label: 'Performance' }] as const as tab (tab.id)}
+					<button
+						type="button"
+						onclick={() => (activeTab = tab.id)}
+						class="rounded px-3 py-1 text-xs font-medium transition-colors"
+						class:bg-background={activeTab === tab.id}
+						class:text-foreground={activeTab === tab.id}
+						class:shadow-sm={activeTab === tab.id}
+						class:text-muted-foreground={activeTab !== tab.id}
+					>
+						{tab.label}
+					</button>
+				{/each}
+			</div>
+		{/if}
 
-		<Card>
-			<CardHeader>
-				<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({inDigestItems.length} items)</CardTitle>
-			</CardHeader>
-			<CardContent>
-				{#if isDraft}
-					<DigestEditor
-						items={inDigestItems}
-						busy={mutatingItems}
-						onReorder={reorderItems}
-						onDelete={deleteItem}
-					/>
-				{:else}
-					<DigestPreview items={inDigestItems} />
-				{/if}
-			</CardContent>
-		</Card>
-
-		{#if notInDigestItems.length > 0}
+		{#if activeTab === 'content'}
 			<Card>
 				<CardHeader>
-					<CardTitle>Not included ({notInDigestItems.length} items)</CardTitle>
+					<CardTitle>{isDraft ? 'Edit fields' : 'Issue fields'}</CardTitle>
 				</CardHeader>
-				<CardContent>
-					<DigestPreview items={notInDigestItems} />
+				<CardContent class="space-y-4">
+					<div class="space-y-1.5">
+						<label for="subject" class="text-sm font-medium">Subject</label>
+						<Input
+							id="subject"
+							bind:value={subject}
+							disabled={!isDraft}
+							placeholder="Email subject and page title"
+						/>
+					</div>
+					<div class="space-y-1.5">
+						<label for="summary" class="text-sm font-medium">Summary</label>
+						<textarea
+							id="summary"
+							bind:value={summary}
+							disabled={!isDraft}
+							rows="3"
+							class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
+							placeholder="Optional intro paragraph"
+						></textarea>
+					</div>
+					{#if !isDraft}
+						<p class="text-muted-foreground text-xs">Only draft issues can be edited.</p>
+					{/if}
 				</CardContent>
 			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({inDigestItems.length} items)</CardTitle>
+				</CardHeader>
+				<CardContent>
+					{#if isDraft}
+						<DigestEditor
+							items={inDigestItems}
+							busy={mutatingItems}
+							onReorder={reorderItems}
+							onDelete={deleteItem}
+						/>
+					{:else}
+						<DigestPreview items={inDigestItems} />
+					{/if}
+				</CardContent>
+			</Card>
+
+			{#if notInDigestItems.length > 0}
+				<Card>
+					<CardHeader>
+						<CardTitle>Not included ({notInDigestItems.length} items)</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<DigestPreview items={notInDigestItems} />
+					</CardContent>
+				</Card>
+			{/if}
+		{:else}
+			<IssuePerformance slug={issue.slug} />
 		{/if}
 	{/if}
 </div>

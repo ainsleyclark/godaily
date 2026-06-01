@@ -133,6 +133,9 @@ type MetricsRepository interface {
 	// Trend returns a time-series for the requested metric, bucketed by day or week.
 	Trend(ctx context.Context, f MetricsFilter, metric, bucket string) (TrendData, error)
 
+	// IssueTrend returns a per-issue time-series for the requested metric, bucketed by day or week.
+	IssueTrend(ctx context.Context, issueID int64, f MetricsFilter, metric, bucket string) (TrendData, error)
+
 	// SubscriberGrowth returns subscriber growth and churn bucketed over time.
 	SubscriberGrowth(ctx context.Context, f MetricsFilter, bucket string) (SubscriberData, error)
 }

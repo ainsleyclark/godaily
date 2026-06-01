@@ -8,6 +8,24 @@ const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
     "components": {
         "schemas": {
+            "IssueDetailResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/metrics.IssueDetail"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "IssueListResponse": {
                 "properties": {
                     "data": {
@@ -483,6 +501,50 @@ const docTemplate = `{
                 },
                 "type": "object"
             },
+            "engagement.IssueStats": {
+                "properties": {
+                    "bounced": {
+                        "type": "integer"
+                    },
+                    "click_rate": {
+                        "type": "number"
+                    },
+                    "complained": {
+                        "type": "integer"
+                    },
+                    "delayed": {
+                        "type": "integer"
+                    },
+                    "delivered": {
+                        "type": "integer"
+                    },
+                    "failed": {
+                        "type": "integer"
+                    },
+                    "issue_id": {
+                        "type": "integer"
+                    },
+                    "open_rate": {
+                        "type": "number"
+                    },
+                    "suppressed": {
+                        "type": "integer"
+                    },
+                    "total_clicks": {
+                        "type": "integer"
+                    },
+                    "total_opens": {
+                        "type": "integer"
+                    },
+                    "unique_clicks": {
+                        "type": "integer"
+                    },
+                    "unique_opens": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "engagement.ItemMetrics": {
                 "properties": {
                     "clicks": {
@@ -499,6 +561,17 @@ const docTemplate = `{
                     },
                     "title": {
                         "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "engagement.LinkClicks": {
+                "properties": {
+                    "clicks": {
+                        "type": "integer"
                     },
                     "url": {
                         "type": "string"
@@ -682,6 +755,21 @@ const docTemplate = `{
                     },
                     "value": {
                         "type": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "metrics.IssueDetail": {
+                "properties": {
+                    "links": {
+                        "items": {
+                            "$ref": "#/components/schemas/engagement.LinkClicks"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "stats": {
+                        "$ref": "#/components/schemas/engagement.IssueStats"
                     }
                 },
                 "type": "object"
@@ -1884,7 +1972,7 @@ const docTemplate = `{
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Response"
+                                    "$ref": "#/components/schemas/IssueDetailResponse"
                                 }
                             }
                         },
@@ -1927,6 +2015,113 @@ const docTemplate = `{
                     }
                 ],
                 "summary": "Single-issue stats and top links.",
+                "tags": [
+                    "metrics"
+                ]
+            }
+        },
+        "/metrics/issues/{slug}/trend": {
+            "get": {
+                "description": "Returns a time series for one issue's chosen engagement metric, bucketed by day or week. When no window is supplied it defaults to the issue's send date through now.",
+                "parameters": [
+                    {
+                        "description": "Issue date slug",
+                        "in": "path",
+                        "name": "slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Relative window: day, week, month, year, all",
+                        "in": "query",
+                        "name": "period",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Start date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "End date (YYYY-MM-DD)",
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate",
+                        "in": "query",
+                        "name": "metric",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Bucket: day or week",
+                        "in": "query",
+                        "name": "bucket",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrendResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved issue trend data"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to fetch issue trend data"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Single-issue engagement time series.",
                 "tags": [
                     "metrics"
                 ]

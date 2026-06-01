@@ -7,6 +7,7 @@ package metrics
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -91,6 +92,15 @@ func (h *Handler) Issues(c *webkit.Context) error {
 // topLinksLimit is the maximum number of top-clicked links returned per issue.
 const topLinksLimit = 10
 
+// IssueDetail bundles single-issue engagement stats with its top-clicked links.
+type IssueDetail struct {
+	Stats engagement.IssueStats   `json:"stats"`
+	Links []engagement.LinkClicks `json:"links"`
+}
+
+// IssueDetailResponse is the response envelope for GET /metrics/issues/{slug}.
+type IssueDetailResponse = api.Response[IssueDetail] //@name IssueDetailResponse
+
 // IssueBySlug godoc
 //
 //	@Summary		Single-issue stats and top links.
@@ -98,8 +108,8 @@ const topLinksLimit = 10
 //	@Tags			metrics
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			slug	path		string			true	"Issue date slug"
-//	@Success		200		{object}	api.MessageResponse	"Issue stats and top links"
+//	@Param			slug	path		string				true	"Issue date slug"
+//	@Success		200		{object}	IssueDetailResponse	"Issue stats and top links"
 //	@Failure		400		{object}	api.MessageResponse	"Slug is required"
 //	@Failure		404		{object}	api.MessageResponse	"Issue not found"
 //	@Failure		500		{object}	api.MessageResponse	"Failed to fetch issue metrics"
@@ -130,8 +140,81 @@ func (h *Handler) IssueBySlug(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to fetch top links")
 	}
 
-	return api.OK(c, http.StatusOK, map[string]any{
-		"stats": stats,
-		"links": links,
+	return api.OK(c, http.StatusOK, IssueDetail{
+		Stats: stats,
+		Links: links,
 	}, "Successfully retrieved issue metrics")
+}
+
+// IssueTrend godoc
+//
+//	@Summary		Single-issue engagement time series.
+//	@Description	Returns a time series for one issue's chosen engagement metric, bucketed by day or week. When no window is supplied it defaults to the issue's send date through now.
+//	@Tags			metrics
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			slug	path		string			true	"Issue date slug"
+//	@Param			period	query		string			false	"Relative window: day, week, month, year, all"
+//	@Param			from	query		string			false	"Start date (YYYY-MM-DD)"
+//	@Param			to		query		string			false	"End date (YYYY-MM-DD)"
+//	@Param			metric	query		string			false	"Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate"
+//	@Param			bucket	query		string			false	"Bucket: day or week"
+//	@Success		200		{object}	TrendResponse		"Successfully retrieved issue trend data"
+//	@Failure		400		{object}	api.MessageResponse	"Invalid query parameters"
+//	@Failure		404		{object}	api.MessageResponse	"Issue not found"
+//	@Failure		500		{object}	api.MessageResponse	"Failed to fetch issue trend data"
+//	@Router			/metrics/issues/{slug}/trend [get]
+func (h *Handler) IssueTrend(c *webkit.Context) error {
+	ctx := c.Context()
+
+	slug := c.Param("slug")
+	if slug == "" {
+		return api.Error(c, http.StatusBadRequest, "Slug is required")
+	}
+
+	var req trendRequest
+	if err := decoder.Decode(&req, c.Request.URL.Query()); err != nil {
+		return api.Error(c, http.StatusBadRequest, "Invalid query parameters")
+	}
+	if err := req.validate(); err != nil {
+		return api.Error(c, http.StatusBadRequest, err.Error())
+	}
+
+	issue, err := h.issuesRepo.FindBySlug(ctx, slug)
+	if err != nil {
+		if errors.Is(err, store.ErrNotFound) {
+			return api.Error(c, http.StatusNotFound, "Issue not found")
+		}
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue")
+	}
+
+	from, to, err := parseDateWindow(req.From, req.To, req.Period)
+	if err != nil {
+		return api.Error(c, http.StatusBadRequest, err.Error())
+	}
+	// Default to the issue's lifetime (send date through now) so the series is
+	// zero-filled from when the issue went out rather than collapsing to the
+	// buckets that happen to have events.
+	if from == nil && to == nil {
+		sent := issue.SentAt.UTC().Truncate(24 * time.Hour)
+		now := time.Now().UTC()
+		from = &sent
+		to = &now
+	}
+
+	metric := req.Metric
+	if metric == "" {
+		metric = "unique_clicks"
+	}
+	bucket := req.Bucket
+	if bucket == "" {
+		bucket = "day"
+	}
+
+	data, err := h.metricsRepo.IssueTrend(ctx, issue.ID, engagement.MetricsFilter{From: from, To: to}, metric, bucket)
+	if err != nil {
+		return api.Error(c, http.StatusInternalServerError, "Failed to fetch issue trend data")
+	}
+
+	return api.OK(c, http.StatusOK, data, "Successfully retrieved issue trend data")
 }

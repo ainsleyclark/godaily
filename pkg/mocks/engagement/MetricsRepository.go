@@ -56,6 +56,21 @@ func (mr *MockMetricsRepositoryMockRecorder) IssueList(ctx, f, sort any) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IssueList", reflect.TypeOf((*MockMetricsRepository)(nil).IssueList), ctx, f, sort)
 }
 
+// IssueTrend mocks base method.
+func (m *MockMetricsRepository) IssueTrend(ctx context.Context, issueID int64, f engagement.MetricsFilter, metric, bucket string) (engagement.TrendData, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IssueTrend", ctx, issueID, f, metric, bucket)
+	ret0, _ := ret[0].(engagement.TrendData)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IssueTrend indicates an expected call of IssueTrend.
+func (mr *MockMetricsRepositoryMockRecorder) IssueTrend(ctx, issueID, f, metric, bucket any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IssueTrend", reflect.TypeOf((*MockMetricsRepository)(nil).IssueTrend), ctx, issueID, f, metric, bucket)
+}
+
 // ItemList mocks base method.
 func (m *MockMetricsRepository) ItemList(ctx context.Context, f engagement.MetricsFilter) ([]engagement.ItemMetrics, error) {
 	m.ctrl.T.Helper()
