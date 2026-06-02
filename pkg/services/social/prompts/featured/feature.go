@@ -53,9 +53,18 @@ type candidate struct {
 // shortlist. The weighted score multiplies the item's per-source relevance
 // score by the tag weight, so a borderline article still loses to a fresh
 // language release.
+//
+// Job listings are excluded outright: they carry a high intrinsic score
+// (JobBoost rewards Go-in-title, salary, and remote roles), which let them
+// out-rank Reddit discussions despite the default tag weight, and the
+// selection prompt never deprioritises them. A job is never the day's
+// reshare-worthy anchor, so it must not reach the shortlist at all.
 func buildCandidates(items []news.Item) []candidate {
 	out := make([]candidate, 0, len(items))
 	for _, it := range items {
+		if it.Tag == news.TagJobs {
+			continue
+		}
 		w, ok := tagWeights[it.Tag]
 		if !ok {
 			// Unknown tags get a modest baseline so they remain eligible

@@ -45,6 +45,28 @@ func TestBuildCandidates(t *testing.T) {
 		assert.Equal(t, "u1", got[3].URL)
 	})
 
+	t.Run("Jobs excluded outright", func(t *testing.T) {
+		t.Parallel()
+		// A high-scoring job listing must never reach the shortlist, even
+		// when its weighted score would otherwise beat genuine content.
+		withJob := []news.Item{
+			{Title: "Senior Go role", URL: "job", Source: news.SourceHNJobs, Tag: news.TagJobs, Score: 5.0},
+			{Title: "Real article", URL: "art", Source: news.SourceMedium, Tag: news.TagArticle, Score: 0.4},
+		}
+		got := buildCandidates(withJob)
+		require.Len(t, got, 1)
+		assert.Equal(t, "art", got[0].URL)
+	})
+
+	t.Run("All-jobs issue yields no candidates", func(t *testing.T) {
+		t.Parallel()
+		onlyJobs := []news.Item{
+			{Title: "Job A", URL: "a", Source: news.SourceHNJobs, Tag: news.TagJobs, Score: 3.0},
+			{Title: "Job B", URL: "b", Source: news.SourceRemoteOK, Tag: news.TagJobs, Score: 2.0},
+		}
+		assert.Empty(t, buildCandidates(onlyJobs))
+	})
+
 	t.Run("Cap respected", func(t *testing.T) {
 		t.Parallel()
 		many := make([]news.Item, maxCandidates+5)
