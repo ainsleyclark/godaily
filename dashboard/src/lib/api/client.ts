@@ -189,6 +189,11 @@ export const api = {
 				params: { path: { id: issueId, itemID: itemId } }
 			})
 		),
+	// Permanently removes the item row from the database, regardless of issue
+	// status. Unlike deleteDigestItem (which only unlinks), this is irreversible
+	// and the item will not reappear in a future build.
+	deleteNewsItem: (itemId: number) =>
+		unwrap<unknown>(client.DELETE('/items/{id}', { params: { path: { id: itemId } } })),
 	reorderDigestItems: (issueId: number, itemIds: number[]) =>
 		unwrap<DigestIssue>(
 			client.PATCH('/issues/{id}/items/reorder', {

@@ -3,18 +3,38 @@
 	import { groupBySection, SECTION_ORDER, type SectionTag } from '$lib/digest/sections';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { ExternalLink, GripVertical, Trash2 } from '@lucide/svelte';
+	import { AlertDialog } from '$lib/components/ui/alert-dialog';
+	import { ExternalLink, GripVertical, Trash2, X } from '@lucide/svelte';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 
 	interface Props {
 		items: DigestItem[];
 		onReorder: (orderedIds: number[]) => void | Promise<void>;
+		/** Unlinks the item from the issue, keeping it in the raw pool. */
 		onDelete: (itemId: number) => void | Promise<void>;
+		/** Permanently deletes the item row from the database. */
+		onHardDelete: (itemId: number) => void | Promise<void>;
 		busy?: boolean;
 	}
 
-	let { items, onReorder, onDelete, busy = false }: Props = $props();
+	let { items, onReorder, onDelete, onHardDelete, busy = false }: Props = $props();
+
+	// The item awaiting a permanent-delete confirmation, or null when the dialog
+	// is closed.
+	let pendingDelete = $state<DigestItem | null>(null);
+
+	function requestHardDelete(item: DigestItem) {
+		if (busy) return;
+		pendingDelete = item;
+	}
+
+	async function confirmHardDelete() {
+		const item = pendingDelete;
+		if (!item) return;
+		await onHardDelete(item.id);
+		pendingDelete = null;
+	}
 
 	// dnd-action mutates the array it operates on, so each section gets its own
 	// local copy keyed off the parent items prop. Re-derive whenever items change.
@@ -59,8 +79,8 @@
 	<div class="text-muted-foreground p-8 text-center text-sm">No items in this issue</div>
 {:else}
 	<p class="text-muted-foreground mb-4 text-xs">
-		Drag to reorder within a section. Deleting an item unlinks it from the issue but keeps it in
-		the raw pool.
+		Drag to reorder within a section. <strong>Remove from issue</strong> unlinks an item but keeps
+		it in the raw pool; <strong>Delete permanently</strong> removes it from the database for good.
 	</p>
 	<div class="space-y-8">
 		{#each sections as section (section.tag)}
@@ -117,16 +137,32 @@
 									<p class="text-muted-foreground text-sm leading-relaxed">{item.snippet}</p>
 								{/if}
 							</div>
-							<Button
-								variant="ghost"
-								size="icon"
-								onclick={() => confirmDelete(item)}
-								disabled={busy}
-								aria-label="Remove from issue"
-								class="text-muted-foreground hover:text-destructive shrink-0 opacity-0 transition group-hover:opacity-100"
+							<div
+								class="flex shrink-0 items-center gap-0.5 opacity-0 transition group-hover:opacity-100"
 							>
-								<Trash2 class="h-4 w-4" />
-							</Button>
+								<Button
+									variant="ghost"
+									size="icon"
+									onclick={() => confirmDelete(item)}
+									disabled={busy}
+									aria-label="Remove from issue"
+									title="Remove from issue (keeps in pool)"
+									class="text-muted-foreground hover:text-foreground"
+								>
+									<X class="h-4 w-4" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="icon"
+									onclick={() => requestHardDelete(item)}
+									disabled={busy}
+									aria-label="Delete permanently"
+									title="Delete permanently from the database"
+									class="text-muted-foreground hover:text-destructive"
+								>
+									<Trash2 class="h-4 w-4" />
+								</Button>
+							</div>
 						</li>
 					{/each}
 				</ul>
@@ -134,3 +170,15 @@
 		{/each}
 	</div>
 {/if}
+
+<AlertDialog
+	open={pendingDelete !== null}
+	title="Delete item permanently?"
+	description={pendingDelete
+		? `"${pendingDelete.title}" will be removed from the database and cannot be recovered. It will not reappear in a future build.`
+		: ''}
+	confirmLabel="Delete permanently"
+	busy={busy}
+	onConfirm={confirmHardDelete}
+	onCancel={() => (pendingDelete = null)}
+/>

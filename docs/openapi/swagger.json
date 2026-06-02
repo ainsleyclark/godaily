@@ -1801,6 +1801,71 @@
             }
         },
         "/items/{id}": {
+            "delete": {
+                "description": "Hard-deletes a news item from the database by its numeric ID, regardless of whether it is linked to an issue. The row is removed entirely and will not reappear in a future build. Use the issue unlink endpoint instead to keep the item in the raw pool.",
+                "parameters": [
+                    {
+                        "description": "Item ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Successfully deleted item"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "ID is required or not a positive integer"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Item not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to delete item"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Permanently delete a news item.",
+                "tags": [
+                    "items"
+                ]
+            },
             "get": {
                 "description": "Returns a single news item identified by its numeric ID.",
                 "parameters": [

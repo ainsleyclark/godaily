@@ -224,6 +224,33 @@ func TestItems_Store(t *testing.T) {
 		}
 	})
 
+	t.Run("Delete", func(t *testing.T) {
+		t.Log("Hard-deletes a single row")
+		{
+			created, err := s.Create(ctx, nil, 30, news.Item{
+				Source:    news.SourceHN,
+				Title:     "Off-topic item",
+				URL:       "https://news.ycombinator.com/item?id=delete-me",
+				Score:     0.1,
+				Published: published,
+			})
+			require.NoError(t, err)
+
+			require.NoError(t, s.Delete(ctx, created.ID))
+
+			_, err = s.Find(ctx, created.ID)
+			require.Error(t, err)
+			assert.Equal(t, store.ErrNotFound, err)
+		}
+
+		t.Log("Missing id returns ErrNotFound")
+		{
+			err := s.Delete(ctx, 999_999)
+			require.Error(t, err)
+			assert.Equal(t, store.ErrNotFound, err)
+		}
+	})
+
 	t.Run("DeleteByIssue", func(t *testing.T) {
 		require.NoError(t, s.DeleteByIssue(ctx, issue.ID))
 		got, err := s.List(ctx, news.ItemListOptions{IssueID: &issue.ID})
@@ -282,6 +309,13 @@ func TestItems_Store(t *testing.T) {
 		t.Log("DeleteByIssue")
 		{
 			assert.Error(t, s.DeleteByIssue(ctx, 1))
+		}
+
+		t.Log("Delete")
+		{
+			err := s.Delete(ctx, 1)
+			assert.Error(t, err)
+			assert.NotErrorIs(t, err, store.ErrNotFound)
 		}
 
 		t.Log("FindByURLInIssue")

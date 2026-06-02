@@ -32,6 +32,7 @@ func New(a *godaily.App) *Handler {
 // Routes registers all items routes on kit.
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/{id}", h.ByID, auth)
+	kit.Delete("/{id}", h.Delete, auth)
 }
 
 // ItemResponse is the response envelope for GET /items/{id}.
