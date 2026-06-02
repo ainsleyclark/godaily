@@ -7,5 +7,6 @@
 {{range .Items}}[{{.SourceLabel}}] {{.Title}}
 {{if .Meta}}   {{.Meta}}{{end}}
    {{.URL}}
+{{end}}{{if .BrowseURL}}   Read {{.More}} more {{.Title}}: {{.BrowseURL}}
 {{end}}
 {{end}}{{ end }}
