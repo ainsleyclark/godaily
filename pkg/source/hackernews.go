@@ -27,7 +27,15 @@ func init() {
 	news.Register(news.SourceHN, func(cfg env.Config) news.Fetcher { return NewHackerNews(cfg) })
 }
 
-const hnBaseURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story&hitsPerPage=50"
+// hnBaseURL is the Algolia search endpoint for recent Go stories.
+//
+// restrictSearchableAttributes=title,url constrains the query=golang match to
+// the title and URL only. Without it Algolia full-text searches story_text too,
+// so an Ask-HN / self-post that merely mentions Go in its body (e.g. a post about
+// Python's future whose author notes they "switched to Golang") is returned as a
+// false positive. typoTolerance=false stops fuzzy matches like molang163 or
+// "GoLand" from being treated as "golang" hits.
+const hnBaseURL = "https://hn.algolia.com/api/v1/search_by_date?query=golang&tags=story&hitsPerPage=50&restrictSearchableAttributes=title,url&typoTolerance=false"
 
 // NewHackerNews creates a Hacker News Algolia client.
 func NewHackerNews(_ env.Config) *HackerNews {
