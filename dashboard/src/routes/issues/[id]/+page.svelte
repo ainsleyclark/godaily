@@ -30,6 +30,9 @@
 	const isDraft = $derived(issue?.status === 'draft');
 	// Performance only makes sense once an issue has been sent and accrued events.
 	const showPerformance = $derived(issue?.status === 'sent');
+	// Both draft and sent issues are published to the public site (drafts as a
+	// live copy ahead of the send), so link out for either status.
+	const hasLiveCopy = $derived(issue?.status === 'sent' || issue?.status === 'draft');
 	const dirty = $derived(
 		issue !== null && (subject !== issue.subject || summary !== (issue.summary ?? ''))
 	);
@@ -147,14 +150,14 @@
 			{/if}
 		</div>
 		<div class="flex shrink-0 items-center gap-2">
-			{#if issue && issue.status === 'sent'}
+			{#if issue && hasLiveCopy}
 				<a
-					href={`https://godaily.dev/issues/${issue.slug}`}
+					href={`https://godaily.dev/issues/${issue.slug}/`}
 					target="_blank"
 					rel="noopener"
 					class="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
 				>
-					View live <ExternalLink class="h-3 w-3" />
+					{isDraft ? 'View live copy' : 'View live'} <ExternalLink class="h-3 w-3" />
 				</a>
 			{/if}
 			{#if isDraft}
