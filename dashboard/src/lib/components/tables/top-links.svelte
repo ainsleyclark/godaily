@@ -2,8 +2,10 @@
 	import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '$lib/components/ui/card';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Table, THead, TBody, TR, TH, TD } from '$lib/components/ui/table';
+	import { Badge } from '$lib/components/ui/badge';
 	import type { LinkClicks } from '$lib/api/types';
 	import { formatCompact } from '$lib/utils/format';
+	import { prettify } from '$lib/utils/labels';
 
 	interface Props {
 		data: LinkClicks[] | null;
@@ -14,6 +16,8 @@
 
 	const rows = $derived((data ?? []).slice(0, limit));
 
+	// Links that map to a digest item carry its title; fall back to a tidy
+	// hostname + path for links that don't (e.g. footer or CTA links).
 	function label(url: string): string {
 		try {
 			const u = new URL(url);
@@ -43,6 +47,7 @@
 				<THead>
 					<TR>
 						<TH>Link</TH>
+						<TH>Source</TH>
 						<TH class="text-right">Clicks</TH>
 					</TR>
 				</THead>
@@ -54,12 +59,16 @@
 									href={r.url}
 									target="_blank"
 									rel="noopener"
-									class="hover:text-primary block max-w-[420px] truncate font-medium"
-									title={r.url}
+									class="hover:text-primary block max-w-[300px] truncate font-medium"
+									title={r.title || r.url}
 								>
-									{label(r.url)}
+									{r.title || label(r.url)}
 								</a>
+								{#if r.tag}
+									<Badge variant="outline" class="mt-1">{prettify(r.tag)}</Badge>
+								{/if}
 							</TD>
+							<TD class="text-muted-foreground text-xs">{r.source ? prettify(r.source) : '—'}</TD>
 							<TD class="text-right tabular-nums font-medium">{formatCompact(r.clicks)}</TD>
 						</TR>
 					{/each}

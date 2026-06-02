@@ -52,12 +52,20 @@ func insertSubscriberAt(t *testing.T, ctx context.Context, db *sql.DB, email str
 	require.NoError(t, err)
 }
 
-// insertEmailEventAt inserts an email event with occurred_at written as an
-// RFC3339 string. The modernc sqlite driver used in tests stores a bound
-// time.Time via Go's time.Time.String() layout, which SQLite's strftime cannot
-// bucket; production (Turso) stores RFC3339 text, which it can. Writing the
-// timestamp as a string here mirrors production storage so the trend bucketing
-// is exercised faithfully.
+// libsqlTimeLayout is the exact text layout the libsql/Turso driver uses when it
+// persists a bound time.Time (see hrana/value.go). It is space-separated with a
+// numeric offset rather than RFC3339's "T…Z", and the from/to window bounds are
+// formatted as RFC3339 — so the two do not sort lexically. Tests seed occurred_at
+// in this layout to mirror production storage and prove the comparison is robust
+// to it.
+const libsqlTimeLayout = "2006-01-02 15:04:05.999999999-07:00"
+
+// insertEmailEventAt inserts an email event with occurred_at written in the same
+// text layout the libsql/Turso driver uses for a bound time.Time. The modernc
+// sqlite driver used in tests would otherwise store a bound time.Time via Go's
+// time.Time.String() layout, which SQLite's date functions cannot parse; writing
+// the timestamp explicitly mirrors production storage so bucketing and the
+// time-window filter are exercised faithfully.
 func insertEmailEventAt(t *testing.T, ctx context.Context, db *sql.DB, issueID, subID int64, email, eventType, url, eventID string, occurredAt time.Time) {
 	t.Helper()
 
@@ -66,7 +74,7 @@ func insertEmailEventAt(t *testing.T, ctx context.Context, db *sql.DB, issueID, 
 		`INSERT INTO email_events
 		    (issue_id, subscriber_id, email, event_type, url, event_id, occurred_at)
 		 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		issueID, subID, email, eventType, url, eventID, occurredAt.Format(time.RFC3339),
+		issueID, subID, email, eventType, url, eventID, occurredAt.UTC().Format(libsqlTimeLayout),
 	)
 	require.NoError(t, err)
 }
@@ -114,16 +122,20 @@ func TestMetrics_Store(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	// Events occurred when the issue went out (2 days ago), firmly inside the
+	// window. Backdating avoids colliding with the window's upper bound (now),
+	// which would otherwise make inclusion ambiguous.
+	occurred := now.Add(-2 * 24 * time.Hour)
 	ee := emailevents.New(db)
 	for _, ev := range []engagement.EmailEvent{
-		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "del-a"},
-		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "del-b"},
-		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-a1"},
-		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-a2"},
-		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-b1"},
-		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "click-a1"},
-		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "click-b1"},
-		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: item2.URL, ItemID: &item2.ID, EventID: "click-a2"},
+		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "del-a", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "del-b", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-a1", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-a2", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeOpened, EventID: "open-b1", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "click-a1", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeClicked, URL: item.URL, ItemID: &item.ID, EventID: "click-b1", OccurredAt: occurred},
+		{IssueID: &issue.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: item2.URL, ItemID: &item2.ID, EventID: "click-a2", OccurredAt: occurred},
 	} {
 		_, err := ee.Create(ctx, ev)
 		require.NoError(t, err)
@@ -306,6 +318,45 @@ func TestMetrics_Store(t *testing.T) {
 			total += p.Value
 		}
 		assert.Zero(t, total, "no events belong to the unknown issue")
+	})
+
+	// Regression: a freshly sent issue defaults its trend window to the send day
+	// at 00:00 through now, so every event lands on the from-boundary day. With a
+	// raw text comparison the space-separated occurred_at sorts before the RFC3339
+	// "T…Z" bound and the whole series collapses to zero; datetime() normalisation
+	// keeps the clicks visible.
+	t.Run("IssueTrend counts events on the from-boundary day", func(t *testing.T) {
+		boundaryIssue, err := issues.New(db).Create(ctx, digest.Issue{
+			Slug:    "2026-05-30",
+			Subject: "GoDaily - May 30, 2026",
+			Status:  digest.IssueStatusSent,
+			SentAt:  now,
+		})
+		require.NoError(t, err)
+
+		dayStart := now.UTC().Truncate(24 * time.Hour)
+		atNoon := dayStart.Add(12 * time.Hour)
+		insertEmailEventAt(t, ctx, db, boundaryIssue.ID, subA.ID, "a@example.com", "delivered", "", "b-del-a", atNoon)
+		insertEmailEventAt(t, ctx, db, boundaryIssue.ID, subA.ID, "a@example.com", "clicked", item.URL, "b-click-a", atNoon)
+		insertEmailEventAt(t, ctx, db, boundaryIssue.ID, subB.ID, "b@example.com", "clicked", item.URL, "b-click-b", atNoon)
+
+		// Window starts at the send day's midnight (the boundary) through tomorrow.
+		boundaryFrom := dayStart
+		boundaryTo := dayStart.Add(24 * time.Hour)
+		got, err := s.IssueTrend(
+			ctx,
+			boundaryIssue.ID,
+			engagement.MetricsFilter{From: &boundaryFrom, To: &boundaryTo},
+			"unique_clicks",
+			"day",
+		)
+		require.NoError(t, err)
+
+		var total float64
+		for _, p := range got.Points {
+			total += p.Value
+		}
+		assert.Equal(t, 2.0, total, "both clicks land on the from-boundary day and must be counted")
 	})
 
 	// MUST be last: closing the DB makes every subsequent query fail.

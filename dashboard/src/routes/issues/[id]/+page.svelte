@@ -116,8 +116,8 @@
 <svelte:head><title>{issue ? issue.slug : 'Issue'} | GoDaily</title></svelte:head>
 
 <div class="space-y-6">
-	<div class="flex items-center justify-between gap-4">
-		<div class="flex items-center gap-3">
+	<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+		<div class="flex flex-wrap items-center gap-x-3 gap-y-1">
 			<a href="/issues" class="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm">
 				<ArrowLeft class="h-4 w-4" /> Issues
 			</a>
@@ -127,7 +127,7 @@
 				<span class="text-muted-foreground text-xs">{formatDate(issue.sent_at)}</span>
 			{/if}
 		</div>
-		<div class="flex items-center gap-2">
+		<div class="flex shrink-0 items-center gap-2">
 			{#if issue && issue.status === 'sent'}
 				<a
 					href={`https://godaily.dev/issues/${issue.slug}`}

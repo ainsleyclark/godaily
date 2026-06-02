@@ -2391,6 +2391,9 @@ export interface components {
         };
         "engagement.LinkClicks": {
             clicks?: number;
+            source?: string;
+            tag?: string;
+            title?: string;
             url?: string;
         };
         "engagement.SocialPostEngagement": {

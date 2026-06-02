@@ -123,13 +123,19 @@ func (q *Queries) EmailEventIssueStats(ctx context.Context, issueID sql.NullInt6
 }
 
 const emailEventTopLinks = `-- name: EmailEventTopLinks :many
-SELECT url, COUNT(*) AS clicks
-FROM email_events
-WHERE issue_id = ?
-  AND event_type = 'clicked'
-  AND url IS NOT NULL
-  AND url != ''
-GROUP BY url
+SELECT
+    e.url        AS url,
+    it.title     AS title,
+    it.tag       AS tag,
+    it.source    AS source,
+    COUNT(*)     AS clicks
+FROM email_events e
+LEFT JOIN items it ON it.id = e.item_id
+WHERE e.issue_id = ?
+  AND e.event_type = 'clicked'
+  AND e.url IS NOT NULL
+  AND e.url != ''
+GROUP BY e.url, it.title, it.tag, it.source
 ORDER BY clicks DESC
 LIMIT ?
 `
@@ -141,6 +147,9 @@ type EmailEventTopLinksParams struct {
 
 type EmailEventTopLinksRow struct {
 	Url    sql.NullString `json:"url"`
+	Title  sql.NullString `json:"title"`
+	Tag    sql.NullString `json:"tag"`
+	Source sql.NullString `json:"source"`
 	Clicks int64          `json:"clicks"`
 }
 
@@ -153,7 +162,13 @@ func (q *Queries) EmailEventTopLinks(ctx context.Context, arg EmailEventTopLinks
 	items := []EmailEventTopLinksRow{}
 	for rows.Next() {
 		var i EmailEventTopLinksRow
-		if err := rows.Scan(&i.Url, &i.Clicks); err != nil {
+		if err := rows.Scan(
+			&i.Url,
+			&i.Title,
+			&i.Tag,
+			&i.Source,
+			&i.Clicks,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -696,8 +711,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (?1 IS NULL OR e.occurred_at >= ?1)
-  AND (?2   IS NULL OR e.occurred_at <  ?2)
+  AND (?1 IS NULL OR datetime(e.occurred_at) >= datetime(?1))
+  AND (?2   IS NULL OR datetime(e.occurred_at) <  datetime(?2))
 GROUP BY it.id, it.title, it.url, it.tag, it.source
 ORDER BY clicks DESC
 LIMIT ?3
@@ -756,8 +771,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (?1 IS NULL OR e.occurred_at >= ?1)
-  AND (?2   IS NULL OR e.occurred_at <  ?2)
+  AND (?1 IS NULL OR datetime(e.occurred_at) >= datetime(?1))
+  AND (?2   IS NULL OR datetime(e.occurred_at) <  datetime(?2))
 GROUP BY it.source
 ORDER BY clicks DESC
 LIMIT ?3
@@ -810,8 +825,8 @@ SELECT
     COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
 FROM email_events e
 WHERE e.issue_id IS NOT NULL
-  AND (?1 IS NULL OR e.occurred_at >= ?1)
-  AND (?2   IS NULL OR e.occurred_at <  ?2)
+  AND (?1 IS NULL OR datetime(e.occurred_at) >= datetime(?1))
+  AND (?2   IS NULL OR datetime(e.occurred_at) <  datetime(?2))
 `
 
 type MetricsSummaryParams struct {
@@ -856,8 +871,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (?1 IS NULL OR e.occurred_at >= ?1)
-  AND (?2   IS NULL OR e.occurred_at <  ?2)
+  AND (?1 IS NULL OR datetime(e.occurred_at) >= datetime(?1))
+  AND (?2   IS NULL OR datetime(e.occurred_at) <  datetime(?2))
 GROUP BY it.tag
 ORDER BY clicks DESC
 LIMIT ?3

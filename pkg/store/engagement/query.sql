@@ -11,8 +11,8 @@ SELECT
     COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
 FROM email_events e
 WHERE e.issue_id IS NOT NULL
-  AND (sqlc.narg('from') IS NULL OR e.occurred_at >= sqlc.narg('from'))
-  AND (sqlc.narg('to')   IS NULL OR e.occurred_at <  sqlc.narg('to'));
+  AND (sqlc.narg('from') IS NULL OR datetime(e.occurred_at) >= datetime(sqlc.narg('from')))
+  AND (sqlc.narg('to')   IS NULL OR datetime(e.occurred_at) <  datetime(sqlc.narg('to')));
 
 -- name: MetricsItemList :many
 SELECT
@@ -26,8 +26,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (sqlc.narg('from') IS NULL OR e.occurred_at >= sqlc.narg('from'))
-  AND (sqlc.narg('to')   IS NULL OR e.occurred_at <  sqlc.narg('to'))
+  AND (sqlc.narg('from') IS NULL OR datetime(e.occurred_at) >= datetime(sqlc.narg('from')))
+  AND (sqlc.narg('to')   IS NULL OR datetime(e.occurred_at) <  datetime(sqlc.narg('to')))
 GROUP BY it.id, it.title, it.url, it.tag, it.source
 ORDER BY clicks DESC
 LIMIT sqlc.arg('limit');
@@ -40,8 +40,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (sqlc.narg('from') IS NULL OR e.occurred_at >= sqlc.narg('from'))
-  AND (sqlc.narg('to')   IS NULL OR e.occurred_at <  sqlc.narg('to'))
+  AND (sqlc.narg('from') IS NULL OR datetime(e.occurred_at) >= datetime(sqlc.narg('from')))
+  AND (sqlc.narg('to')   IS NULL OR datetime(e.occurred_at) <  datetime(sqlc.narg('to')))
 GROUP BY it.tag
 ORDER BY clicks DESC
 LIMIT sqlc.arg('limit');
@@ -54,8 +54,8 @@ FROM email_events e
 JOIN items it ON it.id = e.item_id
 WHERE e.event_type = 'clicked'
   AND e.item_id IS NOT NULL
-  AND (sqlc.narg('from') IS NULL OR e.occurred_at >= sqlc.narg('from'))
-  AND (sqlc.narg('to')   IS NULL OR e.occurred_at <  sqlc.narg('to'))
+  AND (sqlc.narg('from') IS NULL OR datetime(e.occurred_at) >= datetime(sqlc.narg('from')))
+  AND (sqlc.narg('to')   IS NULL OR datetime(e.occurred_at) <  datetime(sqlc.narg('to')))
 GROUP BY it.source
 ORDER BY clicks DESC
 LIMIT sqlc.arg('limit');

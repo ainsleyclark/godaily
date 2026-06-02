@@ -37,7 +37,9 @@
 	const PAD = { top: 16, right: 16, bottom: 32, left: 48 };
 
 	function x(i: number, n: number) {
-		if (n <= 1) return PAD.left;
+		// Centre a lone point rather than pinning it to the left axis, so a
+		// just-sent issue (a single day's bucket) still reads as a real datum.
+		if (n <= 1) return PAD.left + (W - PAD.left - PAD.right) / 2;
 		return PAD.left + (i / (n - 1)) * (W - PAD.left - PAD.right);
 	}
 	function y(v: number) {
@@ -103,6 +105,10 @@
 		return series.map((_, i) => i).filter((i) => i % step === 0);
 	});
 
+	// A smooth line needs at least two points to be drawn; render explicit dots
+	// for short series so single/sparse windows aren't mistaken for an empty chart.
+	const showDots = $derived(series.length > 0 && series.length <= 31);
+
 	function fmt(v: number): string {
 		return isRate ? formatPercent(v) : formatCompact(v);
 	}
@@ -123,7 +129,7 @@
 					{/if}
 				</CardDescription>
 			</div>
-			<div class="bg-secondary/40 flex w-fit items-center rounded-md p-0.5">
+			<div class="bg-secondary/40 flex w-fit max-w-full flex-wrap items-center rounded-md p-0.5">
 				{#each ['unique_opens', 'unique_clicks', 'open_rate', 'click_rate'] as TrendMetric[] as m}
 					<button
 						type="button"
@@ -194,6 +200,11 @@
 				{/each}
 				<path d={areaPath} fill="url(#trend-grad)" />
 				<path d={linePath} fill="none" stroke="var(--chart-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+				{#if showDots}
+					{#each series as p, i (i)}
+						<circle cx={x(i, series.length)} cy={y(p.value)} r="2.5" fill="var(--chart-1)" />
+					{/each}
+				{/if}
 				{#if hover !== null}
 					<line
 						x1={x(hover, series.length)}

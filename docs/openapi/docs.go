@@ -573,6 +573,15 @@ const docTemplate = `{
                     "clicks": {
                         "type": "integer"
                     },
+                    "source": {
+                        "type": "string"
+                    },
+                    "tag": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
                     "url": {
                         "type": "string"
                     }

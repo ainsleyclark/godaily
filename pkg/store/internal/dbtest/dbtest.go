@@ -25,7 +25,14 @@ func Setup(t *testing.T) (context.Context, *sql.DB, func()) {
 	// Allow some time for the test to run.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*3)
 
-	url := "file:" + filepath.Join(t.TempDir(), "godaily.db")
+	// _time_format=sqlite makes the modernc driver persist bound time.Time values
+	// as "2006-01-02 15:04:05.999999999-07:00" — exactly what the libsql/Turso
+	// driver writes in production — instead of its default time.Time.String()
+	// ("… +0000 UTC"), which SQLite's date functions cannot parse. _timezone=UTC
+	// keeps timestamps in UTC when scanned back out. Together they let the test DB
+	// faithfully reproduce production storage so datetime()-based time-window
+	// queries are exercised against the real format.
+	url := "file:" + filepath.Join(t.TempDir(), "godaily.db") + "?_time_format=sqlite&_timezone=UTC"
 	conn, err := db.New(ctx, url, "")
 	require.NoError(t, err, "opening sqlite database")
 
