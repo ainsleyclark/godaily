@@ -23,6 +23,10 @@ type website struct {
 	Issues       []digest.Issue
 	LatestIssue  digest.Issue
 	RecentIssues []digest.Issue
+	// DraftIssues are built-but-unsent issues. Their detail pages are rendered
+	// as live copies at /issues/{slug}/, but they are deliberately excluded
+	// from the archive, sitemap, and RSS feed until they are sent.
+	DraftIssues []digest.Issue
 }
 
 // Site renders all sent issues and the homepage to outDir, generates
@@ -46,7 +50,15 @@ func Site(ctx context.Context, repo digest.IssueRepository, items news.ItemRepos
 		return errors.Wrap(err, "fetching latest issue")
 	}
 
-	w := website{Issues: allIssues, RecentIssues: recent}
+	// Draft issues get a live-copy detail page but are kept out of every
+	// listing (archive, sitemap, RSS) until they are sent.
+	draft := digest.IssueStatusDraft
+	drafts, err := repo.List(ctx, digest.IssueListOptions{Status: &draft})
+	if err != nil {
+		return errors.Wrap(err, "listing draft issues")
+	}
+
+	w := website{Issues: allIssues, RecentIssues: recent, DraftIssues: drafts}
 	if len(recent) > 0 {
 		w.LatestIssue = recent[0]
 	}

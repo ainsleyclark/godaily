@@ -38,12 +38,13 @@ func TestBuildSummary(t *testing.T) {
 		assert.Contains(t, flat, "12")
 	})
 
-	t.Run("View issue button uses dashboard URL with issue id", func(t *testing.T) {
+	t.Run("View live copy button links to the public site issue page by slug", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(Summary{IssueDate: "2026-06-01", IssueID: 42, Subject: "x"})
-		assert.Contains(t, flatten(req), "/issues/42")
-		assert.Contains(t, flatten(req), env.DashboardURL)
+		req := BuildSummary(Summary{IssueDate: "2026-06-01", IssueSlug: "2026-06-01", Subject: "x"})
+		flat := flatten(req)
+		assert.Contains(t, flat, "View live copy")
+		assert.Contains(t, flat, env.AppURL+"/issues/2026-06-01/")
 	})
 
 	t.Run("Each draft renders kind, platform, text and an Edit button", func(t *testing.T) {

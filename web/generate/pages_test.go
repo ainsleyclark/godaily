@@ -39,10 +39,14 @@ func TestOGImages(t *testing.T) {
 		},
 	}
 
+	sent := digest.IssueStatusSent
+	draft := digest.IssueStatusDraft
+
 	ctrl := gomock.NewController(t)
 	repo := mockdigest.NewMockIssueRepository(ctrl)
-	repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+	repo.EXPECT().List(gomock.Any(), digest.IssueListOptions{Status: &sent}).Return([]digest.Issue{issue}, nil)
 	repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
+	repo.EXPECT().List(gomock.Any(), digest.IssueListOptions{Status: &draft}).Return([]digest.Issue{}, nil)
 	repo.EXPECT().Latest(gomock.Any(), 1).Return([]digest.Issue{}, nil).AnyTimes()
 	repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 
