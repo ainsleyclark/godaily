@@ -39,7 +39,7 @@ type ItemReorderRequest struct {
 func (h *Handler) ReorderItems(c *webkit.Context) error {
 	ctx := c.Context()
 
-	issueID, ok := parsePositive(c.Param("id"))
+	issueID, ok := api.ParseID(c.Param("id"))
 	if !ok {
 		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
 	}

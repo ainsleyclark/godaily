@@ -7,7 +7,6 @@ package items
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 
@@ -54,13 +53,8 @@ type ItemResponse = api.Response[news.Item] //@name ItemResponse
 func (h *Handler) ByID(c *webkit.Context) error {
 	ctx := c.Context()
 
-	raw := c.Param("id")
-	if raw == "" {
-		return api.Error(c, http.StatusBadRequest, "ID is required")
-	}
-
-	id, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil || id < 1 {
+	id, ok := api.ParseID(c.Param("id"))
+	if !ok {
 		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
 	}
 

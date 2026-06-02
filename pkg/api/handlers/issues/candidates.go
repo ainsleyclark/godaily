@@ -35,7 +35,7 @@ type CandidateListResponse = api.Response[[]news.Item] //@name CandidateListResp
 func (h *Handler) Candidates(c *webkit.Context) error {
 	ctx := c.Context()
 
-	issueID, ok := parsePositive(c.Param("id"))
+	issueID, ok := api.ParseID(c.Param("id"))
 	if !ok {
 		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
 	}

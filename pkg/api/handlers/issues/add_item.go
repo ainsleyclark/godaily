@@ -30,11 +30,11 @@ import (
 func (h *Handler) AddItem(c *webkit.Context) error {
 	ctx := c.Context()
 
-	issueID, ok := parsePositive(c.Param("id"))
+	issueID, ok := api.ParseID(c.Param("id"))
 	if !ok {
 		return api.Error(c, http.StatusBadRequest, "ID must be a positive integer")
 	}
-	itemID, ok := parsePositive(c.Param("itemID"))
+	itemID, ok := api.ParseID(c.Param("itemID"))
 	if !ok {
 		return api.Error(c, http.StatusBadRequest, "Item ID must be a positive integer")
 	}

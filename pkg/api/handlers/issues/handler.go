@@ -8,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/ainsleydev/webkit/pkg/webkit"
 
@@ -42,15 +41,6 @@ func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Put("/{id}/items/{itemID}", h.AddItem, auth)
 	kit.Delete("/{id}/items/{itemID}", h.DeleteItem, auth)
 	kit.Patch("/{id}/items/reorder", h.ReorderItems, auth)
-}
-
-// parsePositive returns (n, true) if raw parses as a strictly positive int64.
-func parsePositive(raw string) (int64, bool) {
-	n, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil || n < 1 {
-		return 0, false
-	}
-	return n, true
 }
 
 // mapItemMutationError translates repository errors from the item mutation
