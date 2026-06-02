@@ -480,6 +480,18 @@ func (q *Queries) ItemCreate(ctx context.Context, arg ItemCreateParams) (Item, e
 	return i, err
 }
 
+const itemDelete = `-- name: ItemDelete :execrows
+DELETE FROM items WHERE id = ?
+`
+
+func (q *Queries) ItemDelete(ctx context.Context, id int64) (int64, error) {
+	result, err := q.db.ExecContext(ctx, itemDelete, id)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
 const itemDeleteByIssue = `-- name: ItemDeleteByIssue :exec
 DELETE FROM items WHERE issue_id = ?
 `

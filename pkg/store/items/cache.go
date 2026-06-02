@@ -94,6 +94,10 @@ func (s *CachingStore) DeleteByIssue(ctx context.Context, issueID int64) error {
 	return s.repo.DeleteByIssue(ctx, issueID)
 }
 
+func (s *CachingStore) Delete(ctx context.Context, id int64) error {
+	return s.repo.Delete(ctx, id)
+}
+
 func (s *CachingStore) UnlinkFromIssue(ctx context.Context, issueID, itemID int64) error {
 	return s.repo.UnlinkFromIssue(ctx, issueID, itemID)
 }

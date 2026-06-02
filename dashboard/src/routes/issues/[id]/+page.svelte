@@ -111,6 +111,25 @@
 			mutatingItems = false;
 		}
 	}
+
+	// Permanently deletes the item row from the database. Allowed regardless of
+	// issue status — the /items/{id} endpoint is issue-agnostic — so we drop the
+	// item from local state rather than refetching the issue.
+	async function hardDeleteItem(itemId: number) {
+		if (!issue || mutatingItems) return;
+		const snapshot = issue;
+		mutatingItems = true;
+		try {
+			await api.deleteNewsItem(itemId);
+			issue = { ...snapshot, items: snapshot.items.filter((i) => i.id !== itemId) };
+			toast.success('Item deleted');
+		} catch (e) {
+			issue = snapshot;
+			toast.error((e as Error).message || 'Failed to delete item');
+		} finally {
+			mutatingItems = false;
+		}
+	}
 </script>
 
 <svelte:head><title>{issue ? issue.slug : 'Issue'} | GoDaily</title></svelte:head>
@@ -215,9 +234,14 @@
 							busy={mutatingItems}
 							onReorder={reorderItems}
 							onDelete={deleteItem}
+							onHardDelete={hardDeleteItem}
 						/>
 					{:else}
-						<DigestPreview items={inDigestItems} />
+						<DigestPreview
+							items={inDigestItems}
+							busy={mutatingItems}
+							onHardDelete={hardDeleteItem}
+						/>
 					{/if}
 				</CardContent>
 			</Card>

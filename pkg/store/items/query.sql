@@ -30,6 +30,9 @@ ORDER BY position ASC;
 -- name: ItemDeleteByIssue :exec
 DELETE FROM items WHERE issue_id = ?;
 
+-- name: ItemDelete :execrows
+DELETE FROM items WHERE id = ?;
+
 -- name: ItemUnlinkFromIssue :execrows
 UPDATE items
 SET issue_id = NULL, position = 0

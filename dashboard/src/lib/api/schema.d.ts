@@ -839,7 +839,60 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Permanently delete a news item.
+         * @description Hard-deletes a news item from the database by its numeric ID, regardless of whether it is linked to an issue. The row is removed entirely and will not reappear in a future build. Use the issue unlink endpoint instead to keep the item in the raw pool.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Item ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully deleted item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description ID is required or not a positive integer */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Item not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to delete item */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;

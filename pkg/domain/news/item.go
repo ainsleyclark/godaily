@@ -77,6 +77,10 @@ type ItemRepository interface {
 	TagCounts(ctx context.Context) ([]TagCount, error)
 	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)
 	DeleteByIssue(ctx context.Context, issueID int64) error
+	// Delete permanently removes the item row from the store, regardless of
+	// whether it is linked to an issue. Returns store.ErrNotFound if no row
+	// with the given id exists.
+	Delete(ctx context.Context, id int64) error
 	// UnlinkFromIssue clears the items.issue_id for the given (issueID, itemID) pair.
 	// The item row is preserved (it remains in the raw pool, in_digest=false). Fails
 	// with digest.ErrIssueNotDraft if the issue is not in draft status, and with

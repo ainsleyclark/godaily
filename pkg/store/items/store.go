@@ -213,6 +213,19 @@ func (s Store) DeleteByIssue(ctx context.Context, issueID int64) error {
 	return s.sqlc.ItemDeleteByIssue(ctx, sql.NullInt64{Int64: issueID, Valid: true})
 }
 
+// Delete permanently removes the item row from the store, regardless of whether
+// it is linked to an issue. A delete that matches no row returns store.ErrNotFound.
+func (s Store) Delete(ctx context.Context, id int64) error {
+	rows, err := s.sqlc.ItemDelete(ctx, id)
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return store.ErrNotFound
+	}
+	return nil
+}
+
 // UnlinkFromIssue clears items.issue_id for the given (issueID, itemID) pair,
 // leaving the row in the raw pool. The UPDATE statement itself enforces the
 // draft-status precondition via an EXISTS subquery, so a concurrent SendDigest
@@ -424,7 +437,7 @@ func authorFromRow(i sqlc.Item) *news.Author {
 
 func authorFields(a *news.Author) (name, username, avatar, profile sql.NullString) {
 	if a == nil {
-		return
+		return name, username, avatar, profile
 	}
 	return dbtypes.NullString(a.Name), dbtypes.NullString(a.Username), dbtypes.NullString(a.AvatarURL), dbtypes.NullString(a.ProfileURL)
 }

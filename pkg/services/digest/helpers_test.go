@@ -101,6 +101,7 @@ func (e errItemRepo) Create(_ context.Context, _ *int64, _ int, _ news.Item) (ne
 	return news.Item{}, nil
 }
 func (e errItemRepo) DeleteByIssue(_ context.Context, _ int64) error { return nil }
+func (e errItemRepo) Delete(_ context.Context, _ int64) error        { return nil }
 func (e errItemRepo) Count(_ context.Context) (int64, error)         { return 0, e.err }
 func (e errItemRepo) CountMatching(_ context.Context, _ news.ItemListOptions) (int64, error) {
 	return 0, e.err
