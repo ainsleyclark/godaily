@@ -6,6 +6,7 @@ package news
 
 import (
 	"context"
+	"sort"
 	"time"
 )
 
@@ -81,6 +82,12 @@ type ItemRepository interface {
 	// whether it is linked to an issue. Returns store.ErrNotFound if no row
 	// with the given id exists.
 	Delete(ctx context.Context, id int64) error
+	// LinkToIssue links a currently-unlinked item to the given draft issue,
+	// setting items.issue_id and appending it after the issue's existing items
+	// (position = current max + 1). Fails with digest.ErrIssueNotDraft if the
+	// issue is not in draft status, and with store.ErrNotFound if the issue does
+	// not exist or the item does not exist / is already linked to an issue.
+	LinkToIssue(ctx context.Context, issueID, itemID int64) error
 	// UnlinkFromIssue clears the items.issue_id for the given (issueID, itemID) pair.
 	// The item row is preserved (it remains in the raw pool, in_digest=false). Fails
 	// with digest.ErrIssueNotDraft if the issue is not in draft status, and with
@@ -168,6 +175,38 @@ var SectionLimits = map[Tag]int{
 	TagVideo:      5,
 	TagJobs:       5,
 	TagTrending:   5,
+}
+
+// SelectForDigest is the single definition of which items make up a digest and
+// in what order. It groups items into canonical sections (Tag.Section()), sorts
+// each section by score descending, applies the per-section SectionLimits caps,
+// and returns the surviving items as a flat slice in canonical SectionTags
+// order. Build links exactly this set to the issue (position = index), so the
+// persisted rows alone determine what ships — the email and web are then pure
+// renderers ordering by position. Input order is otherwise preserved for items
+// of equal score (stable sort).
+func SelectForDigest(items []Item) []Item {
+	bucket := make(map[Tag][]Item, len(SectionTags))
+	for _, item := range items {
+		section := item.Tag.Section()
+		bucket[section] = append(bucket[section], item)
+	}
+
+	out := make([]Item, 0, len(items))
+	for _, tag := range SectionTags {
+		sectionItems := bucket[tag]
+		if len(sectionItems) == 0 {
+			continue
+		}
+		sort.SliceStable(sectionItems, func(i, j int) bool {
+			return sectionItems[i].Score > sectionItems[j].Score
+		})
+		if limit := SectionLimits[tag]; limit > NoLimit && len(sectionItems) > limit {
+			sectionItems = sectionItems[:limit]
+		}
+		out = append(out, sectionItems...)
+	}
+	return out
 }
 
 // Section returns the canonical section tag this tag renders under.

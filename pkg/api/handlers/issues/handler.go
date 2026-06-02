@@ -37,7 +37,9 @@ func New(a *godaily.App) *Handler {
 func (h *Handler) Routes(kit *webkit.Kit, auth webkit.Plug) {
 	kit.Get("/", h.List, auth)
 	kit.Get("/{key}", h.Find, auth)
+	kit.Get("/{id}/candidates", h.Candidates, auth)
 	kit.Patch("/{id}", h.Update, auth)
+	kit.Put("/{id}/items/{itemID}", h.AddItem, auth)
 	kit.Delete("/{id}/items/{itemID}", h.DeleteItem, auth)
 	kit.Patch("/{id}/items/reorder", h.ReorderItems, auth)
 }

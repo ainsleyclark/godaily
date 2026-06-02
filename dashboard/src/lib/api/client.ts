@@ -5,6 +5,7 @@ import createClient, { type Middleware } from 'openapi-fetch';
 import type { paths } from './schema';
 import type {
 	DigestIssue,
+	DigestItem,
 	IssueDetail,
 	IssueEngagement,
 	IssueStatus,
@@ -183,6 +184,20 @@ export const api = {
 		),
 	updateDigestIssue: (id: number, body: { subject: string; summary: string }) =>
 		unwrap<DigestIssue>(client.PATCH('/issues/{id}', { params: { path: { id } }, body })),
+	// Lists the raw, unlinked items in this issue's build window — the candidate
+	// pool that can be promoted into the digest.
+	issueCandidates: (issueId: number) =>
+		unwrap<DigestItem[]>(
+			client.GET('/issues/{id}/candidates', { params: { path: { id: issueId } } })
+		),
+	// Links a raw item into a draft issue, appending it to the end of its
+	// section. Returns the refreshed issue.
+	addDigestItem: (issueId: number, itemId: number) =>
+		unwrap<DigestIssue>(
+			client.PUT('/issues/{id}/items/{itemID}', {
+				params: { path: { id: issueId, itemID: itemId } }
+			})
+		),
 	deleteDigestItem: (issueId: number, itemId: number) =>
 		unwrap<DigestIssue>(
 			client.DELETE('/issues/{id}/items/{itemID}', {

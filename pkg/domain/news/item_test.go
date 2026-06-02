@@ -88,3 +88,62 @@ func TestAuthor_String(t *testing.T) {
 		})
 	}
 }
+
+func TestSelectForDigest(t *testing.T) {
+	t.Parallel()
+
+	mk := func(tag Tag, title string, score float64) Item {
+		return Item{Tag: tag, Title: title, URL: "https://example.com/" + title, Score: score}
+	}
+	titles := func(items []Item) []string {
+		out := make([]string, len(items))
+		for i, it := range items {
+			out[i] = it.Title
+		}
+		return out
+	}
+
+	t.Run("Orders sections canonically and scores within", func(t *testing.T) {
+		t.Parallel()
+		// Articles (lower in SectionTags) given before Releases (higher); the
+		// output must put the release section first, and order each section by
+		// score descending.
+		in := []Item{
+			mk(TagArticle, "article-low", 1),
+			mk(TagArticle, "article-high", 9),
+			mk(TagRelease, "release-only", 5),
+		}
+		got := SelectForDigest(in)
+		assert.Equal(t, []string{"release-only", "article-high", "article-low"}, titles(got))
+	})
+
+	t.Run("Applies per-section caps", func(t *testing.T) {
+		t.Parallel()
+		// Security caps at 3 (SectionLimits); the two lowest-scored drop.
+		in := []Item{
+			mk(TagSecurity, "sec-1", 10),
+			mk(TagSecurity, "sec-2", 8),
+			mk(TagSecurity, "sec-3", 6),
+			mk(TagSecurity, "sec-4", 4),
+			mk(TagSecurity, "sec-5", 2),
+		}
+		got := SelectForDigest(in)
+		assert.Equal(t, []string{"sec-1", "sec-2", "sec-3"}, titles(got))
+	})
+
+	t.Run("Folds non-canonical tags into their section", func(t *testing.T) {
+		t.Parallel()
+		in := []Item{
+			mk(TagPodcast, "a-podcast", 3),
+			mk(TagVideo, "a-video", 7),
+		}
+		got := SelectForDigest(in)
+		// Both land in the Video section, score-ordered.
+		assert.Equal(t, []string{"a-video", "a-podcast"}, titles(got))
+	})
+
+	t.Run("Empty input yields empty output", func(t *testing.T) {
+		t.Parallel()
+		assert.Empty(t, SelectForDigest(nil))
+	})
+}

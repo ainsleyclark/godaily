@@ -30,7 +30,7 @@ import (
 // On any failure a Slack notification is sent.
 func (s Service) Build(ctx context.Context, date time.Time) error {
 	today := date.UTC().Truncate(24 * time.Hour)
-	start, end := buildWindow(today)
+	start, end := digest.BuildWindow(today)
 	slug := today.Format("2006-01-02")
 
 	slog.InfoContext(ctx, "Building digest", "slug", slug, "start", start.Format("2006-01-02"), "end", end.Format("2006-01-02"))
@@ -78,19 +78,22 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 		return s.buildErr(ctx, errors.Wrap(err, "creating issue"))
 	}
 
-	var position int
-	for _, section := range sections {
-		for _, item := range section.Items {
-			position++
-			item.Source = section.Source
-			id := created.ID
-			if _, err = s.items.Create(ctx, &id, position, item); err != nil {
-				return s.buildErr(ctx, errors.Wrap(err, "associating item"))
-			}
+	// SelectForDigest is the single definition of what makes up the digest:
+	// it groups the window's items into canonical sections, scores and caps
+	// each, and returns the survivors in render order. We link exactly that set
+	// (position = index), so the persisted rows alone determine what ships —
+	// the email and web are pure renderers ordering by position, and the
+	// runner-ups stay raw (issue_id NULL) as the issue's candidate pool.
+	selected := news.SelectForDigest(flattenSections(sections))
+	for i, item := range selected {
+		id := created.ID
+		if _, err = s.items.Create(ctx, &id, i+1, item); err != nil {
+			return s.buildErr(ctx, errors.Wrap(err, "associating item"))
 		}
 	}
+	itemCount := len(selected)
 
-	slog.InfoContext(ctx, "Built draft issue", "slug", slug, "items", position)
+	slog.InfoContext(ctx, "Built draft issue", "slug", slug, "items", itemCount)
 
 	// Preview is best-effort: a failed owner email must not fail the build,
 	// since the draft is already persisted and SendDigest can still run.
@@ -113,7 +116,7 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 				s.slack.MustSend(ctx, slack.Error("Draft social posts after build failed", draftErr))
 			}
 		}
-		s.sendbuildSummary(ctx, created, position)
+		s.sendbuildSummary(ctx, created, itemCount)
 	}
 
 	return nil
@@ -160,15 +163,18 @@ func toSummaryDrafts(rows []social.Post) []slackdata.Draft {
 	return out
 }
 
-// buildWindow returns the date range of items to include in the digest.
-// On Monday, it covers the previous Friday through Monday (4-day window).
-// Tuesday through Friday, it covers only the previous day.
-// today must already be truncated to midnight UTC.
-func buildWindow(today time.Time) (start, end time.Time) {
-	if today.Weekday() == time.Monday {
-		return today.AddDate(0, 0, -3), today
+// flattenSections collapses the per-source sections back into a single item
+// slice, stamping each item with its source. The slice is the deduplicated set
+// of window items, ready for news.SelectForDigest to rank, cap and order.
+func flattenSections(sections []news.SourceItems) []news.Item {
+	var flat []news.Item
+	for _, section := range sections {
+		for _, item := range section.Items {
+			item.Source = section.Source
+			flat = append(flat, item)
+		}
 	}
-	return today.AddDate(0, 0, -1), today
+	return flat
 }
 
 // groupIntoSections groups a flat item list into SourceItems slices,
