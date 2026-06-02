@@ -48,6 +48,11 @@
       {{ template "item-row" $item }}
     </div>
     {{ end }}
+    {{ if .BrowseURL }}
+    <div style="padding:14px 0 0;border-top:1px solid #d0e8f5;">
+      <a href="{{ .BrowseURL }}" style="display:inline-block;color:{{ .Accent }};text-decoration:none;font-size:12px;font-weight:600;">Read {{ .More }} more {{ .Title }} on GoDaily &rarr;</a>
+    </div>
+    {{ end }}
   </td>
 </tr>
 {{ end }}
