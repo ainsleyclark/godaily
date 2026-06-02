@@ -138,7 +138,7 @@
 								{/if}
 							</div>
 							<div
-								class="flex shrink-0 items-center gap-0.5 opacity-0 transition group-hover:opacity-100"
+								class="flex shrink-0 items-center gap-0.5 opacity-0 transition group-hover:opacity-100 pointer-coarse:opacity-100"
 							>
 								<Button
 									variant="ghost"

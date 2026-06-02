@@ -80,7 +80,7 @@
 									disabled={busy}
 									aria-label="Delete permanently"
 									title="Delete permanently from the database"
-									class="text-muted-foreground hover:text-destructive shrink-0 opacity-0 transition group-hover:opacity-100"
+									class="text-muted-foreground hover:text-destructive shrink-0 opacity-0 transition group-hover:opacity-100 pointer-coarse:opacity-100"
 								>
 									<Trash2 class="h-4 w-4" />
 								</Button>
