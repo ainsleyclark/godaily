@@ -8,6 +8,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -32,15 +33,24 @@ func TestSite(t *testing.T) {
 		Items:   []news.Item{},
 	}
 
+	sent := digest.IssueStatusSent
+	draft := digest.IssueStatusDraft
+	sentOpts := digest.IssueListOptions{Status: &sent}
+	draftOpts := digest.IssueListOptions{Status: &draft}
+
 	tt := map[string]struct {
 		mock      func(*mockdigest.MockIssueRepository)
 		wantErr   bool
 		wantFiles []string
+		// wantMissing entries are "file:substring" pairs asserting the named
+		// output file does not contain the given substring.
+		wantMissing []string
 	}{
 		"Happy path no issues": {
 			mock: func(repo *mockdigest.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return([]digest.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), draftOpts).Return([]digest.Issue{}, nil)
 			},
 			wantFiles: []string{
 				"index.html",
@@ -54,8 +64,9 @@ func TestSite(t *testing.T) {
 		},
 		"Happy path with issue": {
 			mock: func(repo *mockdigest.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return([]digest.Issue{issue}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), draftOpts).Return([]digest.Issue{}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(issue, nil)
 			},
 			wantFiles: []string{
@@ -73,24 +84,50 @@ func TestSite(t *testing.T) {
 		},
 		"List error": {
 			mock: func(repo *mockdigest.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return(nil, errors.New("db error"))
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Latest error": {
 			mock: func(repo *mockdigest.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return([]digest.Issue{}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return(nil, errors.New("db error"))
 			},
 			wantErr: true,
 		},
 		"Find error": {
 			mock: func(repo *mockdigest.MockIssueRepository) {
-				repo.EXPECT().List(gomock.Any(), gomock.Any()).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return([]digest.Issue{issue}, nil)
 				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{issue}, nil)
+				repo.EXPECT().List(gomock.Any(), draftOpts).Return([]digest.Issue{}, nil)
 				repo.EXPECT().Find(gomock.Any(), issue.ID).Return(digest.Issue{}, errors.New("db error"))
 			},
 			wantErr: true,
+		},
+		"Draft issue rendered as live copy": {
+			mock: func(repo *mockdigest.MockIssueRepository) {
+				draftIssue := digest.Issue{
+					ID:      2,
+					Slug:    "2026-04-29",
+					Subject: "GoDaily - April 29, 2026",
+					Status:  digest.IssueStatusDraft,
+					Items:   []news.Item{},
+				}
+				repo.EXPECT().List(gomock.Any(), sentOpts).Return([]digest.Issue{}, nil)
+				repo.EXPECT().Latest(gomock.Any(), 4).Return([]digest.Issue{}, nil)
+				repo.EXPECT().List(gomock.Any(), draftOpts).Return([]digest.Issue{draftIssue}, nil)
+				repo.EXPECT().Find(gomock.Any(), draftIssue.ID).Return(draftIssue, nil)
+			},
+			wantFiles: []string{
+				// The draft surfaces as its own live-copy page and OG image...
+				filepath.Join("issues", "2026-04-29", "index.html"),
+				filepath.Join("og", "issues", "2026-04-29.png"),
+			},
+			wantMissing: []string{
+				// ...but never appears in the sitemap or RSS feed until sent.
+				"sitemap.xml:2026-04-29",
+				"rss.xml:2026-04-29",
+			},
 		},
 	}
 
@@ -124,6 +161,12 @@ func TestSite(t *testing.T) {
 
 			for _, f := range test.wantFiles {
 				assert.FileExists(t, filepath.Join(outDir, f))
+			}
+			for _, pair := range test.wantMissing {
+				name, substr, _ := strings.Cut(pair, ":")
+				data, readErr := os.ReadFile(filepath.Join(outDir, name))
+				require.NoError(t, readErr)
+				assert.NotContains(t, string(data), substr)
 			}
 			if !test.wantErr {
 				assert.FileExists(t, filepath.Join(outDir, "assets", "app.css"))

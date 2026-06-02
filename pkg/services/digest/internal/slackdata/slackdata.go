@@ -27,11 +27,13 @@ type Draft struct {
 	Text     string
 }
 
-// Summary is the payload BuildSummary renders. IssueID powers the "View
-// issue" deep-link and may be 0 when only rotation posts were drafted.
+// Summary is the payload BuildSummary renders. IssueSlug powers the "View
+// live copy" link to the public site and may be empty when only rotation
+// posts were drafted.
 type Summary struct {
 	IssueDate string
 	IssueID   int64
+	IssueSlug string
 	Subject   string
 	Intro     string
 	ItemCount int
@@ -39,28 +41,39 @@ type Summary struct {
 }
 
 // BuildSummary renders the rich card emitted by the digest build cron at
-// the end of a successful run. It leads with the issue subject and a "View
-// issue" button, shows the AI intro as a blockquote, and lists each drafted
-// post with an "Edit" deep-link into the dashboard.
+// the end of a successful run. It leads with the issue subject and two
+// buttons — "View live copy" linking to the published page on the public
+// site and "View in dashboard" linking to the admin issue — shows the AI
+// intro as a blockquote, and lists each drafted post with an "Edit"
+// deep-link into the dashboard.
 func BuildSummary(in Summary) slack.Request {
-	blocks := make([]slack.Block, 0, 5+len(in.Drafts))
+	blocks := make([]slack.Block, 0, 6+len(in.Drafts))
 	blocks = append(blocks, header("Digest ready for review"))
 
 	if ctxLine := summaryContext(in); ctxLine != "" {
 		blocks = append(blocks, context(ctxLine))
 	}
 
-	// Subject line, with a "View issue" button when the issue exists.
-	if in.Subject != "" || in.IssueID > 0 {
+	// Subject line, followed by an actions row carrying the public live-copy
+	// link and the dashboard deep-link once the issue has been built.
+	if in.Subject != "" || in.IssueSlug != "" || in.IssueID > 0 {
 		subject := in.Subject
 		if subject == "" {
 			subject = "Digest drafted"
 		}
+		blocks = append(blocks, section("*"+subject+"*"))
+
+		btns := make([]slackgo.BlockElement, 0, 2)
+		if in.IssueSlug != "" {
+			btns = append(btns, linkButton("View live copy",
+				fmt.Sprintf("%s/issues/%s/", env.AppURL, in.IssueSlug), "primary"))
+		}
 		if in.IssueID > 0 {
-			blocks = append(blocks, sectionWithButton("*"+subject+"*",
-				"View issue", fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID), "primary"))
-		} else {
-			blocks = append(blocks, section("*"+subject+"*"))
+			btns = append(btns, linkButton("View in dashboard",
+				fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID), ""))
+		}
+		if len(btns) > 0 {
+			blocks = append(blocks, actions(btns...))
 		}
 	}
 
@@ -79,7 +92,8 @@ func BuildSummary(in Summary) slack.Request {
 	}
 
 	blocks = append(blocks, context(
-		"Auto-publishes at 11:00 UTC unless cancelled from the dashboard."))
+		"Auto-publishes at 11:00 UTC unless cancelled from the dashboard.",
+	))
 
 	fallback := "Digest ready for review"
 	if in.Subject != "" {

@@ -138,6 +138,7 @@ func (s Service) sendbuildSummary(ctx context.Context, issue digest.Issue, itemC
 	summary := slackdata.BuildSummary(slackdata.Summary{
 		IssueDate: issue.Slug,
 		IssueID:   issue.ID,
+		IssueSlug: issue.Slug,
 		Subject:   issue.Subject,
 		Intro:     issue.Summary,
 		ItemCount: itemCount,

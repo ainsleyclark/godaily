@@ -38,12 +38,15 @@ func TestBuildSummary(t *testing.T) {
 		assert.Contains(t, flat, "12")
 	})
 
-	t.Run("View issue button uses dashboard URL with issue id", func(t *testing.T) {
+	t.Run("Renders both a live-copy and a dashboard button", func(t *testing.T) {
 		t.Parallel()
 
-		req := BuildSummary(Summary{IssueDate: "2026-06-01", IssueID: 42, Subject: "x"})
-		assert.Contains(t, flatten(req), "/issues/42")
-		assert.Contains(t, flatten(req), env.DashboardURL)
+		req := BuildSummary(Summary{IssueDate: "2026-06-01", IssueSlug: "2026-06-01", IssueID: 42, Subject: "x"})
+		flat := flatten(req)
+		assert.Contains(t, flat, "View live copy")
+		assert.Contains(t, flat, env.AppURL+"/issues/2026-06-01/")
+		assert.Contains(t, flat, "View in dashboard")
+		assert.Contains(t, flat, env.DashboardURL+"/issues/42")
 	})
 
 	t.Run("Each draft renders kind, platform, text and an Edit button", func(t *testing.T) {
@@ -123,6 +126,19 @@ func flatten(req slack.Request) string {
 					b.WriteString(" ")
 				}
 				b.WriteString(btn.URL)
+			}
+		case *slackgo.ActionBlock:
+			if v.Elements != nil {
+				for _, el := range v.Elements.ElementSet {
+					if btn, ok := el.(*slackgo.ButtonBlockElement); ok {
+						b.WriteString("\n")
+						if btn.Text != nil {
+							b.WriteString(btn.Text.Text)
+							b.WriteString(" ")
+						}
+						b.WriteString(btn.URL)
+					}
+				}
 			}
 		case *slackgo.HeaderBlock:
 			if v.Text != nil {

@@ -87,23 +87,45 @@ func renderPages(ctx context.Context, repo digest.IssueRepository, items news.It
 		fullIssues = append(fullIssues, full)
 	}
 
+	// The archive lists sent issues only; drafts are excluded here (and from
+	// the sitemap and RSS) so they surface solely as a live copy at their own
+	// /issues/{slug}/ URL.
 	if err := renderPageInDir(ctx, filepath.Join(outDir, "issues"), pages.IssuesArchive(fullIssues)); err != nil {
 		return errors.Wrap(err, "rendering issues archive page")
 	}
 
 	for _, full := range fullIssues {
-		if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", full.Slug), pages.Digest(full)); err != nil {
-			return fmt.Errorf("rendering issue %s: %w", full.Slug, err)
+		if err := renderIssuePage(ctx, gen, outDir, full); err != nil {
+			return err
 		}
-		issueCopy := full
-		if err := writeOGImage(outDir, filepath.Join("issues", full.Slug+".png"), func() ([]byte, error) {
-			return gen.Issue(issueCopy)
-		}); err != nil {
-			return fmt.Errorf("generating OG image for issue %s: %w", full.Slug, err)
-		}
-		slog.InfoContext(ctx, "Rendered issue", "slug", full.Slug)
 	}
 
+	// Render the live-copy detail page for each built-but-unsent draft so the
+	// digest appears on the site the moment it is built, ahead of the send.
+	for _, draft := range w.DraftIssues {
+		full, err := repo.Find(ctx, draft.ID)
+		if err != nil {
+			return fmt.Errorf("fetching draft issue %d: %w", draft.ID, err)
+		}
+		if err := renderIssuePage(ctx, gen, outDir, full); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// renderIssuePage writes the detail page and OG image for a single issue.
+func renderIssuePage(ctx context.Context, gen *og.Generator, outDir string, full digest.Issue) error {
+	if err := renderPageInDir(ctx, filepath.Join(outDir, "issues", full.Slug), pages.Digest(full)); err != nil {
+		return fmt.Errorf("rendering issue %s: %w", full.Slug, err)
+	}
+	if err := writeOGImage(outDir, filepath.Join("issues", full.Slug+".png"), func() ([]byte, error) {
+		return gen.Issue(full)
+	}); err != nil {
+		return fmt.Errorf("generating OG image for issue %s: %w", full.Slug, err)
+	}
+	slog.InfoContext(ctx, "Rendered issue", "slug", full.Slug, "status", full.Status)
 	return nil
 }
 

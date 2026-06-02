@@ -41,6 +41,10 @@ func (h *Handler) Build(c *webkit.Context) error {
 		return api.Error(c, http.StatusInternalServerError, "Failed to build digest")
 	}
 
+	// Regenerate the static site so today's freshly built draft is published
+	// as a live copy at /issues/{slug}/ — the page is rendered but kept out of
+	// the archive, sitemap, and RSS feed until the issue is actually sent.
+	hook.Deploy(ctx, h.config.VercelDeployHookURL)
 	hook.Heartbeat(ctx, h.config.BetterStackBuildHeartbeatURL)
 
 	return api.OK(c, http.StatusOK, nil, "Successfully built digest")

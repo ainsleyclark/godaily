@@ -37,16 +37,27 @@ func section(markdown string) slack.Block {
 // sectionWithButton renders a markdown section with a right-aligned
 // accessory link button.
 func sectionWithButton(markdown, label, url, style string) slack.Block {
+	return slackgo.NewSectionBlock(
+		slackgo.NewTextBlockObject(slackgo.MarkdownType, markdown, false, false),
+		nil, slackgo.NewAccessory(linkButton(label, url, style)),
+	)
+}
+
+// linkButton builds a link button element pointing at url.
+func linkButton(label, url, style string) *slackgo.ButtonBlockElement {
 	btn := slackgo.NewButtonBlockElement("", url,
 		slackgo.NewTextBlockObject(slackgo.PlainTextType, label, false, false))
 	btn.URL = url
 	if style != "" {
 		btn.Style = slackgo.Style(style)
 	}
-	return slackgo.NewSectionBlock(
-		slackgo.NewTextBlockObject(slackgo.MarkdownType, markdown, false, false),
-		nil, slackgo.NewAccessory(btn),
-	)
+	return btn
+}
+
+// actions wraps one or more button elements in an actions block, letting a
+// single card carry several side-by-side links.
+func actions(elements ...slackgo.BlockElement) slack.Block {
+	return slackgo.NewActionBlock("", elements...)
 }
 
 // blockquote prefixes every line so multi-line text renders as one
