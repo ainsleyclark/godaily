@@ -5,7 +5,6 @@
 package digest
 
 import (
-	"fmt"
 	htmltemplate "html/template"
 	"strings"
 	"testing"
@@ -114,43 +113,6 @@ func TestRenderDigest(t *testing.T) {
 		assert.NotContains(t, got.HTML, "Discussions")
 		assert.NotContains(t, got.HTML, "Articles")
 		assert.NotContains(t, got.HTML, "Trending")
-	})
-
-	t.Run("Overflow Adds Browse CTA", func(t *testing.T) {
-		// Jobs caps at 5 (news.SectionLimits). Collect 8 so 3 are trimmed and
-		// advertised via the browse CTA, UTM-tagged for the jobs section.
-		jobs := make([]news.Item, 0, 8)
-		for i := range 8 {
-			jobs = append(jobs, news.Item{
-				Source:    news.SourceHN,
-				Tag:       news.TagJobs,
-				Title:     fmt.Sprintf("job-%d", i),
-				URL:       fmt.Sprintf("https://example.com/job/%d", i),
-				Score:     float64(8 - i),
-				Published: sendDigestDay.Add(time.Hour),
-			})
-		}
-		sources := []news.SourceItems{{Source: news.SourceHN, Items: jobs}}
-
-		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
-		require.NoError(t, err)
-		assert.Contains(t, got.HTML, "Read 3 more Jobs on GoDaily")
-		assert.Contains(t, got.HTML, "https://godaily.dev/browse/jobs/?")
-		assert.Contains(t, got.HTML, "utm_campaign=browse-jobs")
-		assert.Contains(t, got.Text, "Read 3 more Jobs:")
-	})
-
-	t.Run("No CTA When Section Under Cap", func(t *testing.T) {
-		// A single job is well under the cap, so no overflow CTA appears.
-		sources := []news.SourceItems{{Source: news.SourceHN, Items: []news.Item{{
-			Source: news.SourceHN, Tag: news.TagJobs,
-			Title: "the only job", URL: "https://example.com/job",
-			Score: 1, Published: sendDigestDay.Add(time.Hour),
-		}}}}
-		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
-		require.NoError(t, err)
-		assert.NotContains(t, got.HTML, "more Jobs on GoDaily")
-		assert.NotContains(t, got.HTML, "/browse/jobs/")
 	})
 
 	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl

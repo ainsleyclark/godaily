@@ -21,7 +21,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/templates"
-	"github.com/ainsleyclark/godaily/pkg/utm"
 )
 
 var (
@@ -59,13 +58,11 @@ type (
 		MarkURL        string
 	}
 	emailSection struct {
-		Tag       string // canonical section tag, e.g. "release"
-		Title     string // display heading, e.g. "Releases"
-		Accent    string // hex colour for the section bar
-		Count     int
-		More      int    // items collected for this section beyond the shown cap
-		BrowseURL string // UTM-tagged /browse/{tag}/ link; set only when More > 0
-		Items     []emailItem
+		Tag    string // canonical section tag, e.g. "release"
+		Title  string // display heading, e.g. "Releases"
+		Accent string // hex colour for the section bar
+		Count  int
+		Items  []emailItem
 	}
 	digestData struct {
 		Date           time.Time
@@ -161,7 +158,6 @@ func buildSections(sources []news.SourceItems) []emailSection {
 		sort.SliceStable(items, func(i, j int) bool {
 			return items[i].Score > items[j].Score
 		})
-		total := len(items)
 		if limit := news.SectionLimits[tag]; limit > 0 && len(items) > limit {
 			items = items[:limit]
 		}
@@ -170,13 +166,6 @@ func buildSections(sources []news.SourceItems) []emailSection {
 			Title:  tag.Title(),
 			Accent: sectionAccents[tag],
 			Count:  len(items),
-		}
-		if more := total - len(items); more > 0 {
-			sec.More = more
-			// Path mirrors pages.BrowseTagURL / the "/browse/{tag}/" web route.
-			// Built inline (like the "/issues/…" and "/api/unsubscribe/…" links
-			// in send.go) to keep the pkg layer free of a web import cycle.
-			sec.BrowseURL = utm.Tag(env.AppURL+"/browse/"+string(tag)+"/", "email", "email", "browse-"+string(tag))
 		}
 		for _, item := range items {
 			sec.Items = append(sec.Items, toEmailItem(item))
