@@ -58,13 +58,11 @@ type (
 		MarkURL        string
 	}
 	emailSection struct {
-		Tag       string // canonical section tag, e.g. "release"
-		Title     string // display heading, e.g. "Releases"
-		Accent    string // hex colour for the section bar
-		Count     int
-		More      int    // items collected for this section beyond the shown cap
-		BrowseURL string // UTM-tagged /browse/{tag}/ link; set only when More > 0
-		Items     []emailItem
+		Tag    string // canonical section tag, e.g. "release"
+		Title  string // display heading, e.g. "Releases"
+		Accent string // hex colour for the section bar
+		Count  int
+		Items  []emailItem
 	}
 	digestData struct {
 		Date           time.Time
