@@ -11,6 +11,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestParseID(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		raw    string
+		want   int64
+		wantOK bool
+	}{
+		"Positive":    {raw: "42", want: 42, wantOK: true},
+		"One":         {raw: "1", want: 1, wantOK: true},
+		"Zero":        {raw: "0", want: 0, wantOK: false},
+		"Negative":    {raw: "-3", want: 0, wantOK: false},
+		"Non-numeric": {raw: "abc", want: 0, wantOK: false},
+		"Empty":       {raw: "", want: 0, wantOK: false},
+		"Float":       {raw: "1.5", want: 0, wantOK: false},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			got, ok := ParseID(test.raw)
+			assert.Equal(t, test.wantOK, ok)
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
+
 func TestQueryInt(t *testing.T) {
 	t.Parallel()
 

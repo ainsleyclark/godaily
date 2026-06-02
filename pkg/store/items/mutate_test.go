@@ -81,6 +81,89 @@ func TestUnlinkFromIssue(t *testing.T) {
 	})
 }
 
+func TestLinkToIssue(t *testing.T) {
+	ctx, db, teardown := dbtest.Setup(t)
+	defer teardown()
+
+	is := issues.New(db)
+	s := items.New(db)
+	published := time.Date(2026, time.May, 1, 8, 0, 0, 0, time.UTC)
+
+	mkIssue := func(t *testing.T, slug string, status digest.IssueStatus) digest.Issue {
+		t.Helper()
+		iss, err := is.Create(ctx, digest.Issue{
+			Slug: slug, Subject: "S", Status: status, SentAt: published,
+		})
+		require.NoError(t, err)
+		return iss
+	}
+	mkRawItem := func(t *testing.T, pos int, url string) int64 {
+		t.Helper()
+		got, err := s.Create(ctx, nil, pos, news.Item{
+			Source: news.SourceGoBlog, Tag: news.TagArticle,
+			Title: url, URL: url, Published: published,
+		})
+		require.NoError(t, err)
+		return got.ID
+	}
+	mkLinkedItem := func(t *testing.T, issueID int64, pos int, url string) int64 {
+		t.Helper()
+		got, err := s.Create(ctx, &issueID, pos, news.Item{
+			Source: news.SourceGoBlog, Tag: news.TagArticle,
+			Title: url, URL: url, Published: published,
+		})
+		require.NoError(t, err)
+		return got.ID
+	}
+
+	t.Run("Links raw item and appends after existing items", func(t *testing.T) {
+		issue := mkIssue(t, "2026-05-10", digest.IssueStatusDraft)
+		mkLinkedItem(t, issue.ID, 4, "https://example.com/existing")
+		raw := mkRawItem(t, 0, "https://example.com/raw")
+
+		require.NoError(t, s.LinkToIssue(ctx, issue.ID, raw))
+
+		got, err := s.Find(ctx, raw)
+		require.NoError(t, err)
+		assert.True(t, got.InDigest, "item should now be linked")
+		assert.EqualValues(t, 5, got.Position, "appended after the max existing position")
+	})
+
+	t.Run("Links into an empty issue at position 1", func(t *testing.T) {
+		issue := mkIssue(t, "2026-05-11", digest.IssueStatusDraft)
+		raw := mkRawItem(t, 0, "https://example.com/first")
+
+		require.NoError(t, s.LinkToIssue(ctx, issue.ID, raw))
+
+		got, err := s.Find(ctx, raw)
+		require.NoError(t, err)
+		assert.EqualValues(t, 1, got.Position)
+	})
+
+	t.Run("Non-draft returns ErrIssueNotDraft", func(t *testing.T) {
+		issue := mkIssue(t, "2026-05-12", digest.IssueStatusSent)
+		raw := mkRawItem(t, 0, "https://example.com/sent")
+
+		err := s.LinkToIssue(ctx, issue.ID, raw)
+		assert.ErrorIs(t, err, digest.ErrIssueNotDraft)
+	})
+
+	t.Run("Missing issue returns ErrNotFound", func(t *testing.T) {
+		raw := mkRawItem(t, 0, "https://example.com/orphan")
+		err := s.LinkToIssue(ctx, 999_999, raw)
+		assert.ErrorIs(t, err, store.ErrNotFound)
+	})
+
+	t.Run("Already-linked item returns ErrNotFound", func(t *testing.T) {
+		issue := mkIssue(t, "2026-05-13", digest.IssueStatusDraft)
+		other := mkIssue(t, "2026-05-13-other", digest.IssueStatusDraft)
+		linked := mkLinkedItem(t, other.ID, 0, "https://example.com/taken")
+
+		err := s.LinkToIssue(ctx, issue.ID, linked)
+		assert.ErrorIs(t, err, store.ErrNotFound)
+	})
+}
+
 func TestReorderInIssue(t *testing.T) {
 	ctx, db, teardown := dbtest.Setup(t)
 	defer teardown()

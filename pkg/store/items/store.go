@@ -226,6 +226,26 @@ func (s Store) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
+// LinkToIssue links an unlinked item to a draft issue, appending it after the
+// issue's existing items. The UPDATE enforces both preconditions in SQL — the
+// item must currently be unlinked (issue_id IS NULL) and the target issue must
+// be a draft (EXISTS subquery) — so a concurrent send flipping status cannot
+// let the write through. On a no-op the reason is disambiguated with a
+// follow-up status read.
+func (s Store) LinkToIssue(ctx context.Context, issueID, itemID int64) error {
+	rows, err := s.sqlc.ItemLinkToIssue(ctx, sqlc.ItemLinkToIssueParams{
+		ItemID:  itemID,
+		IssueID: sql.NullInt64{Int64: issueID, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+	if rows == 1 {
+		return nil
+	}
+	return s.disambiguateMissingItemWrite(ctx, issueID)
+}
+
 // UnlinkFromIssue clears items.issue_id for the given (issueID, itemID) pair,
 // leaving the row in the raw pool. The UPDATE statement itself enforces the
 // draft-status precondition via an EXISTS subquery, so a concurrent SendDigest

@@ -33,6 +33,20 @@ DELETE FROM items WHERE issue_id = ?;
 -- name: ItemDelete :execrows
 DELETE FROM items WHERE id = ?;
 
+-- name: ItemLinkToIssue :execrows
+UPDATE items
+SET issue_id = sqlc.arg('issue_id'),
+    position = COALESCE(
+        (SELECT MAX(existing.position) FROM items existing WHERE existing.issue_id = sqlc.arg('issue_id')),
+        0
+    ) + 1
+WHERE items.id = sqlc.arg('item_id')
+  AND items.issue_id IS NULL
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = sqlc.arg('issue_id') AND issues.status = 'draft'
+  );
+
 -- name: ItemUnlinkFromIssue :execrows
 UPDATE items
 SET issue_id = NULL, position = 0

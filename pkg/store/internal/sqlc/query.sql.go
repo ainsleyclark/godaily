@@ -547,6 +547,34 @@ func (q *Queries) ItemIDsByIssue(ctx context.Context, issueID sql.NullInt64) ([]
 	return items, nil
 }
 
+const itemLinkToIssue = `-- name: ItemLinkToIssue :execrows
+UPDATE items
+SET issue_id = ?1,
+    position = COALESCE(
+        (SELECT MAX(existing.position) FROM items existing WHERE existing.issue_id = ?1),
+        0
+    ) + 1
+WHERE items.id = ?2
+  AND items.issue_id IS NULL
+  AND EXISTS (
+      SELECT 1 FROM issues
+      WHERE issues.id = ?1 AND issues.status = 'draft'
+  )
+`
+
+type ItemLinkToIssueParams struct {
+	IssueID sql.NullInt64 `json:"issue_id"`
+	ItemID  int64         `json:"item_id"`
+}
+
+func (q *Queries) ItemLinkToIssue(ctx context.Context, arg ItemLinkToIssueParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, itemLinkToIssue, arg.IssueID, arg.ItemID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
 const itemListByIssue = `-- name: ItemListByIssue :many
 SELECT id, issue_id, source, title, url, tag, author_name, author_username, author_avatar_url, author_profile_url, score, summary, position, original_url, published FROM items
 WHERE issue_id = ?

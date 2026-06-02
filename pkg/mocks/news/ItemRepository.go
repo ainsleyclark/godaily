@@ -129,6 +129,20 @@ func (mr *MockItemRepositoryMockRecorder) Find(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockItemRepository)(nil).Find), ctx, id)
 }
 
+// LinkToIssue mocks base method.
+func (m *MockItemRepository) LinkToIssue(ctx context.Context, issueID, itemID int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LinkToIssue", ctx, issueID, itemID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// LinkToIssue indicates an expected call of LinkToIssue.
+func (mr *MockItemRepositoryMockRecorder) LinkToIssue(ctx, issueID, itemID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LinkToIssue", reflect.TypeOf((*MockItemRepository)(nil).LinkToIssue), ctx, issueID, itemID)
+}
+
 // List mocks base method.
 func (m *MockItemRepository) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item, error) {
 	m.ctrl.T.Helper()

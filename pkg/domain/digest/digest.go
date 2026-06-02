@@ -23,6 +23,19 @@ type Service interface {
 	SendSuggestion(ctx context.Context, date time.Time) error
 }
 
+// BuildWindow returns the [start, end) date range whose collected items a
+// digest for the given day draws from. A Monday digest reaches back across the
+// weekend (Friday–Monday); every other day covers the previous day only. It is
+// the single source of truth for the window, shared by the build service and
+// the issue-candidates endpoint so the two never drift.
+func BuildWindow(day time.Time) (start, end time.Time) {
+	day = day.UTC().Truncate(24 * time.Hour)
+	if day.Weekday() == time.Monday {
+		return day.AddDate(0, 0, -3), day
+	}
+	return day.AddDate(0, 0, -1), day
+}
+
 // CollectOptions configures a Collect call.
 type CollectOptions struct {
 	// DryRun skips persisting items; only the raw source items are returned.

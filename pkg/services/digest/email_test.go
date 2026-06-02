@@ -116,17 +116,32 @@ func TestRenderDigest(t *testing.T) {
 		assert.NotContains(t, got.HTML, "Trending")
 	})
 
-	t.Run("Overflow Adds Browse CTA", func(t *testing.T) {
-		// Jobs caps at 5 (news.SectionLimits). Collect 8 so 3 are trimmed and
-		// advertised via the browse CTA, UTM-tagged for the jobs section.
-		jobs := make([]news.Item, 0, 8)
-		for i := range 8 {
+	t.Run("Renders All Items In Position Order", func(t *testing.T) {
+		// The renderer no longer caps or re-ranks — selection and ordering are
+		// build's job (news.SelectForDigest), persisted as issue_id + position.
+		// Every linked item renders, in ascending Position order regardless of
+		// score, and there is no overflow CTA.
+		jobs := []news.Item{
+			{
+				Source: news.SourceHN, Tag: news.TagJobs,
+				Title: "job-low-score-first", URL: "https://example.com/job/a",
+				Score: 1, Position: 1, Published: sendDigestDay.Add(time.Hour),
+			},
+			{
+				Source: news.SourceHN, Tag: news.TagJobs,
+				Title: "job-high-score-second", URL: "https://example.com/job/b",
+				Score: 99, Position: 2, Published: sendDigestDay.Add(time.Hour),
+			},
+		}
+		// Add six more so the section is well over the old cap of 5.
+		for i := range 6 {
 			jobs = append(jobs, news.Item{
 				Source:    news.SourceHN,
 				Tag:       news.TagJobs,
-				Title:     fmt.Sprintf("job-%d", i),
-				URL:       fmt.Sprintf("https://example.com/job/%d", i),
-				Score:     float64(8 - i),
+				Title:     fmt.Sprintf("job-extra-%d", i),
+				URL:       fmt.Sprintf("https://example.com/job/extra/%d", i),
+				Score:     float64(i),
+				Position:  int64(3 + i),
 				Published: sendDigestDay.Add(time.Hour),
 			})
 		}
@@ -134,23 +149,16 @@ func TestRenderDigest(t *testing.T) {
 
 		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
 		require.NoError(t, err)
-		assert.Contains(t, got.HTML, "Read 3 more Jobs on GoDaily")
-		assert.Contains(t, got.HTML, "https://godaily.dev/browse/jobs/?")
-		assert.Contains(t, got.HTML, "utm_campaign=browse-jobs")
-		assert.Contains(t, got.Text, "Read 3 more Jobs:")
-	})
 
-	t.Run("No CTA When Section Under Cap", func(t *testing.T) {
-		// A single job is well under the cap, so no overflow CTA appears.
-		sources := []news.SourceItems{{Source: news.SourceHN, Items: []news.Item{{
-			Source: news.SourceHN, Tag: news.TagJobs,
-			Title: "the only job", URL: "https://example.com/job",
-			Score: 1, Published: sendDigestDay.Add(time.Hour),
-		}}}}
-		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
-		require.NoError(t, err)
+		// No cap: every item renders and no overflow CTA appears.
+		assert.Contains(t, got.HTML, "job-extra-5")
 		assert.NotContains(t, got.HTML, "more Jobs on GoDaily")
 		assert.NotContains(t, got.HTML, "/browse/jobs/")
+
+		// Order follows Position, not Score (the high-score item is second).
+		idxLow := strings.Index(got.HTML, "job-low-score-first")
+		idxHigh := strings.Index(got.HTML, "job-high-score-second")
+		assert.Less(t, idxLow, idxHigh, "items render in Position order, not by score")
 	})
 
 	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl

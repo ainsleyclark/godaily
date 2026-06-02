@@ -21,7 +21,6 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
 	"github.com/ainsleyclark/godaily/pkg/templates"
-	"github.com/ainsleyclark/godaily/pkg/utm"
 )
 
 var (
@@ -138,8 +137,11 @@ func renderDigest(opts digestOptions) (renderedDigest, error) {
 
 // buildSections flattens the per-source items and re-groups them by section
 // tag (item.Tag.Section()). Sections are emitted in news.SectionTags order;
-// empty sections are skipped. Items within a section are sorted by score
-// descending so the strongest signal across all sources lands at the top.
+// empty sections are skipped. Items within a section are ordered by their
+// stored Position ascending — the renderer is intentionally dumb: build (via
+// news.SelectForDigest) already chose and ordered the items the dashboard now
+// curates, so what ships is exactly the persisted set, in the persisted order,
+// with no further re-ranking or capping.
 func buildSections(sources []news.SourceItems) []emailSection {
 	bucket := map[news.Tag][]news.Item{}
 	for _, si := range sources {
@@ -159,24 +161,13 @@ func buildSections(sources []news.SourceItems) []emailSection {
 			continue
 		}
 		sort.SliceStable(items, func(i, j int) bool {
-			return items[i].Score > items[j].Score
+			return items[i].Position < items[j].Position
 		})
-		total := len(items)
-		if limit := news.SectionLimits[tag]; limit > 0 && len(items) > limit {
-			items = items[:limit]
-		}
 		sec := emailSection{
 			Tag:    string(tag),
 			Title:  tag.Title(),
 			Accent: sectionAccents[tag],
 			Count:  len(items),
-		}
-		if more := total - len(items); more > 0 {
-			sec.More = more
-			// Path mirrors pages.BrowseTagURL / the "/browse/{tag}/" web route.
-			// Built inline (like the "/issues/…" and "/api/unsubscribe/…" links
-			// in send.go) to keep the pkg layer free of a web import cycle.
-			sec.BrowseURL = utm.Tag(env.AppURL+"/browse/"+string(tag)+"/", "email", "email", "browse-"+string(tag))
 		}
 		for _, item := range items {
 			sec.Items = append(sec.Items, toEmailItem(item))
