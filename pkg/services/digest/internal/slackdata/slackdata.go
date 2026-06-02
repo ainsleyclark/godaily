@@ -41,30 +41,39 @@ type Summary struct {
 }
 
 // BuildSummary renders the rich card emitted by the digest build cron at
-// the end of a successful run. It leads with the issue subject and a "View
-// live copy" button linking to the published page on the public site, shows
-// the AI intro as a blockquote, and lists each drafted post with an "Edit"
+// the end of a successful run. It leads with the issue subject and two
+// buttons — "View live copy" linking to the published page on the public
+// site and "View in dashboard" linking to the admin issue — shows the AI
+// intro as a blockquote, and lists each drafted post with an "Edit"
 // deep-link into the dashboard.
 func BuildSummary(in Summary) slack.Request {
-	blocks := make([]slack.Block, 0, 5+len(in.Drafts))
+	blocks := make([]slack.Block, 0, 6+len(in.Drafts))
 	blocks = append(blocks, header("Digest ready for review"))
 
 	if ctxLine := summaryContext(in); ctxLine != "" {
 		blocks = append(blocks, context(ctxLine))
 	}
 
-	// Subject line, with a "View live copy" button linking to the live page on
-	// the public site once the issue has been built.
-	if in.Subject != "" || in.IssueSlug != "" {
+	// Subject line, followed by an actions row carrying the public live-copy
+	// link and the dashboard deep-link once the issue has been built.
+	if in.Subject != "" || in.IssueSlug != "" || in.IssueID > 0 {
 		subject := in.Subject
 		if subject == "" {
 			subject = "Digest drafted"
 		}
+		blocks = append(blocks, section("*"+subject+"*"))
+
+		btns := make([]slackgo.BlockElement, 0, 2)
 		if in.IssueSlug != "" {
-			blocks = append(blocks, sectionWithButton("*"+subject+"*",
-				"View live copy", fmt.Sprintf("%s/issues/%s/", env.AppURL, in.IssueSlug), "primary"))
-		} else {
-			blocks = append(blocks, section("*"+subject+"*"))
+			btns = append(btns, linkButton("View live copy",
+				fmt.Sprintf("%s/issues/%s/", env.AppURL, in.IssueSlug), "primary"))
+		}
+		if in.IssueID > 0 {
+			btns = append(btns, linkButton("View in dashboard",
+				fmt.Sprintf("%s/issues/%d", env.DashboardURL, in.IssueID), ""))
+		}
+		if len(btns) > 0 {
+			blocks = append(blocks, actions(btns...))
 		}
 	}
 
