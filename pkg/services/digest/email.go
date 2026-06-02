@@ -135,8 +135,11 @@ func renderDigest(opts digestOptions) (renderedDigest, error) {
 
 // buildSections flattens the per-source items and re-groups them by section
 // tag (item.Tag.Section()). Sections are emitted in news.SectionTags order;
-// empty sections are skipped. Items within a section are sorted by score
-// descending so the strongest signal across all sources lands at the top.
+// empty sections are skipped. Items within a section are ordered by their
+// stored Position ascending — the renderer is intentionally dumb: build (via
+// news.SelectForDigest) already chose and ordered the items the dashboard now
+// curates, so what ships is exactly the persisted set, in the persisted order,
+// with no further re-ranking or capping.
 func buildSections(sources []news.SourceItems) []emailSection {
 	bucket := map[news.Tag][]news.Item{}
 	for _, si := range sources {
@@ -156,11 +159,8 @@ func buildSections(sources []news.SourceItems) []emailSection {
 			continue
 		}
 		sort.SliceStable(items, func(i, j int) bool {
-			return items[i].Score > items[j].Score
+			return items[i].Position < items[j].Position
 		})
-		if limit := news.SectionLimits[tag]; limit > 0 && len(items) > limit {
-			items = items[:limit]
-		}
 		sec := emailSection{
 			Tag:    string(tag),
 			Title:  tag.Title(),

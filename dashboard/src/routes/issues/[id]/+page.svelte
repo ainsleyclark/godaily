@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { api, ApiError } from '$lib/api/client';
-	import type { DigestIssue } from '$lib/api/types';
+	import type { DigestIssue, DigestItem } from '$lib/api/types';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
@@ -9,6 +9,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import DigestPreview from '$lib/components/digest-preview.svelte';
 	import DigestEditor from '$lib/components/digest-editor.svelte';
+	import DigestCandidates from '$lib/components/digest-candidates.svelte';
 	import IssuePerformance from '$lib/components/issue-performance.svelte';
 	import { ArrowLeft, ExternalLink } from '@lucide/svelte';
 	import { formatDate } from '$lib/utils/format';
@@ -37,8 +38,11 @@
 		issue !== null && (subject !== issue.subject || summary !== (issue.summary ?? ''))
 	);
 
-	const inDigestItems = $derived((issue?.items ?? []).filter((item) => item.in_digest));
-	const notInDigestItems = $derived((issue?.items ?? []).filter((item) => !item.in_digest));
+	// The issue endpoint returns only linked items, so issue.items *is* the
+	// digest. Candidates (raw items in the issue's window) are fetched
+	// separately and only relevant while the issue is an editable draft.
+	const digestItems = $derived(issue?.items ?? []);
+	let candidates = $state<DigestItem[]>([]);
 
 	async function load() {
 		loading = true;
@@ -47,12 +51,26 @@
 			issue = data;
 			subject = data.subject;
 			summary = data.summary ?? '';
+			await refreshCandidates();
 		} catch (e) {
 			if ((e as ApiError).status !== 401) {
 				toast.error((e as Error).message || 'Failed to load issue');
 			}
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function refreshCandidates() {
+		if (!issue || issue.status !== 'draft') {
+			candidates = [];
+			return;
+		}
+		try {
+			candidates = await api.issueCandidates(issue.id);
+		} catch {
+			// Non-fatal: the editor still works without the candidate pool.
+			candidates = [];
 		}
 	}
 
@@ -100,16 +118,36 @@
 		}
 	}
 
+	// Unlinks the item from the issue. It returns to the candidate pool, so we
+	// refresh candidates to surface it in the "Not included" card.
 	async function deleteItem(itemId: number) {
 		if (!issue || !isDraft || mutatingItems) return;
 		const snapshot = issue;
 		mutatingItems = true;
 		try {
 			issue = await api.deleteDigestItem(snapshot.id, itemId);
-			toast.success('Item removed');
+			await refreshCandidates();
+			toast.success('Removed from digest');
 		} catch (e) {
 			issue = snapshot;
 			toast.error((e as Error).message || 'Failed to remove item');
+		} finally {
+			mutatingItems = false;
+		}
+	}
+
+	// Links a candidate item into the digest, appending it to its section.
+	async function addItem(itemId: number) {
+		if (!issue || !isDraft || mutatingItems) return;
+		const snapshot = issue;
+		mutatingItems = true;
+		try {
+			issue = await api.addDigestItem(snapshot.id, itemId);
+			candidates = candidates.filter((c) => c.id !== itemId);
+			toast.success('Added to digest');
+		} catch (e) {
+			issue = snapshot;
+			toast.error((e as Error).message || 'Failed to add item');
 		} finally {
 			mutatingItems = false;
 		}
@@ -125,6 +163,7 @@
 		try {
 			await api.deleteNewsItem(itemId);
 			issue = { ...snapshot, items: snapshot.items.filter((i) => i.id !== itemId) };
+			candidates = candidates.filter((c) => c.id !== itemId);
 			toast.success('Item deleted');
 		} catch (e) {
 			issue = snapshot;
@@ -228,12 +267,12 @@
 
 			<Card>
 				<CardHeader>
-					<CardTitle>{isDraft ? 'Edit items' : 'Preview'} ({inDigestItems.length} items)</CardTitle>
+					<CardTitle>In this digest ({digestItems.length} {digestItems.length === 1 ? 'item' : 'items'})</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{#if isDraft}
 						<DigestEditor
-							items={inDigestItems}
+							items={digestItems}
 							busy={mutatingItems}
 							onReorder={reorderItems}
 							onDelete={deleteItem}
@@ -241,7 +280,7 @@
 						/>
 					{:else}
 						<DigestPreview
-							items={inDigestItems}
+							items={digestItems}
 							busy={mutatingItems}
 							onHardDelete={hardDeleteItem}
 						/>
@@ -249,13 +288,18 @@
 				</CardContent>
 			</Card>
 
-			{#if notInDigestItems.length > 0}
+			{#if isDraft}
 				<Card>
 					<CardHeader>
-						<CardTitle>Not included ({notInDigestItems.length} items)</CardTitle>
+						<CardTitle>Not included ({candidates.length})</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<DigestPreview items={notInDigestItems} />
+						<DigestCandidates
+							items={candidates}
+							busy={mutatingItems}
+							onAdd={addItem}
+							onHardDelete={hardDeleteItem}
+						/>
 					</CardContent>
 				</Card>
 			{/if}

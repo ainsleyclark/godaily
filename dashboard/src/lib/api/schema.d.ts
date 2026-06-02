@@ -544,6 +544,75 @@ export interface paths {
         };
         trace?: never;
     };
+    "/issues/{id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List items not in the issue that could be added to it.
+         * @description Returns the raw, unlinked items (issue_id IS NULL) published within this issue's build window — the candidate pool that can be promoted into the digest via PUT /issues/{id}/items/{itemID}. Sorted by score descending.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Issue ID */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully retrieved candidate items */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CandidateListResponse"];
+                    };
+                };
+                /** @description Invalid id */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to list candidate items */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/issues/{id}/items/{itemID}": {
         parameters: {
             query?: never;
@@ -552,7 +621,71 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /**
+         * Link a raw item into a draft issue.
+         * @description Adds a currently-unlinked item to a draft issue by setting items.issue_id, appending it after the issue's existing items. The item must be unlinked (in the raw pool) and the issue must be in draft status. Returns the refreshed issue. Returns 409 if the issue is not in draft status.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Issue ID */
+                    id: number;
+                    /** @description Item ID */
+                    itemID: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Successfully linked item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["IssueResponse"];
+                    };
+                };
+                /** @description Invalid id or itemID */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue or item not found, or item already linked */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Issue is not a draft */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+                /** @description Failed to link item */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Response"];
+                    };
+                };
+            };
+        };
         post?: never;
         /**
          * Unlink a digest item from a draft issue.
@@ -2248,6 +2381,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CandidateListResponse: {
+            data?: components["schemas"]["news.Item"][];
+            error?: boolean;
+            /** @example User formatted message from the API */
+            message?: string;
+            status?: number;
+        };
         IssueDetailResponse: {
             data?: components["schemas"]["metrics.IssueDetail"];
             error?: boolean;

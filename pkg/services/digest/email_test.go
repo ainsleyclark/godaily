@@ -5,6 +5,7 @@
 package digest
 
 import (
+	"fmt"
 	htmltemplate "html/template"
 	"strings"
 	"testing"
@@ -113,6 +114,51 @@ func TestRenderDigest(t *testing.T) {
 		assert.NotContains(t, got.HTML, "Discussions")
 		assert.NotContains(t, got.HTML, "Articles")
 		assert.NotContains(t, got.HTML, "Trending")
+	})
+
+	t.Run("Renders All Items In Position Order", func(t *testing.T) {
+		// The renderer no longer caps or re-ranks — selection and ordering are
+		// build's job (news.SelectForDigest), persisted as issue_id + position.
+		// Every linked item renders, in ascending Position order regardless of
+		// score, and there is no overflow CTA.
+		jobs := []news.Item{
+			{
+				Source: news.SourceHN, Tag: news.TagJobs,
+				Title: "job-low-score-first", URL: "https://example.com/job/a",
+				Score: 1, Position: 1, Published: sendDigestDay.Add(time.Hour),
+			},
+			{
+				Source: news.SourceHN, Tag: news.TagJobs,
+				Title: "job-high-score-second", URL: "https://example.com/job/b",
+				Score: 99, Position: 2, Published: sendDigestDay.Add(time.Hour),
+			},
+		}
+		// Add six more so the section is well over the old cap of 5.
+		for i := range 6 {
+			jobs = append(jobs, news.Item{
+				Source:    news.SourceHN,
+				Tag:       news.TagJobs,
+				Title:     fmt.Sprintf("job-extra-%d", i),
+				URL:       fmt.Sprintf("https://example.com/job/extra/%d", i),
+				Score:     float64(i),
+				Position:  int64(3 + i),
+				Published: sendDigestDay.Add(time.Hour),
+			})
+		}
+		sources := []news.SourceItems{{Source: news.SourceHN, Items: jobs}}
+
+		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
+		require.NoError(t, err)
+
+		// No cap: every item renders and no overflow CTA appears.
+		assert.Contains(t, got.HTML, "job-extra-5")
+		assert.NotContains(t, got.HTML, "more Jobs on GoDaily")
+		assert.NotContains(t, got.HTML, "/browse/jobs/")
+
+		// Order follows Position, not Score (the high-score item is second).
+		idxLow := strings.Index(got.HTML, "job-low-score-first")
+		idxHigh := strings.Index(got.HTML, "job-high-score-second")
+		assert.Less(t, idxLow, idxHigh, "items render in Position order, not by score")
 	})
 
 	// HTML/Text template subtests mutate package-level htmlTmpl/textTmpl

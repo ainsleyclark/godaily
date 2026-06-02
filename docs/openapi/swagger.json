@@ -1,6 +1,28 @@
 {
     "components": {
         "schemas": {
+            "CandidateListResponse": {
+                "properties": {
+                    "data": {
+                        "items": {
+                            "$ref": "#/components/schemas/news.Item"
+                        },
+                        "type": "array",
+                        "uniqueItems": false
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "example": "User formatted message from the API",
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "IssueDetailResponse": {
                 "properties": {
                     "data": {
@@ -1550,6 +1572,73 @@
                 ]
             }
         },
+        "/issues/{id}/candidates": {
+            "get": {
+                "description": "Returns the raw, unlinked items (issue_id IS NULL) published within this issue's build window — the candidate pool that can be promoted into the digest via PUT /issues/{id}/items/{itemID}. Sorted by score descending.",
+                "parameters": [
+                    {
+                        "description": "Issue ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CandidateListResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved candidate items"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid id"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue not found"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to list candidate items"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "List items not in the issue that could be added to it.",
+                "tags": [
+                    "issues"
+                ]
+            }
+        },
         "/issues/{id}/items/reorder": {
             "patch": {
                 "description": "Rewrites the position of each item in the issue using the supplied order — item_ids[i] becomes position i. The submitted ids must exactly match the set of items currently linked to the issue; partial reorders are rejected. Returns the refreshed issue. Returns 409 if the issue is not in draft status.",
@@ -1728,6 +1817,90 @@
                     }
                 ],
                 "summary": "Unlink a digest item from a draft issue.",
+                "tags": [
+                    "issues"
+                ]
+            },
+            "put": {
+                "description": "Adds a currently-unlinked item to a draft issue by setting items.issue_id, appending it after the issue's existing items. The item must be unlinked (in the raw pool) and the issue must be in draft status. Returns the refreshed issue. Returns 409 if the issue is not in draft status.",
+                "parameters": [
+                    {
+                        "description": "Issue ID",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Item ID",
+                        "in": "path",
+                        "name": "itemID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IssueResponse"
+                                }
+                            }
+                        },
+                        "description": "Successfully linked item"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Invalid id or itemID"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue or item not found, or item already linked"
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Issue is not a draft"
+                    },
+                    "500": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        },
+                        "description": "Failed to link item"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "summary": "Link a raw item into a draft issue.",
                 "tags": [
                     "issues"
                 ]
