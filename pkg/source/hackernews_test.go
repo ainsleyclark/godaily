@@ -58,6 +58,13 @@ func TestHnURL(t *testing.T) {
 	assert.NotContains(t, u.RawQuery, "<", "raw < must be percent-encoded in query string")
 	assert.Contains(t, u.RawQuery, "%3E")
 	assert.Contains(t, u.RawQuery, "%3C")
+
+	// Relevance guards: restrict matching to title+url so a body-only "golang"
+	// mention (e.g. a Python post that references Go) isn't returned, and disable
+	// typo tolerance so molang/GoLand-style fuzzy matches don't leak in.
+	assert.Equal(t, "title,url", u.Query().Get("restrictSearchableAttributes"))
+	assert.Equal(t, "false", u.Query().Get("typoTolerance"))
+	assert.Contains(t, u.RawQuery, "title%2Curl", "comma must be percent-encoded in query string")
 }
 
 // hnNoURLResponse is a hit where the url field is absent (Ask HN / self-post),
