@@ -5,21 +5,34 @@
 package source
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"net/http"
 	"strings"
 	"time"
+
+	"github.com/ainsleydev/webkit/pkg/util/httputil"
+	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/source/ingest"
+	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
 )
 
-// Bluesky fetches recent #golang posts from the public Bluesky AppView using
-// the app.bsky.feed.searchPosts endpoint. public.api.bsky.app serves
-// unauthenticated read traffic, so no session token or app password is needed.
+// Bluesky fetches recent #golang posts via the AT Protocol app.bsky.feed.searchPosts
+// endpoint. Despite being documented as public, Bluesky now restricts searchPosts
+// to authenticated callers (unauthenticated requests 403), so a session is created
+// from BLUESKY_HANDLE + BLUESKY_APP_PASSWORD and the query is sent to the account's
+// PDS, which proxies app.bsky.* reads to the AppView. No API key is involved — an
+// app password is generated in Bluesky settings and is revocable.
 type Bluesky struct {
-	url string
+	sessionURL  string
+	searchURL   string
+	handle      string
+	appPassword string
+	client      *http.Client
 }
 
 var _ news.Fetcher = &Bluesky{}
@@ -29,10 +42,18 @@ func init() {
 }
 
 const (
+	// blueskyPDSBaseURL is the public PDS bsky-hosted accounts live on. It is
+	// also where authenticated app.bsky.* reads are sent: the PDS proxies them
+	// to the AppView server-side (no atproto-proxy header required).
+	blueskyPDSBaseURL = "https://bsky.social"
+
+	blueskySessionPath = "/xrpc/com.atproto.server.createSession"
+
 	// sort=top surfaces the most-engaged posts first; lang=en narrows to
 	// English at the source so the ingest language filter has less to drop.
-	blueskyURL = "https://public.api.bsky.app/xrpc/app.bsky.feed.searchPosts" +
-		"?q=%23golang&limit=40&sort=top&lang=en"
+	blueskySearchPath = "/xrpc/app.bsky.feed.searchPosts?q=%23golang&limit=40&sort=top&lang=en"
+
+	blueskyUserAgent = "godaily/1.0 (+https://godaily.dev)"
 
 	blueskyMinLikes = 3
 
@@ -40,18 +61,81 @@ const (
 	blueskyPostCollection = "app.bsky.feed.post"
 )
 
-// NewBluesky creates a Bluesky #golang search client.
-func NewBluesky(_ env.Config) *Bluesky {
-	return &Bluesky{url: blueskyURL}
+// NewBluesky creates an authenticated Bluesky #golang search client.
+func NewBluesky(cfg env.Config) *Bluesky {
+	return &Bluesky{
+		sessionURL:  blueskyPDSBaseURL + blueskySessionPath,
+		searchURL:   blueskyPDSBaseURL + blueskySearchPath,
+		handle:      cfg.BlueskyHandle,
+		appPassword: cfg.BlueskyAppPassword,
+		client:      gohttp.New(gohttp.WithTimeout(30 * time.Second)),
+	}
 }
 
-// Fetch retrieves recent #golang posts from the public Bluesky AppView.
+// Fetch creates a session, then retrieves recent #golang posts. searchPosts
+// requires authentication, so a missing handle/app password is a hard error
+// rather than an empty result.
 func (b Bluesky) Fetch(ctx context.Context) ([]news.Item, error) {
-	response, err := ingest.Fetch[blueskySearchResponse](ctx, b.url, "bluesky", json.Unmarshal)
+	if b.handle == "" || b.appPassword == "" {
+		return nil, errors.New("bluesky: BLUESKY_HANDLE and BLUESKY_APP_PASSWORD must be set — searchPosts requires an authenticated session")
+	}
+
+	token, err := b.createSession(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	headers := http.Header{
+		"Authorization": {"Bearer " + token},
+		"User-Agent":    {blueskyUserAgent},
+		"Accept":        {"application/json"},
+	}
+	response, err := ingest.Fetch[blueskySearchResponse](ctx, b.searchURL, "bluesky", json.Unmarshal, headers)
 	if err != nil {
 		return nil, err
 	}
 	return ingest.TransformAll(ctx, response.Posts), nil
+}
+
+// createSession exchanges the handle and app password for a short-lived access
+// JWT via com.atproto.server.createSession. A fresh session is created per
+// fetch — the token expires within minutes, which is fine for a one-shot run.
+func (b Bluesky) createSession(ctx context.Context) (string, error) {
+	payload, err := json.Marshal(map[string]string{
+		"identifier": b.handle,
+		"password":   b.appPassword,
+	})
+	if err != nil {
+		return "", errors.Wrap(err, "bluesky session payload")
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, b.sessionURL, bytes.NewReader(payload))
+	if err != nil {
+		return "", errors.Wrap(err, "bluesky session request creation failed")
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", blueskyUserAgent)
+
+	resp, err := b.client.Do(req)
+	if err != nil {
+		return "", errors.Wrap(err, "bluesky createSession")
+	}
+	defer resp.Body.Close()
+
+	if !httputil.Is2xx(resp.StatusCode) {
+		return "", errors.Errorf("bluesky createSession: unexpected status code %d — check BLUESKY_HANDLE/BLUESKY_APP_PASSWORD", resp.StatusCode)
+	}
+
+	var out struct {
+		AccessJWT string `json:"accessJwt"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return "", errors.Wrap(err, "decoding bluesky session")
+	}
+	if out.AccessJWT == "" {
+		return "", errors.New("bluesky createSession returned an empty accessJwt")
+	}
+	return out.AccessJWT, nil
 }
 
 // ShouldInclude drops empty posts, low-engagement noise, and non-English posts.
