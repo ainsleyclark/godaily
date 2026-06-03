@@ -124,15 +124,24 @@
 
 <div class="space-y-6">
 	<!-- Hero stats -->
-	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
 		<KpiCard
 			label="Active subscribers"
 			size="lg"
 			value={activeSubs != null ? formatCompact(activeSubs) : '--'}
-			sublabel={newSubs != null && unsubs != null
-				? `+${formatCompact(newSubs)} new · -${formatCompact(unsubs)} unsubscribed`
-				: undefined}
 			delta={netDelta}
+			loading={loading && !subscribers}
+		/>
+		<KpiCard
+			label="New"
+			size="lg"
+			value={newSubs != null ? formatCompact(newSubs) : '--'}
+			loading={loading && !subscribers}
+		/>
+		<KpiCard
+			label="Unsubscribed"
+			size="lg"
+			value={unsubs != null ? formatCompact(unsubs) : '--'}
 			loading={loading && !subscribers}
 		/>
 		<KpiCard

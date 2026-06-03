@@ -172,26 +172,26 @@
 									<GripVertical class="h-4 w-4" />
 								</button>
 								<div class="min-w-0 flex-1 space-y-1">
-									<div class="flex items-baseline gap-2">
+									<div class="flex min-w-0 items-start gap-2">
 										<a
 											href={item.url}
 											target="_blank"
 											rel="noopener"
-											class="hover:text-primary text-sm font-medium leading-snug"
+											class="hover:text-primary min-w-0 break-words text-sm font-medium leading-snug"
 										>
 											{item.title}
 										</a>
-										<ExternalLink class="text-muted-foreground h-3 w-3 shrink-0" />
+										<ExternalLink class="text-muted-foreground mt-1 h-3 w-3 shrink-0" />
 									</div>
-									<div class="text-muted-foreground flex items-center gap-2 text-xs">
+									<div class="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
 										<span class="capitalize">{item.source}</span>
 										{#if item.author?.name || item.author?.username}
 											<span>·</span>
-											<span>{item.author.name || item.author.username}</span>
+											<span class="break-all">{item.author.name || item.author.username}</span>
 										{/if}
 									</div>
 									{#if item.snippet}
-										<p class="text-muted-foreground text-sm leading-relaxed">{item.snippet}</p>
+										<p class="text-muted-foreground text-sm leading-relaxed break-words">{item.snippet}</p>
 									{/if}
 								</div>
 								<div class="shrink-0">

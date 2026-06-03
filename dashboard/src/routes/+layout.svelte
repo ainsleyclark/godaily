@@ -15,6 +15,11 @@
 	const isLogin = $derived($page.url.pathname === '/login');
 	const currentPath = $derived($page.url.pathname);
 
+	// Routes that consume the dateRange store. Sub-routes like /issues/[id]
+	// are intentionally excluded — the picker is hidden there.
+	const DATE_RANGE_ROUTES = new Set(['/', '/issues', '/subscribers', '/content', '/social']);
+	const showDateRange = $derived(DATE_RANGE_ROUTES.has(currentPath));
+
 	let mobileOpen = $state(false);
 
 	function logout() {
@@ -86,9 +91,11 @@
 						<span class="text-sm font-semibold tracking-tight">GoDaily</span>
 					</div>
 
-					<div class="ml-auto hidden items-center gap-2 md:flex">
-						<DateRangePicker />
-					</div>
+					{#if showDateRange}
+						<div class="ml-auto hidden items-center gap-2 md:flex">
+							<DateRangePicker />
+						</div>
+					{/if}
 
 					<!-- Mobile toggle -->
 					<button
@@ -125,7 +132,9 @@
 							{/each}
 						</nav>
 						<div class="border-t border-border/60 px-4 py-3 flex items-center gap-3">
-							<DateRangePicker />
+							{#if showDateRange}
+								<DateRangePicker />
+							{/if}
 							<ThemeToggle />
 							<Button variant="ghost" size="sm" onclick={logout}>Logout</Button>
 						</div>

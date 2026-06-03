@@ -58,7 +58,7 @@
 								>
 									{r.slug}
 								</a>
-								<div class="text-muted-foreground text-xs">{formatDate(r.sent_at)}</div>
+								<div class="text-muted-foreground whitespace-nowrap text-xs">{formatDate(r.sent_at)}</div>
 							</TD>
 							<TD class="text-right tabular-nums">{formatCompact(r.delivered)}</TD>
 							<TD class="text-right tabular-nums">

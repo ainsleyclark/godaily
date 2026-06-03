@@ -219,7 +219,7 @@
 					<TBody>
 						{#each sorted as r (r.id)}
 							<TR>
-								<TD>
+								<TD class="whitespace-nowrap">
 									<a href={`/issues/${r.id}`} class="hover:text-primary font-medium">
 										{r.slug}
 									</a>
@@ -227,7 +227,7 @@
 								<TD>
 									<Badge variant={statusVariant(r.status)}>{r.status}</Badge>
 								</TD>
-								<TD class="text-muted-foreground text-xs">{formatDate(r.sent_at)}</TD>
+								<TD class="text-muted-foreground whitespace-nowrap text-xs">{formatDate(r.sent_at)}</TD>
 								<TD class="text-right tabular-nums">
 									{#if r.delivered != null}{formatCompact(r.delivered)}{:else}<span class="text-muted-foreground">—</span>{/if}
 								</TD>

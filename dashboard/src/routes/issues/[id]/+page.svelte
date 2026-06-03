@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 	import { api, ApiError } from '$lib/api/client';
 	import type { DigestIssue, DigestItem } from '$lib/api/types';
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
@@ -18,7 +19,16 @@
 	const issueId = $derived(Number(page.params.id));
 
 	type Tab = 'content' | 'performance';
-	let activeTab = $state<Tab>('content');
+	const activeTab = $derived<Tab>(
+		page.url.searchParams.get('tab') === 'performance' ? 'performance' : 'content'
+	);
+
+	function setTab(t: Tab) {
+		const url = new URL(page.url);
+		if (t === 'content') url.searchParams.delete('tab');
+		else url.searchParams.set('tab', t);
+		void goto(url, { replaceState: true, noScroll: true, keepFocus: true });
+	}
 
 	let issue = $state<DigestIssue | null>(null);
 	let loading = $state(true);
@@ -188,7 +198,7 @@
 				<span class="text-muted-foreground text-xs">{formatDate(issue.sent_at)}</span>
 			{/if}
 		</div>
-		<div class="flex shrink-0 items-center gap-2">
+		<div class="flex flex-wrap items-center gap-2 sm:shrink-0">
 			{#if issue && hasLiveCopy}
 				<a
 					href={`https://godaily.dev/issues/${issue.slug}/`}
@@ -220,7 +230,7 @@
 				{#each [{ id: 'content', label: 'Content' }, { id: 'performance', label: 'Performance' }] as const as tab (tab.id)}
 					<button
 						type="button"
-						onclick={() => (activeTab = tab.id)}
+						onclick={() => setTab(tab.id)}
 						class="rounded px-3 py-1 text-xs font-medium transition-colors"
 						class:bg-background={activeTab === tab.id}
 						class:text-foreground={activeTab === tab.id}
