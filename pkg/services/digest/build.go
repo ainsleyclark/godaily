@@ -105,7 +105,7 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 
 	// Draft every social post (featured + rotation, where applicable)
 	// as a best-effort side effect. A failed AI draft must not fail the
-	// build — the email digest still ships at 08:00 and the 12:00/15:00
+	// build — the email digest still ships at 08:00 and the 10:00/15:00
 	// publish crons will simply find no drafts to publish. social is
 	// optional and may be unset in tests.
 	if s.social != nil {
