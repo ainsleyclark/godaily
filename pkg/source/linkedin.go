@@ -176,7 +176,18 @@ type linkedInPost struct {
 	comments int
 }
 
-func (p linkedInPost) ShouldInclude() bool   { return p.likes >= linkedInMinLikes }
+// linkedInJobRe matches job-posting language that frequently dominates the
+// #golang hashtag. Posts matching this are dropped before scoring so job
+// listings don't crowd out genuine content.
+var linkedInJobRe = regexp.MustCompile(`(?i)\bhiring\b`)
+
+func (p linkedInPost) ShouldInclude() bool {
+	if p.likes < linkedInMinLikes {
+		return false
+	}
+	return !linkedInJobRe.MatchString(p.update.Commentary.Text.Text)
+}
+
 func (p linkedInPost) EnrichmentURL() string { return "" }
 
 func (p linkedInPost) Transform() news.Item {

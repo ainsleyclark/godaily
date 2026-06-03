@@ -80,6 +80,14 @@ func TestLinkedIn_Fetch(t *testing.T) {
 				assert.Empty(t, items)
 			},
 		},
+		"Hiring post filtered": {
+			body: []byte(`{"included":[{"$type":"com.linkedin.voyager.dash.feed.Update","entityUrn":"urn:li:fsd_update:2","metadata":{"backendUrn":"urn:li:activity:2"},"actor":{"name":{"text":"Recruiter"},"description":{"text":"Talent Acquisition"},"navigationContext":{"actionTarget":""}},"commentary":{"text":{"text":"We are hiring Senior Golang Engineers to join our team!"}},"socialContent":{"shareUrl":"https://www.linkedin.com/posts/recruiter-activity-2-abcd"}},{"$type":"com.linkedin.voyager.dash.feed.SocialActivityCounts","entityUrn":"urn:li:fsd_socialActivityCounts:urn:li:activity:2","numLikes":50,"numComments":5}]}`),
+			want: func(t *testing.T, items []news.Item, err error) {
+				t.Helper()
+				require.NoError(t, err)
+				assert.Empty(t, items)
+			},
+		},
 	}
 
 	for name, test := range tt {
