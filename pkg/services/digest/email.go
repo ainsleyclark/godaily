@@ -17,6 +17,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/ainsleyclark/godaily/pkg/gateway/email"
@@ -65,14 +66,14 @@ type (
 		Items  []emailItem
 	}
 	digestData struct {
-		Date           time.Time
-		Intro          string
-		Sections       []emailSection
-		UnsubscribeURL string
-		CanonicalURL   string
-		ShareLinkedIn  string
-		ShareBluesky   string
-		ShareTwitter   string
+		Date            time.Time
+		IntroParagraphs []string
+		Sections        []emailSection
+		UnsubscribeURL  string
+		CanonicalURL    string
+		ShareLinkedIn   string
+		ShareBluesky    string
+		ShareTwitter    string
 	}
 	// renderedDigest carries the rendered email payload so the caller can
 	// both ship it via email and persist it to the issues table without
@@ -103,11 +104,11 @@ func renderDigest(opts digestOptions) (renderedDigest, error) {
 	}
 
 	data := digestData{
-		Date:           opts.Day,
-		Intro:          opts.Intro,
-		Sections:       sections,
-		UnsubscribeURL: opts.UnsubscribeURL,
-		CanonicalURL:   opts.CanonicalURL,
+		Date:            opts.Day,
+		IntroParagraphs: digest.IntroParagraphs(opts.Intro),
+		Sections:        sections,
+		UnsubscribeURL:  opts.UnsubscribeURL,
+		CanonicalURL:    opts.CanonicalURL,
 	}
 	if opts.CanonicalURL != "" {
 		data.ShareLinkedIn = "https://www.linkedin.com/sharing/share-offsite/?url=" + url.QueryEscape(opts.CanonicalURL)

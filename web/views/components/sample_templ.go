@@ -142,15 +142,15 @@ func sampleInner(issue digest.Issue) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		if issue.Summary != "" {
+		for _, para := range digest.IntroParagraphs(issue.Summary) {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p class=\"email-preview__intro\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Summary)
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(para)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/sample.templ`, Line: 43, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/sample.templ`, Line: 43, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {

@@ -70,6 +70,29 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.HTML, "https://godaily.dev/assets/images/marks/hacker_news.svg")
 	})
 
+	t.Run("Intro Subjects Split Into Paragraphs", func(t *testing.T) {
+		// A blank line in the intro separates distinct subjects, which must
+		// render as two paragraphs in HTML rather than collapsing to one.
+		got, err := renderDigest(digestOptions{
+			Day:     sendDigestDay,
+			Intro:   "First subject lands.\n\nSecond subject ships.",
+			Sources: sampleSections(),
+		})
+		require.NoError(t, err)
+		assert.Equal(t, 2, strings.Count(got.HTML, "First subject lands.")+strings.Count(got.HTML, "Second subject ships."))
+		// Two distinct <p> blocks carry the intro paragraphs.
+		introBlock := `<p style="font-size:14px;color:#3a6880;line-height:1.6;margin:12px 0 0;">`
+		assert.Equal(t, 2, strings.Count(got.HTML, introBlock))
+		assert.Contains(t, got.Text, "First subject lands.")
+		assert.Contains(t, got.Text, "Second subject ships.")
+	})
+
+	t.Run("Omits Intro When Empty", func(t *testing.T) {
+		got, err := renderDigest(digestOptions{Day: sendDigestDay, Intro: "  \n\n ", Sources: sampleSections()})
+		require.NoError(t, err)
+		assert.NotContains(t, got.HTML, `line-height:1.6;margin:12px 0 0;`)
+	})
+
 	t.Run("Groups By Section", func(t *testing.T) {
 		// Two sources, two different sections — HN under Discussions and
 		// Go Blog under Articles — must produce two section headings and

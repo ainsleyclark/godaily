@@ -254,10 +254,15 @@
 							id="summary"
 							bind:value={summary}
 							disabled={!isDraft}
-							rows="3"
-							class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
-							placeholder="Optional intro paragraph"
+							rows="6"
+							class="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
+							placeholder={'Optional intro.\n\nLeave a blank line to separate distinct subjects — each block renders as its own paragraph in the email.'}
 						></textarea>
+						{#if isDraft}
+							<p class="text-muted-foreground text-xs">
+								Separate distinct subjects with a blank line; each block renders as its own paragraph.
+							</p>
+						{/if}
 					</div>
 					{#if !isDraft}
 						<p class="text-muted-foreground text-xs">Only draft issues can be edited.</p>
