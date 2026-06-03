@@ -170,7 +170,7 @@ func (p blueskyPost) Transform() news.Item {
 	}
 	return news.Item{
 		Source: news.SourceBluesky,
-		Title:  mastodonTitle(p.Record.Text), // shared HTML-strip/first-line/truncate helper
+		Title:  blueskyTitle(p.Record.Text),
 		URL:    blueskyPostURL(p.Author.Handle, p.URI),
 		Author: &news.Author{
 			Name:       p.Author.DisplayName,
@@ -185,6 +185,44 @@ func (p blueskyPost) Transform() news.Item {
 		Score:     news.ScoreOf(news.SourceBluesky, news.TagSocial, float64(p.LikeCount), true),
 		Published: p.Record.CreatedAt,
 	}
+}
+
+const blueskyTitleMaxLen = 80
+
+// blueskyTitle derives a one-line title from plaintext Bluesky post text: it
+// takes the first line, collapses whitespace, ends at the first sentence
+// boundary if one falls within the limit, and otherwise truncates to
+// blueskyTitleMaxLen runes.
+func blueskyTitle(text string) string {
+	text = strings.TrimSpace(text)
+	if i := strings.IndexByte(text, '\n'); i >= 0 {
+		text = text[:i]
+	}
+	clean := strings.Join(strings.Fields(text), " ")
+	if i := blueskySentenceEnd(clean); i > 0 && i < blueskyTitleMaxLen {
+		return strings.TrimSpace(clean[:i])
+	}
+	r := []rune(clean)
+	if len(r) > blueskyTitleMaxLen {
+		return strings.TrimSpace(string(r[:blueskyTitleMaxLen]))
+	}
+	return clean
+}
+
+// blueskySentenceEnd returns the byte index of the first .?! that terminates a
+// sentence — i.e. one followed by whitespace or the end of the string — or -1.
+// Requiring a trailing space leaves version numbers ("Go 1.26") and dotted
+// names ("llama.cpp") intact, which a naive split on "." would mangle.
+func blueskySentenceEnd(s string) int {
+	for i := 0; i < len(s); i++ {
+		switch s[i] {
+		case '.', '!', '?':
+			if i+1 >= len(s) || s[i+1] == ' ' {
+				return i
+			}
+		}
+	}
+	return -1
 }
 
 // blueskyIsEnglish reports whether the post's declared languages include

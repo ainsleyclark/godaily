@@ -148,6 +148,30 @@ func TestBluesky_Fetch(t *testing.T) {
 	})
 }
 
+func TestBlueskyTitle(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"plain":             {in: "Go generics deep dive", want: "Go generics deep dive"},
+		"keeps version":     {in: "🎆 Go 1.26.4 and 1.25.11 are released!\n\n🔐 Security fixes", want: "🎆 Go 1.26.4 and 1.25.11 are released"},
+		"keeps dotted name": {in: "yzma 1.15 is out for llama.cpp users", want: "yzma 1.15 is out for llama.cpp users"},
+		"first sentence":    {in: "First sentence. Second sentence.", want: "First sentence"},
+		"first line":        {in: "Title line\nbody text here", want: "Title line"},
+		"truncates":         {in: repeat("a", 200), want: repeat("a", 80)},
+		"trailing question": {in: "Anyone using sqlc?", want: "Anyone using sqlc"},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tc.want, blueskyTitle(tc.in))
+		})
+	}
+}
+
 func TestBlueskyPostURL(t *testing.T) {
 	t.Parallel()
 
