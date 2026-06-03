@@ -1,0 +1,236 @@
+[
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "I'm excited to announce that the 3rd edition of \"Learning Go\" is now available i",
+		"url": "https://www.linkedin.com/posts/jonbodner_learning-go-3rd-edition-activity-7467319696124657664-1apW",
+		"author": {
+			"name": "Jon Bodner",
+			"username": "Software Engineer, Author of Learning Go from O’Reilly, Speaker | Go \u0026 Distributed Systems",
+			"profile_url": "https://www.linkedin.com/in/jonbodner"
+		},
+		"snippet": "I'm excited to announce that the 3rd edition of \"Learning Go\" is now available in Early Release! The full book is scheduled for 2027. This edition is updated to cover the most recent Go releases. It a",
+		"tag": "social",
+		"comments": 13,
+		"score": 1,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "Why Go is the ideal platform engineers language",
+		"url": "https://www.linkedin.com/posts/anthonyjoanes_go-golang-platformengineering-activity-7465133718882664448-50SN",
+		"author": {
+			"name": "Tony Joanes",
+			"username": "⚙️ Platform | DevOps | DX | AI ✨",
+			"profile_url": "https://www.linkedin.com/in/anthonyjoanes"
+		},
+		"snippet": "Why Go is the ideal platform engineers language 1. Single binary deploys No runtime, no dependencies, no \"works on my machine.\" Ship one file, run anywhere. 2. Goroutines are cheap Spin up thousands o",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.4760925677494707,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 We’re Hiring: Senior Software Engineers",
+		"url": "https://www.linkedin.com/posts/dipto-mondal_hiring-softwareengineering-golang-activity-7467465856516591617-ENmK",
+		"author": {
+			"name": "Dipto Mondal",
+			"username": "CTO • Ex-Pathao • Backend Engineer • System Architect • Distributed Systems • Golang • Rust • Microservices • Google cloud • Kubernetes • Docker • Kafka • Clickhouse • Building Next Generation Trading Applications",
+			"profile_url": "https://www.linkedin.com/in/dipto-mondal"
+		},
+		"snippet": "🚀 We’re Hiring: Senior Software Engineers We are urgently looking for a few exceptional engineers to join our team. At Traders Connect, we are building successful products used in the trading tec",
+		"tag": "social",
+		"comments": 12,
+		"score": 1,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 Hiring Alert | Golang Engineer | Phoenix, AZ (Hybrid/Onsite)",
+		"url": "https://www.linkedin.com/posts/akanksha-kulshrestha-0a9572276_hiring-golang-golangdeveloper-activity-7467226439029854208-3dwl",
+		"author": {
+			"name": "Akanksha Kulshrestha",
+			"username": "US IT Technical Recruiter | Full-Cycle Recruitment Specialist | Expert in W2, C2C, 1099 Hiring | Talent Acquisition Professional",
+			"profile_url": "https://www.linkedin.com/in/akanksha-kulshrestha-0a9572276"
+		},
+		"snippet": "🚀 Hiring Alert | Golang Engineer | Phoenix, AZ (Hybrid/Onsite) We are looking for a skilled Golang Engineer to join a high-impact team supporting innovative backend and microservices development in",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.5557708294077383,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 We’re Hiring: Senior Golang Engineer 🌟",
+		"url": "https://www.linkedin.com/posts/leonardoguadron_seniorbackendengineer-backendengineering-activity-7465889509440942080-as5m",
+		"author": {
+			"name": "Leonardo Guadrón (He/Him)",
+			"username": "Senior TA Executive @Coforge | Headhunter | Global Tech Talent",
+			"profile_url": "https://www.linkedin.com/in/leonardoguadron"
+		},
+		"snippet": "🚀 We’re Hiring: Senior Golang Engineer 🌟 Encora is looking for an exceptional Senior Golang Engineer to join our growing remote team. If you love building scalable backend systems, designing r",
+		"tag": "social",
+		"comments": 2,
+		"score": 0.5195737064824407,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "Lumanai Recruitment are hiring strong Golang engineers 🚀",
+		"url": "https://www.linkedin.com/posts/petermay3_golang-activity-7465434442463862784-SYEf",
+		"author": {
+			"name": "Peter May",
+			"username": "Co-Founder @ Lumanai | Payments • Fintech • Digital banking 🚀",
+			"profile_url": "https://www.linkedin.com/in/petermay3"
+		},
+		"snippet": "Lumanai Recruitment are hiring strong Golang engineers 🚀 Looking for backend engineers who have built scalable distributed systems in startups, payments/fintech, or other high-growth environments. ",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.49892198580547814,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 We're Hiring: Golang Solutions Architect 🚀",
+		"url": "https://www.linkedin.com/posts/samuel-ch-9b1995228_hiring-golang-golangdeveloper-activity-7467666571620978688-IKzv",
+		"author": {
+			"name": "Samuel Ch",
+			"username": "ERP Recruiter - Solution IT",
+			"profile_url": "https://www.linkedin.com/in/samuel-ch-9b1995228"
+		},
+		"snippet": "🚀 We're Hiring: Golang Solutions Architect 🚀 📍 Location: Atlanta, GA (Local candidates strongly preferred) 💼 Employment Type: Contract Are you a passionate Golang Solutions Architect with ",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.38823676709842325,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "We’re hiring Senior Go Engineers with strong AWS \u0026 Kubernetes experience",
+		"url": "https://www.linkedin.com/posts/surbhigupta21_hiring-golang-godeveloper-activity-7467090461095120896-TRHL",
+		"author": {
+			"name": "Surbhi Gupta",
+			"username": "Director – People | Driving end-to-end HR leadership | Expertise in hiring, culture, DEI, performance, and people strategy | Enabling business transformation through people",
+			"profile_url": "https://www.linkedin.com/in/surbhigupta21"
+		},
+		"snippet": "We’re hiring Senior Go Engineers with strong AWS \u0026 Kubernetes experience Location: Bangalore (Hybrid) / Remote across India Joining Preference: Immediate to 15 days joiners Looking for engineers wit",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.714138851624206,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 Hiring: Golang Engineer",
+		"url": "https://www.linkedin.com/posts/mrvedavyas_hiring-golang-golangdeveloper-activity-7467624859762790400-bitZ",
+		"author": {
+			"name": "Veda Vyas",
+			"username": "Regional Business Development Manager || Technical \u0026 Sales Team Head",
+			"profile_url": "https://www.linkedin.com/in/mrvedavyas"
+		},
+		"snippet": "🚀 Hiring: Golang Engineer 📍 Location: Phoenix, AZ (Onsite) ⏳ Duration: 12 Months We are seeking a skilled Golang Engineer to join a modern microservices-based Loyalty \u0026 Benefits platform team.",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.38823676709842325,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 We’re Hiring: 𝐒𝐞𝐧𝐢𝐨𝐫 𝐆𝐨𝐥𝐚𝐧𝐠 𝐄𝐧𝐠𝐢𝐧𝐞𝐞𝐫 | ANDPAD Vietnam",
+		"url": "https://www.linkedin.com/posts/viphuong_hiring-golang-backendengineer-activity-7465599373444456448-thzc",
+		"author": {
+			"name": "Phuong Nguyen",
+			"username": "💻Hiring AI, RoR, Golang \u0026 SDET for the No.1 Construction SaaS in Japan | 684,000+ users globally",
+			"profile_url": "https://www.linkedin.com/in/viphuong"
+		},
+		"snippet": "🚀 We’re Hiring: 𝐒𝐞𝐧𝐢𝐨𝐫 𝐆𝐨𝐥𝐚𝐧𝐠 𝐄𝐧𝐠𝐢𝐧𝐞𝐞𝐫 | ANDPAD Vietnam ANDPAD Vietnam is looking for a Senior Golang Engineer to join our growing engi",
+		"tag": "social",
+		"comments": 2,
+		"score": 0.6262830509731585,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "🚀 Senior Golang Developer | India 🇮🇳",
+		"url": "https://www.linkedin.com/posts/vi%D1%81toria-ivantsova-b2b1301b7_senior-golang-developer-team-instinctools-activity-7466068949647093761-P4LB",
+		"author": {
+			"name": "VIСTORIA Ivantsova",
+			"username": "Talent Sourcer at *instinctools | Talent Discovery Specialist",
+			"profile_url": "https://www.linkedin.com/in/vi%D1%81toria-ivantsova-b2b1301b7"
+		},
+		"snippet": "🚀 Senior Golang Developer | India 🇮🇳 instinctools is looking for a Senior Golang Developer to join the team and work on a large-scale platform for a globally recognized consulting company ser",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.6007619328947518,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "We’re Hiring: #Golang Developer fully remote ( India )",
+		"url": "https://www.linkedin.com/posts/activity-7466076733319061504-tWum",
+		"author": {
+			"name": "Amrita Dwivedi",
+			"username": "Experienced IT Talent Acquisition \u0026 HR Operations Lead specializing in scalable tech hiring, HR operations, and stakeholder partnership.",
+			"profile_url": "https://www.linkedin.com/in/amrita-dwivedi-07217797"
+		},
+		"snippet": "We’re Hiring: Golang Developer fully remote ( India ) Job Location- India Job Type - Full Time We’re a fast-growing SaaS company looking for a talented Golang Developer to help build and scale our",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.5557708294077383,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "📢 We’re #Hiring : Application Support Engineer",
+		"url": "https://www.linkedin.com/posts/dwisuryaningtyas_hiring-hiring-jobopening-activity-7466936780647444480-nrwp",
+		"author": {
+			"name": "Dwi Apsarini Suryaningtyas",
+			"username": "Talent Acquisition at PT IDstar Cipta Teknologi || Undergraduate Psychology Student at BINUS University || Interested in Human Resources, Recruitment, Talent Acquisition, and Employee Engagement.",
+			"profile_url": "https://www.linkedin.com/in/dwisuryaningtyas"
+		},
+		"snippet": "📢 We’re Hiring : Application Support Engineer Looking for candidates with experience in Application Support / IT Support L2 / Production Support and familiar with Golang, Java, \u0026 JavaScript. If y",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.38823676709842325,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	}
+]
