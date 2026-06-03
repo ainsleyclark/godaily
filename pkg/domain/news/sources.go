@@ -57,6 +57,7 @@ const (
 	SourceGolangCafe     Source = "golang_cafe"
 	SourceGolangProjects Source = "golang_projects"
 	SourceLinkedIn       Source = "linkedin"
+	SourceBluesky        Source = "bluesky"
 )
 
 // Sources defines a list of all source types.
@@ -91,6 +92,7 @@ var Sources = []Source{
 	SourceGolangCafe,
 	SourceGolangProjects,
 	SourceLinkedIn,
+	SourceBluesky,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -112,6 +114,7 @@ var FeaturedSources = []Source{
 	SourceArdanLabs,
 	SourceFallthrough,
 	SourceMastodon,
+	SourceBluesky,
 	SourceAwesomeGo,
 	SourceGolangNuts,
 	SourceMeetup,
@@ -162,6 +165,7 @@ var sourcePriorities = map[Source]int{
 	SourceWeWorkRemotely: 28,
 	SourceRemotive:       29,
 	SourceLinkedIn:       30,
+	SourceBluesky:        31,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -202,6 +206,7 @@ var sourceNiceNames = map[Source]string{
 	SourceGolangCafe:     "Golang.cafe",
 	SourceGolangProjects: "Golangprojects",
 	SourceLinkedIn:       "LinkedIn",
+	SourceBluesky:        "Bluesky",
 }
 
 // NiceName returns a formatted string of the source.
@@ -244,6 +249,7 @@ var sourceEmojis = map[Source]string{
 	SourceGolangCafe:     "☕",
 	SourceGolangProjects: "🧰",
 	SourceLinkedIn:       "🔗",
+	SourceBluesky:        "🦋",
 }
 
 // Emoji returns the display emoji for the source.
@@ -262,6 +268,7 @@ func (s Source) IsRanked() bool {
 var sourceMarkURLs = map[Source]string{
 	SourceArdanLabs:      "/assets/images/marks/ardanlabs_podcast.svg",
 	SourceAwesomeGo:      "/assets/images/marks/awesome_go.png",
+	SourceBluesky:        "/assets/images/marks/bluesky.svg",
 	SourceDevTo:          "/assets/images/marks/dev_to.svg",
 	SourceFallthrough:    "/assets/images/marks/fallthrough.webp",
 	SourceFreeCodeCamp:   "/assets/images/marks/fcc.svg",
@@ -326,6 +333,7 @@ var sourceShortLabels = map[Source]string{
 	SourceGolangCafe:     "GC",
 	SourceGolangProjects: "GP",
 	SourceLinkedIn:       "in",
+	SourceBluesky:        "bs",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,
