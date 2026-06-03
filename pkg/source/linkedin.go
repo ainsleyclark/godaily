@@ -181,11 +181,24 @@ type linkedInPost struct {
 // listings don't crowd out genuine content.
 var linkedInJobRe = regexp.MustCompile(`(?i)\bhiring\b`)
 
+// linkedInOwnAuthors lists author names whose posts are suppressed — our own
+// accounts should never appear in the feed we curate.
+var linkedInOwnAuthors = []string{"ainsley clark", "godaily"}
+
 func (p linkedInPost) ShouldInclude() bool {
 	if p.likes < linkedInMinLikes {
 		return false
 	}
-	return !linkedInJobRe.MatchString(p.update.Commentary.Text.Text)
+	if linkedInJobRe.MatchString(p.update.Commentary.Text.Text) {
+		return false
+	}
+	name := strings.ToLower(p.update.Actor.Name.Text)
+	for _, own := range linkedInOwnAuthors {
+		if strings.Contains(name, own) {
+			return false
+		}
+	}
+	return true
 }
 
 func (p linkedInPost) EnrichmentURL() string { return "" }

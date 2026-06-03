@@ -897,7 +897,8 @@
                     "remotive",
                     "we_work_remotely",
                     "golang_cafe",
-                    "golang_projects"
+                    "golang_projects",
+                    "linkedin"
                 ],
                 "type": "string",
                 "x-enum-varnames": [
@@ -929,7 +930,8 @@
                     "SourceRemotive",
                     "SourceWeWorkRemotely",
                     "SourceGolangCafe",
-                    "SourceGolangProjects"
+                    "SourceGolangProjects",
+                    "SourceLinkedIn"
                 ]
             },
             "news.Tag": {
@@ -950,7 +952,8 @@
                     "conference",
                     "conference_reminder",
                     "conference_alert",
-                    "jobs"
+                    "jobs",
+                    "social"
                 ],
                 "type": "string",
                 "x-enum-comments": {
@@ -974,7 +977,8 @@
                     "TagConference",
                     "TagConferenceReminder",
                     "TagConferenceAlert",
-                    "TagJobs"
+                    "TagJobs",
+                    "TagSocial"
                 ]
             },
             "social.Post": {

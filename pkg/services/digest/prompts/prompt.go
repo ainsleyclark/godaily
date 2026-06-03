@@ -94,6 +94,11 @@ func filterItems(sections []news.SourceItems, cfg filterConfig) []promptItem {
 		}
 		for i := 0; i < take; i++ {
 			it := section.Items[i]
+			// Jobs and social posts add no value to an editorial intro or
+			// subject line — skip them entirely.
+			if it.Tag == news.TagJobs || it.Tag == news.TagSocial {
+				continue
+			}
 			out = append(out, ranked{
 				item: promptItem{
 					Source:  string(it.Source),

@@ -2681,12 +2681,12 @@ export interface components {
             url?: string;
         };
         /** @enum {string} */
-        "news.Source": "dev_to" | "go_blog" | "github" | "github_trending" | "reddit" | "hacker_news" | "golangbridge" | "lobsters" | "medium" | "youtube" | "go_podcast" | "fallthrough" | "ardanlabs_podcast" | "go_release" | "mastodon" | "awesome_go" | "jetbrains" | "golang_nuts" | "planet_golang" | "meetup" | "conferences" | "go_vuln" | "freecodecamp" | "hacker_news_jobs" | "remote_ok" | "remotive" | "we_work_remotely" | "golang_cafe" | "golang_projects";
+        "news.Source": "dev_to" | "go_blog" | "github" | "github_trending" | "reddit" | "hacker_news" | "golangbridge" | "lobsters" | "medium" | "youtube" | "go_podcast" | "fallthrough" | "ardanlabs_podcast" | "go_release" | "mastodon" | "awesome_go" | "jetbrains" | "golang_nuts" | "planet_golang" | "meetup" | "conferences" | "go_vuln" | "freecodecamp" | "hacker_news_jobs" | "remote_ok" | "remotive" | "we_work_remotely" | "golang_cafe" | "golang_projects" | "linkedin";
         /**
          * @description source-specific hint ("proposal-accepted", "trending", "official")
          * @enum {string}
          */
-        "news.Tag": "article" | "tutorial" | "proposal" | "proposal_accepted" | "proposal_shipped" | "video" | "podcast" | "release" | "security" | "discussion" | "trending" | "event" | "conference" | "conference_reminder" | "conference_alert" | "jobs";
+        "news.Tag": "article" | "tutorial" | "proposal" | "proposal_accepted" | "proposal_shipped" | "video" | "podcast" | "release" | "security" | "discussion" | "trending" | "event" | "conference" | "conference_reminder" | "conference_alert" | "jobs" | "social";
         "social.Post": {
             id?: number;
             issue_id?: number;
