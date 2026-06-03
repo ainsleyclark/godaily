@@ -93,7 +93,7 @@ func BuildSummary(in Summary) slack.Request {
 	}
 
 	blocks = append(blocks, context(
-		"Auto-publishes at 11:00 UTC unless cancelled from the dashboard.",
+		"Auto-publishes: featured 11:00 BST (10:00 UTC) · rotation 15:00 BST (14:00 UTC) Mon/Wed/Fri — edit in dashboard to cancel.",
 	))
 
 	fallback := "Digest ready for review"

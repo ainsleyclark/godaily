@@ -36,11 +36,11 @@
 		},
 		{
 			"path": "/api/social/publish/featured/",
-			"schedule": "0 11 * * *"
+			"schedule": "0 10 * * *"
 		},
 		{
 			"path": "/api/social/publish/rotation/",
-			"schedule": "0 15 * * 1,3,5"
+			"schedule": "0 14 * * 1,3,5"
 		},
 		{
 			"path": "/api/social/metrics/",
