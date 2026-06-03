@@ -83,9 +83,10 @@ func BuildSummary(in Summary) slack.Request {
 
 	if len(in.Drafts) > 0 {
 		blocks = append(blocks, slackgo.NewDividerBlock())
+		blocks = append(blocks, context("*Social drafts*"))
 		for _, group := range groupDrafts(in.Drafts) {
-			text := fmt.Sprintf("*%s · %s*\n%s",
-				titleCase(group.Kind), titleCase(group.Platform), codeBlock(group.Text))
+			text := fmt.Sprintf("*%s · %s*\n> %s",
+				titleCase(group.Kind), titleCase(group.Platform), preview(group.Text))
 			blocks = append(blocks, sectionWithButton(text,
 				"Edit", fmt.Sprintf("%s/social/drafts?id=%d", env.DashboardURL, group.ID), ""))
 		}

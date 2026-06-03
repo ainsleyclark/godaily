@@ -70,10 +70,14 @@ func blockquote(text string) string {
 	return strings.Join(lines, "\n")
 }
 
-// codeBlock wraps text in a fenced code block.
-func codeBlock(text string) string {
-	if text == "" {
-		return ""
+// preview collapses whitespace and truncates text so it fits on a couple of
+// lines next to a section accessory without throwing the layout off.
+func preview(text string) string {
+	const max = 140
+	flat := strings.Join(strings.Fields(text), " ")
+	if len([]rune(flat)) <= max {
+		return flat
 	}
-	return "```\n" + text + "\n```"
+	runes := []rune(flat)
+	return strings.TrimRight(string(runes[:max]), " ,.;:-") + "…"
 }

@@ -6,7 +6,6 @@ package digest
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"sort"
 	"time"
@@ -235,16 +234,6 @@ func (s Service) synthesiseDigestMeta(ctx context.Context, day time.Time, sectio
 			s.slack.MustSend(ctx, slack.Error("AI synthesis failed", err))
 		}
 		return subject, ""
-	}
-
-	// Surface the generated subject and intro to Slack. Build and send are
-	// separate pipeline steps, so this is a passive review window: the owner
-	// can catch anything off before the send job runs, with no obligation to.
-	if s.slack != nil {
-		s.slack.MustSend(ctx, slack.Info(
-			"Digest draft for "+day.Format("2006-01-02"),
-			fmt.Sprintf("*Subject:* %s\n\n*Intro:* %s", meta.Title, meta.Intro),
-		))
 	}
 
 	return meta.Title, meta.Intro
