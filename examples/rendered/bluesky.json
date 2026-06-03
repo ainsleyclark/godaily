@@ -1,0 +1,548 @@
+[
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "🎆 Go 1",
+		"url": "https://bsky.app/profile/golang.org/post/3mndjfenols2q",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreic7atvhquydngbbsraybz42xq3yaycia5wswtxhadjfslnm2uskvq",
+		"author": {
+			"name": "Go",
+			"username": "golang.org",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreidmrsynmjhhg7maar33fa2q7u4mkrgeixjsywox3yxum5mjzseanq",
+			"profile_url": "https://bsky.app/profile/golang.org"
+		},
+		"snippet": "🎆 Go 1.26.4 and 1.25.11 are released! 🔐 Security: Includes 3 security fixes to the standard library. 📢 Announcement: https://groups.google.com/g/golang-announce/c/tKs3rmcBcKw/m/1ou-Xt7gAQAJ \ufffd",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.8082896158713685,
+		"published": "2026-06-02T21:17:28Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "The goals this week for probes",
+		"url": "https://bsky.app/profile/blainsmith.com/post/3mnbbp4ih2s2g",
+		"author": {
+			"name": "Blain Smith",
+			"username": "blainsmith.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+			"profile_url": "https://bsky.app/profile/blainsmith.com"
+		},
+		"snippet": "The goals this week for probes.dev are: - Account and member management - Basic status pages - Spruce up the alert/invite/sign-in emails HTTP GoLang BuildInPublic",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.6319981814824864,
+		"published": "2026-06-01T23:54:26.942Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "yzma 1",
+		"url": "https://bsky.app/profile/yzma.ai/post/3mncboov7x22a",
+		"author": {
+			"name": "yzma",
+			"username": "yzma.ai",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiaehp3duscspnlypudd3tn5kzdykiv4cppq4bjhqjrsbjpeh5kw2a",
+			"profile_url": "https://bsky.app/profile/yzma.ai"
+		},
+		"snippet": "yzma 1.15 is out, needed for both breaking changes to llama.cpp \u0026 also for our new, more robust library updater. Go get it! github.com/hybridgroup/... golang llamacpp localAI yourIntelligence",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.49491262604822334,
+		"published": "2026-06-02T09:26:52.42Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Go has no native Set",
+		"url": "https://bsky.app/profile/ashwiniag.bsky.social/post/3mn5t2gbxyc2t",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreie3x3ympsimx7rojmhaw3tbjbwtmztwqy6unfyxzzvtp4ju23i37u",
+		"author": {
+			"name": "ashwiniag",
+			"username": "ashwiniag.bsky.social",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreiec5dp54em7csbcynv7a22yecoencev6twndv5n74w7eiktkswla4",
+			"profile_url": "https://bsky.app/profile/ashwiniag.bsky.social"
+		},
+		"snippet": "Go has no native Set. map[key]bool vs map[key]struct{} are not same If you're storing millions of event IDs in map[int]bool instead of map[int]struct{}, you're wasting millions of bytes unnecessarily.",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.4557067470936043,
+		"published": "2026-05-31T14:54:20.971Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Physical AI running locally on @officialarduino",
+		"url": "https://bsky.app/profile/talkingheads2053.com/post/3mmvkrab4jk2t",
+		"author": {
+			"name": "Talking Heads From The Year 2053",
+			"username": "talkingheads2053.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:gkoy56sigg3vrlqezfi22q7p/bafkreibajuw2ktuxuuzpne4gbqmsqruropqj2xqxqstpx7gkw23vqoodhi",
+			"profile_url": "https://bsky.app/profile/talkingheads2053.com"
+		},
+		"snippet": "Physical AI running locally on @officialarduino.bsky.social UNO Q like you've never seen before (and won't until 2053) \"Talking Heads From The Year 2053 - Episode Zero\" is available now! www.youtube.c",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.5288743031666463,
+		"published": "2026-05-28T08:04:44.821Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Early morning work before everyone gets up",
+		"url": "https://bsky.app/profile/blainsmith.com/post/3mn2yp4l2ok2x",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreid6zxadaxdhwui7bacjlrh4eerrlzxtu6q2pe4zp5efgjtmxqhkpu",
+		"author": {
+			"name": "Blain Smith",
+			"username": "blainsmith.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+			"profile_url": "https://bsky.app/profile/blainsmith.com"
+		},
+		"snippet": "Early morning work before everyone gets up. I got the deployment files and scripts all set for probes.dev HTTP Monitoring Telemetry GoLang SQLite",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4557067470936043,
+		"published": "2026-05-30T11:57:24.916Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Some of the inner workings of @limeleaf",
+		"url": "https://bsky.app/profile/blainsmith.com/post/3mmtqcv5ods2w",
+		"author": {
+			"name": "Blain Smith",
+			"username": "blainsmith.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+			"profile_url": "https://bsky.app/profile/blainsmith.com"
+		},
+		"snippet": "Some of the inner workings of @limeleaf.coop's probes.dev is using Go's net/http/httptrace package which gives you very handy information. blainsmith.com/articles/htt... GoLang HTTP DNS TLS TCP TTFB T",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4557067470936043,
+		"published": "2026-05-27T14:38:46.385Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "One thing that took me a while to internalize in Go: make([]string, n) is is a d",
+		"url": "https://bsky.app/profile/ashwiniag.bsky.social/post/3mmvhe6jmak2f",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreih56mx4iecy3edsdqv7xv4sxxpdhcnbfnmtsqfsbrm4ifeaooiqzm",
+		"author": {
+			"name": "ashwiniag",
+			"username": "ashwiniag.bsky.social",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreiec5dp54em7csbcynv7a22yecoencev6twndv5n74w7eiktkswla4",
+			"profile_url": "https://bsky.app/profile/ashwiniag.bsky.social"
+		},
+		"snippet": "One thing that took me a while to internalize in Go: make([]string, n) is is a declaration of intent You're telling the runtime: I know exactly how much space I need, give it to me now. Skip it and in",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.49491262604822334,
+		"published": "2026-05-28T07:03:45.568Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "New blog post 🥳 How my minimal, memory-safe #golang rsync steers clear of vulner",
+		"url": "https://bsky.app/profile/zekjur.bsky.social/post/3mmm72soha22v",
+		"author": {
+			"name": "Michael Stapelberg 🐧🐹😺",
+			"username": "zekjur.bsky.social",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:eb3563jmh2vjnrlkwujxqdwg/bafkreihozm4cvpbtnw5umr4urxhfny6nplnczski47usq64xekj3u6rmlq",
+			"profile_url": "https://bsky.app/profile/zekjur.bsky.social"
+		},
+		"snippet": "New blog post 🥳 How my minimal, memory-safe golang rsync steers clear of vulnerabilities → michael.stapelberg.ch/posts/2026-0...",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.7351220597983265,
+		"published": "2026-05-24T14:41:23.577Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Go is such a boring language, especially when an LLM writes it, that every few m",
+		"url": "https://bsky.app/profile/preslavrachev.mastodon.social.ap.brid.gy/post/3mmrsfu2du4x2",
+		"author": {
+			"name": "Preslav Rachev",
+			"username": "preslavrachev.mastodon.social.ap.brid.gy",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:f3ydvezllkowxh5rhnl6otjq/bafkreigtjinsajhdvy3omqshnxmb42bslshaq4zutwoiyumo2xrc4gkv5u",
+			"profile_url": "https://bsky.app/profile/preslavrachev.mastodon.social.ap.brid.gy"
+		},
+		"snippet": "Go is such a boring language, especially when an LLM writes it, that every few months I get sick of things just working. I start looking for an intellectual challenge. But then, I realize how averse t",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.3525828687777642,
+		"published": "2026-05-26T20:10:51Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Got D3 rendering the charts",
+		"url": "https://bsky.app/profile/blainsmith.com/post/3mmmhwzucys24",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreifomkvw3pa235kod6qoj5h3urm2r2cvbqjcvs7hwwyio4fg47tgbe",
+		"author": {
+			"name": "Blain Smith",
+			"username": "blainsmith.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+			"profile_url": "https://bsky.app/profile/blainsmith.com"
+		},
+		"snippet": "Got D3 rendering the charts. The design isn't set in stone, but I like it so far. GoLang D3 htmx templ HTTP",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.5288743031666463,
+		"published": "2026-05-24T17:20:20.565Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "The opening of my closing keynote at @gophercon",
+		"url": "https://bsky.app/profile/deadprogram.com/post/3mmm5wp5ofc2y",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreidlewv77njyqfgcutw5vejouhso6d7qqlr73um62epm55knnlprse",
+		"author": {
+			"name": "deadprogram",
+			"username": "deadprogram.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+			"profile_url": "https://bsky.app/profile/deadprogram.com"
+		},
+		"snippet": "The opening of my closing keynote at @gophercon.sg Videos coming soon! th2053 tinygo golang arduino gopherconSG",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.6098681622198213,
+		"published": "2026-05-24T14:21:11.908Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "“Introducing the pkg",
+		"url": "https://bsky.app/profile/golang.org/post/3mmhff7nh5t2h",
+		"author": {
+			"name": "Go",
+			"username": "golang.org",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreidmrsynmjhhg7maar33fa2q7u4mkrgeixjsywox3yxum5mjzseanq",
+			"profile_url": "https://bsky.app/profile/golang.org"
+		},
+		"snippet": "“Introducing the pkg.go.dev API” by Ethan Lee, Hana Kim, and Jonathan Amsterdam — https://go.dev/blog/pkgsite-api golang",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.8082896158713685,
+		"published": "2026-05-22T16:51:16Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Working as intended so far",
+		"url": "https://bsky.app/profile/blainsmith.com/post/3mmjhb3snqc2y",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreih7azibydq35wvotktqyiygi3fzncevvde7hbeenuhq6lfw5rg4du",
+		"author": {
+			"name": "Blain Smith",
+			"username": "blainsmith.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+			"profile_url": "https://bsky.app/profile/blainsmith.com"
+		},
+		"snippet": "Working as intended so far. Main app and N probes start up and the app sends out info to each probe so it can go probe the endpoint, collect results, and report it back to the main app. GoLang Docker ",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.49491262604822334,
+		"published": "2026-05-23T12:30:05.197Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Kronk AI on the main stage🤖 📸 A few snapshots of @goinggo",
+		"url": "https://bsky.app/profile/ardanlabs.com/post/3mmhe2dbngc2v",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifqpg2pjymbpjckzku67zzggex3wdrffuwm7jkdqhb5esrpro7f2i",
+		"author": {
+			"name": "Ardan Labs",
+			"username": "ardanlabs.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifhtj77xjdoqz6mtg63azqv2ry5dna3k6rimibwib25gcvdidglde",
+			"profile_url": "https://bsky.app/profile/ardanlabs.com"
+		},
+		"snippet": "Kronk AI on the main stage🤖 📸 A few snapshots of @goinggo.net giving his talk on \"Kronk: Hardware Accelerated Local Inference\" at GopherCon Singapore golang KronkAI ArdanLabs GopherConSG2026",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4093360343955374,
+		"published": "2026-05-22T16:27:17.443Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Now @sago35tk",
+		"url": "https://bsky.app/profile/deadprogram.com/post/3mmfy45p5vc2n",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreib5yn3lm7z7xc2a23pfo5kyjratrieah6l62q3pmplr6km4zqjo6e",
+		"author": {
+			"name": "deadprogram",
+			"username": "deadprogram.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+			"profile_url": "https://bsky.app/profile/deadprogram.com"
+		},
+		"snippet": "Now @sago35tk.bsky.social speaks about @tinygo.org Keeb at @gophercon.sg! tinygo golang gopherconSG",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.5288743031666463,
+		"published": "2026-05-22T03:20:54.042Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Getting started at @gophercon",
+		"url": "https://bsky.app/profile/deadprogram.com/post/3mmfrix7mgs2b",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreias6flvwee2uzc3sepwbg5cyl5wl33jk6kxxvbwvixpsu4bdm7tqu",
+		"author": {
+			"name": "deadprogram",
+			"username": "deadprogram.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+			"profile_url": "https://bsky.app/profile/deadprogram.com"
+		},
+		"snippet": "Getting started at @gophercon.sg let's Go! golang gopherconSG",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4557067470936043,
+		"published": "2026-05-22T01:22:47.251Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Our very own @goinggo",
+		"url": "https://bsky.app/profile/ardanlabs.com/post/3mmfcdl3aac25",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreias7c54r6twcbbfcsjm6rx7zwiwkcocqk2s6mmupicvdmvmigubcm",
+		"author": {
+			"name": "Ardan Labs",
+			"username": "ardanlabs.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifhtj77xjdoqz6mtg63azqv2ry5dna3k6rimibwib25gcvdidglde",
+			"profile_url": "https://bsky.app/profile/ardanlabs.com"
+		},
+		"snippet": "Our very own @goinggo.net dropping knowledge at GopherCon Singapore in his workshop! Teaching golang worldwide, we love to see it.😎",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4093360343955374,
+		"published": "2026-05-21T20:51:20.652Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "making a level editor for my game engine, it's chunk-based and streaming",
+		"url": "https://bsky.app/profile/nelson.wetdry.world.ap.brid.gy/post/3mmazexidntf2",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:unvheb5jkszdyuwhg4afr6gb/bafkreia52illyv6xy6gcj25zz4wazpu77v7fvsm23v3ke4u5siyrsvbtem",
+		"author": {
+			"name": "Nelson Lopez",
+			"username": "nelson.wetdry.world.ap.brid.gy",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:unvheb5jkszdyuwhg4afr6gb/bafkreifxmnxsbrutgzbuxl45hegpj6v7admhi3izppdg6uspugd67oc2ri",
+			"profile_url": "https://bsky.app/profile/nelson.wetdry.world.ap.brid.gy"
+		},
+		"snippet": "making a level editor for my game engine, it's chunk-based and streaming. the original one could plug straight into aseprite to have real-time updates and integration, it was neato, but lost that on t",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.6319981814824864,
+		"published": "2026-05-20T04:00:22Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "It took a lot, but at last my journey to @gophercon",
+		"url": "https://bsky.app/profile/deadprogram.com/post/3mm72y3rd7k2p",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreid4fndty6vcmjdigpxj22gczpdsjpqzkahtndvvsyscesaysiiliq",
+		"author": {
+			"name": "deadprogram",
+			"username": "deadprogram.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+			"profile_url": "https://bsky.app/profile/deadprogram.com"
+		},
+		"snippet": "It took a lot, but at last my journey to @gophercon.sg has begun! See you there! tinygo gopherconSG golang th2053",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.7051657375555284,
+		"published": "2026-05-19T09:23:40.863Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "A Go typosquat impersonating the popular shopspring/decimal library stayed benig",
+		"url": "https://bsky.app/profile/socket.dev/post/3mm7wak4iuc2f",
+		"author": {
+			"name": "Socket",
+			"username": "socket.dev",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreibac2lxedjvyhs4hyifvkdlu2gouyba4jzpirnuujp3ad2jk6w77i",
+			"profile_url": "https://bsky.app/profile/socket.dev"
+		},
+		"snippet": "A Go typosquat impersonating the popular shopspring/decimal library stayed benign for years before shipping a DNS TXT backdoor that executes commands on import. The legitimate module has 38K+ known im",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.6887513471002596,
+		"published": "2026-05-19T17:31:35.389Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "yzma 1",
+		"url": "https://bsky.app/profile/yzma.ai/post/3mm2lnjba3s2g",
+		"author": {
+			"name": "yzma",
+			"username": "yzma.ai",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiaehp3duscspnlypudd3tn5kzdykiv4cppq4bjhqjrsbjpeh5kw2a",
+			"profile_url": "https://bsky.app/profile/yzma.ai"
+		},
+		"snippet": "yzma 1.14 was just released, and you need it for the latest llama.cpp. Plus a major upgrade to tool and message parsing support, shiny new download progress indicator, and more. go get your update now",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.6319981814824864,
+		"published": "2026-05-17T14:38:40.85Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Good series of posts on Go logging by @rednafi",
+		"url": "https://bsky.app/profile/pawelgrzybek.com/post/3mlzpjbmyhs2w",
+		"author": {
+			"name": "Paweł Grzybek",
+			"username": "pawelgrzybek.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:mdzzw3bmt7jyif4bcvuyeboj/bafkreif5peydztx65y6fvhcxnxsckd3nalkg3wg37imehwk5y3ilubnlw4",
+			"profile_url": "https://bsky.app/profile/pawelgrzybek.com"
+		},
+		"snippet": "Good series of posts on Go logging by @rednafi.com “Go structured logging with slog” rednafi.com/go/structure... “Type-safe slogging” rednafi.com/go/typesafe-... golang",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.49491262604822334,
+		"published": "2026-05-17T06:15:13.858Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "I naively thought I could quickly get a logo for Gastro from using AI models",
+		"url": "https://bsky.app/profile/andri.dk/post/3mlx6slyzdc2j",
+		"image_url": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:rrrwbar3wv576qpsymwey5p5/bafkreigng2xxizcvuzua6zxhbykzxllbhihdkxhls42hsvg7pjjaok2j4u",
+		"author": {
+			"name": "Andri Óskarsson",
+			"username": "andri.dk",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:rrrwbar3wv576qpsymwey5p5/bafkreic2frc7dki4q5ig5ikwb7bdl67czodklo2ujwczooqbcxv7ekrzpu",
+			"profile_url": "https://bsky.app/profile/andri.dk"
+		},
+		"snippet": "I naively thought I could quickly get a logo for Gastro from using AI models. \"Go-like gopher w. a chef's hat\" in SVG. How wrong I was... golang",
+		"tag": "social",
+		"comments": 2,
+		"score": 0.6098681622198213,
+		"published": "2026-05-16T06:10:53.64Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "A minimal coding agent for the terminal",
+		"url": "https://bsky.app/profile/golangch.bsky.social/post/3mlsujf2mxd2i",
+		"author": {
+			"name": "Golang Articles, News, Packages",
+			"username": "golangch.bsky.social",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:p34okilpjskbqyf3fibdirbg/bafkreib3aytbzth56zobfrezojr3uo3orndosek3bg7qnzwe5eafp475xq",
+			"profile_url": "https://bsky.app/profile/golangch.bsky.social"
+		},
+		"snippet": "A minimal coding agent for the terminal. Built for local LLMs, also runs on OpenAI compatible endpoints golang github.com/codehamr/co...",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.3525828687777642,
+		"published": "2026-05-14T12:56:07.901793Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Very excited to be back at @golab",
+		"url": "https://bsky.app/profile/klauspost.com/post/3mlso3lavh22n",
+		"author": {
+			"name": "Klaus Post",
+			"username": "klauspost.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:ufsgk5krmtsfuypumkrekofw/bafkreiglgzc3dkg42kha67q6urssjbec2qbysj5i5sfxyghbxuthk3ystu",
+			"profile_url": "https://bsky.app/profile/klauspost.com"
+		},
+		"snippet": "Very excited to be back at @golab.io - super chill and well organised event! I will give a talk on the state of golang data compression. See you there!",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.4557067470936043,
+		"published": "2026-05-14T11:01:02.277Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "Qwentin orders humans to attend Gophercon Singapore next week",
+		"url": "https://bsky.app/profile/talkingheads2053.com/post/3mlkmmgrhts23",
+		"author": {
+			"name": "Talking Heads From The Year 2053",
+			"username": "talkingheads2053.com",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:gkoy56sigg3vrlqezfi22q7p/bafkreibajuw2ktuxuuzpne4gbqmsqruropqj2xqxqstpx7gkw23vqoodhi",
+			"profile_url": "https://bsky.app/profile/talkingheads2053.com"
+		},
+		"snippet": "Qwentin orders humans to attend Gophercon Singapore next week. 2026.gophercon.sg golang tinygo arduino th2053",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.6098681622198213,
+		"published": "2026-05-11T06:13:22.612Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "bluesky",
+		"title": "A maintainer access dispute in fsnotify, a Go library used by 321k projects for",
+		"url": "https://bsky.app/profile/socket.dev/post/3mlkauryngk26",
+		"author": {
+			"name": "Socket",
+			"username": "socket.dev",
+			"avatar_url": "https://cdn.bsky.app/img/avatar/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreibac2lxedjvyhs4hyifvkdlu2gouyba4jzpirnuujp3ad2jk6w77i",
+			"profile_url": "https://bsky.app/profile/socket.dev"
+		},
+		"snippet": "A maintainer access dispute in fsnotify, a Go library used by 321k projects for cross-platform file notifications, raised supply chain concerns this week after contributors were removed from the GitHu",
+		"tag": "social",
+		"comments": 0,
+		"score": 0.6523558257806837,
+		"published": "2026-05-11T02:43:17.913Z",
+		"position": 0,
+		"in_digest": false
+	}
+]

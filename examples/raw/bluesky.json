@@ -1,0 +1,5075 @@
+{
+	"posts": [
+		{
+			"uri": "at://did:plc:wjk44wlnvy2rz2qq47ctzdkv/app.bsky.feed.post/3mndjfenols2q",
+			"cid": "bafyreiej3t76tk3bllmgyb7rp37s54e6ldnsss64mrfeni5773cxprhori",
+			"author": {
+				"did": "did:plc:wjk44wlnvy2rz2qq47ctzdkv",
+				"handle": "golang.org",
+				"displayName": "Go",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreidmrsynmjhhg7maar33fa2q7u4mkrgeixjsywox3yxum5mjzseanq",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-05T20:57:49.211Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-06-02T21:17:28Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "$ go install golang.org/dl/go1.26.4@latest\n$ go1.26.4 download\nDownloaded   0.0% (       0 / 64432275 bytes) ...\nDownloaded  50.0% (32216137 / 64432275 bytes) ...\nDownloaded 100.0% (64432275 / 64432275 bytes)\nUnpacking go1.26.4.linux-ppc64le.tar.gz ...\nSuccess. You may now run 'go1.26.4'\n$ go1.26.4 version\ngo version go1.26.4 linux/ppc64le",
+							"aspectRatio": {
+								"height": 520,
+								"width": 900
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreic7atvhquydngbbsraybz42xq3yaycia5wswtxhadjfslnm2uskvq"
+								},
+								"mimeType": "image/png",
+								"size": 104155
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://groups.google.com/g/golang-announce/c/tKs3rmcBcKw/m/1ou-Xt7gAQAJ"
+							}
+						],
+						"index": {
+							"byteEnd": 200,
+							"byteStart": 128
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://go.dev/dl/#go1.26.4"
+							}
+						],
+						"index": {
+							"byteEnd": 244,
+							"byteStart": 217
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 253,
+							"byteStart": 246
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "🎆 Go 1.26.4 and 1.25.11 are released!\n\n🔐 Security: Includes 3 security fixes to the standard library.\n\n📢 Announcement: https://groups.google.com/g/golang-announce/c/tKs3rmcBcKw/m/1ou-Xt7gAQAJ\n\n📦 Download: https://go.dev/dl/#go1.26.4\n\n#golang"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreic7atvhquydngbbsraybz42xq3yaycia5wswtxhadjfslnm2uskvq",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreic7atvhquydngbbsraybz42xq3yaycia5wswtxhadjfslnm2uskvq",
+						"alt": "$ go install golang.org/dl/go1.26.4@latest\n$ go1.26.4 download\nDownloaded   0.0% (       0 / 64432275 bytes) ...\nDownloaded  50.0% (32216137 / 64432275 bytes) ...\nDownloaded 100.0% (64432275 / 64432275 bytes)\nUnpacking go1.26.4.linux-ppc64le.tar.gz ...\nSuccess. You may now run 'go1.26.4'\n$ go1.26.4 version\ngo version go1.26.4 linux/ppc64le",
+						"aspectRatio": {
+							"height": 520,
+							"width": 900
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 5,
+			"likeCount": 23,
+			"quoteCount": 0,
+			"indexedAt": "2026-06-02T21:17:29.977Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:pqth2lymyes4es4rapx3dkoa/app.bsky.feed.post/3mnbbp4ih2s2g",
+			"cid": "bafyreihgs5bb5udeywvm4vuufp2yitbqv4zwjye7oqeabltlu5pzgdhfry",
+			"author": {
+				"did": "did:plc:pqth2lymyes4es4rapx3dkoa",
+				"handle": "blainsmith.com",
+				"displayName": "Blain Smith",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-04-11T21:06:51.444Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-06-01T23:54:26.942Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "Website and API uptime and performance monitoring for solo developers and small teams. DNS, TCP, TLS, and TTFB timing breakdowns to the millisecond. $1/site/month. Free trial, no credit card required.",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreiaeh644dg2eoewpyfv6zojt7xggrnaqvjxqttdaxw3lqk3mu2v5e4"
+							},
+							"mimeType": "image/jpeg",
+							"size": 90588
+						},
+						"title": "Probes — Uptime & Performance Monitoring",
+						"uri": "https://probes.dev"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://probes.dev"
+							}
+						],
+						"index": {
+							"byteEnd": 34,
+							"byteStart": 24
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "HTTP"
+							}
+						],
+						"index": {
+							"byteEnd": 145,
+							"byteStart": 140
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 153,
+							"byteStart": 146
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "BuildInPublic"
+							}
+						],
+						"index": {
+							"byteEnd": 168,
+							"byteStart": 154
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "The goals this week for probes.dev are:\n\n- Account and member management \n- Basic status pages\n- Spruce up the alert/invite/sign-in emails\n\n#HTTP #GoLang #BuildInPublic"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://probes.dev",
+					"title": "Probes — Uptime & Performance Monitoring",
+					"description": "Website and API uptime and performance monitoring for solo developers and small teams. DNS, TCP, TLS, and TTFB timing breakdowns to the millisecond. $1/site/month. Free trial, no credit card required.",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreiaeh644dg2eoewpyfv6zojt7xggrnaqvjxqttdaxw3lqk3mu2v5e4"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 11,
+			"quoteCount": 0,
+			"indexedAt": "2026-06-01T23:54:27.673Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:53yublzp5wfiviq6qukotc7m/app.bsky.feed.post/3mncboov7x22a",
+			"cid": "bafyreif5szhlgjzahurchpgb55chm7u2l6dackzwbis43y23pcvapuyim4",
+			"author": {
+				"did": "did:plc:53yublzp5wfiviq6qukotc7m",
+				"handle": "yzma.ai",
+				"displayName": "yzma",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiaehp3duscspnlypudd3tn5kzdykiv4cppq4bjhqjrsbjpeh5kw2a",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2026-02-20T17:24:03.493Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-06-02T09:26:52.420Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration. - hybridgroup/yzma",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreiad3uwdwaoxjuwwby4jq33eswctbnpeyvfh4wmguazhxw6plgg6k4"
+							},
+							"mimeType": "image/jpeg",
+							"size": 168313
+						},
+						"title": "GitHub - hybridgroup/yzma: Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration.",
+						"uri": "https://github.com/hybridgroup/yzma"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://github.com/hybridgroup/yzma"
+							}
+						],
+						"index": {
+							"byteEnd": 152,
+							"byteStart": 126
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 161,
+							"byteStart": 154
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "llamacpp"
+							}
+						],
+						"index": {
+							"byteEnd": 171,
+							"byteStart": 162
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "localAI"
+							}
+						],
+						"index": {
+							"byteEnd": 180,
+							"byteStart": 172
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "yourIntelligence"
+							}
+						],
+						"index": {
+							"byteEnd": 198,
+							"byteStart": 181
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "yzma 1.15 is out, needed for both breaking changes to llama.cpp & also for our new, more robust library updater.\n\nGo get it!\n\ngithub.com/hybridgroup/...\n\n#golang #llamacpp #localAI #yourIntelligence"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://github.com/hybridgroup/yzma",
+					"title": "GitHub - hybridgroup/yzma: Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration.",
+					"description": "Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration. - hybridgroup/yzma",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiad3uwdwaoxjuwwby4jq33eswctbnpeyvfh4wmguazhxw6plgg6k4"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 3,
+			"likeCount": 6,
+			"quoteCount": 0,
+			"indexedAt": "2026-06-02T09:26:54.675Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:ehcers3a6wopzobebumomlno/app.bsky.feed.post/3mn4dzut5v22f",
+			"cid": "bafyreidpo35t7op5uh7wqzj6242gc5us2qu374ytnljbkdfyoxzoruhrhe",
+			"author": {
+				"did": "did:plc:ehcers3a6wopzobebumomlno",
+				"handle": "solarlune.com",
+				"displayName": "SolarLune",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ehcers3a6wopzobebumomlno/bafkreigp7drfr4vvqutfmfjdkpltkfzeprp7abx3kottjtqtoaq2u4rriq",
+				"associated": {
+					"chat": {
+						"allowIncoming": "following"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-02-06T16:58:38.953Z",
+				"status": {
+					"uri": "at://did:plc:ehcers3a6wopzobebumomlno/app.bsky.actor.status/self",
+					"cid": "bafyreie5thpmuigz7xp655llyawso7hru4ex2pkzhmbjsvulspn7bytjge",
+					"record": {
+						"$type": "app.bsky.actor.status",
+						"createdAt": "2026-05-22T19:25:44.854Z",
+						"durationMinutes": 90,
+						"embed": {
+							"$type": "app.bsky.embed.external",
+							"external": {
+								"$type": "app.bsky.embed.external#external",
+								"description": "I'm an indie game dev, artist, and musician. I do stuff sometimes.",
+								"thumb": {
+									"$type": "blob",
+									"ref": {
+										"$link": "bafkreierycluudrmrx4yru22kjqxdm3yu3q7llb4lgzl6ubigjj5amjaja"
+									},
+									"mimeType": "image/jpeg",
+									"size": 378905
+								},
+								"title": "SolarLuneTwitch - Twitch",
+								"uri": "https://www.twitch.tv/solarlunetwitch"
+							}
+						},
+						"status": "app.bsky.actor.status#live"
+					},
+					"status": "app.bsky.actor.status#live",
+					"embed": {
+						"external": {
+							"uri": "https://www.twitch.tv/solarlunetwitch",
+							"title": "SolarLuneTwitch - Twitch",
+							"description": "I'm an indie game dev, artist, and musician. I do stuff sometimes.",
+							"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:ehcers3a6wopzobebumomlno/bafkreierycluudrmrx4yru22kjqxdm3yu3q7llb4lgzl6ubigjj5amjaja"
+						},
+						"$type": "app.bsky.embed.external#view"
+					},
+					"labels": [],
+					"expiresAt": "2026-05-22T20:55:44.854Z",
+					"isActive": false
+				}
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-31T00:52:56.797Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "YouTube video by SolarLune",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreif2aeg5y4wltkbimkal5julqq6ewzv7e4vu22p7mdbrwsxfod27ua"
+							},
+							"mimeType": "image/jpeg",
+							"size": 890177
+						},
+						"title": "3D Platformer Update - NO CAPES",
+						"uri": "https://www.youtube.com/watch?v=gweLhpf18gE&lc=Ugz8WdJ_EaYV8QtyU6p4AaABAg"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gamedev"
+							}
+						],
+						"index": {
+							"byteEnd": 169,
+							"byteStart": 161
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "indie"
+							}
+						],
+						"index": {
+							"byteEnd": 176,
+							"byteStart": 170
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "3dplatformer"
+							}
+						],
+						"index": {
+							"byteEnd": 190,
+							"byteStart": 177
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "ps1"
+							}
+						],
+						"index": {
+							"byteEnd": 195,
+							"byteStart": 191
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 203,
+							"byteStart": 196
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "ebitengine"
+							}
+						],
+						"index": {
+							"byteEnd": 215,
+							"byteStart": 204
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tetra3d"
+							}
+						],
+						"index": {
+							"byteEnd": 224,
+							"byteStart": 216
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "screenshotsaturday"
+							}
+						],
+						"index": {
+							"byteEnd": 244,
+							"byteStart": 225
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Yo, whaddup~!\n\nMade an update video on this 3D platformer I've been working on over the past few months! It uses my open-source PS1-style 3D renderer, Tetra3D:\n\n#gamedev #indie #3dplatformer #ps1 #golang #ebitengine #tetra3d #screenshotsaturday"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://www.youtube.com/watch?v=gweLhpf18gE&lc=Ugz8WdJ_EaYV8QtyU6p4AaABAg",
+					"title": "3D Platformer Update - NO CAPES",
+					"description": "YouTube video by SolarLune",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:ehcers3a6wopzobebumomlno/bafkreif2aeg5y4wltkbimkal5julqq6ewzv7e4vu22p7mdbrwsxfod27ua"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 1,
+			"replyCount": 0,
+			"repostCount": 8,
+			"likeCount": 17,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-31T00:52:58.672Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:g2vnioka4kynwjrbwaw3thg6/app.bsky.feed.post/3mn5t2gbxyc2t",
+			"cid": "bafyreigozsmhudtgvetuxti7ezbevtvcapp55a7jjd76glcfdvmzc7vdx4",
+			"author": {
+				"did": "did:plc:g2vnioka4kynwjrbwaw3thg6",
+				"handle": "ashwiniag.bsky.social",
+				"displayName": "ashwiniag",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreiec5dp54em7csbcynv7a22yecoencev6twndv5n74w7eiktkswla4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-12-12T06:32:17.613Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-31T14:54:20.971Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 512,
+								"width": 1232
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreie3x3ympsimx7rojmhaw3tbjbwtmztwqy6unfyxzzvtp4ju23i37u"
+								},
+								"mimeType": "image/jpeg",
+								"size": 232129
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 279,
+							"byteStart": 272
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "sre"
+							}
+						],
+						"index": {
+							"byteEnd": 284,
+							"byteStart": 280
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "buildinpublic"
+							}
+						],
+						"index": {
+							"byteEnd": 300,
+							"byteStart": 286
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Go has no native Set. map[key]bool vs map[key]struct{} are not same\n\nIf you're storing millions of event IDs in map[int]bool instead of map[int]struct{}, you're wasting millions of bytes unnecessarily. At that scale it can tip pods over the memory limit & major incident\n\n#golang #sre  #buildinpublic"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreie3x3ympsimx7rojmhaw3tbjbwtmztwqy6unfyxzzvtp4ju23i37u",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreie3x3ympsimx7rojmhaw3tbjbwtmztwqy6unfyxzzvtp4ju23i37u",
+						"alt": "",
+						"aspectRatio": {
+							"height": 512,
+							"width": 1232
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 1,
+			"repostCount": 0,
+			"likeCount": 5,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-31T14:54:26.172Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:gkoy56sigg3vrlqezfi22q7p/app.bsky.feed.post/3mmvkrab4jk2t",
+			"cid": "bafyreia3egsev2vyyy3r3dzcmj53gc2jxeggggmyrphzmmnbudaizcw37q",
+			"author": {
+				"did": "did:plc:gkoy56sigg3vrlqezfi22q7p",
+				"handle": "talkingheads2053.com",
+				"displayName": "Talking Heads From The Year 2053",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:gkoy56sigg3vrlqezfi22q7p/bafkreibajuw2ktuxuuzpne4gbqmsqruropqj2xqxqstpx7gkw23vqoodhi",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2026-05-10T13:47:11.969Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-28T08:04:44.821Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "YouTube video by Talking Heads From The Year 2053",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreiah7a4r3rpu6ct2cskjce3gh224jjwyboqh37pcrwotmyror4sqpy"
+							},
+							"mimeType": "image/jpeg",
+							"size": 639917
+						},
+						"title": "Talking Heads From The Year 2053 - Episode Zero",
+						"uri": "https://www.youtube.com/watch?v=wokyfBA7lbY"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:l7mqojj23jm7ekk4wgy5wx6n"
+							}
+						],
+						"index": {
+							"byteEnd": 59,
+							"byteStart": 31
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://www.youtube.com/watch?v=wokyfBA7lbY"
+							}
+						],
+						"index": {
+							"byteEnd": 220,
+							"byteStart": 189
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "th2053"
+							}
+						],
+						"index": {
+							"byteEnd": 229,
+							"byteStart": 222
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "talkingHeads2053"
+							}
+						],
+						"index": {
+							"byteEnd": 247,
+							"byteStart": 230
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "arduino"
+							}
+						],
+						"index": {
+							"byteEnd": 256,
+							"byteStart": 248
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 264,
+							"byteStart": 257
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tinygo"
+							}
+						],
+						"index": {
+							"byteEnd": 272,
+							"byteStart": 265
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "llm"
+							}
+						],
+						"index": {
+							"byteEnd": 277,
+							"byteStart": 273
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tlm"
+							}
+						],
+						"index": {
+							"byteEnd": 282,
+							"byteStart": 278
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "robotOverlords"
+							}
+						],
+						"index": {
+							"byteEnd": 298,
+							"byteStart": 283
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Physical AI running locally on @officialarduino.bsky.social UNO Q like you've never seen before (and won't until 2053)\n\n\"Talking Heads From The Year 2053 - Episode Zero\" is available now!\n\nwww.youtube.com/watch?v=woky...\n\n#th2053 #talkingHeads2053 #arduino #golang #tinygo #llm #tlm #robotOverlords"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://www.youtube.com/watch?v=wokyfBA7lbY",
+					"title": "Talking Heads From The Year 2053 - Episode Zero",
+					"description": "YouTube video by Talking Heads From The Year 2053",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:gkoy56sigg3vrlqezfi22q7p/bafkreiah7a4r3rpu6ct2cskjce3gh224jjwyboqh37pcrwotmyror4sqpy"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 1,
+			"replyCount": 0,
+			"repostCount": 5,
+			"likeCount": 7,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-28T08:04:49.072Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.feed.post/3mn5i2iai222t",
+			"cid": "bafyreieg56p3jibog2zmvwsyfkkyfz2qrfock3mrf2r4v7sxinw73zp5wu",
+			"author": {
+				"did": "did:plc:rguysibsq2tc56prxpgqis6b",
+				"handle": "liliumf.bsky.social",
+				"displayName": "📰Global Feed",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rguysibsq2tc56prxpgqis6b/bafkreifgbznayjd7gdpajcqvkyzji5wez4nu6jlxdgpi5mzjcqxp7q2rea",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:rguysibsq2tc56prxpgqis6b",
+						"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.actor.profile/self",
+						"cid": "bafyreib5qvb6yhz22qdhvrvpht35ellsmlacypcyx3hdf3dxaggtnu26lq",
+						"val": "bot",
+						"cts": "2026-05-07T02:51:16.827Z"
+					}
+				],
+				"createdAt": "2026-05-07T02:51:18.468Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-31T11:37:30Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "What’s the Go programming language (Golang) really good for? - InfoWorld",
+						"uri": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPT3JYQjhRRjEwWEI1c2hJNUY1TGFxQlVXRHpkcVJ0UFo2MlhoN19XaWVFWWNoWGtiUjBHTWdEbTltTGhOcVZ0LVhHVXZxdWw1WUNKQU5Vd1U1TWRGUlpxajljZmxjbzRYT05aNlRTeUdsUmhOUUY0OTFPVUdZUFdYT3JpRDZlcVM5UHdFckE4QQ?oc=5"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "What"
+							}
+						],
+						"index": {
+							"byteEnd": 147,
+							"byteStart": 142
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 159,
+							"byteStart": 152
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Infoworld"
+							}
+						],
+						"index": {
+							"byteEnd": 170,
+							"byteStart": 160
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "🇺🇸 🇬🇧 🔥 What’s the Go programming language (Golang) really good for? - InfoWorld\n\n👉 Tap here to read the full story 👇\n\n#What’s #Golang #Infoworld"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPT3JYQjhRRjEwWEI1c2hJNUY1TGFxQlVXRHpkcVJ0UFo2MlhoN19XaWVFWWNoWGtiUjBHTWdEbTltTGhOcVZ0LVhHVXZxdWw1WUNKQU5Vd1U1TWRGUlpxajljZmxjbzRYT05aNlRTeUdsUmhOUUY0OTFPVUdZUFdYT3JpRDZlcVM5UHdFckE4QQ?oc=5",
+					"title": "What’s the Go programming language (Golang) really good for? - InfoWorld",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 1,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-31T11:37:31.976Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:v2cpbpmfybeunxwo7rjhcdy4/app.bsky.feed.post/3mn5azaypas2j",
+			"cid": "bafyreihfmiy6oww5ny66mcly6eifxomo6ml4bdqujizaxrwwufoacqirv4",
+			"author": {
+				"did": "did:plc:v2cpbpmfybeunxwo7rjhcdy4",
+				"handle": "preslav.me",
+				"displayName": "Preslav Rachev",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v2cpbpmfybeunxwo7rjhcdy4/bafkreih65znsu45cidoo7vgonzrhgu4hrsbe2kaewixwf2ebottdpocpha",
+				"associated": {
+					"chat": {
+						"allowIncoming": "all"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-04-19T16:22:39.560Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-31T09:31:34.519Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"associatedRefs": [
+							{
+								"$type": "com.atproto.repo.strongRef",
+								"cid": "bafyreicmde2vyh4rrtlmlbb3ac234mwffmktphgshjopaogbn2hneeghnm",
+								"uri": "at://did:plc:v2cpbpmfybeunxwo7rjhcdy4/site.standard.document/3mn54zbucq32g"
+							},
+							{
+								"$type": "com.atproto.repo.strongRef",
+								"cid": "bafyreieukz2edfqlwh2xsnhfo4uxc3y5isozyykseaujsaurtsfwvzmb4y",
+								"uri": "at://did:plc:v2cpbpmfybeunxwo7rjhcdy4/site.standard.publication/3mn54xxeprz2l"
+							}
+						],
+						"description": "Thou shalt handle errors with care: ten tips for wrapping, translating, and returning them without turning every failure into noise.",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreieixzz2c5a7sgfeo66z54o7wmcj5ymlzhyhj6nnnk37kneabgq5xe"
+							},
+							"mimeType": "image/jpeg",
+							"size": 975483
+						},
+						"title": "The 10 Go Error Handling Commandments",
+						"uri": "https://preslav.me/2026/05/19/10-golang-error-handling-commandments/"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:re3ebnp5v7ffagz6rb6xfei4"
+							}
+						],
+						"index": {
+							"byteEnd": 51,
+							"byteStart": 37
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://preslav.me/2026/05/19/10-golang-error-handling-commandments/"
+							}
+						],
+						"index": {
+							"byteEnd": 142,
+							"byteStart": 116
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 236,
+							"byteStart": 229
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "This morning, I began making my blog @standard.site - compliant. I'm doing it post by post, starting with this one: preslav.me/2026/05/19/1...\n\nAs of now, I don't know all the benefits, but I guess, I am about to find out soon.\n\n#golang"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://preslav.me/2026/05/19/10-golang-error-handling-commandments/",
+					"title": "The 10 Go Error Handling Commandments",
+					"description": "Thou shalt handle errors with care: ten tips for wrapping, translating, and returning them without turning every failure into noise.",
+					"createdAt": "2026-05-19T00:00:00.000Z",
+					"source": {
+						"uri": "https://preslav.me",
+						"title": "preslav.me",
+						"description": "Personal blog by Preslav Rachev - software engineering, Go, photography, and ideas.",
+						"$type": "app.bsky.embed.external#viewExternalSource"
+					},
+					"associatedProfiles": [
+						{
+							"did": "did:plc:v2cpbpmfybeunxwo7rjhcdy4",
+							"handle": "preslav.me",
+							"displayName": "Preslav Rachev",
+							"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v2cpbpmfybeunxwo7rjhcdy4/bafkreih65znsu45cidoo7vgonzrhgu4hrsbe2kaewixwf2ebottdpocpha",
+							"associated": {
+								"chat": {
+									"allowIncoming": "all"
+								},
+								"activitySubscription": {
+									"allowSubscriptions": "followers"
+								}
+							},
+							"viewer": {
+								"muted": false,
+								"blockedBy": false
+							},
+							"labels": [],
+							"createdAt": "2024-04-19T16:22:39.560Z"
+						}
+					],
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:v2cpbpmfybeunxwo7rjhcdy4/bafkreieixzz2c5a7sgfeo66z54o7wmcj5ymlzhyhj6nnnk37kneabgq5xe",
+					"associatedRefs": [
+						{
+							"$type": "com.atproto.repo.strongRef",
+							"cid": "bafyreicmde2vyh4rrtlmlbb3ac234mwffmktphgshjopaogbn2hneeghnm",
+							"uri": "at://did:plc:v2cpbpmfybeunxwo7rjhcdy4/site.standard.document/3mn54zbucq32g"
+						},
+						{
+							"$type": "com.atproto.repo.strongRef",
+							"cid": "bafyreieukz2edfqlwh2xsnhfo4uxc3y5isozyykseaujsaurtsfwvzmb4y",
+							"uri": "at://did:plc:v2cpbpmfybeunxwo7rjhcdy4/site.standard.publication/3mn54xxeprz2l"
+						}
+					]
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-31T09:31:39.573Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:pqth2lymyes4es4rapx3dkoa/app.bsky.feed.post/3mn2yp4l2ok2x",
+			"cid": "bafyreiexnio3j6gv42vvvbqkykq27mm2t44l6li5eliiytjheu44i4mndm",
+			"author": {
+				"did": "did:plc:pqth2lymyes4es4rapx3dkoa",
+				"handle": "blainsmith.com",
+				"displayName": "Blain Smith",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-04-11T21:06:51.444Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-30T11:57:24.916Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "Directory listing of deployment scripts and systemd folder of unit files and a Litestream config file.",
+							"aspectRatio": {
+								"height": 703,
+								"width": 1079
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreid6zxadaxdhwui7bacjlrh4eerrlzxtu6q2pe4zp5efgjtmxqhkpu"
+								},
+								"mimeType": "image/jpeg",
+								"size": 98322
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://probes.dev"
+							}
+						],
+						"index": {
+							"byteEnd": 105,
+							"byteStart": 95
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "HTTP"
+							}
+						],
+						"index": {
+							"byteEnd": 112,
+							"byteStart": 107
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Monitoring"
+							}
+						],
+						"index": {
+							"byteEnd": 124,
+							"byteStart": 113
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Telemetry"
+							}
+						],
+						"index": {
+							"byteEnd": 135,
+							"byteStart": 125
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 143,
+							"byteStart": 136
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "SQLite"
+							}
+						],
+						"index": {
+							"byteEnd": 151,
+							"byteStart": 144
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Early morning work before everyone gets up. I got the deployment files and scripts all set for probes.dev\n\n#HTTP #Monitoring #Telemetry #GoLang #SQLite"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreid6zxadaxdhwui7bacjlrh4eerrlzxtu6q2pe4zp5efgjtmxqhkpu",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreid6zxadaxdhwui7bacjlrh4eerrlzxtu6q2pe4zp5efgjtmxqhkpu",
+						"alt": "Directory listing of deployment scripts and systemd folder of unit files and a Litestream config file.",
+						"aspectRatio": {
+							"height": 703,
+							"width": 1079
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 5,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-30T11:57:26.071Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:pqth2lymyes4es4rapx3dkoa/app.bsky.feed.post/3mmtqcv5ods2w",
+			"cid": "bafyreicks4aec6cbxdavqozjkb37ibwzplcbxhwxhhhy45lbmvzhntgfne",
+			"author": {
+				"did": "did:plc:pqth2lymyes4es4rapx3dkoa",
+				"handle": "blainsmith.com",
+				"displayName": "Blain Smith",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-04-11T21:06:51.444Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-27T14:38:46.385Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "Tracing HTTP Requests with Go's net/http/httptrace - Blain Smith",
+						"uri": "https://blainsmith.com/articles/httptrace-with-go/"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:ewi2aoat66wrvypvc7clrfvk"
+							}
+						],
+						"index": {
+							"byteEnd": 44,
+							"byteStart": 30
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://probes.dev"
+							}
+						],
+						"index": {
+							"byteEnd": 57,
+							"byteStart": 47
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://blainsmith.com/articles/httptrace-with-go/"
+							}
+						],
+						"index": {
+							"byteEnd": 170,
+							"byteStart": 140
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 179,
+							"byteStart": 172
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "HTTP"
+							}
+						],
+						"index": {
+							"byteEnd": 185,
+							"byteStart": 180
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "DNS"
+							}
+						],
+						"index": {
+							"byteEnd": 190,
+							"byteStart": 186
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "TLS"
+							}
+						],
+						"index": {
+							"byteEnd": 195,
+							"byteStart": 191
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "TCP"
+							}
+						],
+						"index": {
+							"byteEnd": 200,
+							"byteStart": 196
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "TTFB"
+							}
+						],
+						"index": {
+							"byteEnd": 206,
+							"byteStart": 201
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Tracing"
+							}
+						],
+						"index": {
+							"byteEnd": 215,
+							"byteStart": 207
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Some of the inner workings of @limeleaf.coop's probes.dev is using Go's net/http/httptrace package which gives you very handy information.\n\nblainsmith.com/articles/htt...\n\n#GoLang #HTTP #DNS #TLS #TCP #TTFB #Tracing"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://blainsmith.com/articles/httptrace-with-go/",
+					"title": "Tracing HTTP Requests with Go's net/http/httptrace - Blain Smith",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 5,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-27T14:38:47.574Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:g2vnioka4kynwjrbwaw3thg6/app.bsky.feed.post/3mmvhe6jmak2f",
+			"cid": "bafyreicgj2mo5ocqnzp5ueejfznvztmg5l6h5i4l3bunzocvcdwisyupxi",
+			"author": {
+				"did": "did:plc:g2vnioka4kynwjrbwaw3thg6",
+				"handle": "ashwiniag.bsky.social",
+				"displayName": "ashwiniag",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreiec5dp54em7csbcynv7a22yecoencev6twndv5n74w7eiktkswla4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-12-12T06:32:17.613Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-28T07:03:45.568Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 770,
+								"width": 1510
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreih56mx4iecy3edsdqv7xv4sxxpdhcnbfnmtsqfsbrm4ifeaooiqzm"
+								},
+								"mimeType": "image/jpeg",
+								"size": 219715
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 282,
+							"byteStart": 275
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "sre"
+							}
+						],
+						"index": {
+							"byteEnd": 287,
+							"byteStart": 283
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "buildinpublic"
+							}
+						],
+						"index": {
+							"byteEnd": 302,
+							"byteStart": 288
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "One thing that took me a while to internalize in Go:\n\nmake([]string, n) is is a declaration of intent\nYou're telling the runtime: I know exactly how much space I need, give it to me now.\n\nSkip it and index directly → panic\nSmall thing but expensive mistake in a hot path.\n\n#golang #sre #buildinpublic"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreih56mx4iecy3edsdqv7xv4sxxpdhcnbfnmtsqfsbrm4ifeaooiqzm",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:g2vnioka4kynwjrbwaw3thg6/bafkreih56mx4iecy3edsdqv7xv4sxxpdhcnbfnmtsqfsbrm4ifeaooiqzm",
+						"alt": "",
+						"aspectRatio": {
+							"height": 770,
+							"width": 1510
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 1,
+			"repostCount": 0,
+			"likeCount": 6,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-28T07:03:50.876Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:eb3563jmh2vjnrlkwujxqdwg/app.bsky.feed.post/3mmm72soha22v",
+			"cid": "bafyreibdsq7x5lazpcdqsqqt3oyjbptdjp4pe56p2nhf2gepo5uvobd2tu",
+			"author": {
+				"did": "did:plc:eb3563jmh2vjnrlkwujxqdwg",
+				"handle": "zekjur.bsky.social",
+				"displayName": "Michael Stapelberg 🐧🐹😺",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:eb3563jmh2vjnrlkwujxqdwg/bafkreihozm4cvpbtnw5umr4urxhfny6nplnczski47usq64xekj3u6rmlq",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-02-06T16:39:11.296Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-24T14:41:23.577Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "Back in January 2025, multiple different security researchers published a total of 6 security vulnerabilities in rsync, some of which allow arbitrary code execution and file leaks, so naturally I was ...",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreidw4j5wrruyfzd37nryiksowxesgvluvljyipnzyxkmo655bn53um"
+							},
+							"mimeType": "image/jpeg",
+							"size": 416428
+						},
+						"title": "How my minimal, memory-safe Go rsync steers clear of vulnerabilities",
+						"uri": "https://michael.stapelberg.ch/posts/2026-05-24-minimal-memory-safe-go-rsync-vulns/"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 55,
+							"byteStart": 48
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://michael.stapelberg.ch/posts/2026-05-24-minimal-memory-safe-go-rsync-vulns/"
+							}
+						],
+						"index": {
+							"byteEnd": 136,
+							"byteStart": 99
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "New blog post 🥳\n\nHow my minimal, memory-safe #golang rsync steers clear of vulnerabilities\n\n→ michael.stapelberg.ch/posts/2026-0..."
+			},
+			"embed": {
+				"external": {
+					"uri": "https://michael.stapelberg.ch/posts/2026-05-24-minimal-memory-safe-go-rsync-vulns/",
+					"title": "How my minimal, memory-safe Go rsync steers clear of vulnerabilities",
+					"description": "Back in January 2025, multiple different security researchers published a total of 6 security vulnerabilities in rsync, some of which allow arbitrary code execution and file leaks, so naturally I was ...",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:eb3563jmh2vjnrlkwujxqdwg/bafkreidw4j5wrruyfzd37nryiksowxesgvluvljyipnzyxkmo655bn53um"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 2,
+			"replyCount": 0,
+			"repostCount": 3,
+			"likeCount": 17,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-24T14:41:26.374Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:f3ydvezllkowxh5rhnl6otjq/app.bsky.feed.post/3mmrsfu2du4x2",
+			"cid": "bafyreiehtki7wyah4gvbgdcmmqe2cfw42mmppa6hsyap26wmn5oir7dbxe",
+			"author": {
+				"did": "did:plc:f3ydvezllkowxh5rhnl6otjq",
+				"handle": "preslavrachev.mastodon.social.ap.brid.gy",
+				"displayName": "Preslav Rachev",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:f3ydvezllkowxh5rhnl6otjq/bafkreigtjinsajhdvy3omqshnxmb42bslshaq4zutwoiyumo2xrc4gkv5u",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:f3ydvezllkowxh5rhnl6otjq",
+						"uri": "at://did:plc:f3ydvezllkowxh5rhnl6otjq/app.bsky.actor.profile/self",
+						"cid": "bafyreigunc4twmwipmez2yfguyopsf4zfzomeylvm7tlfnml3abesjcboi",
+						"val": "bridged-from-bridgy-fed-activitypub",
+						"cts": "1970-01-01T00:00:00.000Z"
+					}
+				],
+				"createdAt": "2024-06-07T15:04:14.921Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"bridgyOriginalText": "<p>Go is such a boring language, especially when an LLM writes it, that every few months I get sick of things just working. I start looking for an intellectual challenge. But then, I realize how averse to magic and tribal knowledge I’ve become, and run back to my setup. </p><p><a href=\"https://mastodon.social/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://mastodon.social/tags/programming\" class=\"mention hashtag\" rel=\"tag\">#<span>programming</span></a></p>",
+				"bridgyOriginalUrl": "https://mastodon.social/@preslavrachev/116642693226935566",
+				"createdAt": "2026-05-26T20:10:51.000Z",
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 278,
+							"byteStart": 271
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "programming"
+							}
+						],
+						"index": {
+							"byteEnd": 291,
+							"byteStart": 279
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Go is such a boring language, especially when an LLM writes it, that every few months I get sick of things just working. I start looking for an intellectual challenge. But then, I realize how averse to magic and tribal knowledge I’ve become, and run back to my setup.\n\n#golang #programming"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 3,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-26T20:10:58.474Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.feed.post/3mmpbiideni2s",
+			"cid": "bafyreidfqu5mt5ipc2hoc3n7dfxqoezki7fhpuuog7phk4ji4kf4shrucu",
+			"author": {
+				"did": "did:plc:rguysibsq2tc56prxpgqis6b",
+				"handle": "liliumf.bsky.social",
+				"displayName": "📰Global Feed",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rguysibsq2tc56prxpgqis6b/bafkreifgbznayjd7gdpajcqvkyzji5wez4nu6jlxdgpi5mzjcqxp7q2rea",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:rguysibsq2tc56prxpgqis6b",
+						"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.actor.profile/self",
+						"cid": "bafyreib5qvb6yhz22qdhvrvpht35ellsmlacypcyx3hdf3dxaggtnu26lq",
+						"val": "bot",
+						"cts": "2026-05-07T02:51:16.827Z"
+					}
+				],
+				"createdAt": "2026-05-07T02:51:18.468Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-25T20:02:48Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "Golang’s New Generic Methods Arrive—Still Not the Hottest Dev Trend, DevClass...",
+						"uri": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNeF94WWgzWTlWYUNrWEJ5dnQzejNUaFF5SS1XN21MVVlleVh0VVRXckJ5V21ZLVFNT2NybEJ5XzhlaGI1ekVWVlFmbU9Tb0tqdW5BNzJ5MTQ3YmZUc1pteVpSaGVBS19CY0NEQ0Ita3RTVm92UlFzNVdmbTgyUVpmc2ZaNGY5S2xvZlNON29ENEFJY0NRQzRwS3R5MDJfNkhta2Rvc3ZIck9jdks1Rlc1UlF6cEwwOWhnaGtpVEpmc1E?oc=5"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Ethereum"
+							}
+						],
+						"index": {
+							"byteEnd": 166,
+							"byteStart": 157
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 174,
+							"byteStart": 167
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Generic"
+							}
+						],
+						"index": {
+							"byteEnd": 187,
+							"byteStart": 179
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Methods"
+							}
+						],
+						"index": {
+							"byteEnd": 196,
+							"byteStart": 188
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "🇺🇸 🇬🇧 🔥 Golang’s New Generic Methods Arrive—Still Not the Hottest Dev Trend, DevClass Reports\n\n👉 Tap here to read the full story 👇\n\n#Ethereum #Golang’s #Generic #Methods"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNeF94WWgzWTlWYUNrWEJ5dnQzejNUaFF5SS1XN21MVVlleVh0VVRXckJ5V21ZLVFNT2NybEJ5XzhlaGI1ekVWVlFmbU9Tb0tqdW5BNzJ5MTQ3YmZUc1pteVpSaGVBS19CY0NEQ0Ita3RTVm92UlFzNVdmbTgyUVpmc2ZaNGY5S2xvZlNON29ENEFJY0NRQzRwS3R5MDJfNkhta2Rvc3ZIck9jdks1Rlc1UlF6cEwwOWhnaGtpVEpmc1E?oc=5",
+					"title": "Golang’s New Generic Methods Arrive—Still Not the Hottest Dev Trend, DevClass...",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 1,
+			"repostCount": 0,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-25T20:02:49.275Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:pqth2lymyes4es4rapx3dkoa/app.bsky.feed.post/3mmmhwzucys24",
+			"cid": "bafyreibiyizqk6oomqscdseyukv4nm6q43xgt4lo7wplouvhw56v5czapy",
+			"author": {
+				"did": "did:plc:pqth2lymyes4es4rapx3dkoa",
+				"handle": "blainsmith.com",
+				"displayName": "Blain Smith",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-04-11T21:06:51.444Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-24T17:20:20.565Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "Screenshot of heatmap of latency of a single probe.",
+							"aspectRatio": {
+								"height": 534,
+								"width": 985
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreifomkvw3pa235kod6qoj5h3urm2r2cvbqjcvs7hwwyio4fg47tgbe"
+								},
+								"mimeType": "image/jpeg",
+								"size": 60390
+							}
+						},
+						{
+							"alt": "Screenshot of Probes listing showing summary of uptime, latency, and Apdex score with sparkline charts.",
+							"aspectRatio": {
+								"height": 472,
+								"width": 1000
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreibupwe3fg2pg54y47gsit2sqxsrxmxa4cvjyqc5uylxngzbs233pe"
+								},
+								"mimeType": "image/jpeg",
+								"size": 88628
+							}
+						},
+						{
+							"alt": "Screenshot of timings charts for a single probe for DNS lookup, connection, TLS handshake, TTFB, response, and total roundtrip.",
+							"aspectRatio": {
+								"height": 934,
+								"width": 908
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreihskvclvrkrpsiclwdr3ag4baabep6negfc6nwgks2vyb6jqxnvia"
+								},
+								"mimeType": "image/jpeg",
+								"size": 173133
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 90,
+							"byteStart": 83
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "D3"
+							}
+						],
+						"index": {
+							"byteEnd": 94,
+							"byteStart": 91
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "htmx"
+							}
+						],
+						"index": {
+							"byteEnd": 100,
+							"byteStart": 95
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "templ"
+							}
+						],
+						"index": {
+							"byteEnd": 107,
+							"byteStart": 101
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "HTTP"
+							}
+						],
+						"index": {
+							"byteEnd": 113,
+							"byteStart": 108
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Got D3 rendering the charts. The design isn't set in stone, but I like it so far.\n\n#GoLang #D3 #htmx #templ #HTTP"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreifomkvw3pa235kod6qoj5h3urm2r2cvbqjcvs7hwwyio4fg47tgbe",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreifomkvw3pa235kod6qoj5h3urm2r2cvbqjcvs7hwwyio4fg47tgbe",
+						"alt": "Screenshot of heatmap of latency of a single probe.",
+						"aspectRatio": {
+							"height": 534,
+							"width": 985
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreibupwe3fg2pg54y47gsit2sqxsrxmxa4cvjyqc5uylxngzbs233pe",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreibupwe3fg2pg54y47gsit2sqxsrxmxa4cvjyqc5uylxngzbs233pe",
+						"alt": "Screenshot of Probes listing showing summary of uptime, latency, and Apdex score with sparkline charts.",
+						"aspectRatio": {
+							"height": 472,
+							"width": 1000
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreihskvclvrkrpsiclwdr3ag4baabep6negfc6nwgks2vyb6jqxnvia",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreihskvclvrkrpsiclwdr3ag4baabep6negfc6nwgks2vyb6jqxnvia",
+						"alt": "Screenshot of timings charts for a single probe for DNS lookup, connection, TLS handshake, TTFB, response, and total roundtrip.",
+						"aspectRatio": {
+							"height": 934,
+							"width": 908
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 7,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-24T17:19:50.677Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:fpcgu3rqtoyphrib5px54r5b/app.bsky.feed.post/3mmm5wp5ofc2y",
+			"cid": "bafyreidblo47rpevpdavya53llrmp23plecl3fndmehdfubs53f375xihe",
+			"author": {
+				"did": "did:plc:fpcgu3rqtoyphrib5px54r5b",
+				"handle": "deadprogram.com",
+				"displayName": "deadprogram",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-08-23T05:31:13.153Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-24T14:21:11.908Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "deadprogram onstage at Gophercon Singapore with Gopherbot and the Talking Heads From The Year 2053",
+							"aspectRatio": {
+								"height": 3011,
+								"width": 4000
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreidlewv77njyqfgcutw5vejouhso6d7qqlr73um62epm55knnlprse"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1969720
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:ehpfltuhelta4z5r3gpw24jj"
+							}
+						],
+						"index": {
+							"byteEnd": 50,
+							"byteStart": 37
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "th2053"
+							}
+						],
+						"index": {
+							"byteEnd": 78,
+							"byteStart": 71
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tinygo"
+							}
+						],
+						"index": {
+							"byteEnd": 86,
+							"byteStart": 79
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 94,
+							"byteStart": 87
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "arduino"
+							}
+						],
+						"index": {
+							"byteEnd": 103,
+							"byteStart": 95
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gopherconSG"
+							}
+						],
+						"index": {
+							"byteEnd": 116,
+							"byteStart": 104
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "The opening of my closing keynote at @gophercon.sg Videos coming soon!\n#th2053 #tinygo #golang #arduino #gopherconSG"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreidlewv77njyqfgcutw5vejouhso6d7qqlr73um62epm55knnlprse",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreidlewv77njyqfgcutw5vejouhso6d7qqlr73um62epm55knnlprse",
+						"alt": "deadprogram onstage at Gophercon Singapore with Gopherbot and the Talking Heads From The Year 2053",
+						"aspectRatio": {
+							"height": 3011,
+							"width": 4000
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 1,
+			"replyCount": 1,
+			"repostCount": 4,
+			"likeCount": 10,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-24T14:21:25.279Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.feed.post/3mmpag7cpuc2j",
+			"cid": "bafyreifwkk3ebnutec5qxzl2h2lrfxvneeoe7xl25wauy22meej3xuc5bm",
+			"author": {
+				"did": "did:plc:rguysibsq2tc56prxpgqis6b",
+				"handle": "liliumf.bsky.social",
+				"displayName": "📰Global Feed",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rguysibsq2tc56prxpgqis6b/bafkreifgbznayjd7gdpajcqvkyzji5wez4nu6jlxdgpi5mzjcqxp7q2rea",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:rguysibsq2tc56prxpgqis6b",
+						"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.actor.profile/self",
+						"cid": "bafyreib5qvb6yhz22qdhvrvpht35ellsmlacypcyx3hdf3dxaggtnu26lq",
+						"val": "bot",
+						"cts": "2026-05-07T02:51:16.827Z"
+					}
+				],
+				"createdAt": "2026-05-07T02:51:18.468Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-25T19:43:38Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "Introducing the Golang Stellar SDK - Stellar",
+						"uri": "https://news.google.com/rss/articles/CBMiekFVX3lxTE4zN0JkZDB3NGtQdzc2eHp4Z3pPMFVaT2h0SGVEUHVPYkJIMUJMcUNyR2hEVVNteXNPVmJ0ZjNYYmxlSGdhbTdGc0hIblJwRnJWS0RPcml2QU9MYXdUUmFlRjRlUXg5Qy00bXNseXlOR2RIX1JjVmtTa3h3?oc=5"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Introducing"
+							}
+						],
+						"index": {
+							"byteEnd": 124,
+							"byteStart": 112
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 132,
+							"byteStart": 125
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Stellar"
+							}
+						],
+						"index": {
+							"byteEnd": 141,
+							"byteStart": 133
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "🇳🇬 🇬🇧 🔥 Introducing the Golang Stellar SDK - Stellar\n\n👉 Tap here to read the full story 👇\n\n#Introducing #Golang #Stellar"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://news.google.com/rss/articles/CBMiekFVX3lxTE4zN0JkZDB3NGtQdzc2eHp4Z3pPMFVaT2h0SGVEUHVPYkJIMUJMcUNyR2hEVVNteXNPVmJ0ZjNYYmxlSGdhbTdGc0hIblJwRnJWS0RPcml2QU9MYXdUUmFlRjRlUXg5Qy00bXNseXlOR2RIX1JjVmtTa3h3?oc=5",
+					"title": "Introducing the Golang Stellar SDK - Stellar",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 1,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-25T19:43:38.876Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:5dyykuwjfcda6vtyatuihg4f/app.bsky.feed.post/3mmnnhzm6ml2k",
+			"cid": "bafyreicxa5zlxi43iezlnidhouyv2vz5uhym3gfuih6pci6rfrn7xhthpe",
+			"author": {
+				"did": "did:plc:5dyykuwjfcda6vtyatuihg4f",
+				"handle": "boredchilada.bsky.social",
+				"displayName": "boredchilada",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:5dyykuwjfcda6vtyatuihg4f/bafkreia3voiq3p6kf6polrp3hdjnb5zrezltqpmmhbbg6uwkrqm37hlbte",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-01-19T21:22:38.413Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-25T04:31:59.132612+00:00",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"$type": "app.bsky.embed.external#external",
+						"description": "",
+						"title": "Updates to Volexity Golang Tooling",
+						"uri": "https://www.volexity.com/blog/2025/08/11/go-get-em-updates-to-volexity-golang-tooling/"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:z6yenb4npk2aibtsqkerghbo"
+							}
+						],
+						"index": {
+							"$type": "app.bsky.richtext.facet#byteSlice",
+							"byteEnd": 13,
+							"byteStart": 0
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"$type": "app.bsky.richtext.facet#byteSlice",
+							"byteEnd": 159,
+							"byteStart": 152
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "ReverseEngineering"
+							}
+						],
+						"index": {
+							"$type": "app.bsky.richtext.facet#byteSlice",
+							"byteEnd": 179,
+							"byteStart": 160
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "ThreatIntel"
+							}
+						],
+						"index": {
+							"$type": "app.bsky.richtext.facet#byteSlice",
+							"byteEnd": 192,
+							"byteStart": 180
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "@volexity.com\nVolexity released GoStringExtractor and updated GoResolver to enhance reverse engineering of Golang binaries.\n-\nIOCs: (None identified)\n-\n#Golang #ReverseEngineering #ThreatIntel"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://www.volexity.com/blog/2025/08/11/go-get-em-updates-to-volexity-golang-tooling/",
+					"title": "Updates to Volexity Golang Tooling",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 1,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-25T04:32:00.074Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.feed.post/3mmmnbwptcc2q",
+			"cid": "bafyreig3hy2ndwwgkh6fvqnln7wlm6vipnjirxvadfu6v5tbefg5i77ozu",
+			"author": {
+				"did": "did:plc:rguysibsq2tc56prxpgqis6b",
+				"handle": "liliumf.bsky.social",
+				"displayName": "📰Global Feed",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rguysibsq2tc56prxpgqis6b/bafkreifgbznayjd7gdpajcqvkyzji5wez4nu6jlxdgpi5mzjcqxp7q2rea",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:rguysibsq2tc56prxpgqis6b",
+						"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.actor.profile/self",
+						"cid": "bafyreib5qvb6yhz22qdhvrvpht35ellsmlacypcyx3hdf3dxaggtnu26lq",
+						"val": "bot",
+						"cts": "2026-05-07T02:51:16.827Z"
+					}
+				],
+				"createdAt": "2026-05-07T02:51:18.468Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-24T18:55:54Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "Introducing the Golang Stellar SDK - Stellar",
+						"uri": "https://news.google.com/rss/articles/CBMiekFVX3lxTE4zN0JkZDB3NGtQdzc2eHp4Z3pPMFVaT2h0SGVEUHVPYkJIMUJMcUNyR2hEVVNteXNPVmJ0ZjNYYmxlSGdhbTdGc0hIblJwRnJWS0RPcml2QU9MYXdUUmFlRjRlUXg5Qy00bXNseXlOR2RIX1JjVmtTa3h3?oc=5"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 234,
+							"byteStart": 227
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "StellarSDK"
+							}
+						],
+						"index": {
+							"byteEnd": 246,
+							"byteStart": 235
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://news.google.com/rss/articles/CBMiekFVX3lx..."
+							}
+						],
+						"index": {
+							"byteEnd": 305,
+							"byteStart": 253
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Go devs, meet your new sidekick: the Stellar Golang SDK! Build, sign & ship blockchain transactions straight from Go—fast, clean, ready for production. Dive into the details and see how you can start coding on Stellar today. #GoLang #StellarSDK\n\n🔗 https://news.google.com/rss/articles/CBMiekFVX3lx..."
+			},
+			"embed": {
+				"external": {
+					"uri": "https://news.google.com/rss/articles/CBMiekFVX3lxTE4zN0JkZDB3NGtQdzc2eHp4Z3pPMFVaT2h0SGVEUHVPYkJIMUJMcUNyR2hEVVNteXNPVmJ0ZjNYYmxlSGdhbTdGc0hIblJwRnJWS0RPcml2QU9MYXdUUmFlRjRlUXg5Qy00bXNseXlOR2RIX1JjVmtTa3h3?oc=5",
+					"title": "Introducing the Golang Stellar SDK - Stellar",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-24T18:55:55.078Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:wjk44wlnvy2rz2qq47ctzdkv/app.bsky.feed.post/3mmhff7nh5t2h",
+			"cid": "bafyreiho4pdxogfak36xzljvrgarny52tjxdr2rs3hnl52rmkrf6u2h2hq",
+			"author": {
+				"did": "did:plc:wjk44wlnvy2rz2qq47ctzdkv",
+				"handle": "golang.org",
+				"displayName": "Go",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:wjk44wlnvy2rz2qq47ctzdkv/bafkreidmrsynmjhhg7maar33fa2q7u4mkrgeixjsywox3yxum5mjzseanq",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-05T20:57:49.211Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-22T16:51:16Z",
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://go.dev/blog/pkgsite-api"
+							}
+						],
+						"index": {
+							"byteEnd": 119,
+							"byteStart": 88
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 128,
+							"byteStart": 121
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "“Introducing the pkg.go.dev API” by Ethan Lee, Hana Kim, and Jonathan Amsterdam — https://go.dev/blog/pkgsite-api\n\n#golang"
+			},
+			"bookmarkCount": 4,
+			"replyCount": 0,
+			"repostCount": 3,
+			"likeCount": 23,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-22T16:51:16.972Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:pqth2lymyes4es4rapx3dkoa/app.bsky.feed.post/3mmjhb3snqc2y",
+			"cid": "bafyreifk4a3myu32t7xr2lc6nycmzsspyz65oriklevzjd2y7fn3l5xv6q",
+			"author": {
+				"did": "did:plc:pqth2lymyes4es4rapx3dkoa",
+				"handle": "blainsmith.com",
+				"displayName": "Blain Smith",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreie5zrk3mrmcfx5bwal4pokv2acf727uasj55t5irup42kjxtpyoz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-04-11T21:06:51.444Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-23T12:30:05.197Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "Screenshot of tmux with two panes. Top pane shows SQLite data of HTTP probe results from different regions. Bottom pane shows docker compose logs showing 3 probes running and being signaled by a main app when and what to probe.",
+							"aspectRatio": {
+								"height": 872,
+								"width": 1455
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreih7azibydq35wvotktqyiygi3fzncevvde7hbeenuhq6lfw5rg4du"
+								},
+								"mimeType": "image/jpeg",
+								"size": 660175
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GoLang"
+							}
+						],
+						"index": {
+							"byteEnd": 194,
+							"byteStart": 187
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Docker"
+							}
+						],
+						"index": {
+							"byteEnd": 202,
+							"byteStart": 195
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "BuildInPublic"
+							}
+						],
+						"index": {
+							"byteEnd": 217,
+							"byteStart": 203
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Working as intended so far. Main app and N probes start up and the app sends out info to each probe so it can go probe the endpoint, collect results, and report it back to the main app.\n\n#GoLang #Docker #BuildInPublic"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreih7azibydq35wvotktqyiygi3fzncevvde7hbeenuhq6lfw5rg4du",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pqth2lymyes4es4rapx3dkoa/bafkreih7azibydq35wvotktqyiygi3fzncevvde7hbeenuhq6lfw5rg4du",
+						"alt": "Screenshot of tmux with two panes. Top pane shows SQLite data of HTTP probe results from different regions. Bottom pane shows docker compose logs showing 3 probes running and being signaled by a main app when and what to probe.",
+						"aspectRatio": {
+							"height": 872,
+							"width": 1455
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 6,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-23T12:30:08.076Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:2ybyi45jcng3xe7itodokoir/app.bsky.feed.post/3mmhe2dbngc2v",
+			"cid": "bafyreiczkibj5rqszayocq4hl67yprtwaa26lvi5yvd6wtmgzkiop3kntq",
+			"author": {
+				"did": "did:plc:2ybyi45jcng3xe7itodokoir",
+				"handle": "ardanlabs.com",
+				"displayName": "Ardan Labs",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifhtj77xjdoqz6mtg63azqv2ry5dna3k6rimibwib25gcvdidglde",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-01-13T16:25:41.213Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-22T16:27:17.443Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreifqpg2pjymbpjckzku67zzggex3wdrffuwm7jkdqhb5esrpro7f2i"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1506242
+							}
+						},
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreia6dxbgkb4yc6hk2tj6vxizuar5qi3mwna4w3cx4hpxfpghc6bkoe"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1526946
+							}
+						},
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreibjkfwtiyteonxkavg3scwbtpm6g5u5t42ib2m4giaqhlbsg3j4lq"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1419769
+							}
+						},
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreiblfgavkawknir3aifu65fwn6svqnaoyaum5bvpeupwlh64k6bcvq"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1305704
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:hvlg2tiyjzku7kfmyjbqigxr"
+							}
+						],
+						"index": {
+							"byteEnd": 68,
+							"byteStart": 56
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 165,
+							"byteStart": 158
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "KronkAI"
+							}
+						],
+						"index": {
+							"byteEnd": 174,
+							"byteStart": 166
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "ArdanLabs"
+							}
+						],
+						"index": {
+							"byteEnd": 185,
+							"byteStart": 175
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GopherConSG2026"
+							}
+						],
+						"index": {
+							"byteEnd": 202,
+							"byteStart": 186
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Kronk AI on the main stage🤖\n\n📸 A few snapshots of @goinggo.net giving his talk on \"Kronk: Hardware Accelerated Local Inference\" at GopherCon Singapore\n\n#golang #KronkAI #ArdanLabs #GopherConSG2026"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifqpg2pjymbpjckzku67zzggex3wdrffuwm7jkdqhb5esrpro7f2i",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifqpg2pjymbpjckzku67zzggex3wdrffuwm7jkdqhb5esrpro7f2i",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreia6dxbgkb4yc6hk2tj6vxizuar5qi3mwna4w3cx4hpxfpghc6bkoe",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreia6dxbgkb4yc6hk2tj6vxizuar5qi3mwna4w3cx4hpxfpghc6bkoe",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreibjkfwtiyteonxkavg3scwbtpm6g5u5t42ib2m4giaqhlbsg3j4lq",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreibjkfwtiyteonxkavg3scwbtpm6g5u5t42ib2m4giaqhlbsg3j4lq",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreiblfgavkawknir3aifu65fwn6svqnaoyaum5bvpeupwlh64k6bcvq",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreiblfgavkawknir3aifu65fwn6svqnaoyaum5bvpeupwlh64k6bcvq",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 4,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-22T16:27:29.073Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.feed.post/3mmkjcbbf6523",
+			"cid": "bafyreialcyqvedmnv7kbcp2ebhl2eyfev4gwg6qul3h7amhyxwiyhi2qja",
+			"author": {
+				"did": "did:plc:rguysibsq2tc56prxpgqis6b",
+				"handle": "liliumf.bsky.social",
+				"displayName": "📰Global Feed",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rguysibsq2tc56prxpgqis6b/bafkreifgbznayjd7gdpajcqvkyzji5wez4nu6jlxdgpi5mzjcqxp7q2rea",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:rguysibsq2tc56prxpgqis6b",
+						"uri": "at://did:plc:rguysibsq2tc56prxpgqis6b/app.bsky.actor.profile/self",
+						"cid": "bafyreib5qvb6yhz22qdhvrvpht35ellsmlacypcyx3hdf3dxaggtnu26lq",
+						"val": "bot",
+						"cts": "2026-05-07T02:51:16.827Z"
+					}
+				],
+				"createdAt": "2026-05-07T02:51:18.468Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-23T22:39:11Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "",
+						"title": "Generic methods arrive in Golang, but they weren't the top dev demand - DevClass",
+						"uri": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNeF94WWgzWTlWYUNrWEJ5dnQzejNUaFF5SS1XN21MVVlleVh0VVRXckJ5V21ZLVFNT2NybEJ5XzhlaGI1ekVWVlFmbU9Tb0tqdW5BNzJ5MTQ3YmZUc1pteVpSaGVBS19CY0NEQ0Ita3RTVm92UlFzNVdmbTgyUVpmc2ZaNGY5S2xvZlNON29ENEFJY0NRQzRwS3R5MDJfNkhta2Rvc3ZIck9jdks1Rlc1UlF6cEwwOWhnaGtpVEpmc1E?oc=5"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Ethereum"
+							}
+						],
+						"index": {
+							"byteEnd": 157,
+							"byteStart": 148
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Generic"
+							}
+						],
+						"index": {
+							"byteEnd": 166,
+							"byteStart": 158
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 174,
+							"byteStart": 167
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Devclass"
+							}
+						],
+						"index": {
+							"byteEnd": 184,
+							"byteStart": 175
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "🇺🇸 🇬🇧 🔥 Generic methods arrive in Golang, but they weren't the top dev demand - DevClass\n\n👉 Tap here to read the full story 👇\n\n#Ethereum #Generic #Golang #Devclass"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNeF94WWgzWTlWYUNrWEJ5dnQzejNUaFF5SS1XN21MVVlleVh0VVRXckJ5V21ZLVFNT2NybEJ5XzhlaGI1ekVWVlFmbU9Tb0tqdW5BNzJ5MTQ3YmZUc1pteVpSaGVBS19CY0NEQ0Ita3RTVm92UlFzNVdmbTgyUVpmc2ZaNGY5S2xvZlNON29ENEFJY0NRQzRwS3R5MDJfNkhta2Rvc3ZIck9jdks1Rlc1UlF6cEwwOWhnaGtpVEpmc1E?oc=5",
+					"title": "Generic methods arrive in Golang, but they weren't the top dev demand - DevClass",
+					"description": ""
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 1,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-23T22:39:11.677Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:fpcgu3rqtoyphrib5px54r5b/app.bsky.feed.post/3mmfy45p5vc2n",
+			"cid": "bafyreidhzmwnqpauzsrukvyh3u3us6iwdeenimbxqk3zvxbz2i2j2cc4se",
+			"author": {
+				"did": "did:plc:fpcgu3rqtoyphrib5px54r5b",
+				"handle": "deadprogram.com",
+				"displayName": "deadprogram",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-08-23T05:31:13.153Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-22T03:20:54.042Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 4000,
+								"width": 3003
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreib5yn3lm7z7xc2a23pfo5kyjratrieah6l62q3pmplr6km4zqjo6e"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1895414
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:syg5bonp4s3thqtdfo6w3g2q"
+							}
+						],
+						"index": {
+							"byteEnd": 25,
+							"byteStart": 4
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:pjl6sywydeejophn57jtspv2"
+							}
+						],
+						"index": {
+							"byteEnd": 50,
+							"byteStart": 39
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:ehpfltuhelta4z5r3gpw24jj"
+							}
+						],
+						"index": {
+							"byteEnd": 72,
+							"byteStart": 59
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tinygo"
+							}
+						],
+						"index": {
+							"byteEnd": 81,
+							"byteStart": 74
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 89,
+							"byteStart": 82
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gopherconSG"
+							}
+						],
+						"index": {
+							"byteEnd": 102,
+							"byteStart": 90
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Now @sago35tk.bsky.social speaks about @tinygo.org Keeb at @gophercon.sg!\n#tinygo #golang #gopherconSG"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreib5yn3lm7z7xc2a23pfo5kyjratrieah6l62q3pmplr6km4zqjo6e",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreib5yn3lm7z7xc2a23pfo5kyjratrieah6l62q3pmplr6km4zqjo6e",
+						"alt": "",
+						"aspectRatio": {
+							"height": 4000,
+							"width": 3003
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 5,
+			"likeCount": 7,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-22T03:21:08.076Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:fpcgu3rqtoyphrib5px54r5b/app.bsky.feed.post/3mmfrix7mgs2b",
+			"cid": "bafyreigzdx7t6l7su7oogrotgltd3ap3ymdk7ue5igcylu5mz3e3pmgn7i",
+			"author": {
+				"did": "did:plc:fpcgu3rqtoyphrib5px54r5b",
+				"handle": "deadprogram.com",
+				"displayName": "deadprogram",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-08-23T05:31:13.153Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-22T01:22:47.251Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 4000,
+								"width": 3003
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreias6flvwee2uzc3sepwbg5cyl5wl33jk6kxxvbwvixpsu4bdm7tqu"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1930853
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:ehpfltuhelta4z5r3gpw24jj"
+							}
+						],
+						"index": {
+							"byteEnd": 32,
+							"byteStart": 19
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 50,
+							"byteStart": 43
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gopherconSG"
+							}
+						],
+						"index": {
+							"byteEnd": 63,
+							"byteStart": 51
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Getting started at @gophercon.sg let's Go!\n#golang #gopherconSG"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreias6flvwee2uzc3sepwbg5cyl5wl33jk6kxxvbwvixpsu4bdm7tqu",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreias6flvwee2uzc3sepwbg5cyl5wl33jk6kxxvbwvixpsu4bdm7tqu",
+						"alt": "",
+						"aspectRatio": {
+							"height": 4000,
+							"width": 3003
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 2,
+			"likeCount": 5,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-22T01:23:02.671Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:2ybyi45jcng3xe7itodokoir/app.bsky.feed.post/3mmfcdl3aac25",
+			"cid": "bafyreieqzyvkuwldme3nqqhmuc7s2yrrgvzcw6ypr42bdbo3nwj3h5oab4",
+			"author": {
+				"did": "did:plc:2ybyi45jcng3xe7itodokoir",
+				"handle": "ardanlabs.com",
+				"displayName": "Ardan Labs",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreifhtj77xjdoqz6mtg63azqv2ry5dna3k6rimibwib25gcvdidglde",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-01-13T16:25:41.213Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-21T20:51:20.652Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreias7c54r6twcbbfcsjm6rx7zwiwkcocqk2s6mmupicvdmvmigubcm"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1269337
+							}
+						},
+						{
+							"alt": "",
+							"aspectRatio": {
+								"height": 1153,
+								"width": 2048
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreia73mcx5tygsmmkuay4xhcmcepczht4t7u6jphy6qahigg4sppnee"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1301838
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:hvlg2tiyjzku7kfmyjbqigxr"
+							}
+						],
+						"index": {
+							"byteEnd": 25,
+							"byteStart": 13
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 102,
+							"byteStart": 95
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Our very own @goinggo.net dropping knowledge at GopherCon Singapore in his workshop!\n\nTeaching #golang worldwide, we love to see it.😎"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreias7c54r6twcbbfcsjm6rx7zwiwkcocqk2s6mmupicvdmvmigubcm",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreias7c54r6twcbbfcsjm6rx7zwiwkcocqk2s6mmupicvdmvmigubcm",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					},
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreia73mcx5tygsmmkuay4xhcmcepczht4t7u6jphy6qahigg4sppnee",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2ybyi45jcng3xe7itodokoir/bafkreia73mcx5tygsmmkuay4xhcmcepczht4t7u6jphy6qahigg4sppnee",
+						"alt": "",
+						"aspectRatio": {
+							"height": 1153,
+							"width": 2048
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 4,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-21T20:51:28.974Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:b6ry4o2jy6emqtjunwbhwd5g/app.bsky.feed.post/3mmhn76jcsbc2",
+			"cid": "bafyreihwgpcaek4qlos45fq4wqjj5ivdxleikpazybzgmgfh5pgvxlvnwq",
+			"author": {
+				"did": "did:plc:b6ry4o2jy6emqtjunwbhwd5g",
+				"handle": "pymander.fosstodon.org.ap.brid.gy",
+				"displayName": "Erik L. Arneson :emacs:",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:b6ry4o2jy6emqtjunwbhwd5g/bafkreihhz5366dwhvwcccav7oh2stawxowoji3ghm7sqwgwbjfh5i4qrnq",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:b6ry4o2jy6emqtjunwbhwd5g",
+						"uri": "at://did:plc:b6ry4o2jy6emqtjunwbhwd5g/app.bsky.actor.profile/self",
+						"cid": "bafyreia3yfh2mgr5iry7wu4zfd6rewf6shjnrzg7k4opcdp6ig7wcad42u",
+						"val": "bridged-from-bridgy-fed-activitypub",
+						"cts": "1970-01-01T00:00:00.000Z"
+					}
+				],
+				"createdAt": "2024-12-15T14:20:46.116Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"bridgyOriginalText": "<p>Over the past couple of years, I have helped an Oregon charitable foundation free up volunteer time by automating processes. Read what we did! <a href=\"https://arnesonium.com/2026/05/process-automation-oregon-charitable-foundation\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">arnesonium.com/2026/05/process</span><span class=\"invisible\">-automation-oregon-charitable-foundation</span></a><br /><a href=\"https://fosstodon.org/tags/automation\" class=\"mention hashtag\" rel=\"tag\">#<span>automation</span></a> <a href=\"https://fosstodon.org/tags/softwaredevelopment\" class=\"mention hashtag\" rel=\"tag\">#<span>softwaredevelopment</span></a> <a href=\"https://fosstodon.org/tags/programming\" class=\"mention hashtag\" rel=\"tag\">#<span>programming</span></a> <a href=\"https://fosstodon.org/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a> <a href=\"https://fosstodon.org/tags/svelte\" class=\"mention hashtag\" rel=\"tag\">#<span>svelte</span></a></p>",
+				"bridgyOriginalUrl": "https://fosstodon.org/@pymander/116619808684175231",
+				"createdAt": "2026-05-22T19:11:01.000Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"$type": "app.bsky.embed.external#external",
+						"description": "The Oregon Scottish Rite Education Foundation awards scholarships annually to students across Oregon who are entering into college or trade schools. Over the past few years, their foundation has grown, requiring them to distribute more scholarships than ever. However, since the foundation board is small and composed entirely of volunteers, they were looking for some way to automate their application process to reduce the number of manual steps required.\n\n## Initial Approach\n\nMembers of the board approached me with a wish list of features and requirements. They wanted a system to integrate seamlessly with their website, while incoming applications should be automatically checked, sorted, and categorized by county. They already had a spreadsheet system for tracking applicants as well as a cloud storage system for storing supporting documents; they wanted the automation system to integrate with these existing components.\n\nSince the board was already utilizing Google Business products for cloud documents and storage, I decided that the best approach would be to lean into Google Cloud services. Following their list of requirements, I implemented a Google Cloud Run service in Go that processed incoming applications from their website, then updated the spreadsheet while preparing their cloud storage system for each application’s supporting documents. The spreadsheet now contained all the application data, including a link to an automatically generated PDF version of the application and a link to the cloud storage location.\n\nThis initial approach cut out an enormous amount of manual work. Previously, applications were submitted via the website and emailed to a board member, who then manually sorted them by county and generated PDFs for storage and later distribution.\n\n## Implementation Challenges\n\nThe application submission window for the Oregon Scottish Rite Education Foundation runs from December through March of each year, which gave us a limited amount of time to observe incoming live data and how the automation was performing.\n\nMy initial approach worked fairly well, and handled 94% of incoming applications properly. However, the last 6% ran into various problems that prevented correct processing. One error arose from a misspelling in a county name, which was caught early and corrected. Another series of errors arose from processing errors with the Google Sheets API, which has both rate limiting and more mysterious, inexplicable errors. I added additional error correction and error checking, but there was still some additional manual work to enter data from a handful of applications.\n\nBy the end of the application period, we had managed to reduce the amount of manual data entry and processing by a large percentage, maybe as much as 60%. After discussing the current process automation with the board, we began to see opportunities for further automation and improvement.\n\n## Additional Development\n\nAfter the first year’s application submission window, I began working with one of the board members to plan out how the process could be improved even more. My list of improvements were primarily on the backend, and involved robuster error detection and reporting, as well as a backup data store that would allow the automation to recover from the Google Sheets API errors more elegantly.\n\nThe board proposed an additional feature set that would further reduce manual data processing, by allowing applicants to upload supporting documents such as letters of recommendation and high school transcripts. These uploaded documents would then be processed and stored in the proper cloud storage location, thus reducing the amount of manual file management required by volunteers.\n\nImplementing these two new features went very smoothly. It required the development of a new frontend, using Typescript and Svelte. This frontend allowed applicants to upload their supporting documents via a unique link given to each of them by automated email. It used both Google Cloud Storage and the Google Drive API to store these files.\n\nThe improvements on the backend used Google Cloud Datastore and a more robust error recovery system. It now backed up all incoming scholarship applications until they could reliably and more slowly be added to the spreadsheet with the Google Sheets API, thus nearly eliminating all rate limiting errors. In addition, progress reports and error output could now be viewed using a new frontend administrative interface.\n\n## Results\n\nThis round of improvements produced significant results. Over the entire span of the second year of application submissions, error rates dropped from 6% to _just one unrecoverable error._ While I had been hoping for improvement, even I was surprised by how much of an improvement we achieved!\n\nThe board reported that the amount of manual processing was reduced by another 80-90%, with only a few applicants resorting to email for sending in their supporting documents. While we have discussed further improvements to the process automation for the next application submission window, the board is satisfied with the improvements provided by the level of automation implemented so far.\n\n## Lessons\n\nThis project benefited a lot by reviewing requirements and expectations frequently with the client. They were great at providing me with very clear goals from the beginning, and as we progressed and it became clear where the most volunteer time was being spent, we were able to identify more tasks for automation.\n\nOn the development side of things, three things were clear. First, cloud services really make the development and deployment of process automation tools like this a breeze. Costs can be kept low while still providing robust infrastructure for hosting.\n\nSecond, I learned once more the importance of unit tests. I wrote unit tests for most elements of the automation software, which allowed me to catch breaking changes and test features very quickly. Test-driven development can be a great way to run a project, and though I did not follow all of its parameters strictly, that particular philosophy did guide my decision.\n\nThird, once more I was reminded of how the best-planned software runs into difficulties when it collides with the real world. I failed to anticipate the Google Sheets API issues and did not implement enough comprehensive error correction early on. That is not an error I shall repeat again!\n\nFinally, I learned that even with a project that seems as straightforward as this one, it is important to control expectations early. This turned into a multiyear project because we saw room for improvement. I think it is important for a business or organization looking for process automation to understand that it can be an ongoing series of improvements; not everything will be accomplished or perfected after one pass.\n\nOverall, I found this to be a rewarding project. I enjoyed working on software that was aiding a good cause: helping high school graduates fund their education. It was also very nice to work for a charitable foundation instead of a for-profit business; it made all of my programming feel a lot better. I hope to work for more charitable foundations in the future.",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreibgkz3umo2hg347almouvzs4i3ctk7b2akjbfg6iwkj7ypyrfdng4"
+							},
+							"mimeType": "image/jpeg",
+							"size": 182695
+						},
+						"title": "Process Automation for an Oregon Charitable Foundation",
+						"uri": "https://arnesonium.com/2026/05/process-automation-oregon-charitable-foundation"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "automation"
+							}
+						],
+						"index": {
+							"byteEnd": 233,
+							"byteStart": 222
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "softwaredevelopment"
+							}
+						],
+						"index": {
+							"byteEnd": 254,
+							"byteStart": 234
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "programming"
+							}
+						],
+						"index": {
+							"byteEnd": 267,
+							"byteStart": 255
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 275,
+							"byteStart": 268
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "svelte"
+							}
+						],
+						"index": {
+							"byteEnd": 283,
+							"byteStart": 276
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://arnesonium.com/2026/05/process-automation-oregon-charitable-foundation"
+							}
+						],
+						"index": {
+							"byteEnd": 221,
+							"byteStart": 143
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Over the past couple of years, I have helped an Oregon charitable foundation free up volunteer time by automating processes. Read what we did! https://arnesonium.com/2026/05/process-automation-oregon-charitable-foundation\n#automation #softwaredevelopment #programming #golang #svelte"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://arnesonium.com/2026/05/process-automation-oregon-charitable-foundation",
+					"title": "Process Automation for an Oregon Charitable Foundation",
+					"description": "The Oregon Scottish Rite Education Foundation awards scholarships annually to students across Oregon who are entering into college or trade schools. Over the past few years, their foundation has grown, requiring them to distribute more scholarships than ever. However, since the foundation board is small and composed entirely of volunteers, they were looking for some way to automate their application process to reduce the number of manual steps required.\n\n## Initial Approach\n\nMembers of the board approached me with a wish list of features and requirements. They wanted a system to integrate seamlessly with their website, while incoming applications should be automatically checked, sorted, and categorized by county. They already had a spreadsheet system for tracking applicants as well as a cloud storage system for storing supporting documents; they wanted the automation system to integrate with these existing components.\n\nSince the board was already utilizing Google Business products for cloud documents and storage, I decided that the best approach would be to lean into Google Cloud services. Following their list of requirements, I implemented a Google Cloud Run service in Go that processed incoming applications from their website, then updated the spreadsheet while preparing their cloud storage system for each application’s supporting documents. The spreadsheet now contained all the application data, including a link to an automatically generated PDF version of the application and a link to the cloud storage location.\n\nThis initial approach cut out an enormous amount of manual work. Previously, applications were submitted via the website and emailed to a board member, who then manually sorted them by county and generated PDFs for storage and later distribution.\n\n## Implementation Challenges\n\nThe application submission window for the Oregon Scottish Rite Education Foundation runs from December through March of each year, which gave us a limited amount of time to observe incoming live data and how the automation was performing.\n\nMy initial approach worked fairly well, and handled 94% of incoming applications properly. However, the last 6% ran into various problems that prevented correct processing. One error arose from a misspelling in a county name, which was caught early and corrected. Another series of errors arose from processing errors with the Google Sheets API, which has both rate limiting and more mysterious, inexplicable errors. I added additional error correction and error checking, but there was still some additional manual work to enter data from a handful of applications.\n\nBy the end of the application period, we had managed to reduce the amount of manual data entry and processing by a large percentage, maybe as much as 60%. After discussing the current process automation with the board, we began to see opportunities for further automation and improvement.\n\n## Additional Development\n\nAfter the first year’s application submission window, I began working with one of the board members to plan out how the process could be improved even more. My list of improvements were primarily on the backend, and involved robuster error detection and reporting, as well as a backup data store that would allow the automation to recover from the Google Sheets API errors more elegantly.\n\nThe board proposed an additional feature set that would further reduce manual data processing, by allowing applicants to upload supporting documents such as letters of recommendation and high school transcripts. These uploaded documents would then be processed and stored in the proper cloud storage location, thus reducing the amount of manual file management required by volunteers.\n\nImplementing these two new features went very smoothly. It required the development of a new frontend, using Typescript and Svelte. This frontend allowed applicants to upload their supporting documents via a unique link given to each of them by automated email. It used both Google Cloud Storage and the Google Drive API to store these files.\n\nThe improvements on the backend used Google Cloud Datastore and a more robust error recovery system. It now backed up all incoming scholarship applications until they could reliably and more slowly be added to the spreadsheet with the Google Sheets API, thus nearly eliminating all rate limiting errors. In addition, progress reports and error output could now be viewed using a new frontend administrative interface.\n\n## Results\n\nThis round of improvements produced significant results. Over the entire span of the second year of application submissions, error rates dropped from 6% to _just one unrecoverable error._ While I had been hoping for improvement, even I was surprised by how much of an improvement we achieved!\n\nThe board reported that the amount of manual processing was reduced by another 80-90%, with only a few applicants resorting to email for sending in their supporting documents. While we have discussed further improvements to the process automation for the next application submission window, the board is satisfied with the improvements provided by the level of automation implemented so far.\n\n## Lessons\n\nThis project benefited a lot by reviewing requirements and expectations frequently with the client. They were great at providing me with very clear goals from the beginning, and as we progressed and it became clear where the most volunteer time was being spent, we were able to identify more tasks for automation.\n\nOn the development side of things, three things were clear. First, cloud services really make the development and deployment of process automation tools like this a breeze. Costs can be kept low while still providing robust infrastructure for hosting.\n\nSecond, I learned once more the importance of unit tests. I wrote unit tests for most elements of the automation software, which allowed me to catch breaking changes and test features very quickly. Test-driven development can be a great way to run a project, and though I did not follow all of its parameters strictly, that particular philosophy did guide my decision.\n\nThird, once more I was reminded of how the best-planned software runs into difficulties when it collides with the real world. I failed to anticipate the Google Sheets API issues and did not implement enough comprehensive error correction early on. That is not an error I shall repeat again!\n\nFinally, I learned that even with a project that seems as straightforward as this one, it is important to control expectations early. This turned into a multiyear project because we saw room for improvement. I think it is important for a business or organization looking for process automation to understand that it can be an ongoing series of improvements; not everything will be accomplished or perfected after one pass.\n\nOverall, I found this to be a rewarding project. I enjoyed working on software that was aiding a good cause: helping high school graduates fund their education. It was also very nice to work for a charitable foundation instead of a for-profit business; it made all of my programming feel a lot better. I hope to work for more charitable foundations in the future.",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:b6ry4o2jy6emqtjunwbhwd5g/bafkreibgkz3umo2hg347almouvzs4i3ctk7b2akjbfg6iwkj7ypyrfdng4"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-22T19:11:37.079Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:ervizwwpagfyicu2w55mrbcq/app.bsky.feed.post/3mmeextvsck2g",
+			"cid": "bafyreibymvyzw5jvohue5aeq6go6tyn3t4watgyf7xe73zrxx4eyimzgp4",
+			"author": {
+				"did": "did:plc:ervizwwpagfyicu2w55mrbcq",
+				"handle": "gotocon.com",
+				"displayName": "GOTO Conferences",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ervizwwpagfyicu2w55mrbcq/bafkreicmocjvvssj7gmgxim77pzdism6ctvmcr22amfjpcie4shftrnr7u",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-21T11:37:32.033Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-21T12:05:48.746Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "YouTube video by GOTO Conferences",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreiggazezgl7j7lwul5ptcbzkfr6m7lie5zcxxirwbrj6czvoh6h3z4"
+							},
+							"mimeType": "image/jpeg",
+							"size": 981801
+						},
+						"title": "Go for Java Programmers • Barry Feigenbaum & Shon Saliga • GOTO 2026",
+						"uri": "https://youtu.be/vw2k5WVPJKE?list=PLEx5khR4g7PJbSLmADahf0LOpTLifiCra"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Java"
+							}
+						],
+						"index": {
+							"byteEnd": 185,
+							"byteStart": 180
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 206,
+							"byteStart": 199
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://youtu.be/vw2k5WVPJKE?list=PLEx5khR4g7PJbSLmADahf0LOpTLifiCra"
+							}
+						],
+						"index": {
+							"byteEnd": 304,
+							"byteStart": 280
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Java called them \"exceptions\". Go calls them \"panics\". There’s a reason for that — and it shapes everything.\n\nDr. Barry Feigenbaum (ex-IBM, Amazon, Dell) spent decades writing #Java, switched to #Golang, and wrote the book that bridges the two.\n\nGOTO Book Club deep dive 👇\nyoutu.be/vw2k5WVPJKE?..."
+			},
+			"embed": {
+				"external": {
+					"uri": "https://youtu.be/vw2k5WVPJKE?list=PLEx5khR4g7PJbSLmADahf0LOpTLifiCra",
+					"title": "Go for Java Programmers • Barry Feigenbaum & Shon Saliga • GOTO 2026",
+					"description": "YouTube video by GOTO Conferences",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:ervizwwpagfyicu2w55mrbcq/bafkreiggazezgl7j7lwul5ptcbzkfr6m7lie5zcxxirwbrj6czvoh6h3z4"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-21T12:05:55.370Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:unvheb5jkszdyuwhg4afr6gb/app.bsky.feed.post/3mmazexidntf2",
+			"cid": "bafyreibzpig5ybpajnzixpfk5karc65esnz6i43ymbelqolx7mcbatacvi",
+			"author": {
+				"did": "did:plc:unvheb5jkszdyuwhg4afr6gb",
+				"handle": "nelson.wetdry.world.ap.brid.gy",
+				"displayName": "Nelson Lopez",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:unvheb5jkszdyuwhg4afr6gb/bafkreifxmnxsbrutgzbuxl45hegpj6v7admhi3izppdg6uspugd67oc2ri",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:unvheb5jkszdyuwhg4afr6gb",
+						"uri": "at://did:plc:unvheb5jkszdyuwhg4afr6gb/app.bsky.actor.profile/self",
+						"cid": "bafyreic6xsja3dqasfzmr5k3hqetjwbes7rvimrnxot3dew3qdrhbfhvrm",
+						"val": "bridged-from-bridgy-fed-activitypub",
+						"cts": "1970-01-01T00:00:00.000Z"
+					}
+				],
+				"createdAt": "2025-01-30T04:57:22.917Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"bridgyOriginalText": "<p>making a level editor for my game engine, it's chunk-based and streaming. the original one could plug straight into aseprite to have real-time updates and integration, it was neato, but lost that on the rewrite, since the older stack grew too inmature for my needs.</p><p><a href=\"https://wetdry.world/tags/gamedev\" class=\"mention hashtag\" rel=\"tag\">#<span>gamedev</span></a> <a href=\"https://wetdry.world/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a></p>",
+				"bridgyOriginalUrl": "https://wetdry.world/@nelson/116604903238951845",
+				"createdAt": "2026-05-20T04:00:22.000Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"$type": "app.bsky.embed.images#image",
+							"alt": "Some sort of level editor, imgui-based, with a chunk divided by a grid, and some information about the selected entity. the selected entity is an anthropomorphic goaty creature with rabbit feet, white fur, and a red robe, in front of a red brick house in the middle of a dark forest.",
+							"aspectRatio": {
+								"height": 778,
+								"width": 1306
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreia52illyv6xy6gcj25zz4wazpu77v7fvsm23v3ke4u5siyrsvbtem"
+								},
+								"mimeType": "image/png",
+								"size": 121185
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "GameDev"
+							}
+						],
+						"index": {
+							"byteEnd": 275,
+							"byteStart": 267
+						}
+					},
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 283,
+							"byteStart": 276
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "making a level editor for my game engine, it's chunk-based and streaming. the original one could plug straight into aseprite to have real-time updates and integration, it was neato, but lost that on the rewrite, since the older stack grew too inmature for my needs.\n\n#gamedev #golang"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:unvheb5jkszdyuwhg4afr6gb/bafkreia52illyv6xy6gcj25zz4wazpu77v7fvsm23v3ke4u5siyrsvbtem",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:unvheb5jkszdyuwhg4afr6gb/bafkreia52illyv6xy6gcj25zz4wazpu77v7fvsm23v3ke4u5siyrsvbtem",
+						"alt": "Some sort of level editor, imgui-based, with a chunk divided by a grid, and some information about the selected entity. the selected entity is an anthropomorphic goaty creature with rabbit feet, white fur, and a red robe, in front of a red brick house in the middle of a dark forest.",
+						"aspectRatio": {
+							"height": 778,
+							"width": 1306
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 4,
+			"likeCount": 11,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-20T04:00:30.872Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:fpcgu3rqtoyphrib5px54r5b/app.bsky.feed.post/3mm72y3rd7k2p",
+			"cid": "bafyreiae2klbu2eep5mmnnczis43xuaj3o5orkuuyyukyio2cxipxxsx3q",
+			"author": {
+				"did": "did:plc:fpcgu3rqtoyphrib5px54r5b",
+				"handle": "deadprogram.com",
+				"displayName": "deadprogram",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreicfuscokkz5u2kfq2kryyw42qnst4ksljdtdz47s7d4jayeuk7dz4",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-08-23T05:31:13.153Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-19T09:23:40.863Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "@deadprogram's flight cases covered by stickers ",
+							"aspectRatio": {
+								"height": 4000,
+								"width": 3003
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreid4fndty6vcmjdigpxj22gczpdsjpqzkahtndvvsyscesaysiiliq"
+								},
+								"mimeType": "image/jpeg",
+								"size": 1987479
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:ehpfltuhelta4z5r3gpw24jj"
+							}
+						],
+						"index": {
+							"byteEnd": 54,
+							"byteStart": 41
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tinygo"
+							}
+						],
+						"index": {
+							"byteEnd": 88,
+							"byteStart": 81
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gopherconSG"
+							}
+						],
+						"index": {
+							"byteEnd": 101,
+							"byteStart": 89
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 109,
+							"byteStart": 102
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "th2053"
+							}
+						],
+						"index": {
+							"byteEnd": 117,
+							"byteStart": 110
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "It took a lot, but at last my journey to @gophercon.sg has begun! See you there!\n#tinygo #gopherconSG #golang #th2053"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreid4fndty6vcmjdigpxj22gczpdsjpqzkahtndvvsyscesaysiiliq",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fpcgu3rqtoyphrib5px54r5b/bafkreid4fndty6vcmjdigpxj22gczpdsjpqzkahtndvvsyscesaysiiliq",
+						"alt": "@deadprogram's flight cases covered by stickers ",
+						"aspectRatio": {
+							"height": 4000,
+							"width": 3003
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 4,
+			"likeCount": 15,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-19T09:23:56.171Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:n6f3j47vjucu5ijwdmow7n2w/app.bsky.feed.post/3mm7wak4iuc2f",
+			"cid": "bafyreihv7xuziv45aewrk3k5u7fsfe4p2ovi66jj66dzy2lbjrvat2yvva",
+			"author": {
+				"did": "did:plc:n6f3j47vjucu5ijwdmow7n2w",
+				"handle": "socket.dev",
+				"displayName": "Socket",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreibac2lxedjvyhs4hyifvkdlu2gouyba4jzpirnuujp3ad2jk6w77i",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-06T15:36:04.411Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-19T17:31:35.389Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "A long-running Go typosquat impersonated the popular shopspring/decimal library and used DNS TXT records to execute commands.",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreid6ligotwgtdb575ktt42447rrzwhfxgigqvz4n57kqsalh2o5fny"
+							},
+							"mimeType": "image/jpeg",
+							"size": 574595
+						},
+						"title": "Popular Go Decimal Library Targeted by Long-Running Typosqua...",
+						"uri": "https://socket.dev/blog/popular-go-decimal-library-typosquat-dns-backdoor"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://socket.dev/blog/popular-go-decimal-library-typosquat-dns-backdoor"
+							}
+						],
+						"index": {
+							"byteEnd": 286,
+							"byteStart": 260
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "Golang"
+							}
+						],
+						"index": {
+							"byteEnd": 294,
+							"byteStart": 287
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "A Go typosquat impersonating the popular shopspring/decimal library stayed benign for years before shipping a DNS TXT backdoor that executes commands on import.\n\nThe legitimate module has 38K+ known importers, making a single-letter typo a high-value target.\n\nsocket.dev/blog/popular... #Golang"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://socket.dev/blog/popular-go-decimal-library-typosquat-dns-backdoor",
+					"title": "Popular Go Decimal Library Targeted by Long-Running Typosqua...",
+					"description": "A long-running Go typosquat impersonated the popular shopspring/decimal library and used DNS TXT records to execute commands.",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreid6ligotwgtdb575ktt42447rrzwhfxgigqvz4n57kqsalh2o5fny"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 1,
+			"repostCount": 4,
+			"likeCount": 14,
+			"quoteCount": 1,
+			"indexedAt": "2026-05-19T17:31:37.777Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:nihhcibeeizsgpxqbvmtnydr/app.bsky.feed.post/3mm7zstugssb2",
+			"cid": "bafyreiccrqzy6ghpv4ljbox22mqo2kfcwnox4zhq4kjvxh5cgkv7l52mie",
+			"author": {
+				"did": "did:plc:nihhcibeeizsgpxqbvmtnydr",
+				"handle": "oliverandrich.social.tchncs.de.ap.brid.gy",
+				"displayName": "Oliver Andrich",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:nihhcibeeizsgpxqbvmtnydr/bafkreickh4a3s45mz7kgusprenvjvtpcnn3x5cjfw4mcstc7agxkkfggba",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [
+					{
+						"src": "did:plc:nihhcibeeizsgpxqbvmtnydr",
+						"uri": "at://did:plc:nihhcibeeizsgpxqbvmtnydr/app.bsky.actor.profile/self",
+						"cid": "bafyreifk22rt44zahojjow5p6o5x632bvv434t37vasrhy2eb6y4e5z5zm",
+						"val": "bridged-from-bridgy-fed-activitypub",
+						"cts": "1970-01-01T00:00:00.000Z"
+					}
+				],
+				"createdAt": "2025-09-16T09:05:22.064Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"bridgyOriginalText": "<p>Found a good excuse to finally dive into generics in <a href=\"https://social.tchncs.de/tags/golang\" class=\"mention hashtag\" rel=\"tag\">#<span>golang</span></a>.</p>",
+				"bridgyOriginalUrl": "https://social.tchncs.de/@oliverandrich/116602682059849624",
+				"createdAt": "2026-05-19T18:35:29.000Z",
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 60,
+							"byteStart": 53
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Found a good excuse to finally dive into generics in #golang."
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 1,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-19T18:35:35.373Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:53yublzp5wfiviq6qukotc7m/app.bsky.feed.post/3mm2lnjba3s2g",
+			"cid": "bafyreieslf3zkyelr5jqjb4n55j4unqfpwtxc6zrmuupy5xfhdgb3vqhmm",
+			"author": {
+				"did": "did:plc:53yublzp5wfiviq6qukotc7m",
+				"handle": "yzma.ai",
+				"displayName": "yzma",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiaehp3duscspnlypudd3tn5kzdykiv4cppq4bjhqjrsbjpeh5kw2a",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2026-02-20T17:24:03.493Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-17T14:38:40.850Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration. - hybridgroup/yzma",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreiad3uwdwaoxjuwwby4jq33eswctbnpeyvfh4wmguazhxw6plgg6k4"
+							},
+							"mimeType": "image/jpeg",
+							"size": 168313
+						},
+						"title": "GitHub - hybridgroup/yzma: Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration.",
+						"uri": "https://github.com/hybridgroup/yzma"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://github.com/hybridgroup/yzma"
+							}
+						],
+						"index": {
+							"byteEnd": 230,
+							"byteStart": 204
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 239,
+							"byteStart": 232
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "llamacpp"
+							}
+						],
+						"index": {
+							"byteEnd": 249,
+							"byteStart": 240
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "llm"
+							}
+						],
+						"index": {
+							"byteEnd": 254,
+							"byteStart": 250
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "vlm"
+							}
+						],
+						"index": {
+							"byteEnd": 259,
+							"byteStart": 255
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "slm"
+							}
+						],
+						"index": {
+							"byteEnd": 264,
+							"byteStart": 260
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tlm"
+							}
+						],
+						"index": {
+							"byteEnd": 269,
+							"byteStart": 265
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "vla"
+							}
+						],
+						"index": {
+							"byteEnd": 274,
+							"byteStart": 270
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "gguf"
+							}
+						],
+						"index": {
+							"byteEnd": 280,
+							"byteStart": 275
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "yzma 1.14 was just released, and you need it for the latest llama.cpp. Plus a major upgrade to tool and message parsing support, shiny new download progress indicator, and more.\n\ngo get your update now!\n\ngithub.com/hybridgroup/...\n\n#golang #llamacpp #llm #vlm #slm #tlm #vla #gguf"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://github.com/hybridgroup/yzma",
+					"title": "GitHub - hybridgroup/yzma: Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration.",
+					"description": "Go with your own intelligence - Go applications that directly integrate llama.cpp for local inference using hardware acceleration. - hybridgroup/yzma",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:53yublzp5wfiviq6qukotc7m/bafkreiad3uwdwaoxjuwwby4jq33eswctbnpeyvfh4wmguazhxw6plgg6k4"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 1,
+			"replyCount": 1,
+			"repostCount": 6,
+			"likeCount": 11,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-17T14:38:43.871Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:mdzzw3bmt7jyif4bcvuyeboj/app.bsky.feed.post/3mlzpjbmyhs2w",
+			"cid": "bafyreibb2ewgdn4vdvkmuu6pgbnsilybrqiqodk4mlkczv27ygmr3v6mmu",
+			"author": {
+				"did": "did:plc:mdzzw3bmt7jyif4bcvuyeboj",
+				"handle": "pawelgrzybek.com",
+				"displayName": "Paweł Grzybek",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:mdzzw3bmt7jyif4bcvuyeboj/bafkreif5peydztx65y6fvhcxnxsckd3nalkg3wg37imehwk5y3ilubnlw4",
+				"associated": {
+					"chat": {
+						"allowIncoming": "all"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2023-05-14T14:46:27.789Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-17T06:15:13.858Z",
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:fgtm2c26vfcj74rfmeggbyqj"
+							}
+						],
+						"index": {
+							"byteEnd": 50,
+							"byteStart": 38
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://rednafi.com/go/structured-logging-with-slog/"
+							}
+						],
+						"index": {
+							"byteEnd": 118,
+							"byteStart": 91
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://rednafi.com/go/typesafe-slogging/"
+							}
+						],
+						"index": {
+							"byteEnd": 172,
+							"byteStart": 145
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 181,
+							"byteStart": 174
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Good series of posts on Go logging by @rednafi.com \n\n“Go structured logging with slog”\nrednafi.com/go/structure...\n\n“Type-safe slogging”\nrednafi.com/go/typesafe-...\n\n#golang"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 2,
+			"likeCount": 6,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-17T06:15:14.474Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:rrrwbar3wv576qpsymwey5p5/app.bsky.feed.post/3mlx6slyzdc2j",
+			"cid": "bafyreiaxlkkqyx6ychuitqlzho2yzujpjii72iyymjrcimd6sydle27ko4",
+			"author": {
+				"did": "did:plc:rrrwbar3wv576qpsymwey5p5",
+				"handle": "andri.dk",
+				"displayName": "Andri Óskarsson",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rrrwbar3wv576qpsymwey5p5/bafkreic2frc7dki4q5ig5ikwb7bdl67czodklo2ujwczooqbcxv7ekrzpu",
+				"associated": {
+					"chat": {
+						"allowIncoming": "following"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2023-05-03T14:38:18.920Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-16T06:10:53.640Z",
+				"embed": {
+					"$type": "app.bsky.embed.images",
+					"images": [
+						{
+							"alt": "cursed attempts at creating a gopher with a chef's hat, using AI",
+							"aspectRatio": {
+								"height": 1370,
+								"width": 1224
+							},
+							"image": {
+								"$type": "blob",
+								"ref": {
+									"$link": "bafkreigng2xxizcvuzua6zxhbykzxllbhihdkxhls42hsvg7pjjaok2j4u"
+								},
+								"mimeType": "image/jpeg",
+								"size": 348815
+							}
+						}
+					]
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 146,
+							"byteStart": 139
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "I naively thought I could quickly get a logo for Gastro from using AI models. \"Go-like gopher w. a chef's hat\" in SVG.\n\nHow wrong I was... #golang"
+			},
+			"embed": {
+				"images": [
+					{
+						"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:rrrwbar3wv576qpsymwey5p5/bafkreigng2xxizcvuzua6zxhbykzxllbhihdkxhls42hsvg7pjjaok2j4u",
+						"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:rrrwbar3wv576qpsymwey5p5/bafkreigng2xxizcvuzua6zxhbykzxllbhihdkxhls42hsvg7pjjaok2j4u",
+						"alt": "cursed attempts at creating a gopher with a chef's hat, using AI",
+						"aspectRatio": {
+							"height": 1370,
+							"width": 1224
+						}
+					}
+				],
+				"$type": "app.bsky.embed.images#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 2,
+			"repostCount": 1,
+			"likeCount": 10,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-16T06:10:56.372Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:mmvetiqwmokskoqxmedb6xhn/app.bsky.feed.post/3mlutmgxoms2f",
+			"cid": "bafyreib6qa7x6oefnepyj5ds2zcq37p37knim3ucep2w3ijt4ktqtcad64",
+			"author": {
+				"did": "did:plc:mmvetiqwmokskoqxmedb6xhn",
+				"handle": "librasteve.bsky.social",
+				"displayName": "",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:mmvetiqwmokskoqxmedb6xhn/bafkreiamsmxkiyxojftwcyn6xubruvxkhg34jugw2vwbdivn6q7qzx254u",
+				"associated": {
+					"chat": {
+						"allowIncoming": "none"
+					},
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2025-03-25T16:22:53.847Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-15T07:45:16.390Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "slangify.org",
+						"title": "Slangify",
+						"uri": "https://slangify.org/"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://slangify.org/"
+							}
+						],
+						"index": {
+							"byteEnd": 55,
+							"byteStart": 43
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "dsl"
+							}
+						],
+						"index": {
+							"byteEnd": 130,
+							"byteStart": 126
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "python"
+							}
+						],
+						"index": {
+							"byteEnd": 138,
+							"byteStart": 131
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "rustlang"
+							}
+						],
+						"index": {
+							"byteEnd": 148,
+							"byteStart": 139
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 156,
+							"byteStart": 149
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Would you consider a DSL for your project?\nslangify.org says … DSLs are a secret weapon for LLM effectiveness do you agree? #dsl #python #rustlang #golang"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://slangify.org/",
+					"title": "Slangify",
+					"description": "slangify.org"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 1,
+			"repostCount": 1,
+			"likeCount": 2,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-15T07:45:17.175Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:p34okilpjskbqyf3fibdirbg/app.bsky.feed.post/3mlsujf2mxd2i",
+			"cid": "bafyreien2xmr5ijsbj4ceurjtd3w6437spx6rxhp25nwdc7k5gwq6axp6y",
+			"author": {
+				"did": "did:plc:p34okilpjskbqyf3fibdirbg",
+				"handle": "golangch.bsky.social",
+				"displayName": "Golang Articles, News, Packages",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:p34okilpjskbqyf3fibdirbg/bafkreib3aytbzth56zobfrezojr3uo3orndosek3bg7qnzwe5eafp475xq",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-07T07:14:35.722Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-14T12:56:07.901793Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "A minimal, local-first coding agent for the terminal. - codehamr/codehamr",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreig2cpwen2mq3gddzcurxhrzm3pzmomwud3x7k6tv3peoyak6keiki"
+							},
+							"mimeType": "image/webp",
+							"size": 11814
+						},
+						"title": "GitHub - codehamr/codehamr: A minimal, local-first coding agent for the terminal.",
+						"uri": "https://github.com/codehamr/codehamr"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 111,
+							"byteStart": 104
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://github.com/codehamr/codehamr"
+							}
+						],
+						"index": {
+							"byteEnd": 138,
+							"byteStart": 113
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "A minimal coding agent for the terminal. Built for local LLMs, also runs on OpenAI compatible endpoints\n#golang\n\ngithub.com/codehamr/co..."
+			},
+			"embed": {
+				"external": {
+					"uri": "https://github.com/codehamr/codehamr",
+					"title": "GitHub - codehamr/codehamr: A minimal, local-first coding agent for the terminal.",
+					"description": "A minimal, local-first coding agent for the terminal. - codehamr/codehamr",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:p34okilpjskbqyf3fibdirbg/bafkreig2cpwen2mq3gddzcurxhrzm3pzmomwud3x7k6tv3peoyak6keiki"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 1,
+			"replyCount": 0,
+			"repostCount": 0,
+			"likeCount": 3,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-14T12:56:08.672Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:ufsgk5krmtsfuypumkrekofw/app.bsky.feed.post/3mlso3lavh22n",
+			"cid": "bafyreidyj2ym54n3vhnlqrqfsf7cq5uzkcdspx3ve3pr5dbjslnmzgnbfi",
+			"author": {
+				"did": "did:plc:ufsgk5krmtsfuypumkrekofw",
+				"handle": "klauspost.com",
+				"displayName": "Klaus Post",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ufsgk5krmtsfuypumkrekofw/bafkreiglgzc3dkg42kha67q6urssjbec2qbysj5i5sfxyghbxuthk3ystu",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-13T14:54:06.310Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-14T11:01:02.277Z",
+				"embed": {
+					"$type": "app.bsky.embed.record",
+					"record": {
+						"cid": "bafyreifde6eadiwqcp2ax5lhsicwkkbe2s7ybhmwlweb7oachmn2ujgnou",
+						"uri": "at://did:plc:rtoodc3h72luczoecpkpu5bz/app.bsky.feed.post/3mlnjotibw22h"
+					}
+				},
+				"facets": [
+					{
+						"$type": "app.bsky.richtext.facet",
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#mention",
+								"did": "did:plc:rtoodc3h72luczoecpkpu5bz"
+							}
+						],
+						"index": {
+							"byteEnd": 36,
+							"byteStart": 27
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 119,
+							"byteStart": 112
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Very excited to be back at @golab.io - super chill and well organised event! I will give a talk on the state of #golang data compression. See you there!"
+			},
+			"embed": {
+				"record": {
+					"uri": "at://did:plc:rtoodc3h72luczoecpkpu5bz/app.bsky.feed.post/3mlnjotibw22h",
+					"cid": "bafyreifde6eadiwqcp2ax5lhsicwkkbe2s7ybhmwlweb7oachmn2ujgnou",
+					"author": {
+						"did": "did:plc:rtoodc3h72luczoecpkpu5bz",
+						"handle": "golab.io",
+						"displayName": "GoLab Conference",
+						"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rtoodc3h72luczoecpkpu5bz/bafkreiasfwsw77pt5hybxe7a5mwlmrqah6rfmyzlu4dad2sumloomphyda",
+						"associated": {
+							"chat": {
+								"allowIncoming": "following"
+							},
+							"activitySubscription": {
+								"allowSubscriptions": "followers"
+							}
+						},
+						"viewer": {
+							"muted": false,
+							"blockedBy": false
+						},
+						"labels": [],
+						"createdAt": "2023-05-29T13:39:53.196Z"
+					},
+					"value": {
+						"$type": "app.bsky.feed.post",
+						"createdAt": "2026-05-12T09:59:01.038Z",
+						"embed": {
+							"$type": "app.bsky.embed.images",
+							"images": [
+								{
+									"alt": "",
+									"aspectRatio": {
+										"height": 1350,
+										"width": 1080
+									},
+									"image": {
+										"$type": "blob",
+										"ref": {
+											"$link": "bafkreie5bulfeo32d6b7pzav4p4ncah2ok3f6fyxkn4ui7byi4on4nsx3u"
+										},
+										"mimeType": "image/jpeg",
+										"size": 476146
+									}
+								}
+							]
+						},
+						"facets": [
+							{
+								"features": [
+									{
+										"$type": "app.bsky.richtext.facet#link",
+										"uri": "https://golab.io/schedule"
+									}
+								],
+								"index": {
+									"byteEnd": 101,
+									"byteStart": 84
+								}
+							}
+						],
+						"langs": [
+							"en"
+						],
+						"text": "🥳We are extremely glad to announce the Schedule and the Speakers of GoLab 2026!\n\ngolab.io/schedule"
+					},
+					"labels": [],
+					"likeCount": 7,
+					"replyCount": 0,
+					"repostCount": 2,
+					"quoteCount": 1,
+					"indexedAt": "2026-05-12T09:59:05.476Z",
+					"embeds": [
+						{
+							"images": [
+								{
+									"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:rtoodc3h72luczoecpkpu5bz/bafkreie5bulfeo32d6b7pzav4p4ncah2ok3f6fyxkn4ui7byi4on4nsx3u",
+									"fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:rtoodc3h72luczoecpkpu5bz/bafkreie5bulfeo32d6b7pzav4p4ncah2ok3f6fyxkn4ui7byi4on4nsx3u",
+									"alt": "",
+									"aspectRatio": {
+										"height": 1350,
+										"width": 1080
+									}
+								}
+							],
+							"$type": "app.bsky.embed.images#view"
+						}
+					],
+					"$type": "app.bsky.embed.record#viewRecord"
+				},
+				"$type": "app.bsky.embed.record#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 1,
+			"likeCount": 5,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-14T11:01:04.176Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:gkoy56sigg3vrlqezfi22q7p/app.bsky.feed.post/3mlkmmgrhts23",
+			"cid": "bafyreifgbfj3qw74npvk7vxkuh3auaer6kvqcxedl7tlm62q57wu5wedyi",
+			"author": {
+				"did": "did:plc:gkoy56sigg3vrlqezfi22q7p",
+				"handle": "talkingheads2053.com",
+				"displayName": "Talking Heads From The Year 2053",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:gkoy56sigg3vrlqezfi22q7p/bafkreibajuw2ktuxuuzpne4gbqmsqruropqj2xqxqstpx7gkw23vqoodhi",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2026-05-10T13:47:11.969Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-11T06:13:22.612Z",
+				"embed": {
+					"$type": "app.bsky.embed.video",
+					"aspectRatio": {
+						"height": 1920,
+						"width": 1080
+					},
+					"presentation": "default",
+					"video": {
+						"$type": "blob",
+						"ref": {
+							"$link": "bafkreig27hotwjmucf4kbptffmhpm24f27xfvf4v6awfek5lzeodkbeviq"
+						},
+						"mimeType": "video/mp4",
+						"size": 6053924
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://2026.gophercon.sg/"
+							}
+						],
+						"index": {
+							"byteEnd": 80,
+							"byteStart": 63
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 88,
+							"byteStart": 81
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "tinygo"
+							}
+						],
+						"index": {
+							"byteEnd": 96,
+							"byteStart": 89
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "arduino"
+							}
+						],
+						"index": {
+							"byteEnd": 105,
+							"byteStart": 97
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "th2053"
+							}
+						],
+						"index": {
+							"byteEnd": 113,
+							"byteStart": 106
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "Qwentin orders humans to attend Gophercon Singapore next week.\n2026.gophercon.sg\n#golang #tinygo #arduino #th2053"
+			},
+			"embed": {
+				"cid": "bafkreig27hotwjmucf4kbptffmhpm24f27xfvf4v6awfek5lzeodkbeviq",
+				"playlist": "https://video.bsky.app/watch/did%3Aplc%3Agkoy56sigg3vrlqezfi22q7p/bafkreig27hotwjmucf4kbptffmhpm24f27xfvf4v6awfek5lzeodkbeviq/playlist.m3u8",
+				"thumbnail": "https://video.bsky.app/watch/did%3Aplc%3Agkoy56sigg3vrlqezfi22q7p/bafkreig27hotwjmucf4kbptffmhpm24f27xfvf4v6awfek5lzeodkbeviq/thumbnail.jpg",
+				"aspectRatio": {
+					"height": 1920,
+					"width": 1080
+				},
+				"presentation": "default",
+				"$type": "app.bsky.embed.video#view"
+			},
+			"bookmarkCount": 0,
+			"replyCount": 0,
+			"repostCount": 4,
+			"likeCount": 10,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-11T06:13:22.072Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		},
+		{
+			"uri": "at://did:plc:n6f3j47vjucu5ijwdmow7n2w/app.bsky.feed.post/3mlkauryngk26",
+			"cid": "bafyreiaw4aw2cunbzlduhavamijvxfex7pjwcmfqe6yxsjjgp4ztvh63ka",
+			"author": {
+				"did": "did:plc:n6f3j47vjucu5ijwdmow7n2w",
+				"handle": "socket.dev",
+				"displayName": "Socket",
+				"avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreibac2lxedjvyhs4hyifvkdlu2gouyba4jzpirnuujp3ad2jk6w77i",
+				"associated": {
+					"activitySubscription": {
+						"allowSubscriptions": "followers"
+					}
+				},
+				"viewer": {
+					"muted": false,
+					"blockedBy": false
+				},
+				"labels": [],
+				"createdAt": "2024-11-06T15:36:04.411Z"
+			},
+			"record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2026-05-11T02:43:17.913Z",
+				"embed": {
+					"$type": "app.bsky.embed.external",
+					"external": {
+						"description": "A dispute over fsnotify maintainer access set off supply chain alarms around one of Go’s most widely used filesystem libraries.",
+						"thumb": {
+							"$type": "blob",
+							"ref": {
+								"$link": "bafkreibqomxe4dgyzwzkfrp32xihdtqjdcmibmhbfnujcmdi62sznkvrme"
+							},
+							"mimeType": "image/jpeg",
+							"size": 788898
+						},
+						"title": "fsnotify Maintainer Dispute Sparks Supply Chain Concerns - S...",
+						"uri": "https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns"
+					}
+				},
+				"facets": [
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#link",
+								"uri": "https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns"
+							}
+						],
+						"index": {
+							"byteEnd": 283,
+							"byteStart": 257
+						}
+					},
+					{
+						"features": [
+							{
+								"$type": "app.bsky.richtext.facet#tag",
+								"tag": "golang"
+							}
+						],
+						"index": {
+							"byteEnd": 291,
+							"byteStart": 284
+						}
+					}
+				],
+				"langs": [
+					"en"
+				],
+				"text": "A maintainer access dispute in fsnotify, a Go library used by 321k projects for cross-platform file notifications, raised supply chain concerns this week after contributors were removed from the GitHub org and a deleted X post fueled takeover speculation.\n\nsocket.dev/blog/fsnotif... #golang"
+			},
+			"embed": {
+				"external": {
+					"uri": "https://socket.dev/blog/fsnotify-maintainer-dispute-sparks-supply-chain-concerns",
+					"title": "fsnotify Maintainer Dispute Sparks Supply Chain Concerns - S...",
+					"description": "A dispute over fsnotify maintainer access set off supply chain alarms around one of Go’s most widely used filesystem libraries.",
+					"thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:n6f3j47vjucu5ijwdmow7n2w/bafkreibqomxe4dgyzwzkfrp32xihdtqjdcmibmhbfnujcmdi62sznkvrme"
+				},
+				"$type": "app.bsky.embed.external#view"
+			},
+			"bookmarkCount": 3,
+			"replyCount": 0,
+			"repostCount": 3,
+			"likeCount": 12,
+			"quoteCount": 0,
+			"indexedAt": "2026-05-11T02:43:20.575Z",
+			"viewer": {
+				"bookmarked": false,
+				"threadMuted": false,
+				"embeddingDisabled": false
+			},
+			"labels": []
+		}
+	],
+	"cursor": "40"
+}
