@@ -46,7 +46,7 @@ one to put your product in front of.
 
 ### Get in touch
 
-Email **home@ainsley.dev** with the product you'd like to promote and the dates
+Email **hello@godaily.dev** with the product you'd like to promote and the dates
 you're interested in. See pricing and formats below.
 
 ---
@@ -163,7 +163,7 @@ readers:
 
 ### Booking & process
 
-1. **Enquire** — email **home@ainsley.dev** with your product, target dates and
+1. **Enquire** — email **hello@godaily.dev** with your product, target dates and
    preferred placement.
 2. **Confirm** — we check fit and availability and send a current stats snapshot.
 3. **Creative** — you send copy + a destination URL (or we draft it for review).
