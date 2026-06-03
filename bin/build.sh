@@ -4,8 +4,8 @@ set -euo pipefail
 log() { echo "==> $*"; }
 
 if ! command -v go &> /dev/null; then
-	log "Go not found — installing go1.26.3"
-	curl -sSfL https://go.dev/dl/go1.26.3.linux-amd64.tar.gz | tar -xz -C /tmp/
+	log "Go not found — installing go1.26.4"
+	curl -sSfL https://go.dev/dl/go1.26.4.linux-amd64.tar.gz | tar -xz -C /tmp/
 	export PATH="/tmp/go/bin:$PATH"
 fi
 
