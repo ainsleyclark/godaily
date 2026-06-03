@@ -2,6 +2,7 @@
 	import { untrack } from 'svelte';
 	import type { DigestItem } from '$lib/api/types';
 	import { groupBySection, SECTION_ORDER, type SectionTag, type Section } from '$lib/digest/sections';
+	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
 	import { AlertDialog } from '$lib/components/ui/alert-dialog';
 	import { DropdownMenu, DropdownMenuItem } from '$lib/components/ui/dropdown-menu';
@@ -123,100 +124,104 @@
 		This is exactly what sends, in order. Drag the <GripVertical class="inline h-3 w-3 align-text-bottom" />
 		handle to reorder within a section.
 	</p>
-	<div class="space-y-8">
+	<div class="space-y-4">
 		{#each sections as section, si (section.tag)}
-			<section>
-				<header class="mb-3 flex items-center gap-2 border-b pb-2">
-					<h3 class="text-base font-semibold tracking-tight">{section.title}</h3>
-					<Badge variant="secondary">{section.items.length}</Badge>
-				</header>
-				<ul
-					class="space-y-2 rounded-md transition-colors"
-					use:dndzone={{
-						items: section.items,
-						type: `digest-section-${section.tag}`,
-						dragDisabled,
-						flipDurationMs: FLIP_DURATION,
-						dropTargetStyle: {},
-						dropTargetClasses: ['ring-2', 'ring-primary/30', 'bg-primary/5']
-					}}
-					onconsider={(e) => handleConsider(section.tag, e)}
-					onfinalize={(e) => handleFinalize(section.tag, e)}
-				>
-					{#each section.items as item, i (item.id)}
-						<li
-							animate:flip={{ duration: FLIP_DURATION }}
-							class="group bg-card flex items-start gap-2 rounded-md border p-3 transition-shadow"
-							class:opacity-40={isShadow(item)}
-							class:border-dashed={isShadow(item)}
-							class:shadow-md={!isShadow(item)}
-						>
-							<span
-								class="bg-secondary text-muted-foreground mt-0.5 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded px-1 text-xs font-medium tabular-nums"
-								aria-hidden="true"
+			<Card>
+				<CardHeader>
+					<CardTitle class="flex items-center gap-2">
+						{section.title}
+						<Badge variant="secondary">{section.items.length}</Badge>
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<ul
+						class="space-y-2 rounded-md transition-colors"
+						use:dndzone={{
+							items: section.items,
+							type: `digest-section-${section.tag}`,
+							dragDisabled,
+							flipDurationMs: FLIP_DURATION,
+							dropTargetStyle: {},
+							dropTargetClasses: ['ring-2', 'ring-primary/30', 'bg-primary/5']
+						}}
+						onconsider={(e) => handleConsider(section.tag, e)}
+						onfinalize={(e) => handleFinalize(section.tag, e)}
+					>
+						{#each section.items as item, i (item.id)}
+							<li
+								animate:flip={{ duration: FLIP_DURATION }}
+								class="group bg-card flex items-start gap-2 rounded-md border p-3 transition-shadow"
+								class:opacity-40={isShadow(item)}
+								class:border-dashed={isShadow(item)}
+								class:shadow-md={!isShadow(item)}
 							>
-								{sectionOffsets[si] + i + 1}
-							</span>
-							<button
-								type="button"
-								onpointerdown={startDrag}
-								onkeydown={startKeyboardDrag}
-								disabled={busy}
-								class="text-muted-foreground hover:text-foreground mt-0.5 shrink-0 cursor-grab touch-none select-none active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
-								aria-label="Drag to reorder"
-							>
-								<GripVertical class="h-4 w-4" />
-							</button>
-							<div class="min-w-0 flex-1 space-y-1">
-								<div class="flex items-baseline gap-2">
-									<a
-										href={item.url}
-										target="_blank"
-										rel="noopener"
-										class="hover:text-primary text-sm font-medium leading-snug"
-									>
-										{item.title}
-									</a>
-									<ExternalLink class="text-muted-foreground h-3 w-3 shrink-0" />
-								</div>
-								<div class="text-muted-foreground flex items-center gap-2 text-xs">
-									<span class="capitalize">{item.source}</span>
-									{#if item.author?.name || item.author?.username}
-										<span>·</span>
-										<span>{item.author.name || item.author.username}</span>
+								<span
+									class="bg-secondary text-muted-foreground mt-0.5 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded px-1 text-xs font-medium tabular-nums"
+									aria-hidden="true"
+								>
+									{sectionOffsets[si] + i + 1}
+								</span>
+								<button
+									type="button"
+									onpointerdown={startDrag}
+									onkeydown={startKeyboardDrag}
+									disabled={busy}
+									class="text-muted-foreground hover:text-foreground mt-0.5 shrink-0 cursor-grab touch-none select-none active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
+									aria-label="Drag to reorder"
+								>
+									<GripVertical class="h-4 w-4" />
+								</button>
+								<div class="min-w-0 flex-1 space-y-1">
+									<div class="flex items-baseline gap-2">
+										<a
+											href={item.url}
+											target="_blank"
+											rel="noopener"
+											class="hover:text-primary text-sm font-medium leading-snug"
+										>
+											{item.title}
+										</a>
+										<ExternalLink class="text-muted-foreground h-3 w-3 shrink-0" />
+									</div>
+									<div class="text-muted-foreground flex items-center gap-2 text-xs">
+										<span class="capitalize">{item.source}</span>
+										{#if item.author?.name || item.author?.username}
+											<span>·</span>
+											<span>{item.author.name || item.author.username}</span>
+										{/if}
+									</div>
+									{#if item.snippet}
+										<p class="text-muted-foreground text-sm leading-relaxed">{item.snippet}</p>
 									{/if}
 								</div>
-								{#if item.snippet}
-									<p class="text-muted-foreground text-sm leading-relaxed">{item.snippet}</p>
-								{/if}
-							</div>
-							<div class="shrink-0">
-								<DropdownMenu label="Item actions" disabled={busy}>
-									{#snippet children(close)}
-										<DropdownMenuItem
-											onclick={() => {
-												void onDelete(item.id);
-												close();
-											}}
-										>
-											<X class="h-4 w-4" /> Remove from digest
-										</DropdownMenuItem>
-										<DropdownMenuItem
-											variant="destructive"
-											onclick={() => {
-												requestHardDelete(item);
-												close();
-											}}
-										>
-											<Trash2 class="h-4 w-4" /> Delete permanently
-										</DropdownMenuItem>
-									{/snippet}
-								</DropdownMenu>
-							</div>
-						</li>
-					{/each}
-				</ul>
-			</section>
+								<div class="shrink-0">
+									<DropdownMenu label="Item actions" disabled={busy}>
+										{#snippet children(close)}
+											<DropdownMenuItem
+												onclick={() => {
+													void onDelete(item.id);
+													close();
+												}}
+											>
+												<X class="h-4 w-4" /> Remove from digest
+											</DropdownMenuItem>
+											<DropdownMenuItem
+												variant="destructive"
+												onclick={() => {
+													requestHardDelete(item);
+													close();
+												}}
+											>
+												<Trash2 class="h-4 w-4" /> Delete permanently
+											</DropdownMenuItem>
+										{/snippet}
+									</DropdownMenu>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				</CardContent>
+			</Card>
 		{/each}
 	</div>
 {/if}

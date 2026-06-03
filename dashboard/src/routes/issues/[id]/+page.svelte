@@ -270,28 +270,29 @@
 				</CardContent>
 			</Card>
 
-			<Card>
-				<CardHeader>
-					<CardTitle>In this digest ({digestItems.length} {digestItems.length === 1 ? 'item' : 'items'})</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{#if isDraft}
-						<DigestEditor
-							items={digestItems}
-							busy={mutatingItems}
-							onReorder={reorderItems}
-							onDelete={deleteItem}
-							onHardDelete={hardDeleteItem}
-						/>
-					{:else}
-						<DigestPreview
-							items={digestItems}
-							busy={mutatingItems}
-							onHardDelete={hardDeleteItem}
-						/>
-					{/if}
-				</CardContent>
-			</Card>
+			<div class="space-y-4">
+				<div class="flex items-baseline gap-2">
+					<h2 class="text-lg font-semibold tracking-tight">In this digest</h2>
+					<span class="text-muted-foreground text-sm">
+						{digestItems.length} {digestItems.length === 1 ? 'item' : 'items'}
+					</span>
+				</div>
+				{#if isDraft}
+					<DigestEditor
+						items={digestItems}
+						busy={mutatingItems}
+						onReorder={reorderItems}
+						onDelete={deleteItem}
+						onHardDelete={hardDeleteItem}
+					/>
+				{:else}
+					<DigestPreview
+						items={digestItems}
+						busy={mutatingItems}
+						onHardDelete={hardDeleteItem}
+					/>
+				{/if}
+			</div>
 
 			{#if isDraft}
 				<Card>
