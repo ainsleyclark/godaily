@@ -1,0 +1,58 @@
+{
+  "included": [
+    {
+      "$type": "com.linkedin.voyager.dash.feed.Update",
+      "entityUrn": "urn:li:fsd_update:(urn:li:activity:7234567890123456001,BLENDED_SEARCH_FEED,EMPTY,DEFAULT,false)",
+      "metadata": { "backendUrn": "urn:li:activity:7234567890123456001" },
+      "actor": {
+        "name": { "text": "Alice Gopher" },
+        "description": { "text": "Senior Go Engineer at CloudCo" },
+        "navigationContext": { "actionTarget": "https://www.linkedin.com/in/alice-gopher?miniProfileUrn=urn%3Ali%3Afsd_profile%3Aabc123" }
+      },
+      "commentary": { "text": { "text": "Learning Go is great for building microservices. Start simple and iterate." } },
+      "socialContent": { "shareUrl": "https://www.linkedin.com/posts/alice-gopher_golang-activity-7234567890123456001-abcd?utm_source=social_share_send&utm_medium=member_desktop_web" }
+    },
+    {
+      "$type": "com.linkedin.voyager.dash.feed.Update",
+      "entityUrn": "urn:li:fsd_update:(urn:li:activity:7234567890123456002,BLENDED_SEARCH_FEED,EMPTY,DEFAULT,false)",
+      "metadata": { "backendUrn": "urn:li:activity:7234567890123456002" },
+      "actor": {
+        "name": { "text": "Bob Gopher" },
+        "description": { "text": "Go Developer" },
+        "navigationContext": { "actionTarget": "https://www.linkedin.com/in/bob-gopher" }
+      },
+      "commentary": { "text": { "text": "Go generics make code much more reusable and type-safe" } },
+      "socialContent": { "shareUrl": "https://www.linkedin.com/posts/bob-gopher_golang-activity-7234567890123456002-wxyz" }
+    },
+    {
+      "$type": "com.linkedin.voyager.dash.feed.Update",
+      "entityUrn": "urn:li:fsd_update:(urn:li:activity:7234567890123456003,BLENDED_SEARCH_FEED,EMPTY,DEFAULT,false)",
+      "metadata": { "backendUrn": "urn:li:activity:7234567890123456003" },
+      "actor": {
+        "name": { "text": "Low Likes" },
+        "description": { "text": "" },
+        "navigationContext": { "actionTarget": "" }
+      },
+      "commentary": { "text": { "text": "Low engagement golang post" } },
+      "socialContent": { "shareUrl": "https://www.linkedin.com/posts/low-activity-7234567890123456003-zzzz" }
+    },
+    {
+      "$type": "com.linkedin.voyager.dash.feed.SocialActivityCounts",
+      "entityUrn": "urn:li:fsd_socialActivityCounts:urn:li:activity:7234567890123456001",
+      "numLikes": 87,
+      "numComments": 5
+    },
+    {
+      "$type": "com.linkedin.voyager.dash.feed.SocialActivityCounts",
+      "entityUrn": "urn:li:fsd_socialActivityCounts:urn:li:activity:7234567890123456002",
+      "numLikes": 43,
+      "numComments": 2
+    },
+    {
+      "$type": "com.linkedin.voyager.dash.feed.SocialActivityCounts",
+      "entityUrn": "urn:li:fsd_socialActivityCounts:urn:li:activity:7234567890123456003",
+      "numLikes": 2,
+      "numComments": 0
+    }
+  ]
+}

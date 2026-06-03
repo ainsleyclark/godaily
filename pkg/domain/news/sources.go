@@ -56,6 +56,7 @@ const (
 	SourceWeWorkRemotely Source = "we_work_remotely"
 	SourceGolangCafe     Source = "golang_cafe"
 	SourceGolangProjects Source = "golang_projects"
+	SourceLinkedIn       Source = "linkedin"
 )
 
 // Sources defines a list of all source types.
@@ -89,6 +90,7 @@ var Sources = []Source{
 	SourceWeWorkRemotely,
 	SourceGolangCafe,
 	SourceGolangProjects,
+	SourceLinkedIn,
 }
 
 // FeaturedSources is the curated subset rendered on the marketing homepage,
@@ -116,6 +118,7 @@ var FeaturedSources = []Source{
 	SourceConferences,
 	SourceGoVuln,
 	SourceFreeCodeCamp,
+	SourceLinkedIn,
 	SourceRemoteOK,
 	SourceHNJobs,
 	SourceRemotive,
@@ -158,6 +161,7 @@ var sourcePriorities = map[Source]int{
 	SourceGolangProjects: 27,
 	SourceWeWorkRemotely: 28,
 	SourceRemotive:       29,
+	SourceLinkedIn:       30,
 }
 
 // Priority returns a stable per-source ordering weight, used to sort digest
@@ -197,6 +201,7 @@ var sourceNiceNames = map[Source]string{
 	SourceWeWorkRemotely: "We Work Remotely",
 	SourceGolangCafe:     "Golang.cafe",
 	SourceGolangProjects: "Golangprojects",
+	SourceLinkedIn:       "LinkedIn",
 }
 
 // NiceName returns a formatted string of the source.
@@ -238,6 +243,7 @@ var sourceEmojis = map[Source]string{
 	SourceWeWorkRemotely: "🏠",
 	SourceGolangCafe:     "☕",
 	SourceGolangProjects: "🧰",
+	SourceLinkedIn:       "🔗",
 }
 
 // Emoji returns the display emoji for the source.
@@ -280,6 +286,7 @@ var sourceMarkURLs = map[Source]string{
 	SourceRemotive:       "/assets/images/marks/remotive.png",
 	SourceWeWorkRemotely: "/assets/images/marks/we_work_remotely.svg",
 	SourceYouTube:        "/assets/images/marks/youtube.svg",
+	SourceLinkedIn:       "/assets/images/marks/linkedin.png",
 }
 
 // MarkURL returns the public path of the source's mark/logo asset, or ""
@@ -318,6 +325,7 @@ var sourceShortLabels = map[Source]string{
 	SourceWeWorkRemotely: "WWR",
 	SourceGolangCafe:     "GC",
 	SourceGolangProjects: "GP",
+	SourceLinkedIn:       "in",
 }
 
 // ShortLabel returns the 2–3 character chip rendered when a mark is absent,
