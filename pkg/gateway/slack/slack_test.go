@@ -103,9 +103,12 @@ func TestClient_MustSend(t *testing.T) {
 func TestRequestToOptions(t *testing.T) {
 	t.Parallel()
 
+	// Two unfurl-disabling options are always appended so URLs do not preview
+	// as link cards. Counts below include them.
+
 	t.Run("Empty request", func(t *testing.T) {
 		t.Parallel()
-		assert.Empty(t, requestToOptions(Request{}))
+		assert.Len(t, requestToOptions(Request{}), 2)
 	})
 
 	t.Run("All fields", func(t *testing.T) {
@@ -116,6 +119,6 @@ func TestRequestToOptions(t *testing.T) {
 			Attachments:     []Attachment{{Color: ColorInfo}},
 			ThreadTimestamp: "1.0",
 		})
-		assert.Len(t, opts, 4)
+		assert.Len(t, opts, 6)
 	})
 }

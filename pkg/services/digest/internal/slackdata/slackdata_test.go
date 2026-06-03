@@ -74,6 +74,29 @@ func TestBuildSummary(t *testing.T) {
 		assert.Contains(t, flat, "/social/drafts?id=3")
 	})
 
+	t.Run("Drafts group is introduced by a Social drafts header", func(t *testing.T) {
+		t.Parallel()
+		req := BuildSummary(Summary{
+			IssueDate: "2026-06-01",
+			Drafts: []Draft{
+				{ID: 1, Kind: "featured", Platform: "bluesky", Text: "x"},
+			},
+		})
+		assert.Contains(t, flatten(req), "*Social drafts*")
+	})
+
+	t.Run("Long draft text is truncated to a single-line preview", func(t *testing.T) {
+		t.Parallel()
+		long := strings.Repeat("supercalifragilistic ", 20)
+		req := BuildSummary(Summary{
+			IssueDate: "2026-06-01",
+			Drafts:    []Draft{{ID: 1, Kind: "featured", Platform: "bluesky", Text: long}},
+		})
+		flat := flatten(req)
+		assert.Contains(t, flat, "…")
+		assert.NotContains(t, flat, "```", "preview must not render as a code block")
+	})
+
 	t.Run("Drafts are emitted in stable kind+platform order", func(t *testing.T) {
 		t.Parallel()
 

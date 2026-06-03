@@ -109,7 +109,7 @@ func (c *Client) MustSend(ctx context.Context, req Request) {
 // slack-go's PostMessageContext expects. Empty fields are skipped so the
 // outbound payload matches what was set on the Request.
 func requestToOptions(req Request) []slack.MsgOption {
-	opts := make([]slack.MsgOption, 0, 4)
+	opts := make([]slack.MsgOption, 0, 6)
 	if req.Text != "" {
 		opts = append(opts, slack.MsgOptionText(req.Text, false))
 	}
@@ -122,5 +122,11 @@ func requestToOptions(req Request) []slack.MsgOption {
 	if req.ThreadTimestamp != "" {
 		opts = append(opts, slack.MsgOptionTS(req.ThreadTimestamp))
 	}
+	// Operational messages embed URLs purely as deep-links; the auto-unfurled
+	// previews add visual noise and push the actual content off-screen.
+	opts = append(opts,
+		slack.MsgOptionDisableLinkUnfurl(),
+		slack.MsgOptionDisableMediaUnfurl(),
+	)
 	return opts
 }
