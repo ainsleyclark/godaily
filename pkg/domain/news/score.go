@@ -19,6 +19,7 @@ const (
 	golangBridgeViewsSaturation   = 5000.0
 	mastodonFavouritesSaturation  = 20.0
 	linkedInLikesSaturation       = 100.0
+	blueskyLikesSaturation        = 50.0
 	youtubeViewsSaturation        = 5000.0
 	goVulnCVSSSaturation          = 10.0
 )
@@ -158,6 +159,8 @@ func saturationFor(s Source) float64 {
 		return mastodonFavouritesSaturation
 	case SourceLinkedIn:
 		return linkedInLikesSaturation
+	case SourceBluesky:
+		return blueskyLikesSaturation
 	case SourceYouTube:
 		return youtubeViewsSaturation
 	case SourceGoVuln:

@@ -613,6 +613,7 @@ components:
       - golang_cafe
       - golang_projects
       - linkedin
+      - bluesky
       type: string
       x-enum-varnames:
       - SourceDevTo
@@ -645,6 +646,7 @@ components:
       - SourceGolangCafe
       - SourceGolangProjects
       - SourceLinkedIn
+      - SourceBluesky
     news.Tag:
       description: source-specific hint ("proposal-accepted", "trending", "official")
       enum:

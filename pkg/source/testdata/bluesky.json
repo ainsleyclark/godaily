@@ -1,0 +1,78 @@
+{
+  "posts": [
+    {
+      "uri": "at://did:plc:abc123/app.bsky.feed.post/3labcdef2x21",
+      "cid": "bafyreiexample1",
+      "author": {
+        "did": "did:plc:abc123",
+        "handle": "matt.bsky.social",
+        "displayName": "Matt Boyle",
+        "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:abc123/avatar@jpeg"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Just shipped a tiny Go library for typed context keys. Generics make this so clean now #golang",
+        "createdAt": "2026-05-28T09:14:00.000Z",
+        "langs": ["en"]
+      },
+      "replyCount": 4,
+      "repostCount": 6,
+      "likeCount": 5,
+      "quoteCount": 1,
+      "indexedAt": "2026-05-28T09:14:05.000Z"
+    },
+    {
+      "uri": "at://did:plc:def456/app.bsky.feed.post/3lzzqqr7yk22",
+      "cid": "bafyreiexample2",
+      "author": {
+        "did": "did:plc:def456",
+        "handle": "gopher.dev",
+        "displayName": "The Go Gopher",
+        "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:def456/avatar@jpeg"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "Benchmarking sync.Pool vs a hand-rolled freelist in Go 1.26. Results were surprising #golang",
+        "createdAt": "2026-05-28T08:02:00.000Z",
+        "langs": ["en-GB"]
+      },
+      "embed": {
+        "$type": "app.bsky.embed.images#view",
+        "images": [
+          {
+            "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:def456/bench@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:def456/bench@jpeg",
+            "alt": "benchmark chart"
+          }
+        ]
+      },
+      "replyCount": 9,
+      "repostCount": 12,
+      "likeCount": 31,
+      "quoteCount": 2,
+      "indexedAt": "2026-05-28T08:02:07.000Z"
+    },
+    {
+      "uri": "at://did:plc:ghi789/app.bsky.feed.post/3lyyws8plk03",
+      "cid": "bafyreiexample3",
+      "author": {
+        "did": "did:plc:ghi789",
+        "handle": "newbie.bsky.social",
+        "displayName": "Curious Coder",
+        "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ghi789/avatar@jpeg"
+      },
+      "record": {
+        "$type": "app.bsky.feed.post",
+        "text": "anyone got a good #golang tutorial for beginners?",
+        "createdAt": "2026-05-28T07:40:00.000Z",
+        "langs": ["en"]
+      },
+      "replyCount": 0,
+      "repostCount": 0,
+      "likeCount": 1,
+      "quoteCount": 0,
+      "indexedAt": "2026-05-28T07:40:02.000Z"
+    }
+  ],
+  "cursor": "3lyyws8plk03"
+}

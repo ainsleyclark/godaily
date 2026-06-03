@@ -905,7 +905,8 @@ const docTemplate = `{
                     "we_work_remotely",
                     "golang_cafe",
                     "golang_projects",
-                    "linkedin"
+                    "linkedin",
+                    "bluesky"
                 ],
                 "type": "string",
                 "x-enum-varnames": [
@@ -938,7 +939,8 @@ const docTemplate = `{
                     "SourceWeWorkRemotely",
                     "SourceGolangCafe",
                     "SourceGolangProjects",
-                    "SourceLinkedIn"
+                    "SourceLinkedIn",
+                    "SourceBluesky"
                 ]
             },
             "news.Tag": {
