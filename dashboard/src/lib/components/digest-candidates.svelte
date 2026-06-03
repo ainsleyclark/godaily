@@ -49,33 +49,39 @@
 	</p>
 	<ul class="space-y-2">
 		{#each items as item (item.id)}
-			<li class="group bg-card flex items-start gap-3 rounded-md border p-3">
+			<li class="group bg-card flex flex-col items-stretch gap-3 rounded-md border p-3 sm:flex-row sm:items-start">
 				<div class="min-w-0 flex-1 space-y-1">
-					<div class="flex items-baseline gap-2">
+					<div class="flex min-w-0 items-start gap-2">
 						<a
 							href={item.url}
 							target="_blank"
 							rel="noopener"
-							class="hover:text-primary text-sm font-medium leading-snug"
+							class="hover:text-primary min-w-0 break-words text-sm font-medium leading-snug"
 						>
 							{item.title}
 						</a>
-						<ExternalLink class="text-muted-foreground h-3 w-3 shrink-0" />
+						<ExternalLink class="text-muted-foreground mt-1 h-3 w-3 shrink-0" />
 					</div>
 					<div class="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
 						<Badge variant="secondary">{sectionTitle(item.tag)}</Badge>
 						<span class="capitalize">{item.source}</span>
 						{#if item.author?.name || item.author?.username}
 							<span>·</span>
-							<span>{item.author.name || item.author.username}</span>
+							<span class="break-all">{item.author.name || item.author.username}</span>
 						{/if}
 					</div>
 					{#if item.snippet}
-						<p class="text-muted-foreground text-sm leading-relaxed">{item.snippet}</p>
+						<p class="text-muted-foreground text-sm leading-relaxed break-words">{item.snippet}</p>
 					{/if}
 				</div>
-				<div class="flex shrink-0 items-center gap-1">
-					<Button size="sm" variant="outline" onclick={() => onAdd(item.id)} disabled={busy}>
+				<div class="flex flex-wrap items-center gap-1 sm:shrink-0">
+					<Button
+						size="sm"
+						variant="outline"
+						onclick={() => onAdd(item.id)}
+						disabled={busy}
+						class="w-full sm:w-auto"
+					>
 						<Plus class="h-4 w-4" /> Add to digest
 					</Button>
 					<DropdownMenu label="More actions" disabled={busy}>

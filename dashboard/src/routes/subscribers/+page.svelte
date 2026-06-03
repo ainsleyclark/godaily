@@ -220,8 +220,8 @@
 								<TD>
 									<Badge variant={status.variant}>{status.label}</Badge>
 								</TD>
-								<TD class="text-muted-foreground text-xs">{formatDate(s.created_at)}</TD>
-								<TD class="text-muted-foreground text-xs">
+								<TD class="text-muted-foreground whitespace-nowrap text-xs">{formatDate(s.created_at)}</TD>
+								<TD class="text-muted-foreground whitespace-nowrap text-xs">
 									{s.confirmed_at ? formatDate(s.confirmed_at) : '—'}
 								</TD>
 							</TR>

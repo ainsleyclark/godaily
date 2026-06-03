@@ -79,12 +79,13 @@
 </script>
 
 <div class="space-y-6">
-	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+	<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
 		<KpiCard label="Delivered" value={formatCompact(stats?.delivered)} {loading} />
 		<KpiCard label="Open rate" value={formatPercent(stats?.open_rate)} {loading} />
 		<KpiCard label="Click rate" value={formatPercent(stats?.click_rate)} {loading} />
 		<KpiCard label="Click-to-open" value={formatPercent(clickToOpen)} {loading} />
 		<KpiCard label="Bounce rate" value={formatPercent(bounceRate)} {loading} />
+		<KpiCard label="Complaints" value={formatCompact(stats?.complained)} {loading} />
 	</div>
 
 	<EngagementTrend data={trend} loading={trendLoading} {metric} {onMetricChange} />
