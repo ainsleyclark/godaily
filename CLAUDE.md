@@ -87,7 +87,7 @@ golangci-lint run ./... --fix --config=.golangci.yaml
 
 ### Troubleshooting lint failures
 
-**Go version mismatch**: If golangci-lint complains about Go version, ensure your local Go version matches `go.mod` (currently 1.26.3).
+**Go version mismatch**: If golangci-lint complains about Go version, ensure your local Go version matches `go.mod` (currently 1.26.4).
 
 **File formatting issues**: Run `golangci-lint run ./... --fix --config=.golangci.yaml` — this corrects formatting in-place. Always do this before committing.
 
