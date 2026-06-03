@@ -24,8 +24,8 @@
 <tr>
   <td style="padding:28px 32px 24px;border-bottom:1px solid #d0e8f5;">
     <div style="font-size:16px;font-weight:600;color:#0d2236;">🐿️ GoDaily - {{ .Date.Format "January 2, 2006" }}</div>
-    {{ if .Intro }}
-    <p style="font-size:14px;color:#3a6880;line-height:1.6;margin:12px 0 0;">{{ .Intro }}</p>
+    {{ range .IntroParagraphs }}
+    <p style="font-size:14px;color:#3a6880;line-height:1.6;margin:12px 0 0;">{{ . }}</p>
     {{ end }}
   </td>
 </tr>

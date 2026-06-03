@@ -39,10 +39,6 @@
 		margin-bottom: 2.5rem;
 		line-height: 1.6;
 
-		@include desktop {
-			max-width: 45ch;
-		}
-
 		@include mobile {
 			margin-bottom: 1.5rem;
 		}

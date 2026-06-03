@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/ainsleyclark/godaily/pkg/domain/digest"
 	"github.com/ainsleyclark/godaily/pkg/env"
 	"github.com/pkg/errors"
 )
@@ -55,7 +56,7 @@ func rss(w website, outDir string) error {
 		channel.Items = append(channel.Items, rssItem{
 			Title:       issue.Subject,
 			Link:        link,
-			Description: issue.Summary,
+			Description: digest.IntroFlattened(issue.Summary),
 			PubDate:     issue.SentAt.UTC().Format(time.RFC1123Z),
 			GUID:        link,
 		})
