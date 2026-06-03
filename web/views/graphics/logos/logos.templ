@@ -28,6 +28,8 @@ templ SourceLogo(s news.Source, size int) {
 			@JetBrains(size)
 		case news.SourceMastodon:
 			@Mastodon(size)
+		case news.SourceLinkedIn:
+			@LinkedIn(size)
 		case news.SourceAwesomeGo:
 			@AwesomeGo(size)
 		case news.SourceMedium:
@@ -65,6 +67,8 @@ func Background(s news.Source) string {
 		return "#21d789"
 	case news.SourceMastodon:
 		return "#6364ff"
+	case news.SourceLinkedIn:
+		return "#0a66c2"
 	case news.SourceAwesomeGo:
 		return "#fbca04"
 	case news.SourceMedium:
@@ -187,5 +191,11 @@ templ Feed(size int) {
 templ Meetup(size int) {
 	<svg width={ sizeAttr(size) } height={ sizeAttr(size) } viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 		<text x="1" y="15" font-family="Georgia, serif" font-size="16" font-weight="900" fill="#ff4a79">m</text>
+	</svg>
+}
+
+templ LinkedIn(size int) {
+	<svg width={ sizeAttr(size) } height={ sizeAttr(size) } viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+		<text x="2" y="15" font-family="Verdana, sans-serif" font-size="13" font-weight="900" fill="#ffffff">in</text>
 	</svg>
 }

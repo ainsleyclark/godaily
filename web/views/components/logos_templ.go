@@ -24,6 +24,7 @@ var logoItems = []logoEntry{
 	{"/assets/images/logos/youtube.svg", "YouTube"},
 	{"/assets/images/logos/ardanlabs_podcast.svg", "Ardan Labs Podcast"},
 	{"/assets/images/logos/mastodon.svg", "Mastodon"},
+	{"/assets/images/logos/linkedin.png", "LinkedIn"},
 	{"/assets/images/logos/golang-bridge.png", "Golang Bridge"},
 	{"/assets/images/logos/hacker-news.svg", "Hacker News"},
 	{"/assets/images/logos/meetup.svg", "Meetup"},

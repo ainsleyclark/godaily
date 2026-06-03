@@ -139,6 +139,7 @@ const (
 	TagConferenceReminder Tag = "conference_reminder" // ~3 months before
 	TagConferenceAlert    Tag = "conference_alert"    // ~1 week before
 	TagJobs               Tag = "jobs"
+	TagSocial             Tag = "social"
 )
 
 // SectionTags lists the canonical section tags in display order. Each digest
@@ -155,6 +156,7 @@ var SectionTags = []Tag{
 	TagVideo,
 	TagTrending,
 	TagSecurity,
+	TagSocial,
 	TagJobs,
 }
 
@@ -175,6 +177,7 @@ var SectionLimits = map[Tag]int{
 	TagVideo:      5,
 	TagJobs:       5,
 	TagTrending:   5,
+	TagSocial:     5,
 }
 
 // SelectForDigest is the single definition of which items make up a digest and
@@ -236,6 +239,7 @@ var sectionTitles = map[Tag]string{
 	TagDiscussion: "Discussions",
 	TagVideo:      "Videos",
 	TagTrending:   "Trending",
+	TagSocial:     "Social",
 	TagJobs:       "Jobs",
 }
 

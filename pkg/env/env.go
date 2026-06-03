@@ -48,6 +48,7 @@ type Config struct {
 	BlueskyAppPassword                    string          `env:"BLUESKY_APP_PASSWORD,unset"`
 	LinkedInOAuthToken                    string          `env:"LINKEDIN_OAUTH_TOKEN,unset"`
 	LinkedInOrgURN                        string          `env:"LINKEDIN_ORG_URN,unset"`
+	LinkedInCookie                        string          `env:"LINKEDIN_COOKIE,unset"`
 	MastodonServer                        string          `env:"MASTODON_SERVER,unset"`
 	MastodonAppToken                      string          `env:"MASTODON_APP_TOKEN,unset"`
 }

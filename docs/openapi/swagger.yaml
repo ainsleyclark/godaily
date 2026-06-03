@@ -612,6 +612,7 @@ components:
       - we_work_remotely
       - golang_cafe
       - golang_projects
+      - linkedin
       type: string
       x-enum-varnames:
       - SourceDevTo
@@ -643,6 +644,7 @@ components:
       - SourceWeWorkRemotely
       - SourceGolangCafe
       - SourceGolangProjects
+      - SourceLinkedIn
     news.Tag:
       description: source-specific hint ("proposal-accepted", "trending", "official")
       enum:
@@ -662,6 +664,7 @@ components:
       - conference_reminder
       - conference_alert
       - jobs
+      - social
       type: string
       x-enum-comments:
         TagConference: major Go conference announcement
@@ -684,6 +687,7 @@ components:
       - TagConferenceReminder
       - TagConferenceAlert
       - TagJobs
+      - TagSocial
     social.Post:
       properties:
         id:

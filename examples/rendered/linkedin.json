@@ -1,0 +1,38 @@
+[
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "I'm excited to announce that the 3rd edition of \"Learning Go\" is now available i",
+		"url": "https://www.linkedin.com/posts/jonbodner_learning-go-3rd-edition-activity-7467319696124657664-1apW",
+		"author": {
+			"name": "Jon Bodner",
+			"username": "Software Engineer, Author of Learning Go from O’Reilly, Speaker | Go \u0026 Distributed Systems",
+			"profile_url": "https://www.linkedin.com/in/jonbodner"
+		},
+		"snippet": "I'm excited to announce that the 3rd edition of \"Learning Go\" is now available in Early Release! The full book is scheduled for 2027. This edition is updated to cover the most recent Go releases. It a",
+		"tag": "social",
+		"comments": 13,
+		"score": 1,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	},
+	{
+		"id": 0,
+		"source": "linkedin",
+		"title": "Why Go is the ideal platform engineers language",
+		"url": "https://www.linkedin.com/posts/anthonyjoanes_go-golang-platformengineering-activity-7465133718882664448-50SN",
+		"author": {
+			"name": "Tony Joanes",
+			"username": "⚙️ Platform | DevOps | DX | AI ✨",
+			"profile_url": "https://www.linkedin.com/in/anthonyjoanes"
+		},
+		"snippet": "Why Go is the ideal platform engineers language 1. Single binary deploys No runtime, no dependencies, no \"works on my machine.\" Ship one file, run anywhere. 2. Goroutines are cheap Spin up thousands o",
+		"tag": "social",
+		"comments": 1,
+		"score": 0.4760925677494707,
+		"published": "0001-01-01T00:00:00Z",
+		"position": 0,
+		"in_digest": false
+	}
+]

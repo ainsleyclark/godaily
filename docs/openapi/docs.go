@@ -904,7 +904,8 @@ const docTemplate = `{
                     "remotive",
                     "we_work_remotely",
                     "golang_cafe",
-                    "golang_projects"
+                    "golang_projects",
+                    "linkedin"
                 ],
                 "type": "string",
                 "x-enum-varnames": [
@@ -936,7 +937,8 @@ const docTemplate = `{
                     "SourceRemotive",
                     "SourceWeWorkRemotely",
                     "SourceGolangCafe",
-                    "SourceGolangProjects"
+                    "SourceGolangProjects",
+                    "SourceLinkedIn"
                 ]
             },
             "news.Tag": {
@@ -957,7 +959,8 @@ const docTemplate = `{
                     "conference",
                     "conference_reminder",
                     "conference_alert",
-                    "jobs"
+                    "jobs",
+                    "social"
                 ],
                 "type": "string",
                 "x-enum-comments": {
@@ -981,7 +984,8 @@ const docTemplate = `{
                     "TagConference",
                     "TagConferenceReminder",
                     "TagConferenceAlert",
-                    "TagJobs"
+                    "TagJobs",
+                    "TagSocial"
                 ]
             },
             "social.Post": {
