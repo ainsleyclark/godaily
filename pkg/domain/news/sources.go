@@ -268,6 +268,7 @@ func (s Source) IsRanked() bool {
 var sourceMarkURLs = map[Source]string{
 	SourceArdanLabs:      "/assets/images/marks/ardanlabs_podcast.svg",
 	SourceAwesomeGo:      "/assets/images/marks/awesome_go.png",
+	SourceBluesky:        "/assets/images/marks/bluesky.svg",
 	SourceDevTo:          "/assets/images/marks/dev_to.svg",
 	SourceFallthrough:    "/assets/images/marks/fallthrough.webp",
 	SourceFreeCodeCamp:   "/assets/images/marks/fcc.svg",
