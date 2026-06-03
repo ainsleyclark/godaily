@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
@@ -131,7 +132,7 @@ func TestMastodonTitle(t *testing.T) {
 		want string
 	}{
 		"plain":           {in: "<p>Hello world</p>", want: "Hello world"},
-		"truncates":       {in: "<p>" + repeat("a", 200) + "</p>", want: repeat("a", 80)},
+		"truncates":       {in: "<p>" + strings.Repeat("a", 200) + "</p>", want: strings.Repeat("a", 80)},
 		"first sentence":  {in: "<p>First sentence. Second sentence.</p>", want: "First sentence"},
 		"strips entities": {in: "<p>foo &amp; bar</p>", want: "foo & bar"},
 	}
@@ -142,12 +143,4 @@ func TestMastodonTitle(t *testing.T) {
 			assert.Equal(t, tc.want, mastodonTitle(tc.in))
 		})
 	}
-}
-
-func repeat(s string, n int) string {
-	out := make([]byte, 0, len(s)*n)
-	for i := 0; i < n; i++ {
-		out = append(out, s...)
-	}
-	return string(out)
 }

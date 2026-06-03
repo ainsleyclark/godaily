@@ -160,7 +160,7 @@ func TestBlueskyTitle(t *testing.T) {
 		"keeps dotted name": {in: "yzma 1.15 is out for llama.cpp users", want: "yzma 1.15 is out for llama.cpp users"},
 		"first sentence":    {in: "First sentence. Second sentence.", want: "First sentence"},
 		"first line":        {in: "Title line\nbody text here", want: "Title line"},
-		"truncates":         {in: repeat("a", 200), want: repeat("a", 80)},
+		"truncates":         {in: strings.Repeat("a", 200), want: strings.Repeat("a", 80)},
 		"trailing question": {in: "Anyone using sqlc?", want: "Anyone using sqlc"},
 	}
 
