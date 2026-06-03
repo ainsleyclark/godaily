@@ -40,13 +40,31 @@ function baseUrl(): string {
 }
 
 const middleware: Middleware = {
-	onRequest({ request }) {
+	async onRequest({ request }) {
 		// Vercel's trailingSlash:true would otherwise 308-redirect the request,
 		// which browsers reject on CORS preflights — land on the canonical URL.
 		const url = new URL(request.url);
 		if (!url.pathname.endsWith('/')) {
 			url.pathname += '/';
-			request = new Request(url, request);
+			// Reconstructing a Request from another Request re-exposes its body as
+			// a ReadableStream, which iOS Safari refuses to upload ("ReadableStream
+			// uploading is not supported"). Buffer the body first so the rewritten
+			// Request carries a plain body instead of a stream.
+			const hasBody = request.method !== 'GET' && request.method !== 'HEAD';
+			const body = hasBody ? await request.arrayBuffer() : undefined;
+			request = new Request(url, {
+				method: request.method,
+				headers: request.headers,
+				body,
+				credentials: request.credentials,
+				cache: request.cache,
+				mode: request.mode,
+				redirect: request.redirect,
+				referrer: request.referrer,
+				integrity: request.integrity,
+				keepalive: request.keepalive,
+				signal: request.signal
+			});
 		}
 		request.headers.set('Accept', 'application/json');
 		// Don't clobber a per-call Authorization header (used to validate a
