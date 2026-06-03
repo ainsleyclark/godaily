@@ -57,7 +57,7 @@ func IssueSchemas(issue digest.Issue) string {
 		"@context":      "https://schema.org",
 		"@type":         "NewsArticle",
 		"headline":      issue.Subject,
-		"description":   issue.Summary,
+		"description":   digest.IntroFlattened(issue.Summary),
 		"url":           issueURL,
 		"datePublished": issue.SentAt.UTC().Format(time.RFC3339),
 		"dateModified":  issue.SentAt.UTC().Format(time.RFC3339),

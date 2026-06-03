@@ -11,7 +11,7 @@ import (
 templ Digest(issue digest.Issue) {
 	@layouts.Base(layouts.PageMeta{
 		Title:        fmt.Sprintf("Go Newsletter – Issue #%d: %s", issue.ID, issue.Subject),
-		Description:  issue.Summary,
+		Description:  digest.IntroFlattened(issue.Summary),
 		CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 		OGImage:      fmt.Sprintf("https://godaily.dev/og/issues/%s.png", issue.Slug),
 		IsArticle:    true,
@@ -30,8 +30,8 @@ templ Digest(issue digest.Issue) {
 				})
 				<div class="section__label">{ fmt.Sprintf("Issue #%d", issue.ID) }</div>
 				<h1 class="section__title">{ issue.Subject }</h1>
-				if issue.Summary != "" {
-					<p class="section__sub">{ issue.Summary }</p>
+				if sub := digest.IntroFlattened(issue.Summary); sub != "" {
+					<p class="section__sub">{ sub }</p>
 				}
 				@components.ShareButtons(fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug), issue.Subject)
 				@components.Sample(issue)

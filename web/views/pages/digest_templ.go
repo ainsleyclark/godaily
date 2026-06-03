@@ -109,15 +109,15 @@ func Digest(issue digest.Issue) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				if issue.Summary != "" {
+				if sub := digest.IntroFlattened(issue.Summary); sub != "" {
 					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<p class=\"section__sub\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var6 string
-					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(issue.Summary)
+					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(sub)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 34, Col: 44}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/pages/digest.templ`, Line: 34, Col: 34}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -170,7 +170,7 @@ func Digest(issue digest.Issue) templ.Component {
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
 			Title:        fmt.Sprintf("Go Newsletter – Issue #%d: %s", issue.ID, issue.Subject),
-			Description:  issue.Summary,
+			Description:  digest.IntroFlattened(issue.Summary),
 			CanonicalURL: fmt.Sprintf("https://godaily.dev/issues/%s/", issue.Slug),
 			OGImage:      fmt.Sprintf("https://godaily.dev/og/issues/%s.png", issue.Slug),
 			IsArticle:    true,

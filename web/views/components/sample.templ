@@ -39,8 +39,8 @@ templ sampleInner(issue digest.Issue) {
 			if issue.Subject != "" {
 				<div class="email-preview__subject">🐿️ { issue.Subject }</div>
 			}
-			if issue.Summary != "" {
-				<p class="email-preview__intro">{ issue.Summary }</p>
+			for _, para := range digest.IntroParagraphs(issue.Summary) {
+				<p class="email-preview__intro">{ para }</p>
 			}
 		</div>
 		for _, group := range groupItemsBySection(issue.Items) {
