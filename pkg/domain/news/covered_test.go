@@ -86,4 +86,71 @@ func TestExcludeCovered(t *testing.T) {
 		covered := []news.Item{{Title: "go 1.26.4 is released", URL: "https://b"}}
 		assert.Empty(t, news.ExcludeCovered(items, covered))
 	})
+
+	t.Run("Unrelated items all survive with order preserved", func(t *testing.T) {
+		t.Parallel()
+		items := []news.Item{
+			{Title: "A terminal arcade game written in Go", URL: "https://example.com/arcade"},
+			{Title: "Profiling allocations with pprof", URL: "https://example.com/pprof"},
+			{Title: "errgroup patterns for fan-out work", URL: "https://example.com/errgroup"},
+			{Title: "How the scheduler handles preemption", URL: "https://example.com/sched"},
+		}
+		covered := []news.Item{
+			{Title: "Go 1.26.4 is released", URL: "https://go.dev/dl"},
+			{Title: "Generics deep dive", URL: "https://blog/generics"},
+		}
+		got := news.ExcludeCovered(items, covered)
+		assert.Equal(t, items, got, "no unrelated item may be dropped or reordered")
+	})
+
+	t.Run("Same topic but different version is not a duplicate", func(t *testing.T) {
+		t.Parallel()
+		// A follow-up patch release is genuinely new news — the version token
+		// differs, so the normalised titles must not collide.
+		items := []news.Item{{Title: "Go 1.27.0 is released", URL: "https://go.dev/blog/go1.27.0"}}
+		covered := []news.Item{{Title: "Go 1.26.4 is released", URL: "https://go.dev/blog/go1.26.4"}}
+		assert.Len(t, news.ExcludeCovered(items, covered), 1)
+	})
+
+	t.Run("Partial title overlap is not a duplicate", func(t *testing.T) {
+		t.Parallel()
+		// Exact normalised equality is required: a headline that merely shares
+		// words with a covered one (sub- or super-set) must survive.
+		items := []news.Item{
+			{Title: "Go 1.26.4 is released with a critical scheduler fix", URL: "https://example.com/long"},
+			{Title: "released", URL: "https://example.com/short"},
+		}
+		covered := []news.Item{{Title: "Go 1.26.4 is released", URL: "https://go.dev/dl"}}
+		assert.Len(t, news.ExcludeCovered(items, covered), 2, "overlap without exact match must not drop items")
+	})
+
+	t.Run("Different stories sharing a domain are not duplicates", func(t *testing.T) {
+		t.Parallel()
+		// Same host, different path/story — URL equality is exact, so these
+		// stay distinct.
+		items := []news.Item{{Title: "A brand new HTTP router", URL: "https://go.dev/blog/router"}}
+		covered := []news.Item{{Title: "Go 1.26.4 is released", URL: "https://go.dev/blog/go1.26.4"}}
+		assert.Len(t, news.ExcludeCovered(items, covered), 1)
+	})
+
+	t.Run("Empty URLs do not cause false matches", func(t *testing.T) {
+		t.Parallel()
+		// A covered item with no original URL must not match a candidate that
+		// also happens to have an empty URL/original URL.
+		items := []news.Item{{Title: "An untitled-source roundup post", URL: ""}}
+		covered := []news.Item{{Title: "Go 1.26.4 is released", URL: "https://go.dev/dl", OriginalURL: ""}}
+		assert.Len(t, news.ExcludeCovered(items, covered), 1, "empty strings must never be a match key")
+	})
+
+	t.Run("Only the duplicate is removed from a mixed batch", func(t *testing.T) {
+		t.Parallel()
+		items := []news.Item{
+			{Title: "Structured logging tips", URL: "https://example.com/slog"},
+			{Title: "Go 1.26.4 is released", URL: "https://www.reddit.com/r/golang/comments/1tvgabw/", Tag: news.TagDiscussion},
+			{Title: "Building a TUI with bubbletea", URL: "https://example.com/tui"},
+		}
+		covered := []news.Item{{Title: "Go 1.26.4 is released", URL: "https://go.dev/dl", Tag: news.TagRelease}}
+		got := news.ExcludeCovered(items, covered)
+		assert.Equal(t, []string{"Structured logging tips", "Building a TUI with bubbletea"}, titles(got))
+	})
 }
