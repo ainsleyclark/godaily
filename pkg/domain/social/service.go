@@ -29,6 +29,17 @@ type Service interface {
 	// cleared first.
 	DraftAll(ctx context.Context, opts PostOptions) ([]PostResult, error)
 
+	// DraftFeatured drafts only the featured post for opts.Date — one row
+	// per configured platform — without publishing. Used by the CLI to
+	// regenerate a featured draft independently of DraftAll.
+	DraftFeatured(ctx context.Context, opts PostOptions) ([]PostResult, error)
+
+	// DraftRotation drafts only the eligible rotation post for opts.Date's
+	// weekday, without publishing. Used by the CLI to regenerate a rotation
+	// draft independently of DraftAll. Returns nil when no candidate is
+	// eligible for the day.
+	DraftRotation(ctx context.Context, opts PostOptions) ([]PostResult, error)
+
 	// PublishDrafts loads every draft row (any kind) and publishes each
 	// to its platform, transitioning the rows to published (or error on
 	// per-platform failures). Cancelled rows are skipped.
