@@ -100,7 +100,7 @@ func buildPlatformSystem(cfg platformConfig) string {
 }
 
 func parsePlatformPost(raw []byte) (string, error) {
-	body := aiutil.StripFences(string(raw))
+	body := aiutil.ExtractJSON(string(raw))
 	if body == "" {
 		return "", errors.New("empty platform post response")
 	}

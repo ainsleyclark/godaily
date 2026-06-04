@@ -56,6 +56,36 @@ func (mr *MockServiceMockRecorder) DraftAll(ctx, opts any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftAll", reflect.TypeOf((*MockService)(nil).DraftAll), ctx, opts)
 }
 
+// DraftFeatured mocks base method.
+func (m *MockService) DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DraftFeatured", ctx, opts)
+	ret0, _ := ret[0].([]social.PostResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DraftFeatured indicates an expected call of DraftFeatured.
+func (mr *MockServiceMockRecorder) DraftFeatured(ctx, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftFeatured", reflect.TypeOf((*MockService)(nil).DraftFeatured), ctx, opts)
+}
+
+// DraftRotation mocks base method.
+func (m *MockService) DraftRotation(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DraftRotation", ctx, opts)
+	ret0, _ := ret[0].([]social.PostResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DraftRotation indicates an expected call of DraftRotation.
+func (mr *MockServiceMockRecorder) DraftRotation(ctx, opts any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DraftRotation", reflect.TypeOf((*MockService)(nil).DraftRotation), ctx, opts)
+}
+
 // PublishDrafts mocks base method.
 func (m *MockService) PublishDrafts(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
 	m.ctrl.T.Helper()

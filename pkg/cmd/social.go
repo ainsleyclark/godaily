@@ -29,6 +29,7 @@ func socialCmd(a *godaily.App) *cli.Command {
 		Usage: "Social media posting commands.",
 		Commands: []*cli.Command{
 			socialPostCmd(a),
+			socialDraftCmd(a),
 			socialPublishCmd(a),
 		},
 	}
@@ -74,6 +75,78 @@ func socialPostCmd(app *godaily.App) *cli.Command {
 				fmt.Printf("%s: %s\n", p.Platform(), res.PostURL) //nolint
 			}
 			return anyErr
+		},
+	}
+}
+
+// socialDraftCmd runs only the AI drafting half of the pipeline for a single
+// kind (featured or rotation), persisting the draft rows without publishing.
+// Handy for regenerating a draft that failed during the nightly build — the
+// 11:00/15:00 publish crons then pick the fresh drafts up.
+func socialDraftCmd(a *godaily.App) *cli.Command {
+	return &cli.Command{
+		Name:      "draft",
+		Usage:     "Draft (without publishing) the featured or rotation post for a digest.",
+		ArgsUsage: "<featured|rotation>",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:  "dry-run",
+				Usage: "Generate the draft via AI but skip persisting it.",
+			},
+			&cli.StringSliceFlag{
+				Name:  "platform",
+				Usage: "Only draft for the named platforms (bluesky, linkedin, mastodon).",
+			},
+			&cli.StringFlag{
+				Name:  "date",
+				Usage: "Date of the digest to draft for (YYYY-MM-DD). Defaults to today (UTC).",
+			},
+		},
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			kind := strings.ToLower(strings.TrimSpace(cmd.Args().First()))
+			if kind == "" {
+				return fmt.Errorf("specify which post to draft: featured or rotation")
+			}
+
+			date := time.Now().UTC().Truncate(24 * time.Hour)
+			if raw := cmd.String("date"); raw != "" {
+				d, err := time.Parse("2006-01-02", raw)
+				if err != nil {
+					return fmt.Errorf("invalid date %q: must be YYYY-MM-DD", raw)
+				}
+				date = d
+			}
+
+			platforms, err := parsePlatforms(cmd.StringSlice("platform"))
+			if err != nil {
+				return err
+			}
+
+			opts := social.PostOptions{
+				Date:      date,
+				DryRun:    cmd.Bool("dry-run"),
+				Platforms: platforms,
+			}
+
+			var (
+				results  []social.PostResult
+				draftErr error
+			)
+			switch kind {
+			case "featured":
+				results, draftErr = a.Service.Social.DraftFeatured(ctx, opts)
+			case "rotation":
+				results, draftErr = a.Service.Social.DraftRotation(ctx, opts)
+			default:
+				return fmt.Errorf("unknown post kind %q (expected: featured or rotation)", kind)
+			}
+
+			printResults(results)
+			if draftErr != nil {
+				a.Slack.MustSend(ctx, slack.Error("Social draft CLI failed", draftErr))
+				return draftErr
+			}
+			return nil
 		},
 	}
 }

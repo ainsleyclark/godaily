@@ -60,6 +60,29 @@ func (s *Service) DraftAll(ctx context.Context, opts social.PostOptions) ([]soci
 	return all, nil
 }
 
+// DraftFeatured generates featured draft rows for opts.Date — one per
+// configured platform — without publishing. It is the public entrypoint the
+// CLI uses to (re)draft just the featured post, e.g. after a nightly build
+// draft failed. Returns nil when no posters are configured.
+func (s *Service) DraftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	if !s.hasPosters() {
+		slog.InfoContext(ctx, "Skipping featured draft — no posters configured")
+		return nil, nil
+	}
+	return s.draftFeatured(ctx, opts)
+}
+
+// DraftRotation drafts the eligible rotation post for opts.Date's weekday
+// without publishing. Like DraftFeatured it is the public CLI entrypoint;
+// it returns nil when no posters are configured or no candidate is eligible.
+func (s *Service) DraftRotation(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {
+	if !s.hasPosters() {
+		slog.InfoContext(ctx, "Skipping rotation draft — no posters configured")
+		return nil, nil
+	}
+	return s.draftRotation(ctx, opts)
+}
+
 // draftFeatured generates draft featured rows for opts.Date. Internal to
 // the Service — callers go through DraftAll.
 func (s *Service) draftFeatured(ctx context.Context, opts social.PostOptions) ([]social.PostResult, error) {

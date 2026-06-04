@@ -79,7 +79,7 @@ func Suggest(ctx context.Context, p ai.Prompter, day time.Time, sections []news.
 
 // parseSuggestionBytes parses raw model output bytes into a Suggestion.
 func parseSuggestionBytes(raw []byte) (Suggestion, error) {
-	body := aiutil.StripFences(string(raw))
+	body := aiutil.ExtractJSON(string(raw))
 	if body == "" {
 		return Suggestion{}, errors.New("empty response body")
 	}

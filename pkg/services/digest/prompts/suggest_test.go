@@ -71,7 +71,7 @@ func TestSuggest(t *testing.T) {
 			wantErr:   "ai",
 		},
 		"Parse Error Surfaced": {
-			raw:      []byte("not json"),
+			raw:      []byte(`{"posts": invalid}`),
 			sections: sampleSections(),
 			wantErr:  "parse (raw=",
 		},
@@ -124,7 +124,7 @@ func TestParseSuggestionBytes(t *testing.T) {
 			wantErr: "empty response body",
 		},
 		"Invalid JSON": {
-			raw:     []byte("not json"),
+			raw:     []byte(`{"posts": invalid}`),
 			wantErr: "parse (raw=",
 		},
 		"No Posts": {

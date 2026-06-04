@@ -110,3 +110,40 @@ func TestStripFences(t *testing.T) {
 		})
 	}
 }
+
+func TestExtractJSON(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"Clean Object":      {in: `{"a":1}`, want: `{"a":1}`},
+		"Clean Array":       {in: `[1,2,3]`, want: `[1,2,3]`},
+		"Empty":             {in: "", want: ""},
+		"Whitespace Only":   {in: "  \n  ", want: ""},
+		"No Brackets":       {in: "just prose", want: ""},
+		"Fenced Object":     {in: "```json\n{\"a\":1}\n```", want: `{"a":1}`},
+		"Trailing Prose":    {in: "{\"a\":1}\n\nWait, let me reconsider.", want: `{"a":1}`},
+		"Trailing Object":   {in: `{"a":1}{"b":2}`, want: `{"a":1}`},
+		"Leading Prose":     {in: "Here you go:\n{\"a\":1}", want: `{"a":1}`},
+		"Nested Object":     {in: `{"posts":[{"text":"hi"}]}`, want: `{"posts":[{"text":"hi"}]}`},
+		"Brace In String":   {in: `{"text":"a } b"}`, want: `{"text":"a } b"}`},
+		"Escaped Quote":     {in: `{"text":"say \"hi\""} trailing`, want: `{"text":"say \"hi\""}`},
+		"Bracket In String": {in: `{"text":"arr[0]"}`, want: `{"text":"arr[0]"}`},
+		"Unbalanced":        {in: `{"a":1`, want: `{"a":1`},
+		// The exact shape that broke featured-post drafting: a valid object
+		// followed by the model second-guessing itself in prose then re-emitting.
+		"Self Correction": {
+			in:   "{\"title\":\"Go 1.26.4\",\"hook\":\"out now\"}\n\nWait, the schema doesn't include score. Let me output correctly:\n\n{\"title\":\"Go 1.26.4\",\"hook\":\"download it\"}",
+			want: `{"title":"Go 1.26.4","hook":"out now"}`,
+		},
+	}
+
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tc.want, aiutil.ExtractJSON(tc.in))
+		})
+	}
+}
