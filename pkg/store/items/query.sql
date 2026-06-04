@@ -16,6 +16,12 @@ RETURNING *;
 -- name: ItemByID :one
 SELECT * FROM items WHERE id = ? LIMIT 1;
 
+-- name: ItemsCoveredSince :many
+SELECT items.* FROM items
+JOIN issues ON items.issue_id = issues.id
+WHERE issues.status = 'sent' AND issues.sent_at >= @since
+ORDER BY issues.sent_at DESC;
+
 -- name: ItemFindByURLInIssue :one
 SELECT id FROM items
 WHERE issue_id = @issue_id

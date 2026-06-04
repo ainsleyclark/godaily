@@ -48,6 +48,21 @@ func (s Store) Find(ctx context.Context, id int64) (news.Item, error) {
 	return transformItem(i), nil
 }
 
+// CoveredSince returns items linked to issues sent on or after the given time —
+// the stories already shipped to subscribers. Build uses it to drop a story
+// resurfacing from a different source so it is not covered twice across days.
+func (s Store) CoveredSince(ctx context.Context, since time.Time) ([]news.Item, error) {
+	rows, err := s.sqlc.ItemsCoveredSince(ctx, since)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]news.Item, 0, len(rows))
+	for _, r := range rows {
+		out = append(out, transformItem(r))
+	}
+	return out, nil
+}
+
 // List runs a filtered/sorted/paginated query over items. Every field on
 // ItemListOptions is optional; a zero ItemListOptions returns every row
 // ordered by published DESC.

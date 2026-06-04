@@ -39,6 +39,24 @@ func (s Service) Build(ctx context.Context, date time.Time) error {
 		return s.buildErr(ctx, errors.Wrap(err, "listing items"))
 	}
 
+	// Drop any story already shipped in a recent issue. The same real-world
+	// event resurfaces from different sources across days (e.g. a release first
+	// covered from go.dev, then re-posted to r/golang with a different URL and
+	// tag) and slips past the in-window (url, tag) de-dup, so without this it
+	// would be re-featured and re-mentioned in the intro. Done before sectioning
+	// so the single filtered set feeds synthesis, item selection and the social
+	// featured pick alike.
+	covered, err := s.items.CoveredSince(ctx, today.AddDate(0, 0, -digest.CoveredLookbackDays))
+	if err != nil {
+		return s.buildErr(ctx, errors.Wrap(err, "listing recently covered items"))
+	}
+	if n := len(items); n > 0 {
+		items = news.ExcludeCovered(items, covered)
+		if dropped := n - len(items); dropped > 0 {
+			slog.InfoContext(ctx, "Excluded already-covered items", "slug", slug, "excluded", dropped)
+		}
+	}
+
 	if len(items) == 0 {
 		slog.WarnContext(ctx, "No items found for build window, skipping", "slug", slug)
 		return nil

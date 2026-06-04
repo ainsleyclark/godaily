@@ -23,6 +23,11 @@ type Service interface {
 	SendSuggestion(ctx context.Context, date time.Time) error
 }
 
+// CoveredLookbackDays is how far back Build looks for stories already shipped
+// to subscribers when excluding cross-day, cross-source re-posts. A week
+// comfortably covers a release re-posted a day or two after it first ran.
+const CoveredLookbackDays = 7
+
 // BuildWindow returns the [start, end) date range whose collected items a
 // digest for the given day draws from. A Monday digest reaches back across the
 // weekend (Friday–Monday); every other day covers the previous day only. It is

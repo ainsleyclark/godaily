@@ -8,6 +8,7 @@ import (
 	"context"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -111,8 +112,11 @@ func (e errItemRepo) SourceCounts(_ context.Context) ([]news.SourceCount, error)
 	return nil, e.err
 }
 func (e errItemRepo) TagCounts(_ context.Context) ([]news.TagCount, error) { return nil, e.err }
-func (e errItemRepo) LinkToIssue(_ context.Context, _, _ int64) error      { return e.err }
-func (e errItemRepo) UnlinkFromIssue(_ context.Context, _, _ int64) error  { return e.err }
+func (e errItemRepo) CoveredSince(_ context.Context, _ time.Time) ([]news.Item, error) {
+	return nil, nil
+}
+func (e errItemRepo) LinkToIssue(_ context.Context, _, _ int64) error     { return e.err }
+func (e errItemRepo) UnlinkFromIssue(_ context.Context, _, _ int64) error { return e.err }
 func (e errItemRepo) ReorderInIssue(_ context.Context, _ int64, _ []int64) error {
 	return e.err
 }

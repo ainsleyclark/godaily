@@ -12,6 +12,7 @@ package mocknews
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	news "github.com/ainsleyclark/godaily/pkg/domain/news"
 	gomock "go.uber.org/mock/gomock"
@@ -69,6 +70,21 @@ func (m *MockItemRepository) CountMatching(ctx context.Context, opts news.ItemLi
 func (mr *MockItemRepositoryMockRecorder) CountMatching(ctx, opts any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountMatching", reflect.TypeOf((*MockItemRepository)(nil).CountMatching), ctx, opts)
+}
+
+// CoveredSince mocks base method.
+func (m *MockItemRepository) CoveredSince(ctx context.Context, since time.Time) ([]news.Item, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CoveredSince", ctx, since)
+	ret0, _ := ret[0].([]news.Item)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CoveredSince indicates an expected call of CoveredSince.
+func (mr *MockItemRepositoryMockRecorder) CoveredSince(ctx, since any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CoveredSince", reflect.TypeOf((*MockItemRepository)(nil).CoveredSince), ctx, since)
 }
 
 // Create mocks base method.

@@ -544,3 +544,68 @@ func TestItems_Browse(t *testing.T) {
 		assert.GreaterOrEqual(t, got[0].Score, got[1].Score)
 	})
 }
+
+func TestItems_CoveredSince(t *testing.T) {
+	ctx, db, teardown := dbtest.Setup(t)
+	defer teardown()
+
+	is := issues.New(db)
+	s := items.New(db)
+
+	// A sent issue from two days ago whose item should count as covered.
+	sent, err := is.Create(ctx, digest.Issue{
+		Slug:    "2026-04-26",
+		Subject: "GoDaily - April 26, 2026",
+		Status:  digest.IssueStatusSent,
+		SentAt:  time.Date(2026, time.April, 26, 8, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+	_, err = s.Create(ctx, &sent.ID, 0, news.Item{
+		Source:    news.SourceGoBlog,
+		Title:     "Go 1.26.4 is released",
+		URL:       "https://go.dev/blog/go1.26.4",
+		Tag:       news.TagRelease,
+		Published: time.Date(2026, time.April, 26, 7, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+
+	// A draft issue (today's, in progress) — its item must NOT be returned.
+	draft, err := is.Create(ctx, digest.Issue{
+		Slug:    "2026-04-28",
+		Subject: "GoDaily - April 28, 2026",
+		Status:  digest.IssueStatusDraft,
+		SentAt:  time.Date(2026, time.April, 28, 8, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+	_, err = s.Create(ctx, &draft.ID, 0, news.Item{
+		Source:    news.SourceReddit,
+		Title:     "Draft-only story",
+		URL:       "https://example.com/draft",
+		Tag:       news.TagDiscussion,
+		Published: time.Date(2026, time.April, 28, 7, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+
+	// An unlinked raw-pool item — never covered.
+	_, err = s.Create(ctx, nil, 0, news.Item{
+		Source:    news.SourceHN,
+		Title:     "Raw pool item",
+		URL:       "https://example.com/raw",
+		Tag:       news.TagArticle,
+		Published: time.Date(2026, time.April, 28, 7, 0, 0, 0, time.UTC),
+	})
+	require.NoError(t, err)
+
+	t.Run("Returns only items from sent issues within the window", func(t *testing.T) {
+		got, err := s.CoveredSince(ctx, time.Date(2026, time.April, 21, 0, 0, 0, 0, time.UTC))
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+		assert.Equal(t, "Go 1.26.4 is released", got[0].Title)
+	})
+
+	t.Run("Excludes issues sent before the cutoff", func(t *testing.T) {
+		got, err := s.CoveredSince(ctx, time.Date(2026, time.April, 27, 0, 0, 0, 0, time.UTC))
+		require.NoError(t, err)
+		assert.Empty(t, got)
+	})
+}

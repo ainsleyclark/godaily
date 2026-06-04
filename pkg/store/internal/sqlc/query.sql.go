@@ -739,6 +739,52 @@ func (q *Queries) ItemUpdatePosition(ctx context.Context, arg ItemUpdatePosition
 	return result.RowsAffected()
 }
 
+const itemsCoveredSince = `-- name: ItemsCoveredSince :many
+SELECT items.id, items.issue_id, items.source, items.title, items.url, items.tag, items.author_name, items.author_username, items.author_avatar_url, items.author_profile_url, items.score, items.summary, items.position, items.original_url, items.published FROM items
+JOIN issues ON items.issue_id = issues.id
+WHERE issues.status = 'sent' AND issues.sent_at >= ?1
+ORDER BY issues.sent_at DESC
+`
+
+func (q *Queries) ItemsCoveredSince(ctx context.Context, since time.Time) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, itemsCoveredSince, since)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Item{}
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.ID,
+			&i.IssueID,
+			&i.Source,
+			&i.Title,
+			&i.Url,
+			&i.Tag,
+			&i.AuthorName,
+			&i.AuthorUsername,
+			&i.AuthorAvatarUrl,
+			&i.AuthorProfileUrl,
+			&i.Score,
+			&i.Summary,
+			&i.Position,
+			&i.OriginalUrl,
+			&i.Published,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const metricsItemList = `-- name: MetricsItemList :many
 SELECT
     it.id,

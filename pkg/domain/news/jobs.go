@@ -5,7 +5,6 @@
 package news
 
 import (
-	"regexp"
 	"strings"
 )
 
@@ -17,20 +16,8 @@ import (
 // to Remote OK, Remotive, We Work Remotely and the Go-specific boards, each with
 // a different apply URL. Those slip past the (URL, tag) key and would otherwise
 // appear in the digest once per board. DedupeJobs collapses them on company +
-// normalised role instead.
-
-// jobNormRe collapses any run of non-alphanumeric characters to a single space
-// so punctuation and spacing differences between boards ("Acme, Inc." vs
-// "Acme Inc") don't defeat matching.
-var jobNormRe = regexp.MustCompile(`[^a-z0-9]+`)
-
-// normaliseJob lowercases s and squashes punctuation/whitespace runs to a single
-// space, trimming the result. It is the canonical form used to compare company
-// names and roles across sources.
-func normaliseJob(s string) string {
-	s = jobNormRe.ReplaceAllString(strings.ToLower(s), " ")
-	return strings.TrimSpace(s)
-}
+// normalised role instead. Company/role normalisation reuses normaliseText
+// (see covered.go).
 
 // jobTitleSep splits a job title on the separators our sources use to delimit
 // "Company · Role · Location" (and the HN "COMPANY | ROLE | …" convention).
@@ -43,7 +30,7 @@ func jobTitleSep(r rune) bool { return r == '·' || r == '|' }
 func jobRole(title, company string) string {
 	parts := strings.FieldsFunc(title, jobTitleSep)
 	for _, p := range parts {
-		if normaliseJob(p) == company {
+		if normaliseText(p) == company {
 			continue
 		}
 		return strings.TrimSpace(p)
@@ -60,9 +47,9 @@ func jobKey(i Item) string {
 	}
 	var company string
 	if i.Author != nil {
-		company = normaliseJob(i.Author.Name)
+		company = normaliseText(i.Author.Name)
 	}
-	role := normaliseJob(jobRole(i.Title, company))
+	role := normaliseText(jobRole(i.Title, company))
 	// A bare company with no distinguishable role (role == company) carries no
 	// signal to tell two of that company's listings apart, so don't key on it.
 	if company == "" || role == "" || role == company {

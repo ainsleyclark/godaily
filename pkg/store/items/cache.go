@@ -52,6 +52,10 @@ func (s *CachingStore) Count(ctx context.Context) (int64, error) {
 	return s.repo.Count(ctx)
 }
 
+func (s *CachingStore) CoveredSince(ctx context.Context, since time.Time) ([]news.Item, error) {
+	return s.repo.CoveredSince(ctx, since)
+}
+
 func (s *CachingStore) CountMatching(ctx context.Context, opts news.ItemListOptions) (int64, error) {
 	return s.repo.CountMatching(ctx, opts)
 }

@@ -76,6 +76,11 @@ type ItemRepository interface {
 	CountMatching(ctx context.Context, opts ItemListOptions) (int64, error)
 	SourceCounts(ctx context.Context) ([]SourceCount, error)
 	TagCounts(ctx context.Context) ([]TagCount, error)
+	// CoveredSince returns items linked to issues that were sent on or after
+	// the given time, i.e. stories already shipped to subscribers. Build uses
+	// it to drop a story resurfacing from a different source so it is not
+	// covered twice across days.
+	CoveredSince(ctx context.Context, since time.Time) ([]Item, error)
 	Create(ctx context.Context, issueID *int64, position int, item Item) (Item, error)
 	DeleteByIssue(ctx context.Context, issueID int64) error
 	// Delete permanently removes the item row from the store, regardless of
