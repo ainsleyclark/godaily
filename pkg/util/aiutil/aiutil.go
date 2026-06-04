@@ -65,3 +65,64 @@ func StripFences(s string) string {
 	}
 	return strings.TrimSpace(s)
 }
+
+// ExtractJSON returns the first complete, balanced JSON value (object or
+// array) found in s, discarding any surrounding prose the model may emit
+// despite being told to output JSON alone. It first strips a wrapping markdown
+// fence, then scans from the first '{' or '[' to its matching close, respecting
+// string literals and escapes so braces inside strings are ignored.
+//
+// This guards against models that append commentary after the value, e.g.
+// `{"a":1}\n\nWait, let me reconsider...`, which would otherwise fail
+// json.Unmarshal with "invalid character after top-level value".
+//
+// It returns "" when no opening bracket is present. When the value is
+// unbalanced it returns everything from the first bracket onward so the
+// caller's unmarshal surfaces a meaningful error. The result is not validated
+// as JSON; callers unmarshal it as usual.
+func ExtractJSON(s string) string {
+	s = StripFences(s)
+
+	start := strings.IndexAny(s, "{[")
+	if start < 0 {
+		return ""
+	}
+
+	openByte := s[start]
+	closeByte := byte('}')
+	if openByte == '[' {
+		closeByte = ']'
+	}
+
+	depth := 0
+	inString := false
+	escaped := false
+	for i := start; i < len(s); i++ {
+		c := s[i]
+		if inString {
+			switch {
+			case escaped:
+				escaped = false
+			case c == '\\':
+				escaped = true
+			case c == '"':
+				inString = false
+			}
+			continue
+		}
+		switch c {
+		case '"':
+			inString = true
+		case openByte:
+			depth++
+		case closeByte:
+			depth--
+			if depth == 0 {
+				return s[start : i+1]
+			}
+		}
+	}
+
+	// Unbalanced: hand back from the first bracket so unmarshal reports why.
+	return s[start:]
+}

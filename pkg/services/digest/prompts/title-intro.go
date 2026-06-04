@@ -88,7 +88,7 @@ func Synthesise(ctx context.Context, p ai.Prompter, day time.Time, sections []ne
 
 // parseDigestBytes parses raw model output bytes into DigestMeta.
 func parseDigestBytes(raw []byte) (DigestMeta, error) {
-	body := aiutil.StripFences(string(raw))
+	body := aiutil.ExtractJSON(string(raw))
 	if body == "" {
 		return DigestMeta{}, errors.New("empty response body")
 	}

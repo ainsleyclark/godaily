@@ -49,7 +49,7 @@ func TestSynthesise(t *testing.T) {
 			wantErr:   "ai",
 		},
 		"Parse Error Surfaced": {
-			raw:      []byte("not json"),
+			raw:      []byte(`{"title": invalid}`),
 			sections: sampleSections(),
 			wantErr:  "parse (raw=",
 		},
@@ -99,7 +99,7 @@ func TestParseDigestBytes(t *testing.T) {
 			wantErr: "empty response body",
 		},
 		"Invalid JSON": {
-			raw:     []byte("not json"),
+			raw:     []byte(`{"title": invalid}`),
 			wantErr: "parse (raw=",
 		},
 		"Missing Title": {

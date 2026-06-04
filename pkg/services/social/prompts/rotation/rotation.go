@@ -150,7 +150,7 @@ func buildUser(payload any) (string, error) {
 }
 
 func parseTextResponse(raw []byte) (string, error) {
-	body := aiutil.StripFences(string(raw))
+	body := aiutil.ExtractJSON(string(raw))
 	if body == "" {
 		return "", errors.New("empty rotation response")
 	}

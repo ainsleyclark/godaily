@@ -165,7 +165,7 @@ func Feature(ctx context.Context, p ai.Prompter, day time.Time, items []news.Ite
 }
 
 func parseFeatured(raw []byte) (Featured, error) {
-	body := aiutil.StripFences(string(raw))
+	body := aiutil.ExtractJSON(string(raw))
 	if body == "" {
 		return Featured{}, errors.New("empty featured response")
 	}

@@ -186,6 +186,12 @@ func TestParseFeatured(t *testing.T) {
 		"Missing hook": {input: `{"title":"t","url":"u","source":"s","tag":"article"}`, wantErr: true},
 		"Missing url":  {input: `{"title":"t","url":"","source":"s","tag":"article","hook":"h"}`, wantErr: true},
 		"Empty body":   {input: `   `, wantErr: true},
+		// Regression: the model emitted a valid object, then second-guessed
+		// itself in prose and re-emitted. Trailing content must not break parsing.
+		"Trailing self-correction": {
+			input:   "{\"title\":\"t\",\"url\":\"u\",\"source\":\"s\",\"tag\":\"article\",\"hook\":\"h\"}\n\nWait, the schema doesn't include score. Let me output correctly:\n\n{\"title\":\"t2\",\"url\":\"u2\"}",
+			wantErr: false,
+		},
 	}
 
 	for name, test := range tt {
