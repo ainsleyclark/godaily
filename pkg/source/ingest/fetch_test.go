@@ -5,6 +5,7 @@
 package ingest
 
 import (
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"net/http"
@@ -19,15 +20,12 @@ type fakeItem struct {
 }
 
 func TestFetch(t *testing.T) {
-	// closedServer gives us a valid host:port that refuses connections.
-	closedServer := httptest.NewServer(nil)
-	closedServer.Close()
-
 	t.Parallel()
 
 	tt := map[string]struct {
 		stub      http.HandlerFunc
 		url       string // non-empty overrides the stub server URL
+		cancelCtx bool   // cancel the context before the request to force a transport error
 		unmarshal func([]byte, any) error
 		want      func(t *testing.T, got fakeItem, err error)
 	}{
@@ -40,7 +38,11 @@ func TestFetch(t *testing.T) {
 			},
 		},
 		"Do Error": {
-			url:       closedServer.URL,
+			// A pre-cancelled context makes httpClient.Do fail deterministically,
+			// without relying on a refused-connection port that parallel subtests
+			// could reuse.
+			url:       "http://example.invalid",
+			cancelCtx: true,
 			unmarshal: json.Unmarshal,
 			want: func(t *testing.T, _ fakeItem, err error) {
 				t.Helper()
@@ -116,7 +118,14 @@ func TestFetch(t *testing.T) {
 				url = s.URL
 			}
 
-			got, err := Fetch[fakeItem](t.Context(), url, "test", test.unmarshal)
+			ctx := t.Context()
+			if test.cancelCtx {
+				var cancel context.CancelFunc
+				ctx, cancel = context.WithCancel(ctx)
+				cancel()
+			}
+
+			got, err := Fetch[fakeItem](ctx, url, "test", test.unmarshal)
 			test.want(t, got, err)
 		})
 	}
