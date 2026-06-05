@@ -13,12 +13,15 @@ import (
 
 type fakeTransformer struct {
 	title   string
+	snippet string
 	url     string
 	include bool
 	enrich  string
 }
 
-func (f fakeTransformer) Transform() news.Item  { return news.Item{Title: f.title, URL: f.url} }
+func (f fakeTransformer) Transform() news.Item {
+	return news.Item{Title: f.title, Snippet: f.snippet, URL: f.url}
+}
 func (f fakeTransformer) ShouldInclude() bool   { return f.include }
 func (f fakeTransformer) EnrichmentURL() string { return f.enrich }
 
@@ -83,10 +86,15 @@ func TestTransformAll(t *testing.T) {
 		items []fakeTransformer
 		want  []news.Item
 	}{
-		"Empty":                  {items: nil, want: nil},
-		"Multiple":               {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
-		"Filtered by include":    {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
-		"Filtered by language":   {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
+		"Empty":                {items: nil, want: nil},
+		"Multiple":             {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "A"}, {Title: "B"}}},
+		"Filtered by include":  {items: []fakeTransformer{{title: "A", include: true}, {title: "B", include: false}}, want: []news.Item{{Title: "A"}}},
+		"Filtered by language": {items: []fakeTransformer{{title: "Сравнимые типы данных в Go", include: true}, {title: "Go Concurrency Patterns", include: true}}, want: []news.Item{{Title: "Go Concurrency Patterns"}}},
+		"Filtered by snippet language": {items: []fakeTransformer{
+			{title: "Coming from Node.js: What is the Go equivalent to Better Auth?", snippet: "Sou iniciante em Go. Quais são os principais pacotes? Como o Go é usado na web?", include: true},
+			{title: "Go Concurrency Patterns", snippet: "A deep dive into goroutines and channels", include: true},
+		}, want: []news.Item{{Title: "Go Concurrency Patterns", Snippet: "A deep dive into goroutines and channels"}}},
+		"English snippet passes": {items: []fakeTransformer{{title: "Better Auth for Go", snippet: "What is the Go equivalent of the popular Node.js library?", include: true}}, want: []news.Item{{Title: "Better Auth for Go", Snippet: "What is the Go equivalent of the popular Node.js library?"}}},
 		"HTML entities in title": {items: []fakeTransformer{{title: "pkg &amp; internal directories are way overused", include: true}}, want: []news.Item{{Title: "pkg & internal directories are way overused"}}},
 		"Filtered by self URL":   {items: []fakeTransformer{{title: "A", url: "https://godaily.dev/blog/post", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "B"}}},
 		"Filtered by self title": {items: []fakeTransformer{{title: "Launching GoDaily", include: true}, {title: "B", include: true}}, want: []news.Item{{Title: "B"}}},
@@ -129,7 +137,7 @@ func TestIsSelfContent(t *testing.T) {
 	}
 }
 
-func TestIsEnglishTitle(t *testing.T) {
+func TestIsEnglishText(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
@@ -185,7 +193,7 @@ func TestIsEnglishTitle(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, test.want, isEnglishTitle(test.input))
+			assert.Equal(t, test.want, isEnglishText(test.input))
 		})
 	}
 }

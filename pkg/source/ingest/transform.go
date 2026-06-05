@@ -63,10 +63,14 @@ func TransformAll[T Transformer](ctx context.Context, items []T) []news.Item {
 			continue
 		}
 		i.Title = html.UnescapeString(i.Title)
-		if !isEnglishTitle(i.Title) {
+		snippet := sanitise(i.Snippet)
+		// Check the body as well as the title: a post can carry an English
+		// headline over a non-English body (e.g. a question asked in Portuguese
+		// under an English title), which a title-only check lets through.
+		if !isEnglish(i.Title, snippet) {
 			continue
 		}
-		i.Snippet = truncate(sanitise(i.Snippet), maxSnippetLen)
+		i.Snippet = truncate(snippet, maxSnippetLen)
 		out = append(out, i)
 		enrichURLs = append(enrichURLs, item.EnrichmentURL())
 	}
@@ -104,13 +108,26 @@ var langDetector = lingua.NewLanguageDetectorBuilder().
 	).
 	Build()
 
-// isEnglishTitle returns false when lingua confidently detects a non-English
+// isEnglish reports whether every supplied fragment (e.g. an item's title and
+// snippet) is either English or too short to classify. An item is dropped when
+// ANY fragment is confidently detected as non-English, so a non-English body
+// is caught even when the title reads as English.
+func isEnglish(fragments ...string) bool {
+	for _, f := range fragments {
+		if !isEnglishText(f) {
+			return false
+		}
+	}
+	return true
+}
+
+// isEnglishText returns false when lingua confidently detects a non-English
 // language. Before detection:
 //   - URLs, hashtags, and path-like tech tokens (r/golang, pkg.go.dev, net/http)
 //     are stripped so they don't mislead the detector on short English phrases.
 //   - If fewer than 8 runes remain the text is too short for reliable detection
 //     and the item passes through, avoiding false drops.
-func isEnglishTitle(s string) bool {
+func isEnglishText(s string) bool {
 	clean := urlRe.ReplaceAllString(s, " ")
 	clean = hashtagRe.ReplaceAllString(clean, " ")
 	clean = techTokenRe.ReplaceAllString(clean, " ")
