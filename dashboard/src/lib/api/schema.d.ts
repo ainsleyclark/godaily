@@ -2070,7 +2070,7 @@ export interface paths {
         };
         /**
          * Publish rotation social drafts.
-         * @description Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. Skipped at weekends.
+         * @description Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. The cron fires every day and sends its heartbeat regardless; the publish work only runs on rotation days (Mon/Wed/Fri) and is reported-and-skipped otherwise.
          */
         get: {
             parameters: {
@@ -2081,7 +2081,7 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description Published, or skipped (weekend/not wired) */
+                /** @description Published, or skipped (non-rotation day/not wired) */
                 200: {
                     headers: {
                         [name: string]: unknown;
