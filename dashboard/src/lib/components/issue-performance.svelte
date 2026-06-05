@@ -55,7 +55,9 @@
 	async function loadTrend() {
 		trendLoading = true;
 		try {
-			trend = await api.issueTrend(slug, { metric });
+			// Hourly buckets over the post-send surge make the trend meaningful for a
+			// single issue; the API caps the window to the first 48h after send.
+			trend = await api.issueTrend(slug, { metric, bucket: 'hour' });
 		} catch (e) {
 			if ((e as ApiError).status !== 401) {
 				toast.error((e as Error).message || 'Failed to load trend');

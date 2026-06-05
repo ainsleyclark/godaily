@@ -153,9 +153,9 @@ func TestHandleIssueTrend(t *testing.T) {
 
 		deps := setup(t, "2026-05-22", "")
 		deps.Issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{ID: 1, Slug: "2026-05-22"}, nil)
-		deps.Metrics.EXPECT().IssueTrend(gomock.Any(), int64(1), gomock.Any(), "unique_clicks", "day").Return(engagement.TrendData{
+		deps.Metrics.EXPECT().IssueTrend(gomock.Any(), int64(1), gomock.Any(), "unique_clicks", "hour").Return(engagement.TrendData{
 			Metric: "unique_clicks",
-			Bucket: "day",
+			Bucket: "hour",
 			Points: []engagement.TrendPoint{},
 		}, nil)
 
@@ -220,7 +220,7 @@ func TestHandleIssueTrend(t *testing.T) {
 
 		deps := setup(t, "2026-05-22", "")
 		deps.Issues.EXPECT().FindBySlug(gomock.Any(), "2026-05-22").Return(digest.Issue{ID: 1, Slug: "2026-05-22"}, nil)
-		deps.Metrics.EXPECT().IssueTrend(gomock.Any(), int64(1), gomock.Any(), "unique_clicks", "day").Return(engagement.TrendData{}, errors.New("db error"))
+		deps.Metrics.EXPECT().IssueTrend(gomock.Any(), int64(1), gomock.Any(), "unique_clicks", "hour").Return(engagement.TrendData{}, errors.New("db error"))
 
 		_ = deps.Handler.IssueTrend(deps.Context)
 		assert.Equal(t, http.StatusInternalServerError, deps.Recorder.Code)

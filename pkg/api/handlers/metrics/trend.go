@@ -33,8 +33,8 @@ func (req trendRequest) validate() error {
 		)),
 		validation.Field(&req.Bucket, validation.When(
 			req.Bucket != "",
-			validation.In("day", "week").
-				Error("invalid bucket: use day or week"),
+			validation.In("hour", "day", "week").
+				Error("invalid bucket: use hour, day, or week"),
 		)),
 	)
 }
@@ -53,7 +53,7 @@ type TrendResponse = api.Response[engagement.TrendData] //@name TrendResponse
 //	@Param			from	query		string	false	"Start date (YYYY-MM-DD)"
 //	@Param			to		query		string	false	"End date (YYYY-MM-DD)"
 //	@Param			metric	query		string	false	"Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate"
-//	@Param			bucket	query		string	false	"Bucket: day or week"
+//	@Param			bucket	query		string	false	"Bucket: hour, day or week"
 //	@Success		200		{object}	TrendResponse								"Successfully retrieved trend data"
 //	@Failure		400		{object}	api.MessageResponse							"Invalid query parameters"
 //	@Failure		500		{object}	api.MessageResponse							"Failed to fetch trend data"

@@ -31,3 +31,27 @@ export function formatDateShort(iso: string | null | undefined): string {
 	if (Number.isNaN(d.getTime())) return iso;
 	return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
+
+// formatTimeShort renders the hour of day (e.g. "14:00"), for intraday/hourly
+// series where the date alone would repeat across every bucket.
+export function formatTimeShort(iso: string | null | undefined): string {
+	if (!iso) return '--';
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+// formatDateTimeShort renders date and hour together (e.g. "Jun 5, 14:00") for
+// hourly tooltips where both the day and the hour matter.
+export function formatDateTimeShort(iso: string | null | undefined): string {
+	if (!iso) return '--';
+	const d = new Date(iso);
+	if (Number.isNaN(d.getTime())) return iso;
+	return d.toLocaleString('en-US', {
+		month: 'short',
+		day: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false
+	});
+}

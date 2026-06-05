@@ -51,7 +51,7 @@ export interface PaginatedResponse<T> {
 
 // Dashboard-only query helper. Not part of the API contract — the client maps
 // these onto each endpoint's documented query parameters.
-export type Bucket = 'day' | 'week' | 'month';
+export type Bucket = 'hour' | 'day' | 'week' | 'month';
 export type TrendMetric = 'unique_opens' | 'unique_clicks' | 'open_rate' | 'click_rate';
 
 export interface MetricsQuery {
