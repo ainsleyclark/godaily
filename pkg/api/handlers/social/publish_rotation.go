@@ -32,20 +32,20 @@ var rotationKinds = []social.PostKind{
 // PublishRotation godoc
 //
 //	@Summary		Publish rotation social drafts.
-//	@Description	Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. Skipped at weekends.
+//	@Description	Publishes the day's rotation drafts (recap on Monday, community on Wednesday, new_source/spotlight/cta on Friday). Featured drafts are deliberately excluded — they belong to the 11:00 cron. The cron fires every day and sends its heartbeat regardless; the publish work only runs on rotation days (Mon/Wed/Fri) and is reported-and-skipped otherwise.
 //	@Tags			social
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	api.MessageResponse	"Published, or skipped (weekend/not wired)"
+//	@Success		200	{object}	api.MessageResponse	"Published, or skipped (non-rotation day/not wired)"
 //	@Failure		500	{object}	api.MessageResponse	"Failed to publish rotation drafts"
 //	@Router			/social/publish/rotation [get]
 func (h *Handler) PublishRotation(c *webkit.Context) error {
 	ctx := c.Context()
 	now := time.Now().UTC()
-	if api.IsWeekend(now) {
-		slog.InfoContext(ctx, "Skipping rotation publish — weekend")
+	if !api.IsRotationDay(now) {
+		slog.InfoContext(ctx, "Skipping rotation publish — not a rotation day")
 		hook.Heartbeat(ctx, h.config.BetterStackSocialRotationHeartbeatURL)
-		return api.OK(c, http.StatusOK, nil, "Skipped rotation publish — weekend")
+		return api.OK(c, http.StatusOK, nil, "Skipped rotation publish — not a rotation day")
 	}
 
 	if h.social == nil {
