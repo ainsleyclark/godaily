@@ -92,6 +92,11 @@ func (h *Handler) Issues(c *webkit.Context) error {
 // topLinksLimit is the maximum number of top-clicked links returned per issue.
 const topLinksLimit = 10
 
+// issueTrendWindow is the default span of the single-issue engagement trend,
+// measured from the issue's send time. Hourly buckets over this window capture
+// the post-send engagement surge.
+const issueTrendWindow = 48 * time.Hour
+
 // IssueDetail bundles single-issue engagement stats with its top-clicked links.
 type IssueDetail struct {
 	Stats engagement.IssueStats   `json:"stats"`
@@ -158,7 +163,7 @@ func (h *Handler) IssueBySlug(c *webkit.Context) error {
 //	@Param			from	query		string			false	"Start date (YYYY-MM-DD)"
 //	@Param			to		query		string			false	"End date (YYYY-MM-DD)"
 //	@Param			metric	query		string			false	"Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate"
-//	@Param			bucket	query		string			false	"Bucket: day or week"
+//	@Param			bucket	query		string			false	"Bucket: hour, day or week"
 //	@Success		200		{object}	TrendResponse		"Successfully retrieved issue trend data"
 //	@Failure		400		{object}	api.MessageResponse	"Invalid query parameters"
 //	@Failure		404		{object}	api.MessageResponse	"Issue not found"
@@ -192,14 +197,20 @@ func (h *Handler) IssueTrend(c *webkit.Context) error {
 	if err != nil {
 		return api.Error(c, http.StatusBadRequest, err.Error())
 	}
-	// Default to the issue's lifetime (send date through now) so the series is
-	// zero-filled from when the issue went out rather than collapsing to the
-	// buckets that happen to have events.
+	// Default to the first 48 hours after send. Email engagement is heavily
+	// front-loaded — almost all opens and clicks land within hours of delivery —
+	// so an hourly window over the send-day surge produces a meaningful decay
+	// curve, whereas a daily series collapses to a single dot for a just-sent
+	// issue. The upper bound is clamped to now so the series isn't padded with
+	// empty future buckets.
 	if from == nil && to == nil {
-		sent := issue.SentAt.UTC().Truncate(24 * time.Hour)
-		now := time.Now().UTC()
+		sent := issue.SentAt.UTC().Truncate(time.Hour)
+		end := sent.Add(issueTrendWindow)
+		if now := time.Now().UTC(); end.After(now) {
+			end = now
+		}
 		from = &sent
-		to = &now
+		to = &end
 	}
 
 	metric := req.Metric
@@ -208,7 +219,7 @@ func (h *Handler) IssueTrend(c *webkit.Context) error {
 	}
 	bucket := req.Bucket
 	if bucket == "" {
-		bucket = "day"
+		bucket = "hour"
 	}
 
 	data, err := h.metricsRepo.IssueTrend(ctx, issue.ID, engagement.MetricsFilter{From: from, To: to}, metric, bucket)

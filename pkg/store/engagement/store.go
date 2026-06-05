@@ -480,11 +480,21 @@ func timeConditions(f engagement.MetricsFilter, col string) (string, []any) {
 }
 
 // trendBucketSQL returns the SQLite expression that maps e.occurred_at to a bucket key.
+//
+// The hour bucket emits an RFC3339 UTC key (e.g. "2026-06-05T14:00:00Z") so it
+// round-trips through the JavaScript Date parser on the dashboard and matches
+// bucketKey exactly. SQLite normalises any stored "+HH:MM" offset to UTC before
+// formatting, so the key is always UTC regardless of how the driver persisted
+// occurred_at.
 func trendBucketSQL(bucket string) string {
-	if bucket == "week" {
+	switch bucket {
+	case "week":
 		return `date(e.occurred_at, '-' || CAST(((strftime('%w', e.occurred_at) + 6) % 7) AS TEXT) || ' days')`
+	case "hour":
+		return `strftime('%Y-%m-%dT%H:00:00Z', e.occurred_at)`
+	default:
+		return `strftime('%Y-%m-%d', e.occurred_at)`
 	}
-	return `strftime('%Y-%m-%d', e.occurred_at)`
 }
 
 // subsBucketExpr returns the full SQLite date expression for bucketing the given column.
@@ -516,7 +526,7 @@ func buildTrendPoints(f engagement.MetricsFilter, bucket string, byDate map[stri
 
 	var pts []engagement.TrendPoint
 	step := bucketStep(bucket)
-	for cur := f.From.UTC().Truncate(24 * time.Hour); cur.Before(*f.To); cur = cur.Add(step) {
+	for cur := bucketFloor(*f.From, bucket); cur.Before(*f.To); cur = cur.Add(step) {
 		key := bucketKey(cur, bucket)
 		if len(pts) > 0 && pts[len(pts)-1].BucketStart == key {
 			continue
@@ -557,21 +567,38 @@ func trendValue(metric string, tb trendBucket) float64 {
 }
 
 func bucketStep(bucket string) time.Duration {
-	if bucket == "week" {
+	switch bucket {
+	case "week":
 		return 7 * 24 * time.Hour
+	case "hour":
+		return time.Hour
+	default:
+		return 24 * time.Hour
 	}
-	return 24 * time.Hour
+}
+
+// bucketFloor truncates t to the start of its bucket so the zero-fill loop
+// begins on an aligned boundary (the hour for hourly series, the day otherwise).
+func bucketFloor(t time.Time, bucket string) time.Time {
+	if bucket == "hour" {
+		return t.UTC().Truncate(time.Hour)
+	}
+	return t.UTC().Truncate(24 * time.Hour)
 }
 
 func bucketKey(t time.Time, bucket string) string {
-	if bucket == "week" {
+	switch bucket {
+	case "week":
 		wd := int(t.Weekday())
 		if wd == 0 {
 			wd = 7
 		}
 		return t.AddDate(0, 0, -(wd - 1)).Format("2006-01-02")
+	case "hour":
+		return t.UTC().Format("2006-01-02T15") + ":00:00Z"
+	default:
+		return t.Format("2006-01-02")
 	}
-	return t.Format("2006-01-02")
 }
 
 func formatDate(t *time.Time) string {

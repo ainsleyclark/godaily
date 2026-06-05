@@ -7,6 +7,7 @@ package engagement_test
 import (
 	"context"
 	"database/sql"
+	"strings"
 	"testing"
 	"time"
 
@@ -357,6 +358,29 @@ func TestMetrics_Store(t *testing.T) {
 			total += p.Value
 		}
 		assert.Equal(t, 2.0, total, "both clicks land on the from-boundary day and must be counted")
+	})
+
+	// The single-issue trend defaults to an hourly bucket so the post-send surge
+	// is visible. Verify the hour bucket grain is honoured end-to-end against the
+	// strftime-backed test driver and that keys round-trip as RFC3339 UTC hours.
+	t.Run("IssueTrend hour bucket emits hourly UTC keys", func(t *testing.T) {
+		got, err := s.IssueTrend(ctx, trendIssue.ID, filter, "unique_clicks", "hour")
+		require.NoError(t, err)
+		assert.Equal(t, "hour", got.Bucket)
+		require.NotEmpty(t, got.Points)
+
+		// A 7-day window bucketed hourly yields far more points than a daily one,
+		// and every key is an RFC3339 UTC hour the dashboard's Date parser reads.
+		assert.Greater(t, len(got.Points), 24, "hourly grain produces many more buckets than daily")
+		for _, p := range got.Points {
+			assert.True(t, strings.HasSuffix(p.BucketStart, ":00:00Z"), "hour key %q is RFC3339 UTC", p.BucketStart)
+		}
+
+		var total float64
+		for _, p := range got.Points {
+			total += p.Value
+		}
+		assert.Equal(t, 2.0, total, "the two unique clicks land in a single hour bucket")
 	})
 
 	// MUST be last: closing the DB makes every subsequent query fail.

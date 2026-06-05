@@ -1190,7 +1190,7 @@ export interface paths {
                     to?: string;
                     /** @description Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate */
                     metric?: string;
-                    /** @description Bucket: day or week */
+                    /** @description Bucket: hour, day or week */
                     bucket?: string;
                 };
                 header?: never;
@@ -1710,7 +1710,7 @@ export interface paths {
                     to?: string;
                     /** @description Metric: delivered, unique_opens, total_opens, unique_clicks, total_clicks, open_rate, click_rate */
                     metric?: string;
-                    /** @description Bucket: day or week */
+                    /** @description Bucket: hour, day or week */
                     bucket?: string;
                 };
                 header?: never;

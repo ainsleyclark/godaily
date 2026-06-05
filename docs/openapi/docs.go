@@ -2319,7 +2319,7 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "description": "Bucket: day or week",
+                        "description": "Bucket: hour, day or week",
                         "in": "query",
                         "name": "bucket",
                         "schema": {
@@ -2917,7 +2917,7 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "description": "Bucket: day or week",
+                        "description": "Bucket: hour, day or week",
                         "in": "query",
                         "name": "bucket",
                         "schema": {

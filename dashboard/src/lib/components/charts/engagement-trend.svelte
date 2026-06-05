@@ -2,7 +2,13 @@
 	import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '$lib/components/ui/card';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import type { TrendData, TrendMetric } from '$lib/api/types';
-	import { formatDateShort, formatCompact, formatPercent } from '$lib/utils/format';
+	import {
+		formatDateShort,
+		formatTimeShort,
+		formatDateTimeShort,
+		formatCompact,
+		formatPercent
+	} from '$lib/utils/format';
 
 	interface Props {
 		data: TrendData | null;
@@ -20,6 +26,24 @@
 	};
 
 	const isRate = $derived(metric === 'open_rate' || metric === 'click_rate');
+
+	// Hourly series (a single issue's post-send surge) label the x-axis and tooltip
+	// by time of day rather than date, which would otherwise repeat every bucket.
+	const isHourly = $derived(data?.bucket === 'hour');
+
+	const bucketLabels: Record<string, string> = {
+		hour: 'hourly',
+		day: 'daily',
+		week: 'weekly',
+		month: 'monthly'
+	};
+
+	function axisLabel(iso: string): string {
+		return isHourly ? formatTimeShort(iso) : formatDateShort(iso);
+	}
+	function pointLabel(iso: string): string {
+		return isHourly ? formatDateTimeShort(iso) : formatDateShort(iso);
+	}
 
 	const series = $derived(
 		(data?.points ?? []).map((p) => ({
@@ -123,7 +147,7 @@
 				<CardTitle>Engagement trend</CardTitle>
 				<CardDescription>
 					{#if data}
-						{metricLabels[metric]} &middot; {data.bucket}
+						{metricLabels[metric]} &middot; {bucketLabels[data.bucket] ?? data.bucket}
 					{:else}
 						Loading…
 					{/if}
@@ -195,7 +219,7 @@
 						text-anchor="middle"
 						class="fill-muted-foreground text-[10px]"
 					>
-						{formatDateShort(series[i].date.toISOString())}
+						{axisLabel(series[i].date.toISOString())}
 					</text>
 				{/each}
 				<path d={areaPath} fill="url(#trend-grad)" />
@@ -238,7 +262,7 @@
 			</div>
 			{#if hover !== null}
 				<div class="text-muted-foreground mt-2 flex justify-between text-xs">
-					<span>{formatDateShort(series[hover].date.toISOString())}</span>
+					<span>{pointLabel(series[hover].date.toISOString())}</span>
 					<span class="text-foreground font-medium tabular-nums">{fmt(series[hover].value)}</span>
 				</div>
 			{/if}
