@@ -34,8 +34,9 @@ type (
 		// N caps the returned items. Zero means the service default (3).
 		N int
 		// Window is the lookback duration ending at "now". Zero means
-		// "since Monday 00:00 UTC of now's week" — the natural Mon→Fri
-		// recap window.
+		// the previous complete ISO week (Mon 00:00 → next Mon 00:00,
+		// UTC) — the Monday recap window covering the week that just
+		// finished.
 		Window time.Duration
 		// MinItems is the floor below which Top returns its zero value
 		// (so the caller can no-op cleanly). Defaults to 0 — every

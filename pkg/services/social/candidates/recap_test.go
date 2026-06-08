@@ -22,8 +22,10 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/services/social/prompts/rotation"
 )
 
-// Friday 2026-05-22 — ISO W21.
-var recapNow = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC)
+// recapNow is the real trigger: Monday 2026-05-25 02:00 UTC (digest
+// build time, ISO W22). Its previous complete week is W21, so the
+// recap dataset is labelled "2026-W21".
+var recapNow = time.Date(2026, 5, 25, 2, 0, 0, 0, time.UTC)
 
 func TestRecap_Kind(t *testing.T) {
 	c := candidates.NewRecap(nil, nil)

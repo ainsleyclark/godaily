@@ -75,7 +75,8 @@ const (
 	// new source. Subject is "new_source:<source>".
 	PostKindNewSource PostKind = "new_source"
 
-	// PostKindRecap is the Friday weekly top-clicks post.
+	// PostKindRecap is the Monday weekly top-clicks post, covering the
+	// previous complete ISO week.
 	PostKindRecap PostKind = "recap"
 
 	// PostKindSpotlight tags and boosts a curated source.
