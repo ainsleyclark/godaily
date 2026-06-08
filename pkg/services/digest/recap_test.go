@@ -20,10 +20,17 @@ import (
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 )
 
-// Friday 2026-05-22 is in ISO W21; Monday of that week is 2026-05-18.
+// monBuild is the real recap trigger: Monday 2026-05-25 02:00 UTC
+// (digest build time), which falls in ISO W22. The default recap
+// window is therefore the previous complete week, W21, running
+// [2026-05-18 00:00, 2026-05-25 00:00).
+//
+// fri is retained for the custom-window test only.
 var (
-	fri = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC)
-	mon = time.Date(2026, 5, 18, 0, 0, 0, 0, time.UTC)
+	monBuild      = time.Date(2026, 5, 25, 2, 0, 0, 0, time.UTC)
+	prevWeekStart = time.Date(2026, 5, 18, 0, 0, 0, 0, time.UTC)
+	prevWeekEnd   = time.Date(2026, 5, 25, 0, 0, 0, 0, time.UTC)
+	fri           = time.Date(2026, 5, 22, 15, 0, 0, 0, time.UTC)
 )
 
 func TestNewRecapService(t *testing.T) {
@@ -41,7 +48,12 @@ func TestNewRecapService(t *testing.T) {
 }
 
 func TestRecapService_Top(t *testing.T) {
-	t.Run("Default window is this ISO week", func(t *testing.T) {
+	// Regression: a Monday build must look back at the previous complete
+	// week, not the near-empty slice of the week that just started. The
+	// recap was moved Friday→Monday but the default window used to end at
+	// "now", collapsing to [thisMon 00:00, thisMon 02:00) and never
+	// clearing recapMinItems — so no draft was ever created.
+	t.Run("Default window is the previous complete ISO week", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		mr := mockengagement.NewMockMetricsRepository(ctrl)
 
@@ -50,8 +62,8 @@ func TestRecapService_Top(t *testing.T) {
 			DoAndReturn(func(_ context.Context, f engagement.MetricsFilter) ([]engagement.ItemMetrics, error) {
 				require.NotNil(t, f.From)
 				require.NotNil(t, f.To)
-				assert.True(t, f.From.Equal(mon), "From should be Monday 00:00 UTC, got %s", *f.From)
-				assert.True(t, f.To.Equal(fri), "To should be now")
+				assert.True(t, f.From.Equal(prevWeekStart), "From should be last Monday 00:00 UTC, got %s", *f.From)
+				assert.True(t, f.To.Equal(prevWeekEnd), "To should be this Monday 00:00 UTC, got %s", *f.To)
 				assert.Equal(t, 3, f.Limit, "default limit is 3")
 				return []engagement.ItemMetrics{
 					{ItemID: 1, Title: "A", URL: "https://a", Clicks: 30},
@@ -63,7 +75,7 @@ func TestRecapService_Top(t *testing.T) {
 		svc, err := digestsvc.NewRecapService(mr)
 		require.NoError(t, err)
 
-		top, err := svc.Top(context.Background(), fri, digest.TopOptions{})
+		top, err := svc.Top(context.Background(), monBuild, digest.TopOptions{})
 		require.NoError(t, err)
 		require.True(t, top.HasItems())
 		assert.Equal(t, "2026-W21", top.Period.Label)
@@ -134,24 +146,26 @@ func TestRecapService_Top(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("Sunday uses the previous ISO week's Monday as start", func(t *testing.T) {
+	t.Run("Sunday resolves its own ISO week, then looks back one week", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		mr := mockengagement.NewMockMetricsRepository(ctrl)
 
-		// Sunday 2026-05-24 — ISO-week wise still belongs to W21 (Mon
-		// 2026-05-18).
+		// Sunday 2026-05-24 belongs to ISO W21 (Mon 2026-05-18), so the
+		// previous complete week is W20: [2026-05-11, 2026-05-18).
 		sun := time.Date(2026, 5, 24, 15, 0, 0, 0, time.UTC)
+		w20Start := time.Date(2026, 5, 11, 0, 0, 0, 0, time.UTC)
 
 		mr.EXPECT().
 			ItemList(gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ context.Context, f engagement.MetricsFilter) ([]engagement.ItemMetrics, error) {
-				assert.True(t, f.From.Equal(mon), "Sunday should still treat the prior Mon as week start, got %s", *f.From)
+				assert.True(t, f.From.Equal(w20Start), "Sunday should look back to the prior complete week, got %s", *f.From)
+				assert.True(t, f.To.Equal(prevWeekStart), "To should be this ISO week's Monday, got %s", *f.To)
 				return []engagement.ItemMetrics{{ItemID: 1, Clicks: 1}}, nil
 			})
 
 		svc, _ := digestsvc.NewRecapService(mr)
 		top, err := svc.Top(context.Background(), sun, digest.TopOptions{})
 		require.NoError(t, err)
-		assert.Equal(t, "2026-W21", top.Period.Label)
+		assert.Equal(t, "2026-W20", top.Period.Label)
 	})
 }

@@ -25,12 +25,12 @@ type RecapPayload struct {
 	Items     []RecapItem `json:"items"`
 }
 
-const recapGuidance = `You are writing the Friday weekly recap for GoDaily: the most-clicked Go-community stories from this week's daily digests.
+const recapGuidance = `You are writing the Monday weekly recap for GoDaily: the most-clicked Go-community stories from last week's daily digests.
 
-The input is a list of items, already ranked by GoDaily subscriber clicks (highest first). The "week_label" is an ISO week identifier you can reference loosely (e.g. "this week").
+The input is a list of items, already ranked by GoDaily subscriber clicks (highest first). The "week_label" is an ISO week identifier you can reference loosely (e.g. "last week").
 
 Write ONE post that:
-1. Opens with a single short line framing the recap ("Most-clicked Go stories this week:").
+1. Opens with a single short line framing the recap ("Most-clicked Go stories last week:").
 2. Lists each item as a short entry. Format: one tight descriptive phrase (not just the raw title), then the URL on the next line. No bullet characters, no numbers — line breaks alone. The phrase should tell the reader what it's actually about in plain language, so the post is worth reading even without clicking any link.
 3. Does NOT name click counts. The fact these were popular is enough; numbers come across as boastful and date the post.
 4. If only 1 or 2 items are supplied, write a shorter post — never pad.

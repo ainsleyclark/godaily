@@ -33,9 +33,11 @@ func NewRecapService(metrics engagement.MetricsRepository) (*RecapService, error
 	return &RecapService{metrics: metrics}, nil
 }
 
-// Top returns the most-clicked items in the window ending at now. When
-// the dataset has fewer than opts.MinItems entries, it returns the zero
-// value (and an empty period) — the caller treats that as "skip".
+// Top returns the most-clicked items for the recap window. With the
+// default (zero) window that is the previous complete ISO week; a
+// non-zero window rolls back from now. When the dataset has fewer than
+// opts.MinItems entries, it returns the zero value (and an empty
+// period) — the caller treats that as "skip".
 func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOptions) (digest.Top, error) {
 	limit := opts.N
 	if limit <= 0 {
@@ -65,20 +67,26 @@ func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOp
 }
 
 // makePeriod builds the [Start, End) window. When window is zero the
-// start is the Monday 00:00 UTC of now's ISO week, so a Friday call
-// returns Mon-Thu activity (and a Thursday call returns Mon-Wed).
+// period is the previous complete ISO week: Monday 00:00 UTC of last
+// week up to (but not including) Monday 00:00 UTC of now's week. The
+// recap runs on Monday, so the default window is the seven days that
+// just finished — Mon–Sun of last week — not the near-empty slice of
+// the week now beginning. A non-zero window keeps the simple rolling
+// "now minus window" semantics.
 func makePeriod(now time.Time, window time.Duration) digest.Period {
 	now = now.UTC()
-	var start time.Time
+	var start, end time.Time
 	if window > 0 {
 		start = now.Add(-window)
+		end = now
 	} else {
-		start = mondayOf(now)
+		end = mondayOf(now)
+		start = end.Add(-7 * 24 * time.Hour)
 	}
 	year, week := start.ISOWeek()
 	return digest.Period{
 		Start: start,
-		End:   now,
+		End:   end,
 		Label: fmt.Sprintf("%d-W%02d", year, week),
 	}
 }
