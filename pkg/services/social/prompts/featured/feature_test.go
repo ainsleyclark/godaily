@@ -7,6 +7,7 @@ package featured
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -21,60 +22,133 @@ import (
 func TestBuildCandidates(t *testing.T) {
 	t.Parallel()
 
-	items := []news.Item{
-		{Title: "Random article", URL: "u1", Source: news.SourceMedium, Tag: news.TagArticle, Score: 0.4},
-		{Title: "Go 1.30 release", URL: "u2", Source: news.SourceGoRelease, Tag: news.TagRelease, Score: 0.5},
-		{Title: "Some discussion", URL: "u3", Source: news.SourceReddit, Tag: news.TagDiscussion, Score: 0.9},
-		{Title: "Accepted proposal #1234", URL: "u4", Source: news.SourceGitHub, Tag: news.TagProposalAccepted, Score: 0.6},
-	}
-
-	got := buildCandidates(items)
-	require.Len(t, got, 4)
-
-	t.Run("Proposal accepted ranks above release", func(t *testing.T) {
+	t.Run("Score orders items within a section, not across", func(t *testing.T) {
 		t.Parallel()
-		// 0.6 * 0.95 = 0.57 vs 0.5 * 0.9 = 0.45
-		assert.Equal(t, "u4", got[0].URL)
-		assert.Equal(t, "u2", got[1].URL)
+		// Three discussions plus a lower-scored release. Within the discussion
+		// section the higher score comes first; the release still appears
+		// (round-robin), proving score never ranks one section above another.
+		items := []news.Item{
+			{Title: "Quiet", URL: "lo", Source: news.SourceReddit, Tag: news.TagDiscussion, Score: 0.2},
+			{Title: "Lively", URL: "hi", Source: news.SourceReddit, Tag: news.TagDiscussion, Score: 0.9},
+			{Title: "Middling", URL: "mid", Source: news.SourceReddit, Tag: news.TagDiscussion, Score: 0.5},
+			{Title: "Go 1.30 release", URL: "rel", Source: news.SourceGoRelease, Tag: news.TagRelease, Score: 0.1},
+		}
+		got := buildCandidates(items)
+		urls := candidateURLs(got)
+		assert.Contains(t, urls, "rel")
+		assert.Less(t, indexOf(urls, "hi"), indexOf(urls, "mid"))
+		assert.Less(t, indexOf(urls, "mid"), indexOf(urls, "lo"))
 	})
 
-	t.Run("Discussion beats article only if score is high enough", func(t *testing.T) {
+	t.Run("Discussion survives a proposal-heavy day", func(t *testing.T) {
 		t.Parallel()
-		// 0.9 * 0.5 = 0.45 vs 0.4 * 0.8 = 0.32 → discussion wins here.
-		assert.Equal(t, "u3", got[2].URL)
-		assert.Equal(t, "u1", got[3].URL)
+		// The user's complaint: a glut of proposals must not crowd out a strong
+		// discussion. Round-robin guarantees the discussion reaches the shortlist.
+		items := make([]news.Item, 0, 21)
+		for i := 0; i < 20; i++ {
+			items = append(items, news.Item{
+				Title:  "Proposal",
+				URL:    fmt.Sprintf("prop-%d", i),
+				Source: news.SourceGitHub,
+				Tag:    news.TagProposal,
+				Score:  0.9,
+			})
+		}
+		items = append(items, news.Item{
+			Title: "Future of Go", URL: "disc", Source: news.SourceReddit, Tag: news.TagDiscussion, Score: 0.4,
+		})
+
+		got := buildCandidates(items)
+		assert.Contains(t, candidateURLs(got), "disc")
 	})
 
-	t.Run("Jobs excluded outright", func(t *testing.T) {
+	t.Run("No section exceeds the per-section cap", func(t *testing.T) {
 		t.Parallel()
-		// A high-scoring job listing must never reach the shortlist, even
-		// when its weighted score would otherwise beat genuine content.
-		withJob := []news.Item{
+		items := make([]news.Item, 0, 10)
+		for i := 0; i < 10; i++ {
+			items = append(items, news.Item{
+				Title: "Proposal", URL: fmt.Sprintf("p-%d", i),
+				Source: news.SourceGitHub, Tag: news.TagProposal, Score: float64(i),
+			})
+		}
+		got := buildCandidates(items)
+		assert.Len(t, got, perSectionCap)
+	})
+
+	t.Run("Proposal variants fold into one section", func(t *testing.T) {
+		t.Parallel()
+		// Accepted/shipped/open proposals all share the Proposal section, so
+		// together they still respect the single per-section cap.
+		items := []news.Item{
+			{Title: "Open", URL: "p1", Source: news.SourceGitHub, Tag: news.TagProposal, Score: 0.5},
+			{Title: "Accepted", URL: "p2", Source: news.SourceGitHub, Tag: news.TagProposalAccepted, Score: 0.6},
+			{Title: "Shipped", URL: "p3", Source: news.SourceGitHub, Tag: news.TagProposalShipped, Score: 0.7},
+			{Title: "Another open", URL: "p4", Source: news.SourceGitHub, Tag: news.TagProposal, Score: 0.4},
+		}
+		got := buildCandidates(items)
+		assert.Len(t, got, perSectionCap)
+	})
+
+	t.Run("Excluded sections never reach the shortlist", func(t *testing.T) {
+		t.Parallel()
+		// Jobs, social posts, events, conferences/meet-ups, and trending repos
+		// are filtered out regardless of score; only the article remains.
+		items := []news.Item{
 			{Title: "Senior Go role", URL: "job", Source: news.SourceHNJobs, Tag: news.TagJobs, Score: 5.0},
+			{Title: "A toot", URL: "soc", Source: news.SourceMastodon, Tag: news.TagSocial, Score: 4.0},
+			{Title: "GopherCon", URL: "conf", Source: news.SourceGitHub, Tag: news.TagConference, Score: 3.0},
+			{Title: "Local meet-up", URL: "evt", Source: news.SourceGitHub, Tag: news.TagEvent, Score: 3.0},
+			{Title: "Hot repo", URL: "trend", Source: news.SourceGitHubTrending, Tag: news.TagTrending, Score: 9.0},
 			{Title: "Real article", URL: "art", Source: news.SourceMedium, Tag: news.TagArticle, Score: 0.4},
 		}
-		got := buildCandidates(withJob)
+		got := buildCandidates(items)
 		require.Len(t, got, 1)
 		assert.Equal(t, "art", got[0].URL)
 	})
 
-	t.Run("All-jobs issue yields no candidates", func(t *testing.T) {
+	t.Run("All-excluded issue yields no candidates", func(t *testing.T) {
 		t.Parallel()
-		onlyJobs := []news.Item{
+		onlyExcluded := []news.Item{
 			{Title: "Job A", URL: "a", Source: news.SourceHNJobs, Tag: news.TagJobs, Score: 3.0},
-			{Title: "Job B", URL: "b", Source: news.SourceRemoteOK, Tag: news.TagJobs, Score: 2.0},
+			{Title: "Meet-up", URL: "b", Source: news.SourceGitHub, Tag: news.TagEvent, Score: 2.0},
 		}
-		assert.Empty(t, buildCandidates(onlyJobs))
+		assert.Empty(t, buildCandidates(onlyExcluded))
 	})
 
-	t.Run("Cap respected", func(t *testing.T) {
+	t.Run("Total cap respected across diverse sections", func(t *testing.T) {
 		t.Parallel()
-		many := make([]news.Item, maxCandidates+5)
-		for i := range many {
-			many[i] = news.Item{URL: "u", Title: "t", Tag: news.TagArticle, Score: float64(i)}
+		// Enough sections, each with plenty of items, to exceed maxCandidates.
+		tags := []news.Tag{
+			news.TagRelease, news.TagProposal, news.TagArticle, news.TagTutorial,
+			news.TagDiscussion, news.TagVideo, news.TagSecurity,
 		}
-		assert.Len(t, buildCandidates(many), maxCandidates)
+		var items []news.Item
+		for _, tag := range tags {
+			for i := 0; i < perSectionCap; i++ {
+				items = append(items, news.Item{
+					URL: fmt.Sprintf("%s-%d", tag, i), Title: "t", Tag: tag, Score: float64(i),
+				})
+			}
+		}
+		assert.Len(t, buildCandidates(items), maxCandidates)
 	})
+}
+
+func candidateURLs(cands []candidate) []string {
+	urls := make([]string, len(cands))
+	for i, c := range cands {
+		urls[i] = c.URL
+	}
+	return urls
+}
+
+func indexOf(s []string, v string) int {
+	for i, x := range s {
+		if x == v {
+			return i
+		}
+	}
+	return -1
 }
 
 func TestFeature(t *testing.T) {
