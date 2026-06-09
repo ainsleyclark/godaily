@@ -91,13 +91,14 @@ func TestBuildCandidates(t *testing.T) {
 
 	t.Run("Excluded sections never reach the shortlist", func(t *testing.T) {
 		t.Parallel()
-		// Jobs, social posts, events, and conferences/meet-ups are filtered out
-		// regardless of score; only the article remains.
+		// Jobs, social posts, events, conferences/meet-ups, and trending repos
+		// are filtered out regardless of score; only the article remains.
 		items := []news.Item{
 			{Title: "Senior Go role", URL: "job", Source: news.SourceHNJobs, Tag: news.TagJobs, Score: 5.0},
 			{Title: "A toot", URL: "soc", Source: news.SourceMastodon, Tag: news.TagSocial, Score: 4.0},
 			{Title: "GopherCon", URL: "conf", Source: news.SourceGitHub, Tag: news.TagConference, Score: 3.0},
 			{Title: "Local meet-up", URL: "evt", Source: news.SourceGitHub, Tag: news.TagEvent, Score: 3.0},
+			{Title: "Hot repo", URL: "trend", Source: news.SourceGitHubTrending, Tag: news.TagTrending, Score: 9.0},
 			{Title: "Real article", URL: "art", Source: news.SourceMedium, Tag: news.TagArticle, Score: 0.4},
 		}
 		got := buildCandidates(items)
@@ -119,7 +120,7 @@ func TestBuildCandidates(t *testing.T) {
 		// Enough sections, each with plenty of items, to exceed maxCandidates.
 		tags := []news.Tag{
 			news.TagRelease, news.TagProposal, news.TagArticle, news.TagTutorial,
-			news.TagDiscussion, news.TagVideo, news.TagTrending,
+			news.TagDiscussion, news.TagVideo, news.TagSecurity,
 		}
 		var items []news.Item
 		for _, tag := range tags {

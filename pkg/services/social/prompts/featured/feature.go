@@ -33,12 +33,14 @@ const (
 // excludedSections never anchor a featured social post and are filtered out
 // before the shortlist is built. Jobs and social posts are not reshare-worthy
 // Go news; events, conferences, and meet-ups are calendar announcements rather
-// than content that sparks discussion.
+// than content that sparks discussion; trending repos are raw popularity
+// signal, not an editorial anchor.
 var excludedSections = map[news.Tag]bool{
 	news.TagJobs:       true,
 	news.TagSocial:     true,
 	news.TagEvent:      true,
 	news.TagConference: true,
+	news.TagTrending:   true,
 }
 
 // candidate is the wire shape sent to the model. No score is included on
@@ -61,8 +63,8 @@ type candidate struct {
 // per-source score is used only to pick the strongest representative *within* a
 // section, never to rank one section above another.
 //
-// Sections in excludedSections (jobs, social, events, conferences) never reach
-// the shortlist — they are not reshare-worthy conversation anchors.
+// Sections in excludedSections (jobs, social, events, conferences, trending)
+// never reach the shortlist — they are not reshare-worthy conversation anchors.
 func buildCandidates(items []news.Item) []candidate {
 	bySection := make(map[news.Tag][]news.Item)
 	for _, it := range items {
@@ -135,9 +137,9 @@ const featureSystem = `You select the single most reshare-worthy Go-community it
 of the day to anchor a social media post.
 
 You will receive a JSON list — a deliberately diverse shortlist spanning the
-day's categories (releases, proposals, articles, tutorials, discussions, videos,
-trending projects). The list order carries NO priority and no scores are given:
-judge each item on its own merit.
+day's categories (releases, proposals, articles, tutorials, discussions,
+videos). The list order carries NO priority and no scores are given: judge
+each item on its own merit.
 
 Pick the one item a senior Go developer would be most likely to share AND that
 would get the community talking. Weigh two things equally:
