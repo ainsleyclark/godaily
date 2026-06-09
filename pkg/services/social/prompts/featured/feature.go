@@ -19,9 +19,11 @@ import (
 )
 
 const (
-	// maxCandidates caps the number of items presented to the model. Twelve is
-	// enough variety without blowing token budget.
-	maxCandidates = 12
+	// maxCandidates caps the number of items presented to the model. Set
+	// generously: perSectionCap already prevents any one section from
+	// dominating, so a higher ceiling simply gives the model every section's
+	// top 2-3 items to choose from at a trivial token cost.
+	maxCandidates = 18
 	// perSectionCap limits how many items any one section may contribute to the
 	// shortlist, so a proposal-heavy day cannot fill every slot and crowd out
 	// the discussions, articles, and videos that often drive more conversation.
