@@ -18,101 +18,139 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
-// tagWeights bias the candidate shortlist toward items most likely to drive
-// engagement: shipped/accepted proposals, releases, and rich articles win
-// over trending discussions and short videos.
-var tagWeights = map[news.Tag]float64{
-	news.TagProposalShipped:  1.0,
-	news.TagProposalAccepted: 0.95,
-	news.TagRelease:          0.9,
-	news.TagProposal:         0.85,
-	news.TagArticle:          0.8,
-	news.TagTutorial:         0.75,
-	news.TagDiscussion:       0.5,
-	news.TagPodcast:          0.45,
-	news.TagVideo:            0.4,
-	news.TagTrending:         0.2,
+const (
+	// maxCandidates caps the number of items presented to the model. Twelve is
+	// enough variety without blowing token budget.
+	maxCandidates = 12
+	// perSectionCap limits how many items any one section may contribute to the
+	// shortlist, so a proposal-heavy day cannot fill every slot and crowd out
+	// the discussions, articles, and videos that often drive more conversation.
+	perSectionCap = 3
+)
+
+// excludedSections never anchor a featured social post and are filtered out
+// before the shortlist is built. Jobs and social posts are not reshare-worthy
+// Go news; events, conferences, and meet-ups are calendar announcements rather
+// than content that sparks discussion.
+var excludedSections = map[news.Tag]bool{
+	news.TagJobs:       true,
+	news.TagSocial:     true,
+	news.TagEvent:      true,
+	news.TagConference: true,
 }
 
-// maxCandidates caps the number of items presented to the model. Twelve is
-// enough variety without blowing token budget.
-const maxCandidates = 12
-
-// candidate is the wire shape sent to the model.
+// candidate is the wire shape sent to the model. No score is included on
+// purpose: the model judges each item on its own merit (title, source, tag,
+// snippet) rather than anchoring on a pre-computed, proposal-biased number.
 type candidate struct {
-	Title    string  `json:"title"`
-	URL      string  `json:"url"`
-	Source   string  `json:"source"`
-	Tag      string  `json:"tag"`
-	Snippet  string  `json:"snippet,omitempty"`
-	Score    float64 `json:"score"`
-	Weighted float64 `json:"weighted_score"`
+	Title   string `json:"title"`
+	URL     string `json:"url"`
+	Source  string `json:"source"`
+	Tag     string `json:"tag"`
+	Snippet string `json:"snippet,omitempty"`
 }
 
-// buildCandidates filters and scores items, returning the highest-weighted
-// shortlist. The weighted score multiplies the item's per-source relevance
-// score by the tag weight, so a borderline article still loses to a fresh
-// language release.
+// buildCandidates turns the issue's items into a deliberately diverse shortlist
+// for the model to choose from. Rather than ranking categories against one
+// another by the per-source relevance score — which is tuned for editorial
+// authority and structurally favours Go proposals — it guarantees breadth:
+// items are grouped by canonical section, the best-scored item of each section
+// is taken first (round-robin), and no section may exceed perSectionCap. The
+// per-source score is used only to pick the strongest representative *within* a
+// section, never to rank one section above another.
 //
-// Job listings are excluded outright: they carry a high intrinsic score
-// (JobBoost rewards Go-in-title, salary, and remote roles), which let them
-// out-rank Reddit discussions despite the default tag weight, and the
-// selection prompt never deprioritises them. A job is never the day's
-// reshare-worthy anchor, so it must not reach the shortlist at all.
+// Sections in excludedSections (jobs, social, events, conferences) never reach
+// the shortlist — they are not reshare-worthy conversation anchors.
 func buildCandidates(items []news.Item) []candidate {
-	out := make([]candidate, 0, len(items))
+	bySection := make(map[news.Tag][]news.Item)
 	for _, it := range items {
-		if it.Tag == news.TagJobs {
+		sec := it.Tag.Section()
+		if excludedSections[sec] {
 			continue
 		}
-		w, ok := tagWeights[it.Tag]
-		if !ok {
-			// Unknown tags get a modest baseline so they remain eligible
-			// but don't beat tagged items.
-			w = 0.3
-		}
-		weighted := it.Score * w
-		if weighted == 0 {
-			weighted = w
-		}
-		out = append(out, candidate{
-			Title:    it.Title,
-			URL:      it.URL,
-			Source:   string(it.Source),
-			Tag:      string(it.Tag),
-			Snippet:  it.Snippet,
-			Score:    it.Score,
-			Weighted: weighted,
+		bySection[sec] = append(bySection[sec], it)
+	}
+	for sec := range bySection {
+		its := bySection[sec]
+		sort.SliceStable(its, func(i, j int) bool {
+			return its[i].Score > its[j].Score
 		})
 	}
 
-	sort.SliceStable(out, func(i, j int) bool {
-		return out[i].Weighted > out[j].Weighted
-	})
+	order := orderedSections(bySection)
 
-	if len(out) > maxCandidates {
-		out = out[:maxCandidates]
+	out := make([]candidate, 0, maxCandidates)
+	for round := 0; round < perSectionCap && len(out) < maxCandidates; round++ {
+		for _, sec := range order {
+			its := bySection[sec]
+			if round >= len(its) {
+				continue
+			}
+			out = append(out, toCandidate(its[round]))
+			if len(out) >= maxCandidates {
+				break
+			}
+		}
 	}
 
 	return out
 }
 
+// orderedSections returns the populated sections in a deterministic order:
+// the canonical news.SectionTags order first, then any sections from unknown
+// tags (sorted) so nothing is silently dropped. The order is for reproducible
+// output only — the prompt tells the model it carries no priority.
+func orderedSections(bySection map[news.Tag][]news.Item) []news.Tag {
+	seen := make(map[news.Tag]bool, len(bySection))
+	order := make([]news.Tag, 0, len(bySection))
+	for _, sec := range news.SectionTags {
+		if len(bySection[sec]) > 0 {
+			order = append(order, sec)
+			seen[sec] = true
+		}
+	}
+	rest := make([]news.Tag, 0)
+	for sec := range bySection {
+		if !seen[sec] {
+			rest = append(rest, sec)
+		}
+	}
+	sort.Slice(rest, func(i, j int) bool { return rest[i] < rest[j] })
+	return append(order, rest...)
+}
+
+func toCandidate(it news.Item) candidate {
+	return candidate{
+		Title:   it.Title,
+		URL:     it.URL,
+		Source:  string(it.Source),
+		Tag:     string(it.Tag),
+		Snippet: it.Snippet,
+	}
+}
+
 const featureSystem = `You select the single most reshare-worthy Go-community item
 of the day to anchor a social media post.
 
-You will receive a JSON list of items already scored and filtered to today's
-shortlist. Apply two filters in order:
+You will receive a JSON list — a deliberately diverse shortlist spanning the
+day's categories (releases, proposals, articles, tutorials, discussions, videos,
+trending projects). The list order carries NO priority and no scores are given:
+judge each item on its own merit.
 
-1. Substance first: bias heavily toward accepted/shipped language proposals,
-   major releases, formal proposals, and in-depth technical articles. A
-   "discussion" or "trending" item is only acceptable if nothing more
-   substantial is available.
+Pick the one item a senior Go developer would be most likely to share AND that
+would get the community talking. Weigh two things equally:
 
-2. Reshare potential second: among items of similar substance, prefer the one
-   a senior Go developer would pass along to a colleague without needing to
-   explain why it matters. A clear concrete change (new API, removed footgun,
-   measurable performance gain) beats a vague announcement of equivalent
-   formal weight.
+1. Substance: a concrete, real change or insight — a release, an accepted/shipped
+   proposal, an in-depth article, a measurable result, a removed footgun.
+
+2. Conversation value: how much the item would get Go developers discussing,
+   debating, or passing it along. A well-argued opinion piece, a lively community
+   discussion, or a recognised voice's take on the language's direction is a
+   legitimate winner and can rightly beat a routine proposal or minor release.
+
+Substance and conversation value are co-equal — neither outranks the other by
+category. Do NOT default to a proposal or release just because it is "official";
+choose what people would actually share and argue about today.
 
 If multiple items cover the same topic (same release, same proposal, same
 project), treat them as one and pick the canonical link.
@@ -152,7 +190,7 @@ func Feature(ctx context.Context, p ai.Prompter, day time.Time, items []news.Ite
 	}
 
 	user := fmt.Sprintf(
-		"Date: %s\nCandidates (highest weighted score first):\n%s\n\nReturn the JSON object only.",
+		"Date: %s\nCandidates (a diverse shortlist across categories; order is not a ranking):\n%s\n\nReturn the JSON object only.",
 		day.Format("2006-01-02"), string(payload),
 	)
 
