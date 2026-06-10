@@ -14,6 +14,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 	"github.com/pkg/errors"
 )
 
@@ -115,6 +116,10 @@ func (s *Service) publishOne(ctx context.Context, poster platform.Poster, pc pub
 		res.Err = errors.Wrap(err, "generate")
 		return res
 	}
+	// Strip off-brand em dashes for every kind here — the one choke point
+	// all generated text (AI reframers, rotation prompts, and the plain
+	// community templates) flows through before persist or post.
+	text = aiutil.SanitisePost(text)
 	res.Text = text
 
 	if pc.dryRun {

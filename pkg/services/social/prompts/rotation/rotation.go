@@ -97,8 +97,8 @@ func run(
 		return "", err
 	}
 
-	text = aiutil.SanitisePost(text)
-
+	// Em dashes are stripped centrally by ai.Client.Prompt before the
+	// response reaches us, so no SanitisePost call is needed here.
 	if n := utf8.RuneCountInString(text); n > cfg.charLimit {
 		slog.Warn("Rotation post exceeded char limit; truncating",
 			"platform", cfg.name, "chars", n, "limit", cfg.charLimit)

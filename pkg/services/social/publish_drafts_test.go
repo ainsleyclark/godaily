@@ -144,6 +144,36 @@ func TestService_PublishDrafts(t *testing.T) {
 		assert.Contains(t, successMsg, "https://bsky.app/profile/godaily/post/abc")
 	})
 
+	t.Run("Strips Em Dashes Before Posting", func(t *testing.T) {
+		t.Parallel()
+
+		f := newFixture(t)
+
+		bluesky := newMockPoster(f.ctrl, social.Bluesky)
+		bluesky.EXPECT().
+			Post(gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ context.Context, req platform.PostRequest) (platform.PostResponse, error) {
+				assert.NotContains(t, req.Text, "—", "em dash must be stripped before the platform API")
+				assert.Equal(t, "GDG Berlin (Berlin) - Go meetup", req.Text)
+				return platform.PostResponse{PostURL: "https://bsky.app/x/1"}, nil
+			})
+		f.posters = []platform.Poster{bluesky}
+
+		f.posts.EXPECT().List(gomock.Any(), gomock.Any()).Return([]social.Post{
+			{ID: 3, Platform: "bluesky", Text: "GDG Berlin (Berlin) — Go meetup", Status: social.PostStatusDraft},
+		}, nil)
+		f.posts.EXPECT().
+			Update(gomock.Any(), int64(3), gomock.Any()).
+			Return(social.Post{}, nil)
+		f.slack.EXPECT().MustSend(gomock.Any(), gomock.Any())
+
+		date := time.Date(2026, time.May, 20, 0, 0, 0, 0, time.UTC)
+		res, err := f.service().PublishDrafts(t.Context(), social.PostOptions{Date: date})
+		require.NoError(t, err)
+		require.Len(t, res, 1)
+		assert.NotContains(t, res[0].Text, "—")
+	})
+
 	t.Run("Skips Unwired Platform", func(t *testing.T) {
 		t.Parallel()
 
