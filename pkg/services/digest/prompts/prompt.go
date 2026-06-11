@@ -58,6 +58,19 @@ func defaultFilterConfig() filterConfig {
 	return filterConfig{topPerSource: 3, totalCap: 16}
 }
 
+// excludedSections never reach the subject/intro model payload and are
+// filtered out before the round-robin shortlist is built. Jobs and social posts
+// add no value to an editorial intro or subject line; event listings are
+// calendar announcements rather than stories; trending repos are raw popularity
+// signal, not an editorial anchor. Conferences are deliberately not excluded —
+// a major conference announcement is legitimate news for the email intro.
+var excludedSections = map[news.Tag]bool{
+	news.TagJobs:     true,
+	news.TagSocial:   true,
+	news.TagEvent:    true,
+	news.TagTrending: true,
+}
+
 // filterItems takes the scored, per-source-sorted output from the aggregator
 // and produces a flat list of promptItems suitable for feeding to the model.
 // Rather than ranking sections against one another — which structurally
@@ -66,7 +79,8 @@ func defaultFilterConfig() filterConfig {
 // within each section, and taken round-robin (one per section per round) until
 // the total cap. The per-source score picks the strongest representative
 // *within* a section, never ranks one section above another; the resulting
-// list order carries no priority. Jobs and social posts are skipped entirely.
+// list order carries no priority. Sections in excludedSections (jobs, social,
+// events, trending) are skipped entirely.
 func filterItems(sections []news.SourceItems, cfg filterConfig) []promptItem {
 	if cfg.topPerSource <= 0 || cfg.totalCap <= 0 {
 		return nil
@@ -80,12 +94,10 @@ func filterItems(sections []news.SourceItems, cfg filterConfig) []promptItem {
 		}
 		for i := 0; i < take; i++ {
 			it := section.Items[i]
-			// Jobs and social posts add no value to an editorial intro or
-			// subject line — skip them entirely.
-			if it.Tag == news.TagJobs || it.Tag == news.TagSocial {
+			sec := it.Tag.Section()
+			if excludedSections[sec] {
 				continue
 			}
-			sec := it.Tag.Section()
 			bySection[sec] = append(bySection[sec], it)
 		}
 	}
