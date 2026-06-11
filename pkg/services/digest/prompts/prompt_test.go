@@ -160,13 +160,19 @@ func TestFilterItems(t *testing.T) {
 				assert.ElementsMatch(t, []string{"Proposals", "Discussions", "Articles"}, sections)
 			},
 		},
-		"Skips Jobs And Social": {
+		"Skips Jobs Social Events And Trending": {
 			sections: []news.SourceItems{
 				{Source: news.SourceHNJobs, Items: []news.Item{
 					{Source: news.SourceHNJobs, Title: "job", URL: "https://j", Tag: news.TagJobs, Score: 0.9},
 				}},
 				{Source: news.SourceMastodon, Items: []news.Item{
 					{Source: news.SourceMastodon, Title: "toot", URL: "https://s", Tag: news.TagSocial, Score: 0.8},
+				}},
+				{Source: news.SourceMeetup, Items: []news.Item{
+					{Source: news.SourceMeetup, Title: "meetup", URL: "https://e", Tag: news.TagEvent, Score: 0.7},
+				}},
+				{Source: news.SourceGitHubTrending, Items: []news.Item{
+					{Source: news.SourceGitHubTrending, Title: "repo", URL: "https://t", Tag: news.TagTrending, Score: 0.6},
 				}},
 				{Source: news.SourceGoBlog, Items: []news.Item{
 					{Source: news.SourceGoBlog, Title: "art", URL: "https://a", Tag: news.TagArticle, Score: 0.1},
