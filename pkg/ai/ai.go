@@ -2,10 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package ai provides a transport-only abstraction for AI prompt round-trips.
-// Domain logic (prompt building, response parsing, Go-news types) lives in
-// pkg/digest/prompts; this package only defines the Prompter interface and the
-// chaining Client.
+// Package ai provides a thin abstraction for AI prompt round-trips. Domain
+// logic (prompt building, response parsing, Go-news types) lives in
+// pkg/digest/prompts; this package defines the Prompter interface and the
+// chaining Client. The Client also enforces one cross-cutting brand rule on
+// every response — stripping off-brand em dashes — so no caller has to
+// remember to (see Client.Prompt).
 package ai
 
 import "context"

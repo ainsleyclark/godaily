@@ -31,6 +31,21 @@ func TestClient_Prompt(t *testing.T) {
 		assert.Equal(t, []byte("result"), got)
 	})
 
+	t.Run("Strips Em Dashes From Response", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		primary := mockai.NewMockPrompter(ctrl)
+		primary.EXPECT().
+			Prompt(gomock.Any(), ModelOpus, "sys", "user").
+			Return([]byte(`{"title":"Go 1.30 — out now","intro":"fast—really fast"}`), nil)
+
+		got, err := (&Client{primary: primary}).Prompt(context.Background(), ModelOpus, "sys", "user")
+		require.NoError(t, err)
+		assert.Equal(t, `{"title":"Go 1.30 - out now","intro":"fast-really fast"}`, string(got))
+		assert.NotContains(t, string(got), "—")
+	})
+
 	t.Run("Primary Fails", func(t *testing.T) {
 		t.Parallel()
 

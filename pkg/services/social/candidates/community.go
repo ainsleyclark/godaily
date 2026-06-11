@@ -40,20 +40,24 @@ const promoCycleLen = 3
 //
 // Keep the strings short — Bluesky caps at 300 chars and we want
 // headroom for long conference names.
+//
+// Separators are plain hyphens, never em dashes — em dashes are off-brand
+// (see aiutil.SanitisePost, which also strips them at the publish boundary
+// as a backstop for the AI-generated kinds).
 var communityTemplates = map[social.Platform][]string{
 	social.LinkedIn: {
-		"{{.Mention}} — {{.Description}}\n\n{{.URL}}",
-		"{{.Mention}} ({{.Location}}) — {{.Description}}\n\n{{.URL}}",
+		"{{.Mention}} - {{.Description}}\n\n{{.URL}}",
+		"{{.Mention}} ({{.Location}}) - {{.Description}}\n\n{{.URL}}",
 		"{{.Mention}}: {{.Description}}\n\n{{.URL}}",
 	},
 	social.Bluesky: {
-		"{{.Mention}} — {{.Description}} {{.URL}}",
-		"{{.Mention}} ({{.Location}}) — {{.Description}} {{.URL}}",
+		"{{.Mention}} - {{.Description}} {{.URL}}",
+		"{{.Mention}} ({{.Location}}) - {{.Description}} {{.URL}}",
 		"{{.Mention}}: {{.Description}} {{.URL}}",
 	},
 	social.Mastodon: {
-		"{{.Mention}} — {{.Description}} #golang {{.URL}}",
-		"{{.Mention}} ({{.Location}}) — {{.Description}} #golang {{.URL}}",
+		"{{.Mention}} - {{.Description}} #golang {{.URL}}",
+		"{{.Mention}} ({{.Location}}) - {{.Description}} #golang {{.URL}}",
 		"{{.Mention}}: {{.Description}} #golang {{.URL}}",
 	},
 }

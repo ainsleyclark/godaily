@@ -18,6 +18,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
 	"github.com/ainsleyclark/godaily/pkg/services/social/internal/slackdata"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
+	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 )
 
 // PublishDrafts walks every row with status='draft' and posts each to
@@ -84,7 +85,13 @@ func (s *Service) PublishDrafts(ctx context.Context, opts social.PostOptions) ([
 			}
 		}
 
-		result, err := poster.Post(ctx, platform.PostRequest{Text: draft.Text, Mentions: mentions})
+		// Final brand guard: strip em dashes before they reach the platform
+		// API, regardless of how the draft was produced (AI prompt, community
+		// template, or a row persisted before sanitisation was wired in).
+		text := aiutil.SanitisePost(draft.Text)
+		res.Text = text
+
+		result, err := poster.Post(ctx, platform.PostRequest{Text: text, Mentions: mentions})
 		if err != nil {
 			res.Err = errors.Wrap(err, "poster.Post")
 			errs = append(errs, fmt.Errorf("%s: %w", p, res.Err))
