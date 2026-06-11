@@ -71,7 +71,9 @@ func TestFilterItems(t *testing.T) {
 				assert.Equal(t, 0.8, items[1].Score)
 			},
 		},
-		"Sorts Across Sources By Score Desc": {
+		"Sorts Within Section By Score Desc": {
+			// All items share the same (zero-value) tag, so they fold into a
+			// single section and round-robin reduces to plain score ordering.
 			sections: []news.SourceItems{
 				mk(news.SourceHN, 0.4, 0.3),
 				mk(news.SourceGoBlog, 0.95, 0.5),
@@ -102,23 +104,79 @@ func TestFilterItems(t *testing.T) {
 				assert.Equal(t, 0.6, items[3].Score)
 			},
 		},
-		"Section Priority Beats Score": {
-			// A high-scoring security item must not outrank or crowd out a
-			// lower-scoring proposal: proposals are a higher-priority section.
+		"Round Robin Interleaves Sections": {
+			// Every populated section contributes its top item before any
+			// section gets a second slot, so a proposal-heavy day cannot push
+			// discussions and articles down the payload.
 			sections: []news.SourceItems{
-				{Source: news.SourceGoVuln, Items: []news.Item{
-					{Source: news.SourceGoVuln, Title: "vuln", URL: "https://v", Tag: news.TagSecurity, Score: 0.99},
-				}},
 				{Source: news.SourceGitHub, Items: []news.Item{
-					{Source: news.SourceGitHub, Title: "prop", URL: "https://p", Tag: news.TagProposal, Score: 0.10},
+					{Source: news.SourceGitHub, Title: "prop-a", URL: "https://p1", Tag: news.TagProposal, Score: 0.9},
+					{Source: news.SourceGitHub, Title: "prop-b", URL: "https://p2", Tag: news.TagProposalAccepted, Score: 0.8},
+					{Source: news.SourceGitHub, Title: "prop-c", URL: "https://p3", Tag: news.TagProposal, Score: 0.7},
+				}},
+				{Source: news.SourceReddit, Items: []news.Item{
+					{Source: news.SourceReddit, Title: "disc", URL: "https://d", Tag: news.TagDiscussion, Score: 0.6},
+				}},
+				{Source: news.SourceGoBlog, Items: []news.Item{
+					{Source: news.SourceGoBlog, Title: "art", URL: "https://a", Tag: news.TagArticle, Score: 0.5},
 				}},
 			},
-			cfg: filterConfig{topPerSource: 3, totalCap: 1},
+			cfg: defaultFilterConfig(),
+			want: func(t *testing.T, items []promptItem) {
+				t.Helper()
+				require.Len(t, items, 5)
+				sections := make([]string, 3)
+				for i, it := range items[:3] {
+					sections[i] = it.Section
+				}
+				assert.ElementsMatch(t, []string{"Proposals", "Discussions", "Articles"}, sections)
+				assert.Equal(t, "prop-a", items[0].Title) // highest-scored proposal represents the section first
+			},
+		},
+		"Proposals Cannot Crowd Out Other Sections": {
+			// With a tight cap, the surviving slots span sections instead of
+			// all going to the highest-scoring (proposal) section.
+			sections: []news.SourceItems{
+				{Source: news.SourceGitHub, Items: []news.Item{
+					{Source: news.SourceGitHub, Title: "prop-a", URL: "https://p1", Tag: news.TagProposal, Score: 0.9},
+					{Source: news.SourceGitHub, Title: "prop-b", URL: "https://p2", Tag: news.TagProposal, Score: 0.8},
+					{Source: news.SourceGitHub, Title: "prop-c", URL: "https://p3", Tag: news.TagProposal, Score: 0.7},
+				}},
+				{Source: news.SourceReddit, Items: []news.Item{
+					{Source: news.SourceReddit, Title: "disc", URL: "https://d", Tag: news.TagDiscussion, Score: 0.2},
+				}},
+				{Source: news.SourceGoBlog, Items: []news.Item{
+					{Source: news.SourceGoBlog, Title: "art", URL: "https://a", Tag: news.TagArticle, Score: 0.1},
+				}},
+			},
+			cfg: filterConfig{topPerSource: 3, totalCap: 3},
+			want: func(t *testing.T, items []promptItem) {
+				t.Helper()
+				require.Len(t, items, 3)
+				sections := make([]string, len(items))
+				for i, it := range items {
+					sections[i] = it.Section
+				}
+				assert.ElementsMatch(t, []string{"Proposals", "Discussions", "Articles"}, sections)
+			},
+		},
+		"Skips Jobs And Social": {
+			sections: []news.SourceItems{
+				{Source: news.SourceHNJobs, Items: []news.Item{
+					{Source: news.SourceHNJobs, Title: "job", URL: "https://j", Tag: news.TagJobs, Score: 0.9},
+				}},
+				{Source: news.SourceMastodon, Items: []news.Item{
+					{Source: news.SourceMastodon, Title: "toot", URL: "https://s", Tag: news.TagSocial, Score: 0.8},
+				}},
+				{Source: news.SourceGoBlog, Items: []news.Item{
+					{Source: news.SourceGoBlog, Title: "art", URL: "https://a", Tag: news.TagArticle, Score: 0.1},
+				}},
+			},
+			cfg: defaultFilterConfig(),
 			want: func(t *testing.T, items []promptItem) {
 				t.Helper()
 				require.Len(t, items, 1)
-				assert.Equal(t, "Proposals", items[0].Section)
-				assert.Equal(t, "prop", items[0].Title)
+				assert.Equal(t, "art", items[0].Title)
 			},
 		},
 		"Copies All Item Fields": {
@@ -197,10 +255,12 @@ func TestBuildDigestSystem(t *testing.T) {
 
 	got := buildDigestSystem()
 	assert.Contains(t, got, introStyleMD)
-	assert.Contains(t, got, "Editorial voice guide")
-	// The section order is injected from news.SectionTags, so Proposals must
-	// appear ahead of Security in the rendered headline rule.
-	assert.Contains(t, got, sectionOrder())
-	assert.Less(t, strings.Index(got, "Proposals"), strings.Index(got, "Security"))
-	assert.NotContains(t, got, "%s")
+	assert.Contains(t, got, "Voice & style guide")
+	// The headline rule must not reinstate a section pecking order: sections
+	// carry no automatic priority and only the release/security carve-outs
+	// may pre-empt editorial judgement.
+	assert.Contains(t, got, "Sections have no automatic priority")
+	assert.Contains(t, got, "Release carve-out")
+	assert.Contains(t, got, "Severity override")
+	assert.NotContains(t, got, "highest-priority section")
 }
