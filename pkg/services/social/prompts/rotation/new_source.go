@@ -29,14 +29,14 @@ Mention handling:
 - If the "mention" field does NOT start with "@", it is a plain display name. Use it naturally in the sentence. Do not add an "@" prefix or attempt to create a social handle.
 
 Write ONE post that:
-1. Says GoDaily now pulls from this source.
+1. Says GoDaily pulls from this source.
 2. References the source using the mention field (per the rules above).
 3. Uses one line adapted from the blurb to explain why it's worth following.
 4. Includes the source URL on its own line.
 
 Tone is collegial — you're crediting a source and pointing readers at them, not selling. Do not say "we're excited" or similar.`
 
-// NewSource generates a "GoDaily now pulls from X" post for one platform.
+// NewSource generates a "GoDaily pulls from X" post for one platform.
 func NewSource(ctx context.Context, p ai.Prompter, platform social.Platform, payload NewSourcePayload) (string, error) {
 	return run(ctx, p, platform, newSourceGuidance, payload)
 }
