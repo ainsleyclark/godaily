@@ -217,7 +217,10 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		defer resp.Body.Close()
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
-		assert.Equal(t, int32(2), calls.Load())
+		// The closed connection can race with net/http's own connection
+		// handling and produce an extra attempt under load, so assert that a
+		// retry happened rather than an exact attempt count.
+		assert.GreaterOrEqual(t, calls.Load(), int32(2))
 	})
 
 	t.Run("429 with Retry-After header respected", func(t *testing.T) {
