@@ -1,3 +1,5 @@
+@use '../abstracts/mixins' as *;
+
 .search-box {
 	position: relative;
 	width: 100%;
@@ -38,5 +40,9 @@
 		border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 2px 6px;
+
+		// The ⌘K shortcut only applies to physical keyboards; hide the hint on
+		// mobile where it's just noise inside the input.
+		@include mobile { display: none; }
 	}
 }
