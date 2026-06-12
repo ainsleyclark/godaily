@@ -64,6 +64,10 @@ func TestRenderDigest(t *testing.T) {
 		assert.Contains(t, got.Text, "hello")
 		assert.NotContains(t, got.HTML, "42 pts")
 		assert.Contains(t, got.HTML, "7 comments")
+		// The source is advertised only via the "Read on" link, never
+		// duplicated in the item meta line — the comment count stands alone.
+		assert.Contains(t, got.HTML, `<div style="font-size:11px;color:#6b9ab8;margin-bottom:6px;">7 comments</div>`)
+		assert.NotContains(t, got.HTML, "Hacker News · 7 comments")
 		// Each item should advertise its source via the "Read on" link and
 		// the inline mark image (HN has a mark file registered).
 		assert.Contains(t, got.HTML, "Read on Hacker News")
