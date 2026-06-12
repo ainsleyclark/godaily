@@ -59,14 +59,14 @@ func Hero(flash string, subscriberCount int64) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><h1 class=\"hero__title\">All of today's <span class=\"hero__title-accent\">Golang</span> news,<br>in one place</h1><p class=\"hero__lead\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><h1 class=\"hero__title\">All of today's <span class=\"hero__title-accent\">Golang</span> news, in one place</h1><p class=\"hero__lead\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("GoDaily collects, ranks and summarises Go stories from %d sources — releases, proposals, security advisories, articles and discussions. Read it as a daily email, a live feed, or RSS.", len(news.Sources)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 21, Col: 225}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 20, Col: 225}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -84,7 +84,7 @@ func Hero(flash string, subscriberCount int64) templ.Component {
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(flash)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 24, Col: 35}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 23, Col: 35}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func Hero(flash string, subscriberCount int64) templ.Component {
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", subscriberCount))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 47, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/views/components/hero.templ`, Line: 46, Col: 67}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {

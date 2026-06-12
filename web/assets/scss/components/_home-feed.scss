@@ -1,6 +1,16 @@
+@use '../abstracts/mixins' as *;
+
 .home-feed {
 	.stat-strip {
 		grid-template-columns: repeat(3, 1fr);
+
+		@include mobile {
+			grid-template-columns: repeat(2, 1fr);
+
+			.stat:last-child {
+				grid-column: 1 / -1;
+			}
+		}
 	}
 
 	&__chips {

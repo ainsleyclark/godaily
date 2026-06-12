@@ -60,7 +60,7 @@ templ HomeFeed(props HomeFeedProps) {
 				</div>
 			} else {
 				<div class="home-feed__list">
-					@BrowseItemList(props.Items)
+					@BrowseItemList(BrowseItemListProps{Items: props.Items, HideDigest: true})
 				</div>
 				<div class="home-feed__footer">
 					<a class="home-feed__view-all" href="/browse/">Browse all { FormatThousands(props.Total) } stories →</a>

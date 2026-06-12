@@ -127,7 +127,7 @@ templ BrowseMain(props BrowseProps) {
 				CTAAttrs: hxNav(BrowseURL(props.State, ResetAll())),
 			})
 		} else {
-			@components.BrowseItemList(props.Items)
+			@components.BrowseItemList(components.BrowseItemListProps{Items: props.Items})
 			@components.Pagination(components.PaginationProps{
 				Page:       props.Page,
 				TotalPages: props.TotalPages,

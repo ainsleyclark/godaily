@@ -12,10 +12,13 @@ import (
 
 type BrowseItemProps struct {
 	Item news.Item
+	// HideDigest suppresses the "In digest" badge and accent bar; the homepage
+	// feed sets it as the cross-sell is redundant next to the subscribe form.
+	HideDigest bool
 }
 
 templ BrowseItem(props BrowseItemProps) {
-	<article class={ "browse-item", templ.KV("browse-item--in-digest", props.Item.InDigest) }>
+	<article class={ "browse-item", templ.KV("browse-item--in-digest", props.Item.InDigest && !props.HideDigest) }>
 		<div class="browse-item__mark">
 			@SourceMark(props.Item.Source)
 		</div>
@@ -36,7 +39,7 @@ templ BrowseItem(props BrowseItemProps) {
 			}
 			<div class="browse-item__meta">
 				<span class="browse-item__pill">{ props.Item.Tag.Title() }</span>
-				if props.Item.InDigest {
+				if props.Item.InDigest && !props.HideDigest {
 					<span class="browse-item__digest" title="Featured in a digest">
 						@icons.Envelope(11)
 						<span>In digest</span>
@@ -56,10 +59,15 @@ templ BrowseItem(props BrowseItemProps) {
 	</article>
 }
 
-templ BrowseItemList(items []news.Item) {
+type BrowseItemListProps struct {
+	Items      []news.Item
+	HideDigest bool // see BrowseItemProps.HideDigest
+}
+
+templ BrowseItemList(props BrowseItemListProps) {
 	<div class="browse-item-list">
-		for _, it := range items {
-			@BrowseItem(BrowseItemProps{Item: it})
+		for _, it := range props.Items {
+			@BrowseItem(BrowseItemProps{Item: it, HideDigest: props.HideDigest})
 		}
 	</div>
 }

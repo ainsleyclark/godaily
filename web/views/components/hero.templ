@@ -14,8 +14,7 @@ templ Hero(flash string, subscriberCount int64) {
 					@Tag("Updated daily · Sent every weekday", TagProps{})
 				</div>
 				<h1 class="hero__title">
-					All of today's <span class="hero__title-accent">Golang</span> news,<br/>
-					in one place
+					All of today's <span class="hero__title-accent">Golang</span> news, in one place
 				</h1>
 				<p class="hero__lead">
 					{ fmt.Sprintf("GoDaily collects, ranks and summarises Go stories from %d sources — releases, proposals, security advisories, articles and discussions. Read it as a daily email, a live feed, or RSS.", len(news.Sources)) }
