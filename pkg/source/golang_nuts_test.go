@@ -20,11 +20,8 @@ import (
 func TestGolangNuts_Fetch(t *testing.T) {
 	t.Parallel()
 
-	// The included item's <link> is replaced with __SERVER_URL__ so body
-	// enrichment requests land on the test server rather than the live
-	// internet. The server returns the feed (no MHonArc body markers) for the
-	// root path, so enrichment extracts nothing and leaves the snippet empty —
-	// keeping the OK case deterministic.
+	// __SERVER_URL__ in the fixture is rewritten to the test server so body
+	// enrichment doesn't hit the live internet.
 	fixture, err := os.ReadFile("testdata/golang_nuts.xml")
 	require.NoError(t, err)
 
@@ -80,9 +77,6 @@ func TestGolangNuts_Fetch(t *testing.T) {
     </item>
   </channel>
 </rss>`
-				// MHonArc page: no meta description; the body lives between the
-				// X-Body-of-Message markers, with a leading quoted-reply line
-				// that must be dropped, and *markdown*-style emphasis stripped.
 				page := `<html><head><title>[go-nuts] FullStack Go framework</title></head><body>
 <!--X-Body-of-Message-->
 <pre>&gt; someone wrote a quoted reply line
@@ -203,9 +197,13 @@ func TestExtractMHonArcBody(t *testing.T) {
 			in:   "<html><pre>Hello</pre></html>",
 			want: "",
 		},
-		"No end marker": {
+		"No end marker or fallback": {
 			in:   "<!--X-Body-of-Message--><pre>Hello</pre>",
 			want: "",
+		},
+		"Falls back to msgButtons div when end marker absent": {
+			in:   `<!--X-Body-of-Message--><pre>Hi there</pre></div><div class="msgButtons ">…`,
+			want: `<pre>Hi there</pre></div>`,
 		},
 	}
 
@@ -215,4 +213,19 @@ func TestExtractMHonArcBody(t *testing.T) {
 			assert.Equal(t, test.want, extractMHonArcBody(test.in))
 		})
 	}
+}
+
+// Locks the extractor to real mail-archive.com markup, not just synthetic fixtures.
+func TestExtractMHonArcBody_RealPage(t *testing.T) {
+	t.Parallel()
+
+	raw, err := os.ReadFile("testdata/golang_nuts_msg.html")
+	require.NoError(t, err)
+
+	body := extractMHonArcBody(string(raw))
+	require.NotEmpty(t, body, "extractor returned empty body for real page")
+	assert.Contains(t, body, "Some things force us to evolve")
+	assert.Contains(t, body, "FullStack")
+	assert.NotContains(t, body, "msgButtons")
+	assert.NotContains(t, body, "View by thread")
 }

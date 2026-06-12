@@ -100,13 +100,9 @@ func enrich(ctx context.Context, targets []enrichTarget) {
 	wg.Wait()
 }
 
-// EnrichSnippetsFromHTML fills empty snippets by fetching each item's URL and
-// running extract over the raw page HTML to isolate the snippet text, which is
-// then sanitised and truncated like any other source snippet. It is for
-// sources whose pages carry the body in markup that meta-tag enrichment can't
-// reach (e.g. MHonArc mail archives, whose message pages expose no og:/meta
-// description). Items that already have a snippet, or whose URL is empty, are
-// skipped. Per-item failures are logged at debug level and never propagate.
+// EnrichSnippetsFromHTML is for sources whose pages carry the body in markup
+// that meta-tag enrichment can't reach (e.g. MHonArc mail archives). Per-item
+// failures are logged at debug level and never propagate.
 func EnrichSnippetsFromHTML(ctx context.Context, items []news.Item, extract func(rawHTML string) string) {
 	for i := range items {
 		if items[i].Snippet != "" || items[i].URL == "" {
@@ -126,10 +122,8 @@ func EnrichSnippetsFromHTML(ctx context.Context, items []news.Item, extract func
 	}
 }
 
-// fetchRaw GETs target with the enricher's HTTP client and returns the raw
-// response body as a string, capped at enrichBodyMax bytes. Unlike fetchPage
-// it does not parse the document, so callers can read content (e.g. HTML
-// comments) that goquery would discard.
+// fetchRaw returns the unparsed response body so callers can read content
+// (e.g. HTML comments) that goquery would discard.
 func fetchRaw(ctx context.Context, target string) (string, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, target, nil)
 	if err != nil {

@@ -43,10 +43,8 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 		return nil, err
 	}
 	items := ingest.TransformAll(ctx, feed.Channel.Items)
-	// The feed's <description> carries only the date and author, and the
-	// mail-archive message pages expose no meta description, so meta-tag
-	// enrichment finds nothing. Pull the snippet from the MHonArc message
-	// body instead.
+	// Message pages expose no meta description, so pull the snippet from
+	// the MHonArc message body instead of the generic meta-tag enricher.
 	ingest.EnrichSnippetsFromHTML(ctx, items, extractMHonArcBody)
 	return items, nil
 }
@@ -57,38 +55,37 @@ func (e golangNutsItem) ShouldInclude() bool {
 	return !strings.HasPrefix(e.Title, "Re: ") && !strings.HasPrefix(e.Title, "[go-nuts] Re: ")
 }
 
-// EnrichmentURL returns "" because mail-archive message pages carry no meta
-// description for the generic enricher to read; the snippet is filled from the
-// message body in Fetch via extractMHonArcBody instead.
+// EnrichmentURL returns "" because the snippet is filled from the message
+// body via extractMHonArcBody, not from meta tags.
 func (e golangNutsItem) EnrichmentURL() string { return "" }
 
 const (
 	mhonArcBodyStart = "<!--X-Body-of-Message-->"
 	mhonArcBodyEnd   = "<!--X-Body-of-Message-End-->"
+	// mail-archive.com omits the canonical end marker, so we fall back to
+	// the next structural block.
+	mhonArcBodyEndFallback = `<div class="msgButtons`
 )
 
-// quotedLineRe matches MHonArc message lines that are quoted replies — after
-// any leading inline tags/whitespace they begin with ">" (rendered as &gt;).
-// Dropping them keeps the snippet to the author's own words.
+// Dropping quoted-reply lines keeps the snippet to the author's own words.
 var quotedLineRe = regexp.MustCompile(`(?m)^\s*(?:<[^>]+>\s*)*(?:&gt;|>).*$`)
 
-// extractMHonArcBody returns the raw HTML of the message body that MHonArc
-// wraps between its X-Body-of-Message markers, with quoted-reply lines
-// removed. ingest.EnrichSnippetsFromHTML sanitises and truncates the result,
-// so tags, entities and the mailing list's *markdown*-style emphasis are
-// stripped downstream.
 func extractMHonArcBody(rawHTML string) string {
 	start := strings.Index(rawHTML, mhonArcBodyStart)
 	if start == -1 {
 		return ""
 	}
 	start += len(mhonArcBodyStart)
-	end := strings.Index(rawHTML[start:], mhonArcBodyEnd)
+	rest := rawHTML[start:]
+
+	end := strings.Index(rest, mhonArcBodyEnd)
+	if end == -1 {
+		end = strings.Index(rest, mhonArcBodyEndFallback)
+	}
 	if end == -1 {
 		return ""
 	}
-	body := rawHTML[start : start+end]
-	return quotedLineRe.ReplaceAllString(body, "")
+	return quotedLineRe.ReplaceAllString(rest[:end], "")
 }
 
 func (e golangNutsItem) Transform() news.Item {

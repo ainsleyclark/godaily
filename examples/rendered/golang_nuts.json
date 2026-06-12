@@ -7,7 +7,7 @@
 		"author": {
 			"name": "GamiPress Cordial"
 		},
-		"snippet": "",
+		"snippet": "Some things force us to evolve. When I started Web Develoment in 2019 , I couldn't code. I used WordPress , and WordPress let's you build websites without needing to write a single line of code. Just ",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -23,7 +23,7 @@
 		"author": {
 			"name": "Wojciech Kaczmarek"
 		},
-		"snippet": "",
+		"snippet": "Hi Gophers. I'm wondering if the Timer.C channel can be invalidated (recreated) after calling Reset. In other words, is it safe to store the C channel on side after Timer creation and will it survive ",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -39,7 +39,7 @@
 		"author": {
 			"name": "'andreas graeper' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "xxx/main.go 'package main' but works xxx/ cmd/ main.go and app.go (both 'package main') build and run work now xxx/internal/a/a.go (package a) xxx/internal/b/b.go (package b) i would like to build pac",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -55,7 +55,7 @@
 		"author": {
 			"name": "'andreas graeper' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "hi. i try to walk through a tree putting elems into channel w(t,c) { if t!=nil { w(t.left,c) ; c\u003c-t.elem ; w(t.right,c) }} w0(t,c) { w(t,c); close(c); } main(){ go w0(t,c) for e := range c {} } if i d",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -71,7 +71,7 @@
 		"author": {
 			"name": "Jason E. Aten"
 		},
-		"snippet": "",
+		"snippet": "https://github.com/glycerine/gown With Gown, channel sends can now enforce at compile time Go's \"convention\" of transfer of ownership. Gown is a pre-processor for Go, turning .gown files into .go file",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -87,7 +87,7 @@
 		"author": {
 			"name": "Mike Ward"
 		},
-		"snippet": "",
+		"snippet": "I created an X-platform GUI that does not rely on browser technology. It's not a toy but a serious attempt at creating a first-class UI framework. https://go-gui.com -- You received this message becau",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -103,7 +103,7 @@
 		"author": {
 			"name": "announce"
 		},
-		"snippet": "",
+		"snippet": "Hello gophers, We have just released Go versions 1.26.4 and 1.25.11, minor point releases. These releases include 3 security fixes following the security policy \u003c https://go.dev/doc/security/policy \u003e:",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -119,7 +119,7 @@
 		"author": {
 			"name": "Alex Pliutau"
 		},
-		"snippet": "",
+		"snippet": "Is there anything I can cover on my channel that you would like to watch? https://www.youtube.com/c/packagemain Thanks! -- You received this message because you are subscribed to the Google Groups \"go",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -135,7 +135,7 @@
 		"author": {
 			"name": "White Black"
 		},
-		"snippet": "",
+		"snippet": "Hello, I am the mirror site administrator. May I ask if you have an external address available for us to synchronize the Go installation package? -- You received this message because you are subscribe",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -151,7 +151,7 @@
 		"author": {
 			"name": "'SagooIoT Team' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "Hi Go community, I want to share an open-source IoT platform we've been building with Go. Building a Production-Ready IoT Platform with Go Key highlights: - Handles 1M+ concurrent device connections w",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -167,7 +167,7 @@
 		"author": {
 			"name": "Alex Pliutau"
 		},
-		"snippet": "",
+		"snippet": "https://youtu.be/TjlRD VE12Y -- You received this message because you are subscribed to the Google Groups \"golang-nuts\" group. To unsubscribe from this group and stop receiving emails from it, send an",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -183,7 +183,7 @@
 		"author": {
 			"name": "RikuS3n"
 		},
-		"snippet": "",
+		"snippet": "Hello, I am Soshi. https://github.com/atotto/go-tour-jp I found that go tour's jp translation (^this) is no longer maintained right now, since 6 years ago. And I want to make new translations that I c",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -199,7 +199,7 @@
 		"author": {
 			"name": "jfcg...@gmail.com"
 		},
-		"snippet": "",
+		"snippet": "Hi gophers, I released jfcg/sixb \u003c https://github.com/jfcg/sixb \u003e v3. What might be of interest are: - lightweight fifo queue CircleQ - set type Set - no-copy []byte/string converters all of which use",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -215,7 +215,7 @@
 		"author": {
 			"name": "announce"
 		},
-		"snippet": "",
+		"snippet": "Hello gophers, We have tagged version v0.55.0 of golang.org/x/net in order to address the following security issues: html: incorrect handling of namespaced elements in foreign content The HTML parser ",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -231,7 +231,7 @@
 		"author": {
 			"name": "announce"
 		},
-		"snippet": "",
+		"snippet": "Hello gophers, We have tagged version v0.41.0 of golang.org/x/image in order to address the following security issues: x/image/bmp: panic when reading out of bound palette index Decoding a paletted BM",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -247,7 +247,7 @@
 		"author": {
 			"name": "Dishant"
 		},
-		"snippet": "",
+		"snippet": "Hi All, Looking or GoLang Developer in US (Remote or TX) . Feel free to reply here and we can take the conversation further. Full time perm role. Looking for someone who is happy to do hands on job an",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -263,7 +263,7 @@
 		"author": {
 			"name": "announce"
 		},
-		"snippet": "",
+		"snippet": "Hello gophers, We have just released Go versions 1.26.3 and 1.25.10, minor point releases. These releases include 11 security fixes following the security policy \u003c https://go.dev/doc/security/policy \u003e",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -279,7 +279,7 @@
 		"author": {
 			"name": "Jason Gade"
 		},
-		"snippet": "",
+		"snippet": "math/rand and math/rand/V2 have functions that return various int and float types, but no function that returns a bool. While this would be very easy to implement on our own, I think it's an oversight",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -295,7 +295,7 @@
 		"author": {
 			"name": "announce"
 		},
-		"snippet": "",
+		"snippet": "Hello gophers, We plan to issue Go 1.26.3 and Go 1.25.10 during US business hours on Thursday, May 7. These minor releases include PRIVATE security fixes to the standard library and the toolchain, cov",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -311,7 +311,7 @@
 		"author": {
 			"name": "'mve...@free.fr' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "Hi everyone, mvm is a fast interpreter and virtual machine for Go. https://github.com/mvm-sh/mvm - Fast, portable bytecode virtual machine - Aims for full Go language compatibility - Embeddable in Go ",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -327,7 +327,7 @@
 		"author": {
 			"name": "Jason E. Aten"
 		},
-		"snippet": "",
+		"snippet": "https://groups.google.com/g/golang-dev/c/mABYStr5aYs In one line: aiming for 2 nanosecond foreign calls, 4 nanoseconds round trip; 21x faster than CGO. I've asked for early feedback on my design for s",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -343,7 +343,7 @@
 		"author": {
 			"name": "Cheikh Seck"
 		},
-		"snippet": "",
+		"snippet": "Hi folks, I recently wrote an article I feel has some insight in how LLMs work and the best way to apply it to your day-2-day work. \"AI will not take your job, but somebody using it will\" https://medi",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -359,7 +359,7 @@
 		"author": {
 			"name": "Denis Cheremisov"
 		},
-		"snippet": "",
+		"snippet": "Hi everyone, I'd like to discuss a common UX issue with large library ecosystems (like gRPC, OTEL, or AWS SDK) where sub-packages often use overly generic names, assuming they are the \"center of the u",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -375,7 +375,7 @@
 		"author": {
 			"name": "Kevin Chowski"
 		},
-		"snippet": "",
+		"snippet": "Hey all, I am a bit confused at what I'm seeing on my system, and I'm hoping someone can reveal what is happening. I /meant/ to run but I typed instead. The former works fine, whereas the latter gives",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -391,7 +391,7 @@
 		"author": {
 			"name": "Mandolyte"
 		},
-		"snippet": "",
+		"snippet": "Any recommendations on learning more about what this article describes? https://devblogs.microsoft.com/typescript/announcing-typescript-7-0-beta/ Teaser quote: If you haven’t been following TypeScri",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -407,7 +407,7 @@
 		"author": {
 			"name": "'MZA' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "Hi all, Introducing: https://github.com/mzattahri/cli Most Go CLI libraries drift into frameworks: typed decoders, validation DSLs, config loading, tag-based declaration, shell-script generators, CLI ",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
@@ -423,7 +423,7 @@
 		"author": {
 			"name": "'simon place' via golang-nuts"
 		},
-		"snippet": "",
+		"snippet": "i'm 'replacing' modules, for development, with local ones, this has worked fine. but now i am importing a module that itself imports another replaced module, i get 'go: cycle imports modulo: malformed",
 		"tag": "discussion",
 		"comments": 0,
 		"score": 0.5,
