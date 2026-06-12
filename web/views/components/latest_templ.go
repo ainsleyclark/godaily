@@ -52,7 +52,7 @@ func Latest(issue digest.Issue) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Fresh off the press</div><h2 class=\"section__title\">What landed in today's digest</h2><p class=\"section__sub\">A peek at the most recent issue. Subscribe to get the full thing in your inbox.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Fresh off the press</div><h2 class=\"section__title\">What landed in today's Go digest</h2><p class=\"section__sub\">A peek at the most recent issue. Subscribe to get the full thing in your inbox, or read every story in the <a href=\"/browse/\">live feed</a>.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

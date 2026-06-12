@@ -1,0 +1,43 @@
+.home-feed {
+	.stat-strip {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	&__chips {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin: 2rem 0 0.5rem;
+	}
+
+	&__list {
+		margin-top: 1rem;
+	}
+
+	&__footer {
+		margin-top: 2rem;
+	}
+
+	&__view-all {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--accent-dark);
+		text-decoration: none;
+		transition: color 0.15s;
+
+		&:hover {
+			color: var(--accent);
+		}
+	}
+
+	&__empty {
+		background: var(--bg-card);
+		border: 1px dashed var(--border);
+		border-radius: var(--radius);
+		padding: 3rem 1.5rem;
+		text-align: center;
+		color: var(--text-2);
+		font-size: 0.95rem;
+		margin-top: 2rem;
+	}
+}

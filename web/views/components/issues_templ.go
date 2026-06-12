@@ -52,7 +52,7 @@ func Issues(issues []digest.Issue) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Browse the archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest. Each one fully linked and readable.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">The archive</div><h2 class=\"section__title\">Every issue, on demand</h2><p class=\"section__sub\">Catch up on any past digest. Each one fully linked and readable.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

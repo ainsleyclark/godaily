@@ -11,9 +11,9 @@ templ Latest(issue digest.Issue) {
 	<section id="latest" class="section latest">
 		@Container(false) {
 			<div class="section__label">Fresh off the press</div>
-			<h2 class="section__title">What landed in today's digest</h2>
+			<h2 class="section__title">What landed in today's Go digest</h2>
 			<p class="section__sub">
-				A peek at the most recent issue. Subscribe to get the full thing in your inbox.
+				A peek at the most recent issue. Subscribe to get the full thing in your inbox, or read every story in the <a href="/browse/">live feed</a>.
 			</p>
 			if len(issue.Items) == 0 {
 				<div class="latest__empty">

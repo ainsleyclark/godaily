@@ -67,7 +67,7 @@ func SubscribeCTA(props SubscribeCTAProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"subscribe-cta__inner\"><h2 class=\"subscribe-cta__title\">Get the digest in your inbox</h2><p class=\"subscribe-cta__lead\">The best Go stories from across the community, ranked and delivered weekday mornings. Free, no spam.</p><form class=\"subscribe-cta__form\" data-subscribe><input class=\"hero__input\" type=\"email\" name=\"email\" placeholder=\"you@example.com\" autocomplete=\"email\" aria-label=\"Email address\" required>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"subscribe-cta__inner\"><h2 class=\"subscribe-cta__title\">Get the daily Golang digest</h2><p class=\"subscribe-cta__lead\">The day's best Go stories, ranked and summarised in one email. Weekday mornings, free, unsubscribe any time. Prefer to pull? There's <a href=\"/rss.xml\">RSS</a> and the <a href=\"/browse/\">live feed</a> too.</p><form class=\"subscribe-cta__form\" data-subscribe><input class=\"hero__input\" type=\"email\" name=\"email\" placeholder=\"you@example.com\" autocomplete=\"email\" aria-label=\"Email address\" required>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

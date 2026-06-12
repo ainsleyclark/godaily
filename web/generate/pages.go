@@ -30,11 +30,17 @@ func renderPages(ctx context.Context, repo digest.IssueRepository, items news.It
 		return errors.Wrap(err, "creating OG image generator")
 	}
 
+	feed, err := handlers.BuildHomeFeed(ctx, items)
+	if err != nil {
+		return errors.Wrap(err, "building home feed")
+	}
+
 	homeData := pages.HomeData{
 		LatestIssue:     w.LatestIssue,
 		SampleIssue:     w.LatestIssue,
 		RecentIssues:    w.RecentIssues,
 		SubscriberCount: subscriberCount,
+		Feed:            feed,
 	}
 	if err := renderPage(ctx, filepath.Join(outDir, "index.html"), pages.Home(homeData)); err != nil {
 		return errors.Wrap(err, "rendering homepage")

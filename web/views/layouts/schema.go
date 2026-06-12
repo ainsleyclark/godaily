@@ -16,21 +16,22 @@ import (
 const orgLogoURL = "https://godaily.dev/assets/favicon/favicon-96x96.png"
 
 // OrgSchema is the site-wide Organization JSON-LD rendered on every page.
-const OrgSchema = `{"@context":"https://schema.org","@type":"Organization","name":"GoDaily","url":"https://godaily.dev/","description":"A free daily Go newsletter delivering the best Go news and articles from across the community.","logo":{"@type":"ImageObject","url":"https://godaily.dev/assets/favicon/favicon-96x96.png","width":96,"height":96}}`
+const OrgSchema = `{"@context":"https://schema.org","@type":"Organization","name":"GoDaily","url":"https://godaily.dev/","description":"A daily Golang news hub: a free weekday newsletter, a live feed of Go stories from across the community, and RSS.","logo":{"@type":"ImageObject","url":"https://godaily.dev/assets/favicon/favicon-96x96.png","width":96,"height":96}}`
 
 // WebSiteSchema returns the WebSite JSON-LD for the homepage.
 func WebSiteSchema() string {
 	schema := map[string]any{
-		"@context":    "https://schema.org",
-		"@type":       "WebSite",
-		"name":        "GoDaily",
-		"url":         env.AppURL + "/",
-		"description": "The daily Go newsletter. Best stories from the Go community, ranked and delivered before standup.",
+		"@context":      "https://schema.org",
+		"@type":         "WebSite",
+		"name":          "GoDaily",
+		"alternateName": "GoDaily Golang News",
+		"url":           env.AppURL + "/",
+		"description":   "Daily Golang news and newsletter. The best stories from the Go community, ranked and summarised every weekday.",
 		"potentialAction": map[string]any{
 			"@type": "SearchAction",
 			"target": map[string]any{
 				"@type":       "EntryPoint",
-				"urlTemplate": env.AppURL + "/issues/?q={search_term_string}",
+				"urlTemplate": env.AppURL + "/browse/?q={search_term_string}",
 			},
 			"query-input": "required name=search_term_string",
 		},

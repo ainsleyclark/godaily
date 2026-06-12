@@ -1,0 +1,71 @@
+package components
+
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+)
+
+// HomeFeedProps carries the live-feed snapshot rendered on the homepage: the
+// hottest recent stories plus the headline stats for the browse archive.
+type HomeFeedProps struct {
+	Items        []news.Item // hottest items from the last 7 days
+	Total        int64       // total stories indexed
+	SourceCount  int         // number of live sources
+	SectionCount int         // number of browse sections
+}
+
+// homeFeedChipTags is the subset of section tags surfaced as quick links on
+// the homepage; the full set lives on /browse/.
+var homeFeedChipTags = []news.Tag{
+	news.TagRelease,
+	news.TagProposal,
+	news.TagSecurity,
+	news.TagArticle,
+	news.TagDiscussion,
+}
+
+// homeFeedTagURL mirrors pages.BrowseTagURL; defined locally because pages
+// imports components.
+func homeFeedTagURL(tag news.Tag) string {
+	return "/browse/" + string(tag) + "/"
+}
+
+templ HomeFeed(props HomeFeedProps) {
+	<section id="feed" class="section home-feed">
+		@Container(false) {
+			<div class="section__label">Live feed</div>
+			<h2 class="section__title">Hot in Go right now</h2>
+			<p class="section__sub">
+				The same pipeline that builds the newsletter, live on the web. Every Golang story we've collected — searchable, filterable, updated daily.
+			</p>
+			@StatStrip([]StatProps{
+				{Value: FormatThousands(props.Total), Label: "Stories indexed"},
+				{Value: fmt.Sprintf("%d", props.SourceCount), Label: "Live sources"},
+				{Value: fmt.Sprintf("%d", props.SectionCount), Label: "Sections"},
+			})
+			<div class="home-feed__chips">
+				@ChipButton(ChipButtonProps{Href: "/browse/", Active: true}) {
+					All
+				}
+				for _, tag := range homeFeedChipTags {
+					@ChipButton(ChipButtonProps{Href: homeFeedTagURL(tag)}) {
+						{ tag.Title() }
+					}
+				}
+			</div>
+			if len(props.Items) == 0 {
+				<div class="home-feed__empty">
+					The first stories land soon. Subscribe above to be first to read them.
+				</div>
+			} else {
+				<div class="home-feed__list">
+					@BrowseItemList(props.Items)
+				</div>
+				<div class="home-feed__footer">
+					<a class="home-feed__view-all" href="/browse/">Browse all { FormatThousands(props.Total) } stories →</a>
+				</div>
+			}
+		}
+	</section>
+}

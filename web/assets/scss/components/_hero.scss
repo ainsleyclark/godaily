@@ -107,6 +107,25 @@
 		}
 	}
 
+	&__actions {
+		display: flex;
+		gap: 1.25rem;
+		flex-wrap: wrap;
+		margin-bottom: 1rem;
+	}
+
+	&__action {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--accent-dark);
+		text-decoration: none;
+		transition: color 0.15s;
+
+		&:hover {
+			color: var(--accent);
+		}
+	}
+
 	&__sub {
 		font-size: 0.82rem;
 		color: var(--text-3);

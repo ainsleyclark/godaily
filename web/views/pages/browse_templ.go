@@ -106,7 +106,7 @@ func Browse(props BrowseProps) templ.Component {
 						Action:      BrowseBasePath,
 						Name:        "q",
 						Value:       props.State.Query,
-						Placeholder: fmt.Sprintf("Search %s stories…", formatThousands(props.Total)),
+						Placeholder: fmt.Sprintf("Search %s stories…", components.FormatThousands(props.Total)),
 						Hint:        "⌘K",
 						Attrs:       templ.Attributes{"hx-get": "/api/browse"},
 					}).Render(ctx, templ_7745c5c3_Buffer)
@@ -471,7 +471,7 @@ func hxNav(pageURL string) templ.Attributes {
 
 func browseStats(p BrowseProps) []components.StatProps {
 	stats := []components.StatProps{
-		{Value: formatThousands(p.Total), Label: "Stories indexed"},
+		{Value: components.FormatThousands(p.Total), Label: "Stories indexed"},
 		{Value: fmt.Sprintf("%d", len(news.Sources)), Label: "Live sources"},
 	}
 	if p.LatestIssue > 0 {
@@ -496,7 +496,7 @@ func browseTabs(p BrowseProps) []components.TabProps {
 	tabs := []components.TabProps{{
 		Label:  "All",
 		Href:   allHref,
-		Count:  formatThousands(p.Total),
+		Count:  components.FormatThousands(p.Total),
 		Active: p.State.Tab == "" || p.State.Tab == "all",
 		Attrs:  hxNav(allHref),
 	}}
@@ -643,21 +643,6 @@ func emptyBody(digestOnly bool) string {
 		return "Nothing in this slice made the digest. Try widening the date range, or include the full firehose."
 	}
 	return "Try widening the date range, picking fewer sources, or jump back to All."
-}
-
-func formatThousands(n int64) string {
-	if n < 1000 {
-		return fmt.Sprintf("%d", n)
-	}
-	s := fmt.Sprintf("%d", n)
-	var out []byte
-	for i, c := range []byte(s) {
-		if i > 0 && (len(s)-i)%3 == 0 {
-			out = append(out, ',')
-		}
-		out = append(out, c)
-	}
-	return string(out)
 }
 
 var _ = templruntime.GeneratedTemplate
