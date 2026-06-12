@@ -5,15 +5,20 @@
 
 	@include mobile {
 		margin-top: 1rem;
+		overflow: hidden;
+		margin-left: calc(-1 * var(--section-padding-x));
+		margin-right: calc(-1 * var(--section-padding-x));
+		padding-left: var(--section-padding-x);
+		padding-right: var(--section-padding-x);
 
 		.swiper-wrapper {
 			display: flex;
-			flex-direction: column;
-			gap: 16px;
+			box-sizing: content-box;
 		}
 
 		.swiper-slide {
-			width: 100%;
+			flex-shrink: 0;
+			width: 87%;
 		}
 	}
 
