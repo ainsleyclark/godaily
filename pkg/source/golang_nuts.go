@@ -7,6 +7,7 @@ package source
 import (
 	"context"
 	"encoding/xml"
+	"regexp"
 	"strings"
 	"time"
 
@@ -41,7 +42,11 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ingest.TransformAll(ctx, feed.Channel.Items), nil
+	items := ingest.TransformAll(ctx, feed.Channel.Items)
+	// Message pages expose no meta description, so pull the snippet from
+	// the MHonArc message body instead of the generic meta-tag enricher.
+	ingest.EnrichSnippetsFromHTML(ctx, items, extractMHonArcBody)
+	return items, nil
 }
 
 // ShouldInclude returns false for reply threads (subjects containing "Re: "),
@@ -49,7 +54,39 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 func (e golangNutsItem) ShouldInclude() bool {
 	return !strings.HasPrefix(e.Title, "Re: ") && !strings.HasPrefix(e.Title, "[go-nuts] Re: ")
 }
+
+// EnrichmentURL returns "" because the snippet is filled from the message
+// body via extractMHonArcBody, not from meta tags.
 func (e golangNutsItem) EnrichmentURL() string { return "" }
+
+const (
+	mhonArcBodyStart = "<!--X-Body-of-Message-->"
+	mhonArcBodyEnd   = "<!--X-Body-of-Message-End-->"
+	// mail-archive.com omits the canonical end marker, so we fall back to
+	// the next structural block.
+	mhonArcBodyEndFallback = `<div class="msgButtons`
+)
+
+// Dropping quoted-reply lines keeps the snippet to the author's own words.
+var quotedLineRe = regexp.MustCompile(`(?m)^\s*(?:<[^>]+>\s*)*(?:&gt;|>).*$`)
+
+func extractMHonArcBody(rawHTML string) string {
+	start := strings.Index(rawHTML, mhonArcBodyStart)
+	if start == -1 {
+		return ""
+	}
+	start += len(mhonArcBodyStart)
+	rest := rawHTML[start:]
+
+	end := strings.Index(rest, mhonArcBodyEnd)
+	if end == -1 {
+		end = strings.Index(rest, mhonArcBodyEndFallback)
+	}
+	if end == -1 {
+		return ""
+	}
+	return quotedLineRe.ReplaceAllString(rest[:end], "")
+}
 
 func (e golangNutsItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC1123, e.PubDate)

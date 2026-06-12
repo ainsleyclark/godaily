@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -19,40 +20,43 @@ import (
 func TestGolangNuts_Fetch(t *testing.T) {
 	t.Parallel()
 
+	// __SERVER_URL__ in the fixture is rewritten to the test server so body
+	// enrichment doesn't hit the live internet.
 	fixture, err := os.ReadFile("testdata/golang_nuts.xml")
 	require.NoError(t, err)
 
 	tt := map[string]struct {
-		stub func() http.HandlerFunc
-		want func(t *testing.T, items []news.Item, err error)
+		stub func(serverURL string) http.HandlerFunc
+		want func(t *testing.T, items []news.Item, err error, serverURL string)
 	}{
 		"Bad Request": {
-			stub: func() http.HandlerFunc {
+			stub: func(string) http.HandlerFunc {
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusBadRequest)
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				assert.Error(t, err)
 				assert.Nil(t, items)
 			},
 		},
 		"OK": {
-			stub: func() http.HandlerFunc {
+			stub: func(serverURL string) http.HandlerFunc {
+				body := strings.ReplaceAll(string(fixture), "__SERVER_URL__", serverURL)
 				return func(w http.ResponseWriter, _ *http.Request) {
 					w.WriteHeader(http.StatusOK)
-					_, _ = w.Write(fixture)
+					_, _ = w.Write([]byte(body))
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
 				assert.Equal(t, news.Item{
 					Source:    news.SourceGolangNuts,
 					Title:     "How to efficiently process large slices without allocation?",
-					URL:       "http://www.mail-archive.com/golang-nuts@googlegroups.com/msg12345.html",
+					URL:       serverURL,
 					Author:    &news.Author{Name: "Jane Developer"},
 					Tag:       news.TagDiscussion,
 					Score:     news.ScoreOf(news.SourceGolangNuts, news.TagDiscussion, 0, false),
@@ -60,8 +64,49 @@ func TestGolangNuts_Fetch(t *testing.T) {
 				}, items[0])
 			},
 		},
+		"Enriches snippet from MHonArc message body": {
+			stub: func(serverURL string) http.HandlerFunc {
+				feed := `<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <item>
+      <title>[go-nuts] FullStack Go framework</title>
+      <link>` + serverURL + `/msg.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Jane Developer&lt;/a&gt;</description>
+      <pubDate>Tue, 12 May 2026 08:30:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>`
+				page := `<html><head><title>[go-nuts] FullStack Go framework</title></head><body>
+<!--X-Body-of-Message-->
+<pre>&gt; someone wrote a quoted reply line
+Some things force us to evolve. I built my own *Go* FullStack framework.
+</pre>
+<!--X-Body-of-Message-End-->
+</body></html>`
+				return func(w http.ResponseWriter, r *http.Request) {
+					if strings.HasSuffix(r.URL.Path, "/msg.html") {
+						w.Header().Set("Content-Type", "text/html")
+						_, _ = w.Write([]byte(page))
+						return
+					}
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write([]byte(feed))
+				}
+			},
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				assert.Equal(
+					t,
+					"Some things force us to evolve. I built my own Go FullStack framework.",
+					items[0].Snippet,
+				)
+			},
+		},
 		"Filters reply threads": {
-			stub: func() http.HandlerFunc {
+			stub: func(string) http.HandlerFunc {
 				const body = `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
@@ -84,20 +129,20 @@ func TestGolangNuts_Fetch(t *testing.T) {
 					_, _ = w.Write([]byte(body))
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				require.NoError(t, err)
 				assert.Empty(t, items)
 			},
 		},
 		"Missing title prefix": {
-			stub: func() http.HandlerFunc {
-				const body = `<?xml version="1.0" encoding="utf-8"?>
+			stub: func(serverURL string) http.HandlerFunc {
+				body := `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
     <item>
       <title>No prefix title</title>
-      <link>https://www.mail-archive.com/golang-nuts@googlegroups.com/msg99999.html</link>
+      <link>` + serverURL + `</link>
       <description>&lt;a href=&quot;...&quot;&gt;Someone&lt;/a&gt;</description>
       <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
     </item>
@@ -108,7 +153,7 @@ func TestGolangNuts_Fetch(t *testing.T) {
 					_, _ = w.Write([]byte(body))
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error) {
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -120,11 +165,67 @@ func TestGolangNuts_Fetch(t *testing.T) {
 	for name, test := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			s := httptest.NewServer(test.stub())
+			var serverURL string
+			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				test.stub(serverURL)(w, r)
+			}))
 			defer s.Close()
+			serverURL = s.URL
 
 			got, err := GolangNuts{url: s.URL}.Fetch(t.Context())
-			test.want(t, got, err)
+			test.want(t, got, err, serverURL)
 		})
 	}
+}
+
+func TestExtractMHonArcBody(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"Extracts body between markers": {
+			in:   "<html><!--X-Body-of-Message--><pre>Hello there</pre><!--X-Body-of-Message-End--></html>",
+			want: "<pre>Hello there</pre>",
+		},
+		"Drops quoted reply lines": {
+			in:   "<!--X-Body-of-Message-->\n&gt; old quoted line\nmy own words\n<!--X-Body-of-Message-End-->",
+			want: "\nmy own words\n",
+		},
+		"No start marker": {
+			in:   "<html><pre>Hello</pre></html>",
+			want: "",
+		},
+		"No end marker or fallback": {
+			in:   "<!--X-Body-of-Message--><pre>Hello</pre>",
+			want: "",
+		},
+		"Falls back to msgButtons div when end marker absent": {
+			in:   `<!--X-Body-of-Message--><pre>Hi there</pre></div><div class="msgButtons ">…`,
+			want: `<pre>Hi there</pre></div>`,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, extractMHonArcBody(test.in))
+		})
+	}
+}
+
+// Locks the extractor to real mail-archive.com markup, not just synthetic fixtures.
+func TestExtractMHonArcBody_RealPage(t *testing.T) {
+	t.Parallel()
+
+	raw, err := os.ReadFile("testdata/golang_nuts_msg.html")
+	require.NoError(t, err)
+
+	body := extractMHonArcBody(string(raw))
+	require.NotEmpty(t, body, "extractor returned empty body for real page")
+	assert.Contains(t, body, "Some things force us to evolve")
+	assert.Contains(t, body, "FullStack")
+	assert.NotContains(t, body, "msgButtons")
+	assert.NotContains(t, body, "View by thread")
 }

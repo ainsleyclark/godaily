@@ -5,8 +5,8 @@
     <title>golang-nuts</title>
     <link>http://www.mail-archive.com/golang-nuts@googlegroups.com</link>
     <description>golang-nuts @ googlegroups</description>
-    <pubDate>Thu, 07 May 2026 16:32:43 GMT</pubDate>
-    <lastBuildDate>Thu, 07 May 2026 16:32:43 GMT</lastBuildDate>
+    <pubDate>Thu, 11 Jun 2026 15:58:53 GMT</pubDate>
+    <lastBuildDate>Thu, 11 Jun 2026 15:58:53 GMT</lastBuildDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
     <generator>MHonArc RSS 2.0 RCFile</generator>
     <webMaster>themailarchive@gmail.com (The Mail Archive)</webMaster>
@@ -16,6 +16,433 @@
        <link>http://www.mail-archive.com/golang-nuts@googlegroups.com</link>
     </image>
  
+    <item>
+      <title>[go-nuts] FullStack Go framework</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56037.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/11&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22GamiPress Cordial%22&quot;&gt;GamiPress Cordial&lt;/a&gt;</description>
+      <pubDate>Thu, 11 Jun 2026 15:58:52 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56037.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Timer.Reset and channel lifetime</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56036.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Amnon%22&quot;&gt;Amnon&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 22:05:56 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56036.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56035.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 19:33:54 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56035.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56034.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22thepud...@gmail.com%22&quot;&gt;thepud...@gmail.com&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 19:23:23 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56034.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56033.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Raffaele Sena%22&quot;&gt;Raffaele Sena&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 19:17:16 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56033.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56032.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 18:18:27 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56032.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56031.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 18:10:22 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56031.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56030.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 17:18:26 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56030.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Timer.Reset and channel lifetime</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56029.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Wojciech Kaczmarek%22&quot;&gt;Wojciech Kaczmarek&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 17:08:26 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56029.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56028.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Robert Solomon%22&quot;&gt;Robert Solomon&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 11:43:07 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56028.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56027.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Robert Solomon%22&quot;&gt;Robert Solomon&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 11:39:12 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56027.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56026.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 08:42:13 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56026.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56025.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Brian Candler' via golang-nuts%22&quot;&gt;'Brian Candler' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 06:57:35 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56025.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56024.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Robert Solomon%22&quot;&gt;Robert Solomon&lt;/a&gt;</description>
+      <pubDate>Tue, 09 Jun 2026 00:02:41 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56024.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56023.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Robert Solomon%22&quot;&gt;Robert Solomon&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 23:59:32 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56023.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56022.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Ian Davis%22&quot;&gt;Ian Davis&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 17:48:50 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56022.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56021.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Brian Candler' via golang-nuts%22&quot;&gt;'Brian Candler' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 16:53:15 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56021.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56020.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Marvin Renich%22&quot;&gt;Marvin Renich&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 16:27:50 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56020.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] is there a bullet-proof description of how to use go locally: no domain, no github, ..</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56019.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'andreas graeper' via golang-nuts%22&quot;&gt;'andreas graeper' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 15:51:20 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56019.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56018.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Def Ceb%22&quot;&gt;Def Ceb&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 15:47:34 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56018.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56017.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Brian Candler' via golang-nuts%22&quot;&gt;'Brian Candler' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 15:43:50 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56017.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56016.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Marvin Renich%22&quot;&gt;Marvin Renich&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 15:42:37 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56016.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Re: is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56015.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Rishikesh Raj%22&quot;&gt;Rishikesh Raj&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 10:52:30 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56015.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Re: is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56014.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Def Ceb%22&quot;&gt;Def Ceb&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 10:49:30 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56014.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56013.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'andreas graeper' via golang-nuts%22&quot;&gt;'andreas graeper' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 10:33:59 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56013.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56012.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Def Ceb%22&quot;&gt;Def Ceb&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 09:58:42 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56012.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56011.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Rishikesh Raj%22&quot;&gt;Rishikesh Raj&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 09:58:24 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56011.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] is it possible to call a function from inside a go-routine ?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56010.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'andreas graeper' via golang-nuts%22&quot;&gt;'andreas graeper' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Mon, 08 Jun 2026 09:42:52 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56010.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Rust/Pony like ownership for Go: Gown for data-race freedom at compile time</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56009.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/06&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Sat, 06 Jun 2026 16:41:01 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56009.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56008.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/05&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Amnon%22&quot;&gt;Amnon&lt;/a&gt;</description>
+      <pubDate>Fri, 05 Jun 2026 09:48:10 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56008.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56007.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22atd...@gmail.com%22&quot;&gt;atd...@gmail.com&lt;/a&gt;</description>
+      <pubDate>Thu, 04 Jun 2026 21:01:28 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56007.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56006.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Robert Engels' via golang-nuts%22&quot;&gt;'Robert Engels' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Thu, 04 Jun 2026 17:29:16 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56006.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56005.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Stephen Illingworth%22&quot;&gt;Stephen Illingworth&lt;/a&gt;</description>
+      <pubDate>Thu, 04 Jun 2026 17:04:34 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56005.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56004.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Thu, 04 Jun 2026 16:58:07 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56004.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56003.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Randall O'Reilly%22&quot;&gt;Randall O'Reilly&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 13:16:01 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56003.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56002.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22alex-coder%22&quot;&gt;alex-coder&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 11:39:29 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56002.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56001.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nick%22&quot;&gt;Nick&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 10:54:48 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56001.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56000.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Stephen Illingworth%22&quot;&gt;Stephen Illingworth&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 08:31:10 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg56000.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55999.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jorge Javier Araya Navarro%22&quot;&gt;Jorge Javier Araya Navarro&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 00:13:48 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55999.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Go-Gui, Cross Platform GUI for Go.</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55998.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Mike Ward%22&quot;&gt;Mike Ward&lt;/a&gt;</description>
+      <pubDate>Wed, 03 Jun 2026 00:09:17 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55998.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] [security] Go 1.26.4 and Go 1.25.11 are released</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55997.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22announce%22&quot;&gt;announce&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 21:13:42 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55997.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55996.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Rishikesh Raj%22&quot;&gt;Rishikesh Raj&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 16:24:19 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55996.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55995.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Rishikesh Raj%22&quot;&gt;Rishikesh Raj&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 16:24:19 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55995.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55994.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Rishikesh Raj%22&quot;&gt;Rishikesh Raj&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 16:24:19 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55994.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55993.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Alex Pliutau%22&quot;&gt;Alex Pliutau&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 08:34:46 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55993.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55992.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Alex Pliutau%22&quot;&gt;Alex Pliutau&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 08:22:34 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55992.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] What Go topics you are interested in?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55991.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Alex Pliutau%22&quot;&gt;Alex Pliutau&lt;/a&gt;</description>
+      <pubDate>Tue, 02 Jun 2026 07:59:21 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55991.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] golang repository</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55990.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/06/01&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22White Black%22&quot;&gt;White Black&lt;/a&gt;</description>
+      <pubDate>Mon, 01 Jun 2026 13:48:48 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55990.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] [Project Share] Building a Production-Ready IoT Platform with Go</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55989.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/30&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'SagooIoT Team' via golang-nuts%22&quot;&gt;'SagooIoT Team' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Sat, 30 May 2026 19:55:33 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55989.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] What are your thoughts on the future of Go in the AI era?</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55988.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/30&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Alex Pliutau%22&quot;&gt;Alex Pliutau&lt;/a&gt;</description>
+      <pubDate>Sat, 30 May 2026 16:52:46 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55988.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: defer func() { _ = resp.Body.Close() }()</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55987.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Anton Savitsky%22&quot;&gt;Anton Savitsky&lt;/a&gt;</description>
+      <pubDate>Fri, 29 May 2026 19:14:20 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55987.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] a risc-v 64 interpreter and JIT-to-amd64 for Go</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55986.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Fri, 29 May 2026 07:26:44 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55986.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] About translating go tour</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55985.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22RikuS3n%22&quot;&gt;RikuS3n&lt;/a&gt;</description>
+      <pubDate>Wed, 27 May 2026 01:04:41 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55985.html</guid>
+   </item>
+    <item>
+      <title>Re: [go-nuts] About translating go tour</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55984.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/26&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Sean Liao' via golang-nuts%22&quot;&gt;'Sean Liao' via golang-nuts&lt;/a&gt;</description>
+      <pubDate>Tue, 26 May 2026 08:46:09 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55984.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: About translating go tour</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55983.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/26&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
+      <pubDate>Tue, 26 May 2026 07:25:27 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55983.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] About translating go tour</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55982.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/24&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22RikuS3n%22&quot;&gt;RikuS3n&lt;/a&gt;</description>
+      <pubDate>Sun, 24 May 2026 18:28:15 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55982.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] [ANN] jfcg/sixb v3 release: Utilities including lightweight fifo queue</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55981.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/23&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22jfcg...@gmail.com%22&quot;&gt;jfcg...@gmail.com&lt;/a&gt;</description>
+      <pubDate>Sat, 23 May 2026 01:59:12 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55981.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Re: Looking for GoLang Developer in US</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55980.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/22&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Dishant%22&quot;&gt;Dishant&lt;/a&gt;</description>
+      <pubDate>Fri, 22 May 2026 18:28:48 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55980.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] [security] Vulnerabilities in golang.org/x/net</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55979.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/22&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22announce%22&quot;&gt;announce&lt;/a&gt;</description>
+      <pubDate>Fri, 22 May 2026 02:23:42 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55979.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] [security] Vulnerabilities in golang.org/x/image</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55978.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/21&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22announce%22&quot;&gt;announce&lt;/a&gt;</description>
+      <pubDate>Thu, 21 May 2026 23:27:01 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55978.html</guid>
+   </item>
+    <item>
+      <title>[go-nuts] Looking for GoLang Developer in US</title>
+      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55977.html</link>
+      <description>&lt;font color=#6f6f6f&gt; 2026/05/21&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Dishant%22&quot;&gt;Dishant&lt;/a&gt;</description>
+      <pubDate>Thu, 21 May 2026 19:35:56 GMT</pubDate>
+      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55977.html</guid>
+   </item>
     <item>
       <title>[go-nuts] [security] Go 1.26.3 and Go 1.25.10 are released</title>
       <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55976.html</link>
@@ -288,433 +715,6 @@
       <description>&lt;font color=#6f6f6f&gt; 2026/04/16&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22tapi...@gmail.com%22&quot;&gt;tapi...@gmail.com&lt;/a&gt;</description>
       <pubDate>Thu, 16 Apr 2026 19:51:18 GMT</pubDate>
       <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55938.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: Iterators and performance</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55937.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/16&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22tapi...@gmail.com%22&quot;&gt;tapi...@gmail.com&lt;/a&gt;</description>
-      <pubDate>Thu, 16 Apr 2026 08:26:22 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55937.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Iterators and performance</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55936.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/15&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Pierre Durand%22&quot;&gt;Pierre Durand&lt;/a&gt;</description>
-      <pubDate>Wed, 15 Apr 2026 19:51:04 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55936.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55935.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/13&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jan Mercl%22&quot;&gt;Jan Mercl&lt;/a&gt;</description>
-      <pubDate>Mon, 13 Apr 2026 08:53:08 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55935.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55934.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/13&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Axel Wagner' via golang-nuts%22&quot;&gt;'Axel Wagner' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Mon, 13 Apr 2026 06:41:06 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55934.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55933.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/13&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jan Mercl%22&quot;&gt;Jan Mercl&lt;/a&gt;</description>
-      <pubDate>Mon, 13 Apr 2026 06:40:00 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55933.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55932.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/13&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Axel Wagner' via golang-nuts%22&quot;&gt;'Axel Wagner' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Mon, 13 Apr 2026 06:28:47 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55932.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55931.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/12&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jan Mercl%22&quot;&gt;Jan Mercl&lt;/a&gt;</description>
-      <pubDate>Sun, 12 Apr 2026 20:26:53 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55931.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55930.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/12&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'simon place' via golang-nuts%22&quot;&gt;'simon place' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Sun, 12 Apr 2026 16:22:07 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55930.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55929.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/12&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Konstantin Kulikov%22&quot;&gt;Konstantin Kulikov&lt;/a&gt;</description>
-      <pubDate>Sun, 12 Apr 2026 16:02:36 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55929.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] dot import blocks names in another file!</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55928.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/12&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'simon place' via golang-nuts%22&quot;&gt;'simon place' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Sun, 12 Apr 2026 15:33:57 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55928.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: Remove dead code easily</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55927.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/11&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Cheikh Seck%22&quot;&gt;Cheikh Seck&lt;/a&gt;</description>
-      <pubDate>Sat, 11 Apr 2026 22:02:01 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55927.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Remove dead code easily</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55926.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/11&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Navjot Sharma%22&quot;&gt;Navjot Sharma&lt;/a&gt;</description>
-      <pubDate>Sat, 11 Apr 2026 20:48:07 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55926.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55925.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Ian Lance Taylor%22&quot;&gt;Ian Lance Taylor&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 22:50:27 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55925.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55924.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 18:52:54 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55924.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: govulncheck: How to disable checks for specific vulnerabilities?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55923.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22bakari jofrey%22&quot;&gt;bakari jofrey&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 11:27:57 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55923.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: govulncheck: How to disable checks for specific vulnerabilities?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55922.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Marcello H%22&quot;&gt;Marcello H&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 08:04:56 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55922.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55921.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Greg T%22&quot;&gt;Greg T&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 07:54:55 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55921.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55920.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Greg T%22&quot;&gt;Greg T&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 07:51:35 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55920.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55919.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/09&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Grégoire Truhé%22&quot;&gt;Grégoire Truhé&lt;/a&gt;</description>
-      <pubDate>Thu, 09 Apr 2026 05:05:28 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55919.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55918.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Ian Lance Taylor%22&quot;&gt;Ian Lance Taylor&lt;/a&gt;</description>
-      <pubDate>Wed, 08 Apr 2026 22:28:20 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55918.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: x/mobile: gccgo to resolve the issue of multiple SDK conflicts ?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55917.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/08&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
-      <pubDate>Wed, 08 Apr 2026 20:34:11 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55917.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] govulncheck: How to disable checks for specific vulnerabilities?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55916.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/07&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22twp...@gmail.com%22&quot;&gt;twp...@gmail.com&lt;/a&gt;</description>
-      <pubDate>Tue, 07 Apr 2026 23:04:42 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55916.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [security] Go 1.26.2 and Go 1.25.9 are released</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55915.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/07&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22announce%22&quot;&gt;announce&lt;/a&gt;</description>
-      <pubDate>Tue, 07 Apr 2026 22:07:04 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55915.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [ANN] naga v0.17.0 — Pure Go DXIL generator (DirectX 12 shader bytecode)</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55914.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/06&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22a.ko...@gmail.com%22&quot;&gt;a.ko...@gmail.com&lt;/a&gt;</description>
-      <pubDate>Mon, 06 Apr 2026 05:57:31 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55914.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Context cancellation and returned error</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55913.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/05&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Axel Wagner' via golang-nuts%22&quot;&gt;'Axel Wagner' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Sun, 05 Apr 2026 05:23:42 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55913.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] x/text dead?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55912.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Patrick%22&quot;&gt;Patrick&lt;/a&gt;</description>
-      <pubDate>Sat, 04 Apr 2026 22:22:18 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55912.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Context cancellation and returned error</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55911.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Pierre Durand%22&quot;&gt;Pierre Durand&lt;/a&gt;</description>
-      <pubDate>Sat, 04 Apr 2026 21:19:24 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55911.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Context cancellation and returned error</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55910.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/04&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Axel Wagner' via golang-nuts%22&quot;&gt;'Axel Wagner' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Sat, 04 Apr 2026 04:16:49 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55910.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Context cancellation and returned error</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55909.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Pierre Durand%22&quot;&gt;Pierre Durand&lt;/a&gt;</description>
-      <pubDate>Fri, 03 Apr 2026 17:43:36 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55909.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] performance analysis program interface(or skills in the era) for pprof</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55908.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/03&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Qingwei Li' via golang-nuts%22&quot;&gt;'Qingwei Li' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Fri, 03 Apr 2026 03:05:55 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55908.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [Q] &quot;//go:fix inline&quot; and how to deal with imports in writing custom analyzers?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55907.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'TheDiveO' via golang-nuts%22&quot;&gt;'TheDiveO' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Thu, 02 Apr 2026 08:24:29 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55907.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [ANN] nowandlater - fast natural language date and time parsing - no regex</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55906.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/02&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nick Galbreath%22&quot;&gt;Nick Galbreath&lt;/a&gt;</description>
-      <pubDate>Thu, 02 Apr 2026 02:05:32 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55906.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Synchronized workflows for WASM WebWorkers</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55905.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/04/01&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Tobias Cudnik%22&quot;&gt;Tobias Cudnik&lt;/a&gt;</description>
-      <pubDate>Wed, 01 Apr 2026 09:41:05 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55905.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [security] Go 1.26.2 and Go 1.25.9 pre-announcement</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55904.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/30&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22announce%22&quot;&gt;announce&lt;/a&gt;</description>
-      <pubDate>Mon, 30 Mar 2026 16:40:24 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55904.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] [ANN] wprana</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55903.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Luis Furquim%22&quot;&gt;Luis Furquim&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 22:44:00 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55903.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Question about Example code.</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55902.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Travis Keep%22&quot;&gt;Travis Keep&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 20:49:58 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55902.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55901.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nuno Cruces%22&quot;&gt;Nuno Cruces&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 09:52:46 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55901.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55900.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nuno Cruces%22&quot;&gt;Nuno Cruces&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 00:34:55 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55900.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55899.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Andy Balholm%22&quot;&gt;Andy Balholm&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 00:23:44 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55899.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55898.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/29&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nuno Cruces%22&quot;&gt;Nuno Cruces&lt;/a&gt;</description>
-      <pubDate>Sun, 29 Mar 2026 00:11:39 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55898.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] How to implement the Outbox pattern in Go and Postgres</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55897.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/28&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Alex Pliutau%22&quot;&gt;Alex Pliutau&lt;/a&gt;</description>
-      <pubDate>Sat, 28 Mar 2026 13:30:35 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55897.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] v2 of the YottaDB Go wrapper</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55896.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/28&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Berwyn Hoyt%22&quot;&gt;Berwyn Hoyt&lt;/a&gt;</description>
-      <pubDate>Sat, 28 Mar 2026 09:01:53 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55896.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55895.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Andy Balholm%22&quot;&gt;Andy Balholm&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 23:48:28 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55895.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55894.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Nuno Cruces%22&quot;&gt;Nuno Cruces&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 23:33:46 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55894.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Test7800: Atari 7800 emulator written in Go</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55893.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Stephen Illingworth%22&quot;&gt;Stephen Illingworth&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 22:40:46 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55893.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55892.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Andy Balholm%22&quot;&gt;Andy Balholm&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 16:17:07 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55892.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: wasm2go: a Wasm to Go translator</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55891.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Dario Castañé' via golang-nuts%22&quot;&gt;'Dario Castañé' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 15:18:47 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55891.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Dynamic composition of interfaces at runtime?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55890.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22cpu...@gmail.com%22&quot;&gt;cpu...@gmail.com&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 07:42:45 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55890.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] On herding CATSS: how to quickly port anything to Go</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55889.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/27&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
-      <pubDate>Fri, 27 Mar 2026 00:05:01 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55889.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: Ways to debug holding locks bug in runtime</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55888.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/26&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Qingwei Li' via golang-nuts%22&quot;&gt;'Qingwei Li' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Thu, 26 Mar 2026 07:37:27 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55888.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: 35+ Agent Skills for Golang</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55887.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/25&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Samuel Berthe%22&quot;&gt;Samuel Berthe&lt;/a&gt;</description>
-      <pubDate>Wed, 25 Mar 2026 15:51:15 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55887.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: VsCode syntax highlighting for tmpl files</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55886.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/25&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22NIKI CHUM%22&quot;&gt;NIKI CHUM&lt;/a&gt;</description>
-      <pubDate>Wed, 25 Mar 2026 15:13:02 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55886.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Re: 35+ Agent Skills for Golang</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55885.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/24&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Jason E. Aten%22&quot;&gt;Jason E. Aten&lt;/a&gt;</description>
-      <pubDate>Tue, 24 Mar 2026 22:04:14 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55885.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] 35+ Agent Skills for Golang</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55884.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/23&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Samuel Berthe%22&quot;&gt;Samuel Berthe&lt;/a&gt;</description>
-      <pubDate>Mon, 23 Mar 2026 21:41:34 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55884.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Best way to pass a string to a C function</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55883.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/23&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22David Butler (Cro)%22&quot;&gt;David Butler (Cro)&lt;/a&gt;</description>
-      <pubDate>Mon, 23 Mar 2026 12:34:02 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55883.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] chrome-mco - Give agents access to your browser</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55882.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/22&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Cheikh Seck%22&quot;&gt;Cheikh Seck&lt;/a&gt;</description>
-      <pubDate>Sun, 22 Mar 2026 09:34:03 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55882.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Best way to pass a string to a C function</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55881.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/22&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Ian Lance Taylor%22&quot;&gt;Ian Lance Taylor&lt;/a&gt;</description>
-      <pubDate>Sun, 22 Mar 2026 09:08:14 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55881.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Best way to pass a string to a C function</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55880.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/22&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22David Butler (Cro)%22&quot;&gt;David Butler (Cro)&lt;/a&gt;</description>
-      <pubDate>Sun, 22 Mar 2026 08:44:24 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55880.html</guid>
-   </item>
-    <item>
-      <title>[go-nuts] Ways to debug holding locks bug in runtime</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55879.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/21&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Qingwei Li' via golang-nuts%22&quot;&gt;'Qingwei Li' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Sat, 21 Mar 2026 13:33:01 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55879.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] YogaDB: an interesting B-tree variant, 2x faster than LSM trees at writes</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55878.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/17&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22Vasiliy Tolstov%22&quot;&gt;Vasiliy Tolstov&lt;/a&gt;</description>
-      <pubDate>Tue, 17 Mar 2026 15:01:11 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55878.html</guid>
-   </item>
-    <item>
-      <title>Re: [go-nuts] Basic Go binaries for MSDOS?</title>
-      <link>http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55877.html</link>
-      <description>&lt;font color=#6f6f6f&gt; 2026/03/17&lt;/font&gt; -- &lt;a href=&quot;http://www.mail-archive.com/search?l=golang-nuts@googlegroups.com&amp;q=from:%22'Brian Candler' via golang-nuts%22&quot;&gt;'Brian Candler' via golang-nuts&lt;/a&gt;</description>
-      <pubDate>Tue, 17 Mar 2026 12:18:26 GMT</pubDate>
-      <guid isPermaLink="true">http://www.mail-archive.com/golang-nuts@googlegroups.com/msg55877.html</guid>
    </item>
  
   </channel>
