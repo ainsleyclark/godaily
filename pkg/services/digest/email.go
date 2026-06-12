@@ -178,7 +178,10 @@ func buildSections(sources []news.SourceItems) []emailSection {
 }
 
 func toEmailItem(item news.Item) emailItem {
-	parts := []string{item.Source.NiceName()}
+	// The source is already advertised by the "Read on {Source}" link and the
+	// inline mark image, so it is intentionally omitted from Meta to avoid
+	// duplicating the source name on every item.
+	var parts []string
 	if item.Comments > 0 {
 		parts = append(parts, fmt.Sprintf("%d comments", item.Comments))
 	}
