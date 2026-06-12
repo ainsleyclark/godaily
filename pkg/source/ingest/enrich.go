@@ -100,6 +100,61 @@ func enrich(ctx context.Context, targets []enrichTarget) {
 	wg.Wait()
 }
 
+// EnrichSnippetsFromHTML fills empty snippets by fetching each item's URL and
+// running extract over the raw page HTML to isolate the snippet text, which is
+// then sanitised and truncated like any other source snippet. It is for
+// sources whose pages carry the body in markup that meta-tag enrichment can't
+// reach (e.g. MHonArc mail archives, whose message pages expose no og:/meta
+// description). Items that already have a snippet, or whose URL is empty, are
+// skipped. Per-item failures are logged at debug level and never propagate.
+func EnrichSnippetsFromHTML(ctx context.Context, items []news.Item, extract func(rawHTML string) string) {
+	for i := range items {
+		if items[i].Snippet != "" || items[i].URL == "" {
+			continue
+		}
+
+		fetchCtx, cancel := context.WithTimeout(ctx, enrichTimeout)
+		raw, err := fetchRaw(fetchCtx, items[i].URL)
+		cancel()
+		if err != nil {
+			slog.DebugContext(ctx, "Body enrichment failed", "url", items[i].URL, "err", err)
+			continue
+		}
+		if s := truncate(sanitise(extract(raw)), maxSnippetLen); s != "" {
+			items[i].Snippet = s
+		}
+	}
+}
+
+// fetchRaw GETs target with the enricher's HTTP client and returns the raw
+// response body as a string, capped at enrichBodyMax bytes. Unlike fetchPage
+// it does not parse the document, so callers can read content (e.g. HTML
+// comments) that goquery would discard.
+func fetchRaw(ctx context.Context, target string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, target, nil)
+	if err != nil {
+		return "", errors.Wrap(err, "creating enrich request")
+	}
+	req.Header.Set("User-Agent", enrichUserAgent)
+	req.Header.Set("Accept", "text/html,application/xhtml+xml")
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return "", errors.Wrap(err, "fetching url")
+	}
+	defer resp.Body.Close()
+
+	if !httputil.Is2xx(resp.StatusCode) {
+		return "", errors.Errorf("unexpected status %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, enrichBodyMax))
+	if err != nil {
+		return "", errors.Wrap(err, "reading body")
+	}
+	return string(body), nil
+}
+
 // fetchPage returns the parsed HTML document for url and the parsed URL
 // (used as the base for resolving relative meta tag values).
 func fetchPage(ctx context.Context, target string) (*goquery.Document, *url.URL, error) {

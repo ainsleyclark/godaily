@@ -20,10 +20,10 @@ import (
 func TestGolangNuts_Fetch(t *testing.T) {
 	t.Parallel()
 
-	// The included item's <link> is replaced with __SERVER_URL__ so snippet
+	// The included item's <link> is replaced with __SERVER_URL__ so body
 	// enrichment requests land on the test server rather than the live
-	// internet. The server returns the feed (text/xml) for the root path, so
-	// enrichment finds no HTML meta description and leaves the snippet empty —
+	// internet. The server returns the feed (no MHonArc body markers) for the
+	// root path, so enrichment extracts nothing and leaves the snippet empty —
 	// keeping the OK case deterministic.
 	fixture, err := os.ReadFile("testdata/golang_nuts.xml")
 	require.NoError(t, err)
@@ -67,25 +67,33 @@ func TestGolangNuts_Fetch(t *testing.T) {
 				}, items[0])
 			},
 		},
-		"Enriches snippet from message page": {
+		"Enriches snippet from MHonArc message body": {
 			stub: func(serverURL string) http.HandlerFunc {
 				feed := `<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
     <item>
-      <title>[go-nuts] How to efficiently process large slices?</title>
+      <title>[go-nuts] FullStack Go framework</title>
       <link>` + serverURL + `/msg.html</link>
       <description>&lt;a href=&quot;...&quot;&gt;Jane Developer&lt;/a&gt;</description>
       <pubDate>Tue, 12 May 2026 08:30:00 GMT</pubDate>
     </item>
   </channel>
 </rss>`
+				// MHonArc page: no meta description; the body lives between the
+				// X-Body-of-Message markers, with a leading quoted-reply line
+				// that must be dropped, and *markdown*-style emphasis stripped.
+				page := `<html><head><title>[go-nuts] FullStack Go framework</title></head><body>
+<!--X-Body-of-Message-->
+<pre>&gt; someone wrote a quoted reply line
+Some things force us to evolve. I built my own *Go* FullStack framework.
+</pre>
+<!--X-Body-of-Message-End-->
+</body></html>`
 				return func(w http.ResponseWriter, r *http.Request) {
 					if strings.HasSuffix(r.URL.Path, "/msg.html") {
 						w.Header().Set("Content-Type", "text/html")
-						_, _ = w.Write([]byte(`<html><head>
-<meta property="og:description" content="A discussion about reusing slice backing arrays to avoid per-call allocations.">
-</head></html>`))
+						_, _ = w.Write([]byte(page))
 						return
 					}
 					w.WriteHeader(http.StatusOK)
@@ -98,7 +106,7 @@ func TestGolangNuts_Fetch(t *testing.T) {
 				require.Len(t, items, 1)
 				assert.Equal(
 					t,
-					"A discussion about reusing slice backing arrays to avoid per-call allocations.",
+					"Some things force us to evolve. I built my own Go FullStack framework.",
 					items[0].Snippet,
 				)
 			},
@@ -172,6 +180,39 @@ func TestGolangNuts_Fetch(t *testing.T) {
 
 			got, err := GolangNuts{url: s.URL}.Fetch(t.Context())
 			test.want(t, got, err, serverURL)
+		})
+	}
+}
+
+func TestExtractMHonArcBody(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"Extracts body between markers": {
+			in:   "<html><!--X-Body-of-Message--><pre>Hello there</pre><!--X-Body-of-Message-End--></html>",
+			want: "<pre>Hello there</pre>",
+		},
+		"Drops quoted reply lines": {
+			in:   "<!--X-Body-of-Message-->\n&gt; old quoted line\nmy own words\n<!--X-Body-of-Message-End-->",
+			want: "\nmy own words\n",
+		},
+		"No start marker": {
+			in:   "<html><pre>Hello</pre></html>",
+			want: "",
+		},
+		"No end marker": {
+			in:   "<!--X-Body-of-Message--><pre>Hello</pre>",
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, extractMHonArcBody(test.in))
 		})
 	}
 }

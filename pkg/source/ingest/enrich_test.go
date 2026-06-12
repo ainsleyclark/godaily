@@ -17,6 +17,67 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestEnrichSnippetsFromHTML(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Fills empty snippets via extractor and skips populated ones", func(t *testing.T) {
+		t.Parallel()
+		var hits int32
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			atomic.AddInt32(&hits, 1)
+			w.Header().Set("Content-Type", "text/html")
+			_, _ = w.Write([]byte(`<body>BEGIN raw <b>body</b> &amp; more END</body>`))
+		}))
+		defer s.Close()
+
+		extract := func(raw string) string {
+			start := strings.Index(raw, "BEGIN")
+			end := strings.Index(raw, "END")
+			if start == -1 || end == -1 {
+				return ""
+			}
+			return raw[start+len("BEGIN") : end]
+		}
+
+		items := []news.Item{
+			{URL: s.URL},                  // filled from body
+			{URL: s.URL, Snippet: "keep"}, // already set — skipped, no fetch
+			{Snippet: "", URL: ""},        // no URL — skipped
+		}
+		EnrichSnippetsFromHTML(t.Context(), items, extract)
+
+		assert.Equal(t, "raw body & more", items[0].Snippet)
+		assert.Equal(t, "keep", items[1].Snippet)
+		assert.Empty(t, items[2].Snippet)
+		assert.Equal(t, int32(1), atomic.LoadInt32(&hits), "only the empty-snippet item with a URL is fetched")
+	})
+
+	t.Run("Extractor returning empty leaves snippet untouched", func(t *testing.T) {
+		t.Parallel()
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "text/html")
+			_, _ = w.Write([]byte(`<body>no markers here</body>`))
+		}))
+		defer s.Close()
+
+		items := []news.Item{{URL: s.URL}}
+		EnrichSnippetsFromHTML(t.Context(), items, func(string) string { return "" })
+		assert.Empty(t, items[0].Snippet)
+	})
+
+	t.Run("Fetch error is swallowed", func(t *testing.T) {
+		t.Parallel()
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		}))
+		defer s.Close()
+
+		items := []news.Item{{URL: s.URL}}
+		EnrichSnippetsFromHTML(t.Context(), items, func(raw string) string { return raw })
+		assert.Empty(t, items[0].Snippet)
+	})
+}
+
 func TestFetchPage(t *testing.T) {
 	t.Parallel()
 
