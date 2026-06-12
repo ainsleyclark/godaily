@@ -6,7 +6,10 @@
 	gap: 14px;
 	margin-top: 1.6rem;
 
-	@include mobile { grid-template-columns: repeat(2, 1fr); }
+	// These headline stats are decorative context; on mobile they push the
+	// real content (search, feed) below the fold without adding value, so
+	// drop them entirely. Applies to both the homepage and /browse strips.
+	@include mobile { display: none; }
 }
 .stat {
 	background: var(--color-white);
