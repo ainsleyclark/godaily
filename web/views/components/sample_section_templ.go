@@ -49,7 +49,7 @@ func SampleSection(issue digest.Issue) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Sample output</div><h2 class=\"section__title\">What lands in your inbox</h2><p class=\"section__sub\">A clean, readable digest. No ads, no cruft. Just the Go stories worth your time.</p><div class=\"email-preview email-preview--wide\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Sample output</div><h2 class=\"section__title\">What lands in your inbox</h2><p class=\"section__sub\">A clean, readable digest. No ads, no cruft. Just the Go news worth your time.</p><div class=\"email-preview email-preview--wide\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

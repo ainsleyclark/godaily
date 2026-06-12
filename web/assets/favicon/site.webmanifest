@@ -1,7 +1,7 @@
 {
   "name": "GoDaily",
   "short_name": "GoDaily",
-  "description": "The daily Go newsletter — best Go news delivered before standup.",
+  "description": "Daily Golang news and newsletter — the best Go stories, ranked and summarised every weekday.",
   "start_url": "/",
   "icons": [
     {

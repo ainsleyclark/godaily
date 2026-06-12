@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	defaultTitle       = "Daily Go news straight to your inbox before standup"
-	defaultDescription = "A weekday digest of the best Go stories from across the community, ranked and delivered before standup."
+	defaultTitle       = "GoDaily — Daily Golang News & Newsletter"
+	defaultDescription = "Daily Golang news, ranked and summarised: a free weekday newsletter, a live browse feed, and RSS."
 	defaultOGImage     = "https://godaily.dev/og/home.png"
 )
 

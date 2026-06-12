@@ -21,6 +21,7 @@ type HomeData struct {
 	RecentIssues    []digest.Issue
 	Flash           string
 	SubscriberCount int64
+	Feed            components.HomeFeedProps
 }
 
 func Home(data HomeData) templ.Component {
@@ -88,7 +89,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Features().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.HomeFeed(data.Feed).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -96,7 +97,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Sources().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Rule().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -104,7 +105,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Latest(data.LatestIssue).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Features().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -112,7 +113,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Rule().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Sources().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -120,7 +121,7 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Issues(data.RecentIssues).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Latest(data.LatestIssue).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -136,11 +137,27 @@ func Home(data HomeData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.SampleSection(data.SampleIssue).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Issues(data.RecentIssues).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.Rule().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = components.SampleSection(data.SampleIssue).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -151,8 +168,8 @@ func Home(data HomeData) templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = layouts.Base(layouts.PageMeta{
-			Title:        "GoLang Newsletter: Daily Go News Before Standup",
-			Description:  "A free GoLang newsletter delivering the best Go news, articles, and community discussions to your inbox every weekday morning.",
+			Title:        "Daily Golang News & Newsletter",
+			Description:  "All of today's Golang news in one place — a free daily Go newsletter, a live feed of stories from 30+ sources, and RSS. Ranked and summarised every weekday.",
 			CanonicalURL: "https://godaily.dev/",
 			PreloadImage: "/assets/images/hero-gopher.avif",
 			SchemaJSON:   layouts.WebSiteSchema(),

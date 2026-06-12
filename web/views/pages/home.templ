@@ -13,12 +13,13 @@ type HomeData struct {
 	RecentIssues    []digest.Issue
 	Flash           string
 	SubscriberCount int64
+	Feed            components.HomeFeedProps
 }
 
 templ Home(data HomeData) {
 	@layouts.Base(layouts.PageMeta{
-		Title:        "GoLang Newsletter: Daily Go News Before Standup",
-		Description:  "A free GoLang newsletter delivering the best Go news, articles, and community discussions to your inbox every weekday morning.",
+		Title:        "Daily Golang News & Newsletter",
+		Description:  "All of today's Golang news in one place — a free daily Go newsletter, a live feed of stories from 30+ sources, and RSS. Ranked and summarised every weekday.",
 		CanonicalURL: "https://godaily.dev/",
 		PreloadImage: "/assets/images/hero-gopher.avif",
 		SchemaJSON:   layouts.WebSiteSchema(),
@@ -26,6 +27,8 @@ templ Home(data HomeData) {
 		@components.Header()
 		@components.Hero(data.Flash, data.SubscriberCount)
 		@components.Logos()
+		@components.Rule()
+		@components.HomeFeed(data.Feed)
 		@components.Rule()
 		@components.Features()
 		@components.Sources()

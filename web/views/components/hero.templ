@@ -1,20 +1,23 @@
 package components
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
+)
 
 templ Hero(flash string, subscriberCount int64) {
 	<section id="hero" class="hero">
 		@Container(false) {
 			<div class="hero__content">
 				<div class="hero__badge">
-					@Tag("Delivered every weekday", TagProps{})
+					@Tag("Updated daily · Sent every weekday", TagProps{})
 				</div>
 				<h1 class="hero__title">
-					Daily <span class="hero__title-accent">Go</span> news,<br/>
-					straight to your inbox
+					All of today's <span class="hero__title-accent">Golang</span> news, in one place
 				</h1>
 				<p class="hero__lead">
-					The best stories from the Go community, ranked and summarised, delivered before standup. Free, weekday mornings, no noise.
+					{ fmt.Sprintf("GoDaily collects, ranks and summarises Go stories from %d sources — releases, proposals, security advisories, articles and discussions. Read it as a daily email, a live feed, or RSS.", len(news.Sources)) }
 				</p>
 				if flash != "" {
 					<p class="hero__flash">{ flash }</p>
@@ -35,8 +38,12 @@ templ Hero(flash string, subscriberCount int64) {
 						<p class="hero__hint" data-subscribe-hint hidden></p>
 					</form>
 				}
+				<div class="hero__actions">
+					<a class="hero__action" href="/browse/">Browse the live feed →</a>
+					<a class="hero__action" href="/rss.xml">Subscribe via RSS</a>
+				</div>
 				if subscriberCount > 50 {
-					<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } subscribers. Free forever. No spam. Unsubscribe any time.</p>
+					<p class="hero__sub">Join { fmt.Sprintf("%d", subscriberCount) } Go developers. Free forever. No spam. Unsubscribe any time.</p>
 				} else {
 					<p class="hero__sub">Free forever. No spam. Unsubscribe any time.</p>
 				}

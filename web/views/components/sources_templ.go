@@ -65,7 +65,7 @@ func Sources() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h2><p class=\"section__sub\">GoDaily watches the places Go developers actually talk, then aggregates, deduplicates and ranks the day's best.</p><div class=\"sources__grid\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</h2><p class=\"section__sub\">GoDaily watches everywhere Go developers actually talk, then aggregates, deduplicates and ranks the day's best Golang news.</p><div class=\"sources__grid\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

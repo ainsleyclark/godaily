@@ -19,7 +19,7 @@ func featureCards() []featureCard {
 		{Title: "Every corner of the Go community", Body: "Hacker News, r/golang, Lobsters, Dev.to, the Go Blog, GitHub, YouTube and more, deduplicated into one read.", Icon: featureIconGlobe()},
 		{Title: "Ranked, summarised, opinionated", Body: "Every story is read, summarised and scored for relevance. Only what matters to a working Go developer makes the cut.", Icon: featureIconStar()},
 		{Title: "Lands before your first coffee", Body: "A weekday-morning email. Skips weekends and public holidays. No drip, no upsell, no tracking pixels.", Icon: featureIconCalendar()},
-		{Title: "Free and open source", Body: "MIT-licensed Go binary you can self-host or read on the web. Star the repo, send a PR, or just enjoy the digest.", Icon: featureIconCode()},
+		{Title: "Free and open source", Body: "Free to read, free forever, and fully open source. Self-host the Go codebase, star the repo, send a PR, or just enjoy the digest.", Icon: featureIconCode()},
 	}
 }
 
@@ -60,7 +60,7 @@ func Features() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Why GoDaily</div><h2 class=\"section__title features__title\">Everything a Go developer needs,<br>before 9am</h2><p class=\"section__sub\">One short read covers what the Go community shipped, debated, and starred overnight.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"section__label\">Why GoDaily</div><h2 class=\"section__title features__title\">The Golang newsletter that<br>does the reading for you</h2><p class=\"section__sub\">One short read covers what the Go community shipped, debated and starred in the last 24 hours.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

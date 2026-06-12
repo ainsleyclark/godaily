@@ -19,6 +19,16 @@
 		font-size: 1rem;
 		color: var(--text-2);
 		margin-bottom: 1.5rem;
+
+		a {
+			color: var(--accent-dark);
+			text-decoration: underline;
+			transition: color 0.15s;
+
+			&:hover {
+				color: var(--accent);
+			}
+		}
 	}
 
 	&__form {
