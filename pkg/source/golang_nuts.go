@@ -49,7 +49,12 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 func (e golangNutsItem) ShouldInclude() bool {
 	return !strings.HasPrefix(e.Title, "Re: ") && !strings.HasPrefix(e.Title, "[go-nuts] Re: ")
 }
-func (e golangNutsItem) EnrichmentURL() string { return "" }
+
+// EnrichmentURL returns the mail-archive.com message page so the ingest
+// enricher can fill the snippet (and image, if any) from the page's meta
+// description — the feed's <description> carries only the date and author,
+// never the message body.
+func (e golangNutsItem) EnrichmentURL() string { return e.Link }
 
 func (e golangNutsItem) Transform() news.Item {
 	published, _ := time.Parse(time.RFC1123, e.PubDate)
