@@ -100,12 +100,24 @@ func enrich(ctx context.Context, targets []enrichTarget) {
 	wg.Wait()
 }
 
-// EnrichSnippetsFromHTML is for sources whose pages carry the body in markup
-// that meta-tag enrichment can't reach (e.g. MHonArc mail archives). Per-item
-// failures are logged at debug level and never propagate.
-func EnrichSnippetsFromHTML(ctx context.Context, items []news.Item, extract func(rawHTML string) string) {
+// HTMLEnrichment carries the fields a source can recover from a page's raw
+// markup. Snippet is sanitised and truncated before being applied, and only
+// fills an empty Item.Snippet. URL, when non-empty, overrides Item.URL with a
+// canonical link (e.g. the original source behind an archive mirror); an empty
+// URL leaves the existing link untouched as a fallback.
+type HTMLEnrichment struct {
+	Snippet string
+	URL     string
+}
+
+// EnrichFromHTML is for sources whose pages carry data in markup that meta-tag
+// enrichment can't reach (e.g. MHonArc mail archives). It fetches each item's
+// URL once and lets extract recover a snippet and/or a canonical URL from the
+// raw HTML. Items with no URL are skipped. Per-item failures are logged at
+// debug level and never propagate.
+func EnrichFromHTML(ctx context.Context, items []news.Item, extract func(rawHTML string) HTMLEnrichment) {
 	for i := range items {
-		if items[i].Snippet != "" || items[i].URL == "" {
+		if items[i].URL == "" {
 			continue
 		}
 
@@ -116,8 +128,15 @@ func EnrichSnippetsFromHTML(ctx context.Context, items []news.Item, extract func
 			slog.DebugContext(ctx, "Body enrichment failed", "url", items[i].URL, "err", err)
 			continue
 		}
-		if s := truncate(sanitise(extract(raw)), maxSnippetLen); s != "" {
-			items[i].Snippet = s
+
+		res := extract(raw)
+		if items[i].Snippet == "" {
+			if s := truncate(sanitise(res.Snippet), maxSnippetLen); s != "" {
+				items[i].Snippet = s
+			}
+		}
+		if res.URL != "" {
+			items[i].URL = res.URL
 		}
 	}
 }

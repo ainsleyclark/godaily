@@ -94,7 +94,7 @@ Some things force us to evolve. I built my own *Go* FullStack framework.
 					_, _ = w.Write([]byte(feed))
 				}
 			},
-			want: func(t *testing.T, items []news.Item, err error, _ string) {
+			want: func(t *testing.T, items []news.Item, err error, serverURL string) {
 				t.Helper()
 				require.NoError(t, err)
 				require.Len(t, items, 1)
@@ -102,6 +102,53 @@ Some things force us to evolve. I built my own *Go* FullStack framework.
 					t,
 					"Some things force us to evolve. I built my own Go FullStack framework.",
 					items[0].Snippet,
+				)
+				// No Google Groups permalink on the page: the mail-archive
+				// link is retained as a fallback.
+				assert.Equal(t, serverURL+"/msg.html", items[0].URL)
+			},
+		},
+		"Rewrites link to canonical Google Groups permalink": {
+			stub: func(serverURL string) http.HandlerFunc {
+				feed := `<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <item>
+      <title>[go-nuts] FullStack Go framework</title>
+      <link>` + serverURL + `/msg.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Jane Developer&lt;/a&gt;</description>
+      <pubDate>Tue, 12 May 2026 08:30:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>`
+				page := `<html><body>
+<!--X-Body-of-Message-->
+<pre>Body text here.
+To view this discussion visit <a rel="nofollow" href="https://groups.google.com/d/msgid/golang-nuts/abc123n%40googlegroups.com">link</a>.
+</pre>
+<!--X-Body-of-Message-End-->
+<form method="POST" action="/mailto.php">
+<input type="hidden" name="msgid" value="abc123n@googlegroups.com">
+</form>
+</body></html>`
+				return func(w http.ResponseWriter, r *http.Request) {
+					if strings.HasSuffix(r.URL.Path, "/msg.html") {
+						w.Header().Set("Content-Type", "text/html")
+						_, _ = w.Write([]byte(page))
+						return
+					}
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write([]byte(feed))
+				}
+			},
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				assert.Equal(
+					t,
+					"https://groups.google.com/d/msgid/golang-nuts/abc123n%40googlegroups.com",
+					items[0].URL,
 				)
 			},
 		},
@@ -213,6 +260,58 @@ func TestExtractMHonArcBody(t *testing.T) {
 			assert.Equal(t, test.want, extractMHonArcBody(test.in))
 		})
 	}
+}
+
+func TestExtractGoogleGroupsURL(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		in   string
+		want string
+	}{
+		"Prefers the footer permalink verbatim": {
+			in:   `<pre>To view this discussion visit <a rel="nofollow" href="https://groups.google.com/d/msgid/golang-nuts/abc123n%40googlegroups.com">x</a>.</pre>`,
+			want: "https://groups.google.com/d/msgid/golang-nuts/abc123n%40googlegroups.com",
+		},
+		"Builds from reply-form message id when no footer link": {
+			in:   `<input type="hidden" name="msgid" value="abc123n@googlegroups.com">`,
+			want: "https://groups.google.com/d/msgid/golang-nuts/abc123n%40googlegroups.com",
+		},
+		"Footer link wins over message id": {
+			in: `<a href="https://groups.google.com/d/msgid/golang-nuts/from-link%40googlegroups.com">x</a>` +
+				`<input type="hidden" name="msgid" value="from-form@googlegroups.com">`,
+			want: "https://groups.google.com/d/msgid/golang-nuts/from-link%40googlegroups.com",
+		},
+		"Empty message id is ignored": {
+			in:   `<input type="hidden" name="msgid" value="">`,
+			want: "",
+		},
+		"Neither present": {
+			in:   `<html><body>nothing useful here</body></html>`,
+			want: "",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, extractGoogleGroupsURL(test.in))
+		})
+	}
+}
+
+// Locks the URL extractor to real mail-archive.com markup, not just synthetic fixtures.
+func TestExtractGoogleGroupsURL_RealPage(t *testing.T) {
+	t.Parallel()
+
+	raw, err := os.ReadFile("testdata/golang_nuts_msg.html")
+	require.NoError(t, err)
+
+	assert.Equal(
+		t,
+		"https://groups.google.com/d/msgid/golang-nuts/7b3fa44a-328d-454b-be2a-5df8ade50ceen%40googlegroups.com",
+		extractGoogleGroupsURL(string(raw)),
+	)
 }
 
 // Locks the extractor to real mail-archive.com markup, not just synthetic fixtures.
