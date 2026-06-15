@@ -70,6 +70,13 @@ const (
 // Dropping quoted-reply lines keeps the snippet to the author's own words.
 var quotedLineRe = regexp.MustCompile(`(?m)^\s*(?:<[^>]+>\s*)*(?:&gt;|>).*$`)
 
+// sigDelimRe matches the RFC 3676 §4.3 signature delimiter ("-- " on its own
+// line). The Google Groups boilerplate ("You received this message because…")
+// always follows this delimiter, and it sits inside the MHonArc body region
+// — before the msgButtons fallback — so cutting the body here drops both the
+// author's signature and the list footer in one shot.
+var sigDelimRe = regexp.MustCompile(`(?m)^\s*--\s*$`)
+
 func extractMHonArcBody(rawHTML string) string {
 	start := strings.Index(rawHTML, mhonArcBodyStart)
 	if start == -1 {
@@ -85,7 +92,11 @@ func extractMHonArcBody(rawHTML string) string {
 	if end == -1 {
 		return ""
 	}
-	return quotedLineRe.ReplaceAllString(rest[:end], "")
+	body := rest[:end]
+	if loc := sigDelimRe.FindStringIndex(body); loc != nil {
+		body = body[:loc[0]]
+	}
+	return quotedLineRe.ReplaceAllString(body, "")
 }
 
 func (e golangNutsItem) Transform() news.Item {
