@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestEnrichSnippetsFromHTML(t *testing.T) {
+func TestEnrichFromHTML(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Fills empty snippets via extractor and skips populated ones", func(t *testing.T) {
@@ -30,38 +30,59 @@ func TestEnrichSnippetsFromHTML(t *testing.T) {
 		}))
 		defer s.Close()
 
-		extract := func(raw string) string {
+		extract := func(raw string) HTMLEnrichment {
 			start := strings.Index(raw, "BEGIN")
 			end := strings.Index(raw, "END")
 			if start == -1 || end == -1 {
-				return ""
+				return HTMLEnrichment{}
 			}
-			return raw[start+len("BEGIN") : end]
+			return HTMLEnrichment{Snippet: raw[start+len("BEGIN") : end]}
 		}
 
 		items := []news.Item{
 			{URL: s.URL},                  // filled from body
-			{URL: s.URL, Snippet: "keep"}, // already set — skipped, no fetch
-			{Snippet: "", URL: ""},        // no URL — skipped
+			{URL: s.URL, Snippet: "keep"}, // already set — snippet preserved
+			{Snippet: "", URL: ""},        // no URL — skipped, no fetch
 		}
-		EnrichSnippetsFromHTML(t.Context(), items, extract)
+		EnrichFromHTML(t.Context(), items, extract)
 
 		assert.Equal(t, "raw body & more", items[0].Snippet)
 		assert.Equal(t, "keep", items[1].Snippet)
 		assert.Empty(t, items[2].Snippet)
-		assert.Equal(t, int32(1), atomic.LoadInt32(&hits), "only the empty-snippet item with a URL is fetched")
+		assert.Equal(t, int32(2), atomic.LoadInt32(&hits), "both items with a URL are fetched")
 	})
 
-	t.Run("Extractor returning empty leaves snippet untouched", func(t *testing.T) {
+	t.Run("Overrides URL when extractor returns one and keeps it otherwise", func(t *testing.T) {
 		t.Parallel()
 		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 			w.Header().Set("Content-Type", "text/html")
-			_, _ = w.Write([]byte(`<body>no markers here</body>`))
+			_, _ = w.Write([]byte(`<body>canonical https://canonical.example/post here</body>`))
+		}))
+		defer s.Close()
+
+		extract := func(raw string) HTMLEnrichment {
+			if strings.Contains(raw, "canonical") {
+				return HTMLEnrichment{URL: "https://canonical.example/post"}
+			}
+			return HTMLEnrichment{}
+		}
+
+		items := []news.Item{{URL: s.URL}}
+		EnrichFromHTML(t.Context(), items, extract)
+		assert.Equal(t, "https://canonical.example/post", items[0].URL)
+	})
+
+	t.Run("Empty URL override leaves the original link in place", func(t *testing.T) {
+		t.Parallel()
+		s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", "text/html")
+			_, _ = w.Write([]byte(`<body>no canonical link here</body>`))
 		}))
 		defer s.Close()
 
 		items := []news.Item{{URL: s.URL}}
-		EnrichSnippetsFromHTML(t.Context(), items, func(string) string { return "" })
+		EnrichFromHTML(t.Context(), items, func(string) HTMLEnrichment { return HTMLEnrichment{} })
+		assert.Equal(t, s.URL, items[0].URL, "mail-archive style fallback link is retained")
 		assert.Empty(t, items[0].Snippet)
 	})
 
@@ -73,8 +94,11 @@ func TestEnrichSnippetsFromHTML(t *testing.T) {
 		defer s.Close()
 
 		items := []news.Item{{URL: s.URL}}
-		EnrichSnippetsFromHTML(t.Context(), items, func(raw string) string { return raw })
+		EnrichFromHTML(t.Context(), items, func(raw string) HTMLEnrichment {
+			return HTMLEnrichment{Snippet: raw, URL: "https://canonical.example/post"}
+		})
 		assert.Empty(t, items[0].Snippet)
+		assert.Equal(t, s.URL, items[0].URL, "failed fetch must not rewrite the URL")
 	})
 }
 

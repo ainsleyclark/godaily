@@ -43,10 +43,22 @@ func (g GolangNuts) Fetch(ctx context.Context) ([]news.Item, error) {
 		return nil, err
 	}
 	items := ingest.TransformAll(ctx, feed.Channel.Items)
-	// Message pages expose no meta description, so pull the snippet from
-	// the MHonArc message body instead of the generic meta-tag enricher.
-	ingest.EnrichSnippetsFromHTML(ctx, items, extractMHonArcBody)
+	// Each mail-archive message page carries both the message body and the
+	// original Google Groups permalink. Fetch it once per item to pull the
+	// snippet (no usable meta description exists) and rewrite the link to the
+	// canonical groups.google.com URL, keeping the mail-archive link when the
+	// permalink is absent.
+	ingest.EnrichFromHTML(ctx, items, enrichFromMessage)
 	return items, nil
+}
+
+// enrichFromMessage recovers the snippet and canonical Google Groups URL from a
+// mail-archive message page's raw HTML.
+func enrichFromMessage(rawHTML string) ingest.HTMLEnrichment {
+	return ingest.HTMLEnrichment{
+		Snippet: extractMHonArcBody(rawHTML),
+		URL:     extractGoogleGroupsURL(rawHTML),
+	}
 }
 
 // ShouldInclude returns false for reply threads (subjects containing "Re: "),
@@ -69,6 +81,33 @@ const (
 
 // Dropping quoted-reply lines keeps the snippet to the author's own words.
 var quotedLineRe = regexp.MustCompile(`(?m)^\s*(?:<[^>]+>\s*)*(?:&gt;|>).*$`)
+
+const googleGroupsMsgPrefix = "https://groups.google.com/d/msgid/golang-nuts/"
+
+var (
+	// The message footer links the canonical Google Groups permalink directly;
+	// it is already correctly percent-encoded, so prefer it verbatim.
+	googleGroupsLinkRe = regexp.MustCompile(`https://groups\.google\.com/d/msgid/golang-nuts/[^\s"'<>]+`)
+	// The reply form exposes the raw RFC Message-ID as a fallback when the
+	// footer link is absent (e.g. older or trimmed pages).
+	googleGroupsMsgIDRe = regexp.MustCompile(`name="msgid"\s+value="([^"]+)"`)
+)
+
+// extractGoogleGroupsURL recovers the canonical groups.google.com permalink for
+// a mail-archive message page, preferring the footer's ready-made link and
+// falling back to building one from the reply form's Message-ID. Returns "" when
+// neither is present so callers retain the mail-archive link.
+func extractGoogleGroupsURL(rawHTML string) string {
+	if u := googleGroupsLinkRe.FindString(rawHTML); u != "" {
+		return u
+	}
+	if m := googleGroupsMsgIDRe.FindStringSubmatch(rawHTML); len(m) == 2 {
+		if id := strings.TrimSpace(m[1]); id != "" {
+			return googleGroupsMsgPrefix + strings.ReplaceAll(id, "@", "%40")
+		}
+	}
+	return ""
+}
 
 // sigDelimRe matches the RFC 3676 §4.3 signature delimiter ("-- " on its own
 // line). The Google Groups boilerplate ("You received this message because…")
