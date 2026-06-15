@@ -152,6 +152,49 @@ To view this discussion visit <a rel="nofollow" href="https://groups.google.com/
 				)
 			},
 		},
+		"Strips signature and Google Groups footer from snippet": {
+			stub: func(serverURL string) http.HandlerFunc {
+				feed := `<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <item>
+      <title>[go-nuts] pkg.go.dev API</title>
+      <link>` + serverURL + `/msg.html</link>
+      <description>&lt;a href=&quot;...&quot;&gt;Jane Developer&lt;/a&gt;</description>
+      <pubDate>Tue, 12 May 2026 08:30:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>`
+				page := `<html><head><title>[go-nuts] pkg.go.dev API</title></head><body>
+<!--X-Body-of-Message-->
+<pre>Thanks Go team for exposing the pkg.go.dev API.
+--
+You received this message because you are subscribed to the Google Groups
+&quot;golang-nuts&quot; group.
+To unsubscribe from this group and stop receiving emails from it, send an email
+to golang-nuts+unsubscribe@googlegroups.com.
+</pre>
+<!--X-Body-of-Message-End-->
+</body></html>`
+				return func(w http.ResponseWriter, r *http.Request) {
+					if strings.HasSuffix(r.URL.Path, "/msg.html") {
+						w.Header().Set("Content-Type", "text/html")
+						_, _ = w.Write([]byte(page))
+						return
+					}
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write([]byte(feed))
+				}
+			},
+			want: func(t *testing.T, items []news.Item, err error, _ string) {
+				t.Helper()
+				require.NoError(t, err)
+				require.Len(t, items, 1)
+				assert.Equal(t, "Thanks Go team for exposing the pkg.go.dev API.", items[0].Snippet)
+				assert.NotContains(t, items[0].Snippet, "You received this message")
+				assert.NotContains(t, items[0].Snippet, "unsubscribe")
+			},
+		},
 		"Filters reply threads": {
 			stub: func(string) http.HandlerFunc {
 				const body = `<?xml version="1.0" encoding="utf-8"?>
@@ -252,6 +295,19 @@ func TestExtractMHonArcBody(t *testing.T) {
 			in:   `<!--X-Body-of-Message--><pre>Hi there</pre></div><div class="msgButtons ">…`,
 			want: `<pre>Hi there</pre></div>`,
 		},
+		"Cuts signature and Google Groups footer at the delimiter": {
+			in: "<!--X-Body-of-Message--><pre>My actual message.\n" +
+				"-- \n" +
+				"You received this message because you are subscribed to the Google Groups\n" +
+				"\"golang-nuts\" group.\n" +
+				"To unsubscribe from this group...\n" +
+				"</pre><!--X-Body-of-Message-End-->",
+			want: "<pre>My actual message.\n",
+		},
+		"Keeps body when no signature delimiter present": {
+			in:   "<!--X-Body-of-Message--><pre>Just the body -- no delimiter here.</pre><!--X-Body-of-Message-End-->",
+			want: "<pre>Just the body -- no delimiter here.</pre>",
+		},
 	}
 
 	for name, test := range tt {
@@ -327,4 +383,8 @@ func TestExtractMHonArcBody_RealPage(t *testing.T) {
 	assert.Contains(t, body, "FullStack")
 	assert.NotContains(t, body, "msgButtons")
 	assert.NotContains(t, body, "View by thread")
+	// The signature delimiter and the Google Groups footer that follows it
+	// must be cut from the extracted body.
+	assert.NotContains(t, body, "You received this message because")
+	assert.NotContains(t, body, "To unsubscribe from this group")
 }
