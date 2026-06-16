@@ -104,24 +104,28 @@ var langDetector = lingua.NewLanguageDetectorBuilder().
 	).
 	Build()
 
-// isEnglishTitle returns false when lingua confidently detects a non-English
-// language. Before detection:
+// isEnglishTitle returns false when the title uses a non-Latin script, or when
+// lingua confidently detects a non-English language. Before the probabilistic
+// detection step:
 //   - URLs, hashtags, and path-like tech tokens (r/golang, pkg.go.dev, net/http)
 //     are stripped so they don't mislead the detector on short English phrases.
 //   - If fewer than 8 runes remain the text is too short for reliable detection
 //     and the item passes through, avoiding false drops.
 func isEnglishTitle(s string) bool {
+	// A single character from a non-Latin script is conclusive — reject before
+	// the probabilistic detector runs. This catches mixed titles like
+	// "Go: Потоки, Sysmon и GC #shorts" where Latin tech terms outvote Cyrillic.
+	// Run it on the raw title before stripping, so titles whose only non-Latin
+	// content lives inside hashtags (e.g. "#белман #собеседование #айти") are
+	// still caught — stripping hashtags first would discard the Cyrillic.
+	if hasNonLatinScript(s) {
+		return false
+	}
+
 	clean := urlRe.ReplaceAllString(s, " ")
 	clean = hashtagRe.ReplaceAllString(clean, " ")
 	clean = techTokenRe.ReplaceAllString(clean, " ")
 	clean = strings.Join(strings.Fields(clean), " ")
-
-	// A single character from a non-Latin script is conclusive — reject before
-	// the probabilistic detector runs. This catches mixed titles like
-	// "Go: Потоки, Sysmon и GC #shorts" where Latin tech terms outvote Cyrillic.
-	if hasNonLatinScript(clean) {
-		return false
-	}
 
 	if len([]rune(clean)) < 8 {
 		return true

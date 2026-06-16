@@ -159,11 +159,12 @@ func TestIsEnglishTitle(t *testing.T) {
 		// Russian (Cyrillic) — must be rejected
 		"Russian mixed with Latin tech terms": {input: "Go: Потоки, Sysmon и GC #shorts", want: false},
 
-		"Russian title":             {input: "Сравнимые типы данных в Go #shorts", want: false},
-		"Russian salary post":       {input: "Тирлист зарплат в IT #golang #it #собеседование", want: false},
-		"Russian mutex explanation": {input: "RV-мьютексы против обычных: когда читать быстрее", want: false},
-		"Russian subscribe CTA":     {input: "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #golang", want: false},
-		"Russian goroutines post":   {input: "Горутины в Go: полное руководство", want: false},
+		"Russian title":                 {input: "Сравнимые типы данных в Go #shorts", want: false},
+		"Russian salary post":           {input: "Тирлист зарплат в IT #golang #it #собеседование", want: false},
+		"Russian mutex explanation":     {input: "RV-мьютексы против обычных: когда читать быстрее", want: false},
+		"Russian subscribe CTA":         {input: "ПОДПИШИСЬ НА ТГ: cdmtn #it #code #golang", want: false},
+		"Russian goroutines post":       {input: "Горутины в Go: полное руководство", want: false},
+		"Cyrillic only inside hashtags": {input: "#белман #golang #backend #собеседование #айти", want: false},
 
 		// German (Latin script) — must be rejected
 		"German gamedev post":       {input: "So langsam kommt Leben in das kleine Spiel", want: false},
