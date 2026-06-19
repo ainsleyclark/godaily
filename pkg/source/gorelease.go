@@ -74,23 +74,54 @@ func (g GoRelease) Fetch(ctx context.Context) ([]news.Item, error) {
 	return ingest.TransformAll(ctx, releases), nil
 }
 
-func (r goRelease) ShouldInclude() bool   { return r.Stable }
+func (r goRelease) ShouldInclude() bool   { return true }
 func (r goRelease) EnrichmentURL() string { return "" }
 
-// Transform maps a goRelease to a news.Item. The payload carries no release
-// notes, so the snippet is fixed; Published is populated by Fetch via a
-// HEAD request against the source tarball.
+// Transform maps a goRelease to a news.Item. Stable releases read
+// "Go 1.26.2 released"; pre-releases surface their candidate/beta label so the
+// heading reads "Go 1.27 RC1 released" rather than the raw "Go 1.27rc1". The
+// payload carries no release notes, so the snippet is fixed per release kind;
+// Published is populated by Fetch via a HEAD request against the source tarball.
 func (r goRelease) Transform() news.Item {
-	version := strings.TrimPrefix(r.Version, "go")
+	title, snippet := r.titleAndSnippet()
 	return news.Item{
 		Source:    news.SourceGoRelease,
-		Title:     "Go " + version + " released",
+		Title:     title,
 		URL:       "https://go.dev/doc/devel/release#" + r.Version,
-		Snippet:   "Stable Go release. See release notes for changes.",
+		Snippet:   snippet,
 		Tag:       news.TagRelease,
 		Score:     news.ScoreOf(news.SourceGoRelease, news.TagRelease, 0, false),
 		Published: r.published,
 	}
+}
+
+// titleAndSnippet renders the digest title and snippet for the release. Stable
+// releases keep the plain "Go <version> released" form; pre-releases split the
+// version into its base and an rc/beta label so the heading is readable.
+func (r goRelease) titleAndSnippet() (title, snippet string) {
+	version := strings.TrimPrefix(r.Version, "go")
+	if r.Stable {
+		return "Go " + version + " released", "Stable Go release. See release notes for changes."
+	}
+	if base, label := splitPreRelease(version); label != "" {
+		version = base + " " + label
+	}
+	return "Go " + version + " released", "Go pre-release — try it in dev and prod, and file bugs."
+}
+
+// splitPreRelease separates a pre-release version such as "1.27rc1" into its
+// base ("1.27") and a display label ("RC1"). Returns an empty label when the
+// version carries no recognised rc/beta marker.
+func splitPreRelease(version string) (base, label string) {
+	for _, kind := range []struct{ token, display string }{
+		{"rc", "RC"},
+		{"beta", "Beta"},
+	} {
+		if i := strings.Index(version, kind.token); i != -1 {
+			return version[:i], kind.display + version[i+len(kind.token):]
+		}
+	}
+	return version, ""
 }
 
 // sourceFile returns the filename of the .src.tar.gz file in this release,

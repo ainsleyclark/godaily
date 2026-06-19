@@ -51,8 +51,8 @@ func TestGoRelease_Fetch(t *testing.T) {
 				t.Helper()
 				require.NoError(t, err)
 				// Fixture contains 3 entries: 1 stable, 1 unstable RC, 1 stable.
-				// ShouldInclude drops the RC, leaving 2 stable items.
-				require.Len(t, items, 2)
+				// Pre-releases are now included, so all 3 survive.
+				require.Len(t, items, 3)
 				assert.Equal(t, news.Item{
 					Source:  news.SourceGoRelease,
 					Title:   "Go 1.26.2 released",
@@ -61,7 +61,15 @@ func TestGoRelease_Fetch(t *testing.T) {
 					Tag:     news.TagRelease,
 					Score:   1.0, // weight 2.0 * constantNoSignal 0.5
 				}, items[0])
-				assert.Equal(t, "Go 1.25.9 released", items[1].Title)
+				assert.Equal(t, news.Item{
+					Source:  news.SourceGoRelease,
+					Title:   "Go 1.26 RC3 released",
+					URL:     "https://go.dev/doc/devel/release#go1.26rc3",
+					Snippet: "Go pre-release — try it in dev and prod, and file bugs.",
+					Tag:     news.TagRelease,
+					Score:   1.0,
+				}, items[1])
+				assert.Equal(t, "Go 1.25.9 released", items[2].Title)
 			},
 		},
 	}
@@ -91,11 +99,56 @@ func TestGoRelease_LimitTrims(t *testing.T) {
 	defer s.Close()
 
 	// limit=1 keeps only the first entry from the upstream slice (which is stable),
-	// so the unstable RC and the older stable release never reach Transform.
+	// so the RC and the older stable release never reach Transform.
 	got, err := GoRelease{url: s.URL, limit: 1}.Fetch(t.Context())
 	require.NoError(t, err)
 	require.Len(t, got, 1)
 	assert.Equal(t, "Go 1.26.2 released", got[0].Title)
+}
+
+func TestGoRelease_TitleAndSnippet(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		version     string
+		stable      bool
+		wantTitle   string
+		wantSnippet string
+	}{
+		"Stable patch": {
+			version:     "go1.26.2",
+			stable:      true,
+			wantTitle:   "Go 1.26.2 released",
+			wantSnippet: "Stable Go release. See release notes for changes.",
+		},
+		"Release candidate": {
+			version:     "go1.27rc1",
+			stable:      false,
+			wantTitle:   "Go 1.27 RC1 released",
+			wantSnippet: "Go pre-release — try it in dev and prod, and file bugs.",
+		},
+		"Beta": {
+			version:     "go1.27beta2",
+			stable:      false,
+			wantTitle:   "Go 1.27 Beta2 released",
+			wantSnippet: "Go pre-release — try it in dev and prod, and file bugs.",
+		},
+		"Unstable without marker": {
+			version:     "go1.27",
+			stable:      false,
+			wantTitle:   "Go 1.27 released",
+			wantSnippet: "Go pre-release — try it in dev and prod, and file bugs.",
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			title, snippet := goRelease{Version: test.version, Stable: test.stable}.titleAndSnippet()
+			assert.Equal(t, test.wantTitle, title)
+			assert.Equal(t, test.wantSnippet, snippet)
+		})
+	}
 }
 
 func TestGoRelease_DateLookup(t *testing.T) {
@@ -123,11 +176,12 @@ func TestGoRelease_DateLookup(t *testing.T) {
 	}.Fetch(t.Context())
 	require.NoError(t, err)
 
-	// Stable releases get the looked-up date; the RC is filtered out by ShouldInclude.
-	require.Len(t, got, 2)
+	// Every release (stable and pre-release) gets the looked-up date.
+	require.Len(t, got, 3)
 	assert.Equal(t, want, got[0].Published)
 	assert.Equal(t, want, got[1].Published)
-	// All three input releases (including the dropped RC) had their date queried.
+	assert.Equal(t, want, got[2].Published)
+	// All three input releases had their date queried.
 	assert.Equal(t, []string{
 		"https://go.dev/dl/go1.26.2.src.tar.gz",
 		"https://go.dev/dl/go1.26rc3.src.tar.gz",
