@@ -185,3 +185,21 @@
     - 2026-05-25  # announcement
     - 2026-07-27  # ~3 months out
     - 2026-10-16  # 1 week before
+
+- slug: gophercon-latam-2026
+  name: GopherCon Latam 2026
+  url: https://gopherconlatam.org/
+  location: Florianópolis, Brazil
+  start_date: 2026-09-02
+  end_date: 2026-09-04
+  description: "Latin America's largest Go conference, three days of talks and keynotes in Florianópolis."
+  handles:
+    linkedin:
+      slug: gophercon-latam
+      urn: ""
+    bluesky: ""
+    mastodon: ""
+  notify_dates:
+    - 2026-06-22  # announcement
+    - 2026-08-03  # ~1 month out
+    - 2026-08-26  # 1 week before
