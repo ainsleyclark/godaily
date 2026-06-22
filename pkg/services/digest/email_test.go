@@ -126,6 +126,36 @@ func TestRenderDigest(t *testing.T) {
 		assert.Less(t, idxDiscussions, idxArticles, "Discussions section should render before Articles")
 	})
 
+	t.Run("Accepted Proposals Render As Their Own Section", func(t *testing.T) {
+		// Accepted proposals no longer fold into Proposals — they get their own
+		// heading, rendered before the open Proposals section.
+		sources := []news.SourceItems{
+			{Source: news.SourceGitHub, Items: []news.Item{
+				{
+					Source: news.SourceGitHub, Tag: news.TagProposal,
+					Title: "open-proposal", URL: "https://github.com/golang/go/issues/1",
+					Score: 5, Published: sendDigestDay.Add(time.Hour),
+				},
+				{
+					Source: news.SourceGitHub, Tag: news.TagProposalAccepted,
+					Title: "accepted-proposal", URL: "https://github.com/golang/go/issues/2",
+					Score: 9, Published: sendDigestDay.Add(time.Hour),
+				},
+			}},
+		}
+		got, err := renderDigest(digestOptions{Day: sendDigestDay, Sources: sources})
+		require.NoError(t, err)
+		assert.Contains(t, got.HTML, "Accepted Proposals")
+		assert.Contains(t, got.HTML, "accepted-proposal")
+		assert.Contains(t, got.HTML, "open-proposal")
+		// Two headings contain "Proposals": "Accepted Proposals" (first) and the
+		// standalone open "Proposals" (last). The accepted heading renders first.
+		idxAccepted := strings.Index(got.HTML, "Accepted Proposals")
+		idxOpen := strings.LastIndex(got.HTML, "Proposals")
+		assert.Less(t, idxAccepted, idxOpen,
+			"Accepted Proposals section should render before the open Proposals section")
+	})
+
 	t.Run("Skips Empty Sections", func(t *testing.T) {
 		// Only a release item — no other section headings should appear.
 		sources := []news.SourceItems{

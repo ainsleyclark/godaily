@@ -147,6 +147,7 @@ const (
 // Tag.Section().
 var SectionTags = []Tag{
 	TagRelease,
+	TagProposalAccepted,
 	TagProposal,
 	TagConference,
 	TagDiscussion,
@@ -166,18 +167,19 @@ const NoLimit = 0
 // SectionLimits caps the number of items shown per section in a digest.
 // Use NoLimit (0) for unlimited. Adjust these to tune digest density.
 var SectionLimits = map[Tag]int{
-	TagEvent:      5,
-	TagConference: NoLimit,
-	TagRelease:    5,
-	TagSecurity:   3,
-	TagProposal:   NoLimit,
-	TagArticle:    5,
-	TagTutorial:   5,
-	TagDiscussion: 8,
-	TagVideo:      5,
-	TagJobs:       5,
-	TagTrending:   5,
-	TagSocial:     5,
+	TagEvent:            5,
+	TagConference:       NoLimit,
+	TagRelease:          5,
+	TagSecurity:         3,
+	TagProposalAccepted: NoLimit,
+	TagProposal:         NoLimit,
+	TagArticle:          5,
+	TagTutorial:         5,
+	TagDiscussion:       8,
+	TagVideo:            5,
+	TagJobs:             5,
+	TagTrending:         5,
+	TagSocial:           5,
 }
 
 // SelectForDigest is the single definition of which items make up a digest and
@@ -213,14 +215,14 @@ func SelectForDigest(items []Item) []Item {
 }
 
 // Section returns the canonical section tag this tag renders under.
-// TagPodcast folds into TagVideo; the proposal-lifecycle tags fold into
-// TagProposal; conference reminder/alert tags fold into TagConference.
-// Other tags return themselves.
+// TagPodcast folds into TagVideo; TagProposalShipped folds into TagProposal
+// (TagProposalAccepted is its own section); conference reminder/alert tags
+// fold into TagConference. Other tags return themselves.
 func (t Tag) Section() Tag {
 	switch t {
 	case TagPodcast:
 		return TagVideo
-	case TagProposalAccepted, TagProposalShipped:
+	case TagProposalShipped:
 		return TagProposal
 	case TagConferenceReminder, TagConferenceAlert:
 		return TagConference
@@ -229,18 +231,19 @@ func (t Tag) Section() Tag {
 }
 
 var sectionTitles = map[Tag]string{
-	TagEvent:      "Events",
-	TagConference: "Conferences",
-	TagRelease:    "Releases",
-	TagSecurity:   "Security",
-	TagProposal:   "Proposals",
-	TagArticle:    "Articles",
-	TagTutorial:   "Tutorials",
-	TagDiscussion: "Discussions",
-	TagVideo:      "Videos",
-	TagTrending:   "Trending",
-	TagSocial:     "Social",
-	TagJobs:       "Jobs",
+	TagEvent:            "Events",
+	TagConference:       "Conferences",
+	TagRelease:          "Releases",
+	TagSecurity:         "Security",
+	TagProposalAccepted: "Accepted Proposals",
+	TagProposal:         "Proposals",
+	TagArticle:          "Articles",
+	TagTutorial:         "Tutorials",
+	TagDiscussion:       "Discussions",
+	TagVideo:            "Videos",
+	TagTrending:         "Trending",
+	TagSocial:           "Social",
+	TagJobs:             "Jobs",
 }
 
 // Title returns the display heading for a section tag. Defined for the six

@@ -3,6 +3,7 @@ import type { DigestItem } from '$lib/api/types';
 // Mirrors pkg/domain/news/item.go: SectionTags + Tag.Section() + sectionTitles.
 export const SECTION_ORDER = [
 	'release',
+	'proposal_accepted',
 	'proposal',
 	'conference',
 	'discussion',
@@ -19,6 +20,7 @@ export type SectionTag = (typeof SECTION_ORDER)[number];
 
 export const SECTION_TITLES: Record<SectionTag, string> = {
 	release: 'Releases',
+	proposal_accepted: 'Accepted Proposals',
 	proposal: 'Proposals',
 	conference: 'Conferences',
 	discussion: 'Discussions',
@@ -33,7 +35,6 @@ export const SECTION_TITLES: Record<SectionTag, string> = {
 
 const FOLD: Record<string, SectionTag> = {
 	podcast: 'video',
-	proposal_accepted: 'proposal',
 	proposal_shipped: 'proposal',
 	conference_reminder: 'conference',
 	conference_alert: 'conference'

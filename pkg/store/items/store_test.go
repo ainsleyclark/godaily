@@ -180,6 +180,33 @@ func TestItems_Store(t *testing.T) {
 		assert.True(t, found, "item must be linked to the issue after upsert")
 	})
 
+	t.Run("Create freezes published on conflict", func(t *testing.T) {
+		// Guarantee for accepted proposals: their Published is sourced from
+		// updated_at, which bumps on any later activity (a comment re-surfaces
+		// the issue in a later collection window). The upsert must preserve the
+		// first-seen published so the item lands in exactly one digest and never
+		// re-enters a later window.
+		first := news.Item{
+			Source:    news.SourceGitHub,
+			Tag:       news.TagProposalAccepted,
+			Title:     "Accepted proposal",
+			URL:       "https://github.com/golang/go/issues/freeze",
+			Score:     0.9,
+			Published: published,
+		}
+		created, err := s.Create(ctx, nil, 20, first)
+		require.NoError(t, err)
+
+		// Re-collected days later with a bumped published (same URL+tag).
+		bumped := first
+		bumped.Published = published.Add(72 * time.Hour)
+		again, err := s.Create(ctx, nil, 20, bumped)
+		require.NoError(t, err)
+
+		assert.Equal(t, created.ID, again.ID, "upsert must not create a new row")
+		assert.Equal(t, published, again.Published, "published must stay frozen at the first-seen value")
+	})
+
 	t.Run("FindByURLInIssue", func(t *testing.T) {
 		t.Log("Matches the canonical URL")
 		{

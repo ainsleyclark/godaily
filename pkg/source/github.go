@@ -108,8 +108,24 @@ func (i ghIssue) Transform() news.Item {
 		Tag:       i.tag,
 		Comments:  i.Comments,
 		Score:     news.ScoreOf(news.SourceGitHub, i.tag, float64(i.Reactions.PlusOne), true),
-		Published: i.CreatedAt,
+		Published: i.publishedAt(),
 	}
+}
+
+// publishedAt returns the date the issue became newsworthy. For accepted
+// proposals that is the acceptance, not the original filing: these issues are
+// created years before they are accepted, so created_at would always fall
+// outside the digest's collection window and the item would never surface.
+// updated_at is the closest available proxy for the acceptance (the
+// Proposal-Accepted endpoints sort by it), and the items upsert freezes
+// published on first insert, so an accepted proposal lands in exactly one
+// digest regardless of later activity. Open proposals keep created_at — a
+// freshly filed proposal is caught at creation.
+func (i ghIssue) publishedAt() time.Time {
+	if i.tag == news.TagProposalAccepted && !i.UpdatedAt.IsZero() {
+		return i.UpdatedAt
+	}
+	return i.CreatedAt
 }
 
 var (
@@ -144,6 +160,7 @@ type (
 		Comments  int          `json:"comments"`
 		Reactions ghReactions  `json:"reactions"`
 		CreatedAt time.Time    `json:"created_at"`
+		UpdatedAt time.Time    `json:"updated_at"`
 		tag       news.Tag     // populated by Fetch from the endpoint that returned this issue
 	}
 	ghUser struct {

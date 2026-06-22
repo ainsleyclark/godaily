@@ -75,10 +75,12 @@ func TestBuildCandidates(t *testing.T) {
 		assert.Len(t, got, perSectionCap)
 	})
 
-	t.Run("Proposal variants fold into one section", func(t *testing.T) {
+	t.Run("Accepted proposals are their own section; shipped folds into proposals", func(t *testing.T) {
 		t.Parallel()
-		// Accepted/shipped/open proposals all share the Proposal section, so
-		// together they still respect the single per-section cap.
+		// Accepted proposals stand alone in their own section; open and shipped
+		// proposals share the Proposals section and together respect the single
+		// per-section cap. So the accepted item is always present alongside up to
+		// perSectionCap open/shipped proposals.
 		items := []news.Item{
 			{Title: "Open", URL: "p1", Source: news.SourceGitHub, Tag: news.TagProposal, Score: 0.5},
 			{Title: "Accepted", URL: "p2", Source: news.SourceGitHub, Tag: news.TagProposalAccepted, Score: 0.6},
@@ -86,7 +88,10 @@ func TestBuildCandidates(t *testing.T) {
 			{Title: "Another open", URL: "p4", Source: news.SourceGitHub, Tag: news.TagProposal, Score: 0.4},
 		}
 		got := buildCandidates(items)
-		assert.Len(t, got, perSectionCap)
+		urls := candidateURLs(got)
+		assert.Contains(t, urls, "p2", "accepted proposal is its own section and always shortlisted")
+		// 1 accepted + 3 open/shipped (capped at perSectionCap) = 4.
+		assert.Len(t, got, 1+perSectionCap)
 	})
 
 	t.Run("Excluded sections never reach the shortlist", func(t *testing.T) {
