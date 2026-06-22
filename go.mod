@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/a-h/templ v0.3.1020
 	github.com/ainsleydev/webkit v0.14.1
-	github.com/anthropics/anthropic-sdk-go v1.50.2
+	github.com/anthropics/anthropic-sdk-go v1.51.1
 	github.com/caarlos0/env/v11 v11.4.1
 	github.com/fogleman/gg v1.3.0
 	github.com/go-chi/chi/v5 v5.3.0
@@ -19,7 +19,7 @@ require (
 	github.com/pemistahl/lingua-go v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.27.1
-	github.com/resend/resend-go/v3 v3.7.0
+	github.com/resend/resend-go/v3 v3.9.2
 	github.com/slack-go/slack v0.26.0
 	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/swag/v2 v2.0.0-rc5
@@ -29,7 +29,7 @@ require (
 	golang.org/x/sync v0.21.0
 	golang.org/x/time v0.15.0
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.52.0
+	modernc.org/sqlite v1.53.0
 )
 
 require (
@@ -111,15 +111,15 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0-rc.2 // indirect
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
 	golang.org/x/image v0.30.0 // indirect
-	golang.org/x/mod v0.35.0 // indirect
+	golang.org/x/mod v0.36.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/telemetry v0.0.0-20260421165255-392afab6f40e // indirect
+	golang.org/x/telemetry v0.0.0-20260508192327-42602be52be6 // indirect
 	golang.org/x/text v0.37.0 // indirect
-	golang.org/x/tools v0.44.0 // indirect
+	golang.org/x/tools v0.45.0 // indirect
 	golang.org/x/vuln v1.3.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
-	modernc.org/libc v1.72.3 // indirect
+	modernc.org/libc v1.73.4 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
