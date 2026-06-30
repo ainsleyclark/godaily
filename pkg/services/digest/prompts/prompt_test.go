@@ -107,7 +107,8 @@ func TestFilterItems(t *testing.T) {
 		"Round Robin Interleaves Sections": {
 			// Every populated section contributes its top item before any
 			// section gets a second slot, so a proposal-heavy day cannot push
-			// discussions and articles down the payload.
+			// discussions and articles down the payload. Accepted proposals are
+			// their own section, distinct from open proposals.
 			sections: []news.SourceItems{
 				{Source: news.SourceGitHub, Items: []news.Item{
 					{Source: news.SourceGitHub, Title: "prop-a", URL: "https://p1", Tag: news.TagProposal, Score: 0.9},
@@ -125,12 +126,16 @@ func TestFilterItems(t *testing.T) {
 			want: func(t *testing.T, items []promptItem) {
 				t.Helper()
 				require.Len(t, items, 5)
-				sections := make([]string, 3)
-				for i, it := range items[:3] {
+				// Four sections are populated; each contributes its top item in
+				// round one (the first four slots) before any gets a second.
+				sections := make([]string, 4)
+				for i, it := range items[:4] {
 					sections[i] = it.Section
 				}
-				assert.ElementsMatch(t, []string{"Proposals", "Discussions", "Articles"}, sections)
-				assert.Equal(t, "prop-a", items[0].Title) // highest-scored proposal represents the section first
+				assert.ElementsMatch(t, []string{"Accepted Proposals", "Proposals", "Discussions", "Articles"}, sections)
+				// prop-c is the second open proposal — it only appears in round
+				// two, after every section has had its first slot.
+				assert.Equal(t, "prop-c", items[4].Title)
 			},
 		},
 		"Proposals Cannot Crowd Out Other Sections": {

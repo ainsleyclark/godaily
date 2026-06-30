@@ -21,7 +21,7 @@ func TestGitHub_Fetch(t *testing.T) {
 	t.Parallel()
 
 	issueJSON := func(url, milestoneJSON string) string {
-		return `[{"title":"Test Proposal","html_url":"` + url + `","body":"Some body text","user":{"login":"gopher"},"comments":5,"reactions":{"+1":10},"created_at":"2024-01-01T00:00:00Z","milestone":` + milestoneJSON + `}]`
+		return `[{"title":"Test Proposal","html_url":"` + url + `","body":"Some body text","user":{"login":"gopher"},"comments":5,"reactions":{"+1":10},"created_at":"2024-01-01T00:00:00Z","updated_at":"2026-05-01T00:00:00Z","milestone":` + milestoneJSON + `}]`
 	}
 
 	tt := map[string]struct {
@@ -55,6 +55,9 @@ func TestGitHub_Fetch(t *testing.T) {
 				assert.Equal(t, news.TagProposalAccepted, items[0].Tag)
 				assert.Equal(t, 5, items[0].Comments)
 				assert.Equal(t, &news.Author{Username: "gopher"}, items[0].Author)
+				// Accepted proposals publish on updated_at (the acceptance), not
+				// created_at, so they fall inside the digest's collection window.
+				assert.Equal(t, time.Date(2026, time.May, 1, 0, 0, 0, 0, time.UTC), items[0].Published)
 			},
 		},
 		"Backlog milestone omitted from snippet": {
@@ -69,6 +72,9 @@ func TestGitHub_Fetch(t *testing.T) {
 				require.NoError(t, err)
 				require.Len(t, items, 1)
 				assert.False(t, strings.Contains(items[0].Snippet, "Targeting"), "snippet should have no targeting prefix: %q", items[0].Snippet)
+				// Open proposals keep created_at — a freshly filed proposal is
+				// caught at creation, so updated_at is not used here.
+				assert.Equal(t, time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC), items[0].Published)
 			},
 		},
 		"No milestone omitted from snippet": {
@@ -185,11 +191,13 @@ func TestGitHub_RealResponse(t *testing.T) {
 			AvatarURL:  "https://avatars.githubusercontent.com/u/8528975?v=4",
 			ProfileURL: "https://github.com/griesemer",
 		},
-		Snippet:   "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
-		Tag:       news.TagProposalAccepted,
-		Comments:  175,
-		Score:     1.8, // 853 +1s saturates the curve; weight 2.0 * engagement 0.9 (capped to 1.0 by sat) → adjusted by ScoreOf
-		Published: time.Date(2026, time.January, 22, 23, 13, 22, 0, time.UTC),
+		Snippet:  "Proposal: Generic Methods for Go A change of view. Background For clarity, in the following we use the term concrete method (or just method when the c",
+		Tag:      news.TagProposalAccepted,
+		Comments: 175,
+		Score:    1.8, // 853 +1s saturates the curve; weight 2.0 * engagement 0.9 (capped to 1.0 by sat) → adjusted by ScoreOf
+		// Accepted proposals publish on updated_at (the acceptance moment), not
+		// the years-old created_at, so the item lands in the collection window.
+		Published: time.Date(2026, time.April, 25, 14, 0, 0, 0, time.UTC),
 	}, got[0])
 }
 

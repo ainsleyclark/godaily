@@ -23,7 +23,7 @@ func TestTag_Section(t *testing.T) {
 		"Video stays video":           {in: TagVideo, want: TagVideo},
 		"Trending stays trending":     {in: TagTrending, want: TagTrending},
 		"Proposal stays proposal":     {in: TagProposal, want: TagProposal},
-		"ProposalAccepted folds":      {in: TagProposalAccepted, want: TagProposal},
+		"ProposalAccepted is its own": {in: TagProposalAccepted, want: TagProposalAccepted},
 		"ProposalShipped folds":       {in: TagProposalShipped, want: TagProposal},
 		"Podcast folds into video":    {in: TagPodcast, want: TagVideo},
 		"Jobs stays jobs":             {in: TagJobs, want: TagJobs},
@@ -51,7 +51,8 @@ func TestTag_Title(t *testing.T) {
 		"Video":            {in: TagVideo, want: "Videos"},
 		"Trending":         {in: TagTrending, want: "Trending"},
 		"Proposal":         {in: TagProposal, want: "Proposals"},
-		"ProposalAccepted": {in: TagProposalAccepted, want: "Proposals"},
+		"ProposalAccepted": {in: TagProposalAccepted, want: "Accepted Proposals"},
+		"ProposalShipped":  {in: TagProposalShipped, want: "Proposals"},
 		"Podcast":          {in: TagPodcast, want: "Videos"},
 		"Jobs":             {in: TagJobs, want: "Jobs"},
 		"Unknown empty":    {in: Tag("mystery"), want: ""},
@@ -140,6 +141,20 @@ func TestSelectForDigest(t *testing.T) {
 		got := SelectForDigest(in)
 		// Both land in the Video section, score-ordered.
 		assert.Equal(t, []string{"a-video", "a-podcast"}, titles(got))
+	})
+
+	t.Run("Accepted proposals are their own section above open proposals", func(t *testing.T) {
+		t.Parallel()
+		// Open proposals fold to TagProposal; accepted proposals stand alone in
+		// TagProposalAccepted, which sorts before TagProposal in SectionTags.
+		// Shipped still folds into the open-proposal section.
+		in := []Item{
+			mk(TagProposal, "open", 9),
+			mk(TagProposalAccepted, "accepted", 1),
+			mk(TagProposalShipped, "shipped", 5),
+		}
+		got := SelectForDigest(in)
+		assert.Equal(t, []string{"accepted", "open", "shipped"}, titles(got))
 	})
 
 	t.Run("Empty input yields empty output", func(t *testing.T) {

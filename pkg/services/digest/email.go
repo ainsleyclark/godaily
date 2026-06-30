@@ -33,18 +33,19 @@ var (
 // most email clients strip <style> blocks, so colour is passed through the
 // template rather than driven from a CSS class.
 var sectionAccents = map[news.Tag]string{
-	news.TagEvent:      "#16a34a",
-	news.TagRelease:    "#9333ea",
-	news.TagSecurity:   "#dc2626",
-	news.TagProposal:   "#6366f1",
-	news.TagArticle:    "#1a7fa8",
-	news.TagTutorial:   "#0ea5e9",
-	news.TagConference: "#f97316",
-	news.TagDiscussion: "#0d9488",
-	news.TagVideo:      "#ec4899",
-	news.TagJobs:       "#d97706",
-	news.TagTrending:   "#f59e0b",
-	news.TagSocial:     "#0a66c2",
+	news.TagEvent:            "#16a34a",
+	news.TagRelease:          "#9333ea",
+	news.TagSecurity:         "#dc2626",
+	news.TagProposalAccepted: "#059669",
+	news.TagProposal:         "#6366f1",
+	news.TagArticle:          "#1a7fa8",
+	news.TagTutorial:         "#0ea5e9",
+	news.TagConference:       "#f97316",
+	news.TagDiscussion:       "#0d9488",
+	news.TagVideo:            "#ec4899",
+	news.TagJobs:             "#d97706",
+	news.TagTrending:         "#f59e0b",
+	news.TagSocial:           "#0a66c2",
 }
 
 type (
