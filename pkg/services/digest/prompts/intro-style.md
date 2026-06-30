@@ -51,17 +51,13 @@ view over breadth.
   "ship".
 - **No em dashes (—) anywhere.** Use periods, commas, colons, or parentheses.
   Hyphens (-) in compound words like "swiss-table" are fine.
-- No emojis. No hashtags. Use blank lines only to separate genuinely distinct
-  subjects (see Shape); never to break a single thought across lines, and never
-  as a social-post style stack of one-liners.
+- No emojis. No hashtags. No blank lines or line breaks at all: the intro is a
+  single continuous paragraph, never a stack of blocks or one-liners.
 - Do not open with "Today" or the date.
 
 ## Shape
 
-Open on the most important item and why it matters. If the day has only one
-story worth flagging, keep it to a single short block. If there are two or three
-genuinely distinct subjects, give each its own short block (1-2 sentences)
-separated by a blank line, so the intro reads as a few tight paragraphs instead
-of one wall of text. Never more than three blocks, and never split a single
-thought across them — a break means a new subject. Plain prose, no headers, no
-bullet list, no links.
+Open on the most important item and why it matters. Optionally glance at one
+further item, but only when it is genuinely connected. Keep the whole thing to
+one short paragraph (~2-4 sentences) of plain prose: a single continuous block,
+no blank lines, no headers, no bullet list, no links.
