@@ -19,6 +19,12 @@ const orgLogoURL = "https://godaily.dev/assets/favicon/favicon-96x96.png"
 const OrgSchema = `{"@context":"https://schema.org","@type":"Organization","name":"GoDaily","url":"https://godaily.dev/","description":"A daily Golang news hub: a free weekday newsletter, a live feed of Go stories from across the community, and RSS.","logo":{"@type":"ImageObject","url":"https://godaily.dev/assets/favicon/favicon-96x96.png","width":96,"height":96}}`
 
 // WebSiteSchema returns the WebSite JSON-LD for the homepage.
+//
+// It intentionally omits a SearchAction / potentialAction. Google retired the
+// Sitelinks Searchbox rich result, so the markup no longer produces any search
+// feature — its only remaining effect was Googlebot crawling the literal
+// "?q={search_term_string}" urlTemplate, which surfaced in Search Console as an
+// "Alternative page with proper canonical tag" exclusion.
 func WebSiteSchema() string {
 	schema := map[string]any{
 		"@context":      "https://schema.org",
@@ -27,14 +33,6 @@ func WebSiteSchema() string {
 		"alternateName": "GoDaily Golang News",
 		"url":           env.AppURL + "/",
 		"description":   "Daily Golang news and newsletter. The best stories from the Go community, ranked and summarised every weekday.",
-		"potentialAction": map[string]any{
-			"@type": "SearchAction",
-			"target": map[string]any{
-				"@type":       "EntryPoint",
-				"urlTemplate": env.AppURL + "/browse/?q={search_term_string}",
-			},
-			"query-input": "required name=search_term_string",
-		},
 	}
 	return marshalSchema(schema)
 }
