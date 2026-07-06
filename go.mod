@@ -6,10 +6,10 @@ require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/a-h/templ v0.3.1020
 	github.com/ainsleydev/webkit v0.14.1
-	github.com/anthropics/anthropic-sdk-go v1.53.0
+	github.com/anthropics/anthropic-sdk-go v1.56.0
 	github.com/caarlos0/env/v11 v11.4.1
 	github.com/fogleman/gg v1.3.0
-	github.com/go-chi/chi/v5 v5.3.0
+	github.com/go-chi/chi/v5 v5.3.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gorilla/schema v1.4.1
@@ -18,7 +18,7 @@ require (
 	github.com/pandatix/go-cvss v0.6.2
 	github.com/pemistahl/lingua-go v1.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/pressly/goose/v3 v3.27.1
+	github.com/pressly/goose/v3 v3.27.2
 	github.com/resend/resend-go/v3 v3.9.2
 	github.com/slack-go/slack v0.27.0
 	github.com/stretchr/testify v1.11.1
