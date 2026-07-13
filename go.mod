@@ -6,27 +6,27 @@ require (
 	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/a-h/templ v0.3.1020
 	github.com/ainsleydev/webkit v0.14.1
-	github.com/anthropics/anthropic-sdk-go v1.53.0
+	github.com/anthropics/anthropic-sdk-go v1.57.0
 	github.com/caarlos0/env/v11 v11.4.1
 	github.com/fogleman/gg v1.3.0
-	github.com/go-chi/chi/v5 v5.3.0
+	github.com/go-chi/chi/v5 v5.3.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gorilla/schema v1.4.1
 	github.com/joho/godotenv v1.5.1
-	github.com/mattn/go-mastodon v0.0.11
+	github.com/mattn/go-mastodon v0.0.13
 	github.com/pandatix/go-cvss v0.6.2
 	github.com/pemistahl/lingua-go v1.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/pressly/goose/v3 v3.27.1
-	github.com/resend/resend-go/v3 v3.9.2
+	github.com/pressly/goose/v3 v3.27.2
+	github.com/resend/resend-go/v3 v3.10.1
 	github.com/slack-go/slack v0.27.0
 	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/swag/v2 v2.0.0-rc5
 	github.com/tursodatabase/libsql-client-go v0.0.0-20251219100830-236aa1ff8acc
 	github.com/urfave/cli/v3 v3.10.1
 	go.uber.org/mock v0.6.0
-	golang.org/x/sync v0.21.0
+	golang.org/x/sync v0.22.0
 	golang.org/x/time v0.15.0
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.53.0
