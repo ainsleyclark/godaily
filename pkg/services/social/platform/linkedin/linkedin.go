@@ -96,11 +96,20 @@ type (
 )
 
 // Post publishes the request text to the configured organisation's feed.
+//
+// The commentary is escaped for LinkedIn's "little text" format before it
+// is sent (see escapeCommentary): reserved characters left raw cause
+// LinkedIn to silently drop the post body from that character onward — a
+// single unescaped "(" truncates everything after it, hashtags and URL
+// included.
+//
 // Mentions whose Platform is LinkedIn and whose DisplayName occurs
 // (case-sensitive) in req.Text are attached as inline annotations so the
-// rendered post links to the referenced entity. Mentions whose name
-// can't be matched in the text are logged at WARN and dropped — the
-// post still goes through, just without a tag for that entity.
+// rendered post links to the referenced entity. Annotation offsets are
+// computed against the escaped commentary so they still line up after the
+// escape backslashes shift positions. Mentions whose name can't be matched
+// in the text are logged at WARN and dropped — the post still goes through,
+// just without a tag for that entity.
 //
 // The post URL is reconstructed from the x-restli-id response header
 // (LinkedIn's REST convention for newly created resources).
@@ -111,7 +120,8 @@ type (
 // fields between them; verify against the live docs before relying on
 // mentions in production.
 func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
-	annotations, missed := buildAnnotations(req.Text, req.Mentions)
+	commentary := escapeCommentary(req.Text)
+	annotations, missed := buildAnnotations(commentary, req.Mentions)
 	for _, m := range missed {
 		slog.WarnContext(
 			ctx, "LinkedIn mention dropped: display name not found in post text",
@@ -121,7 +131,7 @@ func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.P
 
 	body := postRequest{
 		Author:                c.authorURN,
-		Commentary:            req.Text,
+		Commentary:            commentary,
 		CommentaryAnnotations: annotations,
 		Visibility:            "PUBLIC",
 		LifecycleState:        "PUBLISHED",
@@ -385,6 +395,12 @@ func urnFromPostURL(postURL string) (string, error) {
 // LinkedIn-platform mentions are considered; everything else is silently
 // skipped.
 //
+// text is the already-escaped commentary (see escapeCommentary), so each
+// DisplayName is escaped the same way before matching and its escaped
+// length is used for the annotation. Because escaping is a per-character
+// transform, the escaped name still appears at the correct offset in the
+// escaped text, keeping start/length aligned with what LinkedIn renders.
+//
 // Conflict resolution: when two mentions could match overlapping ranges
 // (e.g. one annotates "Go" and another annotates "Go Blog"), the longer
 // match wins. On equal length the earlier mention wins. Each URN is
@@ -409,14 +425,15 @@ func buildAnnotations(text string, mentions []social.Mention) ([]inlineAnnotatio
 		if m.Platform != social.LinkedIn || m.Handle == "" || m.DisplayName == "" {
 			continue
 		}
-		idx := strings.Index(text, m.DisplayName)
+		name := escapeCommentary(m.DisplayName)
+		idx := strings.Index(text, name)
 		if idx < 0 {
 			missed = append(missed, m)
 			continue
 		}
 		candidates = append(candidates, candidate{
 			start:  idx,
-			length: len(m.DisplayName),
+			length: len(name),
 			entity: m.Handle,
 		})
 	}
@@ -455,6 +472,31 @@ func buildAnnotations(text string, mentions []social.Mention) ([]inlineAnnotatio
 		out[i] = inlineAnnotation{Start: a.start, Length: a.length, Entity: a.entity}
 	}
 	return out, missed
+}
+
+// escapeCommentary escapes the characters LinkedIn's Posts API "little
+// text" commentary format treats as control characters. Any of them left
+// raw makes LinkedIn silently drop the post body from that character
+// onward — a single unescaped "(" is enough to swallow the rest of the
+// sentence, the URL, and the trailing hashtags (the classic "post keeps
+// getting cut off" symptom).
+//
+// Every reserved character is escaped except '#', which is left raw on
+// purpose so the trailing "#golang …" line still renders as clickable
+// hashtags rather than literal text. The backslash is escaped first (it is
+// itself reserved), and the single-pass walk means the backslashes we
+// insert are never re-escaped.
+func escapeCommentary(s string) string {
+	var b strings.Builder
+	b.Grow(len(s) + 8)
+	for _, r := range s {
+		switch r {
+		case '\\', '|', '{', '}', '@', '[', ']', '(', ')', '<', '>', '*', '_', '~':
+			b.WriteByte('\\')
+		}
+		b.WriteRune(r)
+	}
+	return b.String()
 }
 
 // feedURL builds the public URL for a published post. urn looks like

@@ -112,6 +112,45 @@ func TestClient_Post(t *testing.T) {
 	})
 }
 
+func TestClient_Post_EscapesCommentary(t *testing.T) {
+	t.Parallel()
+
+	// A post whose body contains parentheses — the classic cause of
+	// LinkedIn silently truncating everything from the "(" onward. The
+	// commentary sent to the API must arrive with the reserved characters
+	// escaped and the whole body intact (URL + hashtags included).
+	const text = "Go apps in containers default GOMAXPROCS to the host node's CPU count. " +
+		"The fix is well-known (pin GOMAXPROCS to the cgroup quota).\n\n" +
+		"https://example.com/gomaxprocs\n\n#golang #softwareengineering #programming"
+
+	var gotCommentary string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		require.NoError(t, err)
+		var got map[string]any
+		require.NoError(t, json.Unmarshal(body, &got))
+		gotCommentary, _ = got["commentary"].(string)
+
+		w.Header().Set("x-restli-id", "urn:li:share:1")
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer srv.Close()
+
+	c := New("tok", "urn:li:organization:99", "")
+	c.baseURL = srv.URL
+
+	_, err := c.Post(context.Background(), platform.PostRequest{Text: text})
+	require.NoError(t, err)
+
+	// Parentheses escaped so the body is no longer truncated.
+	assert.Contains(t, gotCommentary, `well-known \(pin GOMAXPROCS to the cgroup quota\)`)
+	// The tail that used to get dropped survives.
+	assert.Contains(t, gotCommentary, "https://example.com/gomaxprocs")
+	// Hashtags are left raw so they still render as hashtags.
+	assert.Contains(t, gotCommentary, "#golang #softwareengineering #programming")
+	assert.NotContains(t, gotCommentary, `\#golang`)
+}
+
 func TestClient_Post_Annotation(t *testing.T) {
 	t.Parallel()
 
@@ -296,6 +335,22 @@ func TestBuildAnnotations(t *testing.T) {
 		assert.Empty(t, missed)
 	})
 
+	t.Run("Offsets account for escape backslashes before the mention", func(t *testing.T) {
+		t.Parallel()
+		// Reserved characters ahead of the mention are escaped, shifting the
+		// mention's offset. buildAnnotations runs on the escaped commentary,
+		// so start/length must reflect the added backslashes.
+		escaped := escapeCommentary("(Go) Ardan Labs writes.")
+		got, missed := buildAnnotations(
+			escaped,
+			[]social.Mention{lin("Ardan Labs", "urn:li:organization:1")},
+		)
+		require.Len(t, got, 1)
+		assert.Equal(t, 7, got[0].Start, "shifted right by the two escaped parens")
+		assert.Equal(t, 10, got[0].Length)
+		assert.Empty(t, missed)
+	})
+
 	t.Run("Two non-overlapping mentions both matched in document order", func(t *testing.T) {
 		t.Parallel()
 		got, missed := buildAnnotations(
@@ -374,6 +429,51 @@ func TestBuildAnnotations(t *testing.T) {
 		assert.Empty(t, got)
 		assert.Empty(t, missed)
 	})
+}
+
+func TestEscapeCommentary(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input string
+		want  string
+	}{
+		"No reserved characters is unchanged": {
+			input: "Hello, Go community. Ship it.",
+			want:  "Hello, Go community. Ship it.",
+		},
+		"Parentheses escaped": {
+			input: "The fix (automaxprocs) is well-known.",
+			want:  `The fix \(automaxprocs\) is well-known.`,
+		},
+		"Brackets, braces and angle brackets escaped": {
+			input: "map[string]any and struct{} and <T>",
+			want:  `map\[string\]any and struct\{\} and \<T\>`,
+		},
+		"Formatting characters escaped": {
+			input: "a_b *c* ~d~ e|f",
+			want:  `a\_b \*c\* \~d\~ e\|f`,
+		},
+		"At sign escaped": {
+			input: "email me@example.com",
+			want:  `email me\@example.com`,
+		},
+		"Hashtags left raw so they render": {
+			input: "ship it\n\n#golang #programming",
+			want:  "ship it\n\n#golang #programming",
+		},
+		"Backslash escaped once, additions not re-escaped": {
+			input: `path C:\dir and (x)`,
+			want:  `path C:\\dir and \(x\)`,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, escapeCommentary(test.input))
+		})
+	}
 }
 
 func TestClient_HasLiked(t *testing.T) {
