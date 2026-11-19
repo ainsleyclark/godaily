@@ -252,15 +252,6 @@ func TestBuildUserPrompt(t *testing.T) {
 	assert.Equal(t, items, parsed)
 }
 
-func TestBuildSuggestSystem(t *testing.T) {
-	t.Parallel()
-
-	got := buildSuggestSystem()
-	assert.Contains(t, got, systemIntro)
-	assert.Contains(t, got, "## Style guide")
-	assert.Contains(t, got, "Voice & style guide")
-}
-
 func TestBuildDigestSystem(t *testing.T) {
 	t.Parallel()
 

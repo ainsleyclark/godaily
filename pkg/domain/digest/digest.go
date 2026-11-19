@@ -20,7 +20,6 @@ type Service interface {
 	Build(ctx context.Context, date time.Time) error
 	SendPreview(ctx context.Context, date time.Time) error
 	SendDigest(ctx context.Context, date time.Time, force bool) error
-	SendSuggestion(ctx context.Context, date time.Time) error
 }
 
 // BuildWindow returns the [start, end) date range whose collected items a
