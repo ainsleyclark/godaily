@@ -366,7 +366,8 @@ curl -sf \
 
 ### Manually ingest Reddit listing JSON
 
-Fallback for when the live Reddit fetch is blocked (e.g. ScraperAPI 403). POST the raw JSON body
+Fallback for when the live Reddit fetch fails (it reads r/golang from the Arctic Shift archive;
+see `pkg/source/reddit.go`). POST the raw JSON body
 returned by `https://www.reddit.com/r/golang/new.json`. De-duplicates on `(url, tag)` so it is
 safe to run repeatedly.
 
