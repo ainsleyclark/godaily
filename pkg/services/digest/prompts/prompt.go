@@ -14,15 +14,9 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
 )
 
-// styleMD is the embedded voice guide that the model must follow when
-// drafting social posts.
-//
-//go:embed style.md
-var styleMD string
-
 // introStyleMD is the embedded editorial voice guide for the digest email
-// intro. It is dry and grounded like styleMD, but in email-paragraph form
-// rather than the social-post form (no hashtags, line breaks, or char cap).
+// intro, written in email-paragraph form (no hashtags, line breaks, or char
+// cap).
 //
 //go:embed intro-style.md
 var introStyleMD string
