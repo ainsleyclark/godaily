@@ -20,9 +20,18 @@ import (
 // the dashboard) is never throttled. An empty exemptSecret disables
 // exemption (all requests are rate-limited).
 func RateLimit(limiter *RateLimiter, exemptSecret string) webkit.Plug {
+	return RateLimitFunc(limiter, func(r *http.Request) bool {
+		return bearerMatches(r, exemptSecret)
+	})
+}
+
+// RateLimitFunc is like RateLimit but bypasses the limiter for any request
+// for which exempt returns true. Use it when authenticated traffic can carry
+// credentials in more than one way (see MCPAuthenticated).
+func RateLimitFunc(limiter *RateLimiter, exempt func(*http.Request) bool) webkit.Plug {
 	return func(next webkit.Handler) webkit.Handler {
 		return func(c *webkit.Context) error {
-			if bearerMatches(c.Request, exemptSecret) {
+			if exempt(c.Request) {
 				return next(c)
 			}
 			if !limiter.Allow(ClientIP(c.Request)) {

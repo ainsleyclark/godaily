@@ -1,10 +1,24 @@
 # Future uses for the synth (AI) package
 
-The `internal/synth` package currently has one job: take the day's
-scored news and draft one short, punchy post about the single most
-notable item. The Anthropic client, cached system prompt, and JSON
-parsing scaffolding are general-purpose, so there is room to extend
-them without restructuring the package.
+The AI layer (`pkg/ai` plus the prompts in
+`pkg/services/digest/prompts`) currently has one job: write the digest's
+title and intro (`Synthesise`). The Anthropic client, cached system
+prompt, and JSON parsing scaffolding are general-purpose, so there is
+room to extend them without restructuring the package.
+
+> **Removed (November 2026): daily synth post suggestions.** The
+> service used to email the owner three AI-drafted social posts (about
+> the day's top stories) every day, alongside the digest preview, and
+> the same thing was available on demand as `godaily synth`. It was
+> removed because the drafts weren't being used and didn't add value
+> over the social drafting pipeline in `pkg/services/social`, while
+> costing a Sonnet call per day.
+>
+> Removed: `godaily synth`, `digest.Service.SendSuggestion`, the
+> `prompts.Suggest` prompt and its `style.md` social-post voice guide,
+> and the `suggest.{html,txt}` email templates. To restore it, revert
+> the commit `refactor: Remove daily synth post suggestions`
+> (`git log --grep "Remove daily synth post suggestions"`).
 
 This doc captures candidate extensions, ordered by ROI, along with the
 main tradeoffs.
