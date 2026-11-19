@@ -12,9 +12,11 @@ require (
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+	github.com/google/jsonschema-go v0.4.3
 	github.com/gorilla/schema v1.4.1
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-mastodon v0.0.11
+	github.com/modelcontextprotocol/go-sdk v1.8.0
 	github.com/pandatix/go-cvss v0.6.2
 	github.com/pemistahl/lingua-go v1.4.0
 	github.com/pkg/errors v0.9.1
@@ -91,6 +93,8 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/segmentio/asm v1.2.1 // indirect
+	github.com/segmentio/encoding v0.5.4 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
@@ -107,12 +111,14 @@ require (
 	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
+	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.2 // indirect
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
 	golang.org/x/image v0.30.0 // indirect
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.62.0 // indirect
+	golang.org/x/oauth2 v0.35.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/telemetry v0.0.0-20260924152758-ed294f943157 // indirect
 	golang.org/x/text v0.43.0 // indirect

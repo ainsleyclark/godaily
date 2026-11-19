@@ -86,6 +86,28 @@ func TestRateLimit(t *testing.T) {
 		require.NoError(t, handler(newAuthCtx()))
 		require.NoError(t, handler(newAuthCtx()))
 	})
+
+	t.Run("RateLimitFunc exempts matching requests only", func(t *testing.T) {
+		t.Parallel()
+		handler := RateLimitFunc(NewRateLimiter(0.0001, 1), func(r *http.Request) bool {
+			return r.Header.Get("X-Exempt") == "yes"
+		})(passHandler)
+
+		newCtx := func(exempt bool) *webkit.Context {
+			r := httptest.NewRequest(http.MethodGet, "/", nil)
+			r.RemoteAddr = "9.9.9.9:1234"
+			if exempt {
+				r.Header.Set("X-Exempt", "yes")
+			}
+			return webkit.NewContext(httptest.NewRecorder(), r)
+		}
+
+		for range 3 {
+			require.NoError(t, handler(newCtx(true)))
+		}
+		require.NoError(t, handler(newCtx(false)))
+		require.Error(t, handler(newCtx(false)))
+	})
 }
 
 func TestClientIP(t *testing.T) {
