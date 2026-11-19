@@ -17,8 +17,8 @@ import (
 )
 
 // SendPreview loads the draft digest for the given date, sends it to the
-// admin address along with an AI synth suggestion, and leaves the issue in
-// draft status so SendDigest can still dispatch it to subscribers later.
+// admin address, and leaves the issue in draft status so SendDigest can
+// still dispatch it to subscribers later.
 func (s Service) SendPreview(ctx context.Context, date time.Time) error {
 	slug := date.Format("2006-01-02")
 
@@ -45,12 +45,6 @@ func (s Service) SendPreview(ctx context.Context, date time.Time) error {
 	issueTag := email.Tag{Name: email.TagIssueID, Value: strconv.FormatInt(issue.ID, 10)}
 	if err = s.sendRendered(ctx, s.adminEmailAddress, rendered, []email.Tag{issueTag}); err != nil {
 		return errors.Wrap(err, "sending preview digest")
-	}
-
-	// Synth suggestion is best-effort: a missing prompter or AI error should
-	// not block the owner from receiving the digest preview.
-	if suggErr := s.SendSuggestion(ctx, date); suggErr != nil {
-		slog.WarnContext(ctx, "Failed to send synth suggestion during preview", "err", suggErr)
 	}
 
 	return nil

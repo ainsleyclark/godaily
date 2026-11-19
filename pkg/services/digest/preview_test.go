@@ -142,23 +142,4 @@ func TestAggregator_SendPreview(t *testing.T) {
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "sending preview digest")
 	})
-
-	t.Run("Suggestion Error Does Not Fail Preview", func(t *testing.T) {
-		issueRepo, itemRepo := newTestStores(t)
-		date := day("2026-05-15")
-		_, err := issueRepo.Create(t.Context(), digest.Issue{
-			Slug:    "2026-05-15",
-			Subject: "GoDaily - 2026-05-15",
-			Status:  digest.IssueStatusDraft,
-			SentAt:  time.Now().UTC(),
-		})
-		require.NoError(t, err)
-
-		m := &mockEmail{}
-		// No prompter set; SendSuggestion will return an error but SendPreview must succeed.
-		agg := Service{email: m, adminEmailAddress: "owner@example.com", issues: issueRepo, items: itemRepo}
-
-		require.NoError(t, agg.SendPreview(t.Context(), date))
-		assert.True(t, m.called)
-	})
 }
