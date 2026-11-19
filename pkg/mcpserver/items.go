@@ -20,7 +20,6 @@ type (
 	GetItemInput struct {
 		ID int64 `json:"id" jsonschema:"Numeric news item ID."`
 	}
-
 	// SearchItemsInput is the input for search_items. The embedded Window
 	// filters on the item's published time.
 	SearchItemsInput struct {
@@ -40,7 +39,6 @@ type (
 		PerPage int64       `json:"per_page"`
 		Total   int64       `json:"total"`
 	}
-
 	// ItemFacetsOutput is the output for list_item_facets.
 	ItemFacetsOutput struct {
 		TotalItems int64              `json:"total_items"`

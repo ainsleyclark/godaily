@@ -53,12 +53,10 @@ type (
 		PerPage int64          `json:"per_page"`
 		Total   int64          `json:"total"`
 	}
-
 	// GetIssueInput is the input for get_issue.
 	GetIssueInput struct {
 		Key string `json:"key" jsonschema:"Issue identifier: a numeric ID, a date slug (YYYY-MM-DD), latest or draft."`
 	}
-
 	// IssueCandidatesInput is the input for get_issue_candidates.
 	IssueCandidatesInput struct {
 		Key   string `json:"key"             jsonschema:"Issue identifier: a numeric ID, a date slug (YYYY-MM-DD), latest or draft."`

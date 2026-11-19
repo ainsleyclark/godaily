@@ -46,13 +46,11 @@ type (
 	WindowInput struct {
 		Window
 	}
-
 	// RankedInput is the input for tools returning a top-N list over a window.
 	RankedInput struct {
 		Window
 		Limit int `json:"limit,omitempty" jsonschema:"Maximum rows to return, at most 100. Defaults to 10."`
 	}
-
 	// IssueEngagementListInput is the input for list_issue_engagement.
 	IssueEngagementListInput struct {
 		Window
@@ -63,7 +61,6 @@ type (
 	IssueEngagementListOutput struct {
 		Issues []engagement.IssueEngagement `json:"issues"`
 	}
-
 	// IssueEngagementInput is the input for get_issue_engagement.
 	IssueEngagementInput struct {
 		Key string `json:"key" jsonschema:"Issue identifier: a numeric ID, a date slug (YYYY-MM-DD), latest or draft."`
@@ -77,7 +74,6 @@ type (
 		Stats   engagement.IssueStats   `json:"stats"`
 		Links   []engagement.LinkClicks `json:"top_links"`
 	}
-
 	// TopItemsOutput is the output for top_items.
 	TopItemsOutput struct {
 		Items []engagement.ItemMetrics `json:"items"`
@@ -90,14 +86,12 @@ type (
 	TopSourcesOutput struct {
 		Sources []engagement.SourceMetrics `json:"sources"`
 	}
-
 	// TrendInput is the input for engagement_trend.
 	TrendInput struct {
 		Window
 		Metric string `json:"metric,omitempty" jsonschema:"Metric to chart. Defaults to click_rate."`
 		Bucket string `json:"bucket,omitempty" jsonschema:"Bucket size. Defaults to day."`
 	}
-
 	// IssueTrendInput is the input for issue_engagement_trend.
 	IssueTrendInput struct {
 		Window
@@ -105,13 +99,11 @@ type (
 		Metric string `json:"metric,omitempty" jsonschema:"Metric to chart. Defaults to unique_clicks."`
 		Bucket string `json:"bucket,omitempty" jsonschema:"Bucket size. Defaults to hour."`
 	}
-
 	// SubscriberGrowthInput is the input for subscriber_growth.
 	SubscriberGrowthInput struct {
 		Window
 		Bucket string `json:"bucket,omitempty" jsonschema:"Bucket size. Defaults to day."`
 	}
-
 	// SocialPostsInput is the input for social_post_metrics.
 	SocialPostsInput struct {
 		Window
