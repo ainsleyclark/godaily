@@ -100,20 +100,6 @@ func (mr *MockServiceMockRecorder) SendPreview(ctx, date any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPreview", reflect.TypeOf((*MockService)(nil).SendPreview), ctx, date)
 }
 
-// SendSuggestion mocks base method.
-func (m *MockService) SendSuggestion(ctx context.Context, date time.Time) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendSuggestion", ctx, date)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SendSuggestion indicates an expected call of SendSuggestion.
-func (mr *MockServiceMockRecorder) SendSuggestion(ctx, date any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendSuggestion", reflect.TypeOf((*MockService)(nil).SendSuggestion), ctx, date)
-}
-
 // Submit mocks base method.
 func (m *MockService) Submit(ctx context.Context, source news.Source, items []news.Item) (digest.SubmitResponse, error) {
 	m.ctrl.T.Helper()

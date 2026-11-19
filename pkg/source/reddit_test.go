@@ -88,6 +88,8 @@ func TestRedditChild_ShouldInclude(t *testing.T) {
 	}
 }
 
+// TestReddit_Fetch_Headers covers the legacy reddit.com listing path
+// (NewRedditScraperAPI).
 func TestReddit_Fetch_Headers(t *testing.T) {
 	t.Parallel()
 
@@ -100,7 +102,7 @@ func TestReddit_Fetch_Headers(t *testing.T) {
 	}))
 	defer s.Close()
 
-	_, err := Reddit{url: s.URL}.Fetch(t.Context())
+	_, err := Reddit{url: s.URL, viaScraperAPI: true}.Fetch(t.Context())
 	require.NoError(t, err)
 
 	// Reddit 403s requests without a browser-like fingerprint, so the fetch
@@ -111,6 +113,9 @@ func TestReddit_Fetch_Headers(t *testing.T) {
 	assert.Equal(t, redditCookie, got.Get("Cookie"))
 }
 
+// TestReddit_Fetch covers the legacy reddit.com listing path
+// (NewRedditScraperAPI). The Arctic Shift path is covered in
+// reddit_arcticshift_test.go.
 func TestReddit_Fetch(t *testing.T) {
 	t.Parallel()
 
@@ -190,7 +195,7 @@ func TestReddit_Fetch(t *testing.T) {
 			defer s.Close()
 			serverURL = s.URL
 
-			got, err := Reddit{url: s.URL}.Fetch(t.Context())
+			got, err := Reddit{url: s.URL, viaScraperAPI: true}.Fetch(t.Context())
 			test.want(t, got, err, s.URL)
 		})
 	}

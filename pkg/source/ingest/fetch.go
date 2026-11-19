@@ -26,8 +26,9 @@ import (
 const htmlBodyMax = 2 * 1024 * 1024
 
 // httpClient is the shared HTTP client used by Fetch and EnrichSnippets.
-// The timeout is raised to 2 minutes because ScraperAPI proxying (e.g. Reddit)
-// can take ~45s+ per response, well past gohttp's 30s default.
+// The timeout is raised to 2 minutes because ScraperAPI proxying (e.g.
+// golang.cafe, and formerly Reddit) can take ~45s+ per response, well past
+// gohttp's 30s default. The timeout spans all retry attempts.
 var httpClient = gohttp.New(gohttp.WithTimeout(2 * time.Minute))
 
 // SetHTTPClient replaces the shared HTTP client used by all sources.
@@ -64,7 +65,7 @@ func Fetch[T any](
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return zero, errors.Wrap(err, "fetch "+name)
+		return zero, errors.Wrap(redactURLError(err), "fetch "+name)
 	}
 	defer resp.Body.Close()
 
@@ -108,7 +109,7 @@ func FetchHTML(ctx context.Context, url, name string, headers ...http.Header) (*
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return nil, errors.Wrap(err, "fetch "+name)
+		return nil, errors.Wrap(redactURLError(err), "fetch "+name)
 	}
 	defer resp.Body.Close()
 

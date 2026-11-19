@@ -30,11 +30,5 @@ var NudgeHTML string
 //go:embed nudge.txt
 var NudgeText string
 
-//go:embed suggest.html
-var SuggestHTML string
-
-//go:embed suggest.txt
-var SuggestText string
-
 //go:embed message.html
 var MessageHTML string

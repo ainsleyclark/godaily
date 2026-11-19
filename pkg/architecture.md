@@ -316,6 +316,7 @@ import direction clean.
 | Source scrapers | `pkg/source/<source>/` |
 | AI providers | `pkg/ai/<provider>/` |
 | HTTP routing and handlers | `pkg/api/`, `web/` |
+| MCP server (tools for AI agents) | `pkg/mcpserver/` |
 | Cross-service composition (wiring) | `pkg/app.go` |
 | Embedded YAML data (conferences, meetups) | `pkg/data/` |
 | Email templates | `pkg/templates/` |

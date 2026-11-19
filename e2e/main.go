@@ -117,8 +117,6 @@ func (r seedRunner) SendDigest(ctx context.Context, date time.Time, force bool) 
 	return r.aggregator.SendDigest(ctx, date, force)
 }
 
-func (r seedRunner) SendSuggestion(_ context.Context, _ time.Time) error { return nil }
-
 func main() {
 	// Resolve repo root so relative paths (web/dist/, migrations/) are correct.
 	_, file, _, _ := runtime.Caller(0)
