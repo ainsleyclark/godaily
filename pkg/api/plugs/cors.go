@@ -22,7 +22,8 @@ func CORS(next webkit.Handler) webkit.Handler {
 		h := c.Response.Header()
 		h.Set("Access-Control-Allow-Origin", "*")
 		h.Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		h.Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept")
+		h.Set("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, X-API-Key, Mcp-Protocol-Version, Mcp-Session-Id, Last-Event-ID")
+		h.Set("Access-Control-Expose-Headers", "Mcp-Session-Id, WWW-Authenticate")
 		h.Set("Access-Control-Max-Age", "600")
 		if c.Request.Method == http.MethodOptions {
 			c.Response.WriteHeader(http.StatusNoContent)

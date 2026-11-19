@@ -43,6 +43,7 @@ func Run() {
 			fetchCmd(app),
 			generateCmd(app),
 			emailCmd(app),
+			mcpCmd(app),
 		},
 	}
 
