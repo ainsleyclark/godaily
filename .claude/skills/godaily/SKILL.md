@@ -21,6 +21,15 @@ GoDaily (`https://godaily.dev`) is a daily Go newsletter that aggregates news fr
 Reddit, Lobsters, Dev.to, Medium, GitHub Trending, YouTube, and more — synthesised by Claude and
 delivered by email. This skill lets you interact with its HTTP API directly.
 
+## Prefer the MCP server for read-only questions
+
+If a `godaily` MCP server is connected (tools such as `get_issue`, `search_items`,
+`metrics_summary`, `top_items`), use those tools for **read-only** questions: issues,
+items, engagement and subscriber metrics. They return typed results and need no curl
+or key handling. Use the HTTP API below for anything that changes state (collect,
+build, send, social publishing, subscribing, editing drafts), because the MCP server
+is read-only. Setup is described in `docs/features/mcp-server.md`.
+
 ## API contract (source of truth)
 
 The canonical, machine-readable API contract is the generated OpenAPI 3.1 spec at
@@ -366,7 +375,8 @@ curl -sf \
 
 ### Manually ingest Reddit listing JSON
 
-Fallback for when the live Reddit fetch is blocked (e.g. ScraperAPI 403). POST the raw JSON body
+Fallback for when the live Reddit fetch fails (it reads r/golang from the Arctic Shift archive;
+see `pkg/source/reddit.go`). POST the raw JSON body
 returned by `https://www.reddit.com/r/golang/new.json`. De-duplicates on `(url, tag)` so it is
 safe to run repeatedly.
 

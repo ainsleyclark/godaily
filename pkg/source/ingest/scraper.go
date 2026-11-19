@@ -5,6 +5,7 @@
 package ingest
 
 import (
+	stderrors "errors"
 	"net/url"
 	"time"
 )
@@ -54,4 +55,35 @@ func ScraperURL(keys []string, targetURL string, opts ...ScraperOption) string {
 		opt(params)
 	}
 	return scraperAPIBase + "?" + params.Encode()
+}
+
+// redactedKey replaces ScraperAPI keys in URLs that end up in errors.
+const redactedKey = "REDACTED"
+
+// redactURLError removes the ScraperAPI api_key from the URL inside a
+// *url.Error. net/http embeds the full request URL in transport errors (e.g.
+// `Get "http://api.scraperapi.com?api_key=...": context deadline exceeded`),
+// which would otherwise leak the key into logs and Slack notifications.
+func redactURLError(err error) error {
+	var ue *url.Error
+	if stderrors.As(err, &ue) {
+		ue.URL = redactScraperKey(ue.URL)
+	}
+	return err
+}
+
+// redactScraperKey returns rawURL with its api_key query value replaced, or
+// rawURL unchanged when it has none or cannot be parsed.
+func redactScraperKey(rawURL string) string {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL
+	}
+	q := u.Query()
+	if !q.Has("api_key") {
+		return rawURL
+	}
+	q.Set("api_key", redactedKey)
+	u.RawQuery = q.Encode()
+	return u.String()
 }

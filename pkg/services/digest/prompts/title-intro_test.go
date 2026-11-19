@@ -21,6 +21,18 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
 )
 
+func sampleSections() []news.SourceItems {
+	return []news.SourceItems{{
+		Source: news.SourceGoBlog,
+		Items: []news.Item{{
+			Source: news.SourceGoBlog,
+			Title:  "Go 1.24 ships",
+			URL:    "https://go.dev/blog/go1.24",
+			Score:  0.95,
+		}},
+	}}
+}
+
 func validDigestJSON(title, intro string) []byte {
 	raw, _ := json.Marshal(DigestMeta{Title: title, Intro: intro})
 	return raw

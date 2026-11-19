@@ -24,9 +24,13 @@ import (
 	socialhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/social"
 	webhookhandlers "github.com/ainsleyclark/godaily/pkg/api/handlers/webhooks"
 	"github.com/ainsleyclark/godaily/pkg/api/plugs"
+	"github.com/ainsleyclark/godaily/pkg/mcpserver"
 	"github.com/ainsleydev/webkit/pkg/middleware"
 	"github.com/ainsleydev/webkit/pkg/webkit"
 )
+
+// mcpPath is the route of the MCP endpoint, relative to /api.
+const mcpPath = "/mcp"
 
 // Handler returns an http.Handler for all API routes.
 // Routes are relative to /api — callers should mount or strip the /api prefix
@@ -34,7 +38,11 @@ import (
 func Handler(app *godaily.App) http.Handler {
 	kit := webkit.New()
 	kit.Plug(plugs.CORS)
-	kit.Plug(plugs.RateLimit(plugs.Limiter, app.Config.APISecret))
+	kit.Plug(plugs.RateLimitFunc(plugs.Limiter, func(r *http.Request) bool {
+		// Any valid admin or MCP credential, in any accepted form, bypasses
+		// the public per-IP limit.
+		return plugs.MCPAuthenticated(r, app.Config.MCPAPIKey, app.Config.APISecret)
+	}))
 	kit.Plug(middleware.Logger)
 
 	kit.ErrorHandler = func(c *webkit.Context, err error) error {
@@ -82,6 +90,19 @@ func Handler(app *godaily.App) http.Handler {
 	kit.Group("/items", func(k *webkit.Kit) { itemsH.Routes(k, auth) })
 	kit.Group("/webhooks", func(k *webkit.Kit) { webhookH.Routes(k) })
 
+	// Read-only MCP server (Streamable HTTP). Accepts MCP_API_KEY or
+	// API_SECRET; see plugs.MCPAuth. GET and DELETE are routed so the SDK can
+	// answer them with 405 as the stateless transport requires.
+	mcpHandler := mcpserver.HTTPHandler(mcpserver.New(mcpserver.DepsFromApp(app)))
+	mcpAuth := plugs.MCPAuth(app.Config.MCPAPIKey, app.Config.APISecret)
+	serveMCP := func(c *webkit.Context) error {
+		mcpHandler.ServeHTTP(c.Response, c.Request)
+		return nil
+	}
+	for _, method := range []string{http.MethodPost, http.MethodGet, http.MethodDelete} {
+		kit.Add(method, mcpPath, serveMCP, mcpAuth)
+	}
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Vercel's trailingSlash:true setting appends a slash to every URL.
 		// Strip it here so chi's patterns resolve correctly.
@@ -89,6 +110,9 @@ func Handler(app *godaily.App) http.Handler {
 			r2 := r.Clone(r.Context())
 			r2.URL.Path = p[:len(p)-1]
 			r = r2
+		}
+		if r.URL.Path == mcpPath {
+			r = plugs.LiftMCPQueryKey(r)
 		}
 		kit.ServeHTTP(w, r)
 	})
