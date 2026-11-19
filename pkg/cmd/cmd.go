@@ -52,7 +52,7 @@ func Run() {
 
 func exit(ctx context.Context, err error) {
 	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
+		slog.ErrorContext(ctx, "Command failed", "err", err)
 		os.Exit(1)
 	}
 }
