@@ -24,7 +24,7 @@ require (
 	github.com/resend/resend-go/v3 v3.17.0
 	github.com/slack-go/slack v0.29.0
 	github.com/stretchr/testify v1.12.1
-	github.com/swaggo/swag/v2 v2.0.0-rc5
+	github.com/swaggo/swag/v2 v2.0.0-rc6
 	github.com/tursodatabase/libsql-client-go v0.0.0-20260528064733-9d5d30a29a60
 	github.com/urfave/cli/v3 v3.11.0
 	go.uber.org/mock v0.6.0
