@@ -862,7 +862,8 @@ const docTemplate = `{
                         "$ref": "#/components/schemas/news.Source"
                     },
                     "tag": {
-                        "$ref": "#/components/schemas/news.Tag"
+                        "$ref": "#/components/schemas/news.Tag",
+                        "description": "source-specific hint (\"proposal-accepted\", \"trending\", \"official\")"
                     },
                     "title": {
                         "type": "string"
@@ -944,7 +945,6 @@ const docTemplate = `{
                 ]
             },
             "news.Tag": {
-                "description": "source-specific hint (\"proposal-accepted\", \"trending\", \"official\")",
                 "enum": [
                     "article",
                     "tutorial",
@@ -1506,16 +1506,9 @@ const docTemplate = `{
                     "content": {
                         "application/json": {
                             "schema": {
-                                "oneOf": [
-                                    {
-                                        "type": "object"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/IssueUpdateRequest",
-                                        "summary": "body",
-                                        "description": "Fields to update"
-                                    }
-                                ]
+                                "$ref": "#/components/schemas/IssueUpdateRequest",
+                                "summary": "body",
+                                "description": "Fields to update"
                             }
                         }
                     },
@@ -1670,16 +1663,9 @@ const docTemplate = `{
                     "content": {
                         "application/json": {
                             "schema": {
-                                "oneOf": [
-                                    {
-                                        "type": "object"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/ItemReorderRequest",
-                                        "summary": "body",
-                                        "description": "Ordered list of item IDs"
-                                    }
-                                ]
+                                "$ref": "#/components/schemas/ItemReorderRequest",
+                                "summary": "body",
+                                "description": "Ordered list of item IDs"
                             }
                         }
                     },
@@ -3022,16 +3008,9 @@ const docTemplate = `{
                     "content": {
                         "application/json": {
                             "schema": {
-                                "oneOf": [
-                                    {
-                                        "type": "object"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/SocialDraftUpdateRequest",
-                                        "summary": "body",
-                                        "description": "Replacement text"
-                                    }
-                                ]
+                                "$ref": "#/components/schemas/SocialDraftUpdateRequest",
+                                "summary": "body",
+                                "description": "Replacement text"
                             }
                         }
                     },
@@ -3293,16 +3272,9 @@ const docTemplate = `{
                     "content": {
                         "application/json": {
                             "schema": {
-                                "oneOf": [
-                                    {
-                                        "type": "object"
-                                    },
-                                    {
-                                        "$ref": "#/components/schemas/SubscribeRequest",
-                                        "summary": "request",
-                                        "description": "Subscription request"
-                                    }
-                                ]
+                                "$ref": "#/components/schemas/SubscribeRequest",
+                                "summary": "request",
+                                "description": "Subscription request"
                             }
                         }
                     },

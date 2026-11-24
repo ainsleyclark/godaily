@@ -575,6 +575,7 @@ components:
           $ref: '#/components/schemas/news.Source'
         tag:
           $ref: '#/components/schemas/news.Tag'
+          description: source-specific hint ("proposal-accepted", "trending", "official")
         title:
           type: string
         url:
@@ -648,7 +649,6 @@ components:
       - SourceLinkedIn
       - SourceBluesky
     news.Tag:
-      description: source-specific hint ("proposal-accepted", "trending", "official")
       enum:
       - article
       - tutorial
@@ -1027,11 +1027,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-              - type: object
-              - $ref: '#/components/schemas/IssueUpdateRequest'
-                description: Fields to update
-                summary: body
+              $ref: '#/components/schemas/IssueUpdateRequest'
+              description: Fields to update
+              summary: body
         description: Fields to update
         required: true
       responses:
@@ -1238,11 +1236,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-              - type: object
-              - $ref: '#/components/schemas/ItemReorderRequest'
-                description: Ordered list of item IDs
-                summary: body
+              $ref: '#/components/schemas/ItemReorderRequest'
+              description: Ordered list of item IDs
+              summary: body
         description: Ordered list of item IDs
         required: true
       responses:
@@ -1967,11 +1963,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-              - type: object
-              - $ref: '#/components/schemas/SocialDraftUpdateRequest'
-                description: Replacement text
-                summary: body
+              $ref: '#/components/schemas/SocialDraftUpdateRequest'
+              description: Replacement text
+              summary: body
         description: Replacement text
         required: true
       responses:
@@ -2137,11 +2131,9 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-              - type: object
-              - $ref: '#/components/schemas/SubscribeRequest'
-                description: Subscription request
-                summary: request
+              $ref: '#/components/schemas/SubscribeRequest'
+              description: Subscription request
+              summary: request
         description: Subscription request
         required: true
       responses:

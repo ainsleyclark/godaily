@@ -336,8 +336,8 @@ github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWD
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 github.com/sv-tools/openapi v0.4.0 h1:UhD9DVnGox1hfTePNclpUzUFgos57FvzT2jmcAuTOJ4=
 github.com/sv-tools/openapi v0.4.0/go.mod h1:kD/dG+KP0+Fom1r6nvcj/ORtLus8d8enXT6dyRZDirE=
-github.com/swaggo/swag/v2 v2.0.0-rc5 h1:fK7d6ET9rrEsdB8IyuwXREWMcyQN3N7gawGFbbrjgHk=
-github.com/swaggo/swag/v2 v2.0.0-rc5/go.mod h1:kCL8Fu4Zl8d5tB2Bgj96b8wRowwrwk175bZHXfuGVFI=
+github.com/swaggo/swag/v2 v2.0.0-rc6 h1:uJSxDuXJULAcGGSPItu0xQwUW9biCCOW6C90a+OL1W4=
+github.com/swaggo/swag/v2 v2.0.0-rc6/go.mod h1:kCL8Fu4Zl8d5tB2Bgj96b8wRowwrwk175bZHXfuGVFI=
 github.com/tdewolff/minify/v2 v2.24.8 h1:58/VjsbevI4d5FGV0ZSuBrHMSSkH4MCH0sIz/eKIauE=
 github.com/tdewolff/minify/v2 v2.24.8/go.mod h1:0Ukj0CRpo/sW/nd8uZ4ccXaV1rEVIWA3dj8U7+Shhfw=
 github.com/tdewolff/parse/v2 v2.8.5 h1:ZmBiA/8Do5Rpk7bDye0jbbDUpXXbCdc3iah4VeUvwYU=
