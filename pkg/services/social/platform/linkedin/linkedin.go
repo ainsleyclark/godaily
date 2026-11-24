@@ -38,7 +38,8 @@ const (
 
 // Client posts to LinkedIn via the /rest/posts endpoint.
 type Client struct {
-	token      string
+	tokens     tokenState
+	refresh    *refresher
 	authorURN  string
 	memberURN  string
 	httpClient *http.Client
@@ -51,15 +52,22 @@ type Client struct {
 // page). memberURN is the personal member URN used to check whether the owner
 // engaged with a post (e.g. "urn:li:person:abcXYZ"); pass "" to skip reaction
 // checking.
-func New(token, authorURN, memberURN string) *Client {
-	return &Client{
-		token:      token,
+//
+// token is the OAuth access token. It may be empty when WithRefresh is
+// supplied, in which case one is fetched before the first request.
+func New(token, authorURN, memberURN string, opts ...Option) *Client {
+	c := &Client{
+		tokens:     tokenState{token: token},
 		authorURN:  authorURN,
 		memberURN:  memberURN,
 		httpClient: gohttp.New(gohttp.WithTimeout(15 * time.Second)),
 		baseURL:    defaultBaseURL,
 		apiVersion: defaultAPIVersion,
 	}
+	for _, opt := range opts {
+		opt(c)
+	}
+	return c
 }
 
 // Platform implements platform.Poster.
@@ -147,17 +155,14 @@ func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.P
 		return platform.PostResponse{}, errors.Wrap(err, "marshalling post body")
 	}
 
-	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
-	if err != nil {
-		return platform.PostResponse{}, errors.Wrap(err, "building request")
-	}
-
-	httpReq.Header.Set("Authorization", "Bearer "+c.token)
-	httpReq.Header.Set("Content-Type", "application/json")
-	httpReq.Header.Set("LinkedIn-Version", c.apiVersion)
-	httpReq.Header.Set("X-Restli-Protocol-Version", "2.0.0")
-
-	resp, err := c.httpClient.Do(httpReq)
+	resp, err := c.do(ctx, func() (*http.Request, error) {
+		r, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/rest/posts", bytes.NewReader(buf))
+		if err != nil {
+			return nil, err
+		}
+		r.Header.Set("Content-Type", "application/json")
+		return r, nil
+	})
 	if err != nil {
 		return platform.PostResponse{}, errors.Wrap(err, "sending request")
 	}
@@ -194,15 +199,9 @@ func (c *Client) Stats(ctx context.Context, postURL string) (platform.Stats, err
 		url.QueryEscape(shareURN),
 	)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return platform.Stats{}, errors.Wrap(err, "building request")
-	}
-	req.Header.Set("Authorization", "Bearer "+c.token)
-	req.Header.Set("LinkedIn-Version", c.apiVersion)
-	req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
-
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.do(ctx, func() (*http.Request, error) {
+		return http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+	})
 	if err != nil {
 		return platform.Stats{}, errors.Wrap(err, "sending request")
 	}
@@ -268,17 +267,17 @@ func (c *Client) HasLiked(ctx context.Context, postURL string) (bool, error) {
 			"%s/rest/reactions?q=entity&entity=%s&count=%d&start=%d",
 			c.baseURL, url.QueryEscape(shareURN), pageSize, start,
 		)
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-		if err != nil {
-			return false, errors.Wrap(err, "building reactions request")
-		}
-		req.Header.Set("Authorization", "Bearer "+c.token)
-		req.Header.Set("LinkedIn-Version", c.apiVersion)
-		req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
-
-		resp, err := c.httpClient.Do(req)
+		resp, err := c.do(ctx, func() (*http.Request, error) {
+			return http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		})
 		if err != nil {
 			return false, errors.Wrap(err, "fetching reactions")
+		}
+		if !httputil.Is2xx(resp.StatusCode) {
+			buf := new(bytes.Buffer)
+			_, _ = buf.ReadFrom(resp.Body)
+			_ = resp.Body.Close()
+			return false, fmt.Errorf("linkedin reactions: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
 		}
 
 		var body struct {
@@ -327,17 +326,17 @@ func (c *Client) HasReposted(ctx context.Context, postURL string) (bool, error) 
 			"%s/rest/shares?q=sharesOfShare&shareUrn=%s&count=%d&start=%d",
 			c.baseURL, url.QueryEscape(shareURN), pageSize, start,
 		)
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
-		if err != nil {
-			return false, errors.Wrap(err, "building reshares request")
-		}
-		req.Header.Set("Authorization", "Bearer "+c.token)
-		req.Header.Set("LinkedIn-Version", c.apiVersion)
-		req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
-
-		resp, err := c.httpClient.Do(req)
+		resp, err := c.do(ctx, func() (*http.Request, error) {
+			return http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		})
 		if err != nil {
 			return false, errors.Wrap(err, "fetching reshares")
+		}
+		if !httputil.Is2xx(resp.StatusCode) {
+			buf := new(bytes.Buffer)
+			_, _ = buf.ReadFrom(resp.Body)
+			_ = resp.Body.Close()
+			return false, fmt.Errorf("linkedin reshares: %d %s: %s", resp.StatusCode, resp.Status, buf.String())
 		}
 
 		var body struct {

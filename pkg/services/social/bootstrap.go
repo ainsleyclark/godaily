@@ -26,13 +26,31 @@ func buildPosters(c env.Config) []platform.Poster {
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
 	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ""))
+	if li, ok := NewLinkedIn(c, ""); ok {
+		out = append(out, li)
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
 	}
 	return out
+}
+
+// NewLinkedIn builds a LinkedIn client from config, enabling automatic
+// access-token refresh when refresh credentials are present. memberURN is
+// passed through to linkedin.New (use "" to skip self-engagement checks).
+// The bool is false when the org URN or usable credentials are missing,
+// in which case LinkedIn should be skipped.
+func NewLinkedIn(c env.Config, memberURN string) (*linkedin.Client, bool) {
+	creds := linkedin.Credentials{
+		AccessToken:  c.LinkedInOAuthToken,
+		RefreshToken: c.LinkedInRefreshToken,
+		ClientID:     c.LinkedInClientID,
+		ClientSecret: c.LinkedInClientSecret,
+	}
+	if c.LinkedInOrgURN == "" || !creds.Usable() {
+		return nil, false
+	}
+	return linkedin.NewFromCredentials(creds, c.LinkedInOrgURN, memberURN), true
 }
 
 // buildCandidates wires the rotation candidates the Tue/Wed/Fri rotation
@@ -62,8 +80,7 @@ func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		li := linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ownerLinkedInMemberID)
+	if li, ok := NewLinkedIn(c, ownerLinkedInMemberID); ok {
 		out[social.LinkedIn] = selfEngagementFetcher{
 			inner:   li,
 			checker: li,

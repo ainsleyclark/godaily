@@ -17,9 +17,9 @@ import (
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/gateway/slack"
+	socialsvc "github.com/ainsleyclark/godaily/pkg/services/social"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/bluesky"
-	"github.com/ainsleyclark/godaily/pkg/services/social/platform/linkedin"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform/mastodon"
 )
 
@@ -227,8 +227,8 @@ func postersForFlags(app *godaily.App, platforms []string) ([]platform.Poster, e
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		all[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		all[social.LinkedIn] = linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, "")
+	if li, ok := socialsvc.NewLinkedIn(*c, ""); ok {
+		all[social.LinkedIn] = li
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		all[social.Mastodon] = mastodon.New(c.MastodonServer, c.MastodonAppToken)
