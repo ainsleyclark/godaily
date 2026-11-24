@@ -491,7 +491,7 @@ export interface paths {
             /** @description Fields to update */
             requestBody: {
                 content: {
-                    "application/json": Record<string, never> | components["schemas"]["IssueUpdateRequest"];
+                    "application/json": components["schemas"]["IssueUpdateRequest"];
                 };
             };
             responses: {
@@ -787,7 +787,7 @@ export interface paths {
             /** @description Ordered list of item IDs */
             requestBody: {
                 content: {
-                    "application/json": Record<string, never> | components["schemas"]["ItemReorderRequest"];
+                    "application/json": components["schemas"]["ItemReorderRequest"];
                 };
             };
             responses: {
@@ -1834,7 +1834,7 @@ export interface paths {
             /** @description Replacement text */
             requestBody: {
                 content: {
-                    "application/json": Record<string, never> | components["schemas"]["SocialDraftUpdateRequest"];
+                    "application/json": components["schemas"]["SocialDraftUpdateRequest"];
                 };
             };
             responses: {
@@ -2132,7 +2132,7 @@ export interface paths {
             /** @description Subscription request */
             requestBody: {
                 content: {
-                    "application/json": Record<string, never> | components["schemas"]["SubscribeRequest"];
+                    "application/json": components["schemas"]["SubscribeRequest"];
                 };
             };
             responses: {
@@ -2675,6 +2675,7 @@ export interface components {
             score?: number;
             snippet?: string;
             source?: components["schemas"]["news.Source"];
+            /** @description source-specific hint ("proposal-accepted", "trending", "official") */
             tag?: components["schemas"]["news.Tag"];
             title?: string;
             /** @description click target — the external content the source is linking to */
@@ -2682,10 +2683,7 @@ export interface components {
         };
         /** @enum {string} */
         "news.Source": "dev_to" | "go_blog" | "github" | "github_trending" | "reddit" | "hacker_news" | "golangbridge" | "lobsters" | "medium" | "youtube" | "go_podcast" | "fallthrough" | "ardanlabs_podcast" | "go_release" | "mastodon" | "awesome_go" | "jetbrains" | "golang_nuts" | "planet_golang" | "meetup" | "conferences" | "go_vuln" | "freecodecamp" | "hacker_news_jobs" | "remote_ok" | "remotive" | "we_work_remotely" | "golang_cafe" | "golang_projects" | "linkedin" | "bluesky";
-        /**
-         * @description source-specific hint ("proposal-accepted", "trending", "official")
-         * @enum {string}
-         */
+        /** @enum {string} */
         "news.Tag": "article" | "tutorial" | "proposal" | "proposal_accepted" | "proposal_shipped" | "video" | "podcast" | "release" | "security" | "discussion" | "trending" | "event" | "conference" | "conference_reminder" | "conference_alert" | "jobs" | "social";
         "social.Post": {
             id?: number;
