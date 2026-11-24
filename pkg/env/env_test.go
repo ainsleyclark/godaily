@@ -70,6 +70,9 @@ func TestNew(t *testing.T) {
 		t.Setenv("BLUESKY_APP_PASSWORD", "bsky_pw")
 		t.Setenv("LINKEDIN_OAUTH_TOKEN", "li_token")
 		t.Setenv("LINKEDIN_ORG_URN", "urn:li:organization:12345")
+		t.Setenv("LINKEDIN_REFRESH_TOKEN", "li_refresh")
+		t.Setenv("LINKEDIN_CLIENT_ID", "li_client")
+		t.Setenv("LINKEDIN_CLIENT_SECRET", "li_secret")
 		t.Setenv("MASTODON_SERVER", "https://mastodon.social")
 		t.Setenv("MASTODON_APP_TOKEN", "mastodon_token")
 		t.Setenv("BETTERSTACK_SOCIAL_FEATURED_HEARTBEAT_URL", "https://uptime.betterstack.com/social-featured")
@@ -90,6 +93,9 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, "bsky_pw", cfg.BlueskyAppPassword)
 		assert.Equal(t, "li_token", cfg.LinkedInOAuthToken)
 		assert.Equal(t, "urn:li:organization:12345", cfg.LinkedInOrgURN)
+		assert.Equal(t, "li_refresh", cfg.LinkedInRefreshToken)
+		assert.Equal(t, "li_client", cfg.LinkedInClientID)
+		assert.Equal(t, "li_secret", cfg.LinkedInClientSecret)
 		assert.Equal(t, "https://mastodon.social", cfg.MastodonServer)
 		assert.Equal(t, "mastodon_token", cfg.MastodonAppToken)
 		assert.Equal(t, "https://uptime.betterstack.com/social-featured", cfg.BetterStackSocialFeaturedHeartbeatURL)
@@ -108,4 +114,38 @@ func TestNew(t *testing.T) {
 		_, err := New(t.Context())
 		require.Error(t, err)
 	})
+}
+
+func TestConfig_HasLinkedIn(t *testing.T) {
+	t.Parallel()
+
+	refresh := Config{
+		LinkedInOrgURN:       "urn",
+		LinkedInRefreshToken: "rt",
+		LinkedInClientID:     "id",
+		LinkedInClientSecret: "secret",
+	}
+
+	tt := map[string]struct {
+		input       Config
+		want        bool
+		wantRefresh bool
+	}{
+		"Nothing set":           {input: Config{}, want: false},
+		"Token without org URN": {input: Config{LinkedInOAuthToken: "tok"}, want: false},
+		"Static token":          {input: Config{LinkedInOAuthToken: "tok", LinkedInOrgURN: "urn"}, want: true},
+		"Refresh only":          {input: refresh, want: true, wantRefresh: true},
+		"Partial refresh": {
+			input: Config{LinkedInOrgURN: "urn", LinkedInRefreshToken: "rt", LinkedInClientID: "id"},
+			want:  false,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.want, test.input.HasLinkedIn())
+			assert.Equal(t, test.wantRefresh, test.input.HasLinkedInRefresh())
+		})
+	}
 }

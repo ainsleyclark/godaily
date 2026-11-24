@@ -48,6 +48,9 @@ type Config struct {
 	BlueskyHandle                         string          `env:"BLUESKY_HANDLE,unset"`
 	BlueskyAppPassword                    string          `env:"BLUESKY_APP_PASSWORD,unset"`
 	LinkedInOAuthToken                    string          `env:"LINKEDIN_OAUTH_TOKEN,unset"`
+	LinkedInRefreshToken                  string          `env:"LINKEDIN_REFRESH_TOKEN,unset"`
+	LinkedInClientID                      string          `env:"LINKEDIN_CLIENT_ID,unset"`
+	LinkedInClientSecret                  string          `env:"LINKEDIN_CLIENT_SECRET,unset"`
 	LinkedInOrgURN                        string          `env:"LINKEDIN_ORG_URN,unset"`
 	LinkedInCookie                        string          `env:"LINKEDIN_COOKIE,unset"`
 	MastodonServer                        string          `env:"MASTODON_SERVER,unset"`
@@ -74,6 +77,22 @@ func New(_ context.Context) (Config, error) {
 	}
 
 	return cfg, nil
+}
+
+// HasLinkedIn reports whether enough LinkedIn credentials are configured to
+// post: an organisation URN plus either a static access token or a full set
+// of refresh credentials (refresh token, client ID and client secret).
+func (c Config) HasLinkedIn() bool {
+	if c.LinkedInOrgURN == "" {
+		return false
+	}
+	return c.LinkedInOAuthToken != "" || c.HasLinkedInRefresh()
+}
+
+// HasLinkedInRefresh reports whether the credentials needed to refresh the
+// LinkedIn access token automatically are all present.
+func (c Config) HasLinkedInRefresh() bool {
+	return c.LinkedInRefreshToken != "" && c.LinkedInClientID != "" && c.LinkedInClientSecret != ""
 }
 
 // IsDevelopment returns whether we are running the app in development.

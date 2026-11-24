@@ -26,13 +26,24 @@ func buildPosters(c env.Config) []platform.Poster {
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		out = append(out, bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword))
 	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		out = append(out, linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ""))
+	if c.HasLinkedIn() {
+		out = append(out, NewLinkedIn(c, ""))
 	}
 	if c.MastodonServer != "" && c.MastodonAppToken != "" {
 		out = append(out, mastodon.New(c.MastodonServer, c.MastodonAppToken))
 	}
 	return out
+}
+
+// NewLinkedIn builds a LinkedIn client from config, enabling automatic
+// access-token refresh when refresh credentials are present. memberURN is
+// passed through to linkedin.New (use "" to skip self-engagement checks).
+// Callers should guard with c.HasLinkedIn().
+func NewLinkedIn(c env.Config, memberURN string) *linkedin.Client {
+	return linkedin.New(
+		c.LinkedInOAuthToken, c.LinkedInOrgURN, memberURN,
+		linkedin.WithRefresh(c.LinkedInRefreshToken, c.LinkedInClientID, c.LinkedInClientSecret),
+	)
 }
 
 // buildCandidates wires the rotation candidates the Tue/Wed/Fri rotation
@@ -62,8 +73,8 @@ func buildStatFetchers(c env.Config) map[social.Platform]platform.StatFetcher {
 	if c.BlueskyHandle != "" && c.BlueskyAppPassword != "" {
 		out[social.Bluesky] = bluesky.New(c.BlueskyHandle, c.BlueskyAppPassword)
 	}
-	if c.LinkedInOAuthToken != "" && c.LinkedInOrgURN != "" {
-		li := linkedin.New(c.LinkedInOAuthToken, c.LinkedInOrgURN, ownerLinkedInMemberID)
+	if c.HasLinkedIn() {
+		li := NewLinkedIn(c, ownerLinkedInMemberID)
 		out[social.LinkedIn] = selfEngagementFetcher{
 			inner:   li,
 			checker: li,
