@@ -15,7 +15,6 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
-	"github.com/ainsleyclark/godaily/pkg/util/logutil"
 )
 
 var (
@@ -28,7 +27,6 @@ var (
 // invocations.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	handlerOnce.Do(func() {
-		logutil.Install()
 		ctx := context.Background()
 		app, _, err := godaily.Bootstrap(ctx)
 		if err != nil {

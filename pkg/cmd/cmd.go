@@ -11,13 +11,11 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	_ "github.com/ainsleyclark/godaily/pkg/source"
-	"github.com/ainsleyclark/godaily/pkg/util/logutil"
 	"github.com/urfave/cli/v3"
 )
 
 // Run executes the cli command and runs the program.
 func Run() {
-	logutil.Install()
 	ctx := context.Background()
 
 	app, teardown, err := godaily.Bootstrap(ctx)
