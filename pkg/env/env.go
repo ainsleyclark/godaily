@@ -79,22 +79,6 @@ func New(_ context.Context) (Config, error) {
 	return cfg, nil
 }
 
-// HasLinkedIn reports whether enough LinkedIn credentials are configured to
-// post: an organisation URN plus either a static access token or a full set
-// of refresh credentials (refresh token, client ID and client secret).
-func (c Config) HasLinkedIn() bool {
-	if c.LinkedInOrgURN == "" {
-		return false
-	}
-	return c.LinkedInOAuthToken != "" || c.HasLinkedInRefresh()
-}
-
-// HasLinkedInRefresh reports whether the credentials needed to refresh the
-// LinkedIn access token automatically are all present.
-func (c Config) HasLinkedInRefresh() bool {
-	return c.LinkedInRefreshToken != "" && c.LinkedInClientID != "" && c.LinkedInClientSecret != ""
-}
-
 // IsDevelopment returns whether we are running the app in development.
 func (c Config) IsDevelopment() bool {
 	return env.IsDevelopment()

@@ -115,37 +115,3 @@ func TestNew(t *testing.T) {
 		require.Error(t, err)
 	})
 }
-
-func TestConfig_HasLinkedIn(t *testing.T) {
-	t.Parallel()
-
-	refresh := Config{
-		LinkedInOrgURN:       "urn",
-		LinkedInRefreshToken: "rt",
-		LinkedInClientID:     "id",
-		LinkedInClientSecret: "secret",
-	}
-
-	tt := map[string]struct {
-		input       Config
-		want        bool
-		wantRefresh bool
-	}{
-		"Nothing set":           {input: Config{}, want: false},
-		"Token without org URN": {input: Config{LinkedInOAuthToken: "tok"}, want: false},
-		"Static token":          {input: Config{LinkedInOAuthToken: "tok", LinkedInOrgURN: "urn"}, want: true},
-		"Refresh only":          {input: refresh, want: true, wantRefresh: true},
-		"Partial refresh": {
-			input: Config{LinkedInOrgURN: "urn", LinkedInRefreshToken: "rt", LinkedInClientID: "id"},
-			want:  false,
-		},
-	}
-
-	for name, test := range tt {
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, test.want, test.input.HasLinkedIn())
-			assert.Equal(t, test.wantRefresh, test.input.HasLinkedInRefresh())
-		})
-	}
-}

@@ -168,3 +168,51 @@ func TestClient_Refresh(t *testing.T) {
 		assert.Equal(t, int32(0), refreshes.Load())
 	})
 }
+
+func TestCredentials(t *testing.T) {
+	t.Parallel()
+
+	tt := map[string]struct {
+		input       Credentials
+		wantUsable  bool
+		wantRefresh bool
+	}{
+		"Empty":           {input: Credentials{}},
+		"Static token":    {input: Credentials{AccessToken: "tok"}, wantUsable: true},
+		"Partial refresh": {input: Credentials{RefreshToken: "rt", ClientID: "id"}},
+		"Full refresh": {
+			input:       Credentials{RefreshToken: "rt", ClientID: "id", ClientSecret: "secret"},
+			wantUsable:  true,
+			wantRefresh: true,
+		},
+	}
+
+	for name, test := range tt {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, test.wantUsable, test.input.Usable())
+			assert.Equal(t, test.wantRefresh, test.input.CanRefresh())
+		})
+	}
+}
+
+func TestNewFromCredentials(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Static token only", func(t *testing.T) {
+		t.Parallel()
+
+		c := NewFromCredentials(Credentials{AccessToken: "tok"}, "urn", "")
+		assert.Equal(t, "tok", c.tokens.get())
+		assert.Nil(t, c.refresh)
+	})
+
+	t.Run("Refresh enabled", func(t *testing.T) {
+		t.Parallel()
+
+		c := NewFromCredentials(Credentials{RefreshToken: "rt", ClientID: "id", ClientSecret: "secret"}, "urn", "")
+		assert.Empty(t, c.tokens.get())
+		require.NotNil(t, c.refresh)
+		assert.Equal(t, "rt", c.refresh.refreshToken)
+	})
+}

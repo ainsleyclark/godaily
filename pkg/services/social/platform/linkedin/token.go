@@ -32,6 +32,38 @@ const (
 	refreshTokenWarnWindow = 30 * 24 * time.Hour
 )
 
+// Credentials is the set of OAuth values used to authenticate with
+// LinkedIn. Either AccessToken, or all of RefreshToken, ClientID and
+// ClientSecret (or both) must be set for the client to work.
+type Credentials struct {
+	AccessToken  string
+	RefreshToken string
+	ClientID     string
+	ClientSecret string
+}
+
+// CanRefresh reports whether all the values needed to mint new access
+// tokens are present.
+func (c Credentials) CanRefresh() bool {
+	return c.RefreshToken != "" && c.ClientID != "" && c.ClientSecret != ""
+}
+
+// Usable reports whether the credentials are enough to authenticate: a
+// static access token, a full set of refresh credentials, or both.
+func (c Credentials) Usable() bool {
+	return c.AccessToken != "" || c.CanRefresh()
+}
+
+// NewFromCredentials creates a Client from creds, enabling automatic
+// access-token refresh when creds.CanRefresh(). See New for authorURN and
+// memberURN. Callers should check creds.Usable() first.
+func NewFromCredentials(creds Credentials, authorURN, memberURN string) *Client {
+	return New(
+		creds.AccessToken, authorURN, memberURN,
+		WithRefresh(creds.RefreshToken, creds.ClientID, creds.ClientSecret),
+	)
+}
+
 // Option configures a Client.
 type Option func(*Client)
 
@@ -49,7 +81,8 @@ type Option func(*Client)
 // are not rotated by LinkedIn, so there is nothing to persist.
 func WithRefresh(refreshToken, clientID, clientSecret string) Option {
 	return func(c *Client) {
-		if refreshToken == "" || clientID == "" || clientSecret == "" {
+		creds := Credentials{RefreshToken: refreshToken, ClientID: clientID, ClientSecret: clientSecret}
+		if !creds.CanRefresh() {
 			return
 		}
 		c.refresh = &refresher{
