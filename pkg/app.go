@@ -10,6 +10,8 @@ import (
 	"log/slog"
 	"time"
 
+	webkitlog "github.com/ainsleydev/webkit/pkg/log"
+
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/db"
 	"github.com/ainsleyclark/godaily/pkg/domain/audience"
@@ -74,6 +76,13 @@ func Bootstrap(ctx context.Context) (*App, func(), error) {
 	if err != nil {
 		return nil, func() {}, err
 	}
+
+	// Install webkit's environment-aware slog handler (JSON in production,
+	// coloured in development). It must run after env.New, which loads .env
+	// and therefore APP_ENV. Unlike slog's built-in default handler, it writes
+	// errors as their message rather than %+v, so pkg/errors stack traces no
+	// longer bloat log lines and push the message out of Vercel's logs.
+	webkitlog.Bootstrap("godaily")
 
 	if news.HasSources() {
 		if err = news.Materialise(config); err != nil {
