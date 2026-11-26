@@ -5,7 +5,7 @@ go 1.26.11
 require (
 	github.com/PuerkitoBio/goquery v1.14.0
 	github.com/a-h/templ v0.3.1118
-	github.com/ainsleydev/webkit v0.14.2
+	github.com/ainsleydev/webkit v0.14.3
 	github.com/anthropics/anthropic-sdk-go v1.84.0
 	github.com/caarlos0/env/v11 v11.4.2
 	github.com/fogleman/gg v1.3.0
