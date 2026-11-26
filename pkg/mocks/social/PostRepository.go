@@ -160,6 +160,21 @@ func (mr *MockPostRepositoryMockRecorder) HasPostedOrCancelledBySubject(ctx, sub
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedOrCancelledBySubject", reflect.TypeOf((*MockPostRepository)(nil).HasPostedOrCancelledBySubject), ctx, subject, platform)
 }
 
+// HasPostedSubjectPrefixSince mocks base method.
+func (m *MockPostRepository) HasPostedSubjectPrefixSince(ctx context.Context, prefix, platform string, since time.Time) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPostedSubjectPrefixSince", ctx, prefix, platform, since)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HasPostedSubjectPrefixSince indicates an expected call of HasPostedSubjectPrefixSince.
+func (mr *MockPostRepositoryMockRecorder) HasPostedSubjectPrefixSince(ctx, prefix, platform, since any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPostedSubjectPrefixSince", reflect.TypeOf((*MockPostRepository)(nil).HasPostedSubjectPrefixSince), ctx, prefix, platform, since)
+}
+
 // List mocks base method.
 func (m *MockPostRepository) List(ctx context.Context, opts social.PostListOptions) ([]social.Post, error) {
 	m.ctrl.T.Helper()

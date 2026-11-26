@@ -1,16 +1,22 @@
 # Go meetups curated list.
 #
 # Drives the Wednesday community-promo social rotation
-# (pkg/services/social/candidates/community.go). Each Wednesday picks an
-# entry and tags its social handles so the meetup group gets a notification
-# and (often) reshares.
+# (pkg/services/social/candidates/community.go). The rotation reads each
+# group's upcoming events from its public Meetup.com iCal feed
+# (https://www.meetup.com/<meetup_group>/events/ical/) and promotes the
+# soonest event 3-21 days out, tagging the group's social handles so it
+# gets a notification and (often) reshares. A group is promoted at most
+# once every 8 weeks, and a group with nothing scheduled is never posted.
 #
 # Schema:
 #   slug:        stable unique id (used in the social-post subject)
 #   name:        human display name
 #   url:         primary group page (Meetup.com, own site, etc.)
+#   meetup_group: Meetup.com group path segment, e.g. "golang-amsterdam" for
+#                meetup.com/golang-amsterdam/. Leave "" for groups not on
+#                Meetup.com: they have no feed and are never promoted.
 #   location:    city / region — short, free text
-#   description: one sentence shown in the post
+#   description: one sentence about the group (posts use the event's title)
 #   handles:
 #     linkedin:
 #       slug: company-page-slug, e.g. "london-gophers" → linkedin.com/company/london-gophers
@@ -26,8 +32,9 @@
 # back to a no-mention template variant.
 #
 # Adding a meetup:
-#   1. Append an entry (slug must be unique).
-#   2. Commit. It joins the rotation pool on the next Wednesday.
+#   1. Append an entry (slug must be unique) and set meetup_group.
+#   2. Commit. It is promoted on a Wednesday when it next has an event
+#      3-21 days away.
 #
 # References:
 #   https://www.meetup.com/find/?keywords=golang
@@ -36,6 +43,7 @@
 - slug: golang-london
   name: London Gophers
   url: https://www.meetup.com/londongophers/
+  meetup_group: londongophers
   location: London, UK
   description: London's Go user group, talks, workshops and pub nights.
   handles:
@@ -47,7 +55,8 @@
 
 - slug: golang-paris
   name: Golang Paris
-  url: https://www.meetup.com/Golang-Paris/
+  url: https://www.meetup.com/golang-paris/
+  meetup_group: golang-paris
   location: Paris, France
   description: Paris Gophers meet to share talks and lightning demos.
   handles:
@@ -60,6 +69,7 @@
 - slug: berlin-golang
   name: GDG Berlin Golang
   url: https://www.meetup.com/golang-users-berlin/
+  meetup_group: golang-users-berlin
   location: Berlin, Germany
   description: Berlin's Go meetup, one of Europe's largest Gopher communities.
   handles:
@@ -72,6 +82,7 @@
 - slug: golang-amsterdam
   name: Golang Amsterdam
   url: https://www.meetup.com/golang-amsterdam/
+  meetup_group: golang-amsterdam
   location: Amsterdam, Netherlands
   description: Amsterdam Go user group with monthly talks and socials.
   handles:
@@ -84,6 +95,7 @@
 - slug: munich-go
   name: Munich Gophers
   url: https://www.meetup.com/munich-gophers-go-user-group/
+  meetup_group: munich-gophers-go-user-group
   location: Munich, Germany
   description: Munich's Go programming language meetup.
   handles:
@@ -93,35 +105,12 @@
     bluesky: ""
     mastodon: ""
 
-- slug: stockholm-gophers
-  name: Go Stockholm
-  url: https://www.meetup.com/Go-Stockholm/
-  location: Stockholm, Sweden
-  description: The Stockholm Go community, talks and hack nights.
-  handles:
-    linkedin:
-      slug: ""
-      urn: ""
-    bluesky: ""
-    mastodon: ""
-
 - slug: helsinki-gophers
   name: Helsinki Gophers
-  url: https://www.meetup.com/Helsinki-Gophers/
+  url: https://www.meetup.com/helsinki-gophers/
+  meetup_group: helsinki-gophers
   location: Helsinki, Finland
   description: Finland's Go meetup, friendly community, deep dives, pizza.
-  handles:
-    linkedin:
-      slug: ""
-      urn: ""
-    bluesky: ""
-    mastodon: ""
-
-- slug: copenhagen-gophers
-  name: Copenhagen Gophers
-  url: https://www.meetup.com/Go-Cph/
-  location: Copenhagen, Denmark
-  description: Copenhagen's Go user group hosted across local engineering offices.
   handles:
     linkedin:
       slug: ""
@@ -132,20 +121,9 @@
 - slug: zurich-gophers
   name: Zurich Gophers
   url: https://www.meetup.com/zurich-gophers/
+  meetup_group: zurich-gophers
   location: Zurich, Switzerland
   description: Zurich's Go user group, talks and Swiss Gopher socials.
-  handles:
-    linkedin:
-      slug: ""
-      urn: ""
-    bluesky: ""
-    mastodon: ""
-
-- slug: vienna-gophers
-  name: vienna.go
-  url: https://www.meetup.com/viennago/
-  location: Vienna, Austria
-  description: Vienna's Go meetup community.
   handles:
     linkedin:
       slug: ""
@@ -156,6 +134,7 @@
 - slug: warsaw-go-meetup
   name: Golang Warsaw
   url: https://www.meetup.com/golang-warsaw/
+  meetup_group: golang-warsaw
   location: Warsaw, Poland
   description: The Warsaw Go community, monthly meetups and talks.
   handles:
@@ -168,6 +147,7 @@
 - slug: prague-gophers
   name: Prague Golang Meetup
   url: https://www.meetup.com/prague-golang-meetup/
+  meetup_group: prague-golang-meetup
   location: Prague, Czech Republic
   description: Prague's Go user group.
   handles:
@@ -180,6 +160,7 @@
 - slug: dublin-gophers
   name: Go Ireland
   url: https://www.meetup.com/goireland/
+  meetup_group: goireland
   location: Dublin, Ireland
   description: Dublin's Go meetup community.
   handles:
@@ -192,6 +173,7 @@
 - slug: madrid-golang
   name: GoMAD - Madrid Go UG
   url: https://www.meetup.com/go-mad/
+  meetup_group: go-mad
   location: Madrid, Spain
   description: Madrid's Go user group, talks in Spanish and English.
   handles:
@@ -204,6 +186,7 @@
 - slug: golang-nyc
   name: GolangNYC
   url: https://www.meetup.com/golanguagenewyork/
+  meetup_group: golanguagenewyork
   location: New York, NY, USA
   description: New York's Go user group, one of the largest in the US.
   handles:
@@ -216,20 +199,9 @@
 - slug: bay-area-go-programmers
   name: GoSF
   url: https://www.meetup.com/golangsf/
+  meetup_group: golangsf
   location: San Francisco Bay Area, CA, USA
   description: The Bay Area's home for Gophers, talks from working Go engineers.
-  handles:
-    linkedin:
-      slug: ""
-      urn: ""
-    bluesky: ""
-    mastodon: ""
-
-- slug: toronto-go
-  name: GoTO
-  url: https://www.meetup.com/go-toronto/
-  location: Toronto, Canada
-  description: Toronto's Go user group.
   handles:
     linkedin:
       slug: ""
@@ -240,6 +212,7 @@
 - slug: sydney-golang
   name: Sydney Golang
   url: https://www.meetup.com/golang-syd/
+  meetup_group: ""  # golang-syd: feed is not public (Meetup returns "Invalid feed signature")
   location: Sydney, Australia
   description: Sydney's Go user group, talks and lightning demos.
   handles:
@@ -252,6 +225,7 @@
 - slug: melbourne-go
   name: Melbourne Go
   url: https://www.meetup.com/golang-mel/
+  meetup_group: golang-mel
   location: Melbourne, Australia
   description: Melbourne's Go programming meetup.
   handles:
@@ -264,6 +238,7 @@
 - slug: golang-singapore
   name: GoSG
   url: https://www.meetup.com/golangsg/
+  meetup_group: golangsg
   location: Singapore
   description: Singapore's Go user group.
   handles:
@@ -275,7 +250,8 @@
 
 - slug: golang-bangalore
   name: Golang Bangalore
-  url: https://www.meetup.com/Golang-Bangalore/
+  url: https://www.meetup.com/golang-bangalore/
+  meetup_group: golang-bangalore
   location: Bangalore, India
   description: India's largest Go user group, based in Bangalore.
   handles:
@@ -288,6 +264,7 @@
 - slug: tel-aviv-gophers
   name: Go Israel
   url: https://www.meetup.com/go-israel/
+  meetup_group: go-israel
   location: Tel Aviv, Israel
   description: Tel Aviv's Go community, monthly talks and hack nights.
   handles:
@@ -300,6 +277,7 @@
 - slug: tokyo-go
   name: Tokyo Go
   url: https://gocon.connpass.com/
+  meetup_group: ""
   location: Tokyo, Japan
   description: Tokyo's Go community, hosts of the long-running GoCon conference.
   handles:
@@ -311,7 +289,8 @@
 
 - slug: golang-seoul
   name: GDG Golang Korea
-  url: https://www.meetup.com/GDG-Golang-Korea/
+  url: https://www.meetup.com/gdg-golang-korea/
+  meetup_group: ""  # gdg-golang-korea: group no longer found on Meetup.com (Nov 2026)
   location: Seoul, South Korea
   description: South Korea's Go user group, organisers of GopherCon Korea.
   handles:
@@ -323,7 +302,8 @@
 
 - slug: golang-buenos-aires
   name: Golang Argentina
-  url: https://www.meetup.com/Golang-Argentina/
+  url: https://www.meetup.com/golang-argentina/
+  meetup_group: ""  # golang-argentina: group no longer found on Meetup.com (Nov 2026)
   location: Buenos Aires, Argentina
   description: Argentina's Go community.
   handles:
@@ -336,6 +316,7 @@
 - slug: golang-sao-paulo
   name: Golang São Paulo
   url: https://www.meetup.com/golangbr/
+  meetup_group: golangbr
   location: São Paulo, Brazil
   description: Brazil's Go user group community.
   handles:

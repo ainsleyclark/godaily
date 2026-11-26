@@ -78,6 +78,18 @@ func (s Store) HasPostedKindSince(ctx context.Context, kind social.PostKind, pla
 	})
 }
 
+// HasPostedSubjectPrefixSince reports whether any published row whose
+// subject starts with prefix exists on the given platform at or after
+// since. The comparison is an exact prefix match (not LIKE), so slugs
+// containing "_" or "%" are matched literally.
+func (s Store) HasPostedSubjectPrefixSince(ctx context.Context, prefix, platform string, since time.Time) (bool, error) {
+	return s.sqlc.SocialPostExistsSubjectPrefixSince(ctx, sqlc.SocialPostExistsSubjectPrefixSinceParams{
+		Prefix:   prefix,
+		Platform: platform,
+		Since:    since,
+	})
+}
+
 // Find returns the row with the given id.
 func (s Store) Find(ctx context.Context, id int64) (social.Post, error) {
 	row, err := s.sqlc.SocialPostFind(ctx, id)

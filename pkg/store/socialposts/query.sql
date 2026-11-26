@@ -30,6 +30,12 @@ SELECT EXISTS (
     WHERE kind = ? AND platform = ? AND posted_at >= ? AND status = 'published'
 ) AS exists_flag;
 
+-- name: SocialPostExistsSubjectPrefixSince :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE substr(subject, 1, length(sqlc.arg('prefix'))) = sqlc.arg('prefix') AND platform = sqlc.arg('platform') AND posted_at >= sqlc.arg('since') AND status = 'published'
+) AS exists_flag;
+
 -- name: SocialPostList :many
 SELECT * FROM social_posts
 WHERE (sqlc.narg('issue_id') IS NULL OR issue_id = sqlc.narg('issue_id'))
