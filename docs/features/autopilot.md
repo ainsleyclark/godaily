@@ -12,8 +12,15 @@ Every weeknight, a Claude Code scheduled task runs the `autopilot` skill
    proposes up to three ideas for reach, data or content quality.
 4. **Reports**: DMs Ainsley on Slack when there's news, plus a Friday summary.
 
-GitHub is the source of truth. State is the **Autopilot journal**
-issue plus labels. Ainsley always merges.
+GitHub is the source of truth, in three places:
+
+| Where | What |
+|---|---|
+| [`autopilot/state`](https://github.com/ainsleyclark/godaily/tree/autopilot/state) branch | `state.json` (the checks the autopilot is waiting on, plus flags) and `log.md` (one entry per run). Never merged; Vercel deploys are off for it. |
+| **Autopilot journal** issue ([#333](https://github.com/ainsleyclark/godaily/issues/333)) | Readable view, regenerated from `state.json` every run. Comment there to steer it ("drop L3"). |
+| GitHub Project board | What's in flight, built automatically from labels. The autopilot never writes to it. |
+
+Ainsley always merges.
 
 ## Why it's built this way
 
@@ -46,7 +53,7 @@ Each choice comes from published experience of running agents unattended:
 - **Fix the numbers first.** #317 (bot clicks, wrong summary rates,
   `posted_at`, 0 impressions) is the top bug. Until it's verified, the
   autopilot must not judge ideas on engagement numbers (`metrics_trusted:
-  false` in the journal).
+  false` in `state.json`).
 - **Goal is a scorecard of four**: confirmed subscribers, real reader clicks,
   social reach and content quality. Each experiment picks one primary metric.
   The other three are guardrails it must not hurt.
@@ -106,6 +113,17 @@ stamps, GitHub issues and git history.
 4. Run it once with **Run now** and check: a journal issue with loops for
    #330 and #331, a run-log comment, and (because the loops aren't due yet) no
    DM unless it found something.
+5. Create the Project board (GitHub → Projects → New project → Board):
+   - Columns (the Status field): **Needs you**, **In progress**,
+     **Verifying**, **Done**.
+   - Workflows → **Auto-add to project**: repository `godaily`, filter
+     `is:open label:autopilot,needs-steer,verify-pending,idea,experiment`.
+   - Workflows → **Item closed** and **Pull request merged** → set Status to
+     **Done**.
+   - Optional saved views (tabs): `label:needs-steer`, `label:verify-pending`,
+     `label:idea`.
+   - Put its URL under **Links → Board** in `SKILL.md`, so the Slack DM links
+     it.
 
 ## Files
 
@@ -117,3 +135,4 @@ stamps, GitHub issues and git history.
 | `.claude/skills/autopilot/evals/rubric.md` | LLM-judge rubric for grounding and repeated stories |
 | `.github/pull_request_template.md` | Includes the required `## Verification` block |
 | `.github/ISSUE_TEMPLATE/experiment.yml` | Pre-registered experiments |
+| `state.json`, `log.md` on `autopilot/state` | Autopilot state and run log |
