@@ -98,9 +98,9 @@ test-race: # Test uses race and coverage
 	go clean -testcache && go test -race $$(go list ./... | $(excluded)) -coverprofile=coverage.out -covermode=atomic
 .PHONY: test-race
 
-test-integration: # Run integration tests against real source endpoints
-	go test -v -tags=integration -run TestSources_Integration ./internal/source/...
-.PHONY: test-sources
+test-integration: # Run integration tests against real source endpoints and Meetup.com feeds
+	go test -v -tags=integration -run 'TestSources_Integration|TestMeetup_Integration|TestCommunity_Integration' ./pkg/source/... ./pkg/gateway/meetup/... ./pkg/services/social/candidates/...
+.PHONY: test-integration
 
 lint: # Run linter
 	golangci-lint run ./... --fix --config=.golangci.yaml

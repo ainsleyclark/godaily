@@ -131,6 +131,48 @@ func TestSocialPosts_Store(t *testing.T) {
 		}
 	})
 
+	t.Run("HasPostedSubjectPrefixSince", func(t *testing.T) {
+		when := time.Date(2026, time.June, 3, 11, 0, 0, 0, time.UTC)
+		_, err := s.Create(ctx, social.Post{
+			Kind:     social.PostKindCommunity,
+			Subject:  "community:golang_x:event:123",
+			Platform: "bluesky",
+			Text:     "meetup",
+			Status:   social.PostStatusPublished,
+			PostedAt: when,
+		})
+		require.NoError(t, err)
+		_, err = s.Create(ctx, social.Post{
+			Kind:     social.PostKindCommunity,
+			Subject:  "community:golang-draft:event:9",
+			Platform: "bluesky",
+			Text:     "draft",
+			Status:   social.PostStatusDraft,
+			PostedAt: when,
+		})
+		require.NoError(t, err)
+
+		tt := map[string]struct {
+			prefix   string
+			platform string
+			since    time.Time
+			want     bool
+		}{
+			"Matches prefix in window":        {"community:golang_x:", "bluesky", when.Add(-time.Hour), true},
+			"Since after post misses":         {"community:golang_x:", "bluesky", when.Add(time.Hour), false},
+			"Other platform misses":           {"community:golang_x:", "linkedin", when.Add(-time.Hour), false},
+			"Underscore is literal, not LIKE": {"community:golangXx:", "bluesky", when.Add(-time.Hour), false},
+			"Drafts do not count":             {"community:golang-draft:", "bluesky", when.Add(-time.Hour), false},
+		}
+		for name, test := range tt {
+			t.Run(name, func(t *testing.T) {
+				got, err := s.HasPostedSubjectPrefixSince(ctx, test.prefix, test.platform, test.since)
+				require.NoError(t, err)
+				assert.Equal(t, test.want, got)
+			})
+		}
+	})
+
 	t.Run("List by issue returns inserted rows", func(t *testing.T) {
 		got, err := s.List(ctx, social.PostListOptions{IssueID: &issue.ID})
 		require.NoError(t, err)

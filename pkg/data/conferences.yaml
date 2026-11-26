@@ -9,7 +9,9 @@
 #
 #   2. The Wednesday community-promo social rotation
 #      (pkg/services/social/candidates/community.go) tags the conference's
-#      social handles on a rotating schedule to boost engagement.
+#      social handles once a year, on a Wednesday 7-42 days before
+#      start_date, with the dates and a countdown in the post. Entries
+#      without a start_date are never promoted.
 #
 # Phase ordering (by index in notify_dates):
 #   0 → announcement     (TagConference)

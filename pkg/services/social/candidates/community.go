@@ -7,8 +7,10 @@ package candidates
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
@@ -16,18 +18,50 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/gateway/meetup"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 )
 
-// promoCycleLen is the M-M-C pattern length. Two meetups for each
-// conference. With 52 Wednesdays/year this gives ~35 meetup slots and
-// ~17 conference slots — enough to cover every entry in both pools at
-// least once a year.
+// promoCycleLen is the M-M-C pattern length: two meetup weeks for each
+// conference week. The week's pool is only a preference; when it has
+// nothing timely the other pool is tried, and when neither does the slot
+// is skipped rather than filled with an undated directory entry.
 const promoCycleLen = 3
 
-// communityTemplates is the per-platform pool of message bodies. Every
-// template leads with {{.Mention}} so the tag is the first thing the
-// reader and the platform's auto-tagger both see.
+const (
+	// eventWindowMin / eventWindowMax bound how far ahead a meetup event
+	// must be to be promoted: far enough out that readers can still RSVP,
+	// close enough that "this is happening soon" is the hook.
+	eventWindowMin = 3 * 24 * time.Hour
+	eventWindowMax = 21 * 24 * time.Hour
+
+	// conferenceWindowMin / conferenceWindowMax are the equivalent for
+	// conferences, which need more lead time (travel, tickets).
+	conferenceWindowMin = 7 * 24 * time.Hour
+	conferenceWindowMax = 42 * 24 * time.Hour
+
+	// groupCooldown stops one active group from being promoted every
+	// time it schedules an event.
+	groupCooldown = 8 * 7 * 24 * time.Hour
+
+	// fetchConcurrency caps parallel Meetup feed requests.
+	fetchConcurrency = 5
+
+	// maxEventTitleRunes keeps event posts inside Bluesky's 300-char cap
+	// with room for the group name, date, location and URL.
+	maxEventTitleRunes = 100
+)
+
+// EventSource returns a Meetup group's upcoming events. Satisfied by
+// *meetup.Client; tests use a fake.
+type EventSource interface {
+	UpcomingEvents(ctx context.Context, group string) ([]meetup.Event, error)
+}
+
+// eventTemplates is the per-platform pool for meetup-event posts and
+// conferenceTemplates the pool for conference posts. Every template leads
+// with {{.Mention}} so the tag is the first thing the reader and the
+// platform's auto-tagger both see.
 //
 // {{.Mention}} resolves to:
 //   - Bluesky/Mastodon: "@handle" when configured (auto-tags the
@@ -38,33 +72,52 @@ const promoCycleLen = 3
 //     configured (renders as a clickable card), or {{.Name}} when
 //     neither is set.
 //
-// Keep the strings short — Bluesky caps at 300 chars and we want
-// headroom for long conference names.
+// Keep the strings short — Bluesky caps at 300 chars.
 //
 // Separators are plain hyphens, never em dashes — em dashes are off-brand
 // (see aiutil.SanitisePost, which also strips them at the publish boundary
 // as a backstop for the AI-generated kinds).
-var communityTemplates = map[social.Platform][]string{
-	social.LinkedIn: {
-		"{{.Mention}} - {{.Description}}\n\n{{.URL}}",
-		"{{.Mention}} ({{.Location}}) - {{.Description}}\n\n{{.URL}}",
-		"{{.Mention}}: {{.Description}}\n\n{{.URL}}",
-	},
-	social.Bluesky: {
-		"{{.Mention}} - {{.Description}} {{.URL}}",
-		"{{.Mention}} ({{.Location}}) - {{.Description}} {{.URL}}",
-		"{{.Mention}}: {{.Description}} {{.URL}}",
-	},
-	social.Mastodon: {
-		"{{.Mention}} - {{.Description}} #golang {{.URL}}",
-		"{{.Mention}} ({{.Location}}) - {{.Description}} #golang {{.URL}}",
-		"{{.Mention}}: {{.Description}} #golang {{.URL}}",
-	},
-}
+var (
+	eventTemplates = map[social.Platform][]string{
+		social.LinkedIn: {
+			"{{.Mention}} - next meetup {{.EventDate}} in {{.Location}}: \"{{.EventTitle}}\"\n\n{{.EventURL}}",
+			"{{.Mention}} ({{.Location}}) - \"{{.EventTitle}}\", {{.EventDate}}.\n\n{{.EventURL}}",
+			"{{.Mention}}: \"{{.EventTitle}}\" - {{.EventDate}}, {{.Location}}.\n\n{{.EventURL}}",
+		},
+		social.Bluesky: {
+			"{{.Mention}} - next meetup {{.EventDate}} in {{.Location}}: \"{{.EventTitle}}\" {{.EventURL}}",
+			"{{.Mention}} ({{.Location}}) - \"{{.EventTitle}}\", {{.EventDate}}. {{.EventURL}}",
+			"{{.Mention}}: \"{{.EventTitle}}\" - {{.EventDate}}, {{.Location}}. {{.EventURL}}",
+		},
+		social.Mastodon: {
+			"{{.Mention}} - next meetup {{.EventDate}} in {{.Location}}: \"{{.EventTitle}}\" #golang {{.EventURL}}",
+			"{{.Mention}} ({{.Location}}) - \"{{.EventTitle}}\", {{.EventDate}}. #golang {{.EventURL}}",
+			"{{.Mention}}: \"{{.EventTitle}}\" - {{.EventDate}}, {{.Location}}. #golang {{.EventURL}}",
+		},
+	}
 
-// communityEntry is one row from conferences.yaml or meetups.yaml. Conference
-// entries set EndDate ("YYYY-MM-DD") so the candidate can filter out past
-// editions; meetups leave it blank.
+	conferenceTemplates = map[social.Platform][]string{
+		social.LinkedIn: {
+			"{{.Mention}} is {{.Countdown}} - {{.Dates}}, {{.Location}}. {{.Description}}\n\n{{.URL}}",
+			"{{.Mention}} ({{.Location}}, {{.Dates}}) - {{.Description}}\n\n{{.URL}}",
+		},
+		social.Bluesky: {
+			"{{.Mention}} is {{.Countdown}} - {{.Dates}}, {{.Location}}. {{.Description}} {{.URL}}",
+			"{{.Mention}} ({{.Location}}, {{.Dates}}) - {{.Description}} {{.URL}}",
+		},
+		social.Mastodon: {
+			"{{.Mention}} is {{.Countdown}} - {{.Dates}}, {{.Location}}. {{.Description}} #golang {{.URL}}",
+			"{{.Mention}} ({{.Location}}, {{.Dates}}) - {{.Description}} #golang {{.URL}}",
+		},
+	}
+)
+
+// communityEntry is one row from conferences.yaml or meetups.yaml.
+// Conference entries set StartDate/EndDate ("YYYY-MM-DD") so posts can
+// carry the dates and go out while the conference is weeks away. Meetup
+// entries set MeetupGroup so the candidate can read the group's upcoming
+// events; a blank MeetupGroup means the group has no readable feed and is
+// never promoted.
 type communityEntry struct {
 	Slug        string           `yaml:"slug"`
 	Name        string           `yaml:"name"`
@@ -72,7 +125,9 @@ type communityEntry struct {
 	Location    string           `yaml:"location"`
 	Description string           `yaml:"description"`
 	Handles     communityHandles `yaml:"handles"`
+	StartDate   string           `yaml:"start_date,omitempty"`
 	EndDate     string           `yaml:"end_date,omitempty"`
+	MeetupGroup string           `yaml:"meetup_group,omitempty"`
 }
 
 // communityHandles groups the social handles per platform. Bluesky and
@@ -135,25 +190,34 @@ func (e communityEntry) mentions() []social.Mention {
 	return out
 }
 
-// Community runs every Wednesday and tags a Go conference or meetup. The
-// pool rotates 2:1 meetups-to-conferences (M-M-C…); within each pool the
-// candidate walks entries in slug order and posts the first one not yet
-// promoted this calendar year. If this week's pool is exhausted it falls
-// through to the other pool so the slot doesn't go quiet.
+// Community runs every Wednesday and tags a Go meetup with an event
+// coming up, or a Go conference that is a few weeks away. The pool
+// preference rotates 2:1 meetups-to-conferences (M-M-C…); if this week's
+// pool has nothing timely it falls through to the other pool, and if
+// neither does the slot is skipped.
+//
+// Meetups are picked from their live Meetup.com calendars (via
+// EventSource): the soonest event 3-21 days out whose group hasn't been
+// promoted in the last 8 weeks. Conferences are picked from
+// conferences.yaml: the soonest one starting 7-42 days out that hasn't
+// been promoted this year.
 type Community struct {
 	conferences []communityEntry
 	meetups     []communityEntry
 	posts       social.PostRepository
+	events      EventSource
 }
 
 // NewCommunity parses the two embedded YAMLs and constructs the
-// candidate. Panics on YAML parse error — these are compile-time-checked
-// static assets, so a runtime error is the right escape hatch.
-func NewCommunity(conferencesYAML, meetupsYAML []byte, posts social.PostRepository) *Community {
+// candidate. events may be nil, in which case no meetup is ever eligible.
+// Panics on YAML parse error — these are compile-time-checked static
+// assets, so a runtime error is the right escape hatch.
+func NewCommunity(conferencesYAML, meetupsYAML []byte, posts social.PostRepository, events EventSource) *Community {
 	return &Community{
 		conferences: mustParseCommunityYAML(conferencesYAML, "conferences"),
 		meetups:     mustParseCommunityYAML(meetupsYAML, "meetups"),
 		posts:       posts,
+		events:      events,
 	}
 }
 
@@ -169,36 +233,191 @@ func mustParseCommunityYAML(b []byte, label string) []communityEntry {
 // Kind reports the candidate's SocialPostKind.
 func (c *Community) Kind() social.PostKind { return social.PostKindCommunity }
 
-// Eligible picks the right pool for this Wednesday and returns the first
-// entry not yet promoted this year. Falls through to the other pool when
-// this week's pool is exhausted.
+// Eligible picks this Wednesday's preferred pool, then the other, and
+// returns the first timely entry. Returns false when neither pool has a
+// meetup event or conference inside its window.
 func (c *Community) Eligible(ctx context.Context, now time.Time) (candidate.CandidateContext, bool, error) {
-	today := now.UTC().Truncate(24 * time.Hour)
+	now = now.UTC()
 	idx := weekIndex(now)
-	year := now.UTC().Year()
 
-	primary, secondary := c.poolsForWeek(idx, today)
+	pickers := []func(context.Context, time.Time, int) (candidate.CandidateContext, bool, error){
+		c.pickMeetupEvent,
+		c.pickConference,
+	}
+	if mod(idx, promoCycleLen) == 2 {
+		pickers[0], pickers[1] = pickers[1], pickers[0]
+	}
 
-	for _, pool := range [][]communityEntry{primary, secondary} {
-		for _, entry := range pool {
-			subject := fmt.Sprintf("community:%s:%d", entry.Slug, year)
-			posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
-			if err != nil {
-				return candidate.CandidateContext{}, false, errors.Wrap(err, "checking community subject")
-			}
-			if posted {
-				continue
-			}
-			return candidate.CandidateContext{
-				Kind:     c.Kind(),
-				Subject:  subject,
-				URL:      entry.URL,
-				Mentions: entry.mentions(),
-				Payload:  communityPayload{Entry: entry, WeekIndex: idx},
-			}, true, nil
+	for _, pick := range pickers {
+		cctx, ok, err := pick(ctx, now, idx)
+		if err != nil || ok {
+			return cctx, ok, err
 		}
 	}
 	return candidate.CandidateContext{}, false, nil
+}
+
+// upcomingEvent pairs a meetup entry with one of its events.
+type upcomingEvent struct {
+	entry communityEntry
+	event meetup.Event
+}
+
+// pickMeetupEvent returns the soonest in-window meetup event that hasn't
+// been posted and whose group is outside its cool-down.
+func (c *Community) pickMeetupEvent(ctx context.Context, now time.Time, idx int) (candidate.CandidateContext, bool, error) {
+	if c.events == nil {
+		return candidate.CandidateContext{}, false, nil
+	}
+
+	from, to := now.Add(eventWindowMin), now.Add(eventWindowMax)
+	var inWindow []upcomingEvent
+	for _, u := range c.fetchUpcoming(ctx) {
+		if !u.event.Start.Before(from) && !u.event.Start.After(to) {
+			inWindow = append(inWindow, u)
+		}
+	}
+	sort.SliceStable(inWindow, func(i, j int) bool {
+		a, b := inWindow[i], inWindow[j]
+		if !a.event.Start.Equal(b.event.Start) {
+			return a.event.Start.Before(b.event.Start)
+		}
+		return a.entry.Slug < b.entry.Slug
+	})
+
+	for _, u := range inWindow {
+		subject := fmt.Sprintf("community:%s:event:%s", u.entry.Slug, eventKey(u.event.UID))
+		posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
+		if err != nil {
+			return candidate.CandidateContext{}, false, errors.Wrap(err, "checking community event subject")
+		}
+		if posted {
+			continue
+		}
+		recent, err := c.posts.HasPostedSubjectPrefixSince(ctx, communityPrefix(u.entry.Slug), platformAnchor, now.Add(-groupCooldown))
+		if err != nil {
+			return candidate.CandidateContext{}, false, errors.Wrap(err, "checking community group cool-down")
+		}
+		if recent {
+			continue
+		}
+
+		ev := u.event
+		url := ev.URL
+		if url == "" {
+			url = u.entry.URL
+		}
+		return candidate.CandidateContext{
+			Kind:     c.Kind(),
+			Subject:  subject,
+			URL:      url,
+			Mentions: u.entry.mentions(),
+			Payload:  communityPayload{Entry: u.entry, WeekIndex: idx, Event: &ev},
+		}, true, nil
+	}
+	return candidate.CandidateContext{}, false, nil
+}
+
+// fetchUpcoming reads every meetup's calendar concurrently. A group whose
+// feed fails is logged and treated as having no events: the feed is not
+// a supported API, so one bad response must never fail the slot.
+func (c *Community) fetchUpcoming(ctx context.Context) []upcomingEvent {
+	var (
+		mu  sync.Mutex
+		wg  sync.WaitGroup
+		out []upcomingEvent
+		sem = make(chan struct{}, fetchConcurrency)
+	)
+	for _, entry := range c.meetups {
+		if entry.MeetupGroup == "" {
+			continue
+		}
+		wg.Add(1)
+		go func(entry communityEntry) {
+			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
+			events, err := c.events.UpcomingEvents(ctx, entry.MeetupGroup)
+			if err != nil {
+				slog.WarnContext(ctx, "Community: reading meetup calendar failed",
+					"slug", entry.Slug, "group", entry.MeetupGroup, "error", err)
+				return
+			}
+			mu.Lock()
+			defer mu.Unlock()
+			for _, ev := range events {
+				out = append(out, upcomingEvent{entry: entry, event: ev})
+			}
+		}(entry)
+	}
+	wg.Wait()
+	return out
+}
+
+// pickConference returns the soonest conference starting inside the
+// conference window that hasn't been promoted this year.
+func (c *Community) pickConference(ctx context.Context, now time.Time, idx int) (candidate.CandidateContext, bool, error) {
+	year := now.Year()
+	for _, uc := range upcomingConferences(c.conferences, now) {
+		subject := fmt.Sprintf("community:%s:%d", uc.entry.Slug, year)
+		posted, err := c.posts.HasPostedBySubject(ctx, subject, platformAnchor)
+		if err != nil {
+			return candidate.CandidateContext{}, false, errors.Wrap(err, "checking community subject")
+		}
+		if posted {
+			continue
+		}
+		return candidate.CandidateContext{
+			Kind:     c.Kind(),
+			Subject:  subject,
+			URL:      uc.entry.URL,
+			Mentions: uc.entry.mentions(),
+			Payload: communityPayload{
+				Entry:     uc.entry,
+				WeekIndex: idx,
+				Dates:     formatDateRange(uc.start, uc.end),
+				Countdown: formatCountdown(now, uc.start),
+			},
+		}, true, nil
+	}
+	return candidate.CandidateContext{}, false, nil
+}
+
+// upcomingConference is a conference with its parsed dates.
+type upcomingConference struct {
+	entry      communityEntry
+	start, end time.Time
+}
+
+// upcomingConferences returns conferences starting 7-42 days after now,
+// soonest first. Entries without a parseable start_date are skipped —
+// the whole point of the post is the date. A missing or bad end_date is
+// treated as a one-day conference.
+func upcomingConferences(entries []communityEntry, now time.Time) []upcomingConference {
+	from, to := now.Add(conferenceWindowMin), now.Add(conferenceWindowMax)
+	out := make([]upcomingConference, 0, len(entries))
+	for _, e := range entries {
+		start, err := time.Parse(time.DateOnly, e.StartDate)
+		if err != nil {
+			continue
+		}
+		end, err := time.Parse(time.DateOnly, e.EndDate)
+		if err != nil || end.Before(start) {
+			end = start
+		}
+		if start.Before(from) || start.After(to) {
+			continue
+		}
+		out = append(out, upcomingConference{entry: e, start: start, end: end})
+	}
+	sort.SliceStable(out, func(i, j int) bool {
+		if !out[i].start.Equal(out[j].start) {
+			return out[i].start.Before(out[j].start)
+		}
+		return out[i].entry.Slug < out[j].entry.Slug
+	})
+	return out
 }
 
 // Generate renders one of the per-platform templates with the entry's
@@ -209,7 +428,12 @@ func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform
 	if !ok {
 		return "", errors.New("community: payload missing")
 	}
-	pool := communityTemplates[p]
+
+	templates := conferenceTemplates
+	if payload.Event != nil {
+		templates = eventTemplates
+	}
+	pool := templates[p]
 	if len(pool) == 0 {
 		return "", nil
 	}
@@ -220,48 +444,80 @@ func (c *Community) Generate(_ context.Context, _ ai.Prompter, p social.Platform
 	}
 
 	tpl := pool[mod(payload.WeekIndex, len(pool))]
-	return renderTemplate(tpl, payload.Entry, mention), nil
+	return renderTemplate(tpl, payload, mention), nil
 }
 
 // communityPayload travels through CandidateContext from Eligible to
-// Generate so per-platform rendering doesn't re-derive the week index.
+// Generate so per-platform rendering doesn't re-derive anything. Event is
+// set for meetup posts; Dates and Countdown for conference posts.
 type communityPayload struct {
 	Entry     communityEntry
 	WeekIndex int
+	Event     *meetup.Event
+	Dates     string
+	Countdown string
 }
 
-// poolsForWeek returns (primary, secondary) for the given week-index.
-// Conferences are filtered to entries whose end_date is today or later
-// (past editions are dead data until the next year's entry is added).
-// secondary acts as the fall-through pool when primary is exhausted.
-func (c *Community) poolsForWeek(weekIdx int, today time.Time) (primary, secondary []communityEntry) {
-	upcoming := upcomingConferences(c.conferences, today)
-	if mod(weekIdx, promoCycleLen) == 2 {
-		return upcoming, c.meetups
-	}
-	return c.meetups, upcoming
+// communityPrefix is the subject prefix shared by every post about slug,
+// whatever its suffix (year for conferences and legacy posts, event ID
+// for meetup events).
+func communityPrefix(slug string) string {
+	return "community:" + slug + ":"
 }
 
-// upcomingConferences returns conferences whose EndDate is today or in
-// the future. Empty EndDate means "always upcoming" (defensive — the
-// schema only sets EndDate on conferences, but treating blank as live
-// keeps the filter from accidentally hiding entries with malformed data).
-func upcomingConferences(entries []communityEntry, today time.Time) []communityEntry {
-	out := make([]communityEntry, 0, len(entries))
-	for _, e := range entries {
-		if e.EndDate == "" {
-			out = append(out, e)
-			continue
-		}
-		end, err := time.Parse("2006-01-02", e.EndDate)
-		if err != nil {
-			continue
-		}
-		if !end.Before(today) {
-			out = append(out, e)
-		}
+// eventKey turns a Meetup UID ("event_317454295@meetup.com") into the
+// short, stable key used in the subject ("317454295"). Other UID shapes
+// pass through with only the domain stripped.
+func eventKey(uid string) string {
+	key, _, _ := strings.Cut(uid, "@")
+	return strings.TrimPrefix(key, "event_")
+}
+
+// formatEventDate renders the event start in its own time zone, e.g.
+// "Thu 3 Dec, 18:00", or "Thu 3 Dec" for all-day events.
+func formatEventDate(ev meetup.Event) string {
+	if ev.AllDay {
+		return ev.Start.Format("Mon 2 Jan")
 	}
-	return out
+	return ev.Start.Format("Mon 2 Jan, 15:04")
+}
+
+// formatDateRange renders a conference's dates compactly: "23 Oct",
+// "1-3 Nov" or "30 Sep - 2 Oct".
+func formatDateRange(start, end time.Time) string {
+	switch {
+	case !end.After(start):
+		return start.Format("2 Jan")
+	case start.Month() == end.Month() && start.Year() == end.Year():
+		return fmt.Sprintf("%d-%s", start.Day(), end.Format("2 Jan"))
+	default:
+		return start.Format("2 Jan") + " - " + end.Format("2 Jan")
+	}
+}
+
+// formatCountdown renders how far away start is: "in 10 days" under two
+// weeks, otherwise whole weeks ("in 3 weeks").
+func formatCountdown(now, start time.Time) string {
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	days := int(start.Sub(today).Hours() / 24)
+	if days < 14 {
+		return fmt.Sprintf("in %d days", days)
+	}
+	return fmt.Sprintf("in %d weeks", days/7)
+}
+
+// truncateWords shortens s to at most limit runes, cutting at the last
+// word boundary and appending "...".
+func truncateWords(s string, limit int) string {
+	r := []rune(strings.TrimSpace(s))
+	if len(r) <= limit {
+		return string(r)
+	}
+	cut := string(r[:limit-3])
+	if i := strings.LastIndex(cut, " "); i > 0 {
+		cut = cut[:i]
+	}
+	return strings.TrimRight(cut, " ,.;:-") + "..."
 }
 
 // weekIndex returns a monotonic integer that increments by exactly one
@@ -282,15 +538,30 @@ func mod(a, b int) int {
 	return r
 }
 
-// renderTemplate substitutes the three placeholders without bringing in
+// renderTemplate substitutes the placeholders without bringing in
 // text/template — keeps the candidate dependency-free and the templates
 // readable as plain strings.
-func renderTemplate(tpl string, e communityEntry, mention string) string {
-	return strings.NewReplacer(
+func renderTemplate(tpl string, p communityPayload, mention string) string {
+	e := p.Entry
+	pairs := []string{
 		"{{.Mention}}", mention,
 		"{{.Name}}", e.Name,
 		"{{.Description}}", e.Description,
 		"{{.URL}}", e.URL,
 		"{{.Location}}", e.Location,
-	).Replace(tpl)
+		"{{.Dates}}", p.Dates,
+		"{{.Countdown}}", p.Countdown,
+	}
+	if p.Event != nil {
+		eventURL := p.Event.URL
+		if eventURL == "" {
+			eventURL = e.URL
+		}
+		pairs = append(pairs,
+			"{{.EventTitle}}", truncateWords(p.Event.Title, maxEventTitleRunes),
+			"{{.EventDate}}", formatEventDate(*p.Event),
+			"{{.EventURL}}", eventURL,
+		)
+	}
+	return strings.NewReplacer(pairs...).Replace(tpl)
 }

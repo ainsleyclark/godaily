@@ -86,7 +86,8 @@ const (
 	PostKindCTA PostKind = "cta"
 
 	// PostKindCommunity is the Wednesday community-promo post that tags
-	// a Go conference or meetup. Subject is "community:<slug>:<year>".
+	// a Go conference or meetup. Subject is "community:<slug>:<year>" for
+	// conferences and "community:<slug>:event:<id>" for meetup events.
 	PostKindCommunity PostKind = "community"
 )
 
@@ -140,6 +141,12 @@ type PostRepository interface {
 	// given platform was posted at or after since. Used to throttle the
 	// CTA and recap rotations.
 	HasPostedKindSince(ctx context.Context, kind PostKind, platform string, since time.Time) (bool, error)
+
+	// HasPostedSubjectPrefixSince reports whether any published row on
+	// the given platform whose subject starts with prefix was posted at
+	// or after since. Used to put a per-group cool-down on community
+	// posts, whose subjects are "community:<slug>:...".
+	HasPostedSubjectPrefixSince(ctx context.Context, prefix, platform string, since time.Time) (bool, error)
 
 	// Create persists a new social post record.
 	Create(ctx context.Context, p Post) (Post, error)

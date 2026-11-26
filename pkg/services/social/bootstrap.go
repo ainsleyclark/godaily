@@ -9,6 +9,7 @@ import (
 	"github.com/ainsleyclark/godaily/pkg/domain/engagement"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/env"
+	"github.com/ainsleyclark/godaily/pkg/gateway/meetup"
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidates"
@@ -63,7 +64,7 @@ func buildCandidates(posts social.PostRepository, metrics engagement.MetricsRepo
 	out = append(out, candidates.NewNewSource(social.Profiles, posts))
 	out = append(out, candidates.NewSpotlight(social.Profiles, posts))
 	out = append(out, candidates.NewCTA(posts))
-	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts))
+	out = append(out, candidates.NewCommunity(data.Conferences, data.Meetups, posts, meetup.New()))
 
 	if metrics != nil {
 		if recapSvc, err := digestsvc.NewRecapService(metrics); err == nil {

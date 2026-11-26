@@ -1171,6 +1171,26 @@ func (q *Queries) SocialPostExistsOrCancelledBySubject(ctx context.Context, arg 
 	return exists_flag, err
 }
 
+const socialPostExistsSubjectPrefixSince = `-- name: SocialPostExistsSubjectPrefixSince :one
+SELECT EXISTS (
+    SELECT 1 FROM social_posts
+    WHERE substr(subject, 1, length(?1)) = ?1 AND platform = ?2 AND posted_at >= ?3 AND status = 'published'
+) AS exists_flag
+`
+
+type SocialPostExistsSubjectPrefixSinceParams struct {
+	Prefix   interface{} `json:"prefix"`
+	Platform string      `json:"platform"`
+	Since    time.Time   `json:"since"`
+}
+
+func (q *Queries) SocialPostExistsSubjectPrefixSince(ctx context.Context, arg SocialPostExistsSubjectPrefixSinceParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, socialPostExistsSubjectPrefixSince, arg.Prefix, arg.Platform, arg.Since)
+	var exists_flag bool
+	err := row.Scan(&exists_flag)
+	return exists_flag, err
+}
+
 const socialPostFind = `-- name: SocialPostFind :one
 SELECT id, issue_id, kind, subject, platform, text, post_url, posted_at, status, published_at, mention_source FROM social_posts WHERE id = ?
 `
