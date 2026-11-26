@@ -70,4 +70,7 @@ BEGIN:VEVENT
 DTSTART:20261206T180000Z
 SUMMARY:No UID
 END:VEVENT
+X-ORIGINAL-URL:https://www.meetup.com/Example-Gophers/events/
+ ical/
+X-WR-CALNAME:Example Gophers
 END:VCALENDAR

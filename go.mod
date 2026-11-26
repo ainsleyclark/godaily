@@ -7,6 +7,7 @@ require (
 	github.com/a-h/templ v0.3.1118
 	github.com/ainsleydev/webkit v0.14.2
 	github.com/anthropics/anthropic-sdk-go v1.84.0
+	github.com/arran4/golang-ical v0.3.8
 	github.com/caarlos0/env/v11 v11.4.2
 	github.com/fogleman/gg v1.3.0
 	github.com/go-chi/chi/v5 v5.5.0
