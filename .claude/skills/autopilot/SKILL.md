@@ -53,8 +53,8 @@ permission prompt appears, you've broken a rule: stop that line of work.
 
 ## Links
 
-- **Board**: not set yet. Once Ainsley creates the GitHub Project, its URL goes
-  here. While it's unset, leave the Board line out of the DM.
+- **Board**: https://github.com/users/ainsleyclark/projects/1 (GitHub Project).
+  It auto-adds open issues and PRs labelled `autopilot`.
 - **Journal**: https://github.com/ainsleyclark/godaily/issues/333
 - **State**: https://github.com/ainsleyclark/godaily/tree/autopilot/state
 
@@ -129,7 +129,7 @@ it. The Project board is built from these:
 
 | Label | Meaning |
 |---|---|
-| `autopilot` | Opened or managed by the autopilot (PRs, the journal) |
+| `autopilot` | Anything the autopilot opens, works on or asks about, so it shows on the board. Add it to every PR and issue you open, and to existing issues when you fix part of one, add evidence, or ask a steer question. |
 | `needs-steer` | Waiting for Ainsley to choose |
 | `go-ahead` | Ainsley has answered: act on his latest comment. (Not `go`: Dependabot uses that one.) |
 | `verify-pending` | Merged or about to be; not yet checked in production |
@@ -360,7 +360,7 @@ Board: <board URL from Links> · Journal: <journal issue link>
 ```
 
 Always start with the title line `*GoDaily Autopilot Results: <Day DD Mon>*`.
-Always end with the Board / Journal line (leave out Board while it's unset).
+Always end with the Board / Journal line.
 Drop empty sections. Link everything. No paragraphs.
 
 ## Journal view template
