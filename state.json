@@ -1,0 +1,11 @@
+{
+  "metrics_trusted": false,
+  "last_improve_review": null,
+  "open_loops": [
+    {"id": "L1", "kind": "verify", "ref": "https://github.com/ainsleyclark/godaily/pull/330", "check": "Featured posts drafted on or after 27 Nov 2026 end with a Subscribe line (utm_campaign=featured) on all 3 platforms, untruncated", "due": "2026-11-27", "status": "open", "attempts": 0, "notes": "Deployed 26 Nov ~07:42 UTC; 26 Nov posts were drafted at 02:00 by the old code."},
+    {"id": "L2", "kind": "verify", "ref": "https://github.com/ainsleyclark/godaily/pull/330", "check": "Monday recap is whole (no …), ends with Subscribe line (utm_campaign=recap), has no jobs-tagged items, and is within platform limits", "due": "2026-11-30", "status": "open", "attempts": 0, "notes": ""},
+    {"id": "L3", "kind": "verify", "ref": "https://github.com/ainsleyclark/godaily/pull/331", "check": "Wednesday community post promotes a specific upcoming event (title, date/time, event link) or is skipped; no directory-style entry like post 628", "due": "2026-12-02", "status": "open", "attempts": 0, "notes": ""},
+    {"id": "L4", "kind": "verify", "ref": "https://github.com/ainsleyclark/godaily/pull/334", "check": "metrics_summary open_rate and click_rate are within ±0.01 of the delivery-weighted per-issue rates (Σunique_opens/Σdelivered and Σunique_clicks/Σdelivered from list_issue_engagement) for the same window", "due": "2026-11-30", "status": "open", "attempts": 0, "notes": "Waiting on merge (draft PR opened 26 Nov). Baseline for 2026-10-27..2026-11-26: summary open 0.0399 / click 0.0219, weighted per-issue 0.454 / 0.140. Rates are computed at read time, so it can be checked as soon as the merge is deployed."}
+  ],
+  "closed_loops": []
+}
