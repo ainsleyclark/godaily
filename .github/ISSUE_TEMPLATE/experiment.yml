@@ -1,0 +1,71 @@
+name: Experiment
+description: A change to GoDaily that we measure before deciding to keep it.
+title: "experiment: "
+labels: ["experiment"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write this **before** the change ships, so the result can't be argued
+        into a win afterwards. With about 300 subscribers, only big effects show
+        up: prefer bold changes and run them for weeks, not days.
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hypothesis
+      description: "If we <change>, then <metric> will <move by roughly how much>, because <reason, citing data or past issues>."
+    validations:
+      required: true
+  - type: dropdown
+    id: primary
+    attributes:
+      label: Primary metric
+      description: The one number this experiment is trying to move.
+      options:
+        - Confirmed subscribers
+        - Real reader clicks (bot-filtered; untrusted until #317 is fixed)
+        - Social reach (impressions / likes / reposts / followers)
+        - Content quality (offline evals)
+    validations:
+      required: true
+  - type: textarea
+    id: guardrails
+    attributes:
+      label: Guardrails
+      description: The other scorecard metrics that must not get worse. A "win" that hurts a guardrail is reported as mixed.
+      value: |
+        - Confirmed subscribers:
+        - Real reader clicks:
+        - Social reach:
+        - Content quality:
+  - type: textarea
+    id: design
+    attributes:
+      label: Design
+      description: Surface (featured / recap / subject / intro / …), control vs test, how they're assigned (alternate days by default), and where the change ships (PR link).
+    validations:
+      required: true
+  - type: input
+    id: baseline
+    attributes:
+      label: Baseline
+      description: The current value of the primary metric, and where it came from.
+  - type: input
+    id: window
+    attributes:
+      label: Window
+      description: Start date and minimum duration (usually 2–4 weeks).
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision rule
+      description: Exactly what result means keep, drop or extend. Decide this now.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Result
+      description: Filled in when the window ends, with the evidence.

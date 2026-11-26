@@ -1,5 +1,13 @@
 # Engagement-Driven Growth Loop
 
+> **Partly superseded (Nov 2026)** by [`autopilot.md`](autopilot.md). Phase 1
+> (email events, social metrics) still stands. Phases 3–5 are now a nightly
+> Claude Code scheduled task running `.claude/skills/autopilot`, and it uses
+> the read-only MCP server. That reverses decision 3 below. Experiments are
+> defined in repo YAML and stamped on content, instead of living in an
+> `experiments`/`insights`/`prompt_versions` table set. The guardrails here
+> (human merge, never auto-merge, limits in code) still apply.
+
 GoDaily ships a daily digest and auto-posts to social, but it does so
 blind: nothing measures what content lands, and nothing turns that
 measurement back into better content. This plan closes that gap.
