@@ -8,13 +8,13 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/compose"
 )
 
 // MastodonHashtags is the canonical hashtag list appended to every Mastodon
 // status.
 var MastodonHashtags = []string{"#golang", "#go", "#programming"}
-
-const mastodonCharLimit = 500
 
 const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses hashtags actively for discovery — keep them.
 - The post must be worth reading even if the reader never clicks the link. The hook should give the concrete fact — version number, API name, the specific change — not just a vague prompt to click through.
@@ -32,7 +32,8 @@ const mastodonGuidance = `- Mastodon users skew technical. The fediverse uses ha
 func Mastodon(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
 	return reframe(ctx, p, platformConfig{
 		name:      "Mastodon",
-		charLimit: mastodonCharLimit,
+		platform:  social.Mastodon,
+		charLimit: compose.Limit(social.Mastodon),
 		hashtags:  MastodonHashtags,
 		guidance:  mastodonGuidance,
 	}, f)

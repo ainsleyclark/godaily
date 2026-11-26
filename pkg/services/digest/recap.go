@@ -7,6 +7,7 @@ package digest
 import (
 	"context"
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/pkg/errors"
@@ -19,6 +20,11 @@ import (
 // specify one. Three items fits cleanly into a social post; consumers
 // that want more (e.g. an email outro) can override.
 const defaultLimit = 3
+
+// excludeOverfetch is how many extra rows Top requests when tags are
+// excluded, so filtering out (say) a run of popular job ads still leaves
+// enough items to fill the limit.
+const excludeOverfetch = 25
 
 // RecapService computes recap datasets from the metrics repository.
 type RecapService struct {
@@ -36,8 +42,9 @@ func NewRecapService(metrics engagement.MetricsRepository) (*RecapService, error
 // Top returns the most-clicked items for the recap window. With the
 // default (zero) window that is the previous complete ISO week; a
 // non-zero window rolls back from now. When the dataset has fewer than
-// opts.MinItems entries, it returns the zero value (and an empty
-// period) — the caller treats that as "skip".
+// opts.MinItems entries (after opts.ExcludeTags is applied), it returns
+// the zero value (and an empty period) — the caller treats that as
+// "skip".
 func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOptions) (digest.Top, error) {
 	limit := opts.N
 	if limit <= 0 {
@@ -46,23 +53,35 @@ func (s *RecapService) Top(ctx context.Context, now time.Time, opts digest.TopOp
 
 	period := makePeriod(now.UTC(), opts.Window)
 
+	fetch := limit
+	if len(opts.ExcludeTags) > 0 {
+		fetch += excludeOverfetch
+	}
+
 	items, err := s.metrics.ItemList(ctx, engagement.MetricsFilter{
 		From:  &period.Start,
 		To:    &period.End,
-		Limit: limit,
+		Limit: fetch,
 	})
 	if err != nil {
 		return digest.Top{}, errors.Wrap(err, "metrics.ItemList")
 	}
 
-	if opts.MinItems > 0 && len(items) < opts.MinItems {
+	ranked := make([]digest.RankedItem, 0, limit)
+	for _, it := range items {
+		if len(ranked) == limit {
+			break
+		}
+		if slices.Contains(opts.ExcludeTags, it.Tag) {
+			continue
+		}
+		ranked = append(ranked, digest.RankedItem{ItemMetrics: it})
+	}
+
+	if opts.MinItems > 0 && len(ranked) < opts.MinItems {
 		return digest.Top{}, nil
 	}
 
-	ranked := make([]digest.RankedItem, 0, len(items))
-	for _, it := range items {
-		ranked = append(ranked, digest.RankedItem{ItemMetrics: it})
-	}
 	return digest.Top{Period: period, Items: ranked}, nil
 }
 

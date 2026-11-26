@@ -234,15 +234,11 @@ func (s *Service) draftRotation(ctx context.Context, opts social.PostOptions) ([
 			draftOnly: true,
 			kind:      cand.Kind(),
 			subject:   cctx.Subject,
+			// Generators that link back to godaily.dev (recap, new
+			// source) add their own Subscribe line so its length is
+			// reserved before the body is written, not tacked on after.
 			generate: func(ctx context.Context, p social.Platform) (string, error) {
-				text, err := cand.Generate(ctx, s.prompter, p, cctx)
-				if err != nil {
-					return "", err
-				}
-				if cctx.Kind == social.PostKindNewSource || cctx.Kind == social.PostKindRecap {
-					text = appendSubscribeLine(text, p, string(cctx.Kind))
-				}
-				return text, nil
+				return cand.Generate(ctx, s.prompter, p, cctx)
 			},
 			skipIfPosted: subjectIdempotency(s.posts, cctx.Subject),
 			mentions:     cctx.Mentions,

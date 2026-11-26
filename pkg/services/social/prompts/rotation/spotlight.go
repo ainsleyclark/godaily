@@ -38,5 +38,5 @@ The point is goodwill and discovery, not a hard sell. Sound like one engineer re
 
 // Spotlight generates a source-spotlight post for a single platform.
 func Spotlight(ctx context.Context, p ai.Prompter, platform social.Platform, payload SpotlightPayload) (string, error) {
-	return run(ctx, p, platform, spotlightGuidance, payload)
+	return run(ctx, p, platform, spotlightGuidance, payload, "")
 }

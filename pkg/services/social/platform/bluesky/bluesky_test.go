@@ -336,53 +336,100 @@ func TestPostURLFromURI(t *testing.T) {
 	}
 }
 
-func TestBuildFacets(t *testing.T) {
+func TestRenderLinks(t *testing.T) {
 	t.Parallel()
 
 	tt := map[string]struct {
-		text string
-		want []facet
+		text     string
+		wantText string
+		want     []facet
 	}{
 		"No URL": {
-			text: "Go 1.30 released",
-			want: nil,
+			text:     "Go 1.30 released",
+			wantText: "Go 1.30 released",
+			want:     nil,
 		},
 		"Single URL": {
-			text: "New release\n\nhttps://go.dev/dl\n#golang",
+			text:     "New release\n\nhttps://go.dev/dl\n#golang",
+			wantText: "New release\n\ngo.dev/dl\n#golang",
 			want: []facet{{
-				Index:    facetIndex{ByteStart: 13, ByteEnd: 30},
+				Index:    facetIndex{ByteStart: 13, ByteEnd: 22},
 				Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://go.dev/dl"}},
 			}},
 		},
 		"URL with trailing period trimmed": {
-			text: "See https://example.com.",
+			text:     "See https://example.com.",
+			wantText: "See example.com.",
 			want: []facet{{
-				Index:    facetIndex{ByteStart: 4, ByteEnd: 23},
+				Index:    facetIndex{ByteStart: 4, ByteEnd: 15},
 				Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://example.com"}},
 			}},
 		},
 		"Two URLs": {
-			text: "https://a.io and https://b.io",
+			text:     "https://a.io and https://b.io",
+			wantText: "a.io and b.io",
 			want: []facet{
 				{
-					Index:    facetIndex{ByteStart: 0, ByteEnd: 12},
+					Index:    facetIndex{ByteStart: 0, ByteEnd: 4},
 					Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://a.io"}},
 				},
 				{
-					Index:    facetIndex{ByteStart: 17, ByteEnd: 29},
+					Index:    facetIndex{ByteStart: 9, ByteEnd: 13},
 					Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://b.io"}},
 				},
 			},
+		},
+		"Long URL is shortened but facet keeps the full link": {
+			text:     "https://github.com/someone/a-very-long-repository-name",
+			wantText: "github.com/someone/a-very-lon…",
+			want: []facet{{
+				Index:    facetIndex{ByteStart: 0, ByteEnd: len("github.com/someone/a-very-lon…")},
+				Features: []facetFeature{{Type: "app.bsky.richtext.facet#link", URI: "https://github.com/someone/a-very-long-repository-name"}},
+			}},
+		},
+		"UTM parameters are hidden from the display text": {
+			text:     "Subscribe: https://godaily.dev/?utm_campaign=recap&utm_medium=social&utm_source=social-bluesky",
+			wantText: "Subscribe: godaily.dev",
+			want: []facet{{
+				Index: facetIndex{ByteStart: 11, ByteEnd: 22},
+				Features: []facetFeature{{
+					Type: "app.bsky.richtext.facet#link",
+					URI:  "https://godaily.dev/?utm_campaign=recap&utm_medium=social&utm_source=social-bluesky",
+				}},
+			}},
 		},
 	}
 
 	for name, tc := range tt {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			got := buildFacets(tc.text)
+			gotText, got := renderLinks(tc.text)
+			assert.Equal(t, tc.wantText, gotText)
 			assert.Equal(t, tc.want, got)
 		})
 	}
+}
+
+func TestCapText(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Short text is unchanged", func(t *testing.T) {
+		t.Parallel()
+		text, facets := renderLinks("Hello https://go.dev")
+		gotText, gotFacets := capText(text, facets, 300)
+		assert.Equal(t, text, gotText)
+		assert.Equal(t, facets, gotFacets)
+	})
+
+	t.Run("Facets beyond the cut are dropped", func(t *testing.T) {
+		t.Parallel()
+		text, facets := renderLinks("https://go.dev " + strings.Repeat("word ", 80) + "https://example.com")
+		require.Len(t, facets, 2)
+		gotText, gotFacets := capText(text, facets, 300)
+		assert.LessOrEqual(t, utf8.RuneCountInString(gotText), 300)
+		require.Len(t, gotFacets, 1)
+		assert.Equal(t, "https://go.dev", gotFacets[0].Features[0].URI)
+	})
 }
 
 // Sanity check that body is sent as application/json.

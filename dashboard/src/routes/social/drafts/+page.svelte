@@ -9,6 +9,7 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { Separator } from '$lib/components/ui/separator';
 	import { toast } from 'svelte-sonner';
+	import { postLength } from '$lib/utils/postLength';
 
 	let drafts = $state<SocialPost[] | null>(null);
 	let loading = $state(true);
@@ -17,7 +18,8 @@
 	let cancellingId = $state<number | null>(null);
 
 	// Per-platform character ceilings used by the UI hint. Mirrors the
-	// platform.PostRequest constraints enforced server-side.
+	// platform.PostRequest constraints enforced server-side. Lengths are
+	// counted the way each platform counts them (see postLength).
 	const PLATFORM_LIMITS: Record<string, number> = {
 		bluesky: 300,
 		mastodon: 500,
@@ -159,7 +161,7 @@
 				<CardContent class="space-y-4">
 					{#each rows as d, i (d.id)}
 						{@const limit = platformLimit(d.platform)}
-						{@const length = (edits[d.id] ?? '').length}
+						{@const length = postLength(d.platform, edits[d.id] ?? '')}
 						{@const over = limit !== null && length > limit}
 						<div
 							id={`draft-${d.id}`}
