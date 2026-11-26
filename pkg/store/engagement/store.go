@@ -65,9 +65,12 @@ func (s *Store) Summary(ctx context.Context, f engagement.MetricsFilter) (engage
 		Complained:               r.Complained,
 		UniqueSubscribersEngaged: r.UniqueEngaged,
 	}
+	// Rates are opened (or clicked) deliveries over deliveries. UniqueOpens and
+	// UniqueClicks count distinct people across the whole window, so dividing
+	// them by the summed deliveries of every issue undercounts (#317).
 	if r.Delivered > 0 {
-		stats.OpenRate = float64(r.UniqueOpens) / float64(r.Delivered)
-		stats.ClickRate = float64(r.UniqueClicks) / float64(r.Delivered)
+		stats.OpenRate = float64(r.OpenedDeliveries) / float64(r.Delivered)
+		stats.ClickRate = float64(r.ClickedDeliveries) / float64(r.Delivered)
 	}
 	return stats, nil
 }
