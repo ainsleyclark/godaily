@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"regexp"
 	"strings"
 	"time"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/compose"
 	"github.com/ainsleyclark/godaily/pkg/services/social/platform"
 	"github.com/ainsleyclark/godaily/pkg/util/aiutil"
 	"github.com/ainsleyclark/godaily/pkg/util/gohttp"
@@ -90,10 +90,12 @@ type (
 // req.Text by the rendering layer, and Bluesky renders them natively
 // without out-of-band annotations.
 func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.PostResponse, error) {
-	// Cap the text before building facets so byte offsets stay aligned with
-	// the text we actually send. Bluesky counts graphemes; a rune is never
-	// fewer than one grapheme, so a rune-based cap can't exceed the limit.
-	text := aiutil.TruncatePost(req.Text, maxGraphemes)
+	// Render URLs in their shortened display form (the facet keeps the
+	// full link), then cap the text so byte offsets stay aligned with what
+	// we actually send. Bluesky counts graphemes; a rune is never fewer
+	// than one grapheme, so a rune-based cap can't exceed the limit.
+	text, facets := renderLinks(req.Text)
+	text, facets = capText(text, facets, maxGraphemes)
 	session, err := c.createSession(ctx)
 	if err != nil {
 		return platform.PostResponse{}, errors.Wrap(err, "bluesky createSession")
@@ -105,7 +107,7 @@ func (c *Client) Post(ctx context.Context, req platform.PostRequest) (platform.P
 		"createdAt": time.Now().UTC().Format(time.RFC3339),
 		"langs":     []string{"en"},
 	}
-	if facets := buildFacets(text); len(facets) > 0 {
+	if len(facets) > 0 {
 		record["facets"] = facets
 	}
 
@@ -177,10 +179,6 @@ func (c *Client) doJSON(ctx context.Context, method, token string, body, out any
 	return nil
 }
 
-// urlRe matches http/https URLs in post text. Trailing punctuation is stripped
-// separately so it isn't captured as part of the link target.
-var urlRe = regexp.MustCompile(`https?://[^\s]+`)
-
 type facetIndex struct {
 	ByteStart int `json:"byteStart"`
 	ByteEnd   int `json:"byteEnd"`
@@ -196,27 +194,54 @@ type facet struct {
 	Features []facetFeature `json:"features"`
 }
 
-// buildFacets returns AT Protocol link facets for every URL found in text.
-// Byte offsets are computed over the UTF-8 encoding of text, as required by
-// the AT Protocol richtext spec.
-func buildFacets(text string) []facet {
-	b := []byte(text)
-	matches := urlRe.FindAllIndex(b, -1)
+// renderLinks rewrites every URL in text to its shortened display form
+// (compose.ShortenURL) and returns AT Protocol link facets pointing at
+// the full URLs. Byte offsets are computed over the UTF-8 encoding of the
+// returned text, as required by the AT Protocol richtext spec.
+func renderLinks(text string) (string, []facet) {
+	matches := compose.URLPattern.FindAllStringIndex(text, -1)
 	if len(matches) == 0 {
-		return nil
+		return text, nil
 	}
+	var b strings.Builder
 	out := make([]facet, 0, len(matches))
+	last := 0
 	for _, m := range matches {
-		uri := strings.TrimRight(string(b[m[0]:m[1]]), ".,;:!?)'\"")
+		raw := text[m[0]:m[1]]
+		uri := compose.TrimURL(raw)
+		display := compose.ShortenURL(uri)
+
+		b.WriteString(text[last:m[0]])
+		start := b.Len()
+		b.WriteString(display)
 		out = append(out, facet{
-			Index: facetIndex{ByteStart: m[0], ByteEnd: m[0] + len(uri)},
+			Index: facetIndex{ByteStart: start, ByteEnd: b.Len()},
 			Features: []facetFeature{{
 				Type: "app.bsky.richtext.facet#link",
 				URI:  uri,
 			}},
 		})
+		b.WriteString(raw[len(uri):])
+		last = m[1]
 	}
-	return out
+	b.WriteString(text[last:])
+	return b.String(), out
+}
+
+// capText truncates text to limit runes and drops any facet that no
+// longer points at intact text.
+func capText(text string, facets []facet, limit int) (string, []facet) {
+	capped := aiutil.TruncatePost(text, limit)
+	if capped == text {
+		return text, facets
+	}
+	kept := make([]facet, 0, len(facets))
+	for _, f := range facets {
+		if f.Index.ByteEnd <= len(capped) && capped[f.Index.ByteStart:f.Index.ByteEnd] == text[f.Index.ByteStart:f.Index.ByteEnd] {
+			kept = append(kept, f)
+		}
+	}
+	return capped, kept
 }
 
 // Stats fetches engagement counts for a Bluesky post via the public AppView

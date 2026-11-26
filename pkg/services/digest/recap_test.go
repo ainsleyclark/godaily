@@ -134,6 +134,57 @@ func TestRecapService_Top(t *testing.T) {
 		assert.Empty(t, top.Period.Label)
 	})
 
+	t.Run("ExcludeTags drops matching items and still fills the limit", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mr := mockengagement.NewMockMetricsRepository(ctrl)
+
+		mr.EXPECT().
+			ItemList(gomock.Any(), gomock.Any()).
+			DoAndReturn(func(_ context.Context, f engagement.MetricsFilter) ([]engagement.ItemMetrics, error) {
+				assert.Greater(t, f.Limit, 3, "excluding tags must over-fetch so the limit can still be filled")
+				return []engagement.ItemMetrics{
+					{ItemID: 1, Title: "ICEYE hiring", Tag: "jobs", Clicks: 50},
+					{ItemID: 2, Title: "A", Tag: "article", Clicks: 30},
+					{ItemID: 3, Title: "Remote Go role", Tag: "jobs", Clicks: 25},
+					{ItemID: 4, Title: "B", Tag: "release", Clicks: 20},
+					{ItemID: 5, Title: "C", Tag: "article", Clicks: 10},
+					{ItemID: 6, Title: "D", Tag: "article", Clicks: 5},
+				}, nil
+			})
+
+		svc, _ := digestsvc.NewRecapService(mr)
+		top, err := svc.Top(context.Background(), monBuild, digest.TopOptions{
+			MinItems:    3,
+			ExcludeTags: []string{"jobs"},
+		})
+		require.NoError(t, err)
+		require.Len(t, top.Items, 3)
+		assert.Equal(t, "A", top.Items[0].Title)
+		assert.Equal(t, "B", top.Items[1].Title)
+		assert.Equal(t, "C", top.Items[2].Title)
+	})
+
+	t.Run("MinItems is checked after exclusion", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mr := mockengagement.NewMockMetricsRepository(ctrl)
+
+		mr.EXPECT().
+			ItemList(gomock.Any(), gomock.Any()).
+			Return([]engagement.ItemMetrics{
+				{ItemID: 1, Title: "Job", Tag: "jobs", Clicks: 50},
+				{ItemID: 2, Title: "A", Tag: "article", Clicks: 30},
+				{ItemID: 3, Title: "B", Tag: "article", Clicks: 20},
+			}, nil)
+
+		svc, _ := digestsvc.NewRecapService(mr)
+		top, err := svc.Top(context.Background(), monBuild, digest.TopOptions{
+			MinItems:    3,
+			ExcludeTags: []string{"jobs"},
+		})
+		require.NoError(t, err)
+		assert.False(t, top.HasItems())
+	})
+
 	t.Run("Propagates repository errors", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		mr := mockengagement.NewMockMetricsRepository(ctrl)

@@ -42,6 +42,10 @@ type (
 		// (so the caller can no-op cleanly). Defaults to 0 — every
 		// result kept.
 		MinItems int
+		// ExcludeTags drops items carrying any of these tags (e.g.
+		// "jobs") before ranking and the MinItems check, so a recap of
+		// "Go stories" never lists a job ad.
+		ExcludeTags []string
 	}
 )
 

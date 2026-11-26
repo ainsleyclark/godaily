@@ -41,13 +41,21 @@ type MyKindPayload struct {
 }
 
 func MyKind(ctx context.Context, p ai.Prompter, platform social.Platform, payload MyKindPayload) (string, error) {
-    return run(ctx, p, platform, myKindSystem, payload)
+    // Pass compose.SubscribeLine(platform, "my_kind") instead of "" to end
+    // the post with a UTM-tagged link back to godaily.dev.
+    return run(ctx, p, platform, myKindSystem, payload, "")
 }
 
 const myKindSystem = `...kind-specific guidance for the AI...`
 ```
 
-`run()` handles platform profile selection, AI call, JSON parsing, and char-limit checks.
+`run()` handles platform profile selection, AI call, JSON parsing, and char-limit checks. The footer's length is reserved before the model writes the body, so it is never dropped for lack of room.
+
+## Post length and the Subscribe footer
+
+`pkg/services/social/compose` measures posts the way each platform does: Mastodon counts every URL as 23 characters, and the Bluesky poster displays URLs shortened (no scheme, no `utm_*`, max 30 characters) with a link facet carrying the full URL. Use `compose.Length` / `compose.Limit` rather than a raw rune count.
+
+Featured, recap and new-source posts end with `compose.SubscribeLine` (`utm_campaign` = the post kind) on every platform, Bluesky included. When a body is too long, `compose.WithFooter` drops whole trailing lines before it cuts a sentence, and never drops the footer. The recap is assembled in code from AI-written phrases, so it fits by dropping the lowest-ranked items rather than truncating, and it excludes `jobs` items.
 
 ### 3. Add the candidate
 

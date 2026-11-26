@@ -8,13 +8,13 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/compose"
 )
 
 // BlueskyHashtags is the canonical hashtag list appended to every Bluesky
 // post. Exposed as a variable so tests and the social service can read it.
 var BlueskyHashtags = []string{"#golang"}
-
-const blueskyCharLimit = 300
 
 const blueskyGuidance = `- Bluesky users are heavily developer-focused. Speak like you're posting in a Go channel.
 - The post must be worth reading even if the reader never clicks the link. The hook (Line 1) should give them the concrete fact — version number, API name, the specific change — not just "something shipped".
@@ -32,7 +32,8 @@ const blueskyGuidance = `- Bluesky users are heavily developer-focused. Speak li
 func Bluesky(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
 	return reframe(ctx, p, platformConfig{
 		name:      "Bluesky",
-		charLimit: blueskyCharLimit,
+		platform:  social.Bluesky,
+		charLimit: compose.Limit(social.Bluesky),
 		hashtags:  BlueskyHashtags,
 		guidance:  blueskyGuidance,
 	}, f)

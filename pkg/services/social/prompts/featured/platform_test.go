@@ -6,6 +6,7 @@ package featured
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 	"unicode/utf8"
@@ -15,8 +16,16 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/ainsleyclark/godaily/pkg/domain/news"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	"github.com/ainsleyclark/godaily/pkg/mocks/ai"
+	"github.com/ainsleyclark/godaily/pkg/services/social/compose"
 )
+
+// footerBudget is the body budget the prompt advertises once the
+// featured Subscribe footer is reserved.
+func footerBudget(p social.Platform) int {
+	return compose.Limit(p) - compose.Length(p, compose.SubscribeLine(p, "featured")) - 2
+}
 
 func sampleFeatured() Featured {
 	return Featured{
@@ -37,7 +46,7 @@ func TestBuildPlatformSystem(t *testing.T) {
 		hashtags:  []string{"#golang"},
 		guidance:  "be terse",
 	}
-	sys := buildPlatformSystem(cfg)
+	sys := buildPlatformSystem(cfg, cfg.charLimit)
 
 	assert.Contains(t, sys, "Bluesky")
 	assert.Contains(t, sys, "300 characters")
@@ -51,7 +60,7 @@ func TestBuildPlatformSystem(t *testing.T) {
 func TestBuildPlatformSystem_NoHashtags(t *testing.T) {
 	t.Parallel()
 
-	sys := buildPlatformSystem(platformConfig{name: "X", charLimit: 100, guidance: "g"})
+	sys := buildPlatformSystem(platformConfig{name: "X", charLimit: 100, guidance: "g"}, 100)
 	assert.Contains(t, sys, "No hashtags")
 }
 
@@ -164,7 +173,7 @@ func TestReframe(t *testing.T) {
 func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 	t.Parallel()
 
-	t.Run("Bluesky calls reframe with #golang and 300 limit", func(t *testing.T) {
+	t.Run("Bluesky calls reframe with #golang and the 300 limit less the footer", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -173,7 +182,7 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "Bluesky")
-				assert.Contains(t, system, "300 characters")
+				assert.Contains(t, system, fmt.Sprintf("%d characters", footerBudget(social.Bluesky)))
 				assert.Contains(t, system, "#golang")
 				return []byte(`{"text":"ok"}`), nil
 			})
@@ -182,7 +191,7 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("LinkedIn uses 1300 limit and 3 hashtags", func(t *testing.T) {
+	t.Run("LinkedIn uses the 1300 limit less the footer and 3 hashtags", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -191,7 +200,7 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "LinkedIn")
-				assert.Contains(t, system, "1300 characters")
+				assert.Contains(t, system, fmt.Sprintf("%d characters", footerBudget(social.LinkedIn)))
 				for _, tag := range LinkedInHashtags {
 					assert.Contains(t, system, tag)
 				}
@@ -202,7 +211,7 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("Mastodon uses 500 limit and #go", func(t *testing.T) {
+	t.Run("Mastodon uses the 500 limit less the footer and #go", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -211,7 +220,7 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 			Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
 			DoAndReturn(func(_ any, _, system, _ string) ([]byte, error) {
 				assert.Contains(t, system, "Mastodon")
-				assert.Contains(t, system, "500 characters")
+				assert.Contains(t, system, fmt.Sprintf("%d characters", footerBudget(social.Mastodon)))
 				assert.Contains(t, system, "#go")
 				return []byte(`{"text":"ok"}`), nil
 			})
@@ -219,4 +228,50 @@ func TestBlueskyLinkedInMastodonShape(t *testing.T) {
 		_, err := Mastodon(t.Context(), p, sampleFeatured())
 		require.NoError(t, err)
 	})
+}
+
+func TestReframe_SubscribeFooter(t *testing.T) {
+	t.Parallel()
+
+	for _, plat := range []social.Platform{social.Bluesky, social.LinkedIn, social.Mastodon} {
+		t.Run(plat.String(), func(t *testing.T) {
+			t.Parallel()
+
+			cfg := platformConfig{
+				platform:  plat,
+				name:      plat.String(),
+				charLimit: compose.Limit(plat),
+				hashtags:  []string{"#golang"},
+				guidance:  "g",
+			}
+
+			t.Run("Links back to godaily.dev with featured UTM params", func(t *testing.T) {
+				t.Parallel()
+				ctrl := gomock.NewController(t)
+				p := mockai.NewMockPrompter(ctrl)
+				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return([]byte(`{"text":"Go 1.30 ships.\n\nhttps://go.dev/blog/go1.30\n#golang"}`), nil)
+
+				got, err := reframe(t.Context(), p, cfg, sampleFeatured())
+				require.NoError(t, err)
+				assert.True(t, strings.HasSuffix(got, "\n\n"+compose.SubscribeLine(plat, "featured")))
+				assert.Contains(t, got, "utm_campaign=featured")
+				assert.Contains(t, got, "utm_source=social-"+plat.String())
+			})
+
+			t.Run("Over-long body is trimmed and the footer survives", func(t *testing.T) {
+				t.Parallel()
+				ctrl := gomock.NewController(t)
+				p := mockai.NewMockPrompter(ctrl)
+				long := strings.Repeat("Go 1.30 ships a lot of things. ", 60)
+				p.EXPECT().Prompt(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+					Return([]byte(`{"text":"`+long+`\n\nhttps://go.dev/blog/go1.30\n#golang"}`), nil)
+
+				got, err := reframe(t.Context(), p, cfg, sampleFeatured())
+				require.NoError(t, err)
+				assert.LessOrEqual(t, compose.Length(plat, got), compose.Limit(plat))
+				assert.Contains(t, got, compose.SubscribeLine(plat, "featured"))
+			})
+		})
+	}
 }

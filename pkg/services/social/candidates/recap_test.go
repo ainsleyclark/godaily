@@ -78,6 +78,38 @@ func TestRecap_Eligible(t *testing.T) {
 		assert.Equal(t, int64(30), payload.Items[0].Clicks)
 	})
 
+	t.Run("Job ads are never listed as Go stories", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		metrics := mockengagement.NewMockMetricsRepository(ctrl)
+		posts := mocksocial.NewMockPostRepository(ctrl)
+
+		posts.EXPECT().
+			HasPostedKindSince(gomock.Any(), social.PostKindRecap, "bluesky", gomock.Any()).
+			Return(false, nil)
+		metrics.EXPECT().
+			ItemList(gomock.Any(), gomock.Any()).
+			Return([]engagement.ItemMetrics{
+				{ItemID: 1, Title: "A", URL: "https://a", Tag: "article", Clicks: 30},
+				{ItemID: 2, Title: "ICEYE hiring senior/staff platform engineers", URL: "https://news.ycombinator.com/item?id=1", Tag: "jobs", Source: "hacker_news_jobs", Clicks: 25},
+				{ItemID: 3, Title: "B", URL: "https://b", Tag: "release", Clicks: 20},
+				{ItemID: 4, Title: "C", URL: "https://c", Tag: "article", Clicks: 10},
+			}, nil)
+
+		svc, err := digest.NewRecapService(metrics)
+		require.NoError(t, err)
+
+		cctx, ok, err := candidates.NewRecap(svc, posts).Eligible(context.Background(), recapNow)
+		require.NoError(t, err)
+		require.True(t, ok)
+
+		payload, ok := cctx.Payload.(rotation.RecapPayload)
+		require.True(t, ok)
+		require.Len(t, payload.Items, 3)
+		for _, it := range payload.Items {
+			assert.NotContains(t, it.Title, "hiring")
+		}
+	})
+
 	t.Run("Blocked by cooldown", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		metrics := mockengagement.NewMockMetricsRepository(ctrl)

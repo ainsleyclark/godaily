@@ -8,13 +8,13 @@ import (
 	"context"
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
+	"github.com/ainsleyclark/godaily/pkg/domain/social"
+	"github.com/ainsleyclark/godaily/pkg/services/social/compose"
 )
 
 // LinkedInHashtags is the canonical hashtag list appended to every LinkedIn
 // post.
 var LinkedInHashtags = []string{"#golang", "#softwareengineering", "#programming"}
-
-const linkedInCharLimit = 1300
 
 const linkedInGuidance = `- The audience is engineering leaders and senior Go developers. Slightly more elaborate than Bluesky/Mastodon, still no fluff.
 
@@ -59,7 +59,8 @@ https://go.dev/blog/go1.24
 func LinkedIn(ctx context.Context, p ai.Prompter, f Featured) (string, error) {
 	return reframe(ctx, p, platformConfig{
 		name:      "LinkedIn",
-		charLimit: linkedInCharLimit,
+		platform:  social.LinkedIn,
+		charLimit: compose.Limit(social.LinkedIn),
 		hashtags:  LinkedInHashtags,
 		guidance:  linkedInGuidance,
 	}, f)

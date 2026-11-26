@@ -12,6 +12,7 @@ import (
 
 	"github.com/ainsleyclark/godaily/pkg/ai"
 	"github.com/ainsleyclark/godaily/pkg/domain/digest"
+	"github.com/ainsleyclark/godaily/pkg/domain/news"
 	"github.com/ainsleyclark/godaily/pkg/domain/social"
 	digestsvc "github.com/ainsleyclark/godaily/pkg/services/digest"
 	"github.com/ainsleyclark/godaily/pkg/services/social/candidate"
@@ -22,6 +23,11 @@ import (
 // recap; one or two reads as "we picked our favourite", which the daily
 // featured slot already does.
 const recapMinItems = 3
+
+// recapExcludedTags are never listed in a recap. The post is framed as
+// "most-clicked Go stories", and a job ad (e.g. an HN Who's Hiring
+// listing) is not a story, however many clicks it drew.
+var recapExcludedTags = []string{string(news.TagJobs)}
 
 // recapCooldown prevents two recaps in the same calendar week even if the
 // cron fires twice (manual trigger + scheduled).
@@ -59,7 +65,10 @@ func (c *Recap) Eligible(ctx context.Context, now time.Time) (candidate.Candidat
 		return candidate.CandidateContext{}, false, nil
 	}
 
-	top, err := c.recap.Top(ctx, now, digest.TopOptions{MinItems: recapMinItems})
+	top, err := c.recap.Top(ctx, now, digest.TopOptions{
+		MinItems:    recapMinItems,
+		ExcludeTags: recapExcludedTags,
+	})
 	if err != nil {
 		return candidate.CandidateContext{}, false, errors.Wrap(err, "computing recap")
 	}

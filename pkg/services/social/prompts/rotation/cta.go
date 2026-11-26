@@ -31,5 +31,5 @@ Keep it human and low-pressure. No "join the community" boilerplate, no hype, no
 
 // CTA generates a signup CTA post for a single platform.
 func CTA(ctx context.Context, p ai.Prompter, platform social.Platform, payload CTAPayload) (string, error) {
-	return run(ctx, p, platform, ctaGuidance, payload)
+	return run(ctx, p, platform, ctaGuidance, payload, "")
 }
