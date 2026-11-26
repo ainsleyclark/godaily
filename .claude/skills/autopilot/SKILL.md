@@ -53,10 +53,11 @@ permission prompt appears, you've broken a rule: stop that line of work.
 
 ## Step 0: load state (the journal)
 
-State lives in **one pinned GitHub issue** titled `Autopilot journal` on
-`ainsleyclark/godaily` (label `autopilot`). Find it with the GitHub MCP tools.
-If it doesn't exist, create it from the template at the end of this file and
-pin it (or tell Ainsley to pin it if pinning isn't available).
+State lives in **one GitHub issue** titled `Autopilot journal` on
+`ainsleyclark/godaily` (label `autopilot`), currently #333. Find it with the
+GitHub MCP tools by title and label. If it doesn't exist, create it from the
+template at the end of this file. Don't ask Ainsley to pin it: pinning is
+optional and only for his convenience.
 
 **Labels** the autopilot uses. Adding a label that doesn't exist yet creates it:
 
@@ -182,7 +183,15 @@ For each due `verify` loop:
   dependencies, or deleting data.
 - The issue hasn't already failed verification.
 
-Otherwise, **ask** (Step 4) and move on to the next item.
+Otherwise, **ask** (Step 4) in the same run, then move on to the next item.
+Never stop at "this needs a decision" without asking the question: an issue
+you've looked at must end the run with either a PR, a steer question, or a
+stated reason it's waiting (with a date).
+
+**Adding evidence to an existing issue** works the same way: the comment must
+end with a `**Next:**` line saying who does what, and when. Either "I'll open a
+PR for <part> on <date/next run>", or a steer question (Step 4), or "Waiting
+on <thing> until <date>". Evidence with no next step isn't allowed.
 
 Changes to send or post timing don't need a question first, but they're still
 just a PR.
@@ -286,18 +295,43 @@ quiet nights, write the run log and skip the DM. **On Fridays, always send**
 a short weekly summary, even if it's quiet, so he knows the autopilot is
 running.
 
-Format: short and scannable. Lead with the one thing that needs him, use
-emoji section markers, and keep each line short:
+Format: short and scannable, **no emoji**. Plain bold labels, one item per
+bullet. Lead with what needs him. **Every item ends with what happens next**:
+who does what, and by when. An update with no next step is noise.
 
 ```
-🚨 *Urgent*: <only if production is broken>
-🙋 *Needs you* (N): <question>: <issue link>
-✅ *Verified*: #330 featured footer (posts 632–634)
-❌ *Failed*: <what>: <link>
-🔧 *PRs opened*: <title>: <link>
-🐛 *New bugs*: <title>: <link>
-⏳ *Waiting on*: #331, Wed 2 Dec rotation
-💡 *Ideas* (weekly): <title>: <link>
+*Autopilot, Fri 27 Nov*
+
+*Urgent*: <only if production is broken>
+  Next: <what Ainsley should do, now>
+
+*Needs you*
+- <question>: <issue link>
+  Next: reply with 1, 2 or 3 and add `go-ahead`; I act on it the next run.
+
+*Verified*
+- #330 featured footer: all 3 posts on 27 Nov end with the Subscribe line.
+  Next: nothing, loop closed.
+
+*Failed*
+- <what>: <link>
+  Next: <follow-up fix tonight / question for you>
+
+*PRs opened*
+- <title>: <link>
+  Next: review and merge when ready; I verify it in production on <date>.
+
+*Bug updates*
+- #319: 3 of 4 Mastodon titles cut mid-word today.
+  Next: question for you on the issue (cut at a word boundary, or drop the
+  item?).
+
+*Waiting on*
+- #331 community post: checking Wed 2 Dec.
+
+*Ideas* (weekly)
+- <title>: <link>
+  Next: your call on the issue.
 ```
 
 Drop empty sections. Link everything. No paragraphs.

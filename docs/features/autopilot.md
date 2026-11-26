@@ -12,7 +12,7 @@ Every weeknight, a Claude Code scheduled task runs the `autopilot` skill
    proposes up to three ideas for reach, data or content quality.
 4. **Reports**: DMs Ainsley on Slack when there's news, plus a Friday summary.
 
-GitHub is the source of truth. State is the pinned **Autopilot journal**
+GitHub is the source of truth. State is the **Autopilot journal**
 issue plus labels. Ainsley always merges.
 
 ## Why it's built this way
