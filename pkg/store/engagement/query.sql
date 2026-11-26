@@ -8,7 +8,11 @@ SELECT
     COUNT(CASE          WHEN e.event_type = 'clicked'             THEN 1               END) AS total_clicks,
     COUNT(CASE          WHEN e.event_type = 'bounced'             THEN 1               END) AS bounced,
     COUNT(CASE          WHEN e.event_type = 'complained'          THEN 1               END) AS complained,
-    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
+    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged,
+    -- Opened/clicked deliveries: one per (issue, subscriber) pair. These are the
+    -- numerators for the headline rates, so they match the per-issue rates.
+    COUNT(DISTINCT CASE WHEN e.event_type = 'opened'  THEN e.issue_id || ':' || e.subscriber_id END) AS opened_deliveries,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'clicked' THEN e.issue_id || ':' || e.subscriber_id END) AS clicked_deliveries
 FROM email_events e
 WHERE e.issue_id IS NOT NULL
   AND (sqlc.narg('from') IS NULL OR datetime(e.occurred_at) >= datetime(sqlc.narg('from')))

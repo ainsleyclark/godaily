@@ -430,3 +430,60 @@ func TestMetrics_Store(t *testing.T) {
 		}
 	})
 }
+
+// TestMetrics_SummaryRatesAcrossIssues guards #317 (part 2): the headline open
+// and click rates must be the share of deliveries that were opened or clicked,
+// so a subscriber who opens two issues counts once per issue, not once in the
+// whole window.
+func TestMetrics_SummaryRatesAcrossIssues(t *testing.T) {
+	ctx, db, teardown := dbtest.Setup(t)
+	defer teardown()
+
+	s := metricsstore.New(db)
+
+	now := time.Now().UTC()
+	from := now.Add(-7 * 24 * time.Hour)
+	filter := engagement.MetricsFilter{From: &from, To: &now}
+
+	repo := issues.New(db)
+	issue1, err := repo.Create(ctx, digest.Issue{Slug: "2026-05-21", Status: digest.IssueStatusSent, SentAt: now.Add(-3 * 24 * time.Hour)})
+	require.NoError(t, err)
+	issue2, err := repo.Create(ctx, digest.Issue{Slug: "2026-05-22", Status: digest.IssueStatusSent, SentAt: now.Add(-2 * 24 * time.Hour)})
+	require.NoError(t, err)
+
+	subs := subscribers.New(db)
+	subA, err := subs.Create(ctx, "a@example.com")
+	require.NoError(t, err)
+	subB, err := subs.Create(ctx, "b@example.com")
+	require.NoError(t, err)
+
+	occurred := now.Add(-2 * 24 * time.Hour)
+	ee := emailevents.New(db)
+	for _, ev := range []engagement.EmailEvent{
+		// Both issues are delivered to both subscribers: 4 deliveries.
+		{IssueID: &issue1.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "d1a", OccurredAt: occurred},
+		{IssueID: &issue1.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "d1b", OccurredAt: occurred},
+		{IssueID: &issue2.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "d2a", OccurredAt: occurred},
+		{IssueID: &issue2.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeDelivered, EventID: "d2b", OccurredAt: occurred},
+		// subA opens both issues (twice for issue 1), subB opens issue 1 only: 3 opened deliveries.
+		{IssueID: &issue1.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "o1a", OccurredAt: occurred},
+		{IssueID: &issue1.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "o1a2", OccurredAt: occurred},
+		{IssueID: &issue1.ID, SubscriberID: &subB.ID, Email: "b@example.com", Type: engagement.EmailEventTypeOpened, EventID: "o1b", OccurredAt: occurred},
+		{IssueID: &issue2.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeOpened, EventID: "o2a", OccurredAt: occurred},
+		// subA clicks in both issues: 2 clicked deliveries.
+		{IssueID: &issue1.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://go.dev", EventID: "c1a", OccurredAt: occurred},
+		{IssueID: &issue2.ID, SubscriberID: &subA.ID, Email: "a@example.com", Type: engagement.EmailEventTypeClicked, URL: "https://go.dev", EventID: "c2a", OccurredAt: occurred},
+	} {
+		_, err := ee.Create(ctx, ev)
+		require.NoError(t, err)
+	}
+
+	got, err := s.Summary(ctx, filter)
+	require.NoError(t, err)
+
+	assert.Equal(t, int64(2), got.IssuesSent)
+	assert.Equal(t, int64(4), got.Delivered)
+	assert.Equal(t, int64(2), got.UniqueSubscribersEngaged, "distinct people across the window")
+	assert.InDelta(t, 0.75, got.OpenRate, 0.001, "3 of 4 deliveries were opened")
+	assert.InDelta(t, 0.5, got.ClickRate, 0.001, "2 of 4 deliveries were clicked")
+}

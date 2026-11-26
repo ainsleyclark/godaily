@@ -862,7 +862,11 @@ SELECT
     COUNT(CASE          WHEN e.event_type = 'clicked'             THEN 1               END) AS total_clicks,
     COUNT(CASE          WHEN e.event_type = 'bounced'             THEN 1               END) AS bounced,
     COUNT(CASE          WHEN e.event_type = 'complained'          THEN 1               END) AS complained,
-    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged
+    COUNT(DISTINCT CASE WHEN e.event_type IN ('opened','clicked') THEN e.subscriber_id END) AS unique_engaged,
+    -- Opened/clicked deliveries: one per (issue, subscriber) pair. These are the
+    -- numerators for the headline rates, so they match the per-issue rates.
+    COUNT(DISTINCT CASE WHEN e.event_type = 'opened'  THEN e.issue_id || ':' || e.subscriber_id END) AS opened_deliveries,
+    COUNT(DISTINCT CASE WHEN e.event_type = 'clicked' THEN e.issue_id || ':' || e.subscriber_id END) AS clicked_deliveries
 FROM email_events e
 WHERE e.issue_id IS NOT NULL
   AND (?1 IS NULL OR datetime(e.occurred_at) >= datetime(?1))
@@ -875,15 +879,17 @@ type MetricsSummaryParams struct {
 }
 
 type MetricsSummaryRow struct {
-	IssuesSent    int64 `json:"issues_sent"`
-	Delivered     int64 `json:"delivered"`
-	UniqueOpens   int64 `json:"unique_opens"`
-	TotalOpens    int64 `json:"total_opens"`
-	UniqueClicks  int64 `json:"unique_clicks"`
-	TotalClicks   int64 `json:"total_clicks"`
-	Bounced       int64 `json:"bounced"`
-	Complained    int64 `json:"complained"`
-	UniqueEngaged int64 `json:"unique_engaged"`
+	IssuesSent        int64 `json:"issues_sent"`
+	Delivered         int64 `json:"delivered"`
+	UniqueOpens       int64 `json:"unique_opens"`
+	TotalOpens        int64 `json:"total_opens"`
+	UniqueClicks      int64 `json:"unique_clicks"`
+	TotalClicks       int64 `json:"total_clicks"`
+	Bounced           int64 `json:"bounced"`
+	Complained        int64 `json:"complained"`
+	UniqueEngaged     int64 `json:"unique_engaged"`
+	OpenedDeliveries  int64 `json:"opened_deliveries"`
+	ClickedDeliveries int64 `json:"clicked_deliveries"`
 }
 
 func (q *Queries) MetricsSummary(ctx context.Context, arg MetricsSummaryParams) (MetricsSummaryRow, error) {
@@ -899,6 +905,8 @@ func (q *Queries) MetricsSummary(ctx context.Context, arg MetricsSummaryParams) 
 		&i.Bounced,
 		&i.Complained,
 		&i.UniqueEngaged,
+		&i.OpenedDeliveries,
+		&i.ClickedDeliveries,
 	)
 	return i, err
 }
