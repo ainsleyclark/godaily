@@ -5,7 +5,11 @@
 package digest
 
 import (
+	"context"
 	"errors"
+	"fmt"
+	"io"
+	"net/url"
 	"testing"
 	"time"
 
@@ -275,6 +279,54 @@ func TestAggregator_Collect_Persistence(t *testing.T) {
 		assert.Len(t, second, 2, "second collect must not create duplicate items")
 	})
 
+	t.Run("Retries Existing Check After Dropped Connection", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		_, itemRepo := newTestStores(t)
+		flaky := &flakyListRepo{ItemRepository: itemRepo, failures: 1}
+		agg := Service{
+			items: flaky,
+		}
+
+		_, err := agg.Collect(t.Context(), digest.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.NoError(t, err)
+		assert.Equal(t, 2, flaky.calls, "existing-items check must be retried once")
+
+		collStart, collEnd := collectWindow(time.Now())
+		got, err := itemRepo.List(t.Context(), news.ItemListOptions{From: &collStart, To: &collEnd})
+		require.NoError(t, err)
+		assert.Len(t, got, 2)
+	})
+
+	t.Run("Gives Up After Repeated Dropped Connections", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		_, itemRepo := newTestStores(t)
+		flaky := &flakyListRepo{ItemRepository: itemRepo, failures: 2}
+		agg := Service{
+			items: flaky,
+		}
+
+		_, err := agg.Collect(t.Context(), digest.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.Error(t, err)
+		assert.ErrorIs(t, err, io.EOF)
+		assert.Equal(t, 2, flaky.calls)
+	})
+
+	t.Run("Does Not Retry Other Errors", func(t *testing.T) {
+		t.Cleanup(news.SwapRegistry(registry))
+
+		_, itemRepo := newTestStores(t)
+		flaky := &flakyListRepo{ItemRepository: itemRepo, failures: 1, err: errors.New("no such table")}
+		agg := Service{
+			items: flaky,
+		}
+
+		_, err := agg.Collect(t.Context(), digest.CollectOptions{Sources: []news.Source{news.SourceDevTo}})
+		require.Error(t, err)
+		assert.Equal(t, 1, flaky.calls)
+	})
+
 	t.Run("DryRun Does Not Persist", func(t *testing.T) {
 		t.Cleanup(news.SwapRegistry(registry))
 
@@ -311,4 +363,25 @@ func TestCollectWindow(t *testing.T) {
 		assert.Equal(t, "2026-05-17", start.Format("2006-01-02"), "window start should be Sunday")
 		assert.Equal(t, "2026-05-18", end.Format("2006-01-02"), "window end should be today (Monday)")
 	})
+}
+
+// flakyListRepo fails the first `failures` List calls, mimicking the libsql
+// HTTP driver reusing a keep-alive connection the server has already closed
+// (production, 27 Nov 2026: `Post ".../v2/pipeline": EOF`).
+type flakyListRepo struct {
+	news.ItemRepository
+	failures int
+	err      error
+	calls    int
+}
+
+func (f *flakyListRepo) List(ctx context.Context, opts news.ItemListOptions) ([]news.Item, error) {
+	f.calls++
+	if f.calls <= f.failures {
+		if f.err != nil {
+			return nil, f.err
+		}
+		return nil, fmt.Errorf("failed to execute SQL:\n%w", &url.Error{Op: "Post", URL: "https://example.turso.io/v2/pipeline", Err: io.EOF})
+	}
+	return f.ItemRepository.List(ctx, opts)
 }

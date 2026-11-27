@@ -6,6 +6,7 @@ package digest
 
 import (
 	"context"
+	"io"
 	"log/slog"
 	"sort"
 	"time"
@@ -28,7 +29,7 @@ func (s Service) Collect(ctx context.Context, opts digest.CollectOptions) (diges
 	}
 
 	if !opts.DryRun && s.items != nil {
-		existing, err := s.items.List(ctx, news.ItemListOptions{From: &start, To: &end})
+		existing, err := s.listExisting(ctx, start, end)
 		if err != nil {
 			return digest.CollectResponse{}, errors.Wrap(err, "checking existing items")
 		}
@@ -130,4 +131,22 @@ func windowClamp(item news.Item, start, end time.Time) (news.Item, bool) {
 		item.Published = start.Add(time.Hour)
 	}
 	return item, item.Published.After(start)
+}
+
+// listExisting returns the items already stored for the collection window.
+//
+// It is the first database call of the 01:00 cron. The libsql HTTP driver
+// sends every query over http.DefaultClient, so after an idle period it can
+// reuse a keep-alive connection Turso has already closed and fail with io.EOF
+// (27 Nov 2026: the whole day's collect, build and send were lost to one).
+// net/http never retries a POST, and this is a read, so retry it once; the
+// dead connection is discarded by then.
+func (s Service) listExisting(ctx context.Context, start, end time.Time) ([]news.Item, error) {
+	opts := news.ItemListOptions{From: &start, To: &end}
+	existing, err := s.items.List(ctx, opts)
+	if err != nil && errors.Is(err, io.EOF) {
+		slog.WarnContext(ctx, "Database connection dropped, retrying existing items check", "err", err)
+		existing, err = s.items.List(ctx, opts)
+	}
+	return existing, err
 }
