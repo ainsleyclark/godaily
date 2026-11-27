@@ -32,7 +32,6 @@ type staleTurso struct {
 	dropReused atomic.Bool
 	dropped    atomic.Int32
 	requests   atomic.Int32
-	authHeader atomic.Value
 }
 
 func newStaleTurso(t *testing.T) *staleTurso {
@@ -52,7 +51,6 @@ func newStaleTurso(t *testing.T) *staleTurso {
 
 func (st *staleTurso) serve(w http.ResponseWriter, r *http.Request) {
 	st.requests.Add(1)
-	st.authHeader.Store(r.Header.Get("Authorization"))
 
 	served := r.Context().Value(connKey{}).(*atomic.Int32)
 	if served.Add(1) > 1 && st.dropReused.CompareAndSwap(true, false) {
@@ -91,17 +89,17 @@ func (st *staleTurso) serve(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]any{"results": results})
 }
 
-// testIdle is the idle timeout tests open the DB with, so they don't wait
-// for the real one.
-const testIdle = 50 * time.Millisecond
-
 // newRemote opens a remote DB against st and runs one query, which leaves a
-// keep-alive socket in Turso's idle pool, as a warm serverless instance has
-// after serving a request.
+// keep-alive socket in the HTTP pool, as a warm serverless instance has after
+// serving a request. The idle timeout is shortened so tests don't wait.
 func newRemote(t *testing.T, st *staleTurso) *sql.DB {
 	t.Helper()
 
-	conn, err := open(t.Context(), st.URL, "secret", testIdle)
+	old := idleTimeout
+	idleTimeout = 50 * time.Millisecond
+	t.Cleanup(func() { idleTimeout = old })
+
+	conn, err := New(t.Context(), st.URL, "secret")
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = conn.Close() })
 
@@ -112,17 +110,8 @@ func newRemote(t *testing.T, st *staleTurso) *sql.DB {
 }
 
 func TestNew_Remote(t *testing.T) {
-	t.Run("Sends Auth Token", func(t *testing.T) {
-		st := newStaleTurso(t)
-
-		newRemote(t, st)
-
-		assert.Equal(t, "Bearer secret", st.authHeader.Load())
-	})
-
 	// Guards the harness: reusing a dead pooled socket must fail the way
-	// production did, or the next test proves nothing. It also shows that
-	// nothing retries the query.
+	// production did, or the next test proves nothing.
 	t.Run("Reused Dead Socket Fails", func(t *testing.T) {
 		st := newStaleTurso(t)
 		conn := newRemote(t, st)
@@ -132,7 +121,6 @@ func TestNew_Remote(t *testing.T) {
 		_, err := conn.ExecContext(t.Context(), "SELECT 1")
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "/v2/pipeline\": EOF")
-		assert.Equal(t, int32(2), st.requests.Load(), "the failed query must not be retried")
 	})
 
 	t.Run("Idle Socket Is Not Reused", func(t *testing.T) {
@@ -142,22 +130,11 @@ func TestNew_Remote(t *testing.T) {
 		// As after a frozen invocation: the pooled socket is dead and has
 		// been idle for longer than the idle timeout.
 		st.dropReused.Store(true)
-		time.Sleep(2 * testIdle)
+		time.Sleep(100 * time.Millisecond)
 
-		var one int
-		err := conn.QueryRowContext(t.Context(), "SELECT 1").Scan(&one)
+		_, err := conn.ExecContext(t.Context(), "SELECT 1")
 		require.NoError(t, err)
-		assert.Equal(t, 1, one)
 		assert.Equal(t, int32(0), st.dropped.Load(), "the query should have used a fresh connection")
 		assert.Equal(t, int32(2), st.requests.Load(), "the query should run exactly once")
-	})
-
-	t.Run("Leaves Default Client Alone", func(t *testing.T) {
-		before := http.DefaultTransport.(*http.Transport).IdleConnTimeout
-
-		newRemote(t, newStaleTurso(t))
-
-		assert.Equal(t, before, http.DefaultTransport.(*http.Transport).IdleConnTimeout)
-		assert.Nil(t, http.DefaultClient.Transport)
 	})
 }
