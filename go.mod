@@ -145,3 +145,5 @@ tool (
 	github.com/swaggo/swag/v2/cmd/swag
 	golang.org/x/vuln/cmd/govulncheck
 )
+
+replace github.com/tursodatabase/libsql-client-go => ./third_party/libsql-client-go

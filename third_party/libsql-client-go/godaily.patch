@@ -1,0 +1,173 @@
+diff -ru --label upstream/libsql --label fork/libsql upstream/libsql fork/libsql
+--- upstream/libsql
++++ fork/libsql
+@@ -2,10 +2,11 @@
+ 
+ import (
+ 	"database/sql/driver"
++	nethttp "net/http"
+ 
+ 	"github.com/tursodatabase/libsql-client-go/libsql/internal/http/hranaV2"
+ )
+ 
+-func Connect(url, jwt, host string, schemaDb bool, remoteEncryptionKey string, requestHeaders map[string]string) driver.Conn {
+-	return hranaV2.Connect(url, jwt, host, schemaDb, remoteEncryptionKey, requestHeaders)
++func Connect(url, jwt, host string, schemaDb bool, remoteEncryptionKey string, requestHeaders map[string]string, httpClient *nethttp.Client) driver.Conn {
++	return hranaV2.Connect(url, jwt, host, schemaDb, remoteEncryptionKey, requestHeaders, httpClient)
+ }
+diff -ru --label upstream/libsql --label fork/libsql upstream/libsql fork/libsql
+--- upstream/libsql
++++ fork/libsql
+@@ -37,8 +37,13 @@
+ 	commitHash = "unknown"
+ }
+ 
+-func Connect(url, jwt, host string, schemaDb bool, encryptionKey string, requestHeaders map[string]string) driver.Conn {
+-	return &hranaV2Conn{url, jwt, host, schemaDb, encryptionKey, requestHeaders, "", false, 0}
++// Connect opens a Hrana-over-HTTP connection. httpClient sends every request;
++// nil means http.DefaultClient. (godaily fork: the client is injectable.)
++func Connect(url, jwt, host string, schemaDb bool, encryptionKey string, requestHeaders map[string]string, httpClient *http.Client) driver.Conn {
++	if httpClient == nil {
++		httpClient = http.DefaultClient
++	}
++	return &hranaV2Conn{url, jwt, host, schemaDb, encryptionKey, requestHeaders, httpClient, "", false, 0}
+ }
+ 
+ type hranaV2Stmt struct {
+@@ -89,6 +94,7 @@
+ 	schemaDb            bool
+ 	remoteEncryptionKey string
+ 	requestHeaders      map[string]string
++	httpClient          *http.Client
+ 	baton               string
+ 	streamClosed        bool
+ 	replicationIndex    uint64
+@@ -124,11 +130,11 @@
+ 
+ func (h *hranaV2Conn) Close() error {
+ 	if h.baton != "" {
+-		go func(baton, url, jwt, host, encryptionKey string, requestHeaders map[string]string) {
++		go func(baton, url, jwt, host, encryptionKey string, requestHeaders map[string]string, httpClient *http.Client) {
+ 			msg := hrana.PipelineRequest{Baton: baton}
+ 			msg.Add(hrana.CloseStream())
+-			_, _, _ = sendPipelineRequest(context.Background(), &msg, url, jwt, host, encryptionKey, requestHeaders)
+-		}(h.baton, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders)
++			_, _, _ = sendPipelineRequest(context.Background(), &msg, url, jwt, host, encryptionKey, requestHeaders, httpClient)
++		}(h.baton, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders, h.httpClient)
+ 	}
+ 	return nil
+ }
+@@ -176,7 +182,7 @@
+ 	if h.replicationIndex > 0 {
+ 		addReplicationIndex(msg, h.replicationIndex)
+ 	}
+-	result, streamClosed, err := sendPipelineRequest(ctx, msg, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders)
++	result, streamClosed, err := sendPipelineRequest(ctx, msg, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders, h.httpClient)
+ 	if streamClosed {
+ 		h.streamClosed = true
+ 	}
+@@ -233,7 +239,7 @@
+ 	return replicationIndex
+ }
+ 
+-func sendPipelineRequest(ctx context.Context, msg *hrana.PipelineRequest, url string, jwt string, host string, remoteEncryptionKey string, requestHeaders map[string]string) (result hrana.PipelineResponse, streamClosed bool, err error) {
++func sendPipelineRequest(ctx context.Context, msg *hrana.PipelineRequest, url string, jwt string, host string, remoteEncryptionKey string, requestHeaders map[string]string, httpClient *http.Client) (result hrana.PipelineResponse, streamClosed bool, err error) {
+ 	reqBody, err := json.Marshal(msg)
+ 	if err != nil {
+ 		return hrana.PipelineResponse{}, false, err
+@@ -258,7 +264,7 @@
+ 	for name, value := range requestHeaders {
+ 		req.Header.Set(name, value)
+ 	}
+-	resp, err := http.DefaultClient.Do(req)
++	resp, err := httpClient.Do(req)
+ 	if err != nil {
+ 		return hrana.PipelineResponse{}, false, err
+ 	}
+@@ -601,11 +607,11 @@
+ 
+ func (h *hranaV2Conn) closeStream() {
+ 	if h.baton != "" {
+-		go func(baton, url, jwt, host, encryptionKey string, requestHeaders map[string]string) {
++		go func(baton, url, jwt, host, encryptionKey string, requestHeaders map[string]string, httpClient *http.Client) {
+ 			msg := hrana.PipelineRequest{Baton: baton}
+ 			msg.Add(hrana.CloseStream())
+-			_, _, _ = sendPipelineRequest(context.Background(), &msg, url, jwt, host, encryptionKey, requestHeaders)
+-		}(h.baton, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders)
++			_, _, _ = sendPipelineRequest(context.Background(), &msg, url, jwt, host, encryptionKey, requestHeaders, httpClient)
++		}(h.baton, h.url, h.jwt, h.host, h.remoteEncryptionKey, h.requestHeaders, h.httpClient)
+ 		h.baton = ""
+ 	}
+ }
+diff -ru --label upstream/libsql --label fork/libsql upstream/libsql fork/libsql
+--- upstream/libsql
++++ fork/libsql
+@@ -6,6 +6,7 @@
+ 	"database/sql/driver"
+ 	"errors"
+ 	"fmt"
++	nethttp "net/http"
+ 	"net/url"
+ 	"strings"
+ 
+@@ -20,6 +21,7 @@
+ 	schemaDb            *bool
+ 	remoteEncryptionKey *string
+ 	requestHeaders      map[string]string
++	httpClient          *nethttp.Client
+ }
+ 
+ type Option interface {
+@@ -111,6 +113,21 @@
+ 	})
+ }
+ 
++// WithHTTPClient sets the HTTP client used for http:// and https:// URLs.
++// Without it the driver uses http.DefaultClient. (godaily fork.)
++func WithHTTPClient(client *nethttp.Client) Option {
++	return option(func(o *config) error {
++		if o.httpClient != nil {
++			return fmt.Errorf("httpClient already set")
++		}
++		if client == nil {
++			return fmt.Errorf("httpClient must not be nil")
++		}
++		o.httpClient = client
++		return nil
++	})
++}
++
+ func (c config) connector(dbPath string) (driver.Connector, error) {
+ 	u, err := url.Parse(dbPath)
+ 	if err != nil {
+@@ -203,7 +220,7 @@
+ 		return wsConnector{url: u.String(), authToken: authToken}, nil
+ 	}
+ 	if u.Scheme == "https" || u.Scheme == "http" {
+-		return httpConnector{url: u.String(), authToken: authToken, host: host, schemaDb: schemaDb, remoteEncryptionKey: encryptionKey, requestHeaders: c.requestHeaders}, nil
++		return httpConnector{url: u.String(), authToken: authToken, host: host, schemaDb: schemaDb, remoteEncryptionKey: encryptionKey, requestHeaders: c.requestHeaders, httpClient: c.httpClient}, nil
+ 	}
+ 
+ 	return nil, fmt.Errorf("unsupported URL scheme: %s\nThis driver supports only URLs that start with libsql://, file://, https://, http://, wss:// and ws://", u.Scheme)
+@@ -230,10 +247,11 @@
+ 	schemaDb            bool
+ 	remoteEncryptionKey string
+ 	requestHeaders      map[string]string
++	httpClient          *nethttp.Client
+ }
+ 
+ func (c httpConnector) Connect(_ctx context.Context) (driver.Conn, error) {
+-	return http.Connect(c.url, c.authToken, c.host, c.schemaDb, c.remoteEncryptionKey, c.requestHeaders), nil
++	return http.Connect(c.url, c.authToken, c.host, c.schemaDb, c.remoteEncryptionKey, c.requestHeaders, c.httpClient), nil
+ }
+ 
+ func (c httpConnector) Driver() driver.Driver {
+@@ -382,7 +400,7 @@
+ 		return ws.Connect(u.String(), jwt)
+ 	}
+ 	if u.Scheme == "https" || u.Scheme == "http" {
+-		return http.Connect(u.String(), jwt, u.Host, false, "", nil), nil
++		return http.Connect(u.String(), jwt, u.Host, false, "", nil, nil), nil
+ 	}
+ 
+ 	return nil, fmt.Errorf("unsupported URL scheme: %s\nThis driver supports only URLs that start with libsql://, file://, https://, http://, wss:// and ws://", u.Scheme)

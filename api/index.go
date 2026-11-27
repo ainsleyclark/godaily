@@ -15,7 +15,6 @@ import (
 
 	godaily "github.com/ainsleyclark/godaily/pkg"
 	"github.com/ainsleyclark/godaily/pkg/api/mux"
-	"github.com/ainsleyclark/godaily/pkg/db"
 )
 
 var (
@@ -36,8 +35,5 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 		handler = http.StripPrefix("/api", mux.Handler(app))
 	})
-	// Drop sockets that may have gone stale while the instance was frozen
-	// between invocations. See db.CloseIdleConnections.
-	db.CloseIdleConnections()
 	handler.ServeHTTP(w, r)
 }
