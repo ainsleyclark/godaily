@@ -11,7 +11,7 @@ package db
 import (
 	"context"
 	"database/sql"
-	"database/sql/driver"
+	"net/http"
 	"strings"
 
 	"github.com/ainsleydev/webkit/pkg/enforce"
@@ -19,7 +19,7 @@ import (
 	// Turso DB Driver, for more info, visit:
 	// https://docs.turso.tech/sdk/go/quickstart
 	//_ "turso.tech/database/tursogo"
-	"github.com/tursodatabase/libsql-client-go/libsql"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 // New opens a *sql.DB against the given URL.
@@ -38,10 +38,9 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	if strings.HasPrefix(url, "file:") {
 		db, err = sql.Open("sqlite", url)
 	} else {
-		var connector driver.Connector
-		connector, err = libsql.NewConnector(url, remoteOptions(token)...)
+		url = url + "?authToken=" + token
+		db, err = sql.Open("libsql", url)
 		if err == nil {
-			db = sql.OpenDB(connector)
 			// The libsql HTTP driver marks a connection streamClosed=true after
 			// any non-transactional query (e.g. the ping below). ResetSession
 			// never resets that flag, so the post-ping idle connection hands
@@ -63,37 +62,23 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	return db, nil
 }
 
-// remoteOptions configures the libsql HTTP driver for Turso.
+// CloseIdleConnections drops the idle sockets the libsql HTTP driver has
+// pooled. Call it at the start of each serverless invocation.
 //
-// The driver sends every query as a POST to /v2/pipeline on
-// http.DefaultClient, which keeps idle keep-alive sockets between requests.
-// On Vercel a warm instance is frozen between invocations, and Turso closes
-// those idle sockets in the meantime. The next query reuses a dead socket and
-// fails with `Post ".../v2/pipeline": EOF` before Turso ever sees it. Go's
-// transport already retries that case on a fresh connection, but only for
-// requests it considers replayable, which excludes a plain POST.
+// The driver sends every query as a POST on http.DefaultClient, which keeps
+// idle keep-alive sockets between requests. On Vercel a warm instance is
+// frozen between invocations, and Turso can close those sockets in the
+// meantime. The next invocation then writes its first query into a dead
+// socket and fails with `Post ".../v2/pipeline": EOF`, before Turso sees it.
 //
-// An Idempotency-Key header marks the request replayable (see
-// net/http.Request.isReplayable), so the transport retries it on a fresh
-// connection, and only when a reused connection failed.
+// Closing idle sockets up front means each invocation dials a fresh
+// connection instead. Nothing is retried or replayed, so no query can run
+// twice, and it works the same over HTTP/1.1 and HTTP/2. Connections in use
+// by other in-flight requests are not touched. The cost is one new
+// connection per invocation; within an invocation, sockets are still reused.
 //
-// Caveats:
-//   - This covers HTTP/1.1 only, which is what the production error (a bare
-//     EOF) indicates. Over HTTP/2 a dead connection surfaces as
-//     "unexpected EOF" and is not retried.
-//   - Turso is not known to act on the header. If it ever deduplicated on it,
-//     this constant key would be wrong and must be removed.
-//   - If the connection dies after Turso ran the query but before the reply
-//     arrives, the transport replays it, so a non-idempotent write could run
-//     twice. That is far rarer than the stale-socket case this fixes.
-func remoteOptions(token string) []libsql.Option {
-	opts := []libsql.Option{
-		libsql.WithRequestHeaders(map[string]string{
-			"Idempotency-Key": "godaily-libsql",
-		}),
-	}
-	if token != "" {
-		opts = append(opts, libsql.WithAuthToken(token))
-	}
-	return opts
+// It also closes idle sockets to other hosts that use http.DefaultClient,
+// which only means they reconnect on next use.
+func CloseIdleConnections() {
+	http.DefaultClient.CloseIdleConnections()
 }

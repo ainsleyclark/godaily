@@ -11,7 +11,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
-	"sync"
 	"sync/atomic"
 	"testing"
 
@@ -116,41 +115,35 @@ func TestNew_Remote(t *testing.T) {
 		assert.Equal(t, "Bearer secret", st.authHeader.Load())
 	})
 
-	t.Run("Retries Stale Keep-Alive Connection", func(t *testing.T) {
+	// Guards the harness: a query on a stale pooled socket must fail the way
+	// production did, or the test below proves nothing.
+	t.Run("Stale Connection Fails Without Reset", func(t *testing.T) {
 		st := newStaleTurso(t)
-
 		conn := newRemote(t, st)
 
-		// The warm-up query left a keep-alive socket in the HTTP pool. Make
-		// the server hang up on the next request that reuses it.
 		st.dropReused.Store(true)
+
+		_, err := conn.ExecContext(t.Context(), "SELECT 1")
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "/v2/pipeline\": EOF")
+		assert.Equal(t, int32(1), st.dropped.Load())
+	})
+
+	t.Run("Close Idle Connections Avoids Stale Socket", func(t *testing.T) {
+		st := newStaleTurso(t)
+		conn := newRemote(t, st)
+
+		// The server would hang up on the next request that reuses the
+		// pooled socket, as Turso does after a frozen invocation.
+		st.dropReused.Store(true)
+
+		CloseIdleConnections()
 
 		var one int
 		err := conn.QueryRowContext(t.Context(), "SELECT 1").Scan(&one)
 		require.NoError(t, err)
 		assert.Equal(t, 1, one)
-		assert.Equal(t, int32(1), st.dropped.Load(), "the stale connection should have been hit")
-	})
-
-	t.Run("Concurrent Queries Survive Stale Connections", func(t *testing.T) {
-		st := newStaleTurso(t)
-
-		conn := newRemote(t, st)
-
-		var wg sync.WaitGroup
-		errs := make(chan error, 20)
-		for range 20 {
-			st.dropReused.Store(true)
-			wg.Go(func() {
-				var one int
-				errs <- conn.QueryRowContext(t.Context(), "SELECT 1").Scan(&one)
-			})
-		}
-		wg.Wait()
-		close(errs)
-
-		for err := range errs {
-			require.NoError(t, err)
-		}
+		assert.Equal(t, int32(0), st.dropped.Load(), "the query should have used a fresh connection")
+		assert.Equal(t, int32(2), st.requests.Load(), "the query should run exactly once, with no retry")
 	})
 }
