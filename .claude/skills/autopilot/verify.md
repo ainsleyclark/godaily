@@ -49,8 +49,16 @@ If the code hasn't been exercised yet: the result is **can't tell yet**. Set
 | Log lines | `mcp__Vercel__get_runtime_logs`. Use `group_by: "level"` or `requestPath` for counts. For lines, narrow with `query`, `level` or `deploymentId`, because wide windows time out after 5s. |
 | Health | `curl -sL https://godaily.dev/api/healthz` (public, no key). Expect `"message":"ok"`. The `-L` matters: it 308-redirects to the trailing-slash URL. |
 
-Logs: before webkit v0.14.3 (deployed 26 Nov 2026), ERROR records were not
-labelled as errors. "0 errors" from before that date proves nothing.
+Logs: **"0 errors" proves nothing**, even after webkit v0.14.3. On 27 Nov 2026
+the 01:00 collect returned 500 with a `"level":"ERROR"` JSON line, yet Vercel
+filed the whole record as `info`: `get_runtime_errors` showed no errors and
+`group_by: "level"` showed only `info` (#336). Always also check that each
+cron did its job:
+- `get_runtime_logs` with `query: "/api/digest/collect"` (and `/build`) for
+  01:00–02:05 UTC tonight. Look for `Collect failed`, `Server Error` or
+  `No items found for build window, skipping`.
+- `get_issue key: "draft"` before 08:00. "there is no draft issue" on a
+  weekday means the build skipped: treat it as urgent.
 
 ## Social copy checks
 
