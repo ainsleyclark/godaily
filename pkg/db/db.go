@@ -11,6 +11,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"database/sql/driver"
 	"strings"
 
 	"github.com/ainsleydev/webkit/pkg/enforce"
@@ -18,7 +19,7 @@ import (
 	// Turso DB Driver, for more info, visit:
 	// https://docs.turso.tech/sdk/go/quickstart
 	//_ "turso.tech/database/tursogo"
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	"github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 // New opens a *sql.DB against the given URL.
@@ -37,9 +38,10 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	if strings.HasPrefix(url, "file:") {
 		db, err = sql.Open("sqlite", url)
 	} else {
-		url = url + "?authToken=" + token
-		db, err = sql.Open("libsql", url)
+		var connector driver.Connector
+		connector, err = libsql.NewConnector(url, remoteOptions(token)...)
 		if err == nil {
+			db = sql.OpenDB(connector)
 			// The libsql HTTP driver marks a connection streamClosed=true after
 			// any non-transactional query (e.g. the ping below). ResetSession
 			// never resets that flag, so the post-ping idle connection hands
@@ -59,4 +61,30 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+// remoteOptions configures the libsql HTTP driver for Turso.
+//
+// The driver sends every query as a POST to /v2/pipeline on
+// http.DefaultClient, which keeps idle keep-alive sockets between requests.
+// On Vercel a warm instance is frozen between invocations, and Turso closes
+// those idle sockets in the meantime. The next query reuses a dead socket and
+// fails with `Post ".../v2/pipeline": EOF` before Turso ever sees it. Go's
+// transport already retries that case on a fresh connection, but only for
+// requests it considers replayable, which excludes a plain POST.
+//
+// An Idempotency-Key header marks the request replayable (see
+// net/http.Request.isReplayable), so the transport retries it once, and only
+// when a reused connection failed. Turso ignores the header. The retry runs
+// only when the server hung up without replying, so the query never ran.
+func remoteOptions(token string) []libsql.Option {
+	opts := []libsql.Option{
+		libsql.WithRequestHeaders(map[string]string{
+			"Idempotency-Key": "godaily-libsql",
+		}),
+	}
+	if token != "" {
+		opts = append(opts, libsql.WithAuthToken(token))
+	}
+	return opts
 }
