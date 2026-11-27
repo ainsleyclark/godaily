@@ -74,9 +74,18 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 // requests it considers replayable, which excludes a plain POST.
 //
 // An Idempotency-Key header marks the request replayable (see
-// net/http.Request.isReplayable), so the transport retries it once, and only
-// when a reused connection failed. Turso ignores the header. The retry runs
-// only when the server hung up without replying, so the query never ran.
+// net/http.Request.isReplayable), so the transport retries it on a fresh
+// connection, and only when a reused connection failed.
+//
+// Caveats:
+//   - This covers HTTP/1.1 only, which is what the production error (a bare
+//     EOF) indicates. Over HTTP/2 a dead connection surfaces as
+//     "unexpected EOF" and is not retried.
+//   - Turso is not known to act on the header. If it ever deduplicated on it,
+//     this constant key would be wrong and must be removed.
+//   - If the connection dies after Turso ran the query but before the reply
+//     arrives, the transport replays it, so a non-idempotent write could run
+//     twice. That is far rarer than the stale-socket case this fixes.
 func remoteOptions(token string) []libsql.Option {
 	opts := []libsql.Option{
 		libsql.WithRequestHeaders(map[string]string{
