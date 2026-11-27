@@ -212,7 +212,7 @@ func connect(url string, jwt string) (*websocketConn, error) {
 		"jwt":  jwt,
 	})
 	if err != nil {
-		c.Close(websocket.StatusInternalError, err.Error())
+		_ = c.Close(websocket.StatusInternalError, err.Error())
 		return nil, err
 	}
 
@@ -225,32 +225,32 @@ func connect(url string, jwt string) (*websocketConn, error) {
 		},
 	})
 	if err != nil {
-		c.Close(websocket.StatusInternalError, err.Error())
+		_ = c.Close(websocket.StatusInternalError, err.Error())
 		return nil, err
 	}
 
 	var helloResp interface{}
 	err = wsjson.Read(ctx, c, &helloResp)
 	if err != nil {
-		c.Close(websocket.StatusInternalError, err.Error())
+		_ = c.Close(websocket.StatusInternalError, err.Error())
 		return nil, err
 	}
 	if helloResp.(map[string]interface{})["type"] == "hello_error" {
 		err = fmt.Errorf("handshake error: %s", errorMsg(helloResp))
-		c.Close(websocket.StatusProtocolError, err.Error())
+		_ = c.Close(websocket.StatusProtocolError, err.Error())
 		return nil, err
 	}
 
 	var openStreamResp interface{}
 	err = wsjson.Read(ctx, c, &openStreamResp)
 	if err != nil {
-		c.Close(websocket.StatusInternalError, err.Error())
+		_ = c.Close(websocket.StatusInternalError, err.Error())
 		return nil, err
 	}
 
 	if isErrorResp(openStreamResp) {
 		err = fmt.Errorf("unable to open stream: %s", errorMsg(helloResp))
-		c.Close(websocket.StatusProtocolError, err.Error())
+		_ = c.Close(websocket.StatusProtocolError, err.Error())
 		return nil, err
 	}
 	return &websocketConn{c, newIDPool()}, nil

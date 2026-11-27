@@ -1,6 +1,9 @@
 package hrana
 
 import (
+	"fmt"
+	"math"
+
 	"github.com/tursodatabase/libsql-client-go/libsql/internal/http/shared"
 )
 
@@ -72,7 +75,12 @@ func BatchStream(sqls []string, params []shared.Params, wantRows bool, transacti
 	}
 	if transactional {
 		rollback := "ROLLBACK"
-		last_idx := int32(len(sqls) - 1)
+		// Step indexes are int32 on the wire. (godaily fork: bounds check for gosec G115.)
+		last := len(sqls) - 1
+		if last > math.MaxInt32 {
+			return nil, fmt.Errorf("too many statements in batch: %d", len(sqls))
+		}
+		last_idx := int32(last)
 		batch.Add(Stmt{Sql: &rollback, WantRows: false},
 			&BatchCondition{Type: "not", Cond: &BatchCondition{Type: "ok", Step: &last_idx}})
 	}
