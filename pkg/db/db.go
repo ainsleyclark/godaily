@@ -11,7 +11,9 @@ package db
 import (
 	"context"
 	"database/sql"
+	"net/http"
 	"strings"
+	"time"
 
 	"github.com/ainsleydev/webkit/pkg/enforce"
 	"github.com/pkg/errors"
@@ -20,6 +22,9 @@ import (
 	//_ "turso.tech/database/tursogo"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
+
+// idleTimeout must stay below Turso's (undocumented) idle timeout.
+var idleTimeout = 2 * time.Second
 
 // New opens a *sql.DB against the given URL.
 //
@@ -37,6 +42,14 @@ func New(ctx context.Context, url, token string) (*sql.DB, error) {
 	if strings.HasPrefix(url, "file:") {
 		db, err = sql.Open("sqlite", url)
 	} else {
+		// The driver sends queries on http.DefaultClient. A warm Vercel instance
+		// is frozen between invocations and Turso closes the idle connection
+		// meanwhile, so the next query fails with `.../v2/pipeline": EOF`.
+		// net/http discards a pooled connection idle longer than this when it
+		// takes it from the pool, so the query dials a fresh one instead.
+		if t, ok := http.DefaultTransport.(*http.Transport); ok {
+			t.IdleConnTimeout = idleTimeout
+		}
 		url = url + "?authToken=" + token
 		db, err = sql.Open("libsql", url)
 		if err == nil {
